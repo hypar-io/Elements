@@ -47,14 +47,6 @@ namespace Hypar.Tests
             Assert.True(File.Exists("saveToGlb.glb"));
         }
 
-        [Fact]
-        public void Default_SerializeToJSON_Success()
-        {
-            var model = QuadPanelModel();
-            model.AddData("foo", 42.0);
-            model.AddData("bar", 27.0);
-            var json = model.ToJSON();
-        }
 
         [Fact]
         public void Frame()

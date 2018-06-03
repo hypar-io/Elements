@@ -14,7 +14,6 @@ namespace Hypar.Elements
     /// </summary>
     public class Model
     {
-        private const string DEFAULT_MATERIAL_ID = "default";
         private List<byte> m_buffer = new List<byte>();
         private Dictionary<string, Material> m_materials = new Dictionary<string, Material>();
         private Dictionary<string, Element> m_elements = new Dictionary<string, Element>();
@@ -29,11 +28,6 @@ namespace Hypar.Elements
             get{return m_elements;}
         }
 
-        [JsonProperty("model")]
-        public string ModelBase64
-        {
-            get{return SaveBase64();}
-        }
 
         public Model()
         {
