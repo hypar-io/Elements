@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Title>Hypar</Title>
+    <Authors>Hypar</Authors>
+    <PackageId>Hypar</PackageId>
+    <Description>Generative Design for AEC</Description>
+    <Summary>The Hypar SDK allows developers to create code which runs on the Hypar platform.</Summary>
+    <Copyright>Hypar LLC</Copyright>
+    <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Version>0.0.1-beta2</Version>
+    <Tags>AEC</Tags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- <PackageReference Include="geometry3Sharp" Version="1.0.144" /> -->
+    <PackageReference Include="glTF2Loader" Version="1.1.1-alpha" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>
