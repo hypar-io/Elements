@@ -1,15 +1,17 @@
 # Hypar Elements
-The Hypar Elements library is a highly opinionated library for creating building elements like beams and slabs. It is intended to be easy enough to use for beginning developers, but extensible enough for experienced developers. Elements in Hypar can be serialized to JSON, and their 3D representations can be serialized to binary [glTF](https://www.khronos.org/gltf/) files. Serialization to IFC will be added in the near future.
+The Hypar Elements library is a highly opinionated library for creating building elements like beams and slabs. It is intended to be easy enough to use for beginning developers, but extensible enough for experienced developers. An Element's 3D representations can be serialized to binary [glTF](https://www.khronos.org/gltf/) files.
 
-## Creating a project to use Hypar
-- Install [.net](https://www.microsoft.com/net/) - Hypar is compatible with .net standard 2.1.
-- Create a dotnet class lib.  
-`dotnet new classlib -n MyNewLib`
-- Install Hypar.  
-`nuget install hypar`
+## Creating a project that uses the Hypar Elements library.
+- Install [.net](https://www.microsoft.com/net/) - Hypar Elements is compatible with .net standard 2.1.
+- From the command line...  
+```
+dotnet new classlib -n MyNewLib
+cd MyNewLib
+dotnet add MyNewLib.csproj package hypar
+```
 
 ## Examples
-The best examples are those provided in the tests, where we demonstrate usage of almost every function in the library.
+The best examples are those provided in the [tests](https://github.com/hypar-io/elements/tree/master/test), where we demonstrate usage of almost every function in the library.
 
 ## Third Party Libraries
 
