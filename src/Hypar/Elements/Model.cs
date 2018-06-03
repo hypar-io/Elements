@@ -18,15 +18,12 @@ namespace Hypar.Elements
         private List<byte> m_buffer = new List<byte>();
         private Dictionary<string, Material> m_materials = new Dictionary<string, Material>();
         private Dictionary<string, Element> m_elements = new Dictionary<string, Element>();
-        private Dictionary<string, double> m_data = new Dictionary<string, double>();
 
-        [JsonIgnore]
         public Dictionary<string, Material> Materials
         {
             get{return m_materials;}
         }
 
-        [JsonIgnore]
         public Dictionary<string,Element> Elements
         {
             get{return m_elements;}
@@ -36,12 +33,6 @@ namespace Hypar.Elements
         public string ModelBase64
         {
             get{return SaveBase64();}
-        }
-
-        [JsonProperty("computed")]
-        public Dictionary<string, double> Computed
-        {
-            get{return m_data;}
         }
 
         public Model()
@@ -81,18 +72,6 @@ namespace Hypar.Elements
             else
             {
                 throw new Exception("An Element with the same Id already exists in the Model.");
-            }
-        }
-
-        public void AddData(string key, double value)
-        {
-            if(!m_data.ContainsKey(key))
-            {
-                this.m_data.Add(key, value);
-            }
-            else
-            {
-                throw new Exception("Data with the same key already exists in the Model.");
             }
         }
 
@@ -152,6 +131,26 @@ namespace Hypar.Elements
         public string ToJSON()
         {
             return JsonConvert.SerializeObject(this);
+        }
+
+        public string ToHypar()
+        {
+            var model = SaveBase64();
+
+            var computed = new Dictionary<string,object>();
+            foreach(var e in this.Elements)
+            {
+                if(e.Value is IDataProvider)
+                {
+                    var dp = e.Value as IDataProvider;
+                    computed.Add(e.Value.Id.ToString(), dp.Data());
+                }
+            }
+
+            var result = new Dictionary<string, object>();
+            result["model"] = model;
+            result["computed"] = computed;
+            return JsonConvert.SerializeObject(result);
         }
 
         private Gltf InitializeGlTF()

@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using Hypar.Geometry;
 
 namespace Hypar.Elements
 {
-    public class Beam : Element, IMeshProvider
+    public class Beam : Element, IMeshProvider, IDataProvider
     {
         public Line CenterLine{get;}
 
@@ -18,6 +19,13 @@ namespace Hypar.Elements
         public Mesh Tessellate()
         {
             return Mesh.ExtrudeAlongLine(this.CenterLine, new[]{this.Profile});
+        }
+
+        public Dictionary<string, double> Data()
+        {
+            var data = new Dictionary<string,double>();
+            data.Add("length", this.CenterLine.Length());
+            return data;
         }
     }
 }
