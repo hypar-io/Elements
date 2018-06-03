@@ -5,7 +5,7 @@ using System.Linq;
 namespace Hypar.Elements
 {
     /// <summary>
-    /// A planar panel with an arbitrary outline.
+    /// A zero-thickness planar panel with an arbitrary outline.
     /// </summary>
     public class Panel : Element, IMeshProvider
     {   
