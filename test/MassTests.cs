@@ -12,50 +12,46 @@ namespace Hypar.Tests
         public void Default_Construct_Success()
         {
             var model = new Model();
-            var a = new Vector2();
-            var b = new Vector2(30, 10);
-            var c = new Vector2(20, 50);
-            var d = new Vector2(-10, 5);
+            var a = new Vector3();
+            var b = new Vector3(30, 10);
+            var c = new Vector3(20, 50);
+            var d = new Vector3(-10, 5);
 
-            var profile = new Polygon2(new[]{a,b,c,d});
+            var profile = new Polyline(new[]{a,b,c,d});
 
-            var material = new Material("mass", 1.0f, 1.0f, 0.0f, 0.5f, 0.0f, 0.0f);
-            model.AddMaterial(material);
-
-            var mass = new Mass(profile, 0, profile, 40, material);
+            var mass = Mass.WithBottomProfile(profile)
+                            .WithBottomAt(0)
+                            .WithTopAt(40);
             model.AddElement(mass);
-
-            model.SaveGlb("mass.glb");
-            Assert.True(File.Exists("mass.glb"));
-            Assert.Equal(1, model.Elements.Count);
         }
 
         [Fact]
         public void TopBottomSame_Construct_ThrowsException()
         {
             var model = new Model();
-            var a = new Vector2();
-            var b = new Vector2(30, 10);
-            var c = new Vector2(20, 50);
-            var d = new Vector2(-10, 5);
-            var profile = new Polygon2(new[]{a,b,c,d});
-            var material = new Material("mass", 1.0f, 1.0f, 0.0f, 0.5f, 0.0f, 0.0f);
-            model.AddMaterial(material);
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Mass(profile, 0, profile, 0, material));
+            var a = new Vector3();
+            var b = new Vector3(30, 10);
+            var c = new Vector3(20, 50);
+            var d = new Vector3(-10, 5);
+            var profile = new Polyline(new[]{a,b,c,d});
+            Assert.Throws<ArgumentException>(() => Mass.WithBottomProfile(profile)
+                                                                    .WithBottomAt(0)
+                                                                    .WithTopAt(0));
         }
 
         [Fact]
         public void TopBelowBottom_Construct_ThrowsException()
         {
             var model = new Model();
-            var a = new Vector2();
-            var b = new Vector2(30, 10);
-            var c = new Vector2(20, 50);
-            var d = new Vector2(-10, 5);
-            var profile = new Polygon2(new[]{a,b,c,d});
+            var a = new Vector3();
+            var b = new Vector3(30, 10);
+            var c = new Vector3(20, 50);
+            var d = new Vector3(-10, 5);
+            var profile = new Polyline(new[]{a,b,c,d});
             var material = new Material("mass", 1.0f, 1.0f, 0.0f, 0.5f, 0.0f, 0.0f);
-            model.AddMaterial(material);
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Mass(profile, 1.0, profile, 0, material));
+            Assert.Throws<ArgumentException>(() => Mass.WithBottomProfile(profile)
+                                                                    .WithBottomAt(0)
+                                                                    .WithTopAt(-10));
         }
     }
 }

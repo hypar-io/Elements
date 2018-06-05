@@ -11,16 +11,23 @@ namespace Hypar.Tests
         public void BeamSystem()
         {
             var model = new Model();
-            var profile = new WideFlangeProfile(1.0, 2.0, 0.1, 0.1);
-            var edge1 = new Line(new Vector3(0,0,0), new Vector3(20,0,0));
-            var edge2 = new Line(new Vector3(0,20,0), new Vector3(20,20,10));
-            var system = new BeamSystem(5, profile, edge1, edge2, model.Materials[BuiltInMaterials.STEEL]);
-            foreach(var b in system.Beams)
-            {
-                model.AddElement(b);
-            }
-            model.SaveGlb("beamSystem.glb");
-            Assert.True(File.Exists("beamSystem.glb"));
+            var profile = Profiles.WideFlangeProfile(1.0, 2.0, 0.1, 0.1);
+
+            // Create the edge lines of the system.
+            var l1 = Line.FromStart(new Vector3(0,0,0)).ToEnd(new Vector3(20,0,0));
+            var l2 = Line.FromStart(new Vector3(0,20,0)).ToEnd(new Vector3(20,20,10));
+            
+            // Create points at n equal spaces along each edge.
+            var v1 = Vector3.AtNEqualSpacesAlongLine(l1, 5);
+            var v2 = Vector3.AtNEqualSpacesAlongLine(l2, 5);
+
+            // Create lines spanning between those points.
+            var cls = Line.FromStart(v1).ToEnd(v2);
+
+            // Create beams along all of those lines.
+            var beams = Beam.AlongLines(cls).WithProfile(profile);
+
+            model.AddElements(beams);
             Assert.Equal(5, model.Elements.Count);
         }
     }

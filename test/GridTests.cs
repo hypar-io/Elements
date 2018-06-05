@@ -10,29 +10,38 @@ namespace Hypar.Tests
         [Fact]
         public void Grid()
         {
-            var model = new Model();
-            var bottom = new Line(new Vector3(0,0,0), new Vector3(20,0,0));
-            var top = new Line(new Vector3(0,0,30), new Vector3(20,10,30));
-            var grid = new Grid(bottom, top, 5, 5);
-            var profile = new WideFlangeProfile(0.5,0.5, 0.1,0.1, 0.25);
-            var steel = model.Materials[BuiltInMaterials.STEEL];
+            var bottom = Line.FromStart(new Vector3(0,0,0)).ToEnd(new Vector3(20,0,0));
+            var top = Line.FromStart(new Vector3(0,0,30)).ToEnd(new Vector3(20,10,30));
 
+            var grid = new Grid(bottom, top, 5, 5);
+            var profile = Profiles.WideFlangeProfile(0.5,0.5, 0.1,0.1, 0.25);
+
+            var model = new Model();
             foreach(var row in grid.Cells)
             {
                 foreach(var c in row)
                 {   
-                    var panel = new Panel(c.Perimeter, model.Materials[BuiltInMaterials.GLASS]);
-                    model.AddElement(panel);
-                    var beam1 = new Beam(c.Perimeter.Segment(0), profile, steel, panel.Normal);
-                    var beam2 = new Beam(c.Perimeter.Segment(2), profile, steel, panel.Normal);
-                    var beam3 = new Beam(c.Perimeter.Segment(1), profile, steel, panel.Normal);
-                    model.AddElement(beam1);
-                    model.AddElement(beam2);
-                    model.AddElement(beam3);
+                    var panel = Panel.WithinPerimeter(c.Perimeter)
+                                    .OfMaterial(BuiltIntMaterials.Glass);
+
+                    var beam1 = Beam.AlongLine(c.Perimeter.Segment(0))
+                                    .WithProfile(profile)
+                                    .WithUpAxis(panel.Normal)
+                                    .OfMaterial(BuiltIntMaterials.Steel);
+                                    
+                    var beam2 = Beam.AlongLine(c.Perimeter.Segment(2))
+                                    .WithProfile(profile)
+                                    .WithUpAxis(panel.Normal)
+                                    .OfMaterial(BuiltIntMaterials.Steel);
+                                    
+                    var beam3 = Beam.AlongLine(c.Perimeter.Segment(1))
+                                    .WithProfile(profile)
+                                    .WithUpAxis(panel.Normal)
+                                    .OfMaterial(BuiltIntMaterials.Steel);
+                    
+                    model.AddElements(new Element[]{panel, beam1, beam2, beam3});
                 }
             }
-            model.SaveGlb("grid.glb");
-            Assert.True(File.Exists("grid.glb"));
             Assert.Equal(100, model.Elements.Count);
         }
     }

@@ -14,27 +14,30 @@ namespace Hypar.Elements
     /// </summary>
     public class Model
     {
-        private List<byte> m_buffer = new List<byte>();
-        private Dictionary<string, Material> m_materials = new Dictionary<string, Material>();
-        private Dictionary<string, Element> m_elements = new Dictionary<string, Element>();
+        private List<byte> _buffer = new List<byte>();
+        private Dictionary<string, Material> _materials = new Dictionary<string, Material>();
+        private Dictionary<string, Element> _elements = new Dictionary<string, Element>();
 
         public Dictionary<string, Material> Materials
         {
-            get{return m_materials;}
+            get{return _materials;}
         }
 
         public Dictionary<string,Element> Elements
         {
-            get{return m_elements;}
+            get{return _elements;}
         }
 
+        public static Model FromElements(IEnumerable<Element> elements)
+        {
+            var model = new Model();
+            model.AddElements(elements);
+            return model;
+        }
 
         public Model()
         {
-            this.AddMaterial(Hypar.Elements.Materials.Default());
-            this.AddMaterial(Hypar.Elements.Materials.Steel());
-            this.AddMaterial(Hypar.Elements.Materials.Glass());
-            this.AddMaterial(Hypar.Elements.Materials.Concrete());
+
         }
 
         /// <summary>
@@ -43,13 +46,13 @@ namespace Hypar.Elements
         /// <param name="m"></param>
         public void AddMaterial(Material m)
         {
-            if(!this.m_materials.ContainsKey(m.Id))
+            if(!this._materials.ContainsKey(m.Id))
             {
-                this.m_materials.Add(m.Id, m);
+                this._materials.Add(m.Id, m);
             }
             else
             {
-                throw new Exception("A Material with the same Id already exists in the Model.");
+                this._materials[m.Id] = m;
             }
         }
 
@@ -57,15 +60,25 @@ namespace Hypar.Elements
         /// Add a Mesh to the Model.
         /// </summary>
         /// <param name="m"></param>
-        public void AddElement(Element m)
+        public void AddElement(Element e)
         {
-            if(!this.m_elements.ContainsKey(m.Id.ToString()))
+            if(!this._elements.ContainsKey(e.Id.ToString()))
             {
-                this.m_elements.Add(m.Id.ToString(), m);
+                this._elements.Add(e.Id.ToString(), e);
             }
             else
             {
                 throw new Exception("An Element with the same Id already exists in the Model.");
+            }
+
+            AddMaterial(e.Material);
+        }
+
+        public void AddElements(IEnumerable<Element> elements)
+        {
+            foreach(var e in elements)
+            {
+                AddElement(e);
             }
         }
 
@@ -82,7 +95,7 @@ namespace Hypar.Elements
                 File.Delete(path);
             }
 
-            gltf.SaveBinaryModel(m_buffer.ToArray(), path);
+            gltf.SaveBinaryModel(_buffer.ToArray(), path);
         }
 
         /// <summary>
@@ -108,7 +121,7 @@ namespace Hypar.Elements
 
             using (var fs = new FileStream(uri, FileMode.Create, FileAccess.Write))
             {
-                fs.Write(m_buffer.ToArray(), 0, m_buffer.Count());
+                fs.Write(_buffer.ToArray(), 0, _buffer.Count());
             }
             gltf.SaveModel(path);
         }
@@ -117,9 +130,14 @@ namespace Hypar.Elements
         {
             var tmp = Path.GetTempFileName();
             var gltf = InitializeGlTF();
-            gltf.SaveBinaryModel(m_buffer.ToArray(), tmp);
+            gltf.SaveBinaryModel(_buffer.ToArray(), tmp);
             var bytes = File.ReadAllBytes(tmp);
             return Convert.ToBase64String(bytes);
+        }
+
+        public string ToIFC()
+        {
+            throw new NotImplementedException("IFC serialization is not yet implemented.");
         }
 
         public string ToJSON()
@@ -177,27 +195,27 @@ namespace Hypar.Elements
             gltf.ExtensionsUsed = new[]{"KHR_materials_pbrSpecularGlossiness"};
             
             var materials = new Dictionary<string, int>();
-            foreach(var kvp in this.m_materials)
+            foreach(var kvp in this._materials)
             {
                 var m = kvp.Value;
                 var mId = gltf.AddMaterial(m.Id, m.Red, m.Green, m.Blue, m.Alpha, m.SpecularFactor, m.GlossinessFactor);
                 materials.Add(m.Id, mId);
             }
 
-            foreach(var kvp in this.m_elements)
+            foreach(var kvp in this._elements)
             {
                 var e = kvp.Value;
                 if(e is IMeshProvider)
                 {
                     var mp = e as IMeshProvider;
                     var mesh = mp.Tessellate();
-                    gltf.AddTriangleMesh(m_buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), mesh.Indices.ToArray(), materials[e.Material.Id], null, e.Transform);
+                    gltf.AddTriangleMesh(_buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), mesh.Indices.ToArray(), materials[e.Material.Id], null, e.Transform);
 
                 }
             }
 
             var buff = new glTFLoader.Schema.Buffer();
-            buff.ByteLength = m_buffer.Count();
+            buff.ByteLength = _buffer.Count();
             gltf.Buffers = new[]{buff};
 
             return gltf;

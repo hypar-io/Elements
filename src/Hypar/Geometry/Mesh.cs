@@ -100,7 +100,7 @@ namespace Hypar.Geometry
             m_current_vertex_index += 4;
         }
 
-        public void AddTesselatedFace(IEnumerable<Polygon2> perimeter, double height=0.0, bool reverse = false)
+        public void AddTesselatedFace(IEnumerable<Polyline> perimeter, double height=0.0, bool reverse = false)
         {
             var tess = new Tess();
 
@@ -146,16 +146,16 @@ namespace Hypar.Geometry
             return mesh;
         }
 
-        public static Mesh Extrude(IEnumerable<Polygon2> boundaries, double height, bool capped=true)
+        public static Mesh Extrude(IEnumerable<Polyline> perimeters, double height, bool capped=true)
         {
             var mesh = new Hypar.Geometry.Mesh();
 
-            foreach(var boundary in boundaries)
+            foreach(var boundary in perimeters)
             {
                 for(var i=0; i<boundary.Vertices.Count(); i++)
                 {
-                    Vector2 a;
-                    Vector2 b;
+                    Vector3 a;
+                    Vector3 b;
 
                     if(i == boundary.Vertices.Count()-1)
                     {
@@ -178,17 +178,17 @@ namespace Hypar.Geometry
 
             if(capped)
             {
-                mesh.AddTesselatedFace(boundaries);
-                mesh.AddTesselatedFace(boundaries, height, true);
+                mesh.AddTesselatedFace(perimeters);
+                mesh.AddTesselatedFace(perimeters, height, true);
             }
 
             return mesh;
         }
 
-        public static Mesh ExtrudeAlongLine(Line line, IEnumerable<Polygon2> boundaries, bool capped=true)
+        public static Mesh ExtrudeAlongLine(Line line, IEnumerable<Polyline> perimeters, bool capped=true)
         {
             var height = line.Length();
-            return Mesh.Extrude(boundaries, height, capped);
+            return Mesh.Extrude(perimeters, height, capped);
         }
     }
 

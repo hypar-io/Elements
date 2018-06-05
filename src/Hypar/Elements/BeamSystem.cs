@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Hypar.Elements
 {
-    public class BeamSystem
+    public class BeamSystem : IEnumerable<Beam>
     {
-        private List<Beam> m_beams = new List<Beam>();
+        private List<Beam> _beams = new List<Beam>();
 
         /// <summary>
         /// A collection of Beams contained in the system.
@@ -15,7 +15,7 @@ namespace Hypar.Elements
         /// <returns></returns>
         public IEnumerable<Beam> Beams
         {
-            get{return m_beams;}
+            get{return _beams;}
         }
 
         /// <summary>
@@ -27,22 +27,23 @@ namespace Hypar.Elements
         /// <param name="edge2"></param>
         /// <param name="material"></param>
         /// <param name="transform"></param>
-        public BeamSystem(int count, StructuralProfile profile, Line edge1, Line edge2, Material material, Transform transform = null)
+        public BeamSystem(int count, Polyline profile, Line edge1, Line edge2, Material material, Transform transform = null)
         {
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material, transform);
         }
 
-        public BeamSystem(Slab slab, int count, StructuralProfile profile, Material material, Transform transform = null)
+        public BeamSystem(Slab slab, int count, Polyline profile, Material material, Transform transform = null)
         {
             var edges = slab.Perimeter.Explode().ToArray();
             var e1 = edges[0];
             var e2 = edges[2].Reversed();
-            var edge1 = new Line(new Vector3(e1.Start.X, e1.Start.Y, slab.Elevation - profile.Depth/2), new Vector3(e1.End.X, e1.End.Y, slab.Elevation - profile.Depth/2));
-            var edge2 = new Line(new Vector3(e2.Start.X, e2.Start.Y, slab.Elevation - profile.Depth/2), new Vector3(e2.End.X, e2.End.Y, slab.Elevation - profile.Depth/2));
+            var depth = profile.BoundingBox.Max.Y - profile.BoundingBox.Min.Y;
+            var edge1 = new Line(new Vector3(e1.Start.X, e1.Start.Y, slab.Elevation - depth/2), new Vector3(e1.End.X, e1.End.Y, slab.Elevation - depth/2));
+            var edge2 = new Line(new Vector3(e2.Start.X, e2.Start.Y, slab.Elevation - depth/2), new Vector3(e2.End.X, e2.End.Y, slab.Elevation - depth/2));
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material, transform);
         }
 
-        private void CreateBeamsBetweenEdges(Line edge1, Line edge2, int count, StructuralProfile profile, Material material, Transform transform)
+        private void CreateBeamsBetweenEdges(Line edge1, Line edge2, int count, Polyline profile, Material material, Transform transform)
         {
             var div = 1.0/((double)count + 1);
             for(var i=0; i<count; i++)
@@ -52,8 +53,18 @@ namespace Hypar.Elements
                 var b = edge2.PointAt(t);
                 var line = new Line(a, b);
                 var beam = new Beam(line, profile, material, null, transform);
-                this.m_beams.Add(beam);
+                this._beams.Add(beam);
             }
+        }
+
+        public IEnumerator<Beam> GetEnumerator()
+        {
+            return ((IEnumerable<Beam>)_beams).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<Beam>)_beams).GetEnumerator();
         }
     }
 }

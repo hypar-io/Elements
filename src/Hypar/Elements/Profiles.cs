@@ -2,74 +2,43 @@ using Hypar.Geometry;
 
 namespace Hypar.Elements
 {
-    public abstract class StructuralProfile
-    {
-        public double Width{get;}
-        public double Depth{get;}
-
-        public double VerticalOffset{get;}
-
-        public double HorizontalOffset{get;}
-
-        public Polygon2 Profile{get; protected set;}
-
-        public StructuralProfile(double w, double d, double verticalOffset = 0.0, double horizontalOffset = 0.0)
-        {
-            this.Width = w;
-            this.Depth = d;
-            this.VerticalOffset = verticalOffset;
-            this.HorizontalOffset = horizontalOffset;
-        }
-    }
-
-    public class WideFlangeProfile : StructuralProfile
-    {
-        public WideFlangeProfile(double w, double d, double tf, double tw, double vo = 0.0, double ho = 0.0) : base(w, d, vo, ho)
-        {
-            var o = new Vector2();
-            // Left
-            var a = new Vector2(o.X - w/2 + ho, o.Y + d/2 + vo);
-            var b = new Vector2(o.X - w/2 + ho, o.Y + d/2 - tf + vo);
-            var c = new Vector2(o.X - tw/2 + ho, o.Y + d/2 - tf + vo);
-            var e = new Vector2(o.X - tw/2 + ho, o.Y - d/2 + tf + vo);
-            var f = new Vector2(o.X - w/2 + ho, o.Y - d/2 + tf + vo);
-            var g = new Vector2(o.X - w/2 + ho, o.Y - d/2 + vo);
-
-            // Right
-            var h = new Vector2(o.X + w/2 + ho, o.Y - d/2 + vo);
-            var i = new Vector2(o.X + w/2 + ho, o.Y - d/2 + tf + vo);
-            var j = new Vector2(o.X + tw/2 + ho, o.Y - d/2 + tf + vo);
-            var k = new Vector2(o.X + tw/2 + ho, o.Y + d/2 - tf + vo);
-            var l = new Vector2(o.X + w/2 + ho, o.Y + d/2 - tf + vo);
-            var m = new Vector2(o.X + w/2 + ho, o.Y + d/2 + vo);
-
-            this.Profile = new Polygon2(new []{a,b,c,e,f,g,h,i,j,k,l,m});
-        }
-    }
-
-    public class SquareProfile : StructuralProfile
-    {
-        public SquareProfile(double w, double d, double vo = 0.0, double ho = 0.0) : base (w, d, vo, ho)
-        {
-            var origin = new Vector2();
-            var a = new Vector2(origin.X - w/2 + ho, origin.Y - d/2 + vo);
-            var b = new Vector2(origin.X + w/2 + ho, origin.Y - d/2 + vo);
-            var c = new Vector2(origin.X + w/2 + ho, origin.Y + d/2 + vo);
-            var e = new Vector2(origin.X - w/2 + ho, origin.Y + d/2 + vo);
-
-            this.Profile = new Polygon2(new []{a, b, c, e});
-        }
-    }
-
     public static class Profiles
     {
-        public static Polygon2 Square(Vector2 origin, double width, double length)
+        public static Polyline Square(Vector3 origin = null, double width = 1.0, double height = 1.0, double vo = 0.0, double ho = 0.0)
         {
-            var a = new Vector2(origin.X - width/2, origin.Y - length/2);
-            var b = new Vector2(origin.X + width/2, origin.Y - length/2);
-            var c = new Vector2(origin.X + width/2, origin.Y + length/2);
-            var d = new Vector2(origin.X - width/2, origin.Y + length/2);
-            return new Polygon2(new []{a, b, c, d});
+            if(origin == null)
+            {
+                origin = Vector3.Origin();
+            }
+
+            var a = new Vector3(origin.X - width/2 + ho, origin.Y - height/2 + vo);
+            var b = new Vector3(origin.X + width/2 + ho, origin.Y - height/2 + vo);
+            var c = new Vector3(origin.X + width/2 + ho, origin.Y + height/2 + vo);
+            var d = new Vector3(origin.X - width/2 + ho, origin.Y + height/2 + vo);
+
+            return new Polyline(new []{a, b, c, d});
+        }
+
+        public static Polyline WideFlangeProfile(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, double verticalOffset = 0.0, double horizontalOffset = 0.0)
+        {
+            var o = new Vector3();
+            // Left
+            var a = new Vector3(o.X - width/2 + horizontalOffset, o.Y + height/2 + verticalOffset);
+            var b = new Vector3(o.X - width/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
+            var c = new Vector3(o.X - thicknessWeb/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
+            var e = new Vector3(o.X - thicknessWeb/2 + horizontalOffset, o.Y - height/2 + thicknessFlange + verticalOffset);
+            var f = new Vector3(o.X - width/2 + horizontalOffset, o.Y - height/2 + thicknessFlange + verticalOffset);
+            var g = new Vector3(o.X - width/2 + horizontalOffset, o.Y - height/2 + verticalOffset);
+
+            // Right
+            var h = new Vector3(o.X + width/2 + horizontalOffset, o.Y - height/2 + verticalOffset);
+            var i = new Vector3(o.X + width/2 + horizontalOffset, o.Y - height/2 + thicknessFlange + verticalOffset);
+            var j = new Vector3(o.X + thicknessWeb/2 + horizontalOffset, o.Y - height/2 + thicknessFlange + verticalOffset);
+            var k = new Vector3(o.X + thicknessWeb/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
+            var l = new Vector3(o.X + width/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
+            var m = new Vector3(o.X + width/2 + horizontalOffset, o.Y + height/2 + verticalOffset);
+
+            return new Polyline(new []{a,b,c,e,f,g,h,i,j,k,l,m});
         }
     }
 }

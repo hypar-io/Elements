@@ -54,11 +54,11 @@ namespace Hypar.Elements
 
     public class Cell
     {
-        public Polygon3 Perimeter{get;}
+        public Polyline Perimeter{get;}
 
         public Cell (Vector3 a, Vector3 b, Vector3 c, Vector3 d)
         {
-            this.Perimeter = new Polygon3(new []{a,b,c,d});
+            this.Perimeter = new Polyline(new []{a,b,c,d});
         }
     }
 }
