@@ -13,7 +13,7 @@ namespace Hypar.Tests
             var bottom = Line.FromStart(new Vector3(0,0,0)).ToEnd(new Vector3(20,0,0));
             var top = Line.FromStart(new Vector3(0,0,30)).ToEnd(new Vector3(20,10,30));
 
-            var grid = new Grid(bottom, top, 5, 5);
+            var grid = Grid.WithinPerimeter(bottom, top, 5, 5);
             var profile = Profiles.WideFlangeProfile(0.5,0.5, 0.1,0.1, 0.25);
 
             var model = new Model();

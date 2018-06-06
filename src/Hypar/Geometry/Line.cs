@@ -49,6 +49,11 @@ namespace Hypar.Geometry
         /// <returns></returns>
         public Line ToEnd(Vector3 end)
         {
+            if (this._start.Equals(end))
+            {
+                throw new Exception("The start and end of the Line cannot be the same.");
+            }
+
             this._end = end;
             return this;
         }

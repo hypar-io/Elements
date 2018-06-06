@@ -17,6 +17,8 @@ namespace Hypar.Elements
         public float GlossinessFactor{get;}
         public string Id {get; internal set;}
 
+        public bool UsesPerVertexColoring{get;set;}
+        
         public Material(string id, float red, float green, float blue, float alpha, float specularFactor, float glossinessFactor)
         {
             if(red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0 || specularFactor < 0.0 || glossinessFactor < 0.0)

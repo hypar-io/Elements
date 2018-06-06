@@ -8,7 +8,7 @@ namespace Hypar.Elements
 {
     public class Mass : Element, IMeshProvider
     {
-        private List<Polyline> m_sides = new List<Polyline>();
+        private List<Polyline> _sides = new List<Polyline>();
         private Polyline _bottom;
         private Polyline _top;
         private double _bottomElevation;
@@ -30,15 +30,6 @@ namespace Hypar.Elements
 
         public double TopElevation => _topElevation;
 
-        /// <summary>
-        /// The faces of the mass.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Polyline> Faces
-        {
-            get { return m_sides; }
-        }
-
         public static Mass WithBottomProfile(Polyline profile)
         {
             if(profile.Count() == 0)
@@ -56,6 +47,7 @@ namespace Hypar.Elements
             this._top = profile;
             this._bottomElevation = 0.0;
             this._topElevation = 10.0;
+            this._material = BuiltIntMaterials.Mass;
         }
 
         internal Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation, Material material, Transform transform = null) : base(material, transform)
@@ -74,9 +66,14 @@ namespace Hypar.Elements
             this._bottom = bottom;
             this._bottomElevation = bottomElevation;
             this._topElevation = topElevation;
+        }
 
-            var b = bottom.Vertices.ToArray();
-            var t = top.Vertices.ToArray();
+        public IEnumerable<Polyline> Faces()
+        {
+            var b = this._bottom.Vertices.ToArray();
+            var t = this._top.Vertices.ToArray();
+
+            var sides = new List<Polyline>();
 
             for (var i = 0; i < b.Length; i++)
             {
@@ -89,19 +86,20 @@ namespace Hypar.Elements
                 var v2 = b[next];
                 var v3 = t[next];
                 var v4 = t[i];
-                var v1n = new Vector3(v1.X, v1.Y, bottomElevation);
-                var v2n = new Vector3(v2.X, v2.Y, bottomElevation);
-                var v3n = new Vector3(v3.X, v3.Y, topElevation);
-                var v4n = new Vector3(v4.X, v4.Y, topElevation);
+                var v1n = new Vector3(v1.X, v1.Y, this._bottomElevation);
+                var v2n = new Vector3(v2.X, v2.Y, this._bottomElevation);
+                var v3n = new Vector3(v3.X, v3.Y, this._topElevation);
+                var v4n = new Vector3(v4.X, v4.Y, this._topElevation);
                 var side = new Polyline(new[] { v1n, v2n, v3n, v4n });
-                m_sides.Add(side);
+                sides.Add(side);
             }
+            return sides;
         }
         
         public Mesh Tessellate()
         {
             var mesh = new Mesh();
-            foreach (var s in m_sides)
+            foreach (var s in Faces())
             {
                 mesh.AddQuad(s.ToArray());
             }
@@ -111,7 +109,7 @@ namespace Hypar.Elements
             return mesh;
         }
 
-        public Mass WithTopAt(double elevation)
+        public Mass WithTopAtElevation(double elevation)
         {
             if(elevation <= this._bottomElevation)
             {
@@ -121,7 +119,7 @@ namespace Hypar.Elements
             return this;
         }
 
-        public Mass WithBottomAt(double elevation)
+        public Mass WithBottomAtElevation(double elevation)
         {
             if(elevation >= this._topElevation)
             {
@@ -140,6 +138,5 @@ namespace Hypar.Elements
             this._top = profile;
             return this;
         }
-
     }
 }

@@ -19,9 +19,55 @@ namespace Hypar.Elements
             return new Polyline(new []{a, b, c, d});
         }
 
-        public static Polyline WideFlangeProfile(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, double verticalOffset = 0.0, double horizontalOffset = 0.0)
+        public enum VerticalAlignment
+        {
+            Top, Center, Bottom
+        }
+
+        public enum HorizontalAlignment
+        {
+            Left, Center, Right
+        }
+
+        public static Polyline WideFlangeProfile(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, 
+                                                        VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
+                                                        HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
+                                                        double verticalOffset = 0.0, double horizontalOffset = 0.0)
         {
             var o = new Vector3();
+
+            if(verticalOffset == 0.0)
+            {
+                switch(verticalAlignment)
+                {
+                    case VerticalAlignment.Top:
+                        verticalOffset = height/2;
+                        break;
+                    case VerticalAlignment.Center:
+                        verticalOffset = 0.0;
+                        break;
+                    case VerticalAlignment.Bottom:
+                        verticalOffset = -height/2;
+                    break;
+                }
+            }
+
+            if(horizontalOffset == 0.0)
+            {
+                switch(horizontalAlignment)
+                {
+                    case HorizontalAlignment.Left:
+                        horizontalOffset = -width/2;
+                        break;
+                    case HorizontalAlignment.Center:
+                        horizontalOffset = 0.0;
+                        break;
+                    case HorizontalAlignment.Right:
+                        horizontalOffset = width/2;
+                        break;
+                }
+            }
+
             // Left
             var a = new Vector3(o.X - width/2 + horizontalOffset, o.Y + height/2 + verticalOffset);
             var b = new Vector3(o.X - width/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);

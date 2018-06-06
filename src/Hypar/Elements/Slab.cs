@@ -42,8 +42,7 @@ namespace Hypar.Elements
         /// <returns></returns>
         public static Slab WithinPerimeter(Polyline perimeter)
         {
-            var slab = new Slab();
-            slab._perimeter = perimeter;
+            var slab = new Slab(perimeter);
             return slab;
         }
 
@@ -74,11 +73,12 @@ namespace Hypar.Elements
             return slabs;
         }
 
-        internal Slab()
+        internal Slab(Polyline profile)
         {
-            this._perimeter = Profiles.Square(new Vector3(), 10,10);
+            this._perimeter = profile;
             this._elevation = 0.0;
             this._thickness = 0.2;
+            this._transform = new Transform(new Vector3(0, 0, this._elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
         }
 
         internal Slab(Polyline perimeter, IEnumerable<Polyline> holes, double elevation, double thickness, Material material = null, Transform transform = null) : base(material, transform)
@@ -115,6 +115,7 @@ namespace Hypar.Elements
         public Slab AtElevation(double elevation)
         {
             this._elevation = elevation;
+            this._transform = new Transform(new Vector3(0, 0, this._elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
             return this;
         }
 
@@ -200,6 +201,15 @@ namespace Hypar.Elements
             for(var i=0; i<slabArr.Length; i++)
             {
                 slabArr[i].WithHoles(holesArr[i]);
+            }
+            return slabs;
+        }
+
+        public static IEnumerable<Slab> OfMaterial(this IEnumerable<Slab> slabs, Material m)
+        {
+            foreach(var s in slabs)
+            {
+                s.OfMaterial(m);
             }
             return slabs;
         }

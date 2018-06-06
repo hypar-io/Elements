@@ -122,46 +122,10 @@ namespace Hypar
             return id;
         }
 
-        internal static int AddTriangleMesh(this Gltf gltf, List<byte> buffer, double[] vertices, double[] normals, int[] indices, int materialId, int? parent_index, Transform transform = null)
+        internal static int AddTriangleMesh(this Gltf gltf, List<byte> buffer, double[] vertices, double[] normals, int[] indices, 
+        double[] colors, double[] vMin, double[] vMax, double[] nMin, double[] nMax, double[] cMin, double[] cMax, int iMin, int iMax, int materialId, int? parent_index, Transform transform = null)
         {
             var m = new glTFLoader.Schema.Mesh();
-            
-            var v_max_x = double.MinValue;
-            var v_max_y = double.MinValue;
-            var v_max_z = double.MinValue;
-            var v_min_x = double.MaxValue;
-            var v_min_y = double.MaxValue;
-            var v_min_z = double.MaxValue;
-
-            for(var i=0; i<vertices.Length; i+=3)
-            {
-                v_max_x = Math.Max(v_max_x, vertices[i]);
-                v_min_x = Math.Min(v_min_x, vertices[i]);
-                v_max_y = Math.Max(v_max_y, vertices[i+1]);
-                v_min_y = Math.Min(v_min_y, vertices[i+1]);
-                v_max_z = Math.Max(v_max_z, vertices[i+2]);
-                v_min_z = Math.Min(v_min_z, vertices[i+2]);
-            }
-
-            var n_max_x = double.MinValue;
-            var n_max_y = double.MinValue;
-            var n_max_z = double.MinValue;
-            var n_min_x = double.MaxValue;
-            var n_min_y = double.MaxValue;
-            var n_min_z = double.MaxValue;
-
-            for(var i=0; i<normals.Length; i+=3)
-            {
-                n_max_x = Math.Max(n_max_x, normals[i]);
-                n_min_x = Math.Min(n_min_x, normals[i]);
-                n_max_y = Math.Max(n_max_y, normals[i+1]);
-                n_min_y = Math.Min(n_min_y, normals[i+1]);
-                n_max_z = Math.Max(n_max_z, normals[i+2]);
-                n_min_z = Math.Min(n_min_z, normals[i+2]);
-            }
-
-            var i_max = indices.Max();
-            var i_min = indices.Min();
 
             var vBuff = gltf.AddBufferView(0, buffer.Count(), vertices.Length * sizeof(float), null, null);
             var nBuff = gltf.AddBufferView(0, buffer.Count() + vertices.Length * sizeof(float), normals.Length * sizeof(float), null, null);
@@ -171,9 +135,9 @@ namespace Hypar
             buffer.AddRange(normals.SelectMany(v=>BitConverter.GetBytes((float)v)));
             buffer.AddRange(indices.SelectMany(v=>BitConverter.GetBytes(v)));
             
-            var vAccess = gltf.AddAccessor(vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length/3, new[]{(float)v_min_x, (float)v_min_y, (float)v_min_z}, new[]{(float)v_max_x,(float)v_max_y,(float)v_max_z}, Accessor.TypeEnum.VEC3);
-            var nAccess = gltf.AddAccessor(nBuff, 0, Accessor.ComponentTypeEnum.FLOAT, normals.Length/3, new[]{(float)n_min_x, (float)n_min_y, (float)n_min_z}, new[]{(float)n_max_x, (float)n_max_y, (float)n_max_z}, Accessor.TypeEnum.VEC3);
-            var iAccess = gltf.AddAccessor(iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_INT, indices.Length, new[]{(float)i_min}, new[]{(float)i_max}, Accessor.TypeEnum.SCALAR);
+            var vAccess = gltf.AddAccessor(vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length/3, new[]{(float)vMin[0], (float)vMin[1], (float)vMin[2]}, new[]{(float)vMax[0],(float)vMax[1],(float)vMax[2]}, Accessor.TypeEnum.VEC3);
+            var nAccess = gltf.AddAccessor(nBuff, 0, Accessor.ComponentTypeEnum.FLOAT, normals.Length/3, new[]{(float)nMin[0], (float)nMin[1], (float)nMin[2]}, new[]{(float)nMax[0], (float)nMax[1], (float)nMax[2]}, Accessor.TypeEnum.VEC3);
+            var iAccess = gltf.AddAccessor(iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_INT, indices.Length, new[]{(float)iMin}, new[]{(float)iMax}, Accessor.TypeEnum.SCALAR);
             
             var prim = new MeshPrimitive();
             prim.Indices = iAccess;

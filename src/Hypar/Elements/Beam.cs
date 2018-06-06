@@ -11,6 +11,12 @@ namespace Hypar.Elements
         private Polyline _profile;
         private Vector3 _up;
 
+        private double _verticalOffset = 0.0;
+        public double VerticalOffset => _verticalOffset;
+
+        private double _horizontalOffset = 0.0;
+        public double HorizontalOffset => _horizontalOffset;
+
         public Line CenterLine => _centerLine;
 
         public Polyline Profile => _profile;
@@ -42,6 +48,7 @@ namespace Hypar.Elements
         {
             var b = new Beam();
             b._centerLine = l;
+            b._transform = b._centerLine.GetTransform();
             return b;
         }
 
@@ -55,8 +62,7 @@ namespace Hypar.Elements
             var beams = new List<Beam>();
             foreach(var l in lines)
             {
-                var b = new Beam();
-                b._centerLine = l;
+                var b = Beam.AlongLine(l);
                 beams.Add(b);
             }
             return beams;
@@ -72,8 +78,7 @@ namespace Hypar.Elements
             var beams = new List<Beam>();
             foreach(var l in lines)
             {
-                var b = new Beam();
-                b._centerLine = l;
+                var b = Beam.AlongLine(l);
                 beams.Add(b);
             }
             return beams;
@@ -96,9 +101,11 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="profile"></param>
         /// <returns></returns>
-        public Beam WithProfile(Polyline profile)
+        public Beam WithProfile(Polyline profile, double verticalOffset = 0.0, double horizontalOffset = 0.0)
         {
             this._profile = profile;
+            this._verticalOffset = verticalOffset;
+            this._horizontalOffset = horizontalOffset;
             return this;
         }
 
@@ -107,7 +114,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public Beam WithProfile(Func<Beam,Polyline> selector)
+        public Beam WithProfile(Func<Beam,Polyline> selector, double verticalOffset = 0.0, double horizontalOffset = 0.0)
         {
             this._profile = selector(this);
             return this; 
@@ -121,6 +128,7 @@ namespace Hypar.Elements
         public Beam WithUpAxis(Vector3 up)
         {
             this._up = up;
+            this._transform = this._centerLine.GetTransform(up);
             return this;
         }
 
@@ -142,7 +150,10 @@ namespace Hypar.Elements
         /// <returns></returns>
         public static IEnumerable<Beam> WithProfile(this IEnumerable<Beam> beams, Polyline profile, Action<Beam,Polyline> predicate = null)
         {
-            beams.Select(b=>b.WithProfile(profile));
+            foreach(var b in beams)
+            {
+                b.WithProfile(profile);
+            }
             return beams;
         }
 
@@ -154,7 +165,10 @@ namespace Hypar.Elements
         /// <returns></returns>
         public static IEnumerable<Beam> WithProfile(this IEnumerable<Beam> beams, Func<Beam,Polyline> profileSelector)
         {
-            beams.Select(b=>b.WithProfile(profileSelector(b)));
+            foreach(var b in beams)
+            {
+                beams.WithProfile(profileSelector(b));
+            }
             return beams;
         }
 
@@ -166,7 +180,19 @@ namespace Hypar.Elements
         /// <returns></returns>
         public static IEnumerable<Beam> OfMaterial(this IEnumerable<Beam>beams, Material material)
         {
-            beams.Select(b=>b.OfMaterial(material));
+            foreach(var b in beams)
+            {
+                b.OfMaterial(material);
+            }
+            return beams;
+        }
+
+        public static IEnumerable<Beam> WithUpAxis(this IEnumerable<Beam> beams, Vector3 v)
+        {
+            foreach(var b in beams)
+            {
+                b.WithUpAxis(v);
+            }
             return beams;
         }
     }

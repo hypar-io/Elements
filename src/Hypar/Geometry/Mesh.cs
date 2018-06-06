@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 
 namespace Hypar.Geometry
@@ -16,7 +17,54 @@ namespace Hypar.Geometry
         private List<double> m_normals = new List<double>();
         private List<int> m_indices = new List<int>();
 
+        private int m_index_max;
+        private int m_index_min;
+        
+        private double[] m_v_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
+        private double[] m_v_min= new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
+        private double[] m_n_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
+        private double[] m_n_min = new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
+        private double[] m_c_max = new double[4]{double.MinValue, double.MinValue, double.MinValue, double.MaxValue};
+        private double[] m_c_min = new double[4]{double.MinValue, double.MinValue, double.MinValue, double.MinValue};
+
+        private List<double> m_vertex_colors = new List<double>();
+
         private int m_current_vertex_index = 0;
+
+        public double[] VMax
+        {
+            get{return m_v_max;}
+        }
+        public double[] VMin
+        {
+            get{return m_v_min;}
+        }
+        public double[] NMax
+        {
+            get{return m_n_max;}
+        }
+        public double[] NMin
+        {
+            get{return m_n_min;}
+        }
+        public double[] CMax
+        {
+            get{return m_c_max;}
+        }
+        public double[] CMin
+        {
+            get{return m_c_min;}
+        }
+
+        public int IMax
+        {
+            get{return m_index_max;}
+        }
+
+        public int IMin
+        {
+            get{return m_index_min;}
+        }
 
         public IEnumerable<double> Vertices
         {
@@ -33,6 +81,11 @@ namespace Hypar.Geometry
             get{return m_indices;}
         }
 
+        public IEnumerable<double> VertexColors
+        {
+            get{return m_vertex_colors;}
+        }
+
         public Mesh()
         {
             // An empty mesh.
@@ -45,7 +98,7 @@ namespace Hypar.Geometry
             this.m_indices.AddRange(indices);
         }
 
-        public void AddTri(Vector3 a, Vector3 b, Vector3 c)
+        public void AddTri(Vector3 a, Vector3 b, Vector3 c, Color ac = null, Color bc = null, Color cc = null)
         {
             var v1 = b - a;
             var v2 = c - a;
@@ -56,25 +109,81 @@ namespace Hypar.Geometry
                 return;
             }
 
-            this.m_normals.AddRange(n1.ToArray());
-            this.m_normals.AddRange(n1.ToArray());
-            this.m_normals.AddRange(n1.ToArray());
-
-            this.m_vertices.AddRange(a.ToArray());
-            this.m_vertices.AddRange(b.ToArray());
-            this.m_vertices.AddRange(c.ToArray());
+            if(ac != null && bc != null && cc != null)
+            {
+                AddVertex(a, n1, ac);
+                AddVertex(b, n1, bc);
+                AddVertex(c, n1, cc);
+            }
+            else
+            {
+                AddVertex(a, n1);
+                AddVertex(b, n1);
+                AddVertex(c, n1);
+            }
 
             var start = m_current_vertex_index;
             this.m_indices.AddRange(new[]{start,start+1,start+2});
+            m_index_max = Math.Max(m_index_max, start);
+            m_index_max = Math.Max(m_index_max, start+1);
+            m_index_max = Math.Max(m_index_max, start+2);
+            m_index_min = Math.Min(m_index_min, start);
+            m_index_min = Math.Min(m_index_min, start+1);
+            m_index_min = Math.Min(m_index_min, start+2);
             m_current_vertex_index += 3;
         }
 
-        public void AddTri(Vector3[] v)
+        public void AddTri(Vector3[] v, Color[] c = null)
         {
-            AddTri(v[0], v[1], v[2]);
+            if(c != null)
+            {
+                AddTri(v[0], v[1], v[2], c[0], c[1], c[2]);
+            }
+            else
+            {
+                AddTri(v[0], v[1], v[2]);
+            }
         }
 
-        public void AddQuad(Vector3[] v)
+        private void AddVertex(Vector3 v, Vector3 n, Color c = null)
+        {
+            var vArr = v.ToArray();
+            var nArr = n.ToArray();
+        
+            this.m_vertices.AddRange(v.ToArray());
+            this.m_normals.AddRange(n.ToArray());
+            
+            m_v_max[0] = Math.Max(m_v_max[0], vArr[0]);
+            m_v_max[1] = Math.Max(m_v_max[1], vArr[1]);
+            m_v_max[2] = Math.Max(m_v_max[2], vArr[2]);
+            m_v_min[0] = Math.Min(m_v_min[0], vArr[0]);
+            m_v_min[1] = Math.Min(m_v_min[1], vArr[1]);
+            m_v_min[2] = Math.Min(m_v_min[2], vArr[2]);
+
+            m_n_max[0] = Math.Max(m_n_max[0], nArr[0]);
+            m_n_max[1] = Math.Max(m_n_max[1], nArr[1]);
+            m_n_max[2] = Math.Max(m_n_max[2], nArr[2]);
+            m_n_min[0] = Math.Min(m_n_min[0], nArr[0]);
+            m_n_min[1] = Math.Min(m_n_min[1], nArr[1]);
+            m_n_min[2] = Math.Min(m_n_min[2], nArr[2]);
+
+            if(c != null)
+            {
+                var cArr = c.ToArray();
+                this.m_vertex_colors.AddRange(c.ToArray());
+
+                m_c_max[0] = Math.Max(m_c_max[0], cArr[0]);
+                m_c_max[1] = Math.Max(m_c_max[1], cArr[1]);
+                m_c_max[2] = Math.Max(m_c_max[2], cArr[2]);
+                m_c_max[3] = Math.Max(m_c_max[3], cArr[3]);
+                m_c_min[0] = Math.Min(m_c_min[0], cArr[0]);
+                m_c_min[1] = Math.Min(m_c_min[1], cArr[1]);
+                m_c_min[2] = Math.Min(m_c_min[2], cArr[2]);
+                m_c_min[3] = Math.Min(m_c_min[3], cArr[3]);
+            }
+        }
+
+        public void AddQuad(Vector3[] v, Color[] c = null)
         {
             var v1 = v[1] - v[0];
             var v2 = v[2] - v[0];
@@ -85,18 +194,31 @@ namespace Hypar.Geometry
                 return;
             }
 
-            this.m_normals.AddRange(n1.ToArray());
-            this.m_normals.AddRange(n1.ToArray());
-            this.m_normals.AddRange(n1.ToArray());
-            this.m_normals.AddRange(n1.ToArray());
-
-            this.m_vertices.AddRange(v[0].ToArray());
-            this.m_vertices.AddRange(v[1].ToArray());
-            this.m_vertices.AddRange(v[2].ToArray());
-            this.m_vertices.AddRange(v[3].ToArray());
+            if(c != null)
+            {
+                AddVertex(v[0], n1, c[0]);
+                AddVertex(v[1], n1, c[1]);
+                AddVertex(v[2], n1, c[2]);
+                AddVertex(v[3], n1, c[3]);
+            }
+            else
+            {
+                AddVertex(v[0], n1);
+                AddVertex(v[1], n1);
+                AddVertex(v[2], n1);
+                AddVertex(v[3], n1);
+            }
 
             var start = m_current_vertex_index;
             this.m_indices.AddRange(new[]{start,start+1,start+2,start,start+2,start+3});
+            m_index_max = Math.Max(m_index_max, start);
+            m_index_max = Math.Max(m_index_max, start+1);
+            m_index_max = Math.Max(m_index_max, start+2);
+            m_index_max = Math.Max(m_index_max, start+3);
+            m_index_min = Math.Min(m_index_min, start);
+            m_index_min = Math.Min(m_index_min, start+1);
+            m_index_min = Math.Min(m_index_min, start+2);
+            m_index_min = Math.Min(m_index_min, start+3);
             m_current_vertex_index += 4;
         }
 
@@ -127,7 +249,16 @@ namespace Hypar.Geometry
 
         public override string ToString()
         {
-            return $"Vertices:{m_vertices.Count/3}, Normals:{m_normals.Count/3}, Indices:{m_indices.Count}";
+            return $@"
+Vertices:{m_vertices.Count/3}, 
+Normals:{m_normals.Count/3}, 
+Indices:{m_indices.Count}, 
+VMax:{string.Join(",", m_v_max.Select(v=>v.ToString()))}, 
+VMin:{string.Join(",", m_v_min.Select(v=>v.ToString()))}, 
+NMax:{string.Join(",", m_n_max.Select(v=>v.ToString()))}, 
+NMin:{string.Join(",", m_n_min.Select(v=>v.ToString()))}, 
+IMax:{m_index_max}, 
+IMin:{m_index_min}";
         }
 
         /// <summary>

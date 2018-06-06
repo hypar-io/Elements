@@ -209,7 +209,10 @@ namespace Hypar.Elements
                 {
                     var mp = e as IMeshProvider;
                     var mesh = mp.Tessellate();
-                    gltf.AddTriangleMesh(_buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), mesh.Indices.ToArray(), materials[e.Material.Id], null, e.Transform);
+                    gltf.AddTriangleMesh(_buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), 
+                                        mesh.Indices.ToArray(), mesh.VertexColors.ToArray(), 
+                                        mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax, 
+                                        mesh.IMin, mesh.IMax, materials[e.Material.Id], null, e.Transform);
 
                 }
             }

@@ -96,7 +96,8 @@ namespace Hypar.Elements
         public Mesh Tessellate()
         {
             var mesh = new Mesh();
-            var vCount = this.Perimeter.Vertices.Count();
+            var vCount = this.Perimeter.Count();
+
             if (vCount == 3)
             {
                 mesh.AddTri(this.Perimeter.ToArray());
@@ -112,6 +113,18 @@ namespace Hypar.Elements
         {
             this._material = m;
             return this;
+        }
+    }
+
+    public static class PanelExtensions
+    {
+        public static IEnumerable<Panel> OfMaterial(this IEnumerable<Panel> panels, Material m)
+        {
+            foreach(var p in panels)
+            {
+                p.OfMaterial(m);
+            }
+            return panels;
         }
     }
 }
