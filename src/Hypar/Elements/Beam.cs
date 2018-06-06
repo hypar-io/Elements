@@ -25,6 +25,7 @@ namespace Hypar.Elements
 
         internal Beam() : base(BuiltIntMaterials.Default,null)
         {
+            this._centerLine = new Line(Vector3.Origin(), Vector3.ByXYZ(1,0,0));
             this._profile = Profiles.WideFlangeProfile();
         }
 
@@ -38,7 +39,7 @@ namespace Hypar.Elements
             }
             this._transform = centerLine.GetTransform(up);
         }
-        
+
         /// <summary>
         /// Construct a beam along a line.
         /// </summary>
@@ -146,9 +147,9 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="beams"></param>
         /// <param name="profile"></param>
-        /// <param name="predicate"></param>
+        /// <param name="selector"></param>
         /// <returns></returns>
-        public static IEnumerable<Beam> WithProfile(this IEnumerable<Beam> beams, Polyline profile, Action<Beam,Polyline> predicate = null)
+        public static IEnumerable<Beam> WithProfile(this IEnumerable<Beam> beams, Polyline profile, Func<Beam,Polyline> selector = null)
         {
             foreach(var b in beams)
             {
