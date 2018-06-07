@@ -71,7 +71,7 @@ namespace Hypar.Elements
             return panels;
         }
 
-        internal Panel(Material material = null, Transform transform = null) : base(material, transform)
+        public Panel(Material material = null, Transform transform = null) : base(material, transform)
         {
             this._perimeter = Profiles.Square(new Vector3(), 10, 10);
         }
@@ -83,7 +83,7 @@ namespace Hypar.Elements
         /// <param name="material"></param>
         /// <param name="transform"></param>
         /// <returns></returns>
-        internal Panel(Polyline perimeter, Material material, Transform transform = null) : base(material, transform)
+        public Panel(Polyline perimeter, Material material, Transform transform = null) : base(material, transform)
         {
             var vCount = perimeter.Vertices.Count();
             if (vCount > 4 || vCount < 3)

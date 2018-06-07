@@ -57,7 +57,6 @@ namespace Hypar.Geometry
         /// <returns>A collection of Lines.</returns>
         public IEnumerable<Line> Explode()
         {
-            var lines = new List<Line>();
             for(var i=0; i<_vertices.Count; i++)
             {
                 var a = _vertices[i];
@@ -71,9 +70,8 @@ namespace Hypar.Geometry
                     b = _vertices[i+1];
                 }
                 
-                lines.Add(new Line(a, b));
+                yield return new Line(a, b);
             }
-            return lines;
         }
 
         public Vector3[] ToArray()

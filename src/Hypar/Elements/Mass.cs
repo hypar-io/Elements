@@ -30,27 +30,8 @@ namespace Hypar.Elements
 
         public double TopElevation => _topElevation;
 
-        public static Mass WithBottomProfile(Polyline profile)
-        {
-            if(profile.Count() == 0)
-            {
-                throw new ArgumentException(Messages.EMPTY_POLYLINE_EXCEPTION, "profile");
-            }
 
-            var m = new Mass(profile);
-            return m;
-        }
-
-        internal Mass(Polyline profile)
-        {
-            this._bottom = profile;
-            this._top = profile;
-            this._bottomElevation = 0.0;
-            this._topElevation = 10.0;
-            this._material = BuiltIntMaterials.Mass;
-        }
-
-        internal Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation, Material material, Transform transform = null) : base(material, transform)
+        public Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation, Transform transform = null) : base(BuiltIntMaterials.Mass, transform)
         {
             if (bottom.Vertices.Count() != top.Vertices.Count())
             {
@@ -66,6 +47,7 @@ namespace Hypar.Elements
             this._bottom = bottom;
             this._bottomElevation = bottomElevation;
             this._topElevation = topElevation;
+            this._material = BuiltIntMaterials.Mass;
         }
 
         public IEnumerable<Polyline> Faces()
@@ -109,6 +91,27 @@ namespace Hypar.Elements
             return mesh;
         }
 
+        /// <summary>
+        /// Set the bottom profile of the mass.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public Mass WithBottomProfile(Polyline profile)
+        {
+            if(profile.Count() == 0)
+            {
+                throw new ArgumentException(Messages.EMPTY_POLYLINE_EXCEPTION, "profile");
+            }
+
+            this._bottom = profile;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the top elevation of the mass.
+        /// </summary>
+        /// <param name="elevation"></param>
+        /// <returns></returns>
         public Mass WithTopAtElevation(double elevation)
         {
             if(elevation <= this._bottomElevation)
@@ -119,6 +122,11 @@ namespace Hypar.Elements
             return this;
         }
 
+        /// <summary>
+        /// Set the bottom elevation of the mass.
+        /// </summary>
+        /// <param name="elevation"></param>
+        /// <returns></returns>
         public Mass WithBottomAtElevation(double elevation)
         {
             if(elevation >= this._topElevation)
@@ -128,7 +136,12 @@ namespace Hypar.Elements
             this._bottomElevation = elevation;
             return this;
         }
-    
+
+        /// <summary>
+        /// Set the top profile of the mass.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
         public Mass WithTopProfile(Polyline profile)
         {
             if(profile.Count() == 0)

@@ -7,6 +7,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RuntimeIdentifier>osx.10.13-x64</RuntimeIdentifier>
   </PropertyGroup>
 
 </Project>

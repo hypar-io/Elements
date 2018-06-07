@@ -25,56 +25,60 @@ namespace examples
             var columns = CreateColums(columnProfile, material);
             var beams = CreateBeams(girderProfile, material, perimeter);
             var slabs = CreateSlabs(perimeter);
-
-            var panelMaterial = new Material("panel", 0.0f, 1.0f, 1.0f, 0.75f, 1.0f, 1.0f);
+            
+            
 
             var massPerimeter = Profiles.Square(Vector3.Origin(), 22, 22);
-            var mass = Mass.WithBottomProfile(massPerimeter)
+            var mass = ElementsFactory.CreateMass()
+                            .WithBottomProfile(massPerimeter)
                             .WithTopProfile(massPerimeter)
                             .WithTopAtElevation(20);
 
-            var grids = Grid.WithinPerimeters(mass.Faces())
+            var faces = mass.Faces();
+            
+            var grids = ElementsFactory.CreateGrids(4)
+                            .WithinPerimeters(faces)
                             .WithUDivisions(5)
-                            .WithVDivisions(5);
+                            .WithVDivisions(new[]{0.0, 0.4, 0.55, 1.0});
             
             var panelProfile = Profiles.Square(Vector3.Origin(), 0.05, 1.0, 0.0, 0.0);
+            
+            // Create a function which generates a panel given a perimeter.
+            var panelMaterial = new Material("panel", 0.0f, 1.0f, 1.0f, 0.75f, 1.0f, 1.0f);
+            var createGlazedPanel = new Func<Polyline, IEnumerable<Element>>((Polyline p) => {
+                var panel = Panel.WithinPerimeter(p).OfMaterial(panelMaterial);
+
+                var mullions = Beam.AlongLines(p.Explode())
+                                    .WithProfile(panelProfile)
+                                    .WithUpAxis(p.Normal())
+                                    .OfMaterial(BuiltIntMaterials.Steel);
+
+                var results = new List<Element>();
+                results.Add(panel);
+                results.AddRange(mullions);
+                return results;
+            });
+
+            var opaquePanelMaterial = new Material("opaquePanel", 0.0f, 0.0f, 0.0f, 1.0f, 0.1f, 0.1f);
+            var createSolidPanel = new Func<Polyline, IEnumerable<Element>>((Polyline p) => {
+                var panel = Panel.WithinPerimeter(p).OfMaterial(opaquePanelMaterial);
+                return new[]{panel};
+            });
+
             foreach(var g in grids)
             {
-                var cells = g.Cells();
+                var panelElements = g.InAllCellsAlongRow(0, createGlazedPanel);
+                var panelElements2 = g.InAllCellsAlongRow(2, createGlazedPanel);
+                var opaquePanels = g.InAllCellsAlongRow(1, createSolidPanel);
 
-                var panels = Panel.WithinPerimeters(cells)
-                                    .OfMaterial(panelMaterial);
-                model.AddElements(panels);
-
-                foreach(var c in cells)
-                {
-                    var mullions = Beam.AlongLines(c.Explode())
-                                        .WithProfile(panelProfile)
-                                        .WithUpAxis(c.Normal())
-                                        .OfMaterial(BuiltIntMaterials.Steel);
-
-                    model.AddElements(mullions);
-                    
-                }
-                
+                model.AddElements(panelElements);
+                model.AddElements(panelElements2);
+                model.AddElements(opaquePanels);
             }
+
             model.AddElements(columns);
             model.AddElements(beams);
             model.AddElements(slabs);
-            // model.AddElement(mass);
-
-            // var wf = Profiles.WideFlangeProfile(0.5, 1.0, 0.1, 0.1);
-            // var sys1 = new BeamSystem(slabs.ElementAt(0), 5, wf, material);
-            // foreach(var b in sys1.Beams)
-            // {
-            //     model.AddElement(b);
-            // }
-
-            // var sys2 = new BeamSystem(slabs.ElementAt(1), 5, wf, material);
-            // foreach(var b in sys2.Beams)
-            // {
-            //     model.AddElement(b);
-            // }
 
             Console.WriteLine($"{sw.Elapsed} for creating building elements.");
             sw.Reset();
