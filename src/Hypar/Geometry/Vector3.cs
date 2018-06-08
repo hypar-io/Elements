@@ -39,7 +39,6 @@ namespace Hypar.Geometry
 
         public static IEnumerable<Vector3> AtNEqualSpacesAlongLine(Line l, int n, bool includeEnds = false)
         {   
-            var pts = new List<Vector3>();
             var div = 1.0/(double)(n + 1);
             for(var t=0.0; t<=1.0; t+=div)
             {
@@ -49,21 +48,17 @@ namespace Hypar.Geometry
                 {
                     continue;
                 }
-                pts.Add(pt);
+                yield return pt;
             }
-
-            return pts;
         }
 
         public static IEnumerable<IEnumerable<Vector3>> AtNEqualSpacesAlongLines(IEnumerable<Line> lines, int n, bool includeEnds = false)
         {
-            var vs = new List<IEnumerable<Vector3>>();
             foreach(var l in lines)
             {
                 var vs1 = Vector3.AtNEqualSpacesAlongLine(l, n, includeEnds);
-                vs.Add(vs1);
+                yield return vs1;
             }
-            return vs;
         }
 
         public Vector3()
@@ -111,9 +106,19 @@ namespace Hypar.Geometry
             return v.X * X + v.Y * Y + v.Z * Z;
         }
 
+        /// <summary>
+        /// The angle in radians from this vector to another vector.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public double AngleTo(Vector3 v)
         {
             return Math.Acos((Dot(v)/(Length()*v.Length())));
+        }
+
+        public Vector3 Average(Vector3 v)
+        {
+            return new Vector3((this.X + v.X)/2, (this.Y + v.Y)/2, (this.Z + v.Z)/2).Normalized();
         }
 
         public Vector3 ProjectOnto(Vector3 a)
@@ -172,16 +177,18 @@ namespace Hypar.Geometry
         {
             return $"X:{X},Y:{Y},Z:{Z}";
         }
-        
-        public override bool Equals(object obj)
-        {
-            if(obj.GetType() != GetType())
-            {
-                return false;
-            }
 
-            var v = (Vector3)obj;
-            return X == v.X && Y == v.Y && Z==v.Z;
+        public bool IsAlmostEqualTo(Vector3 v)
+        {
+            const double tolerance = 0.00001;
+
+            if(Math.Abs(this.X - v.X) < tolerance &&
+                Math.Abs(this.Y - v.Y) < tolerance &&
+                Math.Abs(this.Z - v.Z) < tolerance)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

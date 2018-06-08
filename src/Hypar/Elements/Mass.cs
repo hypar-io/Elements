@@ -50,12 +50,28 @@ namespace Hypar.Elements
             this._material = BuiltIntMaterials.Mass;
         }
 
+        public IEnumerable<Line> VerticalEdges()
+        {
+            foreach(var f in Faces())
+            {
+                yield return f.Segments().ElementAt(1);
+            }
+            
+        }
+
+        public IEnumerable<Line> HorizontalEdges()
+        {
+            foreach(var f in Faces())
+            {
+                yield return f.Segments().ElementAt(0);
+                yield return f.Segments().ElementAt(2);
+            }
+        }
+
         public IEnumerable<Polyline> Faces()
         {
             var b = this._bottom.Vertices.ToArray();
             var t = this._top.Vertices.ToArray();
-
-            var sides = new List<Polyline>();
 
             for (var i = 0; i < b.Length; i++)
             {
@@ -72,10 +88,8 @@ namespace Hypar.Elements
                 var v2n = new Vector3(v2.X, v2.Y, this._bottomElevation);
                 var v3n = new Vector3(v3.X, v3.Y, this._topElevation);
                 var v4n = new Vector3(v4.X, v4.Y, this._topElevation);
-                var side = new Polyline(new[] { v1n, v2n, v3n, v4n });
-                sides.Add(side);
+                yield return new Polyline(new[] { v1n, v2n, v3n, v4n });
             }
-            return sides;
         }
         
         public Mesh Tessellate()

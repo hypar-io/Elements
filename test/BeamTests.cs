@@ -12,7 +12,7 @@ namespace Hypar.Tests
         public void Single_AlongLine_Sucess()
         {
             var l = Line.FromStart(Vector3.Origin()).ToEnd(Vector3.ByXYZ(5,5,5));
-            var b = Beam.AlongLine(l);
+            var b = ElementsFactory.CreateBeam().AlongLine(l);
             Assert.Equal(BuiltIntMaterials.Default, b.Material);
             Assert.Equal(l, b.CenterLine);
             Assert.Equal(Profiles.WideFlangeProfile(), b.Profile);
@@ -23,7 +23,7 @@ namespace Hypar.Tests
         {
             var l1 = Line.FromStart(Vector3.Origin()).ToEnd(Vector3.ByXYZ(5,5,5));
             var l2 = Line.FromStart(Vector3.Origin()).ToEnd(Vector3.XAxis());
-            var beams = Beam.AlongLines(new[]{l1, l2});
+            var beams = ElementsFactory.CreateBeams(2).AlongLines(new[]{l1, l2});
             Assert.Equal(2, beams.Count());
         }
 
@@ -32,7 +32,7 @@ namespace Hypar.Tests
         {
             var l1 = Line.FromStart(Vector3.Origin()).ToEnd(Vector3.ByXYZ(5,5,5));
             var l2 = Line.FromStart(Vector3.Origin()).ToEnd(Vector3.XAxis());
-            var beams = Beam.AlongLines(l1,l2);
+            var beams = ElementsFactory.CreateBeams(2).AlongLines(l1,l2);
             Assert.Equal(2, beams.Count());
         }
 

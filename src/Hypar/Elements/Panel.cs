@@ -73,7 +73,7 @@ namespace Hypar.Elements
 
         public Panel(Material material = null, Transform transform = null) : base(material, transform)
         {
-            this._perimeter = Profiles.Square(new Vector3(), 10, 10);
+            this._perimeter = Profiles.Rectangular(new Vector3(), 10, 10);
         }
 
         /// <summary>

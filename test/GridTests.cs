@@ -25,17 +25,20 @@ namespace Hypar.Tests
                 var panel = Panel.WithinPerimeter(c)
                                 .OfMaterial(BuiltIntMaterials.Glass);
 
-                var beam1 = Beam.AlongLine(c.Segment(0))
+                var beam1 = ElementsFactory.CreateBeam()
+                                .AlongLine(c.Segment(0))
                                 .WithProfile(profile)
                                 .WithUpAxis(panel.Normal)
                                 .OfMaterial(BuiltIntMaterials.Steel);
                                 
-                var beam2 = Beam.AlongLine(c.Segment(2))
+                var beam2 = ElementsFactory.CreateBeam()
+                                .AlongLine(c.Segment(2))
                                 .WithProfile(profile)
                                 .WithUpAxis(panel.Normal)
                                 .OfMaterial(BuiltIntMaterials.Steel);
                                 
-                var beam3 = Beam.AlongLine(c.Segment(1))
+                var beam3 = ElementsFactory.CreateBeam()
+                                .AlongLine(c.Segment(1))
                                 .WithProfile(profile)
                                 .WithUpAxis(panel.Normal)
                                 .OfMaterial(BuiltIntMaterials.Steel);

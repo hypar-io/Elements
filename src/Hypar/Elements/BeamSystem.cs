@@ -34,7 +34,7 @@ namespace Hypar.Elements
 
         public BeamSystem(Slab slab, int count, Polyline profile, Material material, Transform transform = null)
         {
-            var edges = slab.Perimeter.Explode().ToArray();
+            var edges = slab.Perimeter.Segments().ToArray();
             var e1 = edges[0];
             var e2 = edges[2].Reversed();
             var depth = profile.BoundingBox.Max.Y - profile.BoundingBox.Min.Y;

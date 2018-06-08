@@ -11,12 +11,6 @@ namespace Hypar.Elements
         private Polyline _profile;
         private Vector3 _up;
 
-        private double _verticalOffset = 0.0;
-        public double VerticalOffset => _verticalOffset;
-
-        private double _horizontalOffset = 0.0;
-        public double HorizontalOffset => _horizontalOffset;
-
         public Line CenterLine => _centerLine;
 
         public Polyline Profile => _profile;
@@ -45,44 +39,11 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="l"></param>
         /// <returns></returns>
-        public static Beam AlongLine(Line l)
+        public Beam AlongLine(Line l)
         {
-            var b = new Beam();
-            b._centerLine = l;
-            b._transform = b._centerLine.GetTransform();
-            return b;
-        }
-
-        /// <summary>
-        /// Construct many beams along a collection of lines.
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <returns></returns>
-        public static IEnumerable<Beam> AlongLines(IEnumerable<Line> lines)
-        {
-            var beams = new List<Beam>();
-            foreach(var l in lines)
-            {
-                var b = Beam.AlongLine(l);
-                beams.Add(b);
-            }
-            return beams;
-        }
-
-        /// <summary>
-        /// Construct many beams along a collection of lines.
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <returns></returns>
-        public static IEnumerable<Beam> AlongLines(params Line[] lines)
-        {
-            var beams = new List<Beam>();
-            foreach(var l in lines)
-            {
-                var b = Beam.AlongLine(l);
-                beams.Add(b);
-            }
-            return beams;
+            this._centerLine = l;
+            this._transform = this._centerLine.GetTransform();
+            return this;
         }
 
         public Mesh Tessellate()
@@ -102,11 +63,9 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="profile"></param>
         /// <returns></returns>
-        public Beam WithProfile(Polyline profile, double verticalOffset = 0.0, double horizontalOffset = 0.0)
+        public Beam WithProfile(Polyline profile)
         {
             this._profile = profile;
-            this._verticalOffset = verticalOffset;
-            this._horizontalOffset = horizontalOffset;
             return this;
         }
 
@@ -115,7 +74,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="selector"></param>
         /// <returns></returns>
-        public Beam WithProfile(Func<Beam,Polyline> selector, double verticalOffset = 0.0, double horizontalOffset = 0.0)
+        public Beam WithProfile(Func<Beam,Polyline> selector)
         {
             this._profile = selector(this);
             return this; 
@@ -142,6 +101,34 @@ namespace Hypar.Elements
 
     public static class BeamCollectionExtensions
     {   
+        /// <summary>
+        /// Construct many beams along a collection of lines.
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        public static IEnumerable<Beam> AlongLines(this IEnumerable<Beam> beams, IEnumerable<Line> lines)
+        {   
+            for(var i=0;i<beams.Count(); i++)
+            {
+                beams.ElementAt(i).AlongLine(lines.ElementAt(i));
+            }
+            return beams;
+        }
+
+        /// <summary>
+        /// Construct many beams along a collection of lines.
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        public static IEnumerable<Beam> AlongLines(this IEnumerable<Beam> beams, params Line[] lines)
+        {
+            for(var i=0;i<beams.Count(); i++)
+            {
+                beams.ElementAt(i).AlongLine(lines.ElementAt(i));
+            }
+            return beams;
+        }
+
         /// <summary>
         /// Set the profile of a collection of beams.
         /// </summary>

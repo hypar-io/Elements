@@ -12,7 +12,7 @@ namespace Hypar.Tests
         [Fact]
         public void Single_WithinPerimeters_Valid()
         {
-            var p = Profiles.Square();
+            var p = Profiles.Rectangular();
             var slab = Slab.WithinPerimeter(p);
             Assert.Equal(0.0, slab.Elevation);
             Assert.Equal(0.2, slab.Thickness);
@@ -22,8 +22,8 @@ namespace Hypar.Tests
         [Fact]
         public void Collection_WithinPerimeters_Valid()
         {
-            var p1 = Profiles.Square(width:5.0, height:10.0);
-            var p2 = Profiles.Square(width:1.0, height:2.0);
+            var p1 = Profiles.Rectangular(width:5.0, height:10.0);
+            var p2 = Profiles.Rectangular(width:1.0, height:2.0);
             var slabs = Slab.WithinPerimeters(new[]{p1,p2});
             Assert.Equal(2, slabs.Count());
         }
@@ -31,8 +31,8 @@ namespace Hypar.Tests
         [Fact]
         public void Params_WithinPerimeters_Valid()
         {
-            var p1 = Profiles.Square(width:5.0, height:10.0);
-            var p2 = Profiles.Square(width:1.0, height:2.0);
+            var p1 = Profiles.Rectangular(width:5.0, height:10.0);
+            var p2 = Profiles.Rectangular(width:1.0, height:2.0);
             var slabs = Slab.WithinPerimeters(p1,p2);
             Assert.Equal(2, slabs.Count());
         }
@@ -82,7 +82,7 @@ namespace Hypar.Tests
         public void ZeroThickness_WithThickness_ThrowsException()
         {
             var model = new Model();
-            var poly = Profiles.Square(width:20, height:20);
+            var poly = Profiles.Rectangular(width:20, height:20);
             Assert.Throws<ArgumentOutOfRangeException>(()=>Slab.WithinPerimeter(poly)
                                                                 .WithThickness(0.0));
         }

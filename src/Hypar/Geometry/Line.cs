@@ -49,7 +49,7 @@ namespace Hypar.Geometry
         /// <returns></returns>
         public Line ToEnd(Vector3 end)
         {
-            if (this._start.Equals(end))
+            if (this._start.IsAlmostEqualTo(end))
             {
                 throw new Exception("The start and end of the Line cannot be the same.");
             }
@@ -65,7 +65,7 @@ namespace Hypar.Geometry
 
         internal Line(Vector3 start, Vector3 end)
         {
-            if (start.Equals(end))
+            if (start.IsAlmostEqualTo(end))
             {
                 throw new Exception("The start and end of the Line cannot be the same.");
             }

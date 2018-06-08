@@ -4,7 +4,7 @@ namespace Hypar.Elements
 {
     public static class Profiles
     {
-        public static Polyline Square(Vector3 origin = null, double width = 1.0, double height = 1.0, double vo = 0.0, double ho = 0.0)
+        public static Polyline Rectangular(Vector3 origin = null, double width = 1.0, double height = 1.0, double vo = 0.0, double ho = 0.0)
         {
             if(origin == null)
             {

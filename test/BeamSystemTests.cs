@@ -25,7 +25,7 @@ namespace Hypar.Tests
             var cls = Line.FromStart(v1).ToEnd(v2);
 
             // Create beams along all of those lines.
-            var beams = Beam.AlongLines(cls).WithProfile(profile);
+            var beams = ElementsFactory.CreateBeams(5).AlongLines(cls).WithProfile(profile);
 
             model.AddElements(beams);
             Assert.Equal(5, model.Elements.Count);

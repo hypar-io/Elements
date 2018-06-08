@@ -11,6 +11,16 @@ namespace Hypar.Elements
         private double[] _vDiv;
         private Polyline _perimeter;
 
+        public int Columns
+        {
+            get{return _uDiv.Length - 1;}
+        }
+
+        public int Rows
+        {
+            get{return _vDiv.Length - 1;}
+        }
+        
         private double[] CalculateEqualDivisions(int n)
         {
             var uStep = 1.0/(double)n;
@@ -64,7 +74,7 @@ namespace Hypar.Elements
         private Vector3[][] CalculateGridPoints()
         {
             var pts = new Vector3[this._uDiv.Length][];
-            var lines = this._perimeter.Explode();
+            var lines = this._perimeter.Segments();
             var edge1 = lines.ElementAt(0).Reversed();
             var edge2 = lines.ElementAt(2);
 
@@ -190,6 +200,26 @@ namespace Hypar.Elements
             foreach(var c in this.CellsInRow(n))
             {
                 result.AddRange(creator(c));
+            }
+            return result;
+        }
+
+        public IEnumerable<Element> AlongEachRowEdge(Func<Line, Element> creator)
+        {
+            var result = new List<Element>();
+            foreach(var c in this.Cells())
+            {
+                result.Add(creator(c.Segment(0)));
+            }
+            return result;
+        }
+
+        public IEnumerable<Element> AlongEachColumnEdge(Func<Line, Element> creator)
+        {
+            var result = new List<Element>();
+            foreach(var c in this.Cells())
+            {
+                result.Add(creator(c.Segment(1)));
             }
             return result;
         }

@@ -11,7 +11,7 @@ namespace Hypar.Tests
         [Fact]
         public void Single_WithinPerimeter_Success()
         {
-            var p = Profiles.Square();
+            var p = Profiles.Rectangular();
             var panel = Panel.WithinPerimeter(p);
             Assert.Equal(BuiltIntMaterials.Default, panel.Material);
             Assert.Equal(Vector3.ZAxis(), panel.Normal);
@@ -21,8 +21,8 @@ namespace Hypar.Tests
         [Fact]
         public void Collection_WithinPerimeter_Success()
         {
-            var p1 = Profiles.Square();
-            var p2 = Profiles.Square(width:10, height:5);
+            var p1 = Profiles.Rectangular();
+            var p2 = Profiles.Rectangular(width:10, height:5);
             var panels = Panel.WithinPerimeters(new[]{p1,p2});
             Assert.Equal(2, panels.Count());
         }
@@ -30,8 +30,8 @@ namespace Hypar.Tests
         [Fact]
         public void Params_WithinPerimeter_Success()
         {
-            var p1 = Profiles.Square();
-            var p2 = Profiles.Square(width:10, height:5);
+            var p1 = Profiles.Rectangular();
+            var p2 = Profiles.Rectangular(width:10, height:5);
             var panels = Panel.WithinPerimeters(p1,p2);
             Assert.Equal(2, panels.Count());
         }

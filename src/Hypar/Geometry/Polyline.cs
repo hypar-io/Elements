@@ -52,10 +52,10 @@ namespace Hypar.Geometry
         }
         
         /// <summary>
-        /// Explode a Polygon3 into a collection of Lines.
+        /// Get a collection a lines representing each segment of the polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
-        public IEnumerable<Line> Explode()
+        public IEnumerable<Line> Segments()
         {
             for(var i=0; i<_vertices.Count; i++)
             {
@@ -87,7 +87,6 @@ namespace Hypar.Geometry
         {
             var a = (this._vertices[2] - this._vertices[1]).Normalized();
             var b = (this._vertices[0] - this._vertices[1]).Normalized();
-
             return a.Cross(b);
         }
 
@@ -103,6 +102,38 @@ namespace Hypar.Geometry
             return new Line(a,b);
         }
 
+        public Polyline Offset(double offset)
+        {
+            var pts = new Vector3[this._vertices.Count];
+            Vector3 prevN = null;
+            for(var i=0; i < this._vertices.Count; i++)
+            {
+                var a = i;
+                var b = a + 1 > this._vertices.Count-1 ? 0 : a + 1;
+                var c = b + 1 > this._vertices.Count-1 ? 0 : b + 1;
+
+                var v1 = (this._vertices[a]-this._vertices[b]).Normalized();
+                var v2 = (this._vertices[c]-this._vertices[b]).Normalized();
+                var n = v1.Cross(v2);
+                if(prevN == null)
+                {
+                    prevN = n;
+                }
+
+                // Naive flipping logic. We find a change in concavity/convexity
+                // by comparing the cross product of the vectors to the
+                // previous corner. If the vectors point in different directions
+                // then we offset in the opposite direction.
+                var dir = prevN.Dot(n) < 0 ? -1 : 1;
+
+                var theta = v1.AngleTo(v2);
+                var halfAngle = (Math.PI - theta)/2;
+                var d = offset/Math.Cos(halfAngle);
+
+                pts[i] = this._vertices[b] + v1.Average(v2) * d * dir;
+            }
+            return new Polyline(pts);
+        }
 
         public IEnumerator<Vector3> GetEnumerator()
         {

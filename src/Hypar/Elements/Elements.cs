@@ -10,9 +10,29 @@ namespace Hypar.Elements
         /// <returns></returns>
         public static Mass CreateMass()
         {
-            var defaultProfile = Profiles.Square();
+            var defaultProfile = Profiles.Rectangular();
             var m = new Mass(defaultProfile, 0.0, defaultProfile, 1.0);
             return m;
+        }
+
+        /// <summary>
+        /// Create a default beam.
+        /// </summary>
+        /// <returns></returns>
+        public static Beam CreateBeam()
+        {
+            var b = new Beam();
+            return b;
+        }
+
+        public static IEnumerable<Beam> CreateBeams(int n)
+        {
+            var beams = new List<Beam>();
+            for(var i=0; i<n; i++)
+            {
+                beams.Add(CreateBeam());
+            }
+            return beams;
         }
 
         /// <summary>
@@ -21,7 +41,7 @@ namespace Hypar.Elements
         /// <returns></returns>
         public static Grid CreateGrid()
         {
-            var perimeter = Profiles.Square();
+            var perimeter = Profiles.Rectangular();
             var g = new Grid(perimeter);
             return g;
         }
