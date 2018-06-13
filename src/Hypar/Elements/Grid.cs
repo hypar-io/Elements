@@ -32,6 +32,32 @@ namespace Hypar.Elements
             return result;
         }
 
+        private Vector3[][] CalculateGridPoints()
+        {
+            var pts = new Vector3[this._uDiv.Length][];
+            var lines = this._perimeter.Segments();
+            var edge1 = lines.ElementAt(0).Reversed();
+            var edge2 = lines.ElementAt(2);
+
+            for(var i=0; i<_uDiv.Length; i++)
+            {
+                var u = _uDiv[i];
+
+                var start = edge1.PointAt(u);
+                var end = edge2.PointAt(u);
+                var l = new Line(start, end);
+                
+                var col = new Vector3[_vDiv.Length];
+                for(var j=0; j<_vDiv.Length; j++ )
+                {
+                    var v = _vDiv[j];
+                    col[j] = l.PointAt(v);
+                }
+                pts[i]=col;
+            }
+            return pts;
+        }
+
         public IEnumerable<Polyline> CellsInColumn(int n)
         {
             if(n < 0 || n >= this._uDiv.Length - 1)
@@ -71,33 +97,7 @@ namespace Hypar.Elements
             }
         }
 
-        private Vector3[][] CalculateGridPoints()
-        {
-            var pts = new Vector3[this._uDiv.Length][];
-            var lines = this._perimeter.Segments();
-            var edge1 = lines.ElementAt(0).Reversed();
-            var edge2 = lines.ElementAt(2);
-
-            for(var i=0; i<_uDiv.Length; i++)
-            {
-                var u = _uDiv[i];
-
-                var start = edge1.PointAt(u);
-                var end = edge2.PointAt(u);
-                var l = new Line(start, end);
-                
-                var col = new Vector3[_vDiv.Length];
-                for(var j=0; j<_vDiv.Length; j++ )
-                {
-                    var v = _vDiv[j];
-                    col[j] = l.PointAt(v);
-                }
-                pts[i]=col;
-            }
-            return pts;
-        }
-
-        public IEnumerable<Polyline> Cells()
+        public IEnumerable<Polyline> AllCells()
         {
             var pts = CalculateGridPoints();
 
@@ -114,6 +114,22 @@ namespace Hypar.Elements
                     var d = rowB[j];
                     yield return new Polyline(new[]{a,b,c,d});
                 }
+            }
+        }
+
+        public IEnumerable<Line> RowEdges()
+        {
+            foreach(var c in this.AllCells())
+            {
+                yield return c.Segment(0);
+            }
+        }
+
+        public IEnumerable<Line> ColumnEdges()
+        {
+            foreach(var c in this.AllCells())
+            {
+                yield return c.Segment(1);
             }
         }
 
@@ -167,61 +183,6 @@ namespace Hypar.Elements
         {
             this._vDiv = vDivisions;
             return this;
-        }
-
-        /// <summary>
-        /// Execute a creation function for each cell in the grid.
-        /// </summary>
-        /// <param name="creator"></param>
-        /// <returns></returns>
-        public IEnumerable<Element> InAllCells(Func<Polyline, IEnumerable<Element>> creator)
-        {
-            var result = new List<Element>();
-            foreach(var c in this.Cells())
-            {
-                result.AddRange(creator(c));
-            }
-            return result;
-        }
-
-        public IEnumerable<Element> InAllCellsAlongColumn(int n, Func<Polyline, IEnumerable<Element>> creator)
-        {
-            var result = new List<Element>();
-            foreach(var c in this.CellsInColumn(n))
-            {
-                result.AddRange(creator(c));
-            }
-            return result;
-        }
-
-        public IEnumerable<Element> InAllCellsAlongRow(int n, Func<Polyline, IEnumerable<Element>> creator)
-        {
-            var result = new List<Element>();
-            foreach(var c in this.CellsInRow(n))
-            {
-                result.AddRange(creator(c));
-            }
-            return result;
-        }
-
-        public IEnumerable<Element> AlongEachRowEdge(Func<Line, Element> creator)
-        {
-            var result = new List<Element>();
-            foreach(var c in this.Cells())
-            {
-                result.Add(creator(c.Segment(0)));
-            }
-            return result;
-        }
-
-        public IEnumerable<Element> AlongEachColumnEdge(Func<Line, Element> creator)
-        {
-            var result = new List<Element>();
-            foreach(var c in this.Cells())
-            {
-                result.Add(creator(c.Segment(1)));
-            }
-            return result;
         }
     }
 

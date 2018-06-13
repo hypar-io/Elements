@@ -211,6 +211,7 @@ namespace Hypar.Geometry
 
             var start = m_current_vertex_index;
             this.m_indices.AddRange(new[]{start,start+1,start+2,start,start+2,start+3});
+            // this.m_indices.AddRange(new[]{start,start+2,start+1,start,start+3,start+2});
             m_index_max = Math.Max(m_index_max, start);
             m_index_max = Math.Max(m_index_max, start+1);
             m_index_max = Math.Max(m_index_max, start+2);

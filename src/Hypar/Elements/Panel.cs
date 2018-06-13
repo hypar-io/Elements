@@ -34,41 +34,9 @@ namespace Hypar.Elements
         /// <returns></returns>
         public static Panel WithinPerimeter(Polyline perimeter)
         {
-            var p = new Panel();
-            p._perimeter = perimeter;
-            return p;
-        }
-
-        /// <summary>
-        /// Construct multiple panels from a collection of perimeters.
-        /// </summary>
-        /// <param name="perimeters"></param>
-        /// <returns></returns>
-        public static IEnumerable<Panel> WithinPerimeters(IEnumerable<Polyline> perimeters)
-        {
-            var panels = new List<Panel>();
-            foreach(var p in perimeters)
-            {
-                var panel = Panel.WithinPerimeter(p);
-                panels.Add(panel);
-            }
-            return panels;
-        }
-
-        /// <summary>
-        /// Construct multiple panels from a collection of perimeters.
-        /// </summary>
-        /// <param name="perimeters"></param>
-        /// <returns></returns>
-        public static IEnumerable<Panel> WithinPerimeters(params Polyline[] perimeters)
-        {
-            var panels = new List<Panel>();
-            foreach(var p in perimeters)
-            {
-                var panel = Panel.WithinPerimeter(p);
-                panels.Add(panel);
-            }
-            return panels;
+            var panel = new Panel();
+            panel._perimeter = perimeter;
+            return panel;
         }
 
         public Panel(Material material = null, Transform transform = null) : base(material, transform)

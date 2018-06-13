@@ -5,7 +5,7 @@ using Hypar.Geometry;
 
 namespace Hypar.Elements
 {
-    public class Beam : Element, IMeshProvider, IDataProvider
+    public class Beam : Element, IMeshProvider
     {
         private Line _centerLine;
         private Polyline _profile;
@@ -17,7 +17,7 @@ namespace Hypar.Elements
         
         public Vector3 UpAxis => _up;
 
-        internal Beam() : base(BuiltIntMaterials.Default,null)
+        public Beam() : base(BuiltInMaterials.Default,null)
         {
             this._centerLine = new Line(Vector3.Origin(), Vector3.ByXYZ(1,0,0));
             this._profile = Profiles.WideFlangeProfile();
@@ -39,23 +39,17 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="l"></param>
         /// <returns></returns>
-        public Beam AlongLine(Line l)
+        public static Beam AlongLine(Line l)
         {
-            this._centerLine = l;
-            this._transform = this._centerLine.GetTransform();
-            return this;
+            var beam = new Beam();
+            beam._centerLine = l;
+            beam._transform = beam._centerLine.GetTransform();
+            return beam;
         }
 
         public Mesh Tessellate()
         {
             return Mesh.ExtrudeAlongLine(this.CenterLine, new[] { this.Profile });
-        }
-
-        public Dictionary<string, double> Data()
-        {
-            var data = new Dictionary<string, double>();
-            data.Add("length", this.CenterLine.Length());
-            return data;
         }
 
         /// <summary>
@@ -101,34 +95,6 @@ namespace Hypar.Elements
 
     public static class BeamCollectionExtensions
     {   
-        /// <summary>
-        /// Construct many beams along a collection of lines.
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <returns></returns>
-        public static IEnumerable<Beam> AlongLines(this IEnumerable<Beam> beams, IEnumerable<Line> lines)
-        {   
-            for(var i=0;i<beams.Count(); i++)
-            {
-                beams.ElementAt(i).AlongLine(lines.ElementAt(i));
-            }
-            return beams;
-        }
-
-        /// <summary>
-        /// Construct many beams along a collection of lines.
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <returns></returns>
-        public static IEnumerable<Beam> AlongLines(this IEnumerable<Beam> beams, params Line[] lines)
-        {
-            for(var i=0;i<beams.Count(); i++)
-            {
-                beams.ElementAt(i).AlongLine(lines.ElementAt(i));
-            }
-            return beams;
-        }
-
         /// <summary>
         /// Set the profile of a collection of beams.
         /// </summary>

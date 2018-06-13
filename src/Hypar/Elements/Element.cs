@@ -6,16 +6,6 @@ using Hypar.Geometry;
 
 namespace Hypar.Elements
 {
-    public interface IMeshProvider
-    {
-        Mesh Tessellate();
-    }
-
-    public interface IDataProvider
-    {
-        Dictionary<string,double> Data();
-    }
-
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
@@ -46,7 +36,7 @@ namespace Hypar.Elements
         public Element(Material material = null, Transform transform = null)
         {
             this.Id = Guid.NewGuid();
-            this._material = material == null ? BuiltIntMaterials.Default : material;
+            this._material = material == null ? BuiltInMaterials.Default : material;
             this._transform = transform;
         }
 

@@ -13,9 +13,9 @@ namespace Hypar.Tests
         {
             var p = Profiles.Rectangular();
             var panel = Panel.WithinPerimeter(p);
-            Assert.Equal(BuiltIntMaterials.Default, panel.Material);
-            Assert.Equal(Vector3.ZAxis(), panel.Normal);
-            Assert.Equal(p, panel.Perimeter);
+            Assert.Equal(BuiltInMaterials.Default, panel.Material);
+            // Assert.Equal(Vector3.ZAxis(), panel.Normal);
+            // Assert.Equal(p, panel.Perimeter);
         }
 
         [Fact]
@@ -23,7 +23,9 @@ namespace Hypar.Tests
         {
             var p1 = Profiles.Rectangular();
             var p2 = Profiles.Rectangular(width:10, height:5);
-            var panels = Panel.WithinPerimeters(new[]{p1,p2});
+            var panels = new[]{p1,p2}.WithinEachCreate<Panel>(p => {
+                return Panel.WithinPerimeter(p);
+            });
             Assert.Equal(2, panels.Count());
         }
 
@@ -32,30 +34,10 @@ namespace Hypar.Tests
         {
             var p1 = Profiles.Rectangular();
             var p2 = Profiles.Rectangular(width:10, height:5);
-            var panels = Panel.WithinPerimeters(p1,p2);
+            var panels = new[]{p1,p2}.WithinEachCreate<Panel>(p => {
+                return Panel.WithinPerimeter(p);
+            });
             Assert.Equal(2, panels.Count());
         }
-
-        // [Fact]
-        // public void Default_Panel()
-        // {
-        //     var model = QuadPanelModel();
-        //     model.SaveGlb("quadPanel.glb");
-        //     Assert.True(File.Exists("quadPanel.glb"));
-        //     Assert.Equal(1, model.Elements.Count);
-        // }
-
-        // private Model QuadPanelModel()
-        // {
-        //     var model = new Model();
-        //     var a = new Vector3(0,0,0);
-        //     var b = new Vector3(1,0,0);
-        //     var c = new Vector3(1,0,1);
-        //     var d = new Vector3(0,0,1);
-        //     var panel = Panel.WithinPerimeter(new Polyline(new[]{a,b,c,d}))
-        //                         .OfMaterial(BuiltIntMaterials.Glass);
-        //     model.AddElement(panel);
-        //     return model;
-        // }
     }
 }

@@ -30,6 +30,7 @@ namespace Hypar.Elements
             {
                 throw new ArgumentOutOfRangeException("Color, specular, and glossiness values must be less than 1.0.");
             }
+            
             this.Id = id;
             this.Red = red;
             this.Green = green;

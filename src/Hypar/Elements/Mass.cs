@@ -30,8 +30,17 @@ namespace Hypar.Elements
 
         public double TopElevation => _topElevation;
 
+        public Mass():base(BuiltInMaterials.Mass)
+        {
+            var defaultProfile = Profiles.Rectangular();
+            this._top = defaultProfile;
+            this._bottom = defaultProfile;
+            this._bottomElevation = 0.0;
+            this._topElevation = 1.0;
+            this._material = BuiltInMaterials.Mass;
+        }
 
-        public Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation, Transform transform = null) : base(BuiltIntMaterials.Mass, transform)
+        public Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation, Transform transform = null) : base(BuiltInMaterials.Mass, transform)
         {
             if (bottom.Vertices.Count() != top.Vertices.Count())
             {
@@ -47,7 +56,7 @@ namespace Hypar.Elements
             this._bottom = bottom;
             this._bottomElevation = bottomElevation;
             this._topElevation = topElevation;
-            this._material = BuiltIntMaterials.Mass;
+            this._material = BuiltInMaterials.Mass;
         }
 
         public IEnumerable<Line> VerticalEdges()
@@ -91,6 +100,15 @@ namespace Hypar.Elements
                 yield return new Polyline(new[] { v1n, v2n, v3n, v4n });
             }
         }
+        public IEnumerable<T> ForEachFaceCreateElementsOfType<T>(Func<Polyline, IEnumerable<T>> creator)
+        {
+            var results = new List<T>();
+            foreach(var p in Faces())
+            {
+                results.AddRange(creator(p));
+            }
+            return results;
+        }
         
         public Mesh Tessellate()
         {
@@ -110,15 +128,16 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="profile"></param>
         /// <returns></returns>
-        public Mass WithBottomProfile(Polyline profile)
+        public static Mass WithBottomProfile(Polyline profile)
         {
             if(profile.Count() == 0)
             {
                 throw new ArgumentException(Messages.EMPTY_POLYLINE_EXCEPTION, "profile");
             }
 
-            this._bottom = profile;
-            return this;
+            var mass = new Mass();
+            mass._bottom = profile;
+            return mass;
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 namespace Hypar.Elements
 {
-    public static class BuiltIntMaterials
+    public static class BuiltInMaterials
     {
         public static Material Glass = new Material("glass", 1.0f, 1.0f, 1.0f, 0.2f, 1.0f, 1.0f);
         public static Material Steel = new Material("steel", 0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f);

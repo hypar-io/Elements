@@ -20,28 +20,25 @@ namespace Hypar.Tests
             var profile = Profiles.WideFlangeProfile(0.5, 0.5, 0.1, 0.1, Profiles.VerticalAlignment.Center);
 
             var model = new Model();
-            foreach(var c in grid.Cells())
+            foreach(var c in grid.AllCells())
             {
                 var panel = Panel.WithinPerimeter(c)
-                                .OfMaterial(BuiltIntMaterials.Glass);
+                                .OfMaterial(BuiltInMaterials.Glass);
 
-                var beam1 = ElementsFactory.CreateBeam()
-                                .AlongLine(c.Segment(0))
+                var beam1 = Beam.AlongLine(c.Segment(0))
                                 .WithProfile(profile)
                                 .WithUpAxis(panel.Normal)
-                                .OfMaterial(BuiltIntMaterials.Steel);
+                                .OfMaterial(BuiltInMaterials.Steel);
                                 
-                var beam2 = ElementsFactory.CreateBeam()
-                                .AlongLine(c.Segment(2))
+                var beam2 = Beam.AlongLine(c.Segment(2))
                                 .WithProfile(profile)
                                 .WithUpAxis(panel.Normal)
-                                .OfMaterial(BuiltIntMaterials.Steel);
+                                .OfMaterial(BuiltInMaterials.Steel);
                                 
-                var beam3 = ElementsFactory.CreateBeam()
-                                .AlongLine(c.Segment(1))
+                var beam3 = Beam.AlongLine(c.Segment(1))
                                 .WithProfile(profile)
                                 .WithUpAxis(panel.Normal)
-                                .OfMaterial(BuiltIntMaterials.Steel);
+                                .OfMaterial(BuiltInMaterials.Steel);
                 
                 model.AddElements(new Element[]{panel, beam1, beam2, beam3});
             }

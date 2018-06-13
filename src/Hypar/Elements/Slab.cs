@@ -35,44 +35,13 @@ namespace Hypar.Elements
 
         public double Thickness => _thickness;
 
-        /// <summary>
-        /// Construct one slab given a perimeter.
-        /// </summary>
-        /// <param name="perimeter"></param>
-        /// <returns></returns>
-        public static Slab WithinPerimeter(Polyline perimeter)
+        public Slab()
         {
-            var slab = new Slab(perimeter);
-            return slab;
+            this._perimeter = Profiles.Rectangular();
+            this._elevation = 0.0;
+            this._thickness = 0.2;
         }
-
-        /// <summary>
-        /// Construct many slabs given a collection of perimeters.
-        /// </summary>
-        /// <param name="perimeters"></param>
-        /// <returns></returns>
-        public static IEnumerable<Slab> WithinPerimeters(IEnumerable<Polyline> perimeters)
-        {
-            var slabs = new List<Slab>();
-            foreach(var p in perimeters)
-            {
-                var s = Slab.WithinPerimeter(p);
-                slabs.Add(s);
-            }
-            return slabs;
-        }
-
-        public static IEnumerable<Slab> WithinPerimeters(params Polyline[] perimeters)
-        {
-            var slabs = new List<Slab>();
-            foreach(var p in perimeters)
-            {
-                var s = Slab.WithinPerimeter(p);
-                slabs.Add(s);
-            }
-            return slabs;
-        }
-
+        
         internal Slab(Polyline profile)
         {
             this._perimeter = profile;
@@ -108,7 +77,18 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// The the elevation of the Slab.
+        /// Create a slab within a perimeter.
+        /// </summary>
+        /// <param name="perimeter"></param>
+        /// <returns></returns>
+        public static Slab WithinPerimeter(Polyline perimeter)
+        {
+            var slab = new Slab(perimeter);
+            return slab;
+        }
+
+        /// <summary>
+        /// Set the elevation of the slab.
         /// </summary>
         /// <param name="elevation"></param>
         /// <returns></returns>
@@ -120,7 +100,7 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Set the thickness of the Slab.
+        /// Set the thickness of the slab.
         /// </summary>
         /// <param name="thickness"></param>
         /// <returns></returns>
@@ -135,7 +115,7 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Set the penetrations of the the Slab.
+        /// Set the penetrations of the the slab.
         /// </summary>
         /// <param name="holes"></param>
         /// <returns></returns>
@@ -145,6 +125,11 @@ namespace Hypar.Elements
             return this;
         }
 
+        /// <summary>
+        /// Set the material of the slab.
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
         public Slab OfMaterial(Material m)
         {
             this._material = m;
@@ -160,7 +145,7 @@ namespace Hypar.Elements
         /// <param name="slabs"></param>
         /// <param name="elevation"></param>
         /// <returns></returns>
-        public static IEnumerable<Slab> AtElevations(this IEnumerable<Slab> slabs, IEnumerable<double> elevation)
+        public static IEnumerable<Slab> AtElevation(this IEnumerable<Slab> slabs, IEnumerable<double> elevation)
         {
             var slabArr = slabs.ToArray();
             var elevArr = elevation.ToArray();

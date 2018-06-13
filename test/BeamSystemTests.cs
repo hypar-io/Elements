@@ -1,6 +1,7 @@
 using Hypar.Elements;
 using Hypar.Geometry;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace Hypar.Tests
@@ -25,10 +26,12 @@ namespace Hypar.Tests
             var cls = Line.FromStart(v1).ToEnd(v2);
 
             // Create beams along all of those lines.
-            var beams = ElementsFactory.CreateBeams(5).AlongLines(cls).WithProfile(profile);
+            var beams = cls.AlongEachCreate<Beam>(l => {
+                return Beam.AlongLine(l).WithProfile(profile);
+            });
 
             model.AddElements(beams);
-            Assert.Equal(5, model.Elements.Count);
+            Assert.Equal(6, model.Elements.Count);
         }
     }
 }
