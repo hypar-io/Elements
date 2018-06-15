@@ -122,15 +122,15 @@ namespace Hypar
             return id;
         }
 
-        internal static int AddTriangleMesh(this Gltf gltf, string name, List<byte> buffer, double[] vertices, double[] normals, int[] indices, 
-        double[] colors, double[] vMin, double[] vMax, double[] nMin, double[] nMax, double[] cMin, double[] cMax, int iMin, int iMax, int materialId, int? parent_index, Transform transform = null)
+        internal static int AddTriangleMesh(this Gltf gltf, string name, List<byte> buffer, double[] vertices, double[] normals, ushort[] indices, 
+        double[] colors, double[] vMin, double[] vMax, double[] nMin, double[] nMax, double[] cMin, double[] cMax, ushort iMin, ushort iMax, int materialId, int? parent_index, Transform transform = null)
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
 
             var vBuff = gltf.AddBufferView(0, buffer.Count(), vertices.Length * sizeof(float), null, null);
             var nBuff = gltf.AddBufferView(0, buffer.Count() + vertices.Length * sizeof(float), normals.Length * sizeof(float), null, null);
-            var iBuff = gltf.AddBufferView(0, buffer.Count() + vertices.Length * sizeof(float) + normals.Length * sizeof(float), indices.Length * sizeof(int), null, null);
+            var iBuff = gltf.AddBufferView(0, buffer.Count() + vertices.Length * sizeof(float) + normals.Length * sizeof(float), indices.Length * sizeof(ushort), null, null);
 
             buffer.AddRange(vertices.SelectMany(v=>BitConverter.GetBytes((float)v)));
             buffer.AddRange(normals.SelectMany(v=>BitConverter.GetBytes((float)v)));
@@ -144,7 +144,7 @@ namespace Hypar
 
             var vAccess = gltf.AddAccessor(vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length/3, new[]{(float)vMin[0], (float)vMin[1], (float)vMin[2]}, new[]{(float)vMax[0],(float)vMax[1],(float)vMax[2]}, Accessor.TypeEnum.VEC3);
             var nAccess = gltf.AddAccessor(nBuff, 0, Accessor.ComponentTypeEnum.FLOAT, normals.Length/3, new[]{(float)nMin[0], (float)nMin[1], (float)nMin[2]}, new[]{(float)nMax[0], (float)nMax[1], (float)nMax[2]}, Accessor.TypeEnum.VEC3);
-            var iAccess = gltf.AddAccessor(iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_INT, indices.Length, new[]{(float)iMin}, new[]{(float)iMax}, Accessor.TypeEnum.SCALAR);
+            var iAccess = gltf.AddAccessor(iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_SHORT, indices.Length, new[]{(float)iMin}, new[]{(float)iMax}, Accessor.TypeEnum.SCALAR);
             
             var prim = new MeshPrimitive();
             prim.Indices = iAccess;

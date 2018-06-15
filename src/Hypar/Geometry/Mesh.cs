@@ -15,10 +15,10 @@ namespace Hypar.Geometry
     {
         private List<double> m_vertices = new List<double>();
         private List<double> m_normals = new List<double>();
-        private List<int> m_indices = new List<int>();
+        private List<ushort> m_indices = new List<ushort>();
 
-        private int m_index_max;
-        private int m_index_min;
+        private ushort m_index_max;
+        private ushort m_index_min;
         
         private double[] m_v_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
         private double[] m_v_min= new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
@@ -29,7 +29,7 @@ namespace Hypar.Geometry
 
         private List<double> m_vertex_colors = new List<double>();
 
-        private int m_current_vertex_index = 0;
+        private ushort m_current_vertex_index = 0;
 
         public double[] VMax
         {
@@ -56,12 +56,12 @@ namespace Hypar.Geometry
             get{return m_c_min;}
         }
 
-        public int IMax
+        public ushort IMax
         {
             get{return m_index_max;}
         }
 
-        public int IMin
+        public ushort IMin
         {
             get{return m_index_min;}
         }
@@ -76,7 +76,7 @@ namespace Hypar.Geometry
             get{return m_normals;}
         }
 
-        public IEnumerable<int> Indices
+        public IEnumerable<ushort> Indices
         {
             get{return m_indices;}
         }
@@ -91,7 +91,7 @@ namespace Hypar.Geometry
             // An empty mesh.
         }
 
-        public Mesh(double[] vertices, double[] normals, int[] indices)
+        public Mesh(double[] vertices, double[] normals, ushort[] indices)
         {
             this.m_vertices.AddRange(vertices);
             this.m_normals.AddRange(normals);
@@ -123,13 +123,13 @@ namespace Hypar.Geometry
             }
 
             var start = m_current_vertex_index;
-            this.m_indices.AddRange(new[]{start,start+1,start+2});
+            this.m_indices.AddRange(new []{start,(ushort)(start+1),(ushort)(start+2)});
             m_index_max = Math.Max(m_index_max, start);
-            m_index_max = Math.Max(m_index_max, start+1);
-            m_index_max = Math.Max(m_index_max, start+2);
+            m_index_max = Math.Max(m_index_max, (ushort)(start+1));
+            m_index_max = Math.Max(m_index_max, (ushort)(start+2));
             m_index_min = Math.Min(m_index_min, start);
-            m_index_min = Math.Min(m_index_min, start+1);
-            m_index_min = Math.Min(m_index_min, start+2);
+            m_index_min = Math.Min(m_index_min, (ushort)(start+1));
+            m_index_min = Math.Min(m_index_min, (ushort)(start+2));
             m_current_vertex_index += 3;
         }
 
@@ -210,15 +210,15 @@ namespace Hypar.Geometry
             }
 
             var start = m_current_vertex_index;
-            this.m_indices.AddRange(new[]{start,start+1,start+2,start,start+2,start+3});
+            this.m_indices.AddRange(new[]{start,(ushort)(start+1),(ushort)(start+2),(ushort)(start),(ushort)(start+2),(ushort)(start+3)});
             m_index_max = Math.Max(m_index_max, start);
-            m_index_max = Math.Max(m_index_max, start+1);
-            m_index_max = Math.Max(m_index_max, start+2);
-            m_index_max = Math.Max(m_index_max, start+3);
+            m_index_max = Math.Max(m_index_max, (ushort)(start+1));
+            m_index_max = Math.Max(m_index_max, (ushort)(start+2));
+            m_index_max = Math.Max(m_index_max, (ushort)(start+3));
             m_index_min = Math.Min(m_index_min, start);
-            m_index_min = Math.Min(m_index_min, start+1);
-            m_index_min = Math.Min(m_index_min, start+2);
-            m_index_min = Math.Min(m_index_min, start+3);
+            m_index_min = Math.Min(m_index_min, (ushort)(start+1));
+            m_index_min = Math.Min(m_index_min, (ushort)(start+2));
+            m_index_min = Math.Min(m_index_min, (ushort)(start+3));
             m_current_vertex_index += 4;
         }
 
@@ -271,7 +271,7 @@ IMin:{m_index_min}";
         {
             var vertices = new[]{-width,-length,0.0,width,-length,0.0,width,length,0.0,-width,length,0.0};
             var normals = new[]{0.0,0.0,1.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,0.0,1.0};
-            var indices = new[]{0,1,2,0,2,3};
+            var indices = new ushort[]{0,1,2,0,2,3};
 
             var mesh = new Hypar.Geometry.Mesh(vertices, normals, indices);
             return mesh;
