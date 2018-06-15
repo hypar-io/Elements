@@ -49,7 +49,7 @@ namespace Hypar.GeoJSON
 
         public Vector3 ToVectorMeters()
         {
-            return WebMercator.LatLonToMeters(Latitude, Longitude);
+            return new Vector3(MercatorProjection.lonToX(Longitude), MercatorProjection.latToY(Latitude));
         }
     }
 

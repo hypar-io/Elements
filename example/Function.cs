@@ -65,7 +65,7 @@ namespace Hypar.Example
                                     .WithTopProfile(siteOffset)
                                     .WithTopAtElevation(20);
 
-            model.AddElement(massExternal);
+            // model.AddElement(massExternal);
 
             var generateColumn = new Func<Line, Beam>((Line l) => {
                 return Beam.AlongLine(l)
@@ -147,7 +147,7 @@ namespace Hypar.Example
                 var panelElements2 = g.CellsInRow(2).WithinEachCreate<Panel>(createGlazedPanel);
                 var opaquePanels = g.CellsInRow(1).WithinEachCreate<Panel>(generateOpaquePanel);
                 var mullions = g.AllCells().WithinEachCreate<IEnumerable<Beam>>(generateMullions);
-                // var louvers = g.CellsInRow(2).WithinEachCreate<IEnumerable<Beam>>(generateLouvers);
+                var louvers = g.CellsInRow(2).WithinEachCreate<IEnumerable<Beam>>(generateLouvers);
 
                 model.AddElements(panelElements);
                 model.AddElements(panelElements2);
@@ -156,10 +156,10 @@ namespace Hypar.Example
                 {
                     model.AddElements(m);
                 }
-                // foreach(var l in louvers)
-                // {
-                //     model.AddElements(l);
-                // }
+                foreach(var l in louvers)
+                {
+                    model.AddElements(l);
+                }
             }
 
             return model;
