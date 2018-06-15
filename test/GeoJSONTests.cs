@@ -5,8 +5,57 @@ using System;
 
 namespace Hypar.Tests
 {
+    
     public class GeoJSONTests
     {   
+        private const string feature = @"
+[
+  {
+    ""geometry"": {
+      ""type"": ""Polygon"",
+      ""coordinates"": [
+        [
+          [
+            -118.40609282255173,
+            34.005940499249576
+          ],
+          [
+            -118.40582929551601,
+            34.005800418852644
+          ],
+          [
+            -118.40580448508263,
+            34.00578763372555
+          ],
+          [
+            -118.40591177344322,
+            34.005647553076486
+          ],
+          [
+            -118.40594664216042,
+            34.00564310606795
+          ],
+          [
+            -118.40619809925556,
+            34.005805421727956
+          ],
+          [
+            -118.40609282255173,
+            34.005940499249576
+          ]
+        ]
+      ]
+    },
+    ""type"": ""Feature"",
+    ""properties"": {
+      ""ain"": ""4210033009"",
+      ""situsaddr"": ""11061 BARMAN AVE"",
+      ""situscity"": ""CULVER CITY CA"",
+      ""situszip_5"": ""90230""
+    }
+  }
+]";
+
         [Fact]
         public void Position_Serialize_Valid()
         {
@@ -65,13 +114,13 @@ namespace Hypar.Tests
             var a = new Position(0,0);
             var b = new Position(5,5);
             var c = new Position(10,10);
-            var p = new Polygon(new[]{a,b,c,a});
+            var p = new Polygon(new[]{new[]{a,b,c,a}});
             var json = JsonConvert.SerializeObject(p);
             Console.WriteLine(json);
 
             Assert.Throws<Exception>(()=>{
                 // End point coincidence test.
-                var pFail = new Polygon(new[]{a,b,c});
+                var pFail = new Polygon(new[]{new[]{a,b,c}});
             });
         }
 
@@ -91,16 +140,51 @@ namespace Hypar.Tests
         }
 
         [Fact]
-
         public void FeatureCollection_SerializeValid()
         {
             var p = new Point(new Position(0,0));
             var l = new Line(new []{new Position(0,0), new Position(10,10)});
-            var f1 = new Feature(p);
-            var f2 = new Feature(l);
+            var f1 = new Feature(p,null);
+            var f2 = new Feature(l,null);
             var fc = new FeatureCollection(new[]{f1,f2});
             var json = JsonConvert.SerializeObject(fc);
             Console.WriteLine(json);
+        }
+
+        [Fact]
+        public void LatLon_ToMeters_Valid()
+        {
+            // Culver City
+            // 34.006074, -118.405970
+
+            //https://epsg.io/transform#s_srs=4326&t_srs=3857&x=-118.4059700&y=34.0060740
+            // X -13180892.29 Y 4029617.65
+            var lat = 34.006074;
+            var lon = -118.405970;
+            var utm = WebMercator.LatLonToMeters(lat, lon);
+            Assert.Equal(utm.Y, 4029617.65, 2);
+            Assert.Equal(utm.X, -13180892.29, 2);
+        }
+
+        // [Fact]
+        // public void Meters_ToLatLon_Valid()
+        // {
+        //     var x = 4029617.65;
+        //     var y = -13180892.29;
+        //     var latlon = WebMercator.MetersToLatLon(new Geometry.Vector3(x,y));
+        //     Assert.Equal(34.006074, latlon.X);
+        //     Assert.Equal(-118.405970, latlon.Y);
+        // }
+
+        [Fact]
+        public void Feature_Deserialize_Valid()
+        {
+            var f = JsonConvert.DeserializeObject<Feature[]>(feature);
+            var p = (Polygon)f[0].Geometry;
+            Assert.Equal(7, p.Coordinates[0].Length);
+            Assert.Equal("Feature", f[0].Type);
+            Assert.Equal(4, f[0].Properties.Count);
+            Assert.Equal("11061 BARMAN AVE", f[0].Properties["situsaddr"]);
         }
     }
 }

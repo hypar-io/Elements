@@ -18,4 +18,8 @@
     <ProjectReference Include="..\src\hypar.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="execution.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

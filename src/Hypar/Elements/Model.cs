@@ -1,6 +1,7 @@
 using glTFLoader;
 using glTFLoader.Schema;
 using Hypar.Geometry;
+using Hypar.GeoJSON;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,15 +31,11 @@ namespace Hypar.Elements
             get{return _elements;}
         }
 
-        public static Model FromElements(IEnumerable<Element> elements)
-        {
-            var model = new Model();
-            model.AddElements(elements);
-            return model;
-        }
+        public Position Origin {get;set;}
 
         public Model()
         {
+            this.Origin = new Position(0,0);
         }
 
         /// <summary>
@@ -166,9 +163,10 @@ namespace Hypar.Elements
             {
                 result["computed"] = computed;
             }
+
+            result["origin"] = this.Origin;
             
             return result;
-            // return JsonConvert.SerializeObject(result);
         }
 
         private Gltf InitializeGlTF()

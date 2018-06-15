@@ -26,7 +26,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Construct a Polygon3 from a collection of vertices.
+        /// Construct a polyline from a collection of vertices.
         /// </summary>
         /// <param name="vertices">A CCW wound set of vertices.</param>
         public Polyline(IEnumerable<Vector3> vertices)
@@ -36,7 +36,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Reverse the direction of a Polygon3.
+        /// Reverse the direction of a polyline.
         /// </summary>
         /// <returns>Returns a new Polygon3 with opposite winding.</returns>
         public Polyline Reversed()
@@ -80,7 +80,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Compute the normal of the Polygon using the first 3 vertices to define a plane.
+        /// Compute the normal of the polyline using the first 3 vertices to define a plane.
         /// </summary>
         /// <returns></returns>
         public Vector3 Normal()

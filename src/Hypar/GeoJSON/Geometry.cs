@@ -1,9 +1,15 @@
+using Hypar.Geometry;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
+/// <summary>
+/// https://tools.ietf.org/html/rfc7946#section-5
+/// </summary>
 namespace Hypar.GeoJSON
 {
     public abstract class Geometry
@@ -39,6 +45,11 @@ namespace Hypar.GeoJSON
         public override int GetHashCode()
         {
             return Longitude.GetHashCode() + ",".GetHashCode() + Latitude.GetHashCode();
+        }
+
+        public Vector3 ToVectorMeters()
+        {
+            return WebMercator.LatLonToMeters(Latitude, Longitude);
         }
     }
 
@@ -125,11 +136,14 @@ namespace Hypar.GeoJSON
     public class Polygon : Geometry
     {
         [JsonProperty("coordinates")]
-        public Position[] Coordinates{get;}
+        public Position[][] Coordinates{get;}
 
-        public Polygon(Position[] coordinates)
+        public Polygon(Position[][] coordinates)
         {
-            CheckPoly(coordinates);
+            foreach(var p in coordinates)
+            {
+                CheckPoly(p);
+            }
             this.Coordinates = coordinates;
         }
 
@@ -145,6 +159,29 @@ namespace Hypar.GeoJSON
             {
                 throw new Exception("The first and last points of the polygon must coincide.");
             }
+        }
+
+        /// <summary>
+        /// Convert the coordinate array to a collection of polylines.
+        /// The last position of the polygon is dropped.
+        /// </summary>
+        /// <returns></returns>
+        public Polyline[] ToPolylines()
+        {
+            var plineArr = new Polyline[Coordinates.Length];
+            for(var i=0; i<plineArr.Length; i++)
+            {
+                var coords = this.Coordinates[i];
+                var verts = new List<Vector3>();
+                // Drop the last position.
+                for(var j=0; j<coords.Length-1; j++)
+                {
+                    verts.Add(coords[j].ToVectorMeters());
+                }
+                var pline = new Polyline(verts);
+                plineArr[i] = pline;
+            }
+            return plineArr;
         }
     }
 
@@ -198,6 +235,57 @@ namespace Hypar.GeoJSON
             writer.WriteValue(p.Longitude);
             writer.WriteValue(p.Latitude);
             writer.WriteEndArray();
+        }
+    }
+
+    
+    class GeometryConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            if(typeof(Geometry).IsAssignableFrom(objectType))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public override bool CanWrite
+        {
+            get{return false;}
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var jsonObject = JObject.Load(reader);
+            string typeName = (jsonObject["type"]).ToString();
+            switch(typeName)
+            {
+                case "Point":
+                    return jsonObject.ToObject<Point>();
+                case "Line":
+                    return jsonObject.ToObject<Line>();
+                case "MultiPoint":
+                    return jsonObject.ToObject<MultiPoint>();
+                case "LineString":
+                    return jsonObject.ToObject<LineString>();
+                case "MultiLineString":
+                    return jsonObject.ToObject<MultiLineString>();
+                case "Polygon":
+                    Console.WriteLine("Deserializing polygon.");
+                    return jsonObject.ToObject<Polygon>();
+                case "MultiPolygon":
+                    return jsonObject.ToObject<MultiPolygon>();
+                case "GeometryCollection":
+                    return jsonObject.ToObject<GeometryCollection>();
+                default:
+                    throw new Exception($"The type found in the GeoJSON, {typeName}, could not be resolved.");
+            }
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

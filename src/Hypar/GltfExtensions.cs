@@ -149,7 +149,7 @@ namespace Hypar
             var prim = new MeshPrimitive();
             prim.Indices = iAccess;
             prim.Material = materialId;
-            prim.Mode = MeshPrimitive.ModeEnum.TRIANGLE_FAN;
+            prim.Mode = MeshPrimitive.ModeEnum.TRIANGLES;
             prim.Attributes = new Dictionary<string,int>{
                 {"NORMAL",nAccess},
                 {"POSITION",vAccess}

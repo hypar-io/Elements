@@ -1,5 +1,10 @@
 using Hypar.Elements;
 using Hypar.Geometry;
+using Hypar.GeoJSON;
+using Line = Hypar.Geometry.Line;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using System;
 using System.Collections.Generic;
@@ -7,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Amazon.Lambda.Core;
+using System.IO;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -15,53 +21,51 @@ namespace Hypar.Example
 {
     public class Function
     {
-        /// <summary>
-        /// A simple function that takes a string and does a ToUpper
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public Dictionary<string,object> FunctionHandler(Dictionary<string, object> args, ILambdaContext context)
+        public Dictionary<string,object> FunctionHandler(Dictionary<string,object> args, ILambdaContext context)
         {
             var verticalDivisions = (Int64)args["verticalDivisions"];
             var louverCount = (Int64)args["louverCount"];
             var louverWidth = (double)args["louverWidth"];
+            var features = ((JArray)args["location"]).ToObject<Feature[]>();
 
-            var model = CreateBuilding((int)verticalDivisions, (int)louverCount, (int)louverWidth);
+            // Do function matching
+
+            var site = (Polygon)features[0].Geometry;
+
+            // Uncorrected polylines
+            var plines = site.ToPolylines();
+            var origin = plines[0].Vertices.First();
+            // Transform and reverse as mapbox's polygon's seem to be CW.
+            var transformed = plines.Select(pline=>new Polyline(pline.Vertices.Select(v=>new Vector3(v.X - origin.X, v.Y - origin.Y, v.Z))).Reversed()).ToArray();
+
+            var model = CreateBuilding(transformed[0], (int)verticalDivisions, (int)louverCount, (int)louverWidth);
+            model.Origin = site.Coordinates[0][0];
+
             return model.ToHypar();
         }
 
-        private Model CreateBuilding(int verticalDivisions, int louverCount, double louverWidth)
+        private Model CreateBuilding(Polyline sitePerimeter, int verticalDivisions, int louverCount, double louverWidth)
         {
             var model = new Model();
-
-            var box = new Box();
-            model.AddElement(box);
-            return model;
             
             var d = 2.0;
             var columnProfile = Profiles.WideFlangeProfile(1.0, d, 0.1, 0.1, Profiles.VerticalAlignment.Center);
             var girderProfile = Profiles.WideFlangeProfile(1.0, d, 0.1, 0.1, Profiles.VerticalAlignment.Top);
             var material = new Material("orange", 1.0f, 1.0f, 0.0f, 1.0f, 0.1f, 0.0f);
 
-            var perimeter = Profiles.Rectangular(new Vector3(), 20, 20);
+            // var perimeter = Profiles.Rectangular(new Vector3(), 20, 20);
 
-            var p1 = Vector3.Origin();
-            var p2 = Vector3.ByXYZ(20, 0, 0);
-            var p3 = Vector3.ByXYZ(30, 50, 0);
-            var p4 = Vector3.ByXYZ(0, 20, 0);
-            var p5 = Vector3.ByXYZ(-20, 40,0);
-            var p6 = Vector3.ByXYZ(-30, 10,0);
-            var massPerimeter = new Polyline(new[]{p1, p2, p3, p4, p5, p6});
-            var offsetPerimeter = massPerimeter.Offset(1.5);
+            var siteOffset = sitePerimeter.Offset(1.5);
 
-            var massExternal = Mass.WithBottomProfile(massPerimeter)
-                                    .WithTopProfile(massPerimeter)
+            var massExternal = Mass.WithBottomProfile(sitePerimeter)
+                                    .WithTopProfile(sitePerimeter)
                                     .WithTopAtElevation(20);
             
-            var massInternal = Mass.WithBottomProfile(offsetPerimeter)
-                                    .WithTopProfile(offsetPerimeter)
+            var massInternal = Mass.WithBottomProfile(siteOffset)
+                                    .WithTopProfile(siteOffset)
                                     .WithTopAtElevation(20);
+
+            model.AddElement(massExternal);
 
             var generateColumn = new Func<Line, Beam>((Line l) => {
                 return Beam.AlongLine(l)
@@ -73,11 +77,10 @@ namespace Hypar.Example
                                         .AlongEachCreate<Beam>(generateColumn);
             model.AddElements(columns);
 
-            var beams = CreateBeams(model, girderProfile, material, offsetPerimeter);
+            var beams = CreateBeams(model, girderProfile, material, siteOffset);
             model.AddElements(beams);
             
-            /*
-            var perimeters = new[]{offsetPerimeter,offsetPerimeter};
+            var perimeters = new[]{siteOffset,siteOffset};
             var generateSlab = new Func<Polyline, Slab>((Polyline p) => {
                 return Slab.WithinPerimeter(p);
             });
@@ -144,7 +147,7 @@ namespace Hypar.Example
                 var panelElements2 = g.CellsInRow(2).WithinEachCreate<Panel>(createGlazedPanel);
                 var opaquePanels = g.CellsInRow(1).WithinEachCreate<Panel>(generateOpaquePanel);
                 var mullions = g.AllCells().WithinEachCreate<IEnumerable<Beam>>(generateMullions);
-                var louvers = g.CellsInRow(2).WithinEachCreate<IEnumerable<Beam>>(generateLouvers);
+                // var louvers = g.CellsInRow(2).WithinEachCreate<IEnumerable<Beam>>(generateLouvers);
 
                 model.AddElements(panelElements);
                 model.AddElements(panelElements2);
@@ -153,11 +156,11 @@ namespace Hypar.Example
                 {
                     model.AddElements(m);
                 }
-                foreach(var l in louvers)
-                {
-                    model.AddElements(l);
-                }
-            }*/
+                // foreach(var l in louvers)
+                // {
+                //     model.AddElements(l);
+                // }
+            }
 
             return model;
         }
