@@ -2,18 +2,26 @@ using Hypar.Geometry;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-/// <summary>
-/// https://tools.ietf.org/html/rfc7946#section-5
-/// </summary>
+using verb.geom;
+
+// https://tools.ietf.org/html/rfc7946#section-5
 namespace Hypar.GeoJSON
 {
+    /// <summary>
+    /// The base class for all GeoJSON geometry types.
+    /// </summary>
     public abstract class Geometry
     {
+        /// <summary>
+        /// The type of the geometry.
+        /// </summary>
+        /// <returns></returns>
         [JsonProperty("type")]
         public virtual string Type
         {
@@ -21,17 +29,40 @@ namespace Hypar.GeoJSON
         }
     }
 
+    /// <summary>
+    /// A GeoJSON position.
+    /// </summary>
     [JsonConverter(typeof(PositionConverter))]
     public class Position
     {
+        /// <summary>
+        /// The latitude in decimal degrees.
+        /// </summary>
+        /// <returns></returns>
         public double Latitude {get;}
+
+        /// <summary>
+        /// The longitude in decimal degrees.
+        /// </summary>
+        /// <returns></returns>
         public double Longitude{get;}
+
+        /// <summary>
+        /// Construct a Position.
+        /// </summary>
+        /// <param name="lon"></param>
+        /// <param name="lat"></param>
         public Position(double lon, double lat)
         {
             this.Latitude = lat;
             this.Longitude = lon;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if(obj.GetType() != GetType())
@@ -42,22 +73,41 @@ namespace Hypar.GeoJSON
             return p.Longitude == Longitude && p.Latitude == Latitude;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return Longitude.GetHashCode() + ",".GetHashCode() + Latitude.GetHashCode();
         }
 
+        /// <summary>
+        /// Convert the position to a vector.
+        /// </summary>
+        /// <returns></returns>
         public Vector3 ToVectorMeters()
         {
             return new Vector3(MercatorProjection.lonToX(Longitude), MercatorProjection.latToY(Latitude));
         }
     }
 
+    /// <summary>
+    /// A GeoJSON point.
+    /// </summary>
     public class Point : Geometry
     {
+        /// <summary>
+        /// The coordinates of the geometry.
+        /// </summary>
+        /// <returns></returns>
         [JsonProperty("coordinates")]
         public Position Coordinates{get;}
 
+        /// <summary>
+        /// Construct a Point.
+        /// </summary>
+        /// <param name="coordinates"></param>
         public Point(Position coordinates)
         {
             if(coordinates == null)
@@ -68,11 +118,22 @@ namespace Hypar.GeoJSON
         }
     }
 
+    /// <summary>
+    /// A GeoJSON line.
+    /// </summary>
     public class Line : Geometry
     {
+        /// <summary>
+        /// The coordinates of the geometry.
+        /// </summary>
+        /// <returns></returns>
         [JsonProperty("coordinates")]
         public Position[] Coordinates{get;}
 
+        /// <summary>
+        /// Construct a Line.
+        /// </summary>
+        /// <param name="coordinates"></param>
         public Line(Position[] coordinates)
         {
             if(coordinates == null || coordinates.Length != 2)
@@ -83,11 +144,22 @@ namespace Hypar.GeoJSON
         }
     }
 
+    /// <summary>
+    /// A GeoJSON multipoint.
+    /// </summary>
     public class MultiPoint : Geometry
     {
+        /// <summary>
+        /// The coordinates of the geometry.
+        /// </summary>
+        /// <returns></returns>
         [JsonProperty("coordinates")]
         public Position[] Coordinates{get;}
 
+        /// <summary>
+        /// Construct a MultiPoint.
+        /// </summary>
+        /// <param name="coordinates"></param>
         public MultiPoint(Position[] coordinates)
         {
             if(coordinates == null || coordinates.Length <= 1)
@@ -98,11 +170,22 @@ namespace Hypar.GeoJSON
         }
     }
 
+    /// <summary>
+    /// A GeoJSON linestring.
+    /// </summary>
     public class LineString : Geometry
     {
+        /// <summary>
+        /// The coordinates of the geometry.
+        /// </summary>
+        /// <returns></returns>
         [JsonProperty("coordinates")]
         public Position[] Coordinates{get;}
 
+        /// <summary>
+        /// Construct a LineString.
+        /// </summary>
+        /// <param name="coordinates"></param>
         public LineString(Position[] coordinates)
         {
             CheckLineString(coordinates);
@@ -118,11 +201,22 @@ namespace Hypar.GeoJSON
         }
     }
 
+    /// <summary>
+    /// A GeoJSON multi line string.
+    /// </summary>
     public class MultiLineString : Geometry
     {
+        /// <summary>
+        /// The coordinates of the geometry.
+        /// </summary>
+        /// <returns></returns>
         [JsonProperty("coordinates")]
         public Position[][] Coordinates{get;}
 
+        /// <summary>
+        /// Construct a MultiLineString.
+        /// </summary>
+        /// <param name="coordinates"></param>
         public MultiLineString(Position[][] coordinates)
         {
             foreach(var lineString in coordinates)
@@ -133,11 +227,21 @@ namespace Hypar.GeoJSON
         }
     }
 
+    /// <summary>
+    /// A GeoJSON polygon.
+    /// </summary>
     public class Polygon : Geometry
     {
-        [JsonProperty("coordinates")]
+        /// <summary>
+        /// The coordinates of the geometry.
+        /// </summary>
+        /// <returns></returns>
         public Position[][] Coordinates{get;}
 
+        /// <summary>
+        /// Construct a Polygon.
+        /// </summary>
+        /// <param name="coordinates"></param>
         public Polygon(Position[][] coordinates)
         {
             foreach(var p in coordinates)
@@ -185,10 +289,22 @@ namespace Hypar.GeoJSON
         }
     }
 
+    /// <summary>
+    /// A GeoJSON multi polygon.
+    /// </summary>
     public class MultiPolygon : Geometry
     {
+        /// <summary>
+        /// The coordinates of the geometry.
+        /// </summary>
+        /// <returns></returns>
         [JsonProperty("coordinates")]
         public Position[][] Coordinates{get;}
+        
+        /// <summary>
+        /// Construct a MultiPolygon.
+        /// </summary>
+        /// <param name="coordinates"></param>
         public MultiPolygon(Position[][] coordinates)
         {
             foreach(var poly in coordinates)
@@ -199,10 +315,17 @@ namespace Hypar.GeoJSON
         }
     }
 
+    /// <summary>
+    /// A GeoJSON geometry collection.
+    /// </summary>
     public class GeometryCollection
     {
         Geometry[] Geometries{get;}
 
+        /// <summary>
+        /// Construct a geometry collection.
+        /// </summary>
+        /// <param name="geometries">An array of geometries.</param>
         public GeometryCollection(Geometry[] geometries)
         {
             this.Geometries = geometries;

@@ -31,66 +31,128 @@ namespace Hypar.Geometry
 
         private ushort m_current_vertex_index = 0;
 
+        /// <summary>
+        /// The maximum vertex.
+        /// </summary>
+        /// <returns></returns>
         public double[] VMax
         {
             get{return m_v_max;}
         }
+
+        /// <summary>
+        /// The minimum vertex.
+        /// </summary>
+        /// <returns></returns>
         public double[] VMin
         {
             get{return m_v_min;}
         }
+
+        /// <summary>
+        /// The maximum normal.
+        /// </summary>
+        /// <returns></returns>
         public double[] NMax
         {
             get{return m_n_max;}
         }
+
+        /// <summary>
+        /// The minimum normal.
+        /// </summary>
+        /// <returns></returns>
         public double[] NMin
         {
             get{return m_n_min;}
         }
+
+        /// <summary>
+        /// The maximum color.
+        /// </summary>
+        /// <returns></returns>
         public double[] CMax
         {
             get{return m_c_max;}
         }
+
+        /// <summary>
+        /// The minimum color.
+        /// </summary>
+        /// <returns></returns>
         public double[] CMin
         {
             get{return m_c_min;}
         }
 
+        /// <summary>
+        /// The maximum index.
+        /// </summary>
+        /// <returns></returns>
         public ushort IMax
         {
             get{return m_index_max;}
         }
 
+        /// <summary>
+        /// The minimum index.
+        /// </summary>
+        /// <returns></returns>
         public ushort IMin
         {
             get{return m_index_min;}
         }
 
+        /// <summary>
+        /// The vertices of the mesh.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<double> Vertices
         {
             get{return m_vertices;}
         }
 
+        /// <summary>
+        /// The normals of the mesh.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<double> Normals
         {
             get{return m_normals;}
         }
-
+        
+        /// <summary>
+        /// The indices of the mesh.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<ushort> Indices
         {
             get{return m_indices;}
         }
 
+        /// <summary>
+        /// The vertex colors of the mesh.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<double> VertexColors
         {
             get{return m_vertex_colors;}
         }
 
+        /// <summary>
+        /// Construct an empty mesh.
+        /// </summary>
         public Mesh()
         {
             // An empty mesh.
         }
 
+        /// <summary>
+        /// Construct a mesh from vertices, normals, and indices.
+        /// </summary>
+        /// <param name="vertices">An array containing doubles of the form [x1, y1, z1, x2, y2, z2...].</param>
+        /// <param name="normals">An array containing doubles of the form [nx1, ny1, nz1, nx2, ny2, nz2...]</param>
+        /// <param name="indices">An array containing integers of the form [0, 1, 2, 0, 2, 3...].</param>
         public Mesh(double[] vertices, double[] normals, ushort[] indices)
         {
             this.m_vertices.AddRange(vertices);
@@ -98,7 +160,16 @@ namespace Hypar.Geometry
             this.m_indices.AddRange(indices);
         }
 
-        public void AddTri(Vector3 a, Vector3 b, Vector3 c, Color ac = null, Color bc = null, Color cc = null)
+        /// <summary>
+        /// Add a triangle to the mesh.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <param name="ac"></param>
+        /// <param name="bc"></param>
+        /// <param name="cc"></param>
+        public void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Color ac = null, Color bc = null, Color cc = null)
         {
             var v1 = b - a;
             var v2 = c - a;
@@ -133,15 +204,20 @@ namespace Hypar.Geometry
             m_current_vertex_index += 3;
         }
 
-        public void AddTri(Vector3[] v, Color[] c = null)
+        /// <summary>
+        /// Add a triangle to the mesh.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="c"></param>
+        public void AddTriangle(Vector3[] v, Color[] c = null)
         {
             if(c != null)
             {
-                AddTri(v[0], v[1], v[2], c[0], c[1], c[2]);
+                AddTriangle(v[0], v[1], v[2], c[0], c[1], c[2]);
             }
             else
             {
-                AddTri(v[0], v[1], v[2]);
+                AddTriangle(v[0], v[1], v[2]);
             }
         }
 
@@ -183,10 +259,15 @@ namespace Hypar.Geometry
             }
         }
 
-        public void AddQuad(Vector3[] v, Color[] c = null)
+        /// <summary>
+        /// Add two triangles to the mesh by splitting a rectangular region in two.
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <param name="colors"></param>
+        public void AddQuad(Vector3[] vertices, Color[] colors = null)
         {
-            var v1 = v[1] - v[0];
-            var v2 = v[2] - v[0];
+            var v1 = vertices[1] - vertices[0];
+            var v2 = vertices[2] - vertices[0];
             var n1 = v1.Cross(v2).Normalized();
             if(Double.IsNaN(n1.X) || Double.IsNaN(n1.Y) || Double.IsNaN(n1.Z))
             {
@@ -194,19 +275,19 @@ namespace Hypar.Geometry
                 return;
             }
 
-            if(c != null)
+            if(colors != null)
             {
-                AddVertex(v[0], n1, c[0]);
-                AddVertex(v[1], n1, c[1]);
-                AddVertex(v[2], n1, c[2]);
-                AddVertex(v[3], n1, c[3]);
+                AddVertex(vertices[0], n1, colors[0]);
+                AddVertex(vertices[1], n1, colors[1]);
+                AddVertex(vertices[2], n1, colors[2]);
+                AddVertex(vertices[3], n1, colors[3]);
             }
             else
             {
-                AddVertex(v[0], n1);
-                AddVertex(v[1], n1);
-                AddVertex(v[2], n1);
-                AddVertex(v[3], n1);
+                AddVertex(vertices[0], n1);
+                AddVertex(vertices[1], n1);
+                AddVertex(vertices[2], n1);
+                AddVertex(vertices[3], n1);
             }
 
             var start = m_current_vertex_index;
@@ -222,6 +303,12 @@ namespace Hypar.Geometry
             m_current_vertex_index += 4;
         }
 
+        /// <summary>
+        /// Add a tessellated face to the mesh.
+        /// </summary>
+        /// <param name="perimeter">The closed polyline representing the edge of the face.</param>
+        /// <param name="height">A height at which the tessellated face will be offset.</param>
+        /// <param name="reverse">A flag indicating whether the perimeter should be reversed.</param>
         public void AddTesselatedFace(IEnumerable<Polyline> perimeter, double height=0.0, bool reverse = false)
         {
             var tess = new Tess();
@@ -243,10 +330,14 @@ namespace Hypar.Geometry
                 var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
                 var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
                 var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
-                AddTri(a,b,c);
+                AddTriangle(a,b,c);
             }
         }
 
+        /// <summary>
+        /// Get a string representation of the mesh.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $@"
@@ -266,7 +357,6 @@ IMin:{m_index_min}";
         /// </summary>
         /// <param name="width"></param>
         /// <param name="length"></param>
-        /// <param name="materialId"></param>
         public static Mesh Plane(double width, double length)
         {
             var vertices = new[]{-width,-length,0.0,width,-length,0.0,width,length,0.0,-width,length,0.0};
@@ -277,26 +367,36 @@ IMin:{m_index_min}";
             return mesh;
         }
 
+        /// <summary>
+        /// Extrude a collection of polylines.
+        /// </summary>
+        /// <param name="perimeters">A collection of polylines. The first polyline represents the outer edge of the extrusion.
+        /// Additional polylines represent holes in the extrusion.</param>
+        /// <param name="height">The height of the extrusion.</param>
+        /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
+        /// <returns></returns>
         public static Mesh Extrude(IEnumerable<Polyline> perimeters, double height, bool capped=true)
         {
             var mesh = new Hypar.Geometry.Mesh();
 
             foreach(var boundary in perimeters)
             {
-                for(var i=0; i<boundary.Vertices.Count(); i++)
+                var verts = boundary.Vertices.ToArray();
+
+                for(var i=0; i<verts.Length; i++)
                 {
                     Vector3 a;
                     Vector3 b;
 
-                    if(i == boundary.Vertices.Count()-1)
+                    if(i == verts.Length-1)
                     {
-                        a = boundary.Vertices.ElementAt(i);
-                        b = boundary.Vertices.ElementAt(0);
+                        a = verts[i];
+                        b = verts[0];
                     }
                     else
                     {
-                        a = boundary.Vertices.ElementAt(i);
-                        b = boundary.Vertices.ElementAt(i+1);
+                        a = verts[i];
+                        b = verts[i+1];
                     }
 
                     var v1 = new Vector3(a.X, a.Y, 0.0);
@@ -316,6 +416,13 @@ IMin:{m_index_min}";
             return mesh;
         }
 
+        /// <summary>
+        /// Extrude a polyline profile along a curve.
+        /// </summary>
+        /// <param name="line">The line along which to extrude.</param>
+        /// <param name="perimeters">A collection of polylines to extrude.</param>
+        /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
+        /// <returns></returns>
         public static Mesh ExtrudeAlongLine(Line line, IEnumerable<Polyline> perimeters, bool capped=true)
         {
             var height = line.Length();

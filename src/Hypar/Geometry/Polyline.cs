@@ -12,12 +12,15 @@ namespace Hypar.Geometry
     {
         private BBox _bbox;
 
+        /// <summary>
+        /// The bounds of the polyline.
+        /// </summary>
         public BBox BoundingBox => _bbox;
 
         private List<Vector3> _vertices = new List<Vector3>();
 
         /// <summary>
-        /// The vertices of the polygon.
+        /// The vertices of the polyline.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Vector3> Vertices
@@ -38,7 +41,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// Reverse the direction of a polyline.
         /// </summary>
-        /// <returns>Returns a new Polygon3 with opposite winding.</returns>
+        /// <returns>Returns a new polyline with opposite winding.</returns>
         public Polyline Reversed()
         {
             var verts = new List<Vector3>(_vertices);
@@ -46,13 +49,17 @@ namespace Hypar.Geometry
             return new Polyline(verts);
         }
 
+        /// <summary>
+        /// Get a string representation of this polyline.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Join(",", this.Vertices);
         }
         
         /// <summary>
-        /// Get a collection a lines representing each segment of the polyline.
+        /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
         public IEnumerable<Line> Segments()
@@ -74,6 +81,10 @@ namespace Hypar.Geometry
             }
         }
 
+        /// <summary>
+        /// Convert this polyline to an array of vectors.
+        /// </summary>
+        /// <returns></returns>
         public Vector3[] ToArray()
         {
             return this._vertices.ToArray();
@@ -90,6 +101,11 @@ namespace Hypar.Geometry
             return a.Cross(b);
         }
 
+        /// <summary>
+        /// Get segment i of this polyline.
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
         public Line Segment(int i)
         {
             if(this._vertices.Count <= i)
@@ -102,6 +118,11 @@ namespace Hypar.Geometry
             return new Line(a,b);
         }
 
+        /// <summary>
+        /// Offset this polyline by the specified amount.
+        /// </summary>
+        /// <param name="offset">The amount to offset.</param>
+        /// <returns>A new polyline offset by offset.</returns>
         public Polyline Offset(double offset)
         {
             var pts = new Vector3[this._vertices.Count];
@@ -135,11 +156,19 @@ namespace Hypar.Geometry
             return new Polyline(pts);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<Vector3> GetEnumerator()
         {
             return ((IEnumerable<Vector3>)_vertices).GetEnumerator();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable<Vector3>)_vertices).GetEnumerator();

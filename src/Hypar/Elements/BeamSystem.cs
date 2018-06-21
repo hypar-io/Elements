@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Hypar.Elements
 {
+    /// <summary>
+    /// BeamSystem represents a collection of beams within a perimeter.
+    /// </summary>
     public class BeamSystem : IEnumerable<Beam>
     {
         private List<Beam> _beams = new List<Beam>();
@@ -32,6 +35,14 @@ namespace Hypar.Elements
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material, transform);
         }
 
+        /// <summary>
+        /// Construct a beam system under a slab.
+        /// </summary>
+        /// <param name="slab"></param>
+        /// <param name="count"></param>
+        /// <param name="profile"></param>
+        /// <param name="material"></param>
+        /// <param name="transform"></param>
         public BeamSystem(Slab slab, int count, Polyline profile, Material material, Transform transform = null)
         {
             var edges = slab.Perimeter.Segments().ToArray();
@@ -57,11 +68,19 @@ namespace Hypar.Elements
             }
         }
 
+        /// <summary>
+        /// Get the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<Beam> GetEnumerator()
         {
             return ((IEnumerable<Beam>)_beams).GetEnumerator();
         }
 
+        /// <summary>
+        /// Get the enumerator.
+        /// </summary>
+        /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable<Beam>)_beams).GetEnumerator();

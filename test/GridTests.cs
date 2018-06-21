@@ -8,14 +8,13 @@ namespace Hypar.Tests
     public class GridTests
     {
         [Fact]
-        public void Grid()
+        public void ValidValues_Construct_Success()
         {
 
             var pline =new Polyline(new[]{new Vector3(0,0,0), new Vector3(20,0,0), new Vector3(20,10,30), new Vector3(0,0,30)});
-            var grid = ElementsFactory.CreateGrid()
-                                        .WithinPerimeter(pline)
-                                        .WithUDivisions(5)
-                                        .WithVDivisions(5);
+            var grid = Grid.WithinPerimeter(pline)
+                            .WithUDivisions(5)
+                            .WithVDivisions(5);
                                         
             var profile = Profiles.WideFlangeProfile(0.5, 0.5, 0.1, 0.1, Profiles.VerticalAlignment.Center);
 

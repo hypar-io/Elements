@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RuntimeIdentifiers>win-x64,linux-x64,osx.10.12-x64</RuntimeIdentifiers>
+    <Version>0.0.1-beta1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.Lambda" Version="3.3.13.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="RestSharp" Version="106.3.1" />
+  </ItemGroup>
+
+</Project>

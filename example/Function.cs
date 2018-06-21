@@ -44,7 +44,11 @@ namespace Hypar.Example
             return model.ToHypar();
         }
 
-        private Model CreateBuilding(Polyline sitePerimeter, int verticalDivisions, int louverCount, double louverWidth)
+        [LocationParameterData("sitePerimeter", "The perimeter of the site.")]
+        [NumericParameterData("verticalDivisions", "The number of vertical divisions.", 1, 7, 1)]
+        [NumericParameterData("louverCount", "The number of louvers.", 0, 10, 2)]
+        [NumericParameterData("louverWidth", "The louver width", 0.2, 1.5, 0.2)]
+        public Model Execute(Polyline sitePerimeter, int verticalDivisions, int louverCount, double louverWidth)
         {
             var model = new Model();
             
@@ -93,10 +97,9 @@ namespace Hypar.Example
 
             var createFaceGrid = new Func<Polyline, Grid>((Polyline p) => 
             {
-                return ElementsFactory.CreateGrid()
-                                        .WithinPerimeter(p)
-                                        .WithUDivisions(verticalDivisions)
-                                        .WithVDivisions(new[]{0.0, 0.4, 0.55, 1.0});
+                return Grid.WithinPerimeter(p)
+                            .WithUDivisions(verticalDivisions)
+                            .WithVDivisions(new[]{0.0, 0.4, 0.55, 1.0});
             });
 
             var panelProfile = Profiles.Rectangular(Vector3.Origin(), 0.05, 1.0, 0.0, 0.0);
@@ -126,8 +129,7 @@ namespace Hypar.Example
             });
 
             var generateLouvers = new Func<Polyline, IEnumerable<Beam>>((Polyline p) => {
-                var g = ElementsFactory.CreateGrid()
-                            .WithinPerimeter(p)
+                var g = Grid.WithinPerimeter(p)
                             .WithUDivisions(louverCount)
                             .WithVDivisions(1);
 

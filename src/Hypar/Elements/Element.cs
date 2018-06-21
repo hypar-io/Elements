@@ -11,14 +11,24 @@ namespace Hypar.Elements
     /// </summary>
     public abstract class Element
     {
-        protected Material _material;
-        protected Transform _transform;
+        private Material _material;
+        private Transform _transform;
 
         /// <summary>
         /// The Element's material.
         /// </summary>
         /// <returns></returns>
-        public Material Material => _material;
+        public Material Material
+        {
+            get
+            {
+                return _material;
+            }
+            set
+            {
+                _material = value;
+            }
+        }
 
         /// <summary>
         /// The unique identifier of the Element.
@@ -26,25 +36,31 @@ namespace Hypar.Elements
         /// <returns></returns>
         public Guid Id { get; }
 
-        public Transform Transform => _transform;
+        /// <summary>
+        /// The element's transform.
+        /// </summary>
+        public Transform Transform
+        {
+            get
+            {
+                return _transform;
+            }
+            set
+            {
+                _transform  = value;
+            }
+        }
 
         /// <summary>
         /// Construct an Element.
         /// </summary>
-        /// <param name="material"></param>
-        /// <param name="transform"></param>
+        /// <param name="material">The element's material.</param>
+        /// <param name="transform">The element's transform.</param>
         public Element(Material material = null, Transform transform = null)
         {
             this.Id = Guid.NewGuid();
             this._material = material == null ? BuiltInMaterials.Default : material;
             this._transform = transform;
-        }
-
-
-        public Element WithTransform(Transform t)
-        {
-            this._transform = t;
-            return this;
         }
     }
 }

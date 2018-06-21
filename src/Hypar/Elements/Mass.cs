@@ -6,7 +6,10 @@ using Hypar.Geometry;
 
 namespace Hypar.Elements
 {
-    public class Mass : Element, IMeshProvider
+    /// <summary>
+    /// A mass represents an extruded building mass.
+    /// </summary>
+    public class Mass : Element, ITessellate<Mesh>
     {
         private List<Polyline> _sides = new List<Polyline>();
         private Polyline _bottom;
@@ -20,16 +23,25 @@ namespace Hypar.Elements
         /// <returns></returns>
         public Polyline Bottom => _bottom;
 
+        /// <summary>
+        /// The elevation of the bottom perimeter.
+        /// </summary>
         public double BottomElevation => _bottomElevation;
 
         /// <summary>
-        /// The top perimeter of the Mass.
+        /// The top perimeter of the mass.
         /// </summary>
         /// <returns></returns>
         public Polyline Top => _top;
 
+        /// <summary>
+        /// The elevation of the top perimeter.
+        /// </summary>
         public double TopElevation => _topElevation;
 
+        /// <summary>
+        /// Construct a default mass.
+        /// </summary>
         public Mass():base(BuiltInMaterials.Mass)
         {
             var defaultProfile = Profiles.Rectangular();
@@ -37,9 +49,18 @@ namespace Hypar.Elements
             this._bottom = defaultProfile;
             this._bottomElevation = 0.0;
             this._topElevation = 1.0;
-            this._material = BuiltInMaterials.Mass;
+            this.Material = BuiltInMaterials.Mass;
         }
 
+        /// <summary>
+        /// Construct a mass from perimeters and elevations.
+        /// </summary>
+        /// <param name="bottom">The bottom perimeter of the mass.</param>
+        /// <param name="bottomElevation">The elevation of the bottom perimeter.</param>
+        /// <param name="top">The top perimeter of the mass.</param>
+        /// <param name="topElevation">The elevation of the top perimeter.</param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
         public Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation, Transform transform = null) : base(BuiltInMaterials.Mass, transform)
         {
             if (bottom.Vertices.Count() != top.Vertices.Count())
@@ -56,9 +77,13 @@ namespace Hypar.Elements
             this._bottom = bottom;
             this._bottomElevation = bottomElevation;
             this._topElevation = topElevation;
-            this._material = BuiltInMaterials.Mass;
+            this.Material = BuiltInMaterials.Mass;
         }
 
+        /// <summary>
+        /// A collection of curves representing the vertical edges of the mass.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Line> VerticalEdges()
         {
             foreach(var f in Faces())
@@ -68,6 +93,10 @@ namespace Hypar.Elements
             
         }
 
+        /// <summary>
+        /// A collection of curves representing the horizontal edges of the mass.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Line> HorizontalEdges()
         {
             foreach(var f in Faces())
@@ -77,6 +106,10 @@ namespace Hypar.Elements
             }
         }
 
+        /// <summary>
+        /// A collection of polylines representing the perimeter of each face of the mass.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Polyline> Faces()
         {
             var b = this._bottom.Vertices.ToArray();
@@ -100,6 +133,13 @@ namespace Hypar.Elements
                 yield return new Polyline(new[] { v1n, v2n, v3n, v4n });
             }
         }
+
+        /// <summary>
+        /// For each face of the mass apply a creator function.
+        /// </summary>
+        /// <param name="creator">The function to apply.</param>
+        /// <typeparam name="T">The creator function's return type.</typeparam>
+        /// <returns></returns>
         public IEnumerable<T> ForEachFaceCreateElementsOfType<T>(Func<Polyline, IEnumerable<T>> creator)
         {
             var results = new List<T>();
@@ -110,6 +150,10 @@ namespace Hypar.Elements
             return results;
         }
         
+        /// <summary>
+        /// Tessellate the mass.
+        /// </summary>
+        /// <returns>A mesh representing the tessellated mass.</returns>
         public Mesh Tessellate()
         {
             var mesh = new Mesh();

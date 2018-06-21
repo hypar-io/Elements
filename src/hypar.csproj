@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Title>Hypar</Title>
     <Authors>Hypar</Authors>
     <PackageId>Hypar</PackageId>
@@ -11,7 +12,7 @@
     <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.0.1-beta2</Version>
+    <Version>0.0.1-beta3</Version>
     <Tags>AEC</Tags>
   </PropertyGroup>
 
@@ -20,6 +21,12 @@
     <PackageReference Include="glTF2Loader" Version="1.1.1-alpha" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Verb">
+      <HintPath>..\..\verb\build\cs\bin\Debug\netstandard2.0\VerbDotnet.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

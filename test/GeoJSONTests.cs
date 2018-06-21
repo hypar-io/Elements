@@ -1,7 +1,9 @@
-using Xunit;
 using Hypar.GeoJSON;
+using Hypar.Geometry;
 using Newtonsoft.Json;
 using System;
+using Xunit;
+using Line = Hypar.GeoJSON.Line;
 
 namespace Hypar.Tests
 {
@@ -161,9 +163,9 @@ namespace Hypar.Tests
             // X -13180892.29 Y 4029617.65
             var lat = 34.006074;
             var lon = -118.405970;
-            var utm = WebMercator.LatLonToMeters(lat, lon);
-            Assert.Equal(utm.Y, 4029617.65, 2);
-            Assert.Equal(utm.X, -13180892.29, 2);
+            var utm = new Vector3(MercatorProjection.lonToX(lon), MercatorProjection.latToY(lat), 0);
+            Assert.Equal(4029617.65, utm.Y, 2);
+            Assert.Equal(-13180892.29, utm.X, 2);
         }
 
         // [Fact]

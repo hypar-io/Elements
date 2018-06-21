@@ -26,7 +26,7 @@ namespace Hypar.Tests
             var b = Vector3.XAxis();
             Assert.True(a.IsParallelTo(b));
 
-            var c = a.Negate();
+            var c = a.Negated();
             Assert.True(a.IsParallelTo(c));
         }
     }

@@ -8,12 +8,12 @@ namespace Hypar.Elements
     /// <summary>
     /// A zero-thickness planar panel with an arbitrary outline.
     /// </summary>
-    public class Panel : Element, IMeshProvider
+    public class Panel : Element, ITessellate<Mesh>
     {
         private Polyline _perimeter;
 
         /// <summary>
-        /// A Polygon3 which defines the perimeter of the panel.
+        /// A polyline which defines the perimeter of the panel.
         /// </summary>
         /// <returns></returns>
         public Polyline Perimeter => _perimeter;
@@ -28,10 +28,10 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Construct a panel within a perimeter.
+        /// Set the perimeter of the panel.
         /// </summary>
-        /// <param name="perimeter"></param>
-        /// <returns></returns>
+        /// <param name="perimeter">The perimeter.</param>
+        /// <returns>The panel.</returns>
         public static Panel WithinPerimeter(Polyline perimeter)
         {
             var panel = new Panel();
@@ -39,6 +39,12 @@ namespace Hypar.Elements
             return panel;
         }
 
+        /// <summary>
+        /// Construct a default panel.
+        /// </summary>
+        /// <param name="material">The panel's material.</param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
         public Panel(Material material = null, Transform transform = null) : base(material, transform)
         {
             this._perimeter = Profiles.Rectangular(new Vector3(), 10, 10);
@@ -47,7 +53,7 @@ namespace Hypar.Elements
         /// <summary>
         /// Construct a Panel.
         /// </summary>
-        /// <param name="perimeter"></param>
+        /// <param name="perimeter">The perimeter of the panel.</param>
         /// <param name="material"></param>
         /// <param name="transform"></param>
         /// <returns></returns>
@@ -61,6 +67,10 @@ namespace Hypar.Elements
             this._perimeter = perimeter;
         }
         
+        /// <summary>
+        /// Tessellate the panel.
+        /// </summary>
+        /// <returns>A mesh representing the tessellated panel.</returns>
         public Mesh Tessellate()
         {
             var mesh = new Mesh();
@@ -68,7 +78,7 @@ namespace Hypar.Elements
 
             if (vCount == 3)
             {
-                mesh.AddTri(this.Perimeter.ToArray());
+                mesh.AddTriangle(this.Perimeter.ToArray());
             }
             else if (vCount == 4)
             {
@@ -77,15 +87,29 @@ namespace Hypar.Elements
             return mesh;
         }
 
-        public Panel OfMaterial(Material m)
+        /// <summary>
+        /// Set the material of the panel.
+        /// </summary>
+        /// <param name="material">The material.</param>
+        /// <returns>The panel.</returns>
+        public Panel OfMaterial(Material material)
         {
-            this._material = m;
+            this.Material = material;
             return this;
         }
     }
 
+    /// <summary>
+    /// Extension methods for panels.
+    /// </summary>
     public static class PanelExtensions
     {
+        /// <summary>
+        /// Set the material of a collection of panels.
+        /// </summary>
+        /// <param name="panels"></param>
+        /// <param name="m"></param>
+        /// <returns></returns>
         public static IEnumerable<Panel> OfMaterial(this IEnumerable<Panel> panels, Material m)
         {
             foreach(var p in panels)

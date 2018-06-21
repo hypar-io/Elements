@@ -1,34 +1,86 @@
 using Hypar.Geometry;
 
 namespace Hypar.Elements
-{
+{   
+    /// <summary>
+    /// Construct profiles.
+    /// </summary>
     public static class Profiles
     {
-        public static Polyline Rectangular(Vector3 origin = null, double width = 1.0, double height = 1.0, double vo = 0.0, double ho = 0.0)
+        /// <summary>
+        /// Construct a rectangular profile
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="verticalOffset"></param>
+        /// <param name="horizontalOffset"></param>
+        /// <returns></returns>
+        public static Polyline Rectangular(Vector3 origin = null, double width = 1.0, double height = 1.0, double verticalOffset = 0.0, double horizontalOffset = 0.0)
         {
             if(origin == null)
             {
                 origin = Vector3.Origin();
             }
 
-            var a = new Vector3(origin.X - width/2 + ho, origin.Y - height/2 + vo);
-            var b = new Vector3(origin.X + width/2 + ho, origin.Y - height/2 + vo);
-            var c = new Vector3(origin.X + width/2 + ho, origin.Y + height/2 + vo);
-            var d = new Vector3(origin.X - width/2 + ho, origin.Y + height/2 + vo);
+            var a = new Vector3(origin.X - width/2 + horizontalOffset, origin.Y - height/2 + verticalOffset);
+            var b = new Vector3(origin.X + width/2 + horizontalOffset, origin.Y - height/2 + verticalOffset);
+            var c = new Vector3(origin.X + width/2 + horizontalOffset, origin.Y + height/2 + verticalOffset);
+            var d = new Vector3(origin.X - width/2 + horizontalOffset, origin.Y + height/2 + verticalOffset);
 
             return new Polyline(new []{a, b, c, d});
         }
 
+        /// <summary>
+        /// The vertical alignment of the profile.
+        /// </summary>
         public enum VerticalAlignment
         {
-            Top, Center, Bottom
+            /// <summary>
+            /// Align the profile along its top.
+            /// </summary>
+            Top,
+            /// <summary>
+            /// Align the profile along its center.
+            /// </summary>
+            Center,
+            /// <summary>
+            /// Align the profile along its bottom.
+            /// </summary>
+            Bottom
         }
 
+        /// <summary>
+        /// The horizontal alignment of the profile.
+        /// </summary>
         public enum HorizontalAlignment
         {
-            Left, Center, Right
+            /// <summary>
+            /// Align the profile along its left edge.
+            /// </summary>
+            Left,
+            /// <summary>
+            /// Align the profile along its center.
+            /// </summary>
+            Center, 
+            /// <summary>
+            /// Align the profile along its right edge.
+            /// </summary>
+            Right
         }
 
+        /// <summary>
+        /// Construct a wide-flange profile.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="thicknessFlange"></param>
+        /// <param name="thicknessWeb"></param>
+        /// <param name="verticalAlignment"></param>
+        /// <param name="horizontalAlignment"></param>
+        /// <param name="verticalOffset"></param>
+        /// <param name="horizontalOffset"></param>
+        /// <returns></returns>
         public static Polyline WideFlangeProfile(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, 
                                                         VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
                                                         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 

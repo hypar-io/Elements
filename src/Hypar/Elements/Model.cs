@@ -21,18 +21,33 @@ namespace Hypar.Elements
 
         private Dictionary<string, IDataExtractor> _dataExtractors = new Dictionary<string,IDataExtractor>();
 
+        /// <summary>
+        /// All materials in the model.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, Material> Materials
         {
             get{return _materials;}
         }
 
+        /// <summary>
+        /// All elements in the model.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string,Element> Elements
         {
             get{return _elements;}
         }
 
+        /// <summary>
+        /// The origin of the model.
+        /// </summary>
+        /// <returns></returns>
         public Position Origin {get;set;}
 
+        /// <summary>
+        /// Construct an empty model.
+        /// </summary>
         public Model()
         {
             this.Origin = new Position(0,0);
@@ -55,13 +70,13 @@ namespace Hypar.Elements
         /// <summary>
         /// Add a Mesh to the Model.
         /// </summary>
-        /// <param name="m"></param>
-        public void AddElement(Element e)
+        /// <param name="element">The element to add to the model.</param>
+        public void AddElement(Element element)
         {
-            if(!this._elements.ContainsKey(e.Id.ToString()))
+            if(!this._elements.ContainsKey(element.Id.ToString()))
             {
-                this._elements.Add(e.Id.ToString(), e);
-                AddMaterial(e.Material);
+                this._elements.Add(element.Id.ToString(), element);
+                AddMaterial(element.Material);
             }
             else
             {
@@ -69,6 +84,10 @@ namespace Hypar.Elements
             }
         }
 
+        /// <summary>
+        /// Add a collection of elements to the model.
+        /// </summary>
+        /// <param name="elements">The elements to add to the model.</param>
         public void AddElements(IEnumerable<Element> elements)
         {
             foreach(var e in elements)
@@ -77,15 +96,19 @@ namespace Hypar.Elements
             }
         }
 
-        public void AddMaterial(Material m)
+        /// <summary>
+        /// Add a material to the model.
+        /// </summary>
+        /// <param name="material">The material to add to the model.</param>
+        public void AddMaterial(Material material)
         {
-            if(!this._materials.ContainsKey(m.Id))
+            if(!this._materials.ContainsKey(material.Id))
             {
-                this._materials.Add(m.Id, m);
+                this._materials.Add(material.Id, material);
             }
             else
             {
-                this._materials[m.Id] = m;
+                this._materials[material.Id] = material;
             }
         }
 
@@ -142,11 +165,19 @@ namespace Hypar.Elements
             return Convert.ToBase64String(bytes);
         }
 
+        /// <summary>
+        /// Serialize the model to JSON.
+        /// </summary>
+        /// <returns></returns>
         public string ToJSON()
         {
             return JsonConvert.SerializeObject(this);
         }
 
+        /// <summary>
+        /// Construct a representation of the model for sending to Hypar.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string,object> ToHypar()
         {
             var model = SaveBase64();
@@ -214,9 +245,9 @@ namespace Hypar.Elements
             foreach(var kvp in this._elements)
             {
                 var e = kvp.Value;
-                if(e is IMeshProvider)
+                if(e is ITessellate<Hypar.Geometry.Mesh>)
                 {
-                    var mp = e as IMeshProvider;
+                    var mp = e as ITessellate<Hypar.Geometry.Mesh>;
                     var mesh = mp.Tessellate();
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), 
                                         mesh.Indices.ToArray(), mesh.VertexColors.ToArray(), 

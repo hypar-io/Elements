@@ -5,14 +5,31 @@ using System.Linq;
 
 namespace Hypar.Geometry
 {
-    public class Line
+    /// <summary>
+    /// Line represents a linear curve between two points.
+    /// </summary>
+    public class Line : ICurve
     {
         private Vector3 _start = new Vector3();
         private Vector3 _end = new Vector3(1,0);
 
-        public Vector3 Start => _start;
+        /// <summary>
+        /// The start of the line.
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 Start
+        {
+            get{return _start;}
+        }
 
-        public Vector3 End => _end;
+        /// <summary>
+        /// The end of the line.
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 End
+        {
+            get{return _end;}
+        }
 
         /// <summary>
         /// Construct a line starting at a point.
@@ -63,7 +80,12 @@ namespace Hypar.Geometry
 
         }
 
-        internal Line(Vector3 start, Vector3 end)
+        /// <summary>
+        /// Construct a line from start and end points.
+        /// </summary>
+        /// <param name="start">The start of the line.</param>
+        /// <param name="end">The end of the line.</param>
+        public Line(Vector3 start, Vector3 end)
         {
             if (start.IsAlmostEqualTo(end))
             {
@@ -71,6 +93,18 @@ namespace Hypar.Geometry
             }
             this._start = start;
             this._end = end;
+        }
+
+        /// <summary>
+        /// Construct a line from a start point, pointing in a direction, with the specified length.
+        /// </summary>
+        /// <param name="start">The start of the line.</param>
+        /// <param name="direction">The direction of the line.</param>
+        /// <param name="length">The length of the line.</param>
+        public Line(Vector3 start, Vector3 direction, double length)
+        {
+            this._start = start;
+            this._end = start + direction.Normalized() * length;
         }
         
         /// <summary>
@@ -83,12 +117,11 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Get a transform from the line, where the origin of the transform
-        /// is the start of the line, and the Z axis of the transform
-        /// is the line's direction.
+        /// Get a transform whose XY plane is perpendicular to the curve, and whose
+        /// positive Z axis points along the curve.
         /// </summary>
-        /// <param name="up"></param>
-        /// <returns></returns>
+        /// <param name="up">The vector which will become the Y vector of the transform.</param>
+        /// <returns>A transform.</returns>
         public Transform GetTransform(Vector3 up = null)
         {
             var v = Direction();
@@ -114,24 +147,24 @@ namespace Hypar.Geometry
         /// <summary>
         /// Get a normalized vector representing the direction of the line.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A vector representing the direction of the line.</returns>
         public Vector3 Direction()
         {
             return (this.End - this.Start).Normalized();
         }
 
         /// <summary>
-        /// Get a point along the line at parameter t.
+        /// Get a point along the line at parameter u.
         /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
-        public Vector3 PointAt(double t)
+        /// <param name="u"></param>
+        /// <returns>A point on the curve at parameter u.</returns>
+        public Vector3 PointAt(double u)
         {
-            if (t > 1.0 || t < 0.0)
+            if (u > 1.0 || u < 0.0)
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
             }
-            var offset = this.Length() * t;
+            var offset = this.Length() * u;
             return this.Start + offset * this.Direction();
         }
 
@@ -143,8 +176,20 @@ namespace Hypar.Geometry
         {
             return new Line(End, Start);
         }
+
+        /// <summary>
+        /// Tessellate the curve.
+        /// </summary>
+        /// <returns>A collection of points sampled along the curve.</returns>
+        public IEnumerable<Vector3> Tessellate()
+        {
+            return new[]{Start, End};
+        }
     }
 
+    /// <summary>
+    /// Extension methods for lines.
+    /// </summary>
     public static class LineCollectionExtensions
     {
         /// <summary>

@@ -5,18 +5,34 @@ using Hypar.Geometry;
 
 namespace Hypar.Elements
 {
-    public class Beam : Element, IMeshProvider
+    /// <summary>
+    /// A linear structural element with a cross section.
+    /// </summary>
+    public class Beam : Element, ITessellate<Mesh>
     {
         private Line _centerLine;
         private Polyline _profile;
         private Vector3 _up;
 
+        /// <summary>
+        /// The centerline of the beam.
+        /// </summary>
         public Line CenterLine => _centerLine;
 
+        /// <summary>
+        /// The cross-section profile of the beam.
+        /// </summary>
         public Polyline Profile => _profile;
         
+        /// <summary>
+        /// The up axis of the beam.
+        /// </summary>
         public Vector3 UpAxis => _up;
 
+        /// <summary>
+        /// Construct a default beam.
+        /// </summary>
+        /// <returns></returns>
         public Beam() : base(BuiltInMaterials.Default,null)
         {
             this._centerLine = new Line(Vector3.Origin(), Vector3.ByXYZ(1,0,0));
@@ -31,7 +47,7 @@ namespace Hypar.Elements
             {
                 this._up = up;
             }
-            this._transform = centerLine.GetTransform(up);
+            this.Transform = centerLine.GetTransform(up);
         }
 
         /// <summary>
@@ -43,10 +59,14 @@ namespace Hypar.Elements
         {
             var beam = new Beam();
             beam._centerLine = l;
-            beam._transform = beam._centerLine.GetTransform();
+            beam.Transform = beam._centerLine.GetTransform();
             return beam;
         }
 
+        /// <summary>
+        /// Tessellate the beam.
+        /// </summary>
+        /// <returns>A mesh representing the tessellated beam.</returns>
         public Mesh Tessellate()
         {
             return Mesh.ExtrudeAlongLine(this.CenterLine, new[] { this.Profile });
@@ -82,17 +102,25 @@ namespace Hypar.Elements
         public Beam WithUpAxis(Vector3 up)
         {
             this._up = up;
-            this._transform = this._centerLine.GetTransform(up);
+            this.Transform = this._centerLine.GetTransform(up);
             return this;
         }
 
-        public Beam OfMaterial(Material m)
+        /// <summary>
+        /// Set the material of the beam.
+        /// </summary>
+        /// <param name="material">The beam's material.</param>
+        /// <returns></returns>
+        public Beam OfMaterial(Material material)
         {
-            this._material = m;
+            this.Material = material;
             return this;
         }
     }
 
+    /// <summary>
+    /// Extension methods for beams.
+    /// </summary>
     public static class BeamCollectionExtensions
     {   
         /// <summary>
@@ -129,10 +157,10 @@ namespace Hypar.Elements
         /// <summary>
         /// Set the material of a collection of beams.
         /// </summary>
-        /// <param name="IEnumerable<Beam>beams"></param>
+        /// <param name="beams"></param>
         /// <param name="material"></param>
         /// <returns></returns>
-        public static IEnumerable<Beam> OfMaterial(this IEnumerable<Beam>beams, Material material)
+        public static IEnumerable<Beam> OfMaterial(this IEnumerable<Beam> beams, Material material)
         {
             foreach(var b in beams)
             {
@@ -141,6 +169,12 @@ namespace Hypar.Elements
             return beams;
         }
 
+        /// <summary>
+        /// Set the up axis of a collection of beams.
+        /// </summary>
+        /// <param name="beams"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public static IEnumerable<Beam> WithUpAxis(this IEnumerable<Beam> beams, Vector3 v)
         {
             foreach(var b in beams)
