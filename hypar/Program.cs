@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -85,6 +86,13 @@ Available Commands:
                         throw new Exception("You must supply a function_id.");
                     }
                     Executions(args[1]);
+                    break;
+                case "new":
+                    if(args.Length < 2)
+                    {
+                        throw new Exception("You must supply a name for the new hypar function.");
+                    }
+                    New(args[1]);
                     break;
                 case "help":
                     ShowHelp(args);
@@ -202,6 +210,63 @@ Available Commands:
                 File.WriteAllBytes(output, response);
             }
             return;
+        }
+
+        static void New(string name)
+        {
+            // Create a directory here.
+            var newDir = Path.Combine(Directory.GetCurrentDirectory(), name);
+            CreateProject(name);       
+            CreateHyparReference(name);
+            CreateHyparJson(newDir, name);
+            return;
+        }
+
+        private static void CreateHyparJson(string dir, string name)
+        {
+            var hyparPath = Path.Combine(dir, "hypar.json");
+            
+            var contents = $@"{{
+    ""function"":""{name}::{name}.{name}"",
+    ""runtime"":""netstandard2.0"",
+    ""parameters"": {{}},
+    ""returns"": {{}}
+}}";
+            File.WriteAllText(hyparPath, contents);
+        }
+        
+        private static void CreateProject(string name)
+        {
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = false,
+                    FileName="dotnet",
+                    Arguments=$"new classlib -n {name}"
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+        }
+
+        private static void CreateHyparReference(string name)
+        {
+            var project = $"./{name}/{name}.csproj";
+            Console.WriteLine(project);
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = false,
+                    FileName="dotnet",
+                    Arguments=$"add {project} package Hypar -v 0.0.1-beta1"
+                }
+            };
+            process.Start();
+            process.WaitForExit();
         }
 
         static void Results()
