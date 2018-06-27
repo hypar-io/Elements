@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>hypar</AssemblyName>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RuntimeIdentifiers>win-x64,linux-x64,osx.10.12-x64</RuntimeIdentifiers>
@@ -8,9 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.10.3" />
+    <PackageReference Include="AWSSDK.Extensions.CognitoAuthentication" Version="0.9.4" />
     <PackageReference Include="AWSSDK.Lambda" Version="3.3.13.4" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.18.5" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="RestSharp" Version="106.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Verb">
+      <HintPath>..\Hypar\bin\Debug\netstandard2.0\Hypar.Elements.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

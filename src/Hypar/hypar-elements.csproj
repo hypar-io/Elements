@@ -3,16 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Hypar.Elements</AssemblyName>
     <Title>Hypar</Title>
     <Authors>Hypar</Authors>
     <PackageId>Hypar</PackageId>
-    <Description>Generative Design for AEC</Description>
+    <Description>Function Execution for AEC</Description>
     <Summary>The Hypar SDK allows developers to create code which runs on the Hypar platform.</Summary>
-    <Copyright>Hypar LLC</Copyright>
+    <Copyright>Hypar LLC, 2018</Copyright>
     <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.0.1-beta3</Version>
+    <Version>0.0.1-beta5</Version>
     <Tags>AEC</Tags>
   </PropertyGroup>
 
@@ -25,7 +26,7 @@
 
   <ItemGroup>
     <Reference Include="Verb">
-      <HintPath>..\..\verb\build\cs\bin\Debug\netstandard2.0\VerbDotnet.dll</HintPath>
+      <HintPath>..\..\..\verb\build\cs\bin\Debug\netstandard2.0\VerbDotnet.dll</HintPath>
     </Reference>
   </ItemGroup>
 

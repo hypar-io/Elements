@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -12,18 +13,21 @@ namespace Hypar.Geometry
         /// The X component of the vector.
         /// </summary>
         /// <returns></returns>
+        [JsonProperty("x")]
         public double X{get;}
 
         /// <summary>
         /// The Y component of the vector.
         /// </summary>
         /// <returns></returns>
+        [JsonProperty("y")]
         public double Y{get;}
 
         /// <summary>
         /// The Z component of the vector.
         /// </summary>
         /// <returns></returns>
+        [JsonProperty("z")]
         public double Z{get;}
 
         /// <summary>
