@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Hypar
+namespace Hypar.API
 {
     public class Function
     {

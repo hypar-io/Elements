@@ -1,11 +1,13 @@
 using System;
+using System.Text;
+
 using System.Threading.Tasks;
 using Amazon;
 using Amazon.CognitoIdentity;
 using Amazon.CognitoIdentityProvider;
 using Amazon.Extensions.CognitoAuthentication;
 
-namespace Hypar
+namespace Hypar.Commands
 {
     //https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/cognito-authentication-extension.html
 
@@ -19,7 +21,7 @@ namespace Hypar
 
         public static string IdentityPoolId = "us-west-2:d0cea890-84af-4af7-9398-fff1bf5268ee";
 
-        public static void GetCredsAsync(string username, string password)
+        private static bool GetCredsAsync(string username, string password)
         {
             var provider = new AmazonCognitoIdentityProviderClient(new Amazon.Runtime.AnonymousAWSCredentials(), RegionEndpoint.USWest2);
             var userPool = new CognitoUserPool(UserPoolId, ClientId, provider);
@@ -73,6 +75,7 @@ namespace Hypar
                 Console.WriteLine("User successfully authenticated.");
 
                 User = user;
+                return true;
                 // var userDetails = Task.Run(()=>user.GetUserDetailsAsync()).Result;
 
                 // foreach(var kvp in userDetails.UserAttributes)
@@ -87,7 +90,48 @@ namespace Hypar
             else
             {
                 Console.WriteLine("Error in authentication process.");
+                return false;
             }
+        }
+
+        public static bool Login()
+        {
+            Console.WriteLine("Enter your user name:");
+            var username = Console.ReadLine();
+            
+            Console.WriteLine("Enter your password:");
+            var password = GetConsolePassword();
+
+            return Task.Run(()=>Cognito.GetCredsAsync(username, password)).Result;
+        }
+
+        private static string GetConsolePassword( )
+        {
+            var sb = new StringBuilder( );
+            while ( true )
+            {
+                ConsoleKeyInfo cki = Console.ReadKey( true );
+                if ( cki.Key == ConsoleKey.Enter )
+                {
+                    Console.WriteLine( );
+                    break;
+                }
+
+                if ( cki.Key == ConsoleKey.Backspace || cki.Key == ConsoleKey.Delete )
+                {
+                    if ( sb.Length > 0 )
+                    {
+                        Console.Write( "\b\0\b" );
+                        sb.Length--;
+                    }
+                    continue;
+                }
+
+                Console.Write( '*' );
+                sb.Append( cki.KeyChar );
+            }
+
+            return sb.ToString();
         }
     }
 }

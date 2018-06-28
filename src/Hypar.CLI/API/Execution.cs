@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Hypar
+namespace Hypar.API
 {
     public class LambdaData
     {
@@ -13,6 +13,7 @@ namespace Hypar
         [JsonProperty("elapsed")]
         public double Elapsed{get;set;}
     }
+
     public class Execution
     {
         [JsonProperty("function_id")]
