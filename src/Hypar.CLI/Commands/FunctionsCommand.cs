@@ -43,7 +43,7 @@ namespace Hypar.Commands
                 var functions = JsonConvert.DeserializeObject<List<Function>>(response.Content);
                 foreach(var f in functions)
                 {
-                    Console.WriteLine($"{f.Id}, {f.Description}");
+                    Console.WriteLine($"{f.Id}, v{string.Join(",", f.Versions.Keys)}, {f.Description}");
                 }
             }
             else

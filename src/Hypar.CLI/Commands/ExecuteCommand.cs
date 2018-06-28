@@ -11,7 +11,7 @@ namespace Hypar.Commands
 {
     public class ExecuteCommand : IHyparCommand
     {
-        int _limit = -1;
+        private Dictionary<string,object> _args;
 
         private RestClient _client = new RestClient(Constants.HYPAR_API_URL);
 
@@ -30,12 +30,28 @@ namespace Hypar.Commands
                 Console.WriteLine("Hypar execute requires a function_id parameter.");
                 return false;
             }
-            
-            if(args.Length == 3)
+
+            // Avoid falling through to reading stdin.
+            if(args[1] == "help")
             {
-                if(!int.TryParse((string)args[2], out _limit))
+                return true;
+            }
+
+            if(!Console.IsInputRedirected)
+            {
+                Console.WriteLine("Hypar execute expects stdin to contain arguments.");
+                return false;
+            }
+            else
+            {
+                try
                 {
-                    Console.WriteLine("The specified limit is invalid.");
+                    var input = Console.In.ReadToEnd();
+                    _args = JsonConvert.DeserializeObject<Dictionary<string,object>>(input);
+                }
+                catch
+                {
+                    Console.WriteLine("The input data could not be deserialized to execution arguments.");
                     return false;
                 }
             }
@@ -47,13 +63,13 @@ namespace Hypar.Commands
         {
             var args = (string[])parameter;
             var functionId = args[1];
-            Execute(functionId, _limit);
+            Execute(functionId);
         }
 
         public void Help()
         {
             Console.WriteLine("Execute a function on hypar by providing its function id.");
-            Console.WriteLine("Usage: hypar execute <function_id> <limit>");
+            Console.WriteLine("Usage: hypar execute <function_id>");
         }
 
         private void Execute(string functionId, int? limit = null)
@@ -65,22 +81,19 @@ namespace Hypar.Commands
             var body = new Dictionary<string,object>();
             body.Add("function_id", functionId);
             body.Add("max_executions", limit!=null?limit:1);
-            if(Console.IsInputRedirected)
-            {
-                var input = Console.In.ReadToEnd();
-                var args = JsonConvert.DeserializeObject<Dictionary<string,object>>(input);
-                body.Add("args", args);
-            }
+            body.Add("arguments", _args);
+
             request.AddBody(body);
             var response = _client.Execute(request);
             if(response.StatusCode == HttpStatusCode.OK)
             {
-                var executions = JsonConvert.DeserializeObject<List<Execution>>(response.Content);
+                var executions = JsonConvert.DeserializeObject<Execution>(response.Content);
                 Console.WriteLine(JsonConvert.SerializeObject(executions, Formatting.Indented));
             }
             else
             {
-                Console.WriteLine($"There was an error executing the function, {functionId}, on Hypar.");
+                Console.WriteLine($"There was an error executing {functionId} on Hypar.");
+                Console.WriteLine(response.Content);
             }
             return;
         }

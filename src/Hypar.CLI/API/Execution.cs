@@ -30,6 +30,8 @@ namespace Hypar.API
         public string ThumbnailUrl{get;set;}
         [JsonProperty("lambda")]
         public LambdaData Lambda{get;set;}
+        [JsonProperty("version")]
+        public string Version{get;set;}
 
         public Execution(){}
     }

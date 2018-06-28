@@ -33,8 +33,8 @@ namespace Hypar.Commands
 
         private void Version()
         {
-            Console.WriteLine($"Hypar CLI Version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
             Console.WriteLine($"Hypar Version {typeof(Hypar.Elements.Model).Assembly.GetName().Version.ToString()}");
+            Console.WriteLine($"Hypar CLI Version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
             return;
         }
     }

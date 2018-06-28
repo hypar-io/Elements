@@ -37,9 +37,20 @@ namespace Hypar
             {
                 if(c.CanExecute(args))
                 {
-                    c.Execute(args);
+                    if(args.Length > 1 && args[1] == "help")
+                    {
+                        c.Help();
+                        return 0;
+                    }
+                    else
+                    {
+                        c.Execute(args);
+                        return 0;
+                    }
                 }
             }
+
+            Console.WriteLine($"The specified command, '{args[0]}', was not recognized. Try 'hypar help'.");
 
             return 0;
         } 
