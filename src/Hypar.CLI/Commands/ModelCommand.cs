@@ -12,7 +12,7 @@ namespace Hypar.Commands
 {
     internal class ModelCommand : IHyparCommand
     {
-        private List<Execution> _executions;
+        private Execution _execution;
 
         public event EventHandler CanExecuteChanged;
 
@@ -23,6 +23,11 @@ namespace Hypar.Commands
             if(args[0] != "model")
             {
                 return false;
+            }
+
+            if(args.Length == 2 && args[1] == "help")
+            {
+                return true;
             }
 
             if(args.Length != 2)
@@ -42,7 +47,7 @@ namespace Hypar.Commands
                 var input = Console.In.ReadToEnd();
                 try
                 {
-                    _executions = JsonConvert.DeserializeObject<List<Execution>>(input);
+                    _execution = JsonConvert.DeserializeObject<Execution>(input);
                 }
                 catch
                 {
@@ -77,7 +82,7 @@ namespace Hypar.Commands
 
             if(!Path.IsPathRooted(outDir)) 
             {
-                outDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), outDir);
+                outDir = Path.Combine(System.Environment.CurrentDirectory, outDir);
             }
 
             if(!Directory.Exists(outDir))
@@ -85,14 +90,12 @@ namespace Hypar.Commands
                 Directory.CreateDirectory(outDir);
             }
 
-            foreach(var e in _executions)
-            {
-                var client = new RestClient("https://s3-us-west-1.amazonaws.com");
-                var request = new RestRequest($"hypar-executions-dev/{e.Id}_model.zip", Method.GET);
-                var response = client.DownloadData(request);
-                var output = Path.Combine(outDir, $"{e.Id}.zip");
-                File.WriteAllBytes(output, response);
-            }
+            var client = new RestClient("https://s3-us-west-1.amazonaws.com");
+            var request = new RestRequest($"hypar-executions-dev/{_execution.Id}_model.zip", Method.GET);
+            var response = client.DownloadData(request);
+            var output = Path.Combine(outDir, $"{_execution.Id}.zip");
+            File.WriteAllBytes(output, response);
+            
             return;
         }
     }

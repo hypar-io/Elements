@@ -27,6 +27,12 @@ namespace Hypar.Commands
                 return false;
             }
 
+            // Avoid falling through to publish.
+            if(args.Length == 2 && args[1] == "help")
+            {
+                return true;
+            }
+
             var path = Path.Combine(System.Environment.CurrentDirectory, Constants.HYPAR_CONFIG);
             if(!File.Exists(path))
             {

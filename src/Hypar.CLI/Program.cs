@@ -32,6 +32,13 @@ namespace Hypar
                 var instance = (IHyparCommand)Activator.CreateInstance(t);
                 commands.Add(instance);
             }
+
+            if(args.Length == 0)
+            {
+                var help = new HelpCommand();
+                help.Execute(args);
+                return 0;
+            }
             
             foreach(var c in commands)
             {
@@ -50,7 +57,7 @@ namespace Hypar
                 }
             }
 
-            Console.WriteLine($"The specified command, '{args[0]}', was not recognized. Try 'hypar help'.");
+            Console.WriteLine($"The {args[0]} command was not recognized. Try 'hypar help'.");
 
             return 0;
         } 
