@@ -20,9 +20,10 @@ For additional command help:
 ```
 
 ## Install
-- [Download](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar.zip)
-- Create an alias in your nix shell:  
-`alias hypar='dotnet <path to repo>/hypar.dll'`
+- Download for:
+  - [Windows](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-win-x64.zip)
+  - [Mac](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-osx.10.12-x64.zip)
+  - [Linux](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-linux-x64.zip)
 
 ## Build
 `dotnet build`
