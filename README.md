@@ -1,5 +1,5 @@
 # Hypar SDK
-The Hypar SDK is a library for creating functions that execute on Hypar. 
+The Hypar SDK is a library for creating functions that execute on Hypar.
 
 - `Hypar.Elements` provides abstractions for building elements like beams and slabs.
 - `Hypar.Geometry` provides a minimal geometry library that supports points, lines, curves, and extrusions.
