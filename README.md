@@ -22,5 +22,5 @@ The best examples are those provided in the [tests](https://github.com/hypar-io/
 
 ## Third Party Libraries
 
-[LibTessDotNet](https://github.com/speps/LibTessDotNet)
+[LibTessDotNet](https://github.com/speps/LibTessDotNet)  
 [Verb](https://github.com/pboyer/verb)
