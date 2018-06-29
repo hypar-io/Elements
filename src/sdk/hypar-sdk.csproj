@@ -3,12 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Hypar.Elements</AssemblyName>
+    <AssemblyName>Hypar.SDK</AssemblyName>
     <Title>Hypar</Title>
     <Authors>Hypar</Authors>
     <PackageId>Hypar</PackageId>
     <Description>Function Execution for AEC</Description>
-    <Summary>The Hypar SDK allows developers to create code which runs on the Hypar platform.</Summary>
+    <Summary>The Hypar SDK allows developers to create functions which runs on the Hypar platform.</Summary>
     <Copyright>Hypar LLC, 2018</Copyright>
     <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>

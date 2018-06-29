@@ -12,6 +12,7 @@ namespace Hypar.Configuration
         /// The description of the function.
         /// </summary>
         /// <returns></returns>
+        [JsonProperty("description")]
         public string Description{get;set;}
 
         /// <summary>
@@ -41,6 +42,13 @@ namespace Hypar.Configuration
         /// <returns></returns>
         [JsonProperty("parameters")]
         public Dictionary<string,ParameterData> Parameters{get;set;}
+
+        /// <summary>
+        /// An optional git repository that stores your function.
+        /// </summary>
+        /// <returns></returns>
+        [JsonProperty("respository_url")]
+        public string RepositoryUrl{get;set;}
 
         /// <summary>
         /// A map of return data for the function.

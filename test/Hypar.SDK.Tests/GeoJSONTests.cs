@@ -63,7 +63,6 @@ namespace Hypar.Tests
         {
             var p = new Position(10.0, 5.0);
             var json = JsonConvert.SerializeObject(p);
-            Console.WriteLine(json);
             var newP = JsonConvert.DeserializeObject<Position>(json);
             Assert.Equal(10.0, newP.Longitude);
             Assert.Equal(5.0, newP.Latitude);
@@ -74,7 +73,6 @@ namespace Hypar.Tests
         {
             var p = new Point(new Position(10.0,5.0));
             var json = JsonConvert.SerializeObject(p);
-            Console.WriteLine(json);
             var newP = JsonConvert.DeserializeObject<Point>(json);
             Assert.Equal("Point", newP.Type);
             Assert.Equal(new Position(10.0,5.0), newP.Coordinates);
@@ -87,7 +85,6 @@ namespace Hypar.Tests
             var b = new Position(5,5);
             var l = new Line(new[]{a,b});
             var json = JsonConvert.SerializeObject(l);
-            Console.WriteLine(json);
             var newL = JsonConvert.DeserializeObject<Line>(json);
             Assert.Equal(a, newL.Coordinates[0]);
             Assert.Equal(b, newL.Coordinates[1]);
@@ -102,7 +99,6 @@ namespace Hypar.Tests
             var c = new Position(10,10);
             var ls = new LineString(new[]{a,b,c});
             var json = JsonConvert.SerializeObject(ls);
-            Console.WriteLine(json);
             var newLs = JsonConvert.DeserializeObject<LineString>(json);
             Assert.Equal(a, newLs.Coordinates[0]);
             Assert.Equal(b, newLs.Coordinates[1]);
@@ -118,7 +114,6 @@ namespace Hypar.Tests
             var c = new Position(10,10);
             var p = new Polygon(new[]{new[]{a,b,c,a}});
             var json = JsonConvert.SerializeObject(p);
-            Console.WriteLine(json);
 
             Assert.Throws<Exception>(()=>{
                 // End point coincidence test.
@@ -134,7 +129,6 @@ namespace Hypar.Tests
             var c = new Position(10,10);
             var mls = new MultiLineString(new[]{new[]{a,b,c},new[]{c,b,a}});
             var json = JsonConvert.SerializeObject(mls);
-            Console.WriteLine(json);
             var newMls = JsonConvert.DeserializeObject<MultiLineString>(json);
             Assert.Equal(2, newMls.Coordinates.GetLength(0));
             Assert.Equal(3, newMls.Coordinates[0].Length);
@@ -150,23 +144,22 @@ namespace Hypar.Tests
             var f2 = new Feature(l,null);
             var fc = new FeatureCollection(new[]{f1,f2});
             var json = JsonConvert.SerializeObject(fc);
-            Console.WriteLine(json);
         }
 
-        [Fact]
-        public void LatLon_ToMeters_Valid()
-        {
-            // Culver City
-            // 34.006074, -118.405970
+        // [Fact]
+        // public void LatLon_ToMeters_Valid()
+        // {
+        //     // Culver City
+        //     // 34.006074, -118.405970
 
-            //https://epsg.io/transform#s_srs=4326&t_srs=3857&x=-118.4059700&y=34.0060740
-            // X -13180892.29 Y 4029617.65
-            var lat = 34.006074;
-            var lon = -118.405970;
-            var utm = new Vector3(MercatorProjection.lonToX(lon), MercatorProjection.latToY(lat), 0);
-            Assert.Equal(4029617.65, utm.Y, 2);
-            Assert.Equal(-13180892.29, utm.X, 2);
-        }
+        //     //https://epsg.io/transform#s_srs=4326&t_srs=3857&x=-118.4059700&y=34.0060740
+        //     // X -13180892.29 Y 4029617.65
+        //     var lat = 34.006074;
+        //     var lon = -118.405970;
+        //     var utm = new Vector3(MercatorProjection.lonToX(lon), MercatorProjection.latToY(lat), 0);
+        //     Assert.Equal(4029617.65, utm.Y, 2);
+        //     Assert.Equal(-13180892.29, utm.X, 2);
+        // }
 
         // [Fact]
         // public void Meters_ToLatLon_Valid()

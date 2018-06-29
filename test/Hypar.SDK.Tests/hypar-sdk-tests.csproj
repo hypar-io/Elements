@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Hypar.Elements.Tests</AssemblyName>
+    <AssemblyName>Hypar.SDK.Tests</AssemblyName>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RootNamespace>hypar_tests</RootNamespace>
+    <RootNamespace>Hypar.SDK.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Hypar\hypar-elements.csproj" />
+    <ProjectReference Include="..\..\src\sdk\hypar-sdk.csproj" />
   </ItemGroup>
 
   <ItemGroup>
