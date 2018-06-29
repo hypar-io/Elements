@@ -7,7 +7,13 @@ namespace Hypar.Configuration
     /// A container for Hypar configuration information.
     /// </summary>
     public class HyparConfig
-    {
+    {   
+        /// <summary>
+        /// The description of the function.
+        /// </summary>
+        /// <returns></returns>
+        public string Description{get;set;}
+
         /// <summary>
         /// The fully-qualified name of the function.
         /// </summary>

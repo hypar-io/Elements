@@ -1,13 +1,17 @@
 #pragma warning disable CS0067
 
 using Amazon;
+using Amazon.Lambda;
+using Amazon.Lambda.Model;
 using Amazon.S3;
+using Amazon.S3.Transfer;
 using Amazon.S3.Model;
 using Hypar.Configuration;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Hypar.Commands
@@ -71,28 +75,79 @@ namespace Hypar.Commands
             process.Start();
             process.WaitForExit();
 
+            var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Cognito.IdentityPoolId, RegionEndpoint.USWest2)).Result;
+            var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
+            var zipPath = ZipProject(functionName);
+            try
+            {
+                CreateBucketAndUpload(credentials, functionName, zipPath);
+                CreateOrUpdateLambda(credentials, functionName);
+                PostFunction();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("There was an error during publish.");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+            finally
+            {
+                if(File.Exists(zipPath))
+                {
+                    File.Delete(zipPath);
+                }
+            }
+        }
+
+        private void CreateOrUpdateLambda(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName)
+        {
+            using(var client = new AmazonLambdaClient(credentials, Constants.HYPAR_DEFAULT_REGION))
+            {
+                try
+                {
+                    // Attempt to get the existing function. If an exception
+                    // is thrown, then create the function.
+                    Task.Run(()=>client.GetFunctionAsync(functionName)).Wait();
+                }
+                catch(Exception getFuncEx)
+                {
+                    Console.WriteLine(getFuncEx.Message);
+
+                    Console.WriteLine("Creating a new function...");
+                    var createRequest = new CreateFunctionRequest{
+                        FunctionName = functionName,
+                        Runtime = _config.Runtime,
+                        Handler = _config.Function,
+                        Role = Constants.HYPAR_IAM_ROLE_LAMBDA,
+                        Code = new FunctionCode{
+                            S3Bucket = functionName,
+                            S3Key = functionName + ".zip"
+                        },
+                        Description = _config.Description,
+                        MemorySize = 1024,
+                        Timeout = 30
+                    };
+
+                    Task.Run(()=>client.CreateFunctionAsync(createRequest)).Wait();
+                }
+                
+                Console.WriteLine("Updating an existing function...");
+                var updateRequest = new UpdateFunctionCodeRequest{
+                    FunctionName = functionName,
+                    S3Bucket = functionName,
+                    S3Key = functionName + ".zip"
+                };
+
+                Task.Run(()=>client.UpdateFunctionCodeAsync(updateRequest)).Wait();
+            }
+        }
+
+        private string ZipProject(string functionName)
+        {
             var publishDir = Path.Combine(System.Environment.CurrentDirectory , "bin/Release/netstandard2.0/publish");
-            var zipPath = Path.Combine(System.Environment.CurrentDirectory, $"{_config.FunctionId}.zip");
+            var zipPath = Path.Combine(System.Environment.CurrentDirectory, $"{functionName}.zip");
             ZipFile.CreateFromDirectory(publishDir, zipPath);
-
-            // CreateS3Bucket(config.FunctionId);
-            // SendProjectToS3();
-            // PostFunction();
-        }
-
-        private void BuildProject()
-        {
-
-        }
-
-        private void ZipProject()
-        {
-
-        }
-
-        private void SendProjectToS3()
-        {
-
+            return zipPath;
         }
 
         private void PostFunction()
@@ -106,14 +161,33 @@ namespace Hypar.Commands
             // Direct user to email confirmation for link.
         }
 
-        private void CreateS3Bucket(string name)
+        private void CreateBucketAndUpload(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName, string zipPath)
         {
-            Console.WriteLine($"Creating the {name} bucket...");
-            var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Cognito.IdentityPoolId, RegionEndpoint.USWest2)).Result;
+            Console.WriteLine($"Creating storage for function...");
+            
+            using (var client = new AmazonS3Client(credentials, Constants.HYPAR_DEFAULT_REGION))
+            {   
+                try
+                {
+                    // Attempt to get the object metadata. If it's not found
+                    // then the object doesn't exist (TODO: Find a better test than this.)
+                    var response = Task.Run(()=>client.GetObjectMetadataAsync(functionName, functionName + ".zip")).Result;
+                }
+                catch
+                {
+                    Console.WriteLine("Existing storage for the function was not found. Creating new storage...");
+                    var putResponse = Task.Run(()=>client.PutBucketAsync(functionName)).Result;
+                    if(putResponse.HttpStatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception("There was an error creating the function storage.");
+                    }
+                }
 
-            using (var client = new AmazonS3Client(credentials, RegionEndpoint.USWest1))
-            {
-                var response = Task.Run(()=>client.PutBucketAsync(name)).Result;
+                Console.WriteLine("Uploading the function contents...");
+                var fileTransferUtility = new TransferUtility(client);
+                
+                Task.Run(()=>fileTransferUtility.UploadAsync(zipPath, functionName)).Wait();
+                Console.WriteLine("Upload of function contents complete!");
             }
         }
     }

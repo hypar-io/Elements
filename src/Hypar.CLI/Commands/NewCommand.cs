@@ -115,8 +115,9 @@ namespace Hypar.Commands
             var hyparPath = Path.Combine(dir, Constants.HYPAR_CONFIG);
             var className = CleanFunctionName(functionId);
             var config = new HyparConfig();
+            config.Description = "A description of your Hypar function.";
             config.FunctionId = functionId;
-            config.Function = $"{className}::{className}.Handler";
+            config.Function = $"{functionId}::{className}.{className}::Handler";
             config.Runtime = "dotnetcore2.0";
             config.Parameters.Add("param1", new NumberParameter("The first parameter.", 0.0, 1.0, 0.1));
             config.Parameters.Add("param2", new PointParameter("The second parameter"));
