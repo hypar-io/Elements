@@ -4,7 +4,7 @@ The Hypar SDK is a library for creating functions that execute on Hypar.
 - `Hypar.Elements` provides abstractions for building elements like beams and slabs.
 - `Hypar.Geometry` provides a minimal geometry library that supports points, lines, curves, and extrusions.
 
-The Hypar SDK also interacts with several open standards like [GeoJson](http://geojson.org/) and [glTF](https://www.khronos.org/gltf/).
+The Hypar SDK also reads and writes data using several open standards like [GeoJson](http://geojson.org/) and [glTF](https://www.khronos.org/gltf/).
 
 ## Getting Started
 - The Hypar SDK is currently in beta. Contact beta@hypar.io to have an account created. Functions can be authored and executed locally. A login is only required when publishing your function to the world!
