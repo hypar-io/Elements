@@ -25,6 +25,12 @@ hypar publish
 ## Examples
 The best examples are those provided in the [tests](https://github.com/hypar-io/elements/tree/master/test), where we demonstrate usage of almost every function in the library.
 
+## Build
+`dotnet build`
+
+## Test
+`dotnet test`
+
 ## Third Party Libraries
 
 - [LibTessDotNet](https://github.com/speps/LibTessDotNet)  
