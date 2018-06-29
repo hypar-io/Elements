@@ -21,7 +21,8 @@ For additional command help:
 
 ## Install
 - [Download](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar.zip)
-- Create an alias in your nix shell: `alias hypar='dotnet <path to repo>/hypar/sdk/src/Hypar.CLI/bin/Debug/netcoreapp2.1/hypar.dll'`
+- Create an alias in your nix shell:  
+`alias hypar='dotnet <path to repo>/hypar.dll'`
 
 ## Build
 `dotnet build`
