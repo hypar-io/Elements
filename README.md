@@ -1,3 +1,7 @@
+# THE HYPAR SDK IS CURRENTLY IN BETA.
+## DO NOT USE IT FOR PRODUCTION WORK (THAT'S PROBABLY NOT EVEN POSSIBLE YET). 
+### Add issues to start discussions for functionality that you would like to see.
+
 # Hypar SDK
 The Hypar SDK is a library for creating functions that execute on Hypar.
 
