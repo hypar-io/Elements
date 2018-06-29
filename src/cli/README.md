@@ -24,6 +24,9 @@ For additional command help:
   - [Windows](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-win-x64.zip)
   - [Mac](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-osx.10.12-x64.zip)
   - [Linux](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-linux-x64.zip)
+- Link
+  - On Mac and Linux: `ln -s <path to hypar executable> /usr/bin/local/hypar`
+  - On windows add `<path to hypar>` to your user `PATH`.
 
 ## Build
 `dotnet build`
