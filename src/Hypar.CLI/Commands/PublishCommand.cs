@@ -37,7 +37,7 @@ namespace Hypar.Commands
                 return true;
             }
 
-            var path = Path.Combine(System.Environment.CurrentDirectory, Constants.HYPAR_CONFIG);
+            var path = Path.Combine(System.Environment.CurrentDirectory, Program.HYPAR_CONFIG);
             if(!File.Exists(path))
             {
                 Console.WriteLine("The hypar.json file could not be located in the current directory.");
@@ -102,7 +102,7 @@ namespace Hypar.Commands
 
         private void CreateOrUpdateLambda(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName)
         {
-            using(var client = new AmazonLambdaClient(credentials, Constants.HYPAR_DEFAULT_REGION))
+            using(var client = new AmazonLambdaClient(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
             {
                 try
                 {
@@ -119,7 +119,7 @@ namespace Hypar.Commands
                         FunctionName = functionName,
                         Runtime = _config.Runtime,
                         Handler = _config.Function,
-                        Role = Constants.HYPAR_IAM_ROLE_LAMBDA,
+                        Role = Program.Configuration["aws_iam_role_lambda"],
                         Code = new FunctionCode{
                             S3Bucket = functionName,
                             S3Key = functionName + ".zip"
@@ -166,7 +166,7 @@ namespace Hypar.Commands
         {
             Console.WriteLine($"Creating storage for function...");
             
-            using (var client = new AmazonS3Client(credentials, Constants.HYPAR_DEFAULT_REGION))
+            using (var client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
             {   
                 try
                 {

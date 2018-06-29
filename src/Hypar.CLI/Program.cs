@@ -4,6 +4,7 @@ using Amazon.Lambda.Model;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
 using Hypar.Configuration;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -22,8 +23,17 @@ namespace Hypar
 {
     class Program
     {
+        public const string HYPAR_CONFIG = "hypar.json";
+        public static IConfiguration Configuration { get; set; }
+
         static int Main(string[] args)
         {
+            var builder = new ConfigurationBuilder()
+                            .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+                            .AddJsonFile("appsettings.json");
+            
+            Configuration = builder.Build();
+
             var commands = new List<IHyparCommand>();
 
             var commandTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t=>typeof(IHyparCommand).IsAssignableFrom(t) && typeof(IHyparCommand) != t);

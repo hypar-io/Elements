@@ -13,7 +13,7 @@ namespace Hypar.Commands
     {
         private Dictionary<string,object> _args;
 
-        private RestClient _client = new RestClient(Constants.HYPAR_API_URL);
+        private RestClient _client = new RestClient(Program.Configuration["hypar_api_url"]);
 
         public event EventHandler CanExecuteChanged;
 
@@ -75,7 +75,7 @@ namespace Hypar.Commands
         private void Execute(string functionId, int? limit = null)
         {
             var request = new RestRequest("executions", Method.POST);
-            request.AddHeader("x-api-key", Constants.HYPAR_API_KEY);
+            request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
             request.RequestFormat = DataFormat.Json;
 
             var body = new Dictionary<string,object>();

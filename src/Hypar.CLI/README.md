@@ -1,9 +1,20 @@
 # Hypar CLI
-```
-hypar new testProject
-cd testProject
-hypar publish
-```
+The Hypar command line interface enables users to create, execute, and publish functions to Hypar from their *nix-compatible command line.
 
-### For Development on the Mac
-`dotnet publish -r osx.10.12-x64`
+```
+Hypar Command Line Usage:
+
+hypar <command> <options>
+
+Available Commands:
+    execute
+    executions
+    functions
+    help
+    model
+    results
+    version
+
+For additional command help:
+    hypar <command> help
+```

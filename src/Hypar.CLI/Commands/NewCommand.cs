@@ -113,7 +113,7 @@ namespace Hypar.Commands
 
         private void CreateHyparJson(string dir, string functionId)
         {
-            var hyparPath = Path.Combine(dir, Constants.HYPAR_CONFIG);
+            var hyparPath = Path.Combine(dir, Program.HYPAR_CONFIG);
             var className = ClassName(functionId);
             var config = new HyparConfig();
             config.Description = "A description of your Hypar function.";
@@ -165,8 +165,12 @@ namespace {className}
 
         private string SanitizeFunctionName(string functionName)
         {
-            var clean = functionName.Replace("_","-");
-            return clean.ToLower();
+            var clean = functionName.Replace("_","-").ToLower();
+            if(clean != functionName)
+            {
+                Console.WriteLine($"The function name has been updated to {clean}.");
+            }
+            return clean;
         }
 
         private string ClassName(string functionName)

@@ -11,7 +11,7 @@ namespace Hypar.Commands
 {
     internal class ExecutionsCommand : IHyparCommand
     {
-        private RestClient _client = new RestClient(Constants.HYPAR_API_URL);
+        private RestClient _client = new RestClient(Program.Configuration["hypar_api_url"]);
 
         public event EventHandler CanExecuteChanged;
 
@@ -49,7 +49,7 @@ namespace Hypar.Commands
         private void Executions(string functionId)
         {
             var request = new RestRequest("executions", Method.GET);
-            request.AddHeader("x-api-key", Constants.HYPAR_API_KEY);
+            request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
             request.AddParameter("function_id",functionId);
             var response = _client.Execute(request);
             if(response.StatusCode == HttpStatusCode.OK)
