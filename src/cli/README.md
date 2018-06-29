@@ -19,8 +19,11 @@ For additional command help:
     hypar <command> help
 ```
 
-# Build
+## Build
 `dotnet build`
 
 It is recommended to create an alias for the build output to allow for `hypar <command>` during development. This can be done by calling the following in bash, or by adding this line to the `.bash_profile`:  
 `alias hypar='dotnet <path to repo>/hypar/sdk/src/Hypar.CLI/bin/Debug/netcoreapp2.1/hypar.dll'`
+
+## Configure
+Building the Hypar CLI requires an `appsettings.json` file.
