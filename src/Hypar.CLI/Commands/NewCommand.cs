@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace Hypar.Commands
 {
@@ -44,12 +45,12 @@ namespace Hypar.Commands
 
         private void New(string functionName)
         {
-            // Create a directory here.
-            var newDir = Path.Combine(Directory.GetCurrentDirectory(), functionName);
-            CreateProject(functionName);       
-            CreateHyparReference(functionName);
-            CreateLambdaReference(functionName);
-            CreateHyparJson(newDir, functionName);
+            var name = SanitizeFunctionName(functionName);
+            var newDir = Path.Combine(Directory.GetCurrentDirectory(), name);
+            CreateProject(name);       
+            CreateHyparReference(name);
+            CreateLambdaReference(name);
+            CreateHyparJson(newDir, name);
             return;
         }
 
@@ -113,7 +114,7 @@ namespace Hypar.Commands
         private void CreateHyparJson(string dir, string functionId)
         {
             var hyparPath = Path.Combine(dir, Constants.HYPAR_CONFIG);
-            var className = CleanFunctionName(functionId);
+            var className = ClassName(functionId);
             var config = new HyparConfig();
             config.Description = "A description of your Hypar function.";
             config.FunctionId = functionId;
@@ -138,15 +139,15 @@ namespace Hypar.Commands
 
         private void CreateHyparDefaultClass(string functionName)
         {
-            var f = CleanFunctionName(functionName);
+            var className = ClassName(functionName);
             
             string classStr = $@"using Hypar.Elements;
 using Amazon.Lambda.Core;
 using System.Collections.Generic;
 
-namespace {f}
+namespace {className}
 {{
-    public class {f}
+    public class {className}
     {{
         public Dictionary<string,object> Handler(Dictionary<string,object> input, ILambdaContext context)
         {{
@@ -158,15 +159,25 @@ namespace {f}
         }}
     }}
 }}";
-            var classPath = Path.Combine(System.Environment.CurrentDirectory, $"{functionName}/{f}.cs");
+            var classPath = Path.Combine(System.Environment.CurrentDirectory, $"{functionName}/{className}.cs");
             File.WriteAllText(classPath, classStr);
         }
 
-        private string CleanFunctionName(string functionName)
+        private string SanitizeFunctionName(string functionName)
         {
-            var clean = functionName.Replace("-","");
-            clean = char.ToUpper(clean[0]) + clean.Substring(1);
-            return clean;
+            var clean = functionName.Replace("_","-");
+            return clean.ToLower();
+        }
+
+        private string ClassName(string functionName)
+        {
+            var splits = functionName.Split('-');
+            var sb = new StringBuilder();
+            foreach(var split in splits)
+            {
+                sb.Append(char.ToUpper(split[0]) + split.Substring(1));
+            }
+            return sb.ToString();
         }
     }
 }

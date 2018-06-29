@@ -64,12 +64,13 @@ namespace Hypar.Commands
         {
             var process = new Process()
             {
+                // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
                 StartInfo = new ProcessStartInfo
                 {
                     CreateNoWindow = true,
                     RedirectStandardOutput = false,
                     FileName="dotnet",
-                    Arguments=$"publish -c Release"
+                    Arguments=$"publish -c Release /p:GenerateRuntimeConfigurationFiles=true"
                 }
             };
             process.Start();
