@@ -116,7 +116,7 @@ namespace Hypar.Commands
             var hyparPath = Path.Combine(dir, Program.HYPAR_CONFIG);
             var className = ClassName(functionId);
             var config = new HyparConfig();
-            config.Description = "A description of your Hypar function.";
+            config.Description = $"The {functionId} function.";
             config.FunctionId = functionId;
             config.Function = $"{functionId}::{className}.{className}::Handler";
             config.Runtime = "dotnetcore2.0";

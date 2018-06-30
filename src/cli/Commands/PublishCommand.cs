@@ -68,7 +68,7 @@ namespace Hypar.Commands
                 StartInfo = new ProcessStartInfo
                 {
                     CreateNoWindow = true,
-                    RedirectStandardOutput = false,
+                    RedirectStandardOutput = true,
                     FileName="dotnet",
                     Arguments=$"publish -c Release /p:GenerateRuntimeConfigurationFiles=true"
                 }
@@ -102,6 +102,8 @@ namespace Hypar.Commands
 
         private void CreateOrUpdateLambda(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName)
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
+
             using(var client = new AmazonLambdaClient(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
             {
                 try
@@ -110,11 +112,9 @@ namespace Hypar.Commands
                     // is thrown, then create the function.
                     Task.Run(()=>client.GetFunctionAsync(functionName)).Wait();
                 }
-                catch(Exception getFuncEx)
+                catch
                 {
-                    Console.WriteLine(getFuncEx.Message);
-
-                    Console.WriteLine("Creating a new function...");
+                    Console.WriteLine($"Creating {functionName}...");
                     var createRequest = new CreateFunctionRequest{
                         FunctionName = functionName,
                         Runtime = _config.Runtime,
@@ -132,15 +132,21 @@ namespace Hypar.Commands
                     Task.Run(()=>client.CreateFunctionAsync(createRequest)).Wait();
                 }
                 
-                Console.WriteLine("Updating an existing function...");
+                Console.WriteLine($"Updating {functionName}...");
                 var updateRequest = new UpdateFunctionCodeRequest{
                     FunctionName = functionName,
                     S3Bucket = functionName,
                     S3Key = functionName + ".zip"
                 };
 
-                Task.Run(()=>client.UpdateFunctionCodeAsync(updateRequest)).Wait();
+                var response = Task.Run(()=>client.UpdateFunctionCodeAsync(updateRequest)).Result;
+                Console.WriteLine(response.FunctionName);
+                Console.WriteLine(response.CodeSize);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{functionName} updated successfully.");
             }
+            Console.ResetColor();
         }
 
         private string ZipProject(string functionName)
@@ -164,19 +170,21 @@ namespace Hypar.Commands
 
         private void CreateBucketAndUpload(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName, string zipPath)
         {
-            Console.WriteLine($"Creating storage for function...");
             
+            Console.ForegroundColor = ConsoleColor.Gray;
             using (var client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
             {   
                 try
                 {
+                    Console.WriteLine($"Looking for existing storage for {functionName}...");
                     // Attempt to get the object metadata. If it's not found
                     // then the object doesn't exist (TODO: Find a better test than this.)
                     var response = Task.Run(()=>client.GetObjectMetadataAsync(functionName, functionName + ".zip")).Result;
+                    Console.WriteLine($"Existing storage located for {functionName}...");
                 }
                 catch
                 {
-                    Console.WriteLine("Existing storage for the function was not found. Creating new storage...");
+                    Console.WriteLine($"Existing storage for {functionName} was not found. Creating new storage...");
                     var putResponse = Task.Run(()=>client.PutBucketAsync(functionName)).Result;
                     if(putResponse.HttpStatusCode != HttpStatusCode.OK)
                     {
@@ -184,12 +192,14 @@ namespace Hypar.Commands
                     }
                 }
 
-                Console.WriteLine("Uploading the function contents...");
+                Console.WriteLine($"Uploading {functionName}...");
                 var fileTransferUtility = new TransferUtility(client);
                 
+                Console.ForegroundColor = ConsoleColor.Green;
                 Task.Run(()=>fileTransferUtility.UploadAsync(zipPath, functionName)).Wait();
-                Console.WriteLine("Upload of function contents complete!");
+                Console.WriteLine($"Upload of {functionName} complete.");
             }
+            Console.ResetColor();
         }
     }
 }

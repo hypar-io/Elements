@@ -72,8 +72,10 @@ namespace Hypar.Commands
 
             if (authResponse.AuthenticationResult != null)
             {
-                Console.WriteLine("User successfully authenticated.");
-
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{user.Username} successfully authenticated.");
+                Console.ResetColor();
+                
                 User = user;
                 return true;
                 // var userDetails = Task.Run(()=>user.GetUserDetailsAsync()).Result;
