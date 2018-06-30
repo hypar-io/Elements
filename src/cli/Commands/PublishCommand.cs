@@ -18,6 +18,8 @@ namespace Hypar.Commands
 {
     internal class PublishCommand : IHyparCommand
     {
+        private string _framework = "netcoreapp2.0";
+        private string _runtime = "linux-x64";
         private HyparConfig _config;
 
         public event EventHandler CanExecuteChanged;
@@ -65,12 +67,13 @@ namespace Hypar.Commands
             var process = new Process()
             {
                 // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
-                StartInfo = new ProcessStartInfo
+                StartInfo = new ProcessStartInfo()
                 {
+                    UseShellExecute = false,
                     CreateNoWindow = true,
-                    RedirectStandardOutput = false,
+                    RedirectStandardOutput = true,
                     FileName="dotnet",
-                    Arguments=$"publish -c Release /p:GenerateRuntimeConfigurationFiles=true"
+                    Arguments=$"publish -c Release /p:GenerateRuntimeConfigurationFiles=true -r linux-x64"
                 }
             };
             process.Start();
@@ -78,6 +81,7 @@ namespace Hypar.Commands
 
             var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Cognito.IdentityPoolId, RegionEndpoint.USWest2)).Result;
             var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
+
             var zipPath = ZipProject(functionName);
             try
             {
@@ -97,11 +101,14 @@ namespace Hypar.Commands
                 {
                     File.Delete(zipPath);
                 }
+                Console.ResetColor();
             }
         }
 
         private void CreateOrUpdateLambda(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName)
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
+
             using(var client = new AmazonLambdaClient(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
             {
                 try
@@ -110,11 +117,9 @@ namespace Hypar.Commands
                     // is thrown, then create the function.
                     Task.Run(()=>client.GetFunctionAsync(functionName)).Wait();
                 }
-                catch(Exception getFuncEx)
+                catch
                 {
-                    Console.WriteLine(getFuncEx.Message);
-
-                    Console.WriteLine("Creating a new function...");
+                    Console.WriteLine($"\tCreating {functionName}...");
                     var createRequest = new CreateFunctionRequest{
                         FunctionName = functionName,
                         Runtime = _config.Runtime,
@@ -132,22 +137,55 @@ namespace Hypar.Commands
                     Task.Run(()=>client.CreateFunctionAsync(createRequest)).Wait();
                 }
                 
-                Console.WriteLine("Updating an existing function...");
+                Console.WriteLine($"\tUpdating {functionName} function...");
                 var updateRequest = new UpdateFunctionCodeRequest{
                     FunctionName = functionName,
                     S3Bucket = functionName,
                     S3Key = functionName + ".zip"
                 };
 
-                Task.Run(()=>client.UpdateFunctionCodeAsync(updateRequest)).Wait();
+                var response = Task.Run(()=>client.UpdateFunctionCodeAsync(updateRequest)).Result;
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{functionName} updated successfully.");
             }
+            Console.ResetColor();
         }
 
         private string ZipProject(string functionName)
         {
-            var publishDir = Path.Combine(System.Environment.CurrentDirectory , "bin/Release/netstandard2.0/publish");
-            var zipPath = Path.Combine(System.Environment.CurrentDirectory, $"{functionName}.zip");
-            ZipFile.CreateFromDirectory(publishDir, zipPath);
+            //TODO: Implement windows compatible zipping - https://github.com/aws/aws-extensions-for-dotnet-cli/blob/c29333812c317b6ac41a44cf8f5ac7e3798fccc2/src/Amazon.Lambda.Tools/LambdaPackager.cs
+            var publishDir = Path.Combine(System.Environment.CurrentDirectory , $"bin/Release/{_framework}/{_runtime}/publish");
+            var zipPath = Path.Combine(publishDir, $"{functionName}.zip");
+
+            if(File.Exists(zipPath))
+            {
+                File.Delete(zipPath);
+            }
+
+            var args = $"{functionName}.zip";
+            foreach(var fi in Directory.GetFiles(publishDir))
+            {
+                args += $" \"{Path.GetFileName(fi)}\"";
+            }
+
+            var process = new Process()
+            {
+                // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
+                StartInfo = new ProcessStartInfo()
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    FileName="zip",
+                    WorkingDirectory = publishDir,
+                    Arguments=args
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+
             return zipPath;
         }
 
@@ -164,19 +202,23 @@ namespace Hypar.Commands
 
         private void CreateBucketAndUpload(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName, string zipPath)
         {
-            Console.WriteLine($"Creating storage for function...");
             
+            Console.ForegroundColor = ConsoleColor.Gray;
             using (var client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
             {   
                 try
                 {
+                    Console.WriteLine($"\tLooking for existing storage for {functionName}...");
                     // Attempt to get the object metadata. If it's not found
                     // then the object doesn't exist (TODO: Find a better test than this.)
                     var response = Task.Run(()=>client.GetObjectMetadataAsync(functionName, functionName + ".zip")).Result;
+                    Console.WriteLine($"\tExisting storage located for {functionName}...");
                 }
                 catch
                 {
-                    Console.WriteLine("Existing storage for the function was not found. Creating new storage...");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"\tExisting storage for {functionName} was not found. Creating new storage...");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     var putResponse = Task.Run(()=>client.PutBucketAsync(functionName)).Result;
                     if(putResponse.HttpStatusCode != HttpStatusCode.OK)
                     {
@@ -184,12 +226,14 @@ namespace Hypar.Commands
                     }
                 }
 
-                Console.WriteLine("Uploading the function contents...");
+                Console.WriteLine($"\tUploading {functionName}...");
                 var fileTransferUtility = new TransferUtility(client);
                 
+                Console.ForegroundColor = ConsoleColor.Green;
                 Task.Run(()=>fileTransferUtility.UploadAsync(zipPath, functionName)).Wait();
-                Console.WriteLine("Upload of function contents complete!");
+                Console.WriteLine($"Upload of {functionName} complete.");
             }
+            Console.ResetColor();
         }
     }
 }

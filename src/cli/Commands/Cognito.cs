@@ -72,7 +72,9 @@ namespace Hypar.Commands
 
             if (authResponse.AuthenticationResult != null)
             {
-                Console.WriteLine("User successfully authenticated.");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{user.Username} successfully authenticated.");
+                Console.ResetColor();
 
                 User = user;
                 return true;
@@ -102,7 +104,18 @@ namespace Hypar.Commands
             Console.WriteLine("Enter your password:");
             var password = GetConsolePassword();
 
-            return Task.Run(()=>Cognito.GetCredsAsync(username, password)).Result;
+            bool response = false;
+            try
+            {
+                response = Task.Run(()=>Cognito.GetCredsAsync(username, password)).Result;
+            }
+            catch
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Login to Hypar failed.");
+                Console.ResetColor();
+            }
+            return response;
         }
 
         private static string GetConsolePassword( )
@@ -121,14 +134,16 @@ namespace Hypar.Commands
                 {
                     if ( sb.Length > 0 )
                     {
-                        Console.Write( "\b\0\b" );
+                        Console.Write( "\b \b" );
                         sb.Length--;
                     }
                     continue;
                 }
-
-                Console.Write( '*' );
-                sb.Append( cki.KeyChar );
+                else
+                {
+                    Console.Write( '*' );
+                    sb.Append( cki.KeyChar );
+                }
             }
 
             return sb.ToString();
