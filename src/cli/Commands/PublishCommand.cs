@@ -18,6 +18,8 @@ namespace Hypar.Commands
 {
     internal class PublishCommand : IHyparCommand
     {
+        private string _framework = "netcoreapp2.0";
+        private string _runtime = "linux-x64";
         private HyparConfig _config;
 
         public event EventHandler CanExecuteChanged;
@@ -65,12 +67,13 @@ namespace Hypar.Commands
             var process = new Process()
             {
                 // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
-                StartInfo = new ProcessStartInfo
+                StartInfo = new ProcessStartInfo()
                 {
+                    UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     FileName="dotnet",
-                    Arguments=$"publish -c Release /p:GenerateRuntimeConfigurationFiles=true"
+                    Arguments=$"publish -c Release /p:GenerateRuntimeConfigurationFiles=true -r linux-x64"
                 }
             };
             process.Start();
@@ -78,6 +81,8 @@ namespace Hypar.Commands
 
             var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Cognito.IdentityPoolId, RegionEndpoint.USWest2)).Result;
             var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
+            // var functionName = _config.FunctionId;
+
             var zipPath = ZipProject(functionName);
             try
             {
@@ -91,13 +96,13 @@ namespace Hypar.Commands
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
             }
-            finally
-            {
-                if(File.Exists(zipPath))
-                {
-                    File.Delete(zipPath);
-                }
-            }
+            // finally
+            // {
+            //     if(File.Exists(zipPath))
+            //     {
+            //         File.Delete(zipPath);
+            //     }
+            // }
         }
 
         private void CreateOrUpdateLambda(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName)
@@ -114,7 +119,7 @@ namespace Hypar.Commands
                 }
                 catch
                 {
-                    Console.WriteLine($"Creating {functionName}...");
+                    Console.WriteLine($"\tCreating {functionName}...");
                     var createRequest = new CreateFunctionRequest{
                         FunctionName = functionName,
                         Runtime = _config.Runtime,
@@ -132,7 +137,7 @@ namespace Hypar.Commands
                     Task.Run(()=>client.CreateFunctionAsync(createRequest)).Wait();
                 }
                 
-                Console.WriteLine($"Updating {functionName}...");
+                Console.WriteLine($"\tUpdating {functionName} function...");
                 var updateRequest = new UpdateFunctionCodeRequest{
                     FunctionName = functionName,
                     S3Bucket = functionName,
@@ -140,8 +145,8 @@ namespace Hypar.Commands
                 };
 
                 var response = Task.Run(()=>client.UpdateFunctionCodeAsync(updateRequest)).Result;
-                Console.WriteLine(response.FunctionName);
-                Console.WriteLine(response.CodeSize);
+                // Console.WriteLine(response.FunctionName);
+                // Console.WriteLine(response.CodeSize);
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"{functionName} updated successfully.");
@@ -151,9 +156,27 @@ namespace Hypar.Commands
 
         private string ZipProject(string functionName)
         {
-            var publishDir = Path.Combine(System.Environment.CurrentDirectory , "bin/Release/netstandard2.0/publish");
-            var zipPath = Path.Combine(System.Environment.CurrentDirectory, $"{functionName}.zip");
+            var publishDir = Path.Combine(System.Environment.CurrentDirectory , $"bin/Release/{_framework}/{_runtime}/publish");
+            var zipPath = Path.Combine(System.Environment.CurrentDirectory , $"bin/Release/{_framework}/{functionName}.zip");
+            if(File.Exists(zipPath))
+            {
+                File.Delete(zipPath);
+            }
             ZipFile.CreateFromDirectory(publishDir, zipPath);
+
+            // Adapted from solution here: https://github.com/aws/aws-lambda-dotnet/issues/274
+            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                {
+                    foreach(var entry in archive.Entries)
+                    {
+                        // Console.WriteLine($"\tSetting attributes on {entry.FullName}...");
+                        entry.ExternalAttributes = 755;
+                    }
+                }
+            }
+
             return zipPath;
         }
 
@@ -176,11 +199,11 @@ namespace Hypar.Commands
             {   
                 try
                 {
-                    Console.WriteLine($"Looking for existing storage for {functionName}...");
+                    Console.WriteLine($"\tLooking for existing storage for {functionName}...");
                     // Attempt to get the object metadata. If it's not found
                     // then the object doesn't exist (TODO: Find a better test than this.)
                     var response = Task.Run(()=>client.GetObjectMetadataAsync(functionName, functionName + ".zip")).Result;
-                    Console.WriteLine($"Existing storage located for {functionName}...");
+                    Console.WriteLine($"\tExisting storage located for {functionName}...");
                 }
                 catch
                 {
@@ -192,7 +215,7 @@ namespace Hypar.Commands
                     }
                 }
 
-                Console.WriteLine($"Uploading {functionName}...");
+                Console.WriteLine($"\tUploading {functionName}...");
                 var fileTransferUtility = new TransferUtility(client);
                 
                 Console.ForegroundColor = ConsoleColor.Green;
