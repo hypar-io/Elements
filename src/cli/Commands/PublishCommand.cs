@@ -81,7 +81,6 @@ namespace Hypar.Commands
 
             var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Cognito.IdentityPoolId, RegionEndpoint.USWest2)).Result;
             var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
-            // var functionName = _config.FunctionId;
 
             var zipPath = ZipProject(functionName);
             try
@@ -96,13 +95,14 @@ namespace Hypar.Commands
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
             }
-            // finally
-            // {
-            //     if(File.Exists(zipPath))
-            //     {
-            //         File.Delete(zipPath);
-            //     }
-            // }
+            finally
+            {
+                if(File.Exists(zipPath))
+                {
+                    File.Delete(zipPath);
+                }
+                Console.ResetColor();
+            }
         }
 
         private void CreateOrUpdateLambda(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName)
@@ -145,8 +145,6 @@ namespace Hypar.Commands
                 };
 
                 var response = Task.Run(()=>client.UpdateFunctionCodeAsync(updateRequest)).Result;
-                // Console.WriteLine(response.FunctionName);
-                // Console.WriteLine(response.CodeSize);
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"{functionName} updated successfully.");
@@ -156,26 +154,37 @@ namespace Hypar.Commands
 
         private string ZipProject(string functionName)
         {
+            //TODO: Implement windows compatible zipping - https://github.com/aws/aws-extensions-for-dotnet-cli/blob/c29333812c317b6ac41a44cf8f5ac7e3798fccc2/src/Amazon.Lambda.Tools/LambdaPackager.cs
             var publishDir = Path.Combine(System.Environment.CurrentDirectory , $"bin/Release/{_framework}/{_runtime}/publish");
-            var zipPath = Path.Combine(System.Environment.CurrentDirectory , $"bin/Release/{_framework}/{functionName}.zip");
+            var zipPath = Path.Combine(publishDir, $"{functionName}.zip");
+
             if(File.Exists(zipPath))
             {
                 File.Delete(zipPath);
             }
-            ZipFile.CreateFromDirectory(publishDir, zipPath);
 
-            // Adapted from solution here: https://github.com/aws/aws-lambda-dotnet/issues/274
-            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Open))
+            var args = $"{functionName}.zip";
+            foreach(var fi in Directory.GetFiles(publishDir))
             {
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-                {
-                    foreach(var entry in archive.Entries)
-                    {
-                        // Console.WriteLine($"\tSetting attributes on {entry.FullName}...");
-                        entry.ExternalAttributes = 755;
-                    }
-                }
+                args += $" \"{Path.GetFileName(fi)}\"";
             }
+
+            var process = new Process()
+            {
+                // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
+                StartInfo = new ProcessStartInfo()
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    FileName="zip",
+                    WorkingDirectory = publishDir,
+                    Arguments=args
+                }
+            };
+            process.Start();
+            process.WaitForExit();
 
             return zipPath;
         }
