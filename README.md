@@ -10,7 +10,7 @@ The Hypar SDK also reads and writes data using several open standards like [GeoJ
 
 ## Getting Started
 - The Hypar SDK is currently in beta. Contact beta@hypar.io to have an account created. Functions can be authored and executed locally. A login is only required when publishing your function to the world!
-- Install [.net](https://www.microsoft.com/net/) - Hypar Elements is compatible with .net standard 2.1.
+- Install [.NET](https://www.microsoft.com/net/)
 - Install the [Hypar CLI](https://github.com/hypar-io/sdk/tree/master/src/cli).
 ```
 hypar new <function name>
