@@ -181,7 +181,10 @@ namespace Hypar
         {{
             var model = new Model();
 
-            // Insert your code here.
+            var profile = Profiles.Rectangular();
+            var mass = Mass.WithBottomProfile(profile)
+                            .WithBottomAtElevation(0)
+                            .WithTopAtElevation(1);
 
             return model.ToHypar();
         }}

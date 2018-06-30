@@ -216,7 +216,9 @@ namespace Hypar.Commands
                 }
                 catch
                 {
-                    Console.WriteLine($"Existing storage for {functionName} was not found. Creating new storage...");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"\tExisting storage for {functionName} was not found. Creating new storage...");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     var putResponse = Task.Run(()=>client.PutBucketAsync(functionName)).Result;
                     if(putResponse.HttpStatusCode != HttpStatusCode.OK)
                     {
