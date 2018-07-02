@@ -1,6 +1,8 @@
 ## THE HYPAR SDK IS CURRENTLY IN BETA. DO NOT USE IT FOR PRODUCTION WORK.
 
 # Hypar SDK
+[![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/sdk)
+
 The Hypar SDK is a library for creating functions that execute on Hypar.
 
 - `Hypar.Elements` provides abstractions for building elements like beams and slabs.
