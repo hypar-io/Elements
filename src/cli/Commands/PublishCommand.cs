@@ -67,6 +67,18 @@ namespace Hypar.Commands
 
         private void Publish()
         {
+            // Inject the logged in user's email into the config.
+            var userDetails = Task.Run(()=>Cognito.User.GetUserDetailsAsync()).Result;
+            foreach(var kvp in userDetails.UserAttributes)
+            {
+                Console.WriteLine(kvp.Name + ":" + kvp.Value);
+                if(kvp.Name == "email")
+                {
+                    _config.Email = kvp.Name;
+                    break;
+                }
+            }
+            
             var process = new Process()
             {
                 // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
@@ -194,6 +206,7 @@ namespace Hypar.Commands
             var client = new RestClient(Program.Configuration["hypar_api_url"]);
 
             var request = new RestRequest("functions", Method.POST);
+            request.RequestFormat = DataFormat.Json;
             request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
             request.AddBody(_config);
 
