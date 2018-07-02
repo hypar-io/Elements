@@ -67,7 +67,7 @@ namespace Hypar
                 }
             }
 
-            Console.WriteLine($"The {args[0]} command was not recognized. Try 'hypar help'.");
+            Logger.LogError($"The {args[0]} command was not recognized. Try 'hypar help'.");
 
             return 0;
         } 
