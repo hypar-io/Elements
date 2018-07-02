@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>hypar</AssemblyName>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>win-x64,linux-x64,osx.10.12-x64</RuntimeIdentifiers>
     <Version>0.0.1-beta6</Version>
   </PropertyGroup>
