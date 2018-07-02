@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <Reference Include="Verb">
-      <HintPath>..\..\..\verb\build\cs\bin\Debug\netstandard2.0\VerbDotnet.dll</HintPath>
+      <HintPath>..\..\lib\VerbDotnet.dll</HintPath>
     </Reference>
   </ItemGroup>
 
