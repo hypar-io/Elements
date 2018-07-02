@@ -27,7 +27,7 @@ The Hypar CLI will create a `hypar.json` file in your function's directory. This
 ```json
 {
   "function": "box.box",
-  "runtime": "python3.6",
+  "runtime": "dotnetcore2.0",
   "parameters": {
     "height": {
       "description": "The height of the box.",
@@ -62,7 +62,7 @@ The Hypar CLI will create a `hypar.json` file in your function's directory. This
 |Property|Description
 |:--|:--
 |`function`|The fully qualified name of the function. For python functions this will be the `module.function`. For .net functions this will be `namespace.class.method`.
-|`runtime`|At this time only `python3.6` and `dotnetcore2.0` are supported.
+|`runtime`|At this time only `dotnetcore2.0` is supported.
 |`parameters`|An object containing data about each parameter.
 |`description`|A description of the parameter. This description will show up in the Hypar web application.
 |`max`|The maximum value for a parameter.
