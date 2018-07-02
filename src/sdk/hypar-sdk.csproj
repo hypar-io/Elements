@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.0.1-beta5</Version>
+    <Version>0.0.1-beta6</Version>
     <Tags>AEC</Tags>
   </PropertyGroup>
 
