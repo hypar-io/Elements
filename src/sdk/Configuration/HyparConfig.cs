@@ -65,6 +65,13 @@ namespace Hypar.Configuration
         public string Version{get;set;}
 
         /// <summary>
+        /// The email of the function's author.
+        /// </summary>
+        /// <returns></returns>
+        [JsonProperty("email")]
+        public string Email{get;set;}
+
+        /// <summary>
         /// Construct a HyparConfig from json.
         /// </summary>
         /// <param name="json"></param>

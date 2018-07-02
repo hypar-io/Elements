@@ -45,16 +45,13 @@ namespace Hypar.Commands
 
         private void New(string functionName)
         {
-            Console.ForegroundColor = ConsoleColor.Gray;
             var name = SanitizeFunctionName(functionName);
             var newDir = Path.Combine(Directory.GetCurrentDirectory(), name);
             CreateProject(name);       
             CreateHyparReference(name);
             CreateLambdaReferences(name);
             CreateHyparJson(newDir, name);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{functionName} project created successfully.");
-            Console.ResetColor();
+            Logger.LogSuccess($"{functionName} project created successfully.");
             return;
         }
 
@@ -67,7 +64,7 @@ namespace Hypar.Commands
 
         private void CreateDotnetProject(string functionName)
         {
-            Console.WriteLine($"\tCreating {functionName} project...");
+            Logger.LogInfo($"Creating {functionName} project...");
             var process = new Process()
             {
                 StartInfo = new ProcessStartInfo
@@ -84,7 +81,7 @@ namespace Hypar.Commands
 
         private void CreateHyparReference(string functionName)
         {
-            Console.WriteLine($"\tReferencing Hypar SDK...");
+            Logger.LogInfo($"Referencing Hypar SDK...");
             var project = $"./{functionName}/{functionName}.csproj";
             var process = new Process()
             {
@@ -133,7 +130,7 @@ namespace Hypar.Commands
 
         private void CreateHyparJson(string dir, string functionId)
         {
-            Console.WriteLine("\tCreating hypar configuration file...");
+            Logger.LogInfo("Creating the hypar configuration file...");
             var hyparPath = Path.Combine(dir, Program.HYPAR_CONFIG);
             var className = ClassName(functionId);
             var config = new HyparConfig();
@@ -165,7 +162,7 @@ namespace Hypar.Commands
 
         private void CreateHyparDefaultClass(string functionName)
         {
-            Console.WriteLine("\tCreating default function class...");
+            Logger.LogInfo("Creating default function class...");
             var className = ClassName(functionName);
             
             string classStr = $@"using Hypar.Elements;
@@ -200,7 +197,7 @@ namespace Hypar
             var clean = functionName.Replace("_","-").ToLower();
             if(clean != functionName)
             {
-                Console.WriteLine($"\tThe function name has been updated to {clean}.");
+                Logger.LogInfo($"The function name has been updated to {clean}.");
             }
             return clean;
         }

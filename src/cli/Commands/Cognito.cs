@@ -16,16 +16,11 @@ namespace Hypar.Commands
 
         public static CognitoUser User{get;set;}
 
-        private static string ClientId = "4lk1efk1vp923fnenc89itsihj";
-        public static string UserPoolId = "us-west-2_DHGhR25BU";
-
-        public static string IdentityPoolId = "us-west-2:d0cea890-84af-4af7-9398-fff1bf5268ee";
-
         private static bool GetCredsAsync(string username, string password)
         {
             var provider = new AmazonCognitoIdentityProviderClient(new Amazon.Runtime.AnonymousAWSCredentials(), RegionEndpoint.USWest2);
-            var userPool = new CognitoUserPool(UserPoolId, ClientId, provider);
-            var user = new CognitoUser(username, ClientId, userPool, provider);
+            var userPool = new CognitoUserPool(Program.Configuration["cognito_user_pool_id"], Program.Configuration["cognito_client_id"], provider);
+            var user = new CognitoUser(username, Program.Configuration["cognito_client_id"], userPool, provider);
             var authRequest = new InitiateSrpAuthRequest()
             {
                 Password = password
@@ -78,14 +73,7 @@ namespace Hypar.Commands
 
                 User = user;
                 return true;
-                // var userDetails = Task.Run(()=>user.GetUserDetailsAsync()).Result;
 
-                // foreach(var kvp in userDetails.UserAttributes)
-                // {
-                //     Console.WriteLine(kvp.Name + ":" + kvp.Value);
-                // }
-
-                
                 //TODO: Experiment with caching credentials
                 // credentials.CacheCredentials()
             }

@@ -75,7 +75,6 @@ namespace Hypar.Commands
             }
             Console.WriteLine(string.Join(",",results.Keys));
 
-
             var length = results.Values.ElementAt(0).Count;
             for(var i=0; i<length; i++)
             {

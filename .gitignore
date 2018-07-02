@@ -331,3 +331,4 @@ ASALocalRun/
 *.glb
 .DS_Store
 appsettings.json
+appsettings.dev.json

@@ -7,12 +7,15 @@ using Amazon.S3;
 using Amazon.S3.Transfer;
 using Amazon.S3.Model;
 using Hypar.Configuration;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Threading.Tasks;
+using Hypar.API;
 
 namespace Hypar.Commands
 {
@@ -42,7 +45,7 @@ namespace Hypar.Commands
             var path = Path.Combine(System.Environment.CurrentDirectory, Program.HYPAR_CONFIG);
             if(!File.Exists(path))
             {
-                Console.WriteLine("The hypar.json file could not be located in the current directory.");
+                Logger.LogError("The hypar.json file could not be located in the current directory.");
                 return false;
             }
             var json = File.ReadAllText(path);
@@ -64,6 +67,17 @@ namespace Hypar.Commands
 
         private void Publish()
         {
+            // Inject the logged in user's email into the config.
+            var userDetails = Task.Run(()=>Cognito.User.GetUserDetailsAsync()).Result;
+            foreach(var kvp in userDetails.UserAttributes)
+            {
+                if(kvp.Name == "email")
+                {
+                    _config.Email = kvp.Name;
+                    break;
+                }
+            }
+
             var process = new Process()
             {
                 // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
@@ -79,7 +93,7 @@ namespace Hypar.Commands
             process.Start();
             process.WaitForExit();
 
-            var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Cognito.IdentityPoolId, RegionEndpoint.USWest2)).Result;
+            var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Program.Configuration["cognito_identity_pool_id"], RegionEndpoint.USWest2)).Result;
             var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
 
             var zipPath = ZipProject(functionName);
@@ -91,9 +105,9 @@ namespace Hypar.Commands
             }
             catch(Exception ex)
             {
-                Console.WriteLine("There was an error during publish.");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
+                Logger.LogError("There was an error during publish.");
+                Logger.LogError(ex.Message);
+                Logger.LogError(ex.StackTrace);
             }
             finally
             {
@@ -101,14 +115,11 @@ namespace Hypar.Commands
                 {
                     File.Delete(zipPath);
                 }
-                Console.ResetColor();
             }
         }
 
         private void CreateOrUpdateLambda(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName)
         {
-            Console.ForegroundColor = ConsoleColor.Gray;
-
             using(var client = new AmazonLambdaClient(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
             {
                 try
@@ -119,7 +130,7 @@ namespace Hypar.Commands
                 }
                 catch
                 {
-                    Console.WriteLine($"\tCreating {functionName}...");
+                   Logger.LogInfo($"Creating {functionName}...");
                     var createRequest = new CreateFunctionRequest{
                         FunctionName = functionName,
                         Runtime = _config.Runtime,
@@ -137,7 +148,7 @@ namespace Hypar.Commands
                     Task.Run(()=>client.CreateFunctionAsync(createRequest)).Wait();
                 }
                 
-                Console.WriteLine($"\tUpdating {functionName} function...");
+                Logger.LogInfo($"Updating {functionName} function...");
                 var updateRequest = new UpdateFunctionCodeRequest{
                     FunctionName = functionName,
                     S3Bucket = functionName,
@@ -146,10 +157,8 @@ namespace Hypar.Commands
 
                 var response = Task.Run(()=>client.UpdateFunctionCodeAsync(updateRequest)).Result;
 
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{functionName} updated successfully.");
+                Logger.LogSuccess($"{functionName} updated successfully.");
             }
-            Console.ResetColor();
         }
 
         private string ZipProject(string functionName)
@@ -191,34 +200,44 @@ namespace Hypar.Commands
 
         private void PostFunction()
         {
-            // Read the hypar.json
+            Logger.LogInfo("Updating function record...");
 
-            // Get the authenticated user's email address.
+            var client = new RestClient(Program.Configuration["hypar_api_url"]);
 
-            // Build the request body
+            var request = new RestRequest("functions", Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+            request.AddBody(_config);
 
-            // Direct user to email confirmation for link.
+            var response = client.Execute(request);
+            if(response.StatusCode == HttpStatusCode.OK)
+            {
+                var functions = JsonConvert.DeserializeObject<Function>(response.Content);
+            }
+            else
+            {
+                Logger.LogError("There was an error getting the functions from hypar.");
+                Logger.LogError(response.Content);
+            }
+            return;
         }
 
         private void CreateBucketAndUpload(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName, string zipPath)
         {
             
-            Console.ForegroundColor = ConsoleColor.Gray;
             using (var client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
             {   
                 try
                 {
-                    Console.WriteLine($"\tLooking for existing storage for {functionName}...");
+                    Logger.LogInfo($"Looking for existing storage for {functionName}...");
                     // Attempt to get the object metadata. If it's not found
                     // then the object doesn't exist (TODO: Find a better test than this.)
                     var response = Task.Run(()=>client.GetObjectMetadataAsync(functionName, functionName + ".zip")).Result;
-                    Console.WriteLine($"\tExisting storage located for {functionName}...");
+                    Logger.LogInfo($"Existing storage located for {functionName}...");
                 }
                 catch
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"\tExisting storage for {functionName} was not found. Creating new storage...");
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Logger.LogWarning($"Existing storage for {functionName} was not found. Creating new storage...");
                     var putResponse = Task.Run(()=>client.PutBucketAsync(functionName)).Result;
                     if(putResponse.HttpStatusCode != HttpStatusCode.OK)
                     {
@@ -226,14 +245,12 @@ namespace Hypar.Commands
                     }
                 }
 
-                Console.WriteLine($"\tUploading {functionName}...");
+                Logger.LogInfo($"Uploading {functionName}...");
                 var fileTransferUtility = new TransferUtility(client);
                 
-                Console.ForegroundColor = ConsoleColor.Green;
                 Task.Run(()=>fileTransferUtility.UploadAsync(zipPath, functionName)).Wait();
-                Console.WriteLine($"Upload of {functionName} complete.");
+                Logger.LogSuccess($"Upload of {functionName} complete.");
             }
-            Console.ResetColor();
         }
     }
 }
