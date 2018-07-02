@@ -71,7 +71,6 @@ namespace Hypar.Commands
             var userDetails = Task.Run(()=>Cognito.User.GetUserDetailsAsync()).Result;
             foreach(var kvp in userDetails.UserAttributes)
             {
-                Console.WriteLine(kvp.Name + ":" + kvp.Value);
                 if(kvp.Name == "email")
                 {
                     _config.Email = kvp.Name;
