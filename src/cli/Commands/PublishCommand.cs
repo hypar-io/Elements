@@ -78,7 +78,7 @@ namespace Hypar.Commands
                     break;
                 }
             }
-            
+
             var process = new Process()
             {
                 // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
@@ -94,7 +94,7 @@ namespace Hypar.Commands
             process.Start();
             process.WaitForExit();
 
-            var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Cognito.IdentityPoolId, RegionEndpoint.USWest2)).Result;
+            var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Program.Configuration["cognito_identity_pool_id"], RegionEndpoint.USWest2)).Result;
             var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
 
             var zipPath = ZipProject(functionName);
