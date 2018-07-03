@@ -16,6 +16,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading.Tasks;
 using Hypar.API;
+using System.Text;
 
 namespace Hypar.Commands
 {
@@ -206,9 +207,10 @@ namespace Hypar.Commands
 
             var request = new RestRequest("functions", Method.POST);
             request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
-            request.AddJsonBody(_config);
-            var jsonConfig = _config.ToJson();
-            Logger.LogWarning(jsonConfig);
+
+            // Send raw json so we can use the json.net serializer.
+            request.AddParameter("application/json", JsonConvert.SerializeObject(_config), ParameterType.RequestBody);
+            request.RequestFormat = DataFormat.Json;
             var response = client.Execute(request);
             if(response.StatusCode == HttpStatusCode.OK)
             {
@@ -217,8 +219,9 @@ namespace Hypar.Commands
             else
             {
                 Logger.LogError("There was an error updating the function record on Hypar.");
-                Logger.LogError(response.Content);
+                Logger.LogError($"{response.Content}");
             }
+
             return;
         }
 
