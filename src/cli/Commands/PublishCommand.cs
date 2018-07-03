@@ -73,7 +73,7 @@ namespace Hypar.Commands
             {
                 if(kvp.Name == "email")
                 {
-                    _config.Email = kvp.Name;
+                    _config.Email = kvp.Value;
                     break;
                 }
             }
@@ -205,10 +205,10 @@ namespace Hypar.Commands
             var client = new RestClient(Program.Configuration["hypar_api_url"]);
 
             var request = new RestRequest("functions", Method.POST);
-            request.RequestFormat = DataFormat.Json;
             request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
-            request.AddBody(_config);
-
+            request.AddJsonBody(_config);
+            var jsonConfig = _config.ToJson();
+            Logger.LogWarning(jsonConfig);
             var response = client.Execute(request);
             if(response.StatusCode == HttpStatusCode.OK)
             {
@@ -216,7 +216,7 @@ namespace Hypar.Commands
             }
             else
             {
-                Logger.LogError("There was an error getting the functions from hypar.");
+                Logger.LogError("There was an error updating the function record on Hypar.");
                 Logger.LogError(response.Content);
             }
             return;

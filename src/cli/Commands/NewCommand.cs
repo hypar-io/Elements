@@ -90,7 +90,7 @@ namespace Hypar.Commands
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     FileName="dotnet",
-                    Arguments=$"add {project} package Hypar -v 0.0.1-beta4"
+                    Arguments=$"add {project} package HyparSDK -v 0.0.1-beta7"
                 }
             };
             process.Start();
