@@ -215,6 +215,7 @@ namespace Hypar.Commands
             if(response.StatusCode == HttpStatusCode.OK)
             {
                 var functions = JsonConvert.DeserializeObject<Function>(response.Content);
+                Logger.LogSuccess($"{_config.FunctionId} version {_config.Version} was added successfully.");
             }
             else
             {
