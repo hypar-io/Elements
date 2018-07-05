@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>win-x64,linux-x64,osx.10.12-x64</RuntimeIdentifiers>
-    <Version>0.0.1-beta7</Version>
+    <Version>0.0.1-beta8</Version>
   </PropertyGroup>
 
   <ItemGroup>

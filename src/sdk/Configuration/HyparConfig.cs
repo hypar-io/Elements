@@ -30,6 +30,13 @@ namespace Hypar.Configuration
         public string FunctionId{get;set;}
 
         /// <summary>
+        /// The name of the function.
+        /// </summary>
+        /// <returns></returns>
+        [JsonProperty("name")]
+        public string Name{get;set;}
+
+        /// <summary>
         /// The runtime used to execute the function.
         /// </summary>
         /// <returns></returns>
