@@ -11,7 +11,7 @@ The Hypar SDK is a library for creating functions that execute on Hypar. In shor
 The Hypar SDK also reads and writes data using several open standards like [GeoJson](http://geojson.org/) and [glTF](https://www.khronos.org/gltf/).
 
 ## Getting Started
-- The Hypar SDK is currently in beta. Contact beta@hypar.io to have an account created. Functions can be authored and executed locally. A login is only required when publishing your function to the world!
+- The Hypar SDK is currently in beta. Contact beta@hypar.io to have an account created. Functions can be authored and executed locally. **A login is only required when publishing your function to the world!**
 - Install [.NET](https://www.microsoft.com/net/)
 - Install the [Hypar CLI](https://github.com/hypar-io/sdk/tree/master/src/cli).
 - Install an IDE. Here's a couple of options:
