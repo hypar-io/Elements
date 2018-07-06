@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Hypar.API;
 using System.Text;
@@ -169,7 +170,7 @@ namespace Hypar.Commands
 
         private string ZipProject(string functionName)
         {
-            //TODO: Implement windows compatible zipping - https://github.com/aws/aws-extensions-for-dotnet-cli/blob/c29333812c317b6ac41a44cf8f5ac7e3798fccc2/src/Amazon.Lambda.Tools/LambdaPackager.cs
+            // https://github.com/aws/aws-extensions-for-dotnet-cli/blob/c29333812c317b6ac41a44cf8f5ac7e3798fccc2/src/Amazon.Lambda.Tools/LambdaPackager.cs
             var publishDir = Path.Combine(System.Environment.CurrentDirectory , $"bin/Release/{_framework}/{_runtime}/publish");
             var zipPath = Path.Combine(publishDir, $"{functionName}.zip");
 
@@ -178,28 +179,35 @@ namespace Hypar.Commands
                 File.Delete(zipPath);
             }
 
-            var args = $"{functionName}.zip";
-            foreach(var fi in Directory.GetFiles(publishDir))
+            if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                args += $" \"{Path.GetFileName(fi)}\"";
+                ZipFile.CreateFromDirectory(publishDir, zipPath);
             }
-
-            var process = new Process()
+            else
             {
-                // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
-                StartInfo = new ProcessStartInfo()
+                var args = $"{functionName}.zip";
+                foreach(var fi in Directory.GetFiles(publishDir))
                 {
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    FileName="zip",
-                    WorkingDirectory = publishDir,
-                    Arguments=args
+                    args += $" \"{Path.GetFileName(fi)}\"";
                 }
-            };
-            process.Start();
-            process.WaitForExit();
+
+                var process = new Process()
+                {
+                    // https://docs.aws.amazon.com/lambda/latest/dg/lambda-dotnet-how-to-create-deployment-package.html
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        FileName="zip",
+                        WorkingDirectory = publishDir,
+                        Arguments=args
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+            }
 
             return zipPath;
         }
