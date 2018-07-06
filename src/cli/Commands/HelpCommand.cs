@@ -38,6 +38,7 @@ Available Commands:
     functions
     help
     model
+    publish
     results
     version
 
