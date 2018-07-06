@@ -96,19 +96,24 @@ namespace Hypar.Commands
 
             var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Program.Configuration["cognito_identity_pool_id"], RegionEndpoint.USWest2)).Result;
             var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
+            
+            // Logger.LogInfo($"Account id: {credentials.AccountId}");
+            // Logger.LogInfo($"Identity pool id: {credentials.IdentityPoolId}");
+            // Logger.LogInfo($"Auth role arn: {credentials.AuthRoleArn}");
 
             var zipPath = ZipProject(functionName);
+            Logger.LogInfo($"Created archive {zipPath}.");
+
             try
             {
+                PostFunction();
                 CreateBucketAndUpload(credentials, functionName, zipPath);
                 CreateOrUpdateLambda(credentials, functionName);
-                PostFunction();
             }
             catch(Exception ex)
             {
-                Logger.LogError("There was an error during publish.");
-                Logger.LogError(ex.Message);
-                Logger.LogError(ex.StackTrace);
+                Logger.LogError($"There was an error during publish: {ex.Message}");
+                // Logger.LogError(ex.StackTrace);
             }
             finally
             {
@@ -138,7 +143,7 @@ namespace Hypar.Commands
                         Handler = _config.Function,
                         Role = Program.Configuration["aws_iam_role_lambda"],
                         Code = new FunctionCode{
-                            S3Bucket = functionName,
+                            S3Bucket = Program.Configuration["s3_functions_bucket"],
                             S3Key = functionName + ".zip"
                         },
                         Description = _config.Description,
@@ -152,7 +157,7 @@ namespace Hypar.Commands
                 Logger.LogInfo($"Updating {functionName} function...");
                 var updateRequest = new UpdateFunctionCodeRequest{
                     FunctionName = functionName,
-                    S3Bucket = functionName,
+                    S3Bucket = Program.Configuration["s3_functions_bucket"],
                     S3Key = functionName + ".zip"
                 };
 
@@ -205,22 +210,56 @@ namespace Hypar.Commands
 
             var client = new RestClient(Program.Configuration["hypar_api_url"]);
 
-            var request = new RestRequest("functions", Method.POST);
-            request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
-
-            // Send raw json so we can use the json.net serializer.
-            request.AddParameter("application/json", JsonConvert.SerializeObject(_config), ParameterType.RequestBody);
-            request.RequestFormat = DataFormat.Json;
-            var response = client.Execute(request);
-            if(response.StatusCode == HttpStatusCode.OK)
+            // Find a function record
+            var getRequest = new RestRequest($"functions/{_config.FunctionId}", Method.GET);
+            getRequest.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+            var getResponse = client.Execute(getRequest);
+            if(getResponse.StatusCode == HttpStatusCode.NotFound)
             {
-                var functions = JsonConvert.DeserializeObject<Function>(response.Content);
-                Logger.LogSuccess($"{_config.FunctionId} version {_config.Version} was added successfully.");
+                Logger.LogInfo("The function does not exist. Adding a function record...");
+                // POST
+                var request = new RestRequest("functions", Method.POST);
+                request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+
+                // Send raw json so we can use the json.net serializer.
+                request.AddParameter("application/json", JsonConvert.SerializeObject(_config), ParameterType.RequestBody);
+                request.RequestFormat = DataFormat.Json;
+                var postResponse = client.Execute(request);
+                if(postResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    var functions = JsonConvert.DeserializeObject<Function>(postResponse.Content);
+                    Logger.LogSuccess($"{_config.FunctionId} version {_config.Version} was added successfully.");
+                }
+                else
+                {
+                    throw new Exception($"There was an error adding the function record on Hypar: {postResponse.Content}");
+                }
+            }
+            else if(getResponse.StatusCode == HttpStatusCode.OK)
+            {
+                Logger.LogInfo("The function already exists. Updating the function record...");
+
+                // PUT
+                var request = new RestRequest($"functions/{_config.FunctionId}", Method.PUT);
+                request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+
+                // Send raw json so we can use the json.net serializer.
+                request.AddParameter("application/json", JsonConvert.SerializeObject(_config), ParameterType.RequestBody);
+                request.RequestFormat = DataFormat.Json;
+                var putResponse = client.Execute(request);
+                if(putResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    var functions = JsonConvert.DeserializeObject<Function>(putResponse.Content);
+                    Logger.LogSuccess($"{_config.FunctionId} version {_config.Version} was updated successfully.");
+                }
+                else
+                {
+                    throw new Exception($"There was an error updating the function record on Hypar: {putResponse.Content}");
+                }
             }
             else
             {
-                Logger.LogError("There was an error updating the function record on Hypar.");
-                Logger.LogError($"{response.Content}");
+                throw new Exception($"There was an error creating or updating the function record: {getResponse.Content}");
             }
 
             return;
@@ -228,31 +267,22 @@ namespace Hypar.Commands
 
         private void CreateBucketAndUpload(Amazon.CognitoIdentity.CognitoAWSCredentials credentials, string functionName, string zipPath)
         {
-            
-            using (var client = new AmazonS3Client(credentials, RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"])))
-            {   
-                try
-                {
-                    Logger.LogInfo($"Looking for existing storage for {functionName}...");
-                    // Attempt to get the object metadata. If it's not found
-                    // then the object doesn't exist (TODO: Find a better test than this.)
-                    var response = Task.Run(()=>client.GetObjectMetadataAsync(functionName, functionName + ".zip")).Result;
-                    Logger.LogInfo($"Existing storage located for {functionName}...");
-                }
-                catch
-                {
-                    Logger.LogWarning($"Existing storage for {functionName} was not found. Creating new storage...");
-                    var putResponse = Task.Run(()=>client.PutBucketAsync(functionName)).Result;
-                    if(putResponse.HttpStatusCode != HttpStatusCode.OK)
-                    {
-                        throw new Exception("There was an error creating the function storage.");
-                    }
-                }
 
+            if(credentials == null)
+            {
+                throw new Exception("The credentials were invalid.");
+            }
+            
+            var endPoint = RegionEndpoint.GetBySystemName(Program.Configuration["aws_default_region"]);
+            // Logger.LogInfo($"Storing the function in {endPoint.DisplayName}...");
+            
+            using (var client = new AmazonS3Client(credentials, endPoint))
+            {   
                 Logger.LogInfo($"Uploading {functionName}...");
                 var fileTransferUtility = new TransferUtility(client);
                 
-                Task.Run(()=>fileTransferUtility.UploadAsync(zipPath, functionName)).Wait();
+                var bucket = Program.Configuration["s3_functions_bucket"];
+                Task.Run(()=>fileTransferUtility.UploadAsync(zipPath, bucket)).Wait();
                 Logger.LogSuccess($"Upload of {functionName} complete.");
             }
         }
