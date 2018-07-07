@@ -31,11 +31,11 @@ namespace Hypar.Commands
             string accessToken;
             while (authResponse.AuthenticationResult == null)
             {
-                Console.WriteLine("waiting...");
+                Logger.LogInfo("waiting...");
                 if (authResponse.ChallengeName == ChallengeNameType.NEW_PASSWORD_REQUIRED)
                 {
-                    Console.WriteLine("Enter your desired new password:");
-                    string newPassword = Console.ReadLine();
+                    Logger.LogInfo("Enter your desired new password:");
+                    var newPassword = GetConsolePassword();
 
                     authResponse = Task.Run(()=>user.RespondToNewPasswordRequiredAsync(new RespondToNewPasswordRequiredRequest()
                     {
@@ -46,7 +46,7 @@ namespace Hypar.Commands
                 }
                 else if (authResponse.ChallengeName == ChallengeNameType.SMS_MFA)
                 {
-                    Console.WriteLine("Enter the MFA Code sent to your device:");
+                    Logger.LogInfo("Enter the MFA Code sent to your device:");
                     string mfaCode = Console.ReadLine();
 
                     AuthFlowResponse mfaResponse = Task.Run(()=>user.RespondToSmsMfaAuthAsync(new RespondToSmsMfaRequest()
@@ -59,7 +59,7 @@ namespace Hypar.Commands
                 }
                 else
                 {
-                    Console.WriteLine("Unrecognized authentication challenge.");
+                    Logger.LogError("Unrecognized authentication challenge.");
                     accessToken = "";
                     break;
                 }
@@ -68,8 +68,7 @@ namespace Hypar.Commands
             if (authResponse.AuthenticationResult != null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{user.Username} successfully authenticated.");
-                Console.ResetColor();
+                Logger.LogSuccess($"{user.Username} successfully authenticated.");
 
                 User = user;
                 return true;
@@ -79,17 +78,17 @@ namespace Hypar.Commands
             }
             else
             {
-                Console.WriteLine("Error in authentication process.");
+                Logger.LogError("Error in authentication process.");
                 return false;
             }
         }
 
         public static bool Login()
         {
-            Console.WriteLine("Enter your user name:");
+            Logger.LogSuccess("Enter your user name:");
             var username = Console.ReadLine();
             
-            Console.WriteLine("Enter your password:");
+            Logger.LogSuccess("Enter your password:");
             var password = GetConsolePassword();
 
             bool response = false;
@@ -100,8 +99,7 @@ namespace Hypar.Commands
             catch
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Login to Hypar failed.");
-                Console.ResetColor();
+                Logger.LogError("Login to Hypar failed.");
             }
             return response;
         }
