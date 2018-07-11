@@ -1,3 +1,5 @@
+<img src="./hypar_logo.svg" width="300px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
+
 ## THE HYPAR SDK IS CURRENTLY IN BETA. DO NOT USE IT FOR PRODUCTION WORK.
 
 # Hypar SDK
