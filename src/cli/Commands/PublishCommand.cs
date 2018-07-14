@@ -23,7 +23,7 @@ namespace Hypar.Commands
 {
     internal class PublishCommand : IHyparCommand
     {
-        private string _framework = "netcoreapp2.0";
+        private string _framework = "netstandard2.0";
         private string _runtime = "linux-x64";
         private HyparConfig _config;
 
