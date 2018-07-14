@@ -96,20 +96,20 @@ namespace Hypar.Commands
             process.WaitForExit();
 
             var credentials = Task.Run(()=>Cognito.User.GetCognitoAWSCredentials(Program.Configuration["cognito_identity_pool_id"], RegionEndpoint.USWest2)).Result;
-            var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
+            // var functionName = $"{Cognito.User.UserID}-{_config.FunctionId}";
             
             // Logger.LogInfo($"Account id: {credentials.AccountId}");
             // Logger.LogInfo($"Identity pool id: {credentials.IdentityPoolId}");
             // Logger.LogInfo($"Auth role arn: {credentials.AuthRoleArn}");
 
-            var zipPath = ZipProject(functionName);
+            var zipPath = ZipProject(_config.FunctionId);
             Logger.LogInfo($"Created archive {zipPath}.");
 
             try
             {
                 PostFunction();
-                CreateBucketAndUpload(credentials, functionName, zipPath);
-                CreateOrUpdateLambda(credentials, functionName);
+                CreateBucketAndUpload(credentials, _config.FunctionId, zipPath);
+                CreateOrUpdateLambda(credentials, _config.FunctionId);
             }
             catch(Exception ex)
             {
