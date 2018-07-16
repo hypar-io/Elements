@@ -1,8 +1,8 @@
 language: csharp
-solution: hypar.sln
+solution: ./csharp/hypar.sln
 dist: trusty
 mono: none
 dotnet: 2.0.0
 script:
   - dotnet build
-  - dotnet test ./test/Hypar.SDK.Tests/hypar-sdk-tests.csproj
+  - dotnet test ./csharp/test/Hypar.SDK.Tests/hypar-sdk-tests.csproj
