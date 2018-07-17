@@ -1,5 +1,5 @@
 # Hypar CLI
-The Hypar command line interface enables users to create, execute, and publish functions to Hypar from their *nix-compatible command line.
+The Hypar command line interface enables users to create, execute, and publish functions to Hypar from the command line.
 
 ```
 Hypar Command Line Usage:
