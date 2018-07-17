@@ -4,7 +4,7 @@ from enum import Enum
 import os
 from struct import *
 import base64
-
+import uuid
 
 # https://github.com/KhronosGroup/glTF-Sample-Models/blob/master/2.0/Box/glTF/Box.gltf
 class glTFEncoder(json.JSONEncoder):
@@ -348,9 +348,9 @@ class glTF():
 
         # Add a new mesh node
         mesh_node = node(meshId=len(self.meshes)-1)
-        self.add_node(mesh_node, 0)
+        node_id = self.add_node(mesh_node, 0)
 
-        return len(self.meshes)-1
+        return node_id
     
     def add_node(self, node, parent_node_id):
         """Add a node.
@@ -364,7 +364,7 @@ class glTF():
         """
 
         self.nodes.append(node)
-        node_id = len(self.nodes)-1
+        node_id = str(uuid.uuid4())
         self.nodes[parent_node_id].children.append(node_id)
         return node_id
 
