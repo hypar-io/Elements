@@ -168,7 +168,9 @@ class glTF():
         bf.close()
         
         buff = buffer(len(b),bin_name)
-        self.buffers.append(buff)
+
+        # Write one buffer that contains everything.
+        self.buffers = [buff]
 
         f = open(path,'w')
         f.write(json.dumps(self, indent=4, cls=glTFEncoder, skipkeys=True))
@@ -176,7 +178,9 @@ class glTF():
 
     def create_glb(self):
         buff = buffer(len(self.buffer))
-        self.buffers.append(buff)
+
+        # Write one buffer that contains everything.
+        self.buffers = [buff]
 
         jsonb = bytearray(json.dumps(self, cls=glTFEncoder, skipkeys=True).encode('utf-8'))
         bin = bytearray(self.buffer)
