@@ -122,10 +122,10 @@ class glTF():
         self.assett = asset()
         
         # Add a root node.
-        root_node = node([],[1.0,0.0,0.0,0.0,
+        root_node = node(childIds=[],matrix=[1.0,0.0,0.0,0.0,
                             0.0,0.0,-1.0,0.0,
                             0.0,1.0,0.0,0.0,
-                            0.0,0.0,0.0,1.0])
+                            0.0,0.0,0.0,1.0], name='root')
         self.nodes = [root_node]
 
         # Add a default scene referencing the 
@@ -347,7 +347,7 @@ class glTF():
         self.meshes.append(m)
 
         # Add a new mesh node
-        mesh_node = node(meshId=len(self.meshes)-1)
+        mesh_node = node(meshId=len(self.meshes)-1, name=str(uuid.uuid4()))
         node_id = self.add_node(mesh_node, 0)
 
         return node_id
@@ -364,9 +364,9 @@ class glTF():
         """
 
         self.nodes.append(node)
-        node_id = str(uuid.uuid4())
+        node_id = len(self.nodes)-1
         self.nodes[parent_node_id].children.append(node_id)
-        return node_id
+        return node
 
     def add_accessor(self, bufferViewId, byteOffset, componentType, count, minArr, maxArr, accessorType):
         """Add an accessor to a buffer view.
@@ -416,10 +416,11 @@ class scene:
 
 
 class node:
-    def __init__(self, childIds=None, matrix=None, meshId=None):
+    def __init__(self, childIds=None, matrix=None, meshId=None, name=None):
         self.children = childIds
         self.matrix = matrix
         self.mesh = meshId
+        self.name = name
 
 
 class mesh:
