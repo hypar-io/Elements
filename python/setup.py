@@ -5,7 +5,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setuptools.setup(name='hypar',
-                 version='0.0.4',
+                 version='0.0.5',
                  description='Function Execution for AEC.',
                  long_description=long_description,
                  long_description_content_type='text/markdown',
