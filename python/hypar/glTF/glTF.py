@@ -352,9 +352,9 @@ class glTF():
 
         # Add a new mesh node
         mesh_node = node(meshId=len(self.meshes)-1, name=str(uuid.uuid4()))
-        node_id = self.add_node(mesh_node, 0)
+        self.add_node(mesh_node, 0)
 
-        return node_id
+        return mesh_node.name
     
     def add_node(self, node, parent_node_id):
         """Add a node.
@@ -362,15 +362,11 @@ class glTF():
         Arguments:
             node {node} -- The node to add.
             parent_node_id {integer} -- The index of the parent node.
-        
-        Returns:
-            [type] -- [description]
         """
 
         self.nodes.append(node)
         node_id = len(self.nodes)-1
         self.nodes[parent_node_id].children.append(node_id)
-        return node
 
     def add_accessor(self, bufferViewId, byteOffset, componentType, count, minArr, maxArr, accessorType):
         """Add an accessor to a buffer view.
