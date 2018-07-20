@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Text;
 
 using System.Threading.Tasks;
@@ -36,6 +37,12 @@ namespace Hypar.Commands
                 {
                     Logger.LogInfo("Enter your desired new password:");
                     var newPassword = GetConsolePassword();
+
+                    if(!ValidatePassword(newPassword))
+                    {
+                        Logger.LogError("Passwords must be a minimum of 8 characters, and contain upper and lower case letters, a number, and a special character.");
+                        return false;
+                    }
 
                     authResponse = Task.Run(()=>user.RespondToNewPasswordRequiredAsync(new RespondToNewPasswordRequiredRequest()
                     {
@@ -81,6 +88,13 @@ namespace Hypar.Commands
                 Logger.LogError("Error in authentication process.");
                 return false;
             }
+        }
+
+        // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
+        public static bool ValidatePassword(string password)
+        {
+            var r = new Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}");
+            return r.Match(password).Success;
         }
 
         public static bool Login()

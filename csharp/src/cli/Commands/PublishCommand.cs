@@ -53,11 +53,15 @@ namespace Hypar.Commands
             var json = File.ReadAllText(path);
             _config = HyparConfig.FromJson(json);
 
-            return Cognito.Login();
+            return true;
         }
 
         public void Execute(object parameter)
         {
+            if(!Cognito.Login())
+            {
+                return;
+            }
             Publish();
         }
 
