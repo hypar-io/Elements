@@ -15,7 +15,7 @@ The Hypar SDK also reads and writes data using several open standards like [GeoJ
 ## Getting Started
 - The Hypar SDK is currently in beta. Contact beta@hypar.io to have an account created. Functions can be authored and executed locally. **A login is only required when publishing your function to the world!**
 - Install [.NET](https://www.microsoft.com/net/)
-- Install the [Hypar CLI](https://github.com/hypar-io/sdk/tree/master/src/cli).
+- Install the [Hypar CLI](https://github.com/hypar-io/sdk/tree/master/csharp/src/cli/).
 - Install an IDE. Here's a couple of options:
   - The Hypar team has enjoyed developing and testing the SDK using [Visual Studio Code](https://code.visualstudio.com/). It's a free IDE with great support for .net and python and it looks and acts the same on every platform (Mac, Linux, Windows), so it makes our job of supporting you slightly easier.
   - [Visual Studio Community Edition](https://visualstudio.microsoft.com/vs/community/) is great too, but it doesn't exist for Linux and is still learning to walk on the Mac.
