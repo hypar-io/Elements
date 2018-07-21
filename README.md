@@ -64,6 +64,7 @@ The `hypar new` command will create a `hypar.json` file in your function's direc
       "description": "The location of the box.",
       "type": "location"
     },
+  },
   "respository_url": "https://github.com/hypar-io/sdk",
   "returns": {
     "volume": {
@@ -84,9 +85,9 @@ The `hypar new` command will create a `hypar.json` file in your function's direc
 |`runtime`|At this time only `dotnetcore2.0` is supported.
 |`parameters`|An object containing data about each parameter.
 |`description`|A description of the parameter. This description will show up in the Hypar web application.
-|`max`|The maximum value for a parameter.
-|`min`|The minimum value for a parameter.
-|`step`|The value by which the parameter will be incremented when multiple executions are requested.
+|`max`|The maximum value for a `number` parameter.
+|`min`|The minimum value for a `number` parameter.
+|`step`|The value by which a `number` parameter will be incremented when multiple executions are requested.
 |`type`|The type of parameter. Supported values are `number`, and `location`.
 |`version`|The version of the function. Versions should adhere to [semantic versioning](https://semver.org/).
 
