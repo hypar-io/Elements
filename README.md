@@ -35,7 +35,7 @@ The `hypar new` command will create a `hypar.json` file in your function's direc
 ```json
 {
   "email": "info@hypar.io",
-  "description": "A function which makes boxes."
+  "description": "A function which makes boxes.",
   "function": "box.box",
   "name": "Box",
   "parameters": {
