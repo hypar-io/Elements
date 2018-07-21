@@ -34,9 +34,10 @@ hypar publish
 The `hypar new` command will create a `hypar.json` file in your function's directory. This file is used to provide configuration information to Hypar. Here's an example of a `hypar.json` file.
 ```json
 {
+  "email": "info@hypar.io",
+  "description": "A function which makes boxes."
   "function": "box.box",
   "name": "Box",
-  "runtime": "dotnetcore2.0",
   "parameters": {
     "height": {
       "description": "The height of the box.",
@@ -58,27 +59,35 @@ The `hypar new` command will create a `hypar.json` file in your function's direc
       "min": 1,
       "step": 5,
       "type": "number"
-    }
-  },
+    },
+    "location": {
+      "description": "The location of the box.",
+      "type": "location"
+    },
+  "respository_url": "https://github.com/hypar-io/sdk",
   "returns": {
     "volume": {
       "description": "The volume of the box."
     }
   },
+  "runtime": "dotnetcore2.0",
   "version": "0.0.1"
 }
 ```
 |Property|Description
 |:--|:--
+|`description`|A description of the function.
+|`email`|The email address of the function's author.
 |`function`|The fully qualified name of the function. For python functions this will be the `module.function`. For .net functions this will be `namespace.class.method`.
 |`name`|A name for the function.
+|`repository_url`|(OPTIONAL) The url of the repository which contains this function's implementation.
 |`runtime`|At this time only `dotnetcore2.0` is supported.
 |`parameters`|An object containing data about each parameter.
 |`description`|A description of the parameter. This description will show up in the Hypar web application.
 |`max`|The maximum value for a parameter.
 |`min`|The minimum value for a parameter.
 |`step`|The value by which the parameter will be incremented when multiple executions are requested.
-|`type`|The type of parameter. Supported values are `number`, `location`, and `point`.
+|`type`|The type of parameter. Supported values are `number`, and `location`.
 |`version`|The version of the function. Versions should adhere to [semantic versioning](https://semver.org/).
 
 ## Examples
