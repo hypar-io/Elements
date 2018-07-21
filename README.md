@@ -5,6 +5,8 @@
 
 The Hypar SDK is a library for creating functions that execute on Hypar. A function is a piece of code that is executed in the cloud to build stuff. That stuff can be 3D geometry, which we store as glTF files, or data which we serialize to JSON and store in a document database. You create the function logic and publish the function to Hypar, then we execute it for you and store the results. The Hypar SDK provides object types that are useful for generating the built environment.
 
+You can see some functions written using the Hypar SDK running on [Hypar Explore](https://explore.hypar.io/functions).
+
 ## Words of Warning
 - The Hypar SDK is currently in beta. Please do not use it for production work.
 - Not all languages are supported equally. When Hypar began we were working in Python and C#. But we are an extremely small team and cannot support both languages equally indefinitely. We have made a choice to standardize on C#. We welcome contributions to the Python SDK. There's a very short list of reasons why we chose C#:
