@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>win-x64,linux-x64,osx.10.12-x64</RuntimeIdentifiers>
-    <Version>0.0.1-beta8</Version>
+    <Version>0.0.1-beta10</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +13,7 @@
     <PackageReference Include="AWSSDK.Extensions.CognitoAuthentication" Version="0.9.4" />
     <PackageReference Include="AWSSDK.Lambda" Version="3.3.13.4" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.18.5" />
-    <PackageReference Include="HyparSDK" Version="0.0.1-beta8" />
+    <PackageReference Include="HyparSDK" Version="0.0.1-beta10" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />

@@ -54,7 +54,7 @@ namespace Hypar.Configuration
         /// An optional git repository that stores your function.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("respository_url")]
+        [JsonProperty("repository_url")]
         public string RepositoryUrl{get;set;}
 
         /// <summary>
@@ -63,13 +63,6 @@ namespace Hypar.Configuration
         /// <returns></returns>
         [JsonProperty("returns")]
         public Dictionary<string,ReturnData> Returns{get;set;}
-
-        /// <summary>
-        /// A semantic version.
-        /// </summary>
-        /// <returns></returns>
-        [JsonProperty("version")]
-        public string Version{get;set;}
 
         /// <summary>
         /// The email of the function's author.
@@ -105,7 +98,6 @@ namespace Hypar.Configuration
         /// </summary>
         public HyparConfig()
         {
-            this.Version = "0.0.1";
             this.Parameters = new Dictionary<string, ParameterData>();
             this.Returns = new Dictionary<string, ReturnData>();
         }
