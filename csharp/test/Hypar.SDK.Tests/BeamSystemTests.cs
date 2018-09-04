@@ -15,19 +15,20 @@ namespace Hypar.Tests
             var profile = Profiles.WideFlangeProfile(1.0, 2.0, 0.1, 0.1);
 
             // Create the edge lines of the system.
-            var l1 = Line.FromStart(new Vector3(0,0,0)).ToEnd(new Vector3(20,0,0));
-            var l2 = Line.FromStart(new Vector3(0,20,0)).ToEnd(new Vector3(20,20,10));
+            var l1 = new Line(new Vector3(0,0,0), new Vector3(20,0,0));
+            var l2 = new Line(new Vector3(0,20,0), new Vector3(20,20,10));
             
             // Create points at n equal spaces along each edge.
             var v1 = Vector3.AtNEqualSpacesAlongLine(l1, 5);
             var v2 = Vector3.AtNEqualSpacesAlongLine(l2, 5);
 
             // Create lines spanning between those points.
-            var cls = Line.FromStart(v1).ToEnd(v2);
+            var cls = v1.Zip(v2, (a,b) =>{
+                return new Line(a,b);
+            });
 
-            // Create beams along all of those lines.
-            var beams = cls.AlongEachCreate<Beam>(l => {
-                return Beam.AlongLine(l).WithProfile(profile);
+            var beams = cls.Select(l=>{
+                return new Beam(l, profile);
             });
 
             model.AddElements(beams);

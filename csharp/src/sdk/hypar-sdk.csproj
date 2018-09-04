@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.0.1-beta8</Version>
+    <Version>0.0.1-beta.12</Version>
     <Tags>AEC</Tags>
   </PropertyGroup>
 
@@ -22,12 +22,6 @@
     <PackageReference Include="glTF2Loader" Version="1.1.1-alpha" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Verb">
-      <HintPath>..\..\lib\VerbDotnet.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

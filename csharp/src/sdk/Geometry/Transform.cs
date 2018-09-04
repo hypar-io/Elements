@@ -30,7 +30,18 @@ namespace Hypar.Geometry
         public Vector3 ZAxis{get;}
 
         /// <summary>
-        /// Construct a transform.
+        /// Construct the identity transform.
+        /// </summary>
+        public Transform()
+        {
+            this.Origin = new Vector3();
+            this.XAxis = Vector3.XAxis();
+            this.YAxis = Vector3.YAxis();
+            this.ZAxis = Vector3.ZAxis();
+        }
+
+        /// <summary>
+        /// Construct a transform by origin and axes.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
         /// <param name="xAxis">The X axis of the transform.</param>

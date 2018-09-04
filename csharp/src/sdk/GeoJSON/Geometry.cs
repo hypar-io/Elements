@@ -8,8 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using verb.geom;
-
 // https://tools.ietf.org/html/rfc7946#section-5
 namespace Hypar.GeoJSON
 {

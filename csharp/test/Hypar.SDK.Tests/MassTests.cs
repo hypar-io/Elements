@@ -19,10 +19,9 @@ namespace Hypar.Tests
 
             var profile = new Polyline(new[]{a,b,c,d});
 
-            var mass = Mass.WithBottomProfile(profile)
-                            .WithBottomAtElevation(0)
-                            .WithTopAtElevation(40);
+            var mass = new Mass(profile, 0, profile, 40);
             model.AddElement(mass);
+            model.SaveGlb("massTest1.glb");
         }
 
         [Fact]
@@ -34,9 +33,7 @@ namespace Hypar.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polyline(new[]{a,b,c,d});
-            Assert.Throws<ArgumentException>(() => Mass.WithBottomProfile(profile)
-                                                        .WithBottomAtElevation(0)
-                                                        .WithTopAtElevation(0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Mass(profile, 0, profile, 0));
         }
 
         [Fact]
@@ -48,10 +45,8 @@ namespace Hypar.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polyline(new[]{a,b,c,d});
-            var material = new Material("mass", 1.0f, 1.0f, 0.0f, 0.5f, 0.0f, 0.0f);
-            Assert.Throws<ArgumentException>(() => Mass.WithBottomProfile(profile)
-                                                        .WithBottomAtElevation(0)
-                                                        .WithTopAtElevation(-10));
+            var material = new Material("mass", new Color(1.0f, 1.0f, 0.0f, 0.5f), 0.0f, 0.0f);
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Mass(profile, 0, profile, -10));
         }
     }
 }

@@ -38,19 +38,19 @@ namespace Hypar.Elements
         /// <summary>
         /// Construct a beam system under a slab.
         /// </summary>
-        /// <param name="slab"></param>
+        /// <param name="floor"></param>
         /// <param name="count"></param>
         /// <param name="profile"></param>
         /// <param name="material"></param>
         /// <param name="transform"></param>
-        public BeamSystem(Slab slab, int count, Polyline profile, Material material, Transform transform = null)
+        public BeamSystem(Floor floor, int count, Polyline profile, Material material, Transform transform = null)
         {
-            var edges = slab.Perimeter.Segments().ToArray();
+            var edges = floor.Location.Segments().ToArray();
             var e1 = edges[0];
             var e2 = edges[2].Reversed();
             var depth = profile.BoundingBox.Max.Y - profile.BoundingBox.Min.Y;
-            var edge1 = new Line(new Vector3(e1.Start.X, e1.Start.Y, slab.Elevation - depth/2), new Vector3(e1.End.X, e1.End.Y, slab.Elevation - depth/2));
-            var edge2 = new Line(new Vector3(e2.Start.X, e2.Start.Y, slab.Elevation - depth/2), new Vector3(e2.End.X, e2.End.Y, slab.Elevation - depth/2));
+            var edge1 = new Line(new Vector3(e1.Start.X, e1.Start.Y, floor.Elevation - depth/2), new Vector3(e1.End.X, e1.End.Y, floor.Elevation - depth/2));
+            var edge2 = new Line(new Vector3(e2.Start.X, e2.Start.Y, floor.Elevation - depth/2), new Vector3(e2.End.X, e2.End.Y, floor.Elevation - depth/2));
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material, transform);
         }
 
@@ -63,7 +63,7 @@ namespace Hypar.Elements
                 var a = edge1.PointAt(t);
                 var b = edge2.PointAt(t);
                 var line = new Line(a, b);
-                var beam = new Beam(line, profile, material, null, transform);
+                var beam = new Beam(line, profile, material, null);
                 this._beams.Add(beam);
             }
         }

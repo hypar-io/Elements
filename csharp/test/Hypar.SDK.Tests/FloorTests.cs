@@ -7,16 +7,16 @@ using Xunit;
 
 namespace Hypar.Tests
 {
-    public class SlabTests
+    public class FloorTests
     {
         [Fact]
         public void Single_WithinPerimeters_Valid()
         {
             var p = Profiles.Rectangular();
-            var slab = Slab.WithinPerimeter(p);
-            Assert.Equal(0.0, slab.Elevation);
-            Assert.Equal(0.2, slab.Thickness);
-            Assert.Equal(p, slab.Perimeter);
+            var floor = new Floor(p, 0.2);
+            Assert.Equal(0.0, floor.Elevation);
+            Assert.Equal(0.2, floor.Thickness);
+            Assert.Equal(p, floor.Location);
         }
 
         [Fact]
@@ -24,10 +24,13 @@ namespace Hypar.Tests
         {
             var p1 = Profiles.Rectangular(width:5.0, height:10.0);
             var p2 = Profiles.Rectangular(width:1.0, height:2.0);
-            var slabs = new[]{p1,p2}.WithinEachCreate<Slab>(p=>{
-                return Slab.WithinPerimeter(p);
+            var slabs = new[]{p1,p2}.Select(p=>{
+                return new Floor(p, 0.1);
             });
             Assert.Equal(2, slabs.Count());
+            var model = new Model();
+            model.AddElements(slabs);
+            model.SaveGlb("slabTests.glb");
         }
 
         [Fact]
@@ -35,8 +38,8 @@ namespace Hypar.Tests
         {
             var p1 = Profiles.Rectangular(width:5.0, height:10.0);
             var p2 = Profiles.Rectangular(width:1.0, height:2.0);
-            var slabs = new[]{p1,p2}.WithinEachCreate<Slab>(p => {
-                return Slab.WithinPerimeter(p);
+            var slabs = new[]{p1,p2}.Select(p => {
+                return new Floor(p, 0.1);
             });
             Assert.Equal(2, slabs.Count());
         }
@@ -46,8 +49,7 @@ namespace Hypar.Tests
         {
             var model = new Model();
             var poly = Profiles.Rectangular(width:20, height:20);
-            Assert.Throws<ArgumentOutOfRangeException>(()=>Slab.WithinPerimeter(poly)
-                                                                .WithThickness(0.0));
+            Assert.Throws<ArgumentOutOfRangeException>(()=> new Floor(poly, 0.0));
         }
     }
 }

@@ -75,14 +75,14 @@ namespace Hypar.Commands
         {
             // Inject the logged in user's email into the config.
             var userDetails = Task.Run(()=>Cognito.User.GetUserDetailsAsync()).Result;
-            foreach(var kvp in userDetails.UserAttributes)
-            {
-                if(kvp.Name == "email")
-                {
-                    _config.Email = kvp.Value;
-                    break;
-                }
-            }
+            // foreach(var kvp in userDetails.UserAttributes)
+            // {
+            //     if(kvp.Name == "email")
+            //     {
+            //         _config.Email = kvp.Value;
+            //         break;
+            //     }
+            // }
 
             var process = new Process()
             {
@@ -175,7 +175,7 @@ namespace Hypar.Commands
         private string ZipProject(string functionName)
         {
             // https://github.com/aws/aws-extensions-for-dotnet-cli/blob/c29333812c317b6ac41a44cf8f5ac7e3798fccc2/src/Amazon.Lambda.Tools/LambdaPackager.cs
-            var publishDir = Path.Combine(System.Environment.CurrentDirectory , $"bin/Release/{_framework}/{_runtime}/publish");
+            var publishDir = Path.Combine(System.Environment.CurrentDirectory , $"src/bin/Release/{_framework}/{_runtime}/publish");
             var zipPath = Path.Combine(publishDir, $"{functionName}.zip");
 
             if(File.Exists(zipPath))
@@ -240,7 +240,7 @@ namespace Hypar.Commands
                 if(postResponse.StatusCode == HttpStatusCode.OK)
                 {
                     var functions = JsonConvert.DeserializeObject<Function>(postResponse.Content);
-                    Logger.LogSuccess($"{_config.FunctionId} version {_config.Version} was added successfully.");
+                    Logger.LogSuccess($"{_config.FunctionId} was added successfully.");
                 }
                 else
                 {
@@ -262,7 +262,7 @@ namespace Hypar.Commands
                 if(putResponse.StatusCode == HttpStatusCode.OK)
                 {
                     var functions = JsonConvert.DeserializeObject<Function>(putResponse.Content);
-                    Logger.LogSuccess($"{_config.FunctionId} version {_config.Version} was updated successfully.");
+                    Logger.LogSuccess($"{_config.FunctionId} was updated successfully.");
                 }
                 else
                 {

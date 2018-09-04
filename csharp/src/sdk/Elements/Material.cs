@@ -1,4 +1,5 @@
 using System;
+using Hypar.Geometry;
 
 namespace Hypar.Elements
 {
@@ -8,28 +9,10 @@ namespace Hypar.Elements
     public class Material
     {   
         /// <summary>
-        /// The red component.
+        /// The RGBA Color of the Material.
         /// </summary>
-        /// <returns></returns>
-        public float Red{get;}
-
-        /// <summary>
-        /// The green component.
-        /// </summary>
-        /// <returns></returns>
-        public float Green{get;}
-
-        /// <summary>
-        /// The blue component.
-        /// </summary>
-        /// <returns></returns>
-        public float Blue{get;}
-
-        /// <summary>
-        /// The alpha component.
-        /// </summary>
-        /// <returns></returns>
-        public float Alpha{get;}
+        /// <value></value>
+        public Color Color{get;}
 
         /// <summary>
         /// The specular factor.
@@ -44,10 +27,10 @@ namespace Hypar.Elements
         public float GlossinessFactor{get;}
 
         /// <summary>
-        /// The identifer of the material.
+        /// The name of the material.
         /// </summary>
         /// <returns></returns>
-        public string Id {get; internal set;}
+        public string Name {get; internal set;}
 
         /// <summary>
         /// A flag indicating whether the material uses per-vertex coloring.
@@ -58,30 +41,24 @@ namespace Hypar.Elements
         /// <summary>
         /// Construct a material.
         /// </summary>
-        /// <param name="id">The identifier of the material. Identifiers should be unique within a model.</param>
-        /// <param name="red">The red component of the color. Between 0.0 and 1.0.</param>
-        /// <param name="green">The green component of the color. Between 0.0 and 1.0.</param>
-        /// <param name="blue">The blue component of the color. Between 0.0 and 1.0.</param>
-        /// <param name="alpha">The alpha (transparency) component of the color. Between 0.0 and 1.0.</param>
+        /// <param name="name">The identifier of the material. Identifiers should be unique within a model.</param>
+        /// <param name="color">The RGBA color of the material.</param>
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
-        public Material(string id, float red, float green, float blue, float alpha, float specularFactor, float glossinessFactor)
+        public Material(string name, Color color, float specularFactor, float glossinessFactor)
         {
-            if(red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0 || specularFactor < 0.0 || glossinessFactor < 0.0)
+            if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {
-                throw new ArgumentOutOfRangeException("Color, specular, and glossiness values must be less greater than 0.0.");
+                throw new ArgumentOutOfRangeException("Specular, and glossiness values must be less greater than 0.0.");
             }
 
-            if(red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0 || specularFactor > 1.0 || glossinessFactor > 1.0)
+            if(specularFactor > 1.0 || glossinessFactor > 1.0)
             {
                 throw new ArgumentOutOfRangeException("Color, specular, and glossiness values must be less than 1.0.");
             }
             
-            this.Id = id;
-            this.Red = red;
-            this.Green = green;
-            this.Blue = blue;
-            this.Alpha = alpha;
+            this.Name = name;
+            this.Color = color;
             this.SpecularFactor = specularFactor;
             this.GlossinessFactor = glossinessFactor;
         }

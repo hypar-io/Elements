@@ -19,21 +19,11 @@ namespace Hypar.Elements
         private Dictionary<string, Material> _materials = new Dictionary<string, Material>();
         private Dictionary<string, Element> _elements = new Dictionary<string, Element>();
 
-        private Dictionary<string, IDataExtractor> _dataExtractors = new Dictionary<string,IDataExtractor>();
-
-        /// <summary>
-        /// All materials in the model.
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<string, Material> Materials
-        {
-            get{return _materials;}
-        }
-
         /// <summary>
         /// All elements in the model.
         /// </summary>
         /// <returns></returns>
+        [JsonProperty("elements")]
         public Dictionary<string,Element> Elements
         {
             get{return _elements;}
@@ -43,6 +33,7 @@ namespace Hypar.Elements
         /// The origin of the model.
         /// </summary>
         /// <returns></returns>
+        [JsonProperty("origin")]
         public Position Origin {get;set;}
 
         /// <summary>
@@ -54,20 +45,6 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Add a data extractor to the model.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="extractor"></param>
-        public void AddDataExtractor(string name, IDataExtractor extractor)
-        {
-            if(this._dataExtractors.ContainsKey(name))
-            {
-                throw new Exception($"A data extractor with the name {name} already exists. Data extractors must have a unique name.");
-            }
-            this._dataExtractors.Add(name, extractor);
-        }
-
-        /// <summary>
         /// Add a Mesh to the Model.
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
@@ -76,7 +53,10 @@ namespace Hypar.Elements
             if(!this._elements.ContainsKey(element.Id.ToString()))
             {
                 this._elements.Add(element.Id.ToString(), element);
-                AddMaterial(element.Material);
+                if(element is IMaterialize)
+                {
+                    AddMaterial(((IMaterialize)element).Material);
+                }
             }
             else
             {
@@ -100,15 +80,15 @@ namespace Hypar.Elements
         /// Add a material to the model.
         /// </summary>
         /// <param name="material">The material to add to the model.</param>
-        public void AddMaterial(Material material)
+        private void AddMaterial(Material material)
         {
-            if(!this._materials.ContainsKey(material.Id))
+            if(!this._materials.ContainsKey(material.Name))
             {
-                this._materials.Add(material.Id, material);
+                this._materials.Add(material.Name, material);
             }
             else
             {
-                this._materials[material.Id] = material;
+                this._materials[material.Name] = material;
             }
         }
 
@@ -169,9 +149,12 @@ namespace Hypar.Elements
         /// Serialize the model to JSON.
         /// </summary>
         /// <returns></returns>
-        public string ToJSON()
-        {
-            return JsonConvert.SerializeObject(this);
+        public string ToJson()
+        {   
+            return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
         }
 
         /// <summary>
@@ -182,19 +165,9 @@ namespace Hypar.Elements
         {
             var model = SaveBase64();
 
-            var computed = new Dictionary<string,object>();
-            foreach(var kvp in this._dataExtractors)
-            {
-                computed.Add(kvp.Key, kvp.Value.ExtractData(this));
-            }
-
             var result = new Dictionary<string, object>();
             result["model"] = model;
-            if(computed.Any())
-            {
-                result["computed"] = computed;
-            }
-
+            result["data"] = JsonConvert.SerializeObject(this.Elements);
             result["origin"] = this.Origin;
             
             return result;
@@ -238,8 +211,8 @@ namespace Hypar.Elements
             foreach(var kvp in this._materials)
             {
                 var m = kvp.Value;
-                var mId = gltf.AddMaterial(m.Id, m.Red, m.Green, m.Blue, m.Alpha, m.SpecularFactor, m.GlossinessFactor);
-                materials.Add(m.Id, mId);
+                var mId = gltf.AddMaterial(m.Name, m.Color.Red, m.Color.Green, m.Color.Blue, m.Color.Alpha, m.SpecularFactor, m.GlossinessFactor);
+                materials.Add(m.Name, mId);
             }
 
             foreach(var kvp in this._elements)
@@ -249,10 +222,15 @@ namespace Hypar.Elements
                 {
                     var mp = e as ITessellate<Hypar.Geometry.Mesh>;
                     var mesh = mp.Tessellate();
+                    Transform transform = null;
+                    if(e is ITransformable)
+                    {
+                        transform = ((ITransformable)e).Transform;
+                    }
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), 
                                         mesh.Indices.ToArray(), mesh.VertexColors.ToArray(), 
                                         mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax, 
-                                        mesh.IMin, mesh.IMax, materials[e.Material.Id], null, e.Transform);
+                                        mesh.IMin, mesh.IMax, materials[((IMaterialize)e).Material.Name], null, transform);
 
                 }
             }

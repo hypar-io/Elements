@@ -11,7 +11,9 @@ namespace Hypar.Tests
     public class ConfigurationTests
     {
         private string configStr = @"{
+  ""description"": ""A test function."",
   ""function"": ""box.box"",
+  ""function_id"": ""box"",
   ""runtime"": ""python3.6"",
   ""parameters"": {
     ""height"": {
@@ -36,12 +38,8 @@ namespace Hypar.Tests
       ""type"": ""number""
     },
     ""point_1"":{
-        ""point"":{
-            ""x"": 1.0,
-            ""y"": 2.0,
-            ""z"": 3.0
-        },
-        ""type"":""point""
+        ""description"": ""The location."",
+        ""type"":""location""
     }
   },
   ""returns"": {
@@ -50,7 +48,7 @@ namespace Hypar.Tests
       ""type"":""number""
     }
   },
-  ""version"": ""0.0.1""
+  ""repository_url"": ""https://github.com/foo/bar"",
 }";
 
         [Fact]
@@ -73,7 +71,8 @@ namespace Hypar.Tests
             var converters = new[]{new ParameterDataConverter()};
             var settings = new JsonSerializerSettings(){Converters = converters};
             var config = JsonConvert.DeserializeObject<HyparConfig>(configStr, settings);
-            JsonConvert.SerializeObject(config, Formatting.Indented, settings);
+            var result = JsonConvert.SerializeObject(config, Formatting.Indented, settings);
+            Console.WriteLine(result);
         }
 
         [Fact]

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Hypar.Geometry
         /// The vertices of the polyline.
         /// </summary>
         /// <returns></returns>
+        [JsonProperty("vertices")]
         public IEnumerable<Vector3> Vertices
         {
             get{return _vertices;}
