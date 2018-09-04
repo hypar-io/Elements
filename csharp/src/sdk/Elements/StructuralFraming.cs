@@ -9,7 +9,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A linear structural element with a cross section.
     /// </summary>
-    public class Beam : Element, ILocateable<Line>, ITessellate<Mesh>, ITransformable, IMaterialize
+    public abstract class StructuralFraming : Element, ILocateable<Line>, ITessellate<Mesh>, ITransformable, IMaterialize
     {
         /// <summary>
         /// The cross-section profile of the beam.
@@ -48,7 +48,7 @@ namespace Hypar.Elements
         /// Construct a default beam.
         /// </summary>
         /// <returns></returns>
-        public Beam(Line centerLine, Polyline profile)
+        public StructuralFraming(Line centerLine, Polyline profile)
         {
             this.Location = centerLine;
             this.Profile = profile;
@@ -62,7 +62,7 @@ namespace Hypar.Elements
         /// <param name="profile">The structural profile of the beam.</param>
         /// <param name="material">The beam's material.</param>
         /// <param name="up">The up axis of the beam.</param>
-        public Beam(Line centerLine, Polyline profile, Material material, Vector3 up = null)
+        public StructuralFraming(Line centerLine, Polyline profile, Material material, Vector3 up = null)
         {
             this.Profile = profile;
             this.Location = centerLine;
@@ -84,5 +84,26 @@ namespace Hypar.Elements
         {
             return Mesh.ExtrudeAlongLine(this.Location, new[] { this.Profile });
         }
+    }
+
+    public class Beam : StructuralFraming
+    {
+        public Beam(Line centerLine, Polyline profile) : base(centerLine, profile){}
+
+        public Beam(Line centerLine, Polyline profile, Material material, Vector3 up = null) : base(centerLine, profile, material, up){}
+    }
+
+    public class Column : StructuralFraming
+    {
+        public Column(Vector3 location, double height, Polyline profile, Material material) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material){}
+
+        public Column(Line centerLine, Polyline profile) : base(centerLine, profile){}
+
+        public Column(Line centerLine, Polyline profile, Material material) : base(centerLine, profile, material){}
+    }
+
+    public class Brace : StructuralFraming
+    {
+        public Brace(Line centerLine, Polyline profile, Material material, Vector3 up = null) : base(centerLine, profile, material, up){}
     }
 }

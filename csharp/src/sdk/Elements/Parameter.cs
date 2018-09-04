@@ -27,7 +27,7 @@ namespace Hypar.Elements
 
     public enum NumericParameterType
     {
-        NONE, DISTANCE, AREA, VOLUME, MASS, FORCE
+        None, Distance, Area, Volume, Mass, Force
     }
 
     public class NumericParameter  : Parameter<double>

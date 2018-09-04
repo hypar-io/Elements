@@ -46,6 +46,18 @@ namespace Hypar.Tests
             });
             model.AddElements(walls);
 
+            var offset = profile.Offset(1.5);
+            var columns = offset.Segments().SelectMany(l=> {
+                var ts = new []{0.5, 1.0};
+                var sideColumns = new List<Column>();
+                foreach(var t in ts)
+                {
+                    sideColumns.Add(new Column(l.PointAt(t), 28.0, Profiles.Rectangular(width:1.0, height:1.0), BuiltInMaterials.Concrete));
+                }
+                return sideColumns;
+            });
+            model.AddElements(columns);
+
             model.SaveGlb("massBuilding.glb");
         }
     }
