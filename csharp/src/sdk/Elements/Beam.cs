@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,59 +9,71 @@ namespace Hypar.Elements
     /// <summary>
     /// A linear structural element with a cross section.
     /// </summary>
-    public class Beam : Element, ITessellate<Mesh>
+    public class Beam : Element, ILocateable<Line>, ITessellate<Mesh>, ITransformable, IMaterialize
     {
-        private Line _centerLine;
-        private Polyline _profile;
-        private Vector3 _up;
-
-        /// <summary>
-        /// The centerline of the beam.
-        /// </summary>
-        public Line CenterLine => _centerLine;
-
         /// <summary>
         /// The cross-section profile of the beam.
         /// </summary>
-        public Polyline Profile => _profile;
+        [JsonProperty("profile")]
+        public Polyline Profile{get;}
         
         /// <summary>
         /// The up axis of the beam.
         /// </summary>
-        public Vector3 UpAxis => _up;
+        [JsonProperty("up_axis")]
+        public Vector3 UpAxis{get;}
+
+        /// <summary>
+        /// The center line of the beam.
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("location")]
+        public Line Location{get;}
+
+        /// <summary>
+        /// The transform of the beam.
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("transform")]
+        public Transform Transform{get;}
+
+        /// <summary>
+        /// The beam's material.
+        /// </summary>
+        /// <value></value>
+        [JsonIgnore]
+        public Material Material {get;set;}
 
         /// <summary>
         /// Construct a default beam.
         /// </summary>
         /// <returns></returns>
-        public Beam() : base(BuiltInMaterials.Default,null)
+        public Beam(Line centerLine, Polyline profile)
         {
-            this._centerLine = new Line(Vector3.Origin(), Vector3.ByXYZ(1,0,0));
-            this._profile = Profiles.WideFlangeProfile();
-        }
-
-        internal Beam(Line centerLine, Polyline profile, Material material, Vector3 up = null, Transform transform = null) : base(material, transform)
-        {
-            this._profile = profile;
-            this._centerLine = centerLine;
-            if(up != null)
-            {
-                this._up = up;
-            }
-            this.Transform = centerLine.GetTransform(up);
+            this.Location = centerLine;
+            this.Profile = profile;
+            this.Material = BuiltInMaterials.Default;
         }
 
         /// <summary>
-        /// Construct a beam along a line.
+        /// Construct a beam.
         /// </summary>
-        /// <param name="l"></param>
-        /// <returns></returns>
-        public static Beam AlongLine(Line l)
+        /// <param name="centerLine">The center line of the beam.</param>
+        /// <param name="profile">The structural profile of the beam.</param>
+        /// <param name="material">The beam's material.</param>
+        /// <param name="up">The up axis of the beam.</param>
+        public Beam(Line centerLine, Polyline profile, Material material, Vector3 up = null)
         {
-            var beam = new Beam();
-            beam._centerLine = l;
-            beam.Transform = beam._centerLine.GetTransform();
-            return beam;
+            this.Profile = profile;
+            this.Location = centerLine;
+
+            if(up != null)
+            {
+                this.UpAxis = up;
+            }
+
+            this.Material = material;
+            this.Transform = centerLine.GetTransform(up);
         }
 
         /// <summary>
@@ -69,119 +82,7 @@ namespace Hypar.Elements
         /// <returns>A mesh representing the tessellated beam.</returns>
         public Mesh Tessellate()
         {
-            return Mesh.ExtrudeAlongLine(this.CenterLine, new[] { this.Profile });
-        }
-
-        /// <summary>
-        /// Set the profile of the beam.
-        /// </summary>
-        /// <param name="profile"></param>
-        /// <returns></returns>
-        public Beam WithProfile(Polyline profile)
-        {
-            this._profile = profile;
-            return this;
-        }
-
-        /// <summary>
-        /// Set the profile of the beam using a selector function.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <returns></returns>
-        public Beam WithProfile(Func<Beam,Polyline> selector)
-        {
-            this._profile = selector(this);
-            return this; 
-        }
-
-        /// <summary>
-        /// Set the up axis of the beam.
-        /// </summary>
-        /// <param name="up"></param>
-        /// <returns></returns>
-        public Beam WithUpAxis(Vector3 up)
-        {
-            this._up = up;
-            this.Transform = this._centerLine.GetTransform(up);
-            return this;
-        }
-
-        /// <summary>
-        /// Set the material of the beam.
-        /// </summary>
-        /// <param name="material">The beam's material.</param>
-        /// <returns></returns>
-        public Beam OfMaterial(Material material)
-        {
-            this.Material = material;
-            return this;
-        }
-    }
-
-    /// <summary>
-    /// Extension methods for beams.
-    /// </summary>
-    public static class BeamCollectionExtensions
-    {   
-        /// <summary>
-        /// Set the profile of a collection of beams.
-        /// </summary>
-        /// <param name="beams"></param>
-        /// <param name="profile"></param>
-        /// <param name="selector"></param>
-        /// <returns></returns>
-        public static IEnumerable<Beam> WithProfile(this IEnumerable<Beam> beams, Polyline profile, Func<Beam,Polyline> selector = null)
-        {
-            foreach(var b in beams)
-            {
-                b.WithProfile(profile);
-            }
-            return beams;
-        }
-
-        /// <summary>
-        /// Set the profile of a collection of beams using a selector function.
-        /// </summary>
-        /// <param name="beams"></param>
-        /// <param name="profileSelector"></param>
-        /// <returns></returns>
-        public static IEnumerable<Beam> WithProfile(this IEnumerable<Beam> beams, Func<Beam,Polyline> profileSelector)
-        {
-            foreach(var b in beams)
-            {
-                beams.WithProfile(profileSelector(b));
-            }
-            return beams;
-        }
-
-        /// <summary>
-        /// Set the material of a collection of beams.
-        /// </summary>
-        /// <param name="beams"></param>
-        /// <param name="material"></param>
-        /// <returns></returns>
-        public static IEnumerable<Beam> OfMaterial(this IEnumerable<Beam> beams, Material material)
-        {
-            foreach(var b in beams)
-            {
-                b.OfMaterial(material);
-            }
-            return beams;
-        }
-
-        /// <summary>
-        /// Set the up axis of a collection of beams.
-        /// </summary>
-        /// <param name="beams"></param>
-        /// <param name="v"></param>
-        /// <returns></returns>
-        public static IEnumerable<Beam> WithUpAxis(this IEnumerable<Beam> beams, Vector3 v)
-        {
-            foreach(var b in beams)
-            {
-                b.WithUpAxis(v);
-            }
-            return beams;
+            return Mesh.ExtrudeAlongLine(this.Location, new[] { this.Profile });
         }
     }
 }

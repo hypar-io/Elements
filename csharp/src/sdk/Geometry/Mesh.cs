@@ -27,7 +27,7 @@ namespace Hypar.Geometry
         private double[] m_c_max = new double[4]{double.MinValue, double.MinValue, double.MinValue, double.MaxValue};
         private double[] m_c_min = new double[4]{double.MinValue, double.MinValue, double.MinValue, double.MinValue};
 
-        private List<double> m_vertex_colors = new List<double>();
+        private List<float> m_vertex_colors = new List<float>();
 
         private ushort m_current_vertex_index = 0;
 
@@ -134,7 +134,7 @@ namespace Hypar.Geometry
         /// The vertex colors of the mesh.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<double> VertexColors
+        public IEnumerable<float> VertexColors
         {
             get{return m_vertex_colors;}
         }

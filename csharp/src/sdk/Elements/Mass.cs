@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,46 +10,45 @@ namespace Hypar.Elements
     /// <summary>
     /// A mass represents an extruded building mass.
     /// </summary>
-    public class Mass : Element, ITessellate<Mesh>
+    public class Mass : Element, ILocateable<Polyline>, ITessellate<Mesh>, IMaterialize
     {
         private List<Polyline> _sides = new List<Polyline>();
-        private Polyline _bottom;
-        private Polyline _top;
-        private double _bottomElevation;
-        private double _topElevation;
 
         /// <summary>
-        /// The bottom perimeter of the Mass.
+        /// The bottom perimeter of the mass.
         /// </summary>
         /// <returns></returns>
-        public Polyline Bottom => _bottom;
+        [JsonProperty("location")]
+        public Polyline Location{get;}
 
         /// <summary>
         /// The elevation of the bottom perimeter.
         /// </summary>
-        public double BottomElevation => _bottomElevation;
-
-        /// <summary>
-        /// The top perimeter of the mass.
-        /// </summary>
-        /// <returns></returns>
-        public Polyline Top => _top;
+        [JsonProperty("bottom_elevation")]
+        public double BottomElevation{get;}
 
         /// <summary>
         /// The elevation of the top perimeter.
         /// </summary>
-        public double TopElevation => _topElevation;
+        [JsonProperty("top_elevation")]
+        public double TopElevation{get;}
+
+        /// <summary>
+        /// The material of the Mass.
+        /// </summary>
+        /// <value></value>
+        [JsonIgnore]
+        public Material Material{get;set;}
 
         /// <summary>
         /// Construct a default mass.
         /// </summary>
-        public Mass():base(BuiltInMaterials.Mass)
+        public Mass()
         {
             var defaultProfile = Profiles.Rectangular();
-            this._top = defaultProfile;
-            this._bottom = defaultProfile;
-            this._bottomElevation = 0.0;
-            this._topElevation = 1.0;
+            this.Location = defaultProfile;
+            this.BottomElevation = 0.0;
+            this.TopElevation = 1.0;
             this.Material = BuiltInMaterials.Mass;
         }
 
@@ -59,9 +59,8 @@ namespace Hypar.Elements
         /// <param name="bottomElevation">The elevation of the bottom perimeter.</param>
         /// <param name="top">The top perimeter of the mass.</param>
         /// <param name="topElevation">The elevation of the top perimeter.</param>
-        /// <param name="transform"></param>
         /// <returns></returns>
-        public Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation, Transform transform = null) : base(BuiltInMaterials.Mass, transform)
+        public Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation)
         {
             if (bottom.Vertices.Count() != top.Vertices.Count())
             {
@@ -73,10 +72,9 @@ namespace Hypar.Elements
                 throw new ArgumentOutOfRangeException(Messages.TOP_BELOW_BOTTOM_EXCEPTION, "topElevation");
             }
 
-            this._top = top;
-            this._bottom = bottom;
-            this._bottomElevation = bottomElevation;
-            this._topElevation = topElevation;
+            this.Location = bottom;
+            this.BottomElevation = bottomElevation;
+            this.TopElevation = topElevation;
             this.Material = BuiltInMaterials.Mass;
         }
 
@@ -112,8 +110,8 @@ namespace Hypar.Elements
         /// <returns></returns>
         public IEnumerable<Polyline> Faces()
         {
-            var b = this._bottom.Vertices.ToArray();
-            var t = this._top.Vertices.ToArray();
+            var b = this.Location.Vertices.ToArray();
+            var t = this.Location.Vertices.ToArray();
 
             for (var i = 0; i < b.Length; i++)
             {
@@ -126,10 +124,10 @@ namespace Hypar.Elements
                 var v2 = b[next];
                 var v3 = t[next];
                 var v4 = t[i];
-                var v1n = new Vector3(v1.X, v1.Y, this._bottomElevation);
-                var v2n = new Vector3(v2.X, v2.Y, this._bottomElevation);
-                var v3n = new Vector3(v3.X, v3.Y, this._topElevation);
-                var v4n = new Vector3(v4.X, v4.Y, this._topElevation);
+                var v1n = new Vector3(v1.X, v1.Y, this.BottomElevation);
+                var v2n = new Vector3(v2.X, v2.Y, this.BottomElevation);
+                var v3n = new Vector3(v3.X, v3.Y, this.TopElevation);
+                var v4n = new Vector3(v4.X, v4.Y, this.TopElevation);
                 yield return new Polyline(new[] { v1n, v2n, v3n, v4n });
             }
         }
@@ -149,6 +147,20 @@ namespace Hypar.Elements
             }
             return results;
         }
+
+        public IEnumerable<Floor> CreateFloors(double[] elevations, double thickness, Material material)
+        {
+            var floors = new List<Floor>();
+            foreach(var e in elevations)
+            {
+                if (e >= this.BottomElevation && e <= this.TopElevation)
+                {
+                    var f = new Floor(this.Location, new Polyline[]{}, e, thickness, material);
+                    floors.Add(f);
+                }
+            }
+            return floors;
+        }
         
         /// <summary>
         /// Tessellate the mass.
@@ -162,71 +174,9 @@ namespace Hypar.Elements
                 mesh.AddQuad(s.ToArray());
             }
 
-            mesh.AddTesselatedFace(new[] { this.Bottom }, this.BottomElevation);
-            mesh.AddTesselatedFace(new[] { this.Top }, this.TopElevation, true);
+            mesh.AddTesselatedFace(new[] { this.Location }, this.BottomElevation);
+            mesh.AddTesselatedFace(new[] { this.Location }, this.TopElevation, true);
             return mesh;
-        }
-
-        /// <summary>
-        /// Set the bottom profile of the mass.
-        /// </summary>
-        /// <param name="profile"></param>
-        /// <returns></returns>
-        public static Mass WithBottomProfile(Polyline profile)
-        {
-            if(profile.Count() == 0)
-            {
-                throw new ArgumentException(Messages.EMPTY_POLYLINE_EXCEPTION, "profile");
-            }
-
-            var mass = new Mass();
-            mass._bottom = profile;
-            return mass;
-        }
-
-        /// <summary>
-        /// Set the top elevation of the mass.
-        /// </summary>
-        /// <param name="elevation"></param>
-        /// <returns></returns>
-        public Mass WithTopAtElevation(double elevation)
-        {
-            if(elevation <= this._bottomElevation)
-            {
-                throw new ArgumentException(Messages.TOP_BELOW_BOTTOM_EXCEPTION, "elevation");
-            }
-            this._topElevation = elevation;
-            return this;
-        }
-
-        /// <summary>
-        /// Set the bottom elevation of the mass.
-        /// </summary>
-        /// <param name="elevation"></param>
-        /// <returns></returns>
-        public Mass WithBottomAtElevation(double elevation)
-        {
-            if(elevation >= this._topElevation)
-            {
-                throw new ArgumentException(Messages.BOTTOM_ABOVE_TOP_EXCEPTION, "elevation");
-            }
-            this._bottomElevation = elevation;
-            return this;
-        }
-
-        /// <summary>
-        /// Set the top profile of the mass.
-        /// </summary>
-        /// <param name="profile"></param>
-        /// <returns></returns>
-        public Mass WithTopProfile(Polyline profile)
-        {
-            if(profile.Count() == 0)
-            {
-                throw new ArgumentException(Messages.EMPTY_POLYLINE_EXCEPTION, "profile");
-            }
-            this._top = profile;
-            return this;
         }
     }
 }

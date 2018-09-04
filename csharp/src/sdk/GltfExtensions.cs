@@ -96,7 +96,6 @@ namespace Hypar
 
             return gltf.BufferViews.Length - 1;
         }
-
         private static int AddNode(this Gltf gltf, Node n, int? parent)
         {
             var nodes = gltf.Nodes.ToList();
@@ -123,7 +122,7 @@ namespace Hypar
         }
 
         internal static int AddTriangleMesh(this Gltf gltf, string name, List<byte> buffer, double[] vertices, double[] normals, ushort[] indices, 
-        double[] colors, double[] vMin, double[] vMax, double[] nMin, double[] nMax, double[] cMin, double[] cMax, ushort iMin, ushort iMax, int materialId, int? parent_index, Transform transform = null)
+        float[] colors, double[] vMin, double[] vMax, double[] nMin, double[] nMax, double[] cMin, double[] cMax, ushort iMin, ushort iMax, int materialId, int? parent_index, Transform transform = null)
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;

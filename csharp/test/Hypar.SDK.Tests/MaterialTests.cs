@@ -1,4 +1,5 @@
 using Hypar.Elements;
+using Hypar.Geometry;
 using System;
 using Xunit;
 
@@ -9,12 +10,12 @@ namespace Hypar.Tests
         [Fact]
         public void ValidValues_Construct_Success()
         {
-            var material = new Material("test", 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+            var material = new Material("test", new Color(1.0f, 1.0f, 1.0f, 1.0f), 1.0f, 1.0f);
             Assert.NotNull(material);
-            Assert.Equal(1.0f, material.Red);
-            Assert.Equal(1.0f, material.Blue);
-            Assert.Equal(1.0f, material.Green);
-            Assert.Equal(1.0f, material.Alpha);
+            Assert.Equal(1.0f, material.Color.Red);
+            Assert.Equal(1.0f, material.Color.Blue);
+            Assert.Equal(1.0f, material.Color.Green);
+            Assert.Equal(1.0f, material.Color.Alpha);
             Assert.Equal(1.0f, material.SpecularFactor);
             Assert.Equal(1.0f, material.GlossinessFactor);
         }
@@ -22,8 +23,8 @@ namespace Hypar.Tests
         [Fact]
         public void InvalidValues_Construct_ThrowsException()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", -1.0f, 1,0f, 1.0f, 1.0f, 1.0f));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", 3.0f, 1,0f, 1.0f, 1.0f, 1.0f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", new Color(-1.0f, 1,0f, 1.0f), 1.0f, 1.0f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", new Color(3.0f, 1,0f, 1.0f), 1.0f, 1.0f));
         }
     }
 }

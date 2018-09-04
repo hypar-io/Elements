@@ -1,3 +1,5 @@
+using Hypar.Geometry;
+
 namespace Hypar.Elements
 {
     /// <summary>
@@ -9,36 +11,36 @@ namespace Hypar.Elements
         /// Glass.
         /// </summary>
         /// <returns></returns>
-        public static Material Glass = new Material("glass", 1.0f, 1.0f, 1.0f, 0.2f, 1.0f, 1.0f);
+        public static Material Glass = new Material("glass", new Color(1.0f, 1.0f, 1.0f, 0.2f), 1.0f, 1.0f);
 
         /// <summary>
         /// Steel.
         /// </summary>
         /// <returns></returns>
-        public static Material Steel = new Material("steel", 0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f);
+        public static Material Steel = new Material("steel", new Color(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0.0f);
 
         /// <summary>
         /// The default material.
         /// </summary>
         /// <returns></returns>
-        public static Material Default = new Material("default", 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+        public static Material Default = new Material("default", new Color(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, 0.0f);
 
         /// <summary>
         /// Concrete.
         /// </summary>
         /// <returns></returns>
-        public static Material Concrete = new Material("concrete", 0.5f,0.5f,0.5f,1.0f,0.0f,0.0f);
+        public static Material Concrete = new Material("concrete", new Color(0.5f,0.5f,0.5f,1.0f), 0.0f, 0.0f);
 
         /// <summary>
         /// Default material used to represent masses.
         /// </summary>
         /// <returns></returns>
-        public static Material Mass = new Material("mass", 0.5f, 0.5f, 1.0f, 0.2f, 0.0f, 0.0f);
+        public static Material Mass = new Material("mass", new Color(0.5f, 0.5f, 1.0f, 0.2f), 0.0f, 0.0f);
 
         /// <summary>
         /// Wood.
         /// </summary>
         /// <returns></returns>
-        public static Material Wood = new Material("wood", 0.94f, 0.94f, 0.94f, 1.0f, 0.0f, 0.0f);
+        public static Material Wood = new Material("wood", new Color(0.94f, 0.94f, 0.94f, 1.0f), 0.0f, 0.0f);
     }
 }
