@@ -937,7 +937,7 @@ namespace AECSpacesTest
                                                                                         
                 model.AddElement(mass);               
             }
-            model.SaveGlb("C:\\Users\\Anthony\\Dropbox\\Business\\Hypar\\GitHub\\AECSpaces\\AECSpacesTest\\CopyStackToArea.glb");
+            model.SaveGlb("CopyStackToArea.glb");
         }
 
         [Fact]
@@ -1506,7 +1506,7 @@ namespace AECSpacesTest
         //     var mass = new Mass(boundary, 0, boundary, space.Height);
         //     Hypar.Elements.Model model = new Hypar.Elements.Model();
         //     model.AddElement(mass);
-        //     model.SaveGlb("C:\\Users\\Anthony\\Dropbox\\Business\\Hypar\\GitHub\\AECSpaces\\AECSpacesTest\\model.glb");
+        //     model.SaveGlb("model.glb");
         // }
 
         [Fact]
