@@ -408,13 +408,20 @@ namespace AECSpaces
                 foreach (AECPoint point in PointsFloor)
                 {
                     vertices.Add(new Hypar.Geometry.Vector3(point.X, point.Y, point.Z));
-                }//foreach
-                Hypar.Geometry.Polyline boundary = new Hypar.Geometry.Polyline(vertices);
-
-                var mass = new Mass(boundary, Level, boundary, Elevation);
+                }
+                vertices.Reverse();
+                Hypar.Geometry.Polyline boundary = new Hypar.Geometry.Polyline(vertices);               
+                var color = new Material(ID, new Hypar.Geometry.Color(red: Color.R / 255,
+                                                                      green: Color.G / 255,
+                                                                      blue: Color.B / 255,
+                                                                      alpha: Color.A / 255),
+                                                                      specularFactor: AECColor.Translucent / 255,
+                                                                      glossinessFactor: AECColor.Translucent / 255);
+                var mass = new Mass(boundary, Elevation, boundary, Level);
+                mass.Material = color;
                 return mass;
-            }//get
-        }//property
+            }
+        }
 
         /// <summary>
         /// Returns a mesh representation as a structure of flat lists of doubles indicating #D vertex coordinates, triangle indices, and 3D normal vectors for each point.

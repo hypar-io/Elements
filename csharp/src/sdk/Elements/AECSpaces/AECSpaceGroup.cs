@@ -232,6 +232,22 @@ namespace AECSpaces
         }//method
 
         /// <summary>
+        /// Retrieves all spaces with the supplied department.
+        /// </summary>
+        public List<AECSpace> GetSpacesByDepartment(string department)
+        {
+            List<AECSpace> deptSpaces = new List<AECSpace>();
+            int index = 0;
+            while (index < spaces.Count)
+            {
+                if (spaces[index].Name == name) deptSpaces.Add(spaces[index]);
+                index++;
+            }//while
+            if (deptSpaces.Count > 0) return deptSpaces;
+            return null;
+        }//method
+
+        /// <summary>
         /// Retrieves all spaces with the supplied name.
         /// </summary>
         public List<AECSpace> GetSpacesByName(string name)
@@ -244,6 +260,22 @@ namespace AECSpaces
                 index++;
             }//while
             if (nameSpaces.Count > 0) return nameSpaces;
+            return null;
+        }//method
+
+        /// <summary>
+        /// Retrieves all spaces with the supplied type.
+        /// </summary>
+        public List<AECSpace> GetSpacesByType(string spaceType)
+        {
+            List<AECSpace> typeSpaces = new List<AECSpace>();
+            int index = 0;
+            while (index < spaces.Count)
+            {
+                if (spaces[index].Type == spaceType) typeSpaces.Add(spaces[index]);
+                index++;
+            }//while
+            if (typeSpaces.Count > 0) return typeSpaces;
             return null;
         }//method
 
@@ -307,6 +339,17 @@ namespace AECSpaces
         }//method
 
         /// <summary>
+        /// Uniformly sets the department identifier of all the spaces in the group.
+        /// </summary>
+        public void SetDepartment(string department)
+        {
+            foreach (AECSpace space in spaces)
+            {
+                space.Department = department;
+            }//foreach
+        }//method
+
+        /// <summary>
         /// Uniformly sets the height of all the spaces in the group.
         /// </summary>
         public void SetHeight(double height)
@@ -316,6 +359,18 @@ namespace AECSpaces
                 space.Height = height;
             }//foreach
         }//method
+
+        /// <summary>
+        /// Uniformly sets the space type identifier of all the spaces in the group.
+        /// </summary>
+        public void SetType(string spaceType)
+        {
+            foreach (AECSpace space in spaces)
+            {
+                space.Type = spaceType;
+            }//foreach
+        }//method
+
     }//class
 
 }//namespace
