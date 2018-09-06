@@ -11,7 +11,6 @@ namespace Hypar.Elements
         /// <summary>
         /// The value of the parameter.
         /// </summary>
-        /// <value></value>
         [JsonProperty("value")]
         public TValue Value{get;}
 
@@ -25,11 +24,40 @@ namespace Hypar.Elements
         }
     }
 
+    /// <summary>
+    /// An enumeration of unit types for a numeric parameter.
+    /// </summary>
     public enum NumericParameterType
     {
-        None, Distance, Area, Volume, Mass, Force
+        /// <summary>
+        /// No unit assigned.
+        /// </summary>
+        None,
+        /// <summary>
+        /// A length in meters.
+        /// </summary>
+        Distance,
+        /// <summary>
+        /// An area in square meters.
+        /// </summary>
+        Area,
+        /// <summary>
+        /// A volume in cubic meters.
+        /// </summary>
+        Volume,
+        /// <summary>
+        /// A mass in kilograms.
+        /// </summary>
+        Mass,
+        /// <summary>
+        /// A force in Newtons.
+        /// </summary>
+        Force
     }
 
+    /// <summary>
+    /// A parameter whose value is a number.
+    /// </summary>
     public class NumericParameter  : Parameter<double>
     {
         /// <summary>
@@ -39,15 +67,28 @@ namespace Hypar.Elements
         [JsonProperty("type")]
         public NumericParameterType Type{get;}
 
+        /// <summary>
+        /// Construct a numeric parameter.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public NumericParameter(double value, NumericParameterType type) : base(value)
         {
             this.Type = type;
         }
-
     }
 
+    /// <summary>
+    /// A parameter whose value is a string.
+    /// </summary>
     public class StringParameter : Parameter<string>
     {
+        /// <summary>
+        /// Construct a string parameter.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public StringParameter(string value) : base(value){}
     }
 }

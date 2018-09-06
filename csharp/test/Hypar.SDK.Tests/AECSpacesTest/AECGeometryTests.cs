@@ -1,33 +1,32 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AECSpaces;
+using Xunit;
 
 namespace AECSpacesTest
 {
-    [TestClass]
     public class GeometryTests
     {
         const double dblVariance = 0.000000001;
 
-        [TestMethod]
+        [Fact]
         public void AngleConvex()
         {
             AECPoint point0 = new AECPoint(0, 0, 0);
             AECPoint point1 = new AECPoint(3, 0, 0);
             AECPoint point2 = new AECPoint(0, 3, 0);
-             Assert.IsTrue(AECGeometry.IsConvexAngle(point0, point2, point1));
-        }//method
+            Assert.True(AECGeometry.IsConvexAngle(point0, point2, point1));
+        }
 
-        [TestMethod]
+        [Fact]
         public void AngleConcave()
         {
             AECPoint point0 = new AECPoint(3, 0, 0);
             AECPoint point1 = new AECPoint(2, 1, 0);
             AECPoint point2 = new AECPoint(3, 3, 0);
-            Assert.IsFalse(AECGeometry.IsConvexAngle(point1, point0, point2));
-        }//method
+            Assert.False(AECGeometry.IsConvexAngle(point1, point0, point2));
+        }
 
-        [TestMethod]
+        [Fact]
         public void AreColinear()
         {
             AECGeometry geometry = new AECGeometry();
@@ -36,17 +35,17 @@ namespace AECSpacesTest
             AECPoint thatPoint = new AECPoint(2, 1, 0);
             AECPoint othrPoint = new AECPoint(3, 1, 0);
 
-            Assert.IsTrue(geometry.AreColinear(thisPoint, thatPoint, othrPoint));
+            Assert.True(geometry.AreColinear(thisPoint, thatPoint, othrPoint));
 
             thisPoint = new AECPoint(1, 1, 0);
             thatPoint = new AECPoint(2, 5, 0);
             othrPoint = new AECPoint(3, 1, 0);
 
-            Assert.IsFalse(geometry.AreColinear(thisPoint, thatPoint, othrPoint));
+            Assert.False(geometry.AreColinear(thisPoint, thatPoint, othrPoint));
 
-        }//method
+        }
 
-        [TestMethod]
+        [Fact]
         public void AreOverlapping()
         {
             AECGeometry geometry = new AECGeometry();
@@ -65,43 +64,43 @@ namespace AECSpacesTest
                 new AECPoint(3, 3, 0),
                 new AECPoint(0, 3, 0)
             };
-            Assert.IsTrue(geometry.AreOverlapping(thesePoints, thosePoints));
+            Assert.True(geometry.AreOverlapping(thesePoints, thosePoints));
         }//method
 
-        [TestMethod]
+        [Fact]
         public void Box()
         {
             AECPoint thisPoint = new AECPoint(0, 0, 0);
             AECPoint thatPoint = new AECPoint(1, 1, 0);
             AECBox box = AECGeometry.Box(thisPoint, thatPoint);
 
-            Assert.AreEqual(0, box.NW.X, 0);
-            Assert.AreEqual(1, box.NW.Y, 0);
+            Assert.Equal(0, box.NW.X, 0);
+            Assert.Equal(1, box.NW.Y, 0);
 
-            Assert.AreEqual(1, box.SE.X, 0);
-            Assert.AreEqual(0, box.SE.Y, 0);
+            Assert.Equal(1, box.SE.X, 0);
+            Assert.Equal(0, box.SE.Y, 0);
 
             thisPoint = new AECPoint(0, 0, 0);
             thatPoint = new AECPoint(-1, -1, 0);
             box = AECGeometry.Box(thisPoint, thatPoint);
 
-            Assert.AreEqual(-1, box.NW.X, 0);
-            Assert.AreEqual(0, box.NW.Y, 0);
+            Assert.Equal(-1, box.NW.X, 0);
+            Assert.Equal(0, box.NW.Y, 0);
 
-            Assert.AreEqual(0, box.SE.X, 0);
-            Assert.AreEqual(-1, box.SE.Y, 0);
+            Assert.Equal(0, box.SE.X, 0);
+            Assert.Equal(-1, box.SE.Y, 0);
 
             thisPoint = new AECPoint(0, 0, 0);
             thatPoint = new AECPoint(0, 1, 0);
             box = AECGeometry.Box(thisPoint, thatPoint);
 
-            Assert.IsNull(box.SW);
-            Assert.IsNull(box.SE);
-            Assert.IsNull(box.NE);
-            Assert.IsNull(box.NW);
+            Assert.Null(box.SW);
+            Assert.Null(box.SE);
+            Assert.Null(box.NE);
+            Assert.Null(box.NW);
         }//method
 
-        [TestMethod]
+        [Fact]
         public void CompassLine()
         {
             AECBox box = new AECBox
@@ -113,69 +112,69 @@ namespace AECSpacesTest
             };
 
             List<AECPoint> line = AECGeometry.CompassLine(box, AECGeometry.Compass.N);
-            Assert.AreEqual(4, line[0].X, 0);
-            Assert.AreEqual(4, line[0].Y, 0);
+            Assert.Equal(4, line[0].X, 0);
+            Assert.Equal(4, line[0].Y, 0);
             AECPoint point = line[1];
-            Assert.AreEqual(4, point.X, 0);
-            Assert.AreEqual(8, point.Y, 0);
+            Assert.Equal(4, point.X, 0);
+            Assert.Equal(8, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.E);
             point = line[1];
-            Assert.AreEqual(8, point.X, 0);
-            Assert.AreEqual(4, point.Y, 0);
+            Assert.Equal(8, point.X, 0);
+            Assert.Equal(4, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.S);
             point = line[1];
-            Assert.AreEqual(4, point.X, 0);
-            Assert.AreEqual(0, point.Y, 0);
+            Assert.Equal(4, point.X, 0);
+            Assert.Equal(0, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.W);
             point = line[1];
-            Assert.AreEqual(0, point.X, 0);
-            Assert.AreEqual(4, point.Y, 0);
+            Assert.Equal(0, point.X, 0);
+            Assert.Equal(4, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.NNE);
             point = line[1];
-            Assert.AreEqual(6, point.X, 0);
-            Assert.AreEqual(8, point.Y, 0);
+            Assert.Equal(6, point.X, 0);
+            Assert.Equal(8, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.ENE);
             point = line[1];
-            Assert.AreEqual(8, point.X, 0);
-            Assert.AreEqual(6, point.Y, 0);
+            Assert.Equal(8, point.X, 0);
+            Assert.Equal(6, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.ESE);
             point = line[1];
-            Assert.AreEqual(8, point.X, 0);
-            Assert.AreEqual(2, point.Y, 0);
+            Assert.Equal(8, point.X, 0);
+            Assert.Equal(2, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.SSE);
             point = line[1];
-            Assert.AreEqual(6, point.X, 0);
-            Assert.AreEqual(0, point.Y, 0);
+            Assert.Equal(6, point.X, 0);
+            Assert.Equal(0, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.SSW);
             point = line[1];
-            Assert.AreEqual(2, point.X, 0);
-            Assert.AreEqual(0, point.Y, 0);
+            Assert.Equal(2, point.X, 0);
+            Assert.Equal(0, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.WSW);
             point = line[1];
-            Assert.AreEqual(0, point.X, 0);
-            Assert.AreEqual(2, point.Y, 0);
+            Assert.Equal(0, point.X, 0);
+            Assert.Equal(2, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.WNW);
             point = line[1];
-            Assert.AreEqual(0, point.X, 0);
-            Assert.AreEqual(6, point.Y, 0);
+            Assert.Equal(0, point.X, 0);
+            Assert.Equal(6, point.Y, 0);
 
             line = AECGeometry.CompassLine(box, AECGeometry.Compass.NNW);
             point = line[1];
-            Assert.AreEqual(2, point.X, 0);
-            Assert.AreEqual(8, point.Y, 0);
+            Assert.Equal(2, point.X, 0);
+            Assert.Equal(8, point.Y, 0);
         }//method
 
-        [TestMethod]
+        [Fact]
         public void CompassPoint()
         {
             AECBox box = new AECBox
@@ -187,55 +186,55 @@ namespace AECSpacesTest
             };
 
             AECPoint point = AECGeometry.CompassPoint(box, AECGeometry.Compass.N);
-            Assert.AreEqual(4, point.X, 0);
-            Assert.AreEqual(8, point.Y, 0);
+            Assert.Equal(4, point.X, 0);
+            Assert.Equal(8, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.E);
-            Assert.AreEqual(8, point.X, 0);
-            Assert.AreEqual(4, point.Y, 0);
+            Assert.Equal(8, point.X, 0);
+            Assert.Equal(4, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.S);
-            Assert.AreEqual(4, point.X, 0);
-            Assert.AreEqual(0, point.Y, 0);
+            Assert.Equal(4, point.X, 0);
+            Assert.Equal(0, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.W);
-            Assert.AreEqual(0, point.X, 0);
-            Assert.AreEqual(4, point.Y, 0);
+            Assert.Equal(0, point.X, 0);
+            Assert.Equal(4, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.NNE);
-            Assert.AreEqual(6, point.X, 0);
-            Assert.AreEqual(8, point.Y, 0);
+            Assert.Equal(6, point.X, 0);
+            Assert.Equal(8, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.ENE);
-            Assert.AreEqual(8, point.X, 0);
-            Assert.AreEqual(6, point.Y, 0);
+            Assert.Equal(8, point.X, 0);
+            Assert.Equal(6, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.ESE);
-            Assert.AreEqual(8, point.X, 0);
-            Assert.AreEqual(2, point.Y, 0);
+            Assert.Equal(8, point.X, 0);
+            Assert.Equal(2, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.SSE);
-            Assert.AreEqual(6, point.X, 0);
-            Assert.AreEqual(0, point.Y, 0);
+            Assert.Equal(6, point.X, 0);
+            Assert.Equal(0, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.SSW);
-            Assert.AreEqual(2, point.X, 0);
-            Assert.AreEqual(0, point.Y, 0);
+            Assert.Equal(2, point.X, 0);
+            Assert.Equal(0, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.WSW);
-            Assert.AreEqual(0, point.X, 0);
-            Assert.AreEqual(2, point.Y, 0);
+            Assert.Equal(0, point.X, 0);
+            Assert.Equal(2, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.WNW);
-            Assert.AreEqual(0, point.X, 0);
-            Assert.AreEqual(6, point.Y, 0);
+            Assert.Equal(0, point.X, 0);
+            Assert.Equal(6, point.Y, 0);
 
             point = AECGeometry.CompassPoint(box, AECGeometry.Compass.NNW);
-            Assert.AreEqual(2, point.X, 0);
-            Assert.AreEqual(8, point.Y, 0);
+            Assert.Equal(2, point.X, 0);
+            Assert.Equal(8, point.Y, 0);
         }//method
 
-        [TestMethod]
+        [Fact]
         public void CoversPoint()
         {
             AECGeometry geometry = new AECGeometry();
@@ -248,10 +247,10 @@ namespace AECSpacesTest
                 new AECPoint(0, 3, 0)
             };
             AECPoint point = new AECPoint(2, 1, 0);
-            Assert.IsTrue(geometry.CoversPoint(shape, point));
+            Assert.True(geometry.CoversPoint(shape, point));
         }//method
 
-        [TestMethod]
+        [Fact]
         public void CoversShape()
         {
             AECGeometry geometry = new AECGeometry();
@@ -269,22 +268,22 @@ namespace AECSpacesTest
                 new AECPoint(3, 0, 0),
                 new AECPoint(2, 1, 0),
             };
-            Assert.IsTrue(geometry.CoversShape(thesePoints, thosePoints));
+            Assert.True(geometry.CoversShape(thesePoints, thosePoints));
         }//method
 
-        [TestMethod]
+        [Fact]
         public void Midpoint()
         {
             AECPoint start = new AECPoint(0, 0, 0);
             AECPoint end = new AECPoint(3, 3, 3);
             AECPoint mid = AECGeometry.MidPoint(start, end);
 
-            Assert.AreEqual(1.5, mid.X, 0);
-            Assert.AreEqual(1.5, mid.Y, 0);
-            Assert.AreEqual(1.5, mid.Z, 0);
+            Assert.Equal(1.5, mid.X, 0);
+            Assert.Equal(1.5, mid.Y, 0);
+            Assert.Equal(1.5, mid.Z, 0);
         }//method
 
-        [TestMethod]
+        [Fact]
         public void Normal()
         {
             AECBox box = new AECBox
@@ -295,57 +294,57 @@ namespace AECSpacesTest
             };
             AECVector normal = AECGeometry.Normal(box);
 
-            Assert.AreEqual(0, normal.X, 0);
-            Assert.AreEqual(-1, normal.Y, 0);
-            Assert.AreEqual(0, normal.Z, 0);
+            Assert.Equal(0, normal.X, 0);
+            Assert.Equal(-1, normal.Y, 0);
+            Assert.Equal(0, normal.Z, 0);
 
             box.SE = new AECPoint(1, 1, 0);
             box.SW = new AECPoint(1, 0, 0);
             box.NW = new AECPoint(1, 0, 1);
             normal = AECGeometry.Normal(box);
 
-            Assert.AreEqual(1, normal.X, 0);
-            Assert.AreEqual(0, normal.Y, 0);
-            Assert.AreEqual(0, normal.Z, 0);
+            Assert.Equal(1, normal.X, 0);
+            Assert.Equal(0, normal.Y, 0);
+            Assert.Equal(0, normal.Z, 0);
 
             box.SE = new AECPoint(0, 1, 0);
             box.SW = new AECPoint(1, 1, 0);
             box.NW = new AECPoint(1, 1, 1);
             normal = AECGeometry.Normal(box);
 
-            Assert.AreEqual(0, normal.X, 0);
-            Assert.AreEqual(1, normal.Y, 0);
-            Assert.AreEqual(0, normal.Z, 0);
+            Assert.Equal(0, normal.X, 0);
+            Assert.Equal(1, normal.Y, 0);
+            Assert.Equal(0, normal.Z, 0);
 
             box.SE = new AECPoint(0, 0, 0);
             box.SW = new AECPoint(0, 1, 0);
             box.NW = new AECPoint(0, 1, 1);
             normal = AECGeometry.Normal(box);
 
-            Assert.AreEqual(-1, normal.X, 0);
-            Assert.AreEqual(0, normal.Y, 0);
-            Assert.AreEqual(0, normal.Z, 0);
+            Assert.Equal(-1, normal.X, 0);
+            Assert.Equal(0, normal.Y, 0);
+            Assert.Equal(0, normal.Z, 0);
 
             box.SE = new AECPoint(0, 1, 0);
             box.SW = new AECPoint(0, 0, 0);
             box.NW = new AECPoint(1, 0, 0);
             normal = AECGeometry.Normal(box);
 
-            Assert.AreEqual(0, normal.X, 0);
-            Assert.AreEqual(0, normal.Y, 0);
-            Assert.AreEqual(-1, normal.Z, 0);
+            Assert.Equal(0, normal.X, 0);
+            Assert.Equal(0, normal.Y, 0);
+            Assert.Equal(-1, normal.Z, 0);
 
             box.SE = new AECPoint(1, 0, 1);
             box.SW = new AECPoint(0, 0, 1);
             box.NW = new AECPoint(0, 1, 1);
             normal = AECGeometry.Normal(box);
 
-            Assert.AreEqual(0, normal.X, 0);
-            Assert.AreEqual(0, normal.Y, 0);
-            Assert.AreEqual(1, normal.Z, 0);
+            Assert.Equal(0, normal.X, 0);
+            Assert.Equal(0, normal.Y, 0);
+            Assert.Equal(1, normal.Z, 0);
         }//method
 
-        [TestMethod]
+        [Fact]
         public void PointAlong()
         {
             AECPoint thisPoint = new AECPoint(0, 0, 0);
@@ -353,12 +352,12 @@ namespace AECSpacesTest
             double fraction = AECGeometry.RandomDouble(0, 1);
             AECPoint along = AECGeometry.PointAlong(thisPoint, thatPoint, fraction);
 
-            Assert.AreEqual(0, along.X, 0);
-            Assert.IsTrue((along.Y >= 0 && along.Y <= 20));
-            Assert.AreEqual(0, along.Z, 0);
+            Assert.Equal(0, along.X, 0);
+            Assert.True((along.Y >= 0 && along.Y <= 20));
+            Assert.Equal(0, along.Z, 0);
         }//method
 
-        [TestMethod]
+        [Fact]
         public void PolygonConcave()
         {
             List<AECPoint> bndPoints = new List<AECPoint>
@@ -369,10 +368,10 @@ namespace AECSpacesTest
                 new AECPoint(3, 3, 0),
                 new AECPoint(0, 3, 0)
             };
-            Assert.IsFalse(AECGeometry.IsConvexPolygon(bndPoints));
-        }//method
+            Assert.False(AECGeometry.IsConvexPolygon(bndPoints));
+        }
 
-        [TestMethod]
+        [Fact]
         public void PolygonConvex()
         {
             List<AECPoint> bndPoints = new List<AECPoint>
@@ -382,10 +381,10 @@ namespace AECSpacesTest
                 new AECPoint(3, 3, 0),
                 new AECPoint(0, 3, 0)
             };
-            Assert.IsTrue(AECGeometry.IsConvexPolygon(bndPoints));
-        }//method
+            Assert.True(AECGeometry.IsConvexPolygon(bndPoints));
+        }
 
-        [TestMethod]
+        [Fact]
         public void RemoveColinear()
         {
             AECGeometry geometry = new AECGeometry();
@@ -395,7 +394,7 @@ namespace AECSpacesTest
                 new AECPoint(1, 0, 0),
                 new AECPoint(3, 0, 0)
             };
-            Assert.AreEqual(2, geometry.RemoveColinear(points).Count, 0); 
+            Assert.Equal(2, geometry.RemoveColinear(points).Count); 
 
             points = new List<AECPoint>
             {
@@ -407,7 +406,7 @@ namespace AECSpacesTest
                 new AECPoint(0, 3, 0)
             };
             List<AECPoint> cleanPoints = geometry.RemoveColinear(points);
-            Assert.AreEqual(4, cleanPoints.Count, 0);
+            Assert.Equal(4, cleanPoints.Count);
 
             points = new List<AECPoint>
             {
@@ -417,7 +416,7 @@ namespace AECSpacesTest
                 new AECPoint(0, 1, 0)
             };
             cleanPoints = geometry.RemoveColinear(points);
-            Assert.AreEqual(4, cleanPoints.Count, 0);
-        }//method
-    }//class
-}//namespace
+            Assert.Equal(4, cleanPoints.Count);
+        }
+    }
+}

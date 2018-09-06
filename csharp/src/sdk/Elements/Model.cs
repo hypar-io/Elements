@@ -167,7 +167,7 @@ namespace Hypar.Elements
 
             var result = new Dictionary<string, object>();
             result["model"] = model;
-            result["data"] = JsonConvert.SerializeObject(this.Elements);
+            result["computed"] = JsonConvert.SerializeObject(this.Elements);
             result["origin"] = this.Origin;
             
             return result;

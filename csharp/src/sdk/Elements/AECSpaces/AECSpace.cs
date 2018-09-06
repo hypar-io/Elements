@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hypar.Elements;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using GeoAPI.Geometries;
@@ -409,10 +410,8 @@ namespace AECSpaces
                     vertices.Add(new Hypar.Geometry.Vector3(point.X, point.Y, point.Z));
                 }//foreach
                 Hypar.Geometry.Polyline boundary = new Hypar.Geometry.Polyline(vertices);
-                Hypar.Elements.Mass mass = Hypar.Elements.Mass.WithBottomProfile(boundary)
-                                                         .WithTopAtElevation(Elevation)
-                                                         .WithTopProfile(boundary)
-                                                         .WithBottomAtElevation(Level);
+
+                var mass = new Mass(boundary, Elevation, boundary, Level);
                 return mass;
             }//get
         }//property

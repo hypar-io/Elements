@@ -86,24 +86,76 @@ namespace Hypar.Elements
         }
     }
 
+    /// <summary>
+    /// A beam is a structural framing element which is often horizontal.
+    /// </summary>
     public class Beam : StructuralFraming
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="centerLine"></param>
+        /// <param name="profile"></param>
+        /// <returns></returns>
         public Beam(Line centerLine, Polyline profile) : base(centerLine, profile){}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="centerLine"></param>
+        /// <param name="profile"></param>
+        /// <param name="material"></param>
+        /// <param name="up"></param>
+        /// <returns></returns>
         public Beam(Line centerLine, Polyline profile, Material material, Vector3 up = null) : base(centerLine, profile, material, up){}
     }
 
+    /// <summary>
+    /// A column is a structural framing element which is often vertical.
+    /// </summary>
     public class Column : StructuralFraming
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="height"></param>
+        /// <param name="profile"></param>
+        /// <param name="material"></param>
+        /// <returns></returns>
         public Column(Vector3 location, double height, Polyline profile, Material material) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material){}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="centerLine"></param>
+        /// <param name="profile"></param>
+        /// <returns></returns>
         public Column(Line centerLine, Polyline profile) : base(centerLine, profile){}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="centerLine"></param>
+        /// <param name="profile"></param>
+        /// <param name="material"></param>
+        /// <returns></returns>
         public Column(Line centerLine, Polyline profile, Material material) : base(centerLine, profile, material){}
     }
 
+    /// <summary>
+    /// A brace is a structural framing element which is often diagonal.
+    /// </summary>
     public class Brace : StructuralFraming
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="centerLine"></param>
+        /// <param name="profile"></param>
+        /// <param name="material"></param>
+        /// <param name="up"></param>
+        /// <returns></returns>
         public Brace(Line centerLine, Polyline profile, Material material, Vector3 up = null) : base(centerLine, profile, material, up){}
     }
 }
