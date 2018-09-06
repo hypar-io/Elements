@@ -411,7 +411,7 @@ namespace AECSpaces
                 }//foreach
                 Hypar.Geometry.Polyline boundary = new Hypar.Geometry.Polyline(vertices);
 
-                var mass = new Mass(boundary, Elevation, boundary, Level);
+                var mass = new Mass(boundary, Level, boundary, Elevation);
                 return mass;
             }//get
         }//property
