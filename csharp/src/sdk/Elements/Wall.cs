@@ -4,6 +4,9 @@ using System;
 
 namespace Hypar.Elements
 {
+    /// <summary>
+    /// A wall is a building element which is used to enclose space.
+    /// </summary>
     public class Wall: Element, ILocateable<Line>, IMaterialize, ITessellate<Mesh>
     {
         /// <summary>
@@ -59,6 +62,10 @@ namespace Hypar.Elements
             this.Height = height;
         }
 
+        /// <summary>
+        /// Generate a mesh of the wall.
+        /// </summary>
+        /// <returns></returns>
         public Mesh Tessellate()
         {
             return Mesh.Extrude(new[]{this.Location.Thicken(this.Thickness)}, this.Height);
