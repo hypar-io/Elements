@@ -1,5 +1,6 @@
 using Hypar.Geometry;
 using Hypar.Elements;
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -18,13 +19,21 @@ namespace Hypar.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
 
+            var buildingHeight = 100;
+
             var profile = new Polyline(new[]{a,b,c,d});
-            var mass = new Mass(profile, 0, profile, 28);
+            var mass = new Mass(profile, 0, profile, buildingHeight);
             
+            var elevations = new List<double>();
+            for(var i=0.0; i<=buildingHeight; i += 4.0)
+            {
+                elevations.Add(i);
+            }
+
             var faces = mass.Faces();
             foreach (var f in faces)
             {
-                var g = new Grid(f, 7, 7);
+                var g = new Grid(f, 14, elevations.Count-1);
                 foreach(var cell in g.AllCells())
                 {
                     var panel = new Panel(cell, BuiltInMaterials.Glass);
@@ -36,13 +45,12 @@ namespace Hypar.Tests
                 }
             }
 
-            var elevations = new double[]{0.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0};
             var floors = mass.CreateFloors(elevations, 0.2, BuiltInMaterials.Concrete);
             model.AddElements(floors);
 
             var shaft = Profiles.Rectangular(new Vector3(10,10), 5, 5);
             var walls = shaft.Segments().Select(l=>{
-                return new Wall(l, 0.1, 32, BuiltInMaterials.Concrete);
+                return new Wall(l, 0.1, buildingHeight, BuiltInMaterials.Concrete);
             });
             model.AddElements(walls);
 
@@ -52,7 +60,7 @@ namespace Hypar.Tests
                 var sideColumns = new List<Column>();
                 foreach(var t in ts)
                 {
-                    sideColumns.Add(new Column(l.PointAt(t), 28.0, Profiles.Rectangular(width:1.0, height:1.0), BuiltInMaterials.Concrete));
+                    sideColumns.Add(new Column(l.PointAt(t), buildingHeight, Profiles.Rectangular(width:1.0, height:1.0), BuiltInMaterials.Concrete));
                 }
                 return sideColumns;
             });
