@@ -13,13 +13,14 @@
     <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.0.1-beta.12</Version>
+    <Version>0.0.2-alpha2</Version>
     <Tags>AEC</Tags>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- <PackageReference Include="geometry3Sharp" Version="1.0.144" /> -->
     <PackageReference Include="glTF2Loader" Version="1.1.1-alpha" />
+    <PackageReference Include="NetTopologySuite" Version="1.15.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
   </ItemGroup>

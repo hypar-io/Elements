@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hypar.Elements;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using GeoAPI.Geometries;
@@ -407,24 +408,20 @@ namespace AECSpaces
                 foreach (AECPoint point in PointsFloor)
                 {
                     vertices.Add(new Hypar.Geometry.Vector3(point.X, point.Y, point.Z));
-                }//foreach
+                }
                 vertices.Reverse();
                 Hypar.Geometry.Polyline boundary = new Hypar.Geometry.Polyline(vertices);               
-                Hypar.Elements.Mass mass = Hypar.Elements.Mass.WithBottomProfile(boundary)
-                                                              .WithTopAtElevation(Elevation)
-                                                              .WithTopProfile(boundary)
-                                                              .WithBottomAtElevation(Level);
-                Hypar.Elements.Material color =
-                    new Hypar.Elements.Material(ID, red: Color.R / 255,
-                                                    green: Color.G / 255,
-                                                    blue: Color.B / 255,
-                                                    alpha: Color.A / 255,
-                                                    specularFactor: AECColor.Translucent / 255,
-                                                    glossinessFactor: AECColor.Translucent / 255);
+                var color = new Material(ID, new Hypar.Geometry.Color(red: Color.R / 255,
+                                                                      green: Color.G / 255,
+                                                                      blue: Color.B / 255,
+                                                                      alpha: Color.A / 255),
+                                                                      specularFactor: AECColor.Translucent / 255,
+                                                                      glossinessFactor: AECColor.Translucent / 255);
+                var mass = new Mass(boundary, Elevation, boundary, Level);
                 mass.Material = color;
                 return mass;
-            }//get
-        }//property
+            }
+        }
 
         /// <summary>
         /// Returns a mesh representation as a structure of flat lists of doubles indicating #D vertex coordinates, triangle indices, and 3D normal vectors for each point.

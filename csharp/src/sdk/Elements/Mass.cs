@@ -148,7 +148,14 @@ namespace Hypar.Elements
             return results;
         }
 
-        public IEnumerable<Floor> CreateFloors(double[] elevations, double thickness, Material material)
+        /// <summary>
+        /// Create floors at the specified elevations within a mass.
+        /// </summary>
+        /// <param name="elevations"></param>
+        /// <param name="thickness"></param>
+        /// <param name="material"></param>
+        /// <returns></returns>
+        public IEnumerable<Floor> CreateFloors(IEnumerable<double> elevations, double thickness, Material material)
         {
             var floors = new List<Floor>();
             foreach(var e in elevations)

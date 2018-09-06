@@ -1,15 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AECSpaces;
+using Xunit;
 
 namespace AECSpacesTest
 {
-    [TestClass]
     public class SpaceGroupTests
     {
-        /* -------- Begin Property Tests -------- */
-
-        [TestMethod]
+        [Fact]
         public void Area()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -27,10 +24,10 @@ namespace AECSpacesTest
             spaces.Add(thatSpace);
 
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
-            Assert.AreEqual(32, spaceGroup.Area, 0);
-        }//method
+            Assert.Equal(32, spaceGroup.Area, 0);
+        }
 
-        [TestMethod]
+        [Fact]
         public void ByLevel()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -60,12 +57,12 @@ namespace AECSpacesTest
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
             spaces = spaceGroup.ByLevel;
 
-            Assert.AreEqual("othr", spaces[0].Name);
-            Assert.AreEqual("that", spaces[1].Name);
-            Assert.AreEqual("this", spaces[2].Name);
-        }//method
+            Assert.Equal("othr", spaces[0].Name);
+            Assert.Equal("that", spaces[1].Name);
+            Assert.Equal("this", spaces[2].Name);
+        }
 
-        [TestMethod]
+        [Fact]
         public void Count()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -85,10 +82,10 @@ namespace AECSpacesTest
             spaces.Add(othrSpace);
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
 
-            Assert.AreEqual(3, spaceGroup.Count, 0);
-        }//method
+            Assert.Equal(3, spaceGroup.Count);
+        }
 
-        [TestMethod]
+        [Fact]
         public void Volume()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -106,10 +103,10 @@ namespace AECSpacesTest
             spaces.Add(thatSpace);
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
 
-            Assert.AreEqual(32, spaceGroup.Volume, 0);
-        }//method
+            Assert.Equal(32, spaceGroup.Volume, 0);
+        }
 
-        [TestMethod]
+        [Fact]
         public void Wrap()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -131,12 +128,12 @@ namespace AECSpacesTest
             List<AECPoint> tstPoints = spaceGroup.Wrap;
             AECSpace othrSpace = new AECSpace(tstPoints);
 
-            Assert.AreEqual(32, othrSpace.Area, 0);
-        }//method
+            Assert.Equal(32, othrSpace.Area, 0);
+        }
 
         /* -------- Begin Method Tests -------- */
 
-        [TestMethod]
+        [Fact]
         public void Clear()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -157,10 +154,10 @@ namespace AECSpacesTest
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
             spaceGroup.Clear();
 
-            Assert.AreEqual(0, spaceGroup.Count, 0);
-        }//method
+            Assert.Equal(0, spaceGroup.Count);
+        }
 
-        [TestMethod]
+        [Fact]
         public void Delete()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -181,10 +178,10 @@ namespace AECSpacesTest
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
             spaceGroup.Delete(1);
 
-            Assert.AreEqual(2, spaceGroup.Count, 0);
-        }//method
+            Assert.Equal(2, spaceGroup.Count);
+        }
 
-        [TestMethod]
+        [Fact]
         public void GetSpace()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -210,10 +207,10 @@ namespace AECSpacesTest
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
             AECSpace space = spaceGroup.GetSpace(1);
 
-            Assert.AreEqual("that", space.Name);
-        }//method
+            Assert.Equal("that", space.Name);
+        }
 
-        [TestMethod]
+        [Fact]
         public void GetSpaceByID()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -240,10 +237,10 @@ namespace AECSpacesTest
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
             AECSpace space = spaceGroup.GetSpaceByID(thatID);
 
-            Assert.AreEqual("that", space.Name);
-        }//method
+            Assert.Equal("that", space.Name);
+        }
 
-        [TestMethod]
+        [Fact]
         public void GetSpaceByName()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -270,10 +267,10 @@ namespace AECSpacesTest
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
             AECSpace space = spaceGroup.GetSpaceByName("that");
 
-            Assert.AreEqual("that", space.Name);
-        }//method
+            Assert.Equal("that", space.Name);
+        }
 
-        [TestMethod]
+        [Fact]
         public void GetSpacesByName()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -300,10 +297,10 @@ namespace AECSpacesTest
             AECSpaceGroup spaceGroup = new AECSpaceGroup(spaces);
             List<AECSpace> spacesByName = spaceGroup.GetSpacesByName("that");
 
-            Assert.AreEqual(2, spacesByName.Count);
-        }//method
+            Assert.Equal(2, spacesByName.Count);
+        }
 
-        [TestMethod]
+        [Fact]
         public void MoveBy()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -327,36 +324,36 @@ namespace AECSpacesTest
 
             AECSpace space = spaceGroup.GetSpace(0);
 
-            Assert.AreEqual(1, space.PointsBox.SW.X);
-            Assert.AreEqual(1, space.PointsBox.SW.Y);
-            Assert.AreEqual(1, space.PointsBox.SW.Z);
+            Assert.Equal(1, space.PointsBox.SW.X);
+            Assert.Equal(1, space.PointsBox.SW.Y);
+            Assert.Equal(1, space.PointsBox.SW.Z);
 
-            Assert.AreEqual(5, space.PointsBox.NE.X);
-            Assert.AreEqual(5, space.PointsBox.NE.Y);
-            Assert.AreEqual(1, space.PointsBox.NE.Z);
+            Assert.Equal(5, space.PointsBox.NE.X);
+            Assert.Equal(5, space.PointsBox.NE.Y);
+            Assert.Equal(1, space.PointsBox.NE.Z);
 
             space = spaceGroup.GetSpace(1);
 
-            Assert.AreEqual(1, space.PointsBox.SW.X);
-            Assert.AreEqual(1, space.PointsBox.SW.Y);
-            Assert.AreEqual(1, space.PointsBox.SW.Z);
+            Assert.Equal(1, space.PointsBox.SW.X);
+            Assert.Equal(1, space.PointsBox.SW.Y);
+            Assert.Equal(1, space.PointsBox.SW.Z);
 
-            Assert.AreEqual(5, space.PointsBox.NE.X);
-            Assert.AreEqual(5, space.PointsBox.NE.Y);
-            Assert.AreEqual(1, space.PointsBox.NE.Z);
+            Assert.Equal(5, space.PointsBox.NE.X);
+            Assert.Equal(5, space.PointsBox.NE.Y);
+            Assert.Equal(1, space.PointsBox.NE.Z);
 
             space = spaceGroup.GetSpace(2);
 
-            Assert.AreEqual(1, space.PointsBox.SW.X);
-            Assert.AreEqual(1, space.PointsBox.SW.Y);
-            Assert.AreEqual(1, space.PointsBox.SW.Z);
+            Assert.Equal(1, space.PointsBox.SW.X);
+            Assert.Equal(1, space.PointsBox.SW.Y);
+            Assert.Equal(1, space.PointsBox.SW.Z);
 
-            Assert.AreEqual(5, space.PointsBox.NE.X);
-            Assert.AreEqual(5, space.PointsBox.NE.Y);
-            Assert.AreEqual(1, space.PointsBox.NE.Z);
-        }//method
+            Assert.Equal(5, space.PointsBox.NE.X);
+            Assert.Equal(5, space.PointsBox.NE.Y);
+            Assert.Equal(1, space.PointsBox.NE.Z);
+        }
 
-        [TestMethod]
+        [Fact]
         public void MoveTo()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -380,36 +377,36 @@ namespace AECSpacesTest
 
             AECSpace space = spaceGroup.GetSpace(0);
 
-            Assert.AreEqual(1, space.PointsBox.SW.X);
-            Assert.AreEqual(1, space.PointsBox.SW.Y);
-            Assert.AreEqual(1, space.PointsBox.SW.Z);
+            Assert.Equal(1, space.PointsBox.SW.X);
+            Assert.Equal(1, space.PointsBox.SW.Y);
+            Assert.Equal(1, space.PointsBox.SW.Z);
 
-            Assert.AreEqual(5, space.PointsBox.NE.X);
-            Assert.AreEqual(5, space.PointsBox.NE.Y);
-            Assert.AreEqual(1, space.PointsBox.NE.Z);
+            Assert.Equal(5, space.PointsBox.NE.X);
+            Assert.Equal(5, space.PointsBox.NE.Y);
+            Assert.Equal(1, space.PointsBox.NE.Z);
 
             space = spaceGroup.GetSpace(1);
 
-            Assert.AreEqual(1, space.PointsBox.SW.X);
-            Assert.AreEqual(1, space.PointsBox.SW.Y);
-            Assert.AreEqual(1, space.PointsBox.SW.Z);
+            Assert.Equal(1, space.PointsBox.SW.X);
+            Assert.Equal(1, space.PointsBox.SW.Y);
+            Assert.Equal(1, space.PointsBox.SW.Z);
 
-            Assert.AreEqual(5, space.PointsBox.NE.X);
-            Assert.AreEqual(5, space.PointsBox.NE.Y);
-            Assert.AreEqual(1, space.PointsBox.NE.Z);
+            Assert.Equal(5, space.PointsBox.NE.X);
+            Assert.Equal(5, space.PointsBox.NE.Y);
+            Assert.Equal(1, space.PointsBox.NE.Z);
 
             space = spaceGroup.GetSpace(2);
 
-            Assert.AreEqual(1, space.PointsBox.SW.X);
-            Assert.AreEqual(1, space.PointsBox.SW.Y);
-            Assert.AreEqual(1, space.PointsBox.SW.Z);
+            Assert.Equal(1, space.PointsBox.SW.X);
+            Assert.Equal(1, space.PointsBox.SW.Y);
+            Assert.Equal(1, space.PointsBox.SW.Z);
 
-            Assert.AreEqual(5, space.PointsBox.NE.X);
-            Assert.AreEqual(5, space.PointsBox.NE.Y);
-            Assert.AreEqual(1, space.PointsBox.NE.Z);
-        }//method
+            Assert.Equal(5, space.PointsBox.NE.X);
+            Assert.Equal(5, space.PointsBox.NE.Y);
+            Assert.Equal(1, space.PointsBox.NE.Z);
+        }
 
-        [TestMethod]
+        [Fact]
         public void Rotate()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -433,30 +430,30 @@ namespace AECSpacesTest
 
             AECSpace space = spaceGroup.GetSpace(0);
 
-            Assert.AreEqual(-4, space.PointsBox.SW.X);
-            Assert.AreEqual(0, space.PointsBox.SW.Y);
+            Assert.Equal(-4, space.PointsBox.SW.X);
+            Assert.Equal(0, space.PointsBox.SW.Y);
 
-            Assert.AreEqual(0, space.PointsBox.NE.X);
-            Assert.AreEqual(4, space.PointsBox.NE.Y);
+            Assert.Equal(0, space.PointsBox.NE.X);
+            Assert.Equal(4, space.PointsBox.NE.Y);
 
             space = spaceGroup.GetSpace(1);
 
-            Assert.AreEqual(-4, space.PointsBox.SW.X);
-            Assert.AreEqual(0, space.PointsBox.SW.Y);
+            Assert.Equal(-4, space.PointsBox.SW.X);
+            Assert.Equal(0, space.PointsBox.SW.Y);
 
-            Assert.AreEqual(0, space.PointsBox.NE.X);
-            Assert.AreEqual(4, space.PointsBox.NE.Y);
+            Assert.Equal(0, space.PointsBox.NE.X);
+            Assert.Equal(4, space.PointsBox.NE.Y);
 
             space = spaceGroup.GetSpace(2);
 
-            Assert.AreEqual(-4, space.PointsBox.SW.X);
-            Assert.AreEqual(0, space.PointsBox.SW.Y);
+            Assert.Equal(-4, space.PointsBox.SW.X);
+            Assert.Equal(0, space.PointsBox.SW.Y);
 
-            Assert.AreEqual(0, space.PointsBox.NE.X);
-            Assert.AreEqual(4, space.PointsBox.NE.Y);
-        }//method
+            Assert.Equal(0, space.PointsBox.NE.X);
+            Assert.Equal(4, space.PointsBox.NE.Y);
+        }
 
-        [TestMethod]
+        [Fact]
         public void Scale()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -479,16 +476,16 @@ namespace AECSpacesTest
             spaceGroup.Scale(xScale: 2, yScale: 2);
 
             AECSpace space = spaceGroup.GetSpace(0);
-            Assert.AreEqual(64, space.Area);
+            Assert.Equal(64, space.Area);
 
             space = spaceGroup.GetSpace(1);
-            Assert.AreEqual(64, space.Area);
+            Assert.Equal(64, space.Area);
 
             space = spaceGroup.GetSpace(2);
-            Assert.AreEqual(64, space.Area);
-        }//method
+            Assert.Equal(64, space.Area);
+        }
 
-        [TestMethod]
+        [Fact]
         public void SetHeight()
         {
             List<AECPoint> points = new List<AECPoint>
@@ -511,13 +508,13 @@ namespace AECSpacesTest
             spaceGroup.SetHeight(12);
 
             AECSpace space = spaceGroup.GetSpace(0);
-            Assert.AreEqual(12, space.Height);
+            Assert.Equal(12, space.Height);
 
             space = spaceGroup.GetSpace(1);
-            Assert.AreEqual(12, space.Height);
+            Assert.Equal(12, space.Height);
 
             space = spaceGroup.GetSpace(2);
-            Assert.AreEqual(12, space.Height);
-        }//method
-    }//class
-}//namespace
+            Assert.Equal(12, space.Height);
+        }
+    }
+}
