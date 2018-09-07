@@ -14,28 +14,24 @@ namespace Hypar.Elements
         /// <summary>
         /// The boundary of the floor.
         /// </summary>
-        /// <value></value>
         [JsonProperty("location")]
         public Polyline Location{get;}
 
         /// <summary>
         /// The transform of the floor 
         /// </summary>
-        /// <value></value>
         [JsonProperty("transform")]
         public Transform Transform{get;}
 
         /// <summary>
         /// The openings in the slab.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("openings")]
         public IEnumerable<Polyline> Openings{get;}
 
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("elevation")]
         public double Elevation{get;}
 
@@ -50,7 +46,7 @@ namespace Hypar.Elements
         /// Overlapping openings and openings which are outside of the floor's perimeter,
         /// will result in incorrect area results.
         /// </summary>
-        /// <value></value>
+        [JsonProperty("area")]
         public double Area
         {
             get{return this.Location.Area - this.Openings.Sum(o=>o.Area);}
@@ -59,7 +55,6 @@ namespace Hypar.Elements
         /// <summary>
         /// The floor's material.
         /// </summary>
-        /// <value></value>
         [JsonIgnore]
         public Material Material{get;set;}
 
