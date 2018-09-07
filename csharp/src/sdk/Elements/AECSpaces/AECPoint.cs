@@ -80,7 +80,7 @@ namespace AECSpaces
         {
             if (X == point.x && Y == point.y && Z == point.Z) return true;
             return false;
-        }//MoveBy
+        }//IsColocated
 
         /// <summary>
         /// Changes the coordinates by the delivered deltas.
@@ -99,7 +99,7 @@ namespace AECSpaces
         {
             if (point == null) point = new AECPoint(0, 0, 0);
             Rotate(angle, point.X, point.Y, radians);
-        }//method
+        }//Rotate
 
         /// <summary>
         /// Rotates the point horizontally by the specified angle around the delivered pivot coordinates.
@@ -111,6 +111,6 @@ namespace AECSpaces
             double newY = ((Math.Sin(angle) * (X - x)) + (Math.Cos(angle) * (Y - y))) + y;
             X = Math.Round(newX, digits: 12);
             Y = Math.Round(newY, digits: 12);
-        }//method
-    }//Point
-}//aecSpace
+        }//Rotate
+    }//AECPoint
+}//AECSpaces
