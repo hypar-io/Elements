@@ -46,6 +46,17 @@ namespace Hypar.Elements
         public double Thickness{get;}
         
         /// <summary>
+        /// The area of the floor.
+        /// Overlapping openings and openings which are outside of the floor's perimeter,
+        /// will result in incorrect area results.
+        /// </summary>
+        /// <value></value>
+        public double Area
+        {
+            get{return this.Location.Area - this.Openings.Sum(o=>o.Area);}
+        }
+
+        /// <summary>
         /// The floor's material.
         /// </summary>
         /// <value></value>

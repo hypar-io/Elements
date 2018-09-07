@@ -70,10 +70,17 @@ namespace Hypar.Tests
             mass2.Material = material2;
             mass3.Material = material3;
             model.AddElements(new[]{mass1,mass2,mass3});
-            model.SaveGlb("transformed_masses.glb");
+            
             Console.WriteLine(profile1.Area);
             Console.WriteLine(profile2.Area);
             Console.WriteLine(profile3.Area);
+
+            var f1 = new Floor(profile1, new Polyline[]{}, 0.0, 0.2, BuiltInMaterials.Concrete);
+            var f2 = new Floor(profile2, new Polyline[]{}, 10.0, 0.2, BuiltInMaterials.Concrete);
+            var f3 = new Floor(profile3, new Polyline[]{}, 20.0, 0.2, BuiltInMaterials.Concrete);
+            model.AddElements(new[]{f1,f2,f3});
+
+            model.SaveGlb("transformed_masses.glb");
         }
     }
 }

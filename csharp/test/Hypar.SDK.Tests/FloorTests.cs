@@ -51,5 +51,14 @@ namespace Hypar.Tests
             var poly = Profiles.Rectangular(width:20, height:20);
             Assert.Throws<ArgumentOutOfRangeException>(()=> new Floor(poly, 0.0));
         }
+
+        [Fact]
+        public void Floor_Area()
+        {
+            var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1).Reversed();
+            var p2 = Profiles.Rectangular(new Vector3(2,2,0), 1, 1).Reversed();
+            var floor = new Floor(Profiles.Rectangular(Vector3.Origin(), 10, 10), new []{p1, p2}, 0.0, 0.2, BuiltInMaterials.Concrete);
+            Assert.Equal(100.0-2.0, floor.Area);
+        }
     }
 }
