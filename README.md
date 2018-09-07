@@ -22,7 +22,8 @@ You can see some functions written using the Hypar SDK running on [Hypar Explore
 - Install an IDE. Here's a couple of options:
   - [Visual Studio Code](https://code.visualstudio.com/). It's a free IDE with great support for .net and python and it looks and acts the same on every platform (Mac, Linux, Windows), so it makes our job of supporting you slightly easier.
   - [Visual Studio Community Edition](https://visualstudio.microsoft.com/vs/community/) is great too, but it doesn't exist for Linux and is still learning to walk on the Mac.
-- `git clone https://github.com/hypar-io/dotnet-starter`. This repository contains the boilerplate for a working function.
+- Clone the starter repo.  
+```git clone https://github.com/hypar-io/dotnet-starter```. 
 - `cd dotnet-starter`
 - Edit the `hypar.json` file to describe your function. See [configuration](#configuration).
 - Use the Hypar CLI to publish your function.
