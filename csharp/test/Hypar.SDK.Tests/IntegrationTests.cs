@@ -19,7 +19,7 @@ namespace Hypar.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
 
-            var buildingHeight = 100;
+            var buildingHeight = 30;
 
             var profile = new Polyline(new[]{a,b,c,d});
             var mass = new Mass(profile, 0, profile, buildingHeight);

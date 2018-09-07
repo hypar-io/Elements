@@ -33,18 +33,18 @@ namespace Hypar.Geometry
         {
             var tess = this._curve.Tessellate().ToArray();
             var offset = new Vector3[tess.Length];
-            for(var i=0; i<tess.Length; i++)
+            for (var i = 0; i < tess.Length; i++)
             {
                 offset[i] = tess[i] + this._direction * _distance;
             }
             var mesh = new Mesh();
-            for(var i=0; i<tess.Length-1; i++)
+            for (var i = 0; i < tess.Length - 1; i++)
             {
                 var a = tess[i];
-                var b = tess[i+1];
-                var c = offset[i+1];
+                var b = tess[i + 1];
+                var c = offset[i + 1];
                 var d = offset[i];
-                mesh.AddQuad(new[]{a,b,c,d});
+                mesh.AddQuad(new[] { a, b, c, d });
             }
             return mesh;
         }

@@ -26,6 +26,18 @@ namespace Hypar.Geometry
         public Vector3 End{get;}
 
         /// <summary>
+        /// Get the length of the line.
+        /// </summary>
+        /// <returns></returns>
+        public double Length => Math.Sqrt(Math.Pow(this.Start.X - this.End.X, 2) + Math.Pow(this.Start.Y - this.End.Y, 2) + Math.Pow(this.Start.Z - this.End.Z, 2));
+
+        /// <summary>
+        /// Get a normalized vector representing the direction of the line.
+        /// </summary>
+        /// <returns>A vector representing the direction of the line.</returns>
+        public Vector3 Direction => (this.End - this.Start).Normalized();
+
+        /// <summary>
         /// Construct a line from start and end points.
         /// </summary>
         /// <param name="start">The start of the line.</param>
@@ -51,15 +63,6 @@ namespace Hypar.Geometry
             this.Start = start;
             this.End = start + direction.Normalized() * length;
         }
-        
-        /// <summary>
-        /// Get the length of the line.
-        /// </summary>
-        /// <returns></returns>
-        public double Length()
-        {
-            return Math.Sqrt(Math.Pow(this.Start.X - this.End.X, 2) + Math.Pow(this.Start.Y - this.End.Y, 2) + Math.Pow(this.Start.Z - this.End.Z, 2));
-        }
 
         /// <summary>
         /// Get a transform whose XY plane is perpendicular to the curve, and whose
@@ -69,7 +72,7 @@ namespace Hypar.Geometry
         /// <returns>A transform.</returns>
         public Transform GetTransform(Vector3 up = null)
         {
-            var v = Direction();
+            var v = Direction;
             var x = new Vector3(1, 0, 0);
             var y = new Vector3(0, 1, 0);
             var z = new Vector3(0, 0, 1);
@@ -90,15 +93,6 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Get a normalized vector representing the direction of the line.
-        /// </summary>
-        /// <returns>A vector representing the direction of the line.</returns>
-        public Vector3 Direction()
-        {
-            return (this.End - this.Start).Normalized();
-        }
-
-        /// <summary>
         /// Get a point along the line at parameter u.
         /// </summary>
         /// <param name="u"></param>
@@ -109,8 +103,8 @@ namespace Hypar.Geometry
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
             }
-            var offset = this.Length() * u;
-            return this.Start + offset * this.Direction();
+            var offset = this.Length* u;
+            return this.Start + offset * this.Direction;
         }
 
         /// <summary>
@@ -138,7 +132,7 @@ namespace Hypar.Geometry
         /// <returns></returns>
         public Polyline Thicken(double amount)
         {
-            var offsetN = this.Direction().Cross(Vector3.ZAxis());
+            var offsetN = this.Direction.Cross(Vector3.ZAxis());
             var a = this.Start + (offsetN * (amount/2));
             var b = this.End + (offsetN * (amount/2));
             var c = this.End - (offsetN * (amount/2));

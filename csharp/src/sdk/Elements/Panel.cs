@@ -18,7 +18,7 @@ namespace Hypar.Elements
         [JsonProperty("normal")]
         public Vector3 Normal
         {
-            get{return this.Location.Normal();}
+            get{return this.Location.Normal;}
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Hypar.Elements
             this.Location = perimeter;
             this.Material = material;
         }
-        
+
         /// <summary>
         /// Tessellate the panel.
         /// </summary>

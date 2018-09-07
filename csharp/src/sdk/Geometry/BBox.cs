@@ -7,34 +7,30 @@ namespace Hypar.Geometry
     /// </summary>
     public class BBox
     {
-        private Vector3 _min;
-        private Vector3 _max;
-
         /// <summary>
         /// The maximum extent of the bounding box.
         /// </summary>
-        public Vector3 Max => _max;
+        public Vector3 Max{get;}
 
         /// <summary>
         /// The minimum extent of the bounding box.
         /// </summary>
-        public Vector3 Min => _min;
+        public Vector3 Min{get;}
 
         /// <summary>
         /// Construct a bounding box from a collection of points.
         /// </summary>
         /// <param name="points">The points which are contained within the bounding box.</param>
         /// <returns>A bounding box.</returns>
-        public static BBox FromPoints(IEnumerable<Vector3> points)
+        public BBox(IEnumerable<Vector3> points)
         {
-            var min = Vector3.Origin();
-            var max = Vector3.Origin();
+            this.Min = Vector3.Origin();
+            this.Max = Vector3.Origin();
             foreach(var p in points)
             {
-                if(p < min) min = p;
-                if(p > max) max = p;
+                if(p < this.Min) this.Min = p;
+                if(p > this.Max) this.Max = p;
             }
-            return new BBox(min, max);
         }
 
         /// <summary>
@@ -44,8 +40,8 @@ namespace Hypar.Geometry
         /// <param name="max">The maximum extent of the bounding box.</param>
         public BBox(Vector3 min, Vector3 max)
         {
-            this._min = min;
-            this._max = max;
+            this.Min = min;
+            this.Max = max;
         }
     }
 }

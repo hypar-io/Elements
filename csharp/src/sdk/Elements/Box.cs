@@ -35,9 +35,9 @@ namespace Hypar.Elements
         /// Tessellate the box.
         /// </summary>
         /// <returns>A mesh representing the tessellated box.</returns>
-        public Mesh Tessellate()
+        public Mesh Tessellate() 
         {
-            return Mesh.Extrude(new[]{Profiles.Rectangular()},1);
+            return Mesh.Extrude(new[] { Profiles.Rectangular() }, 1);
         }
     }
 }

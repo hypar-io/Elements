@@ -104,7 +104,7 @@ namespace Hypar.Elements
             this.Transform = new Transform(new Vector3(0, 0, elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
             this.Material = material;
         }
-        
+
         /// <summary>
         /// Tessellate the slab.
         /// </summary>
@@ -113,11 +113,11 @@ namespace Hypar.Elements
         {
             var polys = new List<Polyline>();
             polys.Add(this.Location);
-            if(this.Openings != null)
+            if (this.Openings != null)
             {
                 polys.AddRange(this.Openings);
             }
-            
+
             return Mesh.Extrude(polys, this.Thickness, true);
         }
     }

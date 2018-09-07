@@ -68,7 +68,7 @@ namespace Hypar.Elements
         /// <returns></returns>
         public Mesh Tessellate()
         {
-            return Mesh.Extrude(new[]{this.Location.Thicken(this.Thickness)}, this.Height);
+            return Mesh.Extrude(new[] { this.Location.Thicken(this.Thickness) }, this.Height);
         }
     }
 }

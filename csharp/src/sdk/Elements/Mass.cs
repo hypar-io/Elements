@@ -168,7 +168,7 @@ namespace Hypar.Elements
             }
             return floors;
         }
-        
+
         /// <summary>
         /// Tessellate the mass.
         /// </summary>

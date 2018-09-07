@@ -425,7 +425,7 @@ IMin:{m_index_min}";
         /// <returns></returns>
         public static Mesh ExtrudeAlongLine(Line line, IEnumerable<Polyline> perimeters, bool capped=true)
         {
-            var height = line.Length();
+            var height = line.Length;
             return Mesh.Extrude(perimeters, height, capped);
         }
     }
