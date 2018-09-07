@@ -8,7 +8,7 @@ The Hypar SDK is a library for creating functions that execute on Hypar. A funct
 You can see some functions written using the Hypar SDK running on [Hypar Explore](https://explore.hypar.io/functions).
 
 ## Words of Warning
-- The Hypar SDK is currently in beta. Please do not use it for production work.
+- The Hypar SDK is currently in alpha. Please do not use it for production work.
 - Why we chose C#:
   - C# is a strongly typed language. We want the code checking tools and the compiler to help you write code that you can publish with confidence. 
   - Microsoft is investing heavily in C# performance. There are lots of articles out there about Lambda performance. [Here's](https://read.acloud.guru/comparing-aws-lambda-performance-of-node-js-python-java-c-and-go-29c1163c2581) a good one.
