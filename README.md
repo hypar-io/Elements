@@ -9,11 +9,11 @@ You can see some functions written using the Hypar SDK running on [Hypar Explore
 
 ## Words of Warning
 - The Hypar SDK is currently in beta. Please do not use it for production work.
-- Not all languages are supported equally. When Hypar began we were working in Python and C#. But we are an extremely small team and cannot support both languages equally indefinitely. We have made a choice to standardize on C#. We welcome contributions to the Python SDK. There's a very short list of reasons why we chose C#:
+- Why we chose C#:
   - C# is a strongly typed language. We want the code checking tools and the compiler to help you write code that you can publish with confidence. 
   - Microsoft is investing heavily in C# performance. There are lots of articles out there about Lambda performance. [Here's](https://read.acloud.guru/comparing-aws-lambda-performance-of-node-js-python-java-c-and-go-29c1163c2581) a good one.
   - Dotnet function packages are small. Smaller functions results in faster cold start times in serverless environments.
-  - C# libraries can be reused in other popular AEC applications like Dynamo, Grasshopper, and Revit.
+  - C# libraries can be reused in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
 
 ## Getting Started
 - Contact beta@hypar.io to have an account created. Functions can be authored and executed locally. **A login is only required when publishing your function to the world!**
