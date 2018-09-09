@@ -1,3 +1,4 @@
+using ClipperLib;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
@@ -137,37 +138,28 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
         /// <returns>A new polyline offset by offset.</returns>
-        public Polyline Offset(double offset)
+        public IEnumerable<Polyline> Offset(double offset)
         {
-            var pts = new Vector3[this._vertices.Count];
-            Vector3 prevN = null;
-            for(var i=0; i < this._vertices.Count; i++)
+            var scale = 1024.0;
+            var path = new List<IntPoint>();
+            foreach(var v in this._vertices)
             {
-                var a = i;
-                var b = a + 1 > this._vertices.Count-1 ? 0 : a + 1;
-                var c = b + 1 > this._vertices.Count-1 ? 0 : b + 1;
-
-                var v1 = (this._vertices[a]-this._vertices[b]).Normalized();
-                var v2 = (this._vertices[c]-this._vertices[b]).Normalized();
-                var n = v1.Cross(v2);
-                if(prevN == null)
-                {
-                    prevN = n;
-                }
-
-                // Naive flipping logic. We find a change in concavity/convexity
-                // by comparing the cross product of the vectors to the
-                // previous corner. If the vectors point in different directions
-                // then we offset in the opposite direction.
-                var dir = prevN.Dot(n) < 0 ? -1 : 1;
-
-                var theta = v1.AngleTo(v2);
-                var halfAngle = (Math.PI - theta)/2;
-                var d = offset/Math.Cos(halfAngle);
-
-                pts[i] = this._vertices[b] + v1.Average(v2) * d * dir;
+                path.Add(new IntPoint(v.X * scale, v.Y * scale));
             }
-            return new Polyline(pts);
+
+            var solution = new List<List<IntPoint>>();
+            var co = new ClipperOffset();
+            co.AddPath(path, JoinType.jtMiter, EndType.etClosedPolygon);
+            co.Execute(ref solution, offset * scale);  // important, scale also used here
+
+            var result = new List<Polyline>();
+            var z = this._vertices[0].Z;
+            foreach (var loop in solution)
+            {
+                var pline = new Polyline(loop.Select(v=>new Vector3(v.X/scale, v.Y/scale, z)));
+                result.Add(pline);
+            }
+            return result;
         }
 
         /// <summary>

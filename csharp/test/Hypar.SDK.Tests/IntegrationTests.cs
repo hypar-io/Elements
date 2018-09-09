@@ -54,7 +54,7 @@ namespace Hypar.Tests
             });
             model.AddElements(walls);
 
-            var offset = profile.Offset(1.5);
+            var offset = profile.Offset(1.5).ElementAt(0);
             var columns = offset.Segments().SelectMany(l=> {
                 var ts = new []{0.5, 1.0};
                 var sideColumns = new List<Column>();
