@@ -27,7 +27,7 @@ namespace Hypar.Tests
                 
                 model.AddElements(new Element[]{panel, beam1, beam2, beam3});
             }
-            Assert.Equal(100, model.Elements.Count);
+            Assert.Equal(100, model.Count);
             model.SaveGlb("gridTests.glb");
         }
     }

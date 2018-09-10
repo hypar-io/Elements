@@ -7,27 +7,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Collections;
 
 namespace Hypar.Elements
 {
     /// <summary>
-    /// A container for Meshes and Materials
+    /// A model is a map of elements, keyed by their unique identifier. 
     /// </summary>
-    public class Model
+    public class Model : IDictionary<string, Element>
     {
         private List<byte> _buffer = new List<byte>();
         private Dictionary<string, Material> _materials = new Dictionary<string, Material>();
         private Dictionary<string, Element> _elements = new Dictionary<string, Element>();
-
-        /// <summary>
-        /// All elements in the model.
-        /// </summary>
-        /// <returns></returns>
-        [JsonProperty("elements")]
-        public Dictionary<string,Element> Elements
-        {
-            get{return _elements;}
-        }
 
         /// <summary>
         /// The origin of the model.
@@ -35,6 +26,52 @@ namespace Hypar.Elements
         /// <returns></returns>
         [JsonProperty("origin")]
         public Position Origin {get;set;}
+
+        /// <summary>
+        /// The identifiers of all elements in the model.
+        /// </summary>
+        /// <value></value>
+        public ICollection<string> Keys
+        {
+            get{return _elements.Keys;}
+        }
+
+        /// <summary>
+        /// The elements in the model.
+        /// </summary>
+        /// <value></value>
+        public ICollection<Element> Values
+        {
+            get{return _elements.Values;}
+        }
+
+        /// <summary>
+        /// The number of elements in the model.
+        /// </summary>
+        /// <value></value>
+        public int Count
+        {
+            get{return _elements.Count;}
+        }
+
+        /// <summary>
+        /// Is the model read only?
+        /// </summary>
+        /// <value></value>
+        public bool IsReadOnly
+        {
+            get{return false;}
+        }
+
+        /// <summary>
+        /// Return an element by its identifier.
+        /// </summary>
+        /// <value></value>
+        public Element this[string key]
+        {
+            get{return this._elements[key];}
+            set{this._elements[key] = value;}
+        }
 
         /// <summary>
         /// Construct an empty model.
@@ -45,7 +82,7 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Add a Mesh to the Model.
+        /// Add an element to the model.
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
         public void AddElement(Element element)
@@ -167,7 +204,7 @@ namespace Hypar.Elements
 
             var result = new Dictionary<string, object>();
             result["model"] = model;
-            result["computed"] = JsonConvert.SerializeObject(this.Elements);
+            result["computed"] = JsonConvert.SerializeObject(this._elements);
             result["origin"] = this.Origin;
             
             return result;
@@ -240,6 +277,136 @@ namespace Hypar.Elements
             gltf.Buffers = new[]{buff};
 
             return gltf;
+        }
+
+        /// <summary>
+        /// Add an element to the model.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add(string key, Element value)
+        {
+            if(!this._elements.ContainsKey(key))
+            {
+                this._elements.Add(key, value);
+                if(value is IMaterialize)
+                {
+                    AddMaterial(((IMaterialize)value).Material);
+                }
+            }
+            else
+            {
+                throw new Exception("An Element with the same Id already exists in the Model.");
+            }
+        }
+
+        /// <summary>
+        /// Does an element with specified key exist in the model?
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool ContainsKey(string key)
+        {
+            return this.ContainsKey(key);
+        }
+        
+        /// <summary>
+        /// Remove an element from the model.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool Remove(string key)
+        {
+            if(this.ContainsKey(key))
+            {
+                this.Remove(key);
+                return true;
+            } else 
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Try and get an element from the model given an identifier.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool TryGetValue(string key, out Element value)
+        {
+            return this._elements.TryGetValue(key, out value);
+        }
+
+        /// <summary>
+        /// And an element to the model.
+        /// </summary>
+        /// <param name="item"></param>
+        public void Add(KeyValuePair<string, Element> item)
+        {
+            this._elements.Add(item.Key, item.Value);
+        }
+
+        /// <summary>
+        /// Remove all elements from the model.
+        /// </summary>
+        public void Clear()
+        {
+            this._elements.Clear();
+        }
+
+        /// <summary>
+        /// Does the model contain the specified element?
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool Contains(KeyValuePair<string, Element> item)
+        {
+            return this._elements.Contains(item);
+        }
+
+        /// <summary>
+        /// Copy the elements in the model to the specified array.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
+        public void CopyTo(KeyValuePair<string, Element>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// Remove an element from the model.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool Remove(KeyValuePair<string, Element> item)
+        {
+            if(this._elements.ContainsKey(item.Key))
+            {
+                this._elements.Remove(item.Key);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get the enumerator for elements in the model.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<KeyValuePair<string, Element>> GetEnumerator()
+        {
+            return this._elements.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Get the enumerator for elements in the model.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this._elements.GetEnumerator();
         }
     }
 }

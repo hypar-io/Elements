@@ -28,7 +28,7 @@ namespace Hypar.GeoJSON
     }
 
     /// <summary>
-    /// A GeoJSON position.
+    /// A GeoJSON position specified by longitude and latitude.
     /// </summary>
     [JsonConverter(typeof(PositionConverter))]
     public class Position

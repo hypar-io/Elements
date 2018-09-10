@@ -32,7 +32,7 @@ namespace Hypar.Tests
             });
 
             model.AddElements(beams);
-            Assert.Equal(6, model.Elements.Count);
+            Assert.Equal(6, model.Count);
         }
     }
 }

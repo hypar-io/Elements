@@ -49,7 +49,7 @@ namespace Hypar.Tests
         public void TestModel_SerializeToJson_Success()
         {
             var model = QuadPanelModel();
-            var panel = model.Elements.First().Value;
+            var panel = model.First().Value;
             panel.AddParameter("foo", new NumericParameter(42.0, NumericParameterType.Distance));
             panel.AddParameter("bar", new StringParameter("This is rad!"));
             Console.WriteLine(model.ToJson());
