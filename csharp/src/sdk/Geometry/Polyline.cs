@@ -141,11 +141,7 @@ namespace Hypar.Geometry
         public IEnumerable<Polyline> Offset(double offset)
         {
             var scale = 1024.0;
-            var path = new List<IntPoint>();
-            foreach(var v in this._vertices)
-            {
-                path.Add(new IntPoint(v.X * scale, v.Y * scale));
-            }
+            var path = this.ToClipperPath(this);
 
             var solution = new List<List<IntPoint>>();
             var co = new ClipperOffset();
@@ -156,10 +152,26 @@ namespace Hypar.Geometry
             var z = this._vertices[0].Z;
             foreach (var loop in solution)
             {
-                var pline = new Polyline(loop.Select(v=>new Vector3(v.X/scale, v.Y/scale, z)));
-                result.Add(pline);
+                result.Add(FromClipperPath(loop, z));
             }
             return result;
+        }
+
+        private List<IntPoint> ToClipperPath(Polyline p)
+        {
+            var scale = 1024.0;
+            var path = new List<IntPoint>();
+            foreach(var v in this._vertices)
+            {
+                path.Add(new IntPoint(v.X * scale, v.Y * scale));
+            }
+            return path;
+        }
+
+        private Polyline FromClipperPath(List<IntPoint> p, double z)
+        {
+            var scale = 1024.0;
+            return new Polyline(p.Select(v=>new Vector3(v.X/scale, v.Y/scale, z)));
         }
 
         /// <summary>
