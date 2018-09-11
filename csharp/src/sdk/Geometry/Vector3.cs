@@ -356,4 +356,13 @@ namespace Hypar.Geometry
             return false;
         }
     }
+
+    public static class Vector3Extensions
+    {
+        public static bool AreCoplanar(this IEnumerable<Vector3> points)
+        {
+            //TODO: https://github.com/hypar-io/sdk/issues/54
+            throw new NotImplementedException();
+        }
+    }
 }
