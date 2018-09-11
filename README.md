@@ -7,6 +7,13 @@ The Hypar SDK is a library for creating functions that execute on Hypar. A funct
 
 You can see some functions written using the Hypar SDK running on [Hypar Explore](https://explore.hypar.io/functions).
 
+# Install
+The Hypar SDK is available as a [nuget package](https://www.nuget.org/packages/HyparSDK).
+To install for dotnet projects:
+```
+dotnet add package HyparSDK
+```
+
 ## Words of Warning
 - The Hypar SDK is currently in alpha. Please do not use it for production work.
 - Why we chose C#:
