@@ -69,6 +69,7 @@ namespace Hypar.Elements
 
             this.Location = bottom;
             this.BottomElevation = bottomElevation;
+            this.Height = height;
             this.Material = BuiltInMaterials.Default;
         }
 
