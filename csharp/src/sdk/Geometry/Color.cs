@@ -7,33 +7,33 @@ namespace Hypar.Geometry
     /// </summary>
     public class Color
     {
-        public static readonly float[] Aqua = { 0.3f, 0.7f, 0.7f, 0.0f };
-        public static readonly float[] Beige = { 1.0f, 0.9f, 0.8f, 0.0f };
-        public static readonly float[] Black = { 0.0f, 0.0f, 0.0f, 0.0f };
-        public static readonly float[] Brown = { 0.6f, 0.4f, 0.2f, 0.0f };
-        public static readonly float[] Cobalt = { 0.0f, 0.4f, 1.0f, 0.0f };
-        public static readonly float[] Coral = { 1.0f, 0.8f, 0.7f, 0.0f };
-        public static readonly float[] Crimson = { 1.0f, 0.0f, 0.0f, 0.0f };
-        public static readonly float[] Cyan = { 0.3f, 0.9f, 0.9f, 0.0f };
-        public static readonly float[] Darkgray = { 0.2f, 0.2f, 0.2f, 0.0f };
-        public static readonly float[] Emerald = { 0.2f, 0.7f, 0.3f, 0.0f };
-        public static readonly float[] Granite = { 0.4f, 0.4f, 0.4f, 0.0f };
-        public static readonly float[] Gray = { 0.5f, 0.5f, 0.5f, 0.0f };
-        public static readonly float[] Lavender = { 0.9f, 0.7f, 1.0f, 0.0f };
-        public static readonly float[] Lime = { 0.8f, 0.9f, 0.3f, 0.0f };
-        public static readonly float[] Magenta = { 0.9f, 0.2f, 0.9f, 0.0f };
-        public static readonly float[] Maroon = { 0.5f, 0.0f, 0.3f, 0.0f };
-        public static readonly float[] Mint = { 0.6f, 1.0f, 0.7f, 0.0f };
-        public static readonly float[] Navy = { 0.0f, 0.0f, 0.5f, 0.0f };
-        public static readonly float[] Olive = { 0.5f, 0.5f, 0.0f, 0.0f };
-        public static readonly float[] Orange = { 1.0f, 0.5f, 0.1f, 0.0f };
-        public static readonly float[] Pink = { 1.0f, 0.3f, 0.5f, 0.0f };
-        public static readonly float[] Purple = { 0.7f, 0.1f, 1.0f, 0.0f };
-        public static readonly float[] Sand = { 1.0f, 0.8f, 0.4f, 0.0f };
-        public static readonly float[] Stone = { 0.1f, 0.1f, 0.1f, 0.0f };
-        public static readonly float[] Teal = { 0.0f, 0.5f, 0.5f, 0.0f };
-        public static readonly float[] White = { 1.0f, 1.0f, 1.0f, 0.0f };
-        public static readonly float[] Yellow = { 1.0f, 0.9f, 0.1f, 0.0f };
+        public static Color Aqua => new Color(0.3f, 0.7f, 0.7f, 0.0f);
+        public static Color Beige => new Color(1.0f, 0.9f, 0.8f, 0.0f);
+        public static Color Black => new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        public static Color Brown => new Color(0.6f, 0.4f, 0.2f, 0.0f);
+        public static Color Cobalt => new Color(0.0f, 0.4f, 1.0f, 0.0f);
+        public static Color Coral => new Color(1.0f, 0.8f, 0.7f, 0.0f);
+        public static Color Crimson => new Color(1.0f, 0.0f, 0.0f, 0.0f);
+        public static Color Cyan => new Color(0.3f, 0.9f, 0.9f, 0.0f);
+        public static Color Darkgray => new Color(0.2f, 0.2f, 0.2f, 0.0f);
+        public static Color Emerald => new Color(0.2f, 0.7f, 0.3f, 0.0f);
+        public static Color Granite => new Color(0.4f, 0.4f, 0.4f, 0.0f);
+        public static Color Gray => new Color(0.5f, 0.5f, 0.5f, 0.0f);
+        public static Color Lavender => new Color(0.9f, 0.7f, 1.0f, 0.0f);
+        public static Color Lime => new Color(0.8f, 0.9f, 0.3f, 0.0f);
+        public static Color Magenta => new Color(0.9f, 0.2f, 0.9f, 0.0f);
+        public static Color Maroon => new Color(0.5f, 0.0f, 0.3f, 0.0f);
+        public static Color Mint => new Color(0.6f, 1.0f, 0.7f, 0.0f);
+        public static Color Navy => new Color(0.0f, 0.0f, 0.5f, 0.0f);
+        public static Color Olive => new Color(0.5f, 0.5f, 0.0f, 0.0f);
+        public static Color Orange => new Color(1.0f, 0.5f, 0.1f, 0.0f);
+        public static Color Pink => new Color(1.0f, 0.3f, 0.5f, 0.0f);
+        public static Color Purple => new Color(0.7f, 0.1f, 1.0f, 0.0f);
+        public static Color Sand => new Color(1.0f, 0.8f, 0.4f, 0.0f);
+        public static Color Stone => new Color(0.1f, 0.1f, 0.1f, 0.0f);
+        public static Color Teal => new Color(0.0f, 0.5f, 0.5f, 0.0f);
+        public static Color White => new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        public static Color Yellow => new Color(1.0f, 0.9f, 0.1f, 0.0f);
 
         /// <summary>
         /// The red component of the color.
@@ -82,33 +82,6 @@ namespace Hypar.Geometry
             this.Green = green;
             this.Blue = blue;
             this.Alpha = alpha;
-        }
-
-        /// <summary>
-        /// Construct a color from an red, green, blue, and alpha value array.
-        /// </summary>
-        /// <param name="rgba">An array of the red, blue, green, and alpha color components between 0.0 and 1.0.</param>
-        public Color(float[] rgba)
-        {
-            if (rgba.Length != 4)
-            {
-                throw new ArgumentOutOfRangeException("Requires an array of four values between 0.0 and 1.0.");
-            }
-
-            if (rgba[0] < 0.0 || rgba[1] < 0.0 || rgba[2] < 0.0 || rgba[3] < 0.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value greater than 0.0.");
-            }
-
-            if (rgba[0] > 1.0 || rgba[1] > 1.0 || rgba[2] > 1.0 || rgba[3] > 1.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value less than 1.0.");
-            }
-
-            this.Red = rgba[0];
-            this.Green = rgba[1];
-            this.Blue = rgba[2];
-            this.Alpha = rgba[3];
         }
 
         /// <summary>
