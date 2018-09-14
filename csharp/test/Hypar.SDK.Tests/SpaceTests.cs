@@ -18,7 +18,7 @@ namespace Hypar.Tests
 
             var profile = new Polyline(new[]{a,b,c,d});
 
-            var space = new Space(profile, 0, 10);
+            var space = new Space(profile, null,  0, 10);
             model.AddElement(space);
             model.SaveGlb("spaceTest1.glb");
         }
@@ -32,7 +32,7 @@ namespace Hypar.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polyline(new[]{a,b,c,d});
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Space(profile, 0, -10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Space(profile, null, 0, -10));
         }
     }
 }

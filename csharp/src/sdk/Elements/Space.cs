@@ -8,157 +8,103 @@ using Hypar.Geometry;
 namespace Hypar.Elements
 {
     /// <summary>
-    /// A space represents an extruded boundary an occupiable region within a building.
+    /// A space represents the extruded boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, ILocateable<Polyline>, ITessellate<Mesh>, IMaterialize
+    public class Space : Element, ILocateable<Polyline>, ITessellate<Mesh>, ITransformable, IMaterialize
     {
-        private List<Polyline> _sides = new List<Polyline>();
+        /// <summary>
+        /// The elevation of the lower Space perimeter.
+        /// </summary>
+        [JsonProperty("elevation")]
+        public double Elevation { get; }
 
         /// <summary>
-        /// The bottom perimeter of the space.
+        /// The height of the Space above its perimeter elevation.
+        /// </summary>
+        [JsonProperty("height")]
+        public double Height { get; }
+
+        /// <summary>
+        /// The lower perimeter of the Space.
         /// </summary>
         /// <returns></returns>
         [JsonProperty("location")]
         public Polyline Location{get;}
 
         /// <summary>
-        /// The elevation of the bottom perimeter.
-        /// </summary>
-        [JsonProperty("bottom_elevation")]
-        public double BottomElevation{get;}
-
-        /// <summary>
-        /// The height of the space above its bottom elevation.
-        /// </summary>
-        [JsonProperty("height")]
-        public double Height{get;}
-
-        /// <summary>
-        /// The material of the Mass.
+        /// The material of the Space.
         /// </summary>
         /// <value></value>
         [JsonIgnore]
-        public Material Material{get;set;}
+        public Material Material { get; set; }
 
         /// <summary>
-        /// Construct a default space.
+        /// The transform of the Space.
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("transform")]
+        public Transform Transform { get; }
+
+        /// <summary>
+        /// The voids within the Space.
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("voids")]
+        public IEnumerable<Polyline> Voids { get; }
+
+        /// <summary>
+        /// Construct a default Space.
         /// </summary>
         public Space()
         {
-            var defaultProfile = Profiles.Rectangular();
-            this.Location = defaultProfile;
-            this.BottomElevation = 0.0;
+            this.Elevation = 0.0;
             this.Height = 1.0;
+            this.Location = Profiles.Rectangular();
             this.Material = BuiltInMaterials.Default;
+            this.Transform = new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
         }
 
         /// <summary>
-        /// Construct a space from a perimeter and a height.
+        /// Construct a Space from a perimeter, a list of voids, a lower elevation, and a height.
         /// </summary>
-        /// <param name="bottom">The bottom perimeter of the space.</param>
-        /// <param name="bottomElevation">The elevation of the bottom perimeter.</param>
-        /// <param name="height">The height of the space above the bottom elevation.</param>
+        /// <param name="perimeter">The lower perimeter of the space.</param>
+        /// <param name="voids">A list of perimeters as vertical voids the same height as the space.</param>
+        /// <param name="elevation">The elevation of the lower perimeter.</param>
+        /// <param name="height">The height of the space above the lower elevation.</param>
         /// <returns></returns>
-        public Space(Polyline bottom, double bottomElevation, double height)
+        public Space(Polyline perimeter, IEnumerable<Polyline> voids, double elevation, double height)
         {
-
             if (height <= 0.0)
             {
                 throw new ArgumentOutOfRangeException(Messages.HEIGHT_EXCEPTION, "height");
             }
 
-            this.Location = bottom;
-            this.BottomElevation = bottomElevation;
+            // TODO: Test that voids are within perimeter. Add appropriate exception message.
+
+            this.Location = perimeter;
+            this.Voids = voids;
+            this.Elevation = elevation;
             this.Height = height;
-            this.Material = BuiltInMaterials.Default;
-        }
-
-        /// <summary>
-        /// A collection of curves representing the vertical edges of the space.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Line> VerticalEdges()
-        {
-            foreach(var f in Faces())
-            {
-                yield return f.Segments().ElementAt(1);
-            }
             
+            this.Material = BuiltInMaterials.Default;
+            this.Transform =  new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
         }
 
         /// <summary>
-        /// A collection of curves representing the horizontal edges of the space.
+        /// Tessellate the Space.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Line> HorizontalEdges()
-        {
-            foreach(var f in Faces())
-            {
-                yield return f.Segments().ElementAt(0);
-                yield return f.Segments().ElementAt(2);
-            }
-        }
-
-        /// <summary>
-        /// A collection of polylines representing the perimeter of each face of the space.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Polyline> Faces()
-        {
-            var b = this.Location.Vertices.ToArray();
-            var t = this.Location.Vertices.ToArray();
-
-            for (var i = 0; i < b.Length; i++)
-            {
-                var next = i + 1;
-                if (i == b.Length - 1)
-                {
-                    next = 0;
-                }
-                var v1 = b[i];
-                var v2 = b[next];
-                var v3 = t[next];
-                var v4 = t[i];
-                var v1n = new Vector3(v1.X, v1.Y, this.BottomElevation);
-                var v2n = new Vector3(v2.X, v2.Y, this.BottomElevation);
-                var v3n = new Vector3(v3.X, v3.Y, this.BottomElevation + this.Height);
-                var v4n = new Vector3(v4.X, v4.Y, this.BottomElevation + this.Height);
-                yield return new Polyline(new[] { v1n, v2n, v3n, v4n });
-            }
-        }
-
-        /// <summary>
-        /// For each face of the space apply a creator function.
-        /// </summary>
-        /// <param name="creator">The function to apply.</param>
-        /// <typeparam name="T">The creator function's return type.</typeparam>
-        /// <returns></returns>
-        public IEnumerable<T> ForEachFaceCreateElementsOfType<T>(Func<Polyline, IEnumerable<T>> creator)
-        {
-            var results = new List<T>();
-            foreach(var p in Faces())
-            {
-                results.AddRange(creator(p));
-            }
-            return results;
-        }
-
-       
-        /// <summary>
-        /// Tessellate the mass.
-        /// </summary>
-        /// <returns>A mesh representing the tessellated mass.</returns>
         public Mesh Tessellate()
         {
-            var mesh = new Mesh();
-            foreach (var s in Faces())
+            var polys = new List<Polyline>
             {
-                mesh.AddQuad(s.ToArray());
+                this.Location
+            };
+            if (this.Voids != null)
+            {
+                polys.AddRange(this.Voids);
             }
-
-            mesh.AddTesselatedFace(new[] { this.Location }, this.BottomElevation);
-            mesh.AddTesselatedFace(new[] { this.Location }, this.BottomElevation + this.Height, true);
-            return mesh;
+            return Mesh.Extrude(polys, this.Height, true);
         }
     }
 }
