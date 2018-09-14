@@ -23,13 +23,11 @@ namespace Hypar.Tests
             var request = (JObject)JsonConvert.DeserializeObject(str);
             var features = ((JArray)request["location"]).ToObject<Feature[]>();
 
-            var outline = (Polygon)features[0].Geometry;
+            var outline = (Hypar.GeoJSON.Polygon)features[0].Geometry;
             var origin = outline.Coordinates[0][0].ToVectorMeters();
 
-            var plines = outline.ToPolylines();
-            var transformed = plines.Select(pline=>new Polyline(pline.Vertices.Select(v=>new Vector3(v.X - origin.X, v.Y - origin.Y, v.Z))).Reversed()).ToArray();
-
-            Console.WriteLine(transformed[0]);
+            var plines = outline.ToPolygons();
+            var transformed = plines.Select(pline=>new Hypar.Geometry.Polygon(pline.Vertices.Select(v=>new Vector3(v.X - origin.X, v.Y - origin.Y, v.Z))).Reversed()).ToArray();
 
             var mass = new Mass(transformed[0], 0.0, transformed[0], 5.0);
             var model = new Model();
@@ -39,7 +37,6 @@ namespace Hypar.Tests
             model.SaveGlb("siteMass.glb");
             
             var json = JsonConvert.SerializeObject(model);
-            Console.WriteLine(json);
         }
     }
 }

@@ -37,22 +37,12 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void Box_SaveToGltf_Success()
-        {
-            var model = new Model();
-            model.AddElement(new Box(new Vector3()));
-            model.SaveGltf("box.gltf");
-            Assert.True(File.Exists("box.gltf"));
-        }
-
-        [Fact]
         public void TestModel_SerializeToJson_Success()
         {
             var model = QuadPanelModel();
             var panel = model.First().Value;
             panel.AddParameter("foo", new NumericParameter(42.0, NumericParameterType.Distance));
             panel.AddParameter("bar", new StringParameter("This is rad!"));
-            Console.WriteLine(model.ToJson());
         }
 
         private Model QuadPanelModel()
@@ -62,7 +52,7 @@ namespace Hypar.Tests
             var b = new Vector3(1,0,0);
             var c = new Vector3(1,0,1);
             var d = new Vector3(0,0,1);
-            var panel = new Panel(new Polyline(new[]{a,b,c,d}), BuiltInMaterials.Glass);
+            var panel = new Panel(new[]{a,b,c,d}, BuiltInMaterials.Glass);
             model.AddElement(panel);
             return model;
         }

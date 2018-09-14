@@ -28,7 +28,7 @@ namespace Hypar.Tests
             });
 
             var beams = cls.Select(l=>{
-                return new Beam(l, profile);
+                return new Beam(l, new[]{profile});
             });
 
             model.AddElements(beams);

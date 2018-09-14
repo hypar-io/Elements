@@ -90,9 +90,9 @@ namespace Hypar.Elements
             if(!this._elements.ContainsKey(element.Id.ToString()))
             {
                 this._elements.Add(element.Id.ToString(), element);
-                if(element is IMaterialize)
+                if(element.Material != null)
                 {
-                    AddMaterial(((IMaterialize)element).Material);
+                    AddMaterial(element.Material);
                 }
             }
             else
@@ -260,14 +260,14 @@ namespace Hypar.Elements
                     var mp = e as ITessellate<Hypar.Geometry.Mesh>;
                     var mesh = mp.Tessellate();
                     Transform transform = null;
-                    if(e is ITransformable)
+                    if(e.Transform != null)
                     {
-                        transform = ((ITransformable)e).Transform;
+                        transform = e.Transform;
                     }
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), 
                                         mesh.Indices.ToArray(), mesh.VertexColors.ToArray(), 
                                         mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax, 
-                                        mesh.IMin, mesh.IMax, materials[((IMaterialize)e).Material.Name], null, transform);
+                                        mesh.IMin, mesh.IMax, materials[e.Material.Name], null, transform);
 
                 }
             }
@@ -289,10 +289,7 @@ namespace Hypar.Elements
             if(!this._elements.ContainsKey(key))
             {
                 this._elements.Add(key, value);
-                if(value is IMaterialize)
-                {
-                    AddMaterial(((IMaterialize)value).Material);
-                }
+                AddMaterial(value.Material);
             }
             else
             {

@@ -268,9 +268,9 @@ namespace Hypar.GeoJSON
         /// The last position of the polygon is dropped.
         /// </summary>
         /// <returns></returns>
-        public Polyline[] ToPolylines()
+        public Hypar.Geometry.Polygon[] ToPolygons()
         {
-            var plineArr = new Polyline[Coordinates.Length];
+            var plineArr = new Hypar.Geometry.Polygon[Coordinates.Length];
             for(var i=0; i<plineArr.Length; i++)
             {
                 var coords = this.Coordinates[i];
@@ -280,7 +280,7 @@ namespace Hypar.GeoJSON
                 {
                     verts.Add(coords[j].ToVectorMeters());
                 }
-                var pline = new Polyline(verts);
+                var pline = new Hypar.Geometry.Polygon(verts);
                 plineArr[i] = pline;
             }
             return plineArr;
@@ -393,7 +393,6 @@ namespace Hypar.GeoJSON
                 case "MultiLineString":
                     return jsonObject.ToObject<MultiLineString>();
                 case "Polygon":
-                    Console.WriteLine("Deserializing polygon.");
                     return jsonObject.ToObject<Polygon>();
                 case "MultiPolygon":
                     return jsonObject.ToObject<MultiPolygon>();

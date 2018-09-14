@@ -29,7 +29,10 @@ namespace Hypar.Geometry
         /// Get the length of the line.
         /// </summary>
         /// <returns></returns>
-        public double Length => Math.Sqrt(Math.Pow(this.Start.X - this.End.X, 2) + Math.Pow(this.Start.Y - this.End.Y, 2) + Math.Pow(this.Start.Z - this.End.Z, 2));
+        public double Length
+        {
+            get{return this.Start.DistanceTo(this.End);}
+        }
 
         /// <summary>
         /// Get a normalized vector representing the direction of the line.
@@ -130,14 +133,14 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="amount">The amount to thicken the line.</param>
         /// <returns></returns>
-        public Polyline Thicken(double amount)
+        public Polygon Thicken(double amount)
         {
-            var offsetN = this.Direction.Cross(Vector3.ZAxis());
+            var offsetN = this.Direction.Cross(Vector3.ZAxis);
             var a = this.Start + (offsetN * (amount/2));
             var b = this.End + (offsetN * (amount/2));
             var c = this.End - (offsetN * (amount/2));
             var d = this.Start - (offsetN * (amount/2));
-            return new Polyline(new[]{a,b,c,d});
+            return new Polygon(new[]{a, b, c, d});
         }
     }
 }

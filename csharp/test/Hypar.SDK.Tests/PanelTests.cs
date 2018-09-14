@@ -9,35 +9,25 @@ namespace Hypar.Tests
     public class PanelTests
     {
         [Fact]
-        public void Single_WithinPerimeter_Success()
+        public void Example()
+        {
+            var model = new Model();
+            var a = new Vector3(0,0,0);
+            var b = new Vector3(1,0,0);
+            var c = new Vector3(1,0,1);
+            var d = new Vector3(0,0,1);
+            var panel = new Panel(new[]{a,b,c,d}, BuiltInMaterials.Glass);
+            model.AddElement(panel);
+            model.SaveGlb("panel.glb");
+        }
+
+        [Fact]
+        public void Construct()
         {
             var p = Profiles.Rectangular();
-            var panel = new Panel(p);
+            var panel = new Panel(p.Vertices);
             Assert.Equal(BuiltInMaterials.Default, panel.Material);
-            // Assert.Equal(Vector3.ZAxis(), panel.Normal);
-            // Assert.Equal(p, panel.Perimeter);
-        }
-
-        [Fact]
-        public void Collection_WithinPerimeter_Success()
-        {
-            var p1 = Profiles.Rectangular();
-            var p2 = Profiles.Rectangular(width:10, height:5);
-            var panels = new[]{p1,p2}.Select(p => {
-                return new Panel(p);
-            });
-            Assert.Equal(2, panels.Count());
-        }
-
-        [Fact]
-        public void Params_WithinPerimeter_Success()
-        {
-            var p1 = Profiles.Rectangular();
-            var p2 = Profiles.Rectangular(width:10, height:5);
-            var panels = new[]{p1,p2}.Select(p => {
-                return new Panel(p);
-            });
-            Assert.Equal(2, panels.Count());
+            Assert.Equal(panel.Perimeter, p.Vertices);
         }
     }
 }

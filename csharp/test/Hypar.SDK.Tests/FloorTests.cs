@@ -10,38 +10,25 @@ namespace Hypar.Tests
     public class FloorTests
     {
         [Fact]
-        public void Single_WithinPerimeters_Valid()
+        public void Examples()
         {
             var p = Profiles.Rectangular();
-            var floor = new Floor(p, 0.2);
+            var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1).Reversed();
+            var p2 = Profiles.Rectangular(new Vector3(2,2,0), 1, 1).Reversed();
+            var floor = new Floor(p, 0.0, 0.2, new[]{p1,p2});
+            var model = new Model();
+            model.AddElement(floor);
+            model.SaveGlb("floor.glb");
+        }
+
+        [Fact]
+        public void Construct()
+        {
+            var p = Profiles.Rectangular();
+            var floor = new Floor(p, 0.0, 0.2);
             Assert.Equal(0.0, floor.Elevation);
             Assert.Equal(0.2, floor.Thickness);
-            Assert.Equal(p, floor.Location);
-        }
-
-        [Fact]
-        public void Collection_WithinPerimeters_Valid()
-        {
-            var p1 = Profiles.Rectangular(width:5.0, height:10.0);
-            var p2 = Profiles.Rectangular(width:1.0, height:2.0);
-            var slabs = new[]{p1,p2}.Select(p=>{
-                return new Floor(p, 0.1);
-            });
-            Assert.Equal(2, slabs.Count());
-            var model = new Model();
-            model.AddElements(slabs);
-            model.SaveGlb("slabTests.glb");
-        }
-
-        [Fact]
-        public void Params_WithinPerimeters_Valid()
-        {
-            var p1 = Profiles.Rectangular(width:5.0, height:10.0);
-            var p2 = Profiles.Rectangular(width:1.0, height:2.0);
-            var slabs = new[]{p1,p2}.Select(p => {
-                return new Floor(p, 0.1);
-            });
-            Assert.Equal(2, slabs.Count());
+            Assert.Equal(p, floor.Perimeter);
         }
 
         [Fact]
@@ -49,7 +36,7 @@ namespace Hypar.Tests
         {
             var model = new Model();
             var poly = Profiles.Rectangular(width:20, height:20);
-            Assert.Throws<ArgumentOutOfRangeException>(()=> new Floor(poly, 0.0));
+            Assert.Throws<ArgumentOutOfRangeException>(()=> new Floor(poly, 0.0, 0.0));
         }
 
         [Fact]
@@ -57,7 +44,7 @@ namespace Hypar.Tests
         {
             var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1).Reversed();
             var p2 = Profiles.Rectangular(new Vector3(2,2,0), 1, 1).Reversed();
-            var floor = new Floor(Profiles.Rectangular(Vector3.Origin(), 10, 10), new []{p1, p2}, 0.0, 0.2, BuiltInMaterials.Concrete);
+            var floor = new Floor(Profiles.Rectangular(Vector3.Origin(), 10, 10), 0.0, 0.2, new []{p1, p2}, BuiltInMaterials.Concrete);
             Assert.Equal(100.0-2.0, floor.Area);
         }
     }

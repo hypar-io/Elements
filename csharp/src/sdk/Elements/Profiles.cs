@@ -1,4 +1,5 @@
 using Hypar.Geometry;
+using System.Collections.Generic;
 
 namespace Hypar.Elements
 {   
@@ -16,7 +17,7 @@ namespace Hypar.Elements
         /// <param name="verticalOffset"></param>
         /// <param name="horizontalOffset"></param>
         /// <returns></returns>
-        public static Polyline Rectangular(Vector3 origin = null, double width = 1.0, double height = 1.0, double verticalOffset = 0.0, double horizontalOffset = 0.0)
+        public static Polygon Rectangular(Vector3 origin = null, double width = 1.0, double height = 1.0, double verticalOffset = 0.0, double horizontalOffset = 0.0)
         {
             if(origin == null)
             {
@@ -28,7 +29,7 @@ namespace Hypar.Elements
             var c = new Vector3(origin.X + width/2 + horizontalOffset, origin.Y + height/2 + verticalOffset);
             var d = new Vector3(origin.X - width/2 + horizontalOffset, origin.Y + height/2 + verticalOffset);
 
-            return new Polyline(new []{a, b, c, d});
+            return new Polygon(new []{a, b, c, d});
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace Hypar.Elements
         /// <param name="verticalOffset"></param>
         /// <param name="horizontalOffset"></param>
         /// <returns></returns>
-        public static Polyline WideFlangeProfile(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, 
+        public static Polygon WideFlangeProfile(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, 
                                                         VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
                                                         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
                                                         double verticalOffset = 0.0, double horizontalOffset = 0.0)
@@ -136,7 +137,7 @@ namespace Hypar.Elements
             var l = new Vector3(o.X + width/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
             var m = new Vector3(o.X + width/2 + horizontalOffset, o.Y + height/2 + verticalOffset);
 
-            return new Polyline(new []{a,b,c,e,f,g,h,i,j,k,l,m});
+            return new Polygon(new []{a,b,c,e,f,g,h,i,j,k,l,m});
         }
     }
 }

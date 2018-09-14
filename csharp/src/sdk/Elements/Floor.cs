@@ -9,25 +9,19 @@ namespace Hypar.Elements
     /// <summary>
     /// A Floor is a horizontal element defined by an outer boundary and one or several holes.
     /// </summary>
-    public class Floor : Element, ILocateable<Polyline>, ITessellate<Mesh>, ITransformable, IMaterialize
+    public class Floor : Element, ITessellate<Mesh>
     {
         /// <summary>
         /// The boundary of the floor.
         /// </summary>
         [JsonProperty("location")]
-        public Polyline Location{get;}
+        public Polygon Perimeter{get;}
 
         /// <summary>
-        /// The transform of the floor 
+        /// The voids in the slab.
         /// </summary>
-        [JsonProperty("transform")]
-        public Transform Transform{get;}
-
-        /// <summary>
-        /// The openings in the slab.
-        /// </summary>
-        [JsonProperty("openings")]
-        public IEnumerable<Polyline> Openings{get;}
+        [JsonProperty("voids")]
+        public IEnumerable<Polygon> Voids{get;}
 
         /// <summary>
         /// The elevation from which the floor is extruded.
@@ -49,66 +43,42 @@ namespace Hypar.Elements
         [JsonProperty("area")]
         public double Area
         {
-            get{return this.Location.Area - this.Openings.Sum(o=>o.Area);}
+            get{return this.Perimeter.Area - this.Voids.Sum(o=>o.Area);}
         }
 
         /// <summary>
-        /// The floor's material.
-        /// </summary>
-        [JsonIgnore]
-        public Material Material{get;set;}
-
-        /// <summary>
-        /// Construct a default floor.
+        /// Construct a floor.
         /// </summary>
         public Floor() : base()
         {
-            this.Location = Profiles.Rectangular();
+            this.Perimeter = Profiles.Rectangular();
             this.Elevation = 0.0;
             this.Thickness = 0.2;
             this.Material = BuiltInMaterials.Concrete;
+            this.Voids = new List<Polygon>();
         }
         
         /// <summary>
-        /// Construct a floor without penetrations.
+        /// Construct a floor.
         /// </summary>
-        /// <param name="profile">The profile of the floor.</param>
-        /// <param name="thickness">The thickness of the floor</param>
-        public Floor(Polyline profile, double thickness)
-        {
-            if (thickness <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException("thickness", "The slab thickness must be greater than 0.0.");
-            }
-            
-            this.Location = profile;
-            this.Elevation = 0.0;
-            this.Thickness = thickness;
-            this.Transform = new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
-            this.Material = BuiltInMaterials.Concrete;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="profile">The profile of the floor.</param>
-        /// <param name="openings">The openings in the floor.</param>
+        /// <param name="perimeter">The perimeter of the floor.</param>
         /// <param name="elevation">The elevation of the floor.</param>
         /// <param name="thickness">The thickness of the floor.</param>
+        /// <param name="voids">The voids in the floor.</param>
         /// <param name="material">The floor's material.</param>
-        public Floor(Polyline profile, IEnumerable<Polyline> openings, double elevation, double thickness, Material material)
+        public Floor(Polygon perimeter, double elevation, double thickness, IList<Polygon> voids = null, Material material = null)
         {
             if (thickness <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("thickness", "The slab thickness must be greater than 0.0.");
             }
 
-            this.Location = profile;
-            this.Openings = openings;
+            this.Perimeter = perimeter;
+            this.Voids = voids == null ? new List<Polygon>() : voids;
             this.Elevation = elevation;
             this.Thickness = thickness;
             this.Transform = new Transform(new Vector3(0, 0, elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
-            this.Material = material;
+            this.Material = material == null ? BuiltInMaterials.Concrete : material;
         }
 
         /// <summary>
@@ -117,11 +87,11 @@ namespace Hypar.Elements
         /// <returns></returns>
         public Mesh Tessellate()
         {
-            var polys = new List<Polyline>();
-            polys.Add(this.Location);
-            if (this.Openings != null)
+            var polys = new List<Polygon>();
+            polys.Add(this.Perimeter);
+            if (this.Voids != null)
             {
-                polys.AddRange(this.Openings);
+                polys.AddRange(this.Voids);
             }
 
             return Mesh.Extrude(polys, this.Thickness, true);

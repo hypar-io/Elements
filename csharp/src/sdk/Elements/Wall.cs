@@ -7,21 +7,14 @@ namespace Hypar.Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall: Element, ILocateable<Line>, IMaterialize, ITessellate<Mesh>
+    public class Wall: Element, ITessellate<Mesh>
     {
         /// <summary>
         /// The center line of the wall.
         /// </summary>
         /// <value></value>
-        [JsonProperty("Line")]
-        public Line Location{get;}
-
-        /// <summary>
-        /// The wall's material.
-        /// </summary>
-        /// <value></value>
-        [JsonIgnore]
-        public Material Material {get;set;}
+        [JsonProperty("center_line")]
+        public Line CenterLine{get;}
 
         /// <summary>
         /// The thickness of the wall.
@@ -46,17 +39,17 @@ namespace Hypar.Elements
         /// <param name="material">The wall's material.</param>
         public Wall(Line centerLine, double thickness, double height, Material material)
         {
-            if(centerLine.Start.Z != centerLine.End.Z)
-            {
-                throw new ArgumentException("The start and end points of the wall's centerline must be in the same plane.");
-            }
-
             if(height <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("The height of the wall must be greater than 0.0.");
             }
 
-            this.Location = centerLine;
+            if(centerLine.Start.Z != centerLine.End.Z)
+            {
+                throw new ArgumentOutOfRangeException("The Z component of the start and end points of the wall's center line must be the same.");
+            }
+
+            this.CenterLine = centerLine;
             this.Thickness = thickness;
             this.Material = material;
             this.Height = height;
@@ -68,7 +61,7 @@ namespace Hypar.Elements
         /// <returns></returns>
         public Mesh Tessellate()
         {
-            return Mesh.Extrude(new[] { this.Location.Thicken(this.Thickness) }, this.Height);
+            return Mesh.Extrude(new[] { this.CenterLine.Thicken(this.Thickness) }, this.Height);
         }
     }
 }

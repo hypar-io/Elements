@@ -923,7 +923,7 @@ namespace AECSpacesTest
 
             List<Hypar.Geometry.Vector3> vertices = new List<Hypar.Geometry.Vector3>();
             Hypar.Elements.Model model = new Hypar.Elements.Model();
-            Hypar.Geometry.Polyline boundary;
+            Hypar.Geometry.Polygon boundary;
             foreach (AECSpace space in thoseSpaces.Spaces)
             {
                 points = space.PointsFloor;
@@ -931,7 +931,7 @@ namespace AECSpacesTest
                 {
                     vertices.Add(new Hypar.Geometry.Vector3(point.X, point.Y, point.Z));
                 }
-                boundary = new Hypar.Geometry.Polyline(vertices);
+                boundary = new Hypar.Geometry.Polygon(vertices);
                 vertices.Clear();
                 var mass = new Mass(boundary, space.Level, boundary, space.Elevation);
                                                                                         
