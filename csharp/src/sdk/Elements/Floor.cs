@@ -43,7 +43,7 @@ namespace Hypar.Elements
         [JsonProperty("area")]
         public double Area
         {
-            get{return this.Perimeter.Area - this.Voids.Sum(o=>o.Area);}
+            get{return this.Perimeter.Area + this.Voids.Sum(o=>o.Area);}
         }
 
         /// <summary>

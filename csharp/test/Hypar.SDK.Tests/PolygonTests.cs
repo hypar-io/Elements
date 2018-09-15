@@ -57,8 +57,8 @@ namespace Hypar.Tests
 
             var p1 = Vector3.Origin;
             var p2 = Vector3.XAxis;
-            var p3 = new Vector3(1.0, 0.0, 1.0);
-            var p4 = new Vector3(0.0, 0.0, 1.0);
+            var p3 = new Vector3(1.0, 1.0);
+            var p4 = new Vector3(0.0, 1.0);
             var pp = new Polygon(new[]{p1,p2,p3,p4});
             Assert.Equal(1.0, pp.Area);
         }
