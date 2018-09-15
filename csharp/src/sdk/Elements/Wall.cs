@@ -37,21 +37,26 @@ namespace Hypar.Elements
         /// <param name="thickness">The thickness of the wall.</param>
         /// <param name="height">The height of the wall.</param>
         /// <param name="material">The wall's material.</param>
-        public Wall(Line centerLine, double thickness, double height, Material material)
+        public Wall(Line centerLine, double thickness, double height, Material material = null)
         {
+            if(thickness <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException("The wall could not be constructed. The thickness of the wall must be greater than 0.0.");
+            }
+            
             if(height <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("The height of the wall must be greater than 0.0.");
+                throw new ArgumentOutOfRangeException("The wall could not be constructed. The height of the wall must be greater than 0.0.");
             }
 
             if(centerLine.Start.Z != centerLine.End.Z)
             {
-                throw new ArgumentOutOfRangeException("The Z component of the start and end points of the wall's center line must be the same.");
+                throw new ArgumentException("The wall could not be constructed. The Z component of the start and end points of the wall's center line must be the same.");
             }
 
             this.CenterLine = centerLine;
             this.Thickness = thickness;
-            this.Material = material;
+            this.Material = material == null? BuiltInMaterials.Concrete: material;
             this.Height = height;
         }
 

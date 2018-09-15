@@ -38,7 +38,13 @@ namespace Hypar.Geometry
         /// Get a normalized vector representing the direction of the line.
         /// </summary>
         /// <returns>A vector representing the direction of the line.</returns>
-        public Vector3 Direction => (this.End - this.Start).Normalized();
+        public Vector3 Direction
+        {
+            get
+            {
+                return (this.End - this.Start).Normalized();
+            }
+        }
 
         /// <summary>
         /// Construct a line from start and end points.
@@ -49,7 +55,7 @@ namespace Hypar.Geometry
         {
             if (start.IsAlmostEqualTo(end))
             {
-                throw new Exception("The start and end of the Line cannot be the same.");
+                throw new ArgumentException("The line could not be constructed. The start and end points of the line cannot be the same.");
             }
             this.Start = start;
             this.End = end;
@@ -63,6 +69,11 @@ namespace Hypar.Geometry
         /// <param name="length">The length of the line.</param>
         public Line(Vector3 start, Vector3 direction, double length)
         {
+            if(length <= 0)
+            {
+                throw new ArgumentException("The line could not be constructed. The length must be greater than zero.");
+            }
+
             this.Start = start;
             this.End = start + direction.Normalized() * length;
         }

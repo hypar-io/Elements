@@ -10,7 +10,7 @@ namespace Hypar.Tests
     public class FloorTests
     {
         [Fact]
-        public void Examples()
+        public void Example()
         {
             var p = Profiles.Rectangular(Vector3.Origin, 5, 5);
             var p1 = Profiles.Rectangular(new Vector3(3,2,0), 3, 1).Reversed();
@@ -31,7 +31,7 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void ZeroThickness_WithThickness_ThrowsException()
+        public void ZeroThickness_ThrowsException()
         {
             var model = new Model();
             var poly = Profiles.Rectangular(width:20, height:20);
@@ -39,7 +39,7 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void Floor_Area()
+        public void Area()
         {
             // A floor with two holes punched in it.
             var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1).Reversed();

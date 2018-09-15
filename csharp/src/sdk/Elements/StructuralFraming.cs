@@ -26,7 +26,6 @@ namespace Hypar.Elements
         /// <summary>
         /// The center line of the beam.
         /// </summary>
-        /// <value></value>
         [JsonProperty("location")]
         public Line CenterLine{get;}
 
@@ -64,22 +63,14 @@ namespace Hypar.Elements
     public class Beam : StructuralFraming
     {
         /// <summary>
-        /// 
+        /// Construct a beam.
         /// </summary>
-        /// <param name="centerLine"></param>
-        /// <param name="profile"></param>
+        /// <param name="centerLine">The beam's center line.</param>
+        /// <param name="profile">The beam's profile.</param>
+        /// <param name="material">The beam's material.</param>
+        /// <param name="up">The beam's up axis.</param>
         /// <returns></returns>
-        public Beam(Line centerLine, IList<Polygon> profile) : base(centerLine, profile){}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="centerLine"></param>
-        /// <param name="profile"></param>
-        /// <param name="material"></param>
-        /// <param name="up"></param>
-        /// <returns></returns>
-        public Beam(Line centerLine, IList<Polygon> profile, Material material, Vector3 up = null) : base(centerLine, profile, material, up){}
+        public Beam(Line centerLine, IList<Polygon> profile, Material material = null, Vector3 up = null) : base(centerLine, profile, material, up){}
     }
 
     /// <summary>
@@ -88,29 +79,21 @@ namespace Hypar.Elements
     public class Column : StructuralFraming
     {
         /// <summary>
-        /// 
+        /// Construct a column.
         /// </summary>
-        /// <param name="location"></param>
-        /// <param name="height"></param>
-        /// <param name="profile"></param>
-        /// <param name="material"></param>
+        /// <param name="location">The location of the base of the column.</param>
+        /// <param name="height">The column's height.</param>
+        /// <param name="profile">The column's profile.</param>
+        /// <param name="material">The column's material.</param>
         /// <returns></returns>
-        public Column(Vector3 location, double height, IList<Polygon> profile, Material material) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material){}
+        public Column(Vector3 location, double height, IList<Polygon> profile, Material material = null) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material){}
 
         /// <summary>
-        /// 
+        /// Construct a column.
         /// </summary>
-        /// <param name="centerLine"></param>
-        /// <param name="profile"></param>
-        /// <returns></returns>
-        public Column(Line centerLine, IList<Polygon> profile) : base(centerLine, profile){}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="centerLine"></param>
-        /// <param name="profile"></param>
-        /// <param name="material"></param>
+        /// <param name="centerLine">The Column's center line</param>
+        /// <param name="profile">The column's profile.</param>
+        /// <param name="material">The column's material.</param>
         /// <returns></returns>
         public Column(Line centerLine, IList<Polygon> profile, Material material) : base(centerLine, profile, material){}
     }
@@ -121,13 +104,13 @@ namespace Hypar.Elements
     public class Brace : StructuralFraming
     {
         /// <summary>
-        /// 
+        /// Construct a brace.
         /// </summary>
-        /// <param name="centerLine"></param>
-        /// <param name="profile"></param>
-        /// <param name="material"></param>
-        /// <param name="up"></param>
+        /// <param name="centerLine">The brace's center line.</param>
+        /// <param name="profile">The brace's profile.</param>
+        /// <param name="material">The brace's material.</param>
+        /// <param name="up">The brace's up axis.</param>
         /// <returns></returns>
-        public Brace(Line centerLine, IList<Polygon> profile, Material material, Vector3 up = null) : base(centerLine, profile, material, up){}
+        public Brace(Line centerLine, IList<Polygon> profile, Material material = null, Vector3 up = null) : base(centerLine, profile, material, up){}
     }
 }

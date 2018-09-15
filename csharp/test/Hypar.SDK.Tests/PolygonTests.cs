@@ -9,7 +9,7 @@ namespace Hypar.Tests
     public class PolygonTests
     {
         [Fact]
-        public void Polygon_Offset()
+        public void Offset()
         {
             var a = new Vector3();
             var b = new Vector3(2, 5);
@@ -21,7 +21,7 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void Polygon_TwoPeaks__Offset_2Polylines()
+        public void TwoPeaks__Offset_2Polylines()
         {
             var a = new Vector3();
             var b = new Vector3(5, 0);
@@ -36,7 +36,7 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void Polygon_Construct()
+        public void Construct()
         {
             var a = new Vector3();
             var b = new Vector3(1,0);
@@ -47,7 +47,7 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void Polygon_Area()
+        public void Area()
         {
             var a = Profiles.Rectangular();
             Assert.Equal(1.0, a.Area);
@@ -63,7 +63,8 @@ namespace Hypar.Tests
             Assert.Equal(1.0, pp.Area);
         }
 
-        public void Polygon_Length()
+        [Fact]
+        public void Length()
         {
             var a = new Vector3();
             var b = new Vector3(1,0);
@@ -73,14 +74,16 @@ namespace Hypar.Tests
             Assert.Equal(4, p.Length);
         }
 
-        public void Polygon_PointAt()
+        [Fact]
+        public void PointAt()
         {
             var a = new Vector3();
             var b = new Vector3(1,0);
             var c = new Vector3(1,1);
             var d = new Vector3(0,1);
             var p = new Polygon(new[]{a,b,c,d});
-            Assert.Equal(new Vector3(0.5, 1), p.PointAt(0.5));
+            Assert.Equal(4, p.Segments().Count());
+            Assert.Equal(new Vector3(1.0, 1.0), p.PointAt(0.5));
         }
     }
 }

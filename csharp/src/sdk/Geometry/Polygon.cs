@@ -142,7 +142,7 @@ namespace Hypar.Geometry
         {
             var d = this.Length * u;
             var totalLength = 0.0;
-            for(var i=0; i<this._vertices.Count - 1; i++)
+            for(var i=0; i<this._vertices.Count-1; i++)
             {
                 var a = this._vertices[i];
                 var b = this._vertices[i+1];
@@ -152,10 +152,7 @@ namespace Hypar.Geometry
                 {
                     return a + currVec * ((d-totalLength)/currLength);
                 }
-                else
-                {
-                    totalLength += currLength;
-                }
+                totalLength += currLength;
             }
 
             return this.End;
