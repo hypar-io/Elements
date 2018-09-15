@@ -1,3 +1,4 @@
+using Hypar.Elements;
 using Hypar.Geometry;
 using System;
 using System.Linq;
@@ -51,11 +52,11 @@ namespace Hypar.Tests
             var a = Profiles.Rectangular();
             Assert.Equal(1.0, a.Area);
 
-            var b = Profiles.Rectangular(Vector3.Origin(), 2.0,2.0);
+            var b = Profiles.Rectangular(Vector3.Origin, 2.0,2.0);
             Assert.Equal(4.0, b.Area);
 
-            var p1 = Vector3.Origin();
-            var p2 = Vector3.XAxis();
+            var p1 = Vector3.Origin;
+            var p2 = Vector3.XAxis;
             var p3 = new Vector3(1.0, 0.0, 1.0);
             var p4 = new Vector3(0.0, 0.0, 1.0);
             var pp = new Polygon(new[]{p1,p2,p3,p4});

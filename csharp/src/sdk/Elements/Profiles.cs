@@ -21,7 +21,7 @@ namespace Hypar.Elements
         {
             if(origin == null)
             {
-                origin = Vector3.Origin();
+                origin = Vector3.Origin;
             }
 
             var a = new Vector3(origin.X - width/2 + horizontalOffset, origin.Y - height/2 + verticalOffset);

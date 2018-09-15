@@ -95,7 +95,7 @@ namespace Hypar.Geometry
         public IEnumerable<Polygon> Offset(double offset)
         {
             var scale = 1024.0;
-            var path = this.ToClipperPath(this);
+            var path = this.ToClipperPath();
 
             var solution = new List<List<IntPoint>>();
             var co = new ClipperOffset();
@@ -105,26 +105,9 @@ namespace Hypar.Geometry
             var result = new List<Polygon>();
             foreach (var loop in solution)
             {
-                result.Add(FromClipperPath(loop));
+                result.Add(loop.ToPolygon());
             }
             return result;
-        }
-
-        private List<IntPoint> ToClipperPath(Polygon p)
-        {
-            var scale = 1024.0;
-            var path = new List<IntPoint>();
-            foreach(var v in this._vertices)
-            {
-                path.Add(new IntPoint(v.X * scale, v.Y * scale));
-            }
-            return path;
-        }
-
-        private Polygon FromClipperPath(List<IntPoint> p)
-        {
-            var scale = 1024.0;
-            return new Polygon(p.Select(v=>new Vector3(v.X/scale, v.Y/scale)));
         }
 
         /// <summary>
@@ -196,6 +179,34 @@ namespace Hypar.Geometry
             var verts = new List<Vector3>(_vertices);
             verts.Reverse();
             return new Polygon(verts);
+        }
+    }
+
+    /// <summary>
+    /// Polygon extension methods.
+    /// </summary>
+    internal static class PolygonExtensions
+    {
+        /// <summary>
+        /// Construct a clipper path from a Polygon.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        internal static List<IntPoint> ToClipperPath(this Polygon p)
+        {
+            var scale = 1024.0;
+            var path = new List<IntPoint>();
+            foreach(var v in p.Vertices)
+            {
+                path.Add(new IntPoint(v.X * scale, v.Y * scale));
+            }
+            return path;
+        }
+
+        internal static Polygon ToPolygon(this List<IntPoint> p)
+        {
+            var scale = 1024.0;
+            return new Polygon(p.Select(v=>new Vector3(v.X/scale, v.Y/scale)));
         }
     }
 }

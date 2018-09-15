@@ -34,9 +34,9 @@ namespace Hypar.Geometry
         /// Construct a vector at the origin.
         /// </summary>
         /// <returns></returns>
-        public static Vector3 Origin()
+        public static Vector3 Origin
         {
-            return new Vector3();
+            get{return new Vector3();}
         }
 
         /// <summary>

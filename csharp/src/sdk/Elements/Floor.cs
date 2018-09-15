@@ -87,12 +87,12 @@ namespace Hypar.Elements
         /// <returns></returns>
         public Mesh Tessellate()
         {
-            var polys = new List<Polygon>();
-            polys.Add(this.Perimeter);
-            if (this.Voids != null)
-            {
-                polys.AddRange(this.Voids);
-            }
+            var clipper = new ClipperLib.Clipper();
+            clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            clipper.AddPaths(this.Voids.Select(p=>p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            List<List<ClipperLib.IntPoint>> solution = new List<List<ClipperLib.IntPoint>>();
+            var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
+            var polys = solution.Select(s=>s.ToPolygon());
 
             return Mesh.Extrude(polys, this.Thickness, true);
         }

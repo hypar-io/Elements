@@ -12,9 +12,9 @@ namespace Hypar.Tests
         [Fact]
         public void Examples()
         {
-            var p = Profiles.Rectangular();
+            var p = Profiles.Rectangular(Vector3.Origin, 5, 5);
             var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1).Reversed();
-            var p2 = Profiles.Rectangular(new Vector3(2,2,0), 1, 1).Reversed();
+            var p2 = Profiles.Rectangular(new Vector3(3,2,0), 3, 1).Reversed();
             var floor = new Floor(p, 0.0, 0.2, new[]{p1,p2});
             var model = new Model();
             model.AddElement(floor);
@@ -43,8 +43,8 @@ namespace Hypar.Tests
         public void Floor_Area()
         {
             var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1).Reversed();
-            var p2 = Profiles.Rectangular(new Vector3(2,2,0), 1, 1).Reversed();
-            var floor = new Floor(Profiles.Rectangular(Vector3.Origin(), 10, 10), 0.0, 0.2, new []{p1, p2}, BuiltInMaterials.Concrete);
+            var p2 = Profiles.Rectangular(new Vector3(3,3,0), 2, 1).Reversed();
+            var floor = new Floor(Profiles.Rectangular(Vector3.Origin, 10, 10), 0.0, 0.2, new []{p1, p2}, BuiltInMaterials.Concrete);
             Assert.Equal(100.0-2.0, floor.Area);
         }
     }

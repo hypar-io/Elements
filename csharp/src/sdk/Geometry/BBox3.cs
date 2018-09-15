@@ -25,8 +25,8 @@ namespace Hypar.Geometry
         /// <returns>A bounding box.</returns>
         public BBox3(IEnumerable<Vector3> points)
         {
-            this.Min = Vector3.Origin();
-            this.Max = Vector3.Origin();
+            this.Min = Vector3.Origin;
+            this.Max = Vector3.Origin;
             foreach(var p in points)
             {
                 if(p < this.Min) this.Min = p;
@@ -41,8 +41,8 @@ namespace Hypar.Geometry
         public BBox3(ICurve curve)
         {
             var verts = curve.Tessellate();
-            this.Min = Vector3.Origin();
-            this.Max = Vector3.Origin();
+            this.Min = Vector3.Origin;
+            this.Max = Vector3.Origin;
             foreach(var p in verts)
             {
                 if(p < this.Min) this.Min = p;
@@ -57,8 +57,8 @@ namespace Hypar.Geometry
         public BBox3(IEnumerable<Polygon> polygons)
         {
             var verts = polygons.SelectMany(p=>p.Tessellate());
-            this.Min = Vector3.Origin();
-            this.Max = Vector3.Origin();
+            this.Min = Vector3.Origin;
+            this.Max = Vector3.Origin;
             foreach(var p in verts)
             {
                 if(p < this.Min) this.Min = p;
