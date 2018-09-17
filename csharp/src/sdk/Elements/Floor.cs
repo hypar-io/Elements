@@ -82,7 +82,7 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Tessellate the slab.
+        /// Tessellate the floor.
         /// </summary>
         /// <returns></returns>
         public Mesh Tessellate()

@@ -24,7 +24,12 @@ namespace Hypar.Elements
         /// 
         /// </summary>
         public const string PROFILES_UNEQUAL_VERTEX_EXCEPTION = "You've provided profiles with unequal number of vertices. Profiles must have the same number of vertices.";
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string HEIGHT_EXCEPTION = "You've provided a height that is less than or equal to zero. Height must be greater than zero.";
+
         /// <summary>
         /// 
         /// </summary>
