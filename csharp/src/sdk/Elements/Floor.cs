@@ -98,6 +98,9 @@ namespace Hypar.Elements
         }
     }
 
+    /// <summary>
+    /// Extension methods for floors.
+    /// </summary>
     public static class FloorExtensions
     {
         /// <summary>
