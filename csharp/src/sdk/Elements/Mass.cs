@@ -10,7 +10,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A mass represents an extruded building mass.
     /// </summary>
-    public class Mass : Element, IRepresent<Mesh>
+    public class Mass : Element, ITessellate<Mesh>
     {
         private List<Polyline> _sides = new List<Polyline>();
 
