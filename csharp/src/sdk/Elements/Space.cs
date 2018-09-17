@@ -13,6 +13,14 @@ namespace Hypar.Elements
     public class Space : Element, ILocateable<Polygon>, ITessellate<Mesh>
     {
         /// <summary>
+        /// The type of the element.
+        /// </summary>
+        public override string Type
+        {
+            get{return "space";}
+        }
+
+        /// <summary>
         /// The elevation of the lower Space perimeter.
         /// </summary>
         [JsonProperty("elevation")]
@@ -36,7 +44,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <value></value>
         [JsonProperty("voids")]
-        public IEnumerable<Polygon> Voids { get; }
+        public IList<Polygon> Voids { get; }
 
         /// <summary>
         /// Construct a space.
@@ -58,7 +66,7 @@ namespace Hypar.Elements
         /// <param name="elevation">The elevation of the perimeter.</param>
         /// <param name="height">The height of the space above the lower elevation.</param>
         /// <returns></returns>
-        public Space(Polygon perimeter, IEnumerable<Polygon> voids, double elevation, double height)
+        public Space(Polygon perimeter, IList<Polygon> voids, double elevation, double height)
         {
             if (height <= 0.0)
             {

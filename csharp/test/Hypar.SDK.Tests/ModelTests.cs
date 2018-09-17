@@ -1,20 +1,17 @@
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Xunit;
-using Hypar;
 using Hypar.Elements;
 using Hypar.Geometry;
-using Xunit.Abstractions;
 
 namespace Hypar.Tests
 {
     public class ModelTests
     {
         [Fact]
-        public void Default_Construct_NoParameters_Success()
+        public void Construct()
         {
             var model = new Model();
             Assert.NotNull(model);
@@ -37,12 +34,41 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void TestModel_SerializeToJson_Success()
+        public void JsonSerialization()
         {
-            var model = QuadPanelModel();
-            var panel = model.First().Value;
-            panel.AddParameter("foo", new NumericParameter(42.0, NumericParameterType.Distance));
-            panel.AddParameter("bar", new StringParameter("This is rad!"));
+            var a = new Vector3(0,0,0);
+            var b = new Vector3(1,0,0);
+            var c = new Vector3(1,0,1);
+            var d = new Vector3(0,0,1);
+            var panel = new Panel(new []{a,b,c,d,}, BuiltInMaterials.Glass);
+            var floor = new Floor(Profiles.Rectangular(), 5.0, 0.2, new []{Profiles.Rectangular(new Vector3(2,2), 1.0, 1.0)});
+            var mass = new Mass(Profiles.Rectangular(), 5.0, 1.0);
+            var line = new Line(Vector3.Origin, new Vector3(5,5,5));
+            var beam = new Beam(line, new[]{Profiles.WideFlangeProfile()}, BuiltInMaterials.Steel);
+            var column = new Column(new Vector3(5,5,5), 5.0, new[]{Profiles.WideFlangeProfile()}, BuiltInMaterials.Steel);
+            var space = new Space(Profiles.Rectangular(), new []{Profiles.Rectangular(new Vector3(2,2), 1.0, 1.0)}, 5.0, 5.0);
+            var model = new Model();
+            model.AddElements(new Element[]{panel, floor, mass, beam, column});//, space});
+            var json = model.ToJson();
+            Console.WriteLine(json);
+
+            var newModel = Model.FromJson(json);
+            var elements = newModel.Values;
+            var newPanel = elements.OfType<Panel>().FirstOrDefault();
+            var newFloor = elements.OfType<Floor>().FirstOrDefault();
+            var newMass = elements.OfType<Mass>().FirstOrDefault();
+            var newBeam = elements.OfType<Beam>().FirstOrDefault();
+
+            Assert.Equal(panel.Perimeter.Count, newPanel.Perimeter.Count);
+            Assert.Equal(panel.Id, newPanel.Id);
+            Assert.Equal(floor.Id, newFloor.Id);
+            Assert.Equal(floor.Material, newFloor.Material);
+            Assert.Equal(floor.Perimeter.Vertices.Count, newFloor.Perimeter.Vertices.Count);
+            Assert.Equal(floor.Thickness, newFloor.Thickness);
+            Assert.Equal(floor.Elevation, newFloor.Elevation);
+            Assert.Equal(mass.Perimeter.Vertices.Count, newMass.Perimeter.Vertices.Count);
+            Assert.Equal(mass.Elevation, newMass.Elevation);
+            Assert.Equal(mass.Height, newMass.Height);
         }
 
         private Model QuadPanelModel()

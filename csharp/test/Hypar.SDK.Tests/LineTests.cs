@@ -25,19 +25,10 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void ByPoints_ZeroLength_ThrowsException()
+        public void ZeroLength_ThrowsException()
         {
             var a = new Vector3();
             Assert.Throws<ArgumentException>(()=>new Line(a,a));
-        }
-
-        [Fact]
-        public void ByDirectionLength_ZeroLength_ThrowsException()
-        {
-            var a = new Vector3();
-            var v = Vector3.ZAxis;
-            var d = 0.0;
-            Assert.Throws<ArgumentException>(()=>new Line(a,v,d));
         }
     }
 }

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 namespace Hypar.Geometry
@@ -38,25 +39,25 @@ namespace Hypar.Geometry
         /// <summary>
         /// The red component of the color.
         /// </summary>
-        /// <value></value>
+        [JsonProperty("red")]
         public float Red{get;}
 
         /// <summary>
         /// The green component of the color.
         /// </summary>
-        /// <value></value>
+        [JsonProperty("green")]
         public float Green{get;}
 
         /// <summary>
         /// The blue component of the color.
         /// </summary>
-        /// <value></value>
+        [JsonProperty("blue")]
         public float Blue{get;}
 
         /// <summary>
         /// The alpha component of the color.
         /// </summary>
-        /// <value></value>
+        [JsonProperty("alpha")]
         public float Alpha{get;}
 
         /// <summary>
@@ -91,6 +92,31 @@ namespace Hypar.Geometry
         public float[] ToArray()
         {
             return new[]{Red, Green, Blue, Alpha};
+        }
+
+        /// <summary>
+        /// Is this color equal to the provided color?
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            var m = obj as Color;
+            if(m == null)
+            {
+                return false;
+            }
+
+            return m.Red == this.Red && m.Green == this.Green && m.Blue == this.Blue && m.Alpha == this.Alpha;
+        }
+
+        /// <summary>
+        /// Get the hash code for this color.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return new {this.Red, this.Green, this.Blue, this.Alpha}.GetHashCode();
         }
     }
 }

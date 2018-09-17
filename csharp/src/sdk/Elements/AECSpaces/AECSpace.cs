@@ -410,7 +410,7 @@ namespace AECSpaces
                     vertices.Add(new Hypar.Geometry.Vector3(point.X, point.Y, point.Z));
                 }
                 vertices.Reverse();
-                var boundary = new Hypar.Geometry.Polygon(vertices);               
+                var boundary = new Hypar.Geometry.Polygon(vertices.ToArray());               
                 var color = new Material(ID, new Hypar.Geometry.Color(red: Color.R / 255,
                                                                       green: Color.G / 255,
                                                                       blue: Color.B / 255,

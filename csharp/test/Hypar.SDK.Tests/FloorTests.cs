@@ -45,7 +45,7 @@ namespace Hypar.Tests
             var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1).Reversed();
             var p2 = Profiles.Rectangular(new Vector3(3,3,0), 1, 1).Reversed();
             var floor = new Floor(Profiles.Rectangular(Vector3.Origin, 10, 10), 0.0, 0.2, new []{p1, p2}, BuiltInMaterials.Concrete);
-            Assert.Equal(100.0-2.0, floor.Area);
+            Assert.Equal(100.0-2.0, floor.Area());
         }
     }
 }
