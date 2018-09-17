@@ -933,7 +933,7 @@ namespace AECSpacesTest
                 }
                 boundary = new Hypar.Geometry.Polygon(vertices);
                 vertices.Clear();
-                var mass = new Mass(boundary, space.Level, boundary, space.Elevation);
+                var mass = new Mass(boundary, space.Level, space.Elevation);
                                                                                         
                 model.AddElement(mass);               
             }

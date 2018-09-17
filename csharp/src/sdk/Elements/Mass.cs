@@ -24,14 +24,23 @@ namespace Hypar.Elements
         /// <summary>
         /// The elevation of the bottom perimeter.
         /// </summary>
-        [JsonProperty("bottom_elevation")]
-        public double BottomElevation{get;}
+        [JsonProperty("elevation")]
+        public double Elevation{get;}
 
         /// <summary>
-        /// The elevation of the top perimeter.
+        /// The height of the mass.
         /// </summary>
-        [JsonProperty("top_elevation")]
-        public double TopElevation{get;}
+        [JsonProperty("height")]
+        public double Height{get;}
+
+        /// <summary>
+        /// The volume of the mass.
+        /// </summary>
+        [JsonProperty("volume")]
+        public double Volume
+        {
+            get{return this.Perimeter.Area * this.Height;}
+        }
 
         /// <summary>
         /// Construct a default mass.
@@ -40,8 +49,8 @@ namespace Hypar.Elements
         {
             var defaultProfile = Profiles.Rectangular();
             this.Perimeter = defaultProfile;
-            this.BottomElevation = 0.0;
-            this.TopElevation = 1.0;
+            this.Elevation = 0.0;
+            this.Height = 1.0;
             this.Material = BuiltInMaterials.Mass;
         }
 
@@ -49,26 +58,19 @@ namespace Hypar.Elements
         /// Construct a mass from perimeters and elevations.
         /// </summary>
         /// <param name="perimeter">The bottom perimeter of the mass.</param>
-        /// <param name="bottomElevation">The elevation of the bottom perimeter.</param>
-        /// <param name="top">The top perimeter of the mass.</param>
-        /// <param name="topElevation">The elevation of the top perimeter.</param>
+        /// <param name="elevation">The elevation of the perimeter.</param>
+        /// <param name="height">The height of the mass from the bottom elevation.</param>
         /// <param name="material">The mass' material. The default is the built in mass material.</param>
         /// <returns></returns>
-        public Mass(Polygon perimeter, double bottomElevation, Polygon top, double topElevation, Material material = null)
+        public Mass(Polygon perimeter, double elevation, double height, Material material = null)
         {
-            if (perimeter.Vertices.Count != top.Vertices.Count)
+            if (height <= 0)
             {
-                throw new ArgumentException(Messages.PROFILES_UNEQUAL_VERTEX_EXCEPTION);
+                throw new ArgumentOutOfRangeException("The mass could not be constructed. The height must be greater than zero.");
             }
-
-            if (topElevation <= bottomElevation)
-            {
-                throw new ArgumentOutOfRangeException(Messages.TOP_BELOW_BOTTOM_EXCEPTION, "topElevation");
-            }
-
             this.Perimeter = perimeter;
-            this.BottomElevation = bottomElevation;
-            this.TopElevation = topElevation;
+            this.Elevation = elevation;
+            this.Height = height;
             this.Material = material != null?material: BuiltInMaterials.Mass;
         }
 
@@ -117,10 +119,10 @@ namespace Hypar.Elements
                 var v2 = b[next];
                 var v3 = t[next];
                 var v4 = t[i];
-                var v1n = new Vector3(v1.X, v1.Y, this.BottomElevation);
-                var v2n = new Vector3(v2.X, v2.Y, this.BottomElevation);
-                var v3n = new Vector3(v3.X, v3.Y, this.TopElevation);
-                var v4n = new Vector3(v4.X, v4.Y, this.TopElevation);
+                var v1n = new Vector3(v1.X, v1.Y, this.Elevation);
+                var v2n = new Vector3(v2.X, v2.Y, this.Elevation);
+                var v3n = new Vector3(v3.X, v3.Y, this.Elevation + this.Height);
+                var v4n = new Vector3(v4.X, v4.Y, this.Elevation + this.Height);
                 var l1 = new Line(v1n, v2n);
                 var l2 = new Line(v2n, v3n);
                 var l3 = new Line(v3n, v4n);
@@ -141,7 +143,7 @@ namespace Hypar.Elements
             var floors = new List<Floor>();
             foreach(var e in elevations)
             {
-                if (e >= this.BottomElevation && e <= this.TopElevation)
+                if (e >= this.Elevation && e <= this.Elevation + this.Height)
                 {
                     var f = new Floor(this.Perimeter, e, thickness, new Polygon[]{}, material);
                     floors.Add(f);
@@ -162,8 +164,8 @@ namespace Hypar.Elements
                 mesh.AddQuad(f.Vertices.ToArray());
             }
 
-            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.BottomElevation);
-            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.TopElevation, true);
+            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.Elevation);
+            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.Elevation + this.Height, true);
             return mesh;
         }
     }

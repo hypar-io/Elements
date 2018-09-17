@@ -22,7 +22,7 @@ namespace Hypar.Tests
             var buildingHeight = 30;
 
             var profile = new Polygon(new[]{a,b,c,d});
-            var mass = new Mass(profile, 0, profile, buildingHeight);
+            var mass = new Mass(profile, 0, buildingHeight);
             
             var elevations = new List<double>();
             for(var i=0.0; i<=buildingHeight; i += 4.0)

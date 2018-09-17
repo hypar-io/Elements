@@ -417,7 +417,7 @@ namespace AECSpaces
                                                                       alpha: Color.A / 255),
                                                                       specularFactor: AECColor.Translucent / 255,
                                                                       glossinessFactor: AECColor.Translucent / 255);
-                var mass = new Mass(boundary, Level, boundary, Elevation, color);
+                var mass = new Mass(boundary, Level, Elevation, color);
                 return mass;
             }
         }

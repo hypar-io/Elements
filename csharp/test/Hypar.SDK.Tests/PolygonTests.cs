@@ -85,5 +85,20 @@ namespace Hypar.Tests
             Assert.Equal(4, p.Segments().Count());
             Assert.Equal(new Vector3(1.0, 1.0), p.PointAt(0.5));
         }
+
+        [Fact]
+        public void TwoPeaks_Offset_2Polylines()
+        {
+            var a = new Vector3();
+            var b = new Vector3(5, 0);
+            var c = new Vector3(5, 5);
+            var d = new Vector3(0, 1);
+            var e = new Vector3(-5, 5);
+            var f = new Vector3(-5, 0);
+
+            var plinew = new Polygon(new[]{a,b,c,d,e,f});
+            var offset = plinew.Offset(-0.5);
+            Assert.Equal(2, offset.Count());
+        }
     }
 }

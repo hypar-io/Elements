@@ -29,7 +29,7 @@ namespace Hypar.Tests
             var plines = outline.ToPolygons();
             var transformed = plines.Select(pline=>new Hypar.Geometry.Polygon(pline.Vertices.Select(v=>new Vector3(v.X - origin.X, v.Y - origin.Y, v.Z))).Reversed()).ToArray();
 
-            var mass = new Mass(transformed[0], 0.0, transformed[0], 5.0);
+            var mass = new Mass(transformed[0], 0.0, 5.0);
             var model = new Model();
             model.Origin = outline.Coordinates[0][0];
 
