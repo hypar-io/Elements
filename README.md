@@ -23,7 +23,7 @@ dotnet add package HyparSDK
   - C# libraries can be reused in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
 
 ## Examples
-The best examples are those provided in the [tests](https://github.com/hypar-io/elements/tree/master/test), where we demonstrate usage of almost every function in the library.
+The best examples are those provided in the [tests](https://github.com/hypar-io/sdk/tree/master/csharp/test/Hypar.SDK.Tests), where we demonstrate usage of almost every function in the library.
 
 ## Build
 `dotnet build`

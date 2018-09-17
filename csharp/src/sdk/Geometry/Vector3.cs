@@ -34,74 +34,67 @@ namespace Hypar.Geometry
         /// Construct a vector at the origin.
         /// </summary>
         /// <returns></returns>
-        public static Vector3 Origin()
+        public static Vector3 Origin
         {
-            return new Vector3();
+            get{return new Vector3();}
+        }
+
+        /// <summary>
+        /// Is this vector equal to the provide vector?
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if(obj.GetType() != typeof(Vector3))
+            {
+                return false;
+            }
+
+            var v = (Vector3)obj;
+            return this.X == v.X && this.Y == v.Y && this.Z == v.Z;
         }
 
         /// <summary>
         /// Construct a vector along the X axis.
         /// </summary>
         /// <returns></returns>
-        public static Vector3 XAxis()
+        public static Vector3 XAxis
         {
-            return new Vector3(1.0,0.0,0.0);
+            get{return new Vector3(1.0,0.0,0.0);}
         }
 
         /// <summary>
         /// Construct a vector along the Y axis.
         /// </summary>
         /// <returns></returns>
-        public static Vector3 YAxis()
+        public static Vector3 YAxis
         {
-            return new Vector3(0.0,1.0,0.0);
+            get{return new Vector3(0.0,1.0,0.0);}
         }
 
         /// <summary>
         /// Construct a vector along the Z axis.
         /// </summary>
         /// <returns></returns>
-        public static Vector3 ZAxis()
+        public static Vector3 ZAxis
         {
-            return new Vector3(0.0,0.0,1.0);
-        }
-
-        /// <summary>
-        /// Construct a vector from x, y, and z components.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
-        /// <returns></returns>
-        public static Vector3 ByXYZ(double x, double y, double z)
-        {
-            return new Vector3(x,y,z);
-        }
-
-        /// <summary>
-        /// Construct a vector from x, and y components.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public static Vector3 ByXY(double x, double y)
-        {
-            return new Vector3(x,y);
+            get{return new Vector3(0.0,0.0,1.0);}
         }
 
         /// <summary>
         /// Construct vectors at n equal spaces along the provided line.
         /// </summary>
-        /// <param name="l"></param>
-        /// <param name="n"></param>
-        /// <param name="includeEnds"></param>
+        /// <param name="line">The line.</param>
+        /// <param name="n">The number of samples along the line.</param>
+        /// <param name="includeEnds">A flag indicating whether or not to include points for the start and end of the line.</param>
         /// <returns></returns>
-        public static IEnumerable<Vector3> AtNEqualSpacesAlongLine(Line l, int n, bool includeEnds = false)
+        public static IEnumerable<Vector3> AtNEqualSpacesAlongLine(Line line, int n, bool includeEnds = false)
         {   
             var div = 1.0/(double)(n + 1);
             for(var t=0.0; t<=1.0; t+=div)
             {
-                var pt = l.PointAt(t);
+                var pt = line.PointAt(t);
                 
                 if((t == 0.0 && !includeEnds) || (t == 1.0 && !includeEnds))
                 {
@@ -354,6 +347,43 @@ namespace Hypar.Geometry
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// The distance from this point to b.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public double DistanceTo(Vector3 v)
+        {
+            return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
+        }
+    }
+
+    /// <summary>
+    /// Extension methods for Vector3.
+    /// </summary>
+    public static class Vector3Extensions
+    {
+        /// <summary>
+        /// Are the provided points on the same plane?
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static bool AreCoplanar(this IEnumerable<Vector3> points)
+        {
+            //TODO: https://github.com/hypar-io/sdk/issues/54
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get the bounding box for a set of points.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static BBox3 BBox(this IEnumerable<Vector3> points)
+        {
+            return new BBox3(points);
         }
     }
 }
