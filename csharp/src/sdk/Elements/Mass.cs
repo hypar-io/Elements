@@ -10,35 +10,37 @@ namespace Hypar.Elements
     /// <summary>
     /// A mass represents an extruded building mass.
     /// </summary>
-    public class Mass : Element, ILocateable<Polyline>, ITessellate<Mesh>, IMaterialize
+    public class Mass : Element, IRepresent<Mesh>
     {
         private List<Polyline> _sides = new List<Polyline>();
 
         /// <summary>
-        /// The bottom perimeter of the mass.
+        /// The perimeter of the mass.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("location")]
-        public Polyline Location{get;}
+        [JsonProperty("perimeter")]
+        public Polygon Perimeter{get;}
 
         /// <summary>
         /// The elevation of the bottom perimeter.
         /// </summary>
-        [JsonProperty("bottom_elevation")]
-        public double BottomElevation{get;}
+        [JsonProperty("elevation")]
+        public double Elevation{get;}
 
         /// <summary>
-        /// The elevation of the top perimeter.
+        /// The height of the mass.
         /// </summary>
-        [JsonProperty("top_elevation")]
-        public double TopElevation{get;}
+        [JsonProperty("height")]
+        public double Height{get;}
 
         /// <summary>
-        /// The material of the Mass.
+        /// The volume of the mass.
         /// </summary>
-        /// <value></value>
-        [JsonIgnore]
-        public Material Material{get;set;}
+        [JsonProperty("volume")]
+        public double Volume
+        {
+            get{return this.Perimeter.Area * this.Height;}
+        }
 
         /// <summary>
         /// Construct a default mass.
@@ -46,36 +48,30 @@ namespace Hypar.Elements
         public Mass()
         {
             var defaultProfile = Profiles.Rectangular();
-            this.Location = defaultProfile;
-            this.BottomElevation = 0.0;
-            this.TopElevation = 1.0;
+            this.Perimeter = defaultProfile;
+            this.Elevation = 0.0;
+            this.Height = 1.0;
             this.Material = BuiltInMaterials.Mass;
         }
 
         /// <summary>
         /// Construct a mass from perimeters and elevations.
         /// </summary>
-        /// <param name="bottom">The bottom perimeter of the mass.</param>
-        /// <param name="bottomElevation">The elevation of the bottom perimeter.</param>
-        /// <param name="top">The top perimeter of the mass.</param>
-        /// <param name="topElevation">The elevation of the top perimeter.</param>
+        /// <param name="perimeter">The bottom perimeter of the mass.</param>
+        /// <param name="elevation">The elevation of the perimeter.</param>
+        /// <param name="height">The height of the mass from the bottom elevation.</param>
+        /// <param name="material">The mass' material. The default is the built in mass material.</param>
         /// <returns></returns>
-        public Mass(Polyline bottom, double bottomElevation, Polyline top, double topElevation)
+        public Mass(Polygon perimeter, double elevation, double height, Material material = null)
         {
-            if (bottom.Vertices.Count() != top.Vertices.Count())
+            if (height <= 0)
             {
-                throw new ArgumentException(Messages.PROFILES_UNEQUAL_VERTEX_EXCEPTION);
+                throw new ArgumentOutOfRangeException("The mass could not be constructed. The height must be greater than zero.");
             }
-
-            if (topElevation <= bottomElevation)
-            {
-                throw new ArgumentOutOfRangeException(Messages.TOP_BELOW_BOTTOM_EXCEPTION, "topElevation");
-            }
-
-            this.Location = bottom;
-            this.BottomElevation = bottomElevation;
-            this.TopElevation = topElevation;
-            this.Material = BuiltInMaterials.Mass;
+            this.Perimeter = perimeter;
+            this.Elevation = elevation;
+            this.Height = height;
+            this.Material = material != null?material: BuiltInMaterials.Mass;
         }
 
         /// <summary>
@@ -86,9 +82,8 @@ namespace Hypar.Elements
         {
             foreach(var f in Faces())
             {
-                yield return f.Segments().ElementAt(1);
+                yield return f.ElementAt(1);
             }
-            
         }
 
         /// <summary>
@@ -99,8 +94,8 @@ namespace Hypar.Elements
         {
             foreach(var f in Faces())
             {
-                yield return f.Segments().ElementAt(0);
-                yield return f.Segments().ElementAt(2);
+                yield return f.ElementAt(0);
+                yield return f.ElementAt(2);
             }
         }
 
@@ -108,15 +103,15 @@ namespace Hypar.Elements
         /// A collection of polylines representing the perimeter of each face of the mass.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Polyline> Faces()
+        public IEnumerable<Face> Faces()
         {
-            var b = this.Location.Vertices.ToArray();
-            var t = this.Location.Vertices.ToArray();
+            var b = this.Perimeter.Vertices;
+            var t = this.Perimeter.Vertices;
 
-            for (var i = 0; i < b.Length; i++)
+            for (var i = 0; i < b.Count; i++)
             {
                 var next = i + 1;
-                if (i == b.Length - 1)
+                if (i == b.Count - 1)
                 {
                     next = 0;
                 }
@@ -124,51 +119,18 @@ namespace Hypar.Elements
                 var v2 = b[next];
                 var v3 = t[next];
                 var v4 = t[i];
-                var v1n = new Vector3(v1.X, v1.Y, this.BottomElevation);
-                var v2n = new Vector3(v2.X, v2.Y, this.BottomElevation);
-                var v3n = new Vector3(v3.X, v3.Y, this.TopElevation);
-                var v4n = new Vector3(v4.X, v4.Y, this.TopElevation);
-                yield return new Polyline(new[] { v1n, v2n, v3n, v4n });
+                var v1n = new Vector3(v1.X, v1.Y, this.Elevation);
+                var v2n = new Vector3(v2.X, v2.Y, this.Elevation);
+                var v3n = new Vector3(v3.X, v3.Y, this.Elevation + this.Height);
+                var v4n = new Vector3(v4.X, v4.Y, this.Elevation + this.Height);
+                var l1 = new Line(v1n, v2n);
+                var l2 = new Line(v2n, v3n);
+                var l3 = new Line(v3n, v4n);
+                var l4 = new Line(v4n, v1n);
+                yield return new Face(new[]{l1,l2,l3,l4});
             }
         }
 
-        /// <summary>
-        /// For each face of the mass apply a creator function.
-        /// </summary>
-        /// <param name="creator">The function to apply.</param>
-        /// <typeparam name="T">The creator function's return type.</typeparam>
-        /// <returns></returns>
-        public IEnumerable<T> ForEachFaceCreateElementsOfType<T>(Func<Polyline, IEnumerable<T>> creator)
-        {
-            var results = new List<T>();
-            foreach(var p in Faces())
-            {
-                results.AddRange(creator(p));
-            }
-            return results;
-        }
-
-        /// <summary>
-        /// Create floors at the specified elevations within a mass.
-        /// </summary>
-        /// <param name="elevations"></param>
-        /// <param name="thickness"></param>
-        /// <param name="material"></param>
-        /// <returns></returns>
-        public IEnumerable<Floor> CreateFloors(IEnumerable<double> elevations, double thickness, Material material)
-        {
-            var floors = new List<Floor>();
-            foreach(var e in elevations)
-            {
-                if (e >= this.BottomElevation && e <= this.TopElevation)
-                {
-                    var f = new Floor(this.Location, new Polyline[]{}, e, thickness, material);
-                    floors.Add(f);
-                }
-            }
-            return floors;
-        }
-        
         /// <summary>
         /// Tessellate the mass.
         /// </summary>
@@ -176,13 +138,13 @@ namespace Hypar.Elements
         public Mesh Tessellate()
         {
             var mesh = new Mesh();
-            foreach (var s in Faces())
+            foreach (var f in Faces())
             {
-                mesh.AddQuad(s.ToArray());
+                mesh.AddQuad(f.Vertices.ToArray());
             }
 
-            mesh.AddTesselatedFace(new[] { this.Location }, this.BottomElevation);
-            mesh.AddTesselatedFace(new[] { this.Location }, this.TopElevation, true);
+            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.Elevation);
+            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.Elevation + this.Height, true);
             return mesh;
         }
     }

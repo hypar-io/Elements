@@ -32,6 +32,18 @@ namespace Hypar.Elements
         }
 
         /// <summary>
+        /// The element's material.
+        /// </summary>
+        /// <value></value>
+        public Material Material{get; protected set;}
+        
+        /// <summary>
+        /// The element's transform.
+        /// </summary>
+        /// <value></value>
+        public Transform Transform{get; protected set;}
+
+        /// <summary>
         /// Construct a default Element.
         /// </summary>
         public Element()

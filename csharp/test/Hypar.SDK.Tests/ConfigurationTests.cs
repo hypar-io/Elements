@@ -72,7 +72,6 @@ namespace Hypar.Tests
             var settings = new JsonSerializerSettings(){Converters = converters};
             var config = JsonConvert.DeserializeObject<HyparConfig>(configStr, settings);
             var result = JsonConvert.SerializeObject(config, Formatting.Indented, settings);
-            Console.WriteLine(result);
         }
 
         [Fact]

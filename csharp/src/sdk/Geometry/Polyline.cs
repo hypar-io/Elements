@@ -1,3 +1,4 @@
+using ClipperLib;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
@@ -7,37 +8,53 @@ using System.Collections;
 namespace Hypar.Geometry
 {
     /// <summary>
-    /// A planar polyon in 3D.
+    /// A coplanar continuous set of lines.
     /// </summary>
-    public class Polyline : IEnumerable<Vector3>
+    public class Polyline: ICurve
     {
-        private BBox _bbox;
-
-        /// <summary>
-        /// The bounds of the polyline.
-        /// </summary>
-        public BBox BoundingBox => _bbox;
-
         private List<Vector3> _vertices = new List<Vector3>();
 
         /// <summary>
         /// The vertices of the polyline.
         /// </summary>
-        /// <returns></returns>
+        /// <value></value>
         [JsonProperty("vertices")]
-        public IEnumerable<Vector3> Vertices
+        public IList<Vector3> Vertices
         {
-            get{return _vertices;}
+            get{return this._vertices;}
+        }
+
+        /// <summary>
+        /// The length of the polyline.
+        /// </summary>
+        public double Length
+        {
+            get{return this.Segments().Sum(s=>s.Length);}
+        }
+
+        /// <summary>
+        /// The start of the polyline.
+        /// </summary>
+        public Vector3 Start
+        {
+            get{return this._vertices[0];}
+        }
+
+        /// <summary>
+        /// The end of the polyline.
+        /// </summary>
+        public Vector3 End
+        {
+            get{return this._vertices[this._vertices.Count - 1];}
         }
 
         /// <summary>
         /// Construct a polyline from a collection of vertices.
         /// </summary>
         /// <param name="vertices">A CCW wound set of vertices.</param>
-        public Polyline(IEnumerable<Vector3> vertices)
+        public Polyline(IList<Vector3> vertices)
         {
-            _vertices.AddRange(vertices);
-            this._bbox = BBox.FromPoints(vertices);
+            this._vertices.AddRange(vertices);
         }
 
         /// <summary>
@@ -57,28 +74,19 @@ namespace Hypar.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Join(",", this.Vertices);
+            return string.Join(",", this._vertices);
         }
-        
+
         /// <summary>
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
         public IEnumerable<Line> Segments()
         {
-            for(var i=0; i<_vertices.Count; i++)
+            for (var i = 0; i < _vertices.Count-1; i++)
             {
                 var a = _vertices[i];
-                Vector3 b;
-                if(i == _vertices.Count-1)
-                {
-                    b = _vertices[0];
-                }
-                else
-                {
-                    b = _vertices[i+1];
-                }
-                
+                var b = _vertices[i+1];
                 yield return new Line(a, b);
             }
         }
@@ -93,87 +101,53 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Compute the normal of the polyline using the first 3 vertices to define a plane.
-        /// </summary>
-        /// <returns></returns>
-        public Vector3 Normal()
-        {
-            var a = (this._vertices[2] - this._vertices[1]).Normalized();
-            var b = (this._vertices[0] - this._vertices[1]).Normalized();
-            return a.Cross(b);
-        }
-
-        /// <summary>
         /// Get segment i of this polyline.
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
         public Line Segment(int i)
         {
-            if(this._vertices.Count <= i)
+            if (this._vertices.Count <= i)
             {
                 throw new Exception($"The specified index is greater than the number of segments.");
             }
 
             var a = this._vertices[i];
-            var b = this._vertices[i+1];
-            return new Line(a,b);
+            var b = this._vertices[i + 1];
+            return new Line(a, b);
         }
 
         /// <summary>
-        /// Offset this polyline by the specified amount.
+        /// Get the point at parameter u along the polyline.
         /// </summary>
-        /// <param name="offset">The amount to offset.</param>
-        /// <returns>A new polyline offset by offset.</returns>
-        public Polyline Offset(double offset)
+        /// <param name="u">A value between 0.0 and 1.0.</param>
+        public Vector3 PointAt(double u)
         {
-            var pts = new Vector3[this._vertices.Count];
-            Vector3 prevN = null;
-            for(var i=0; i < this._vertices.Count; i++)
+            var d = this.Length * u;
+            var totalLength = 0.0;
+            for(var i=0; i<this._vertices.Count-1; i++)
             {
-                var a = i;
-                var b = a + 1 > this._vertices.Count-1 ? 0 : a + 1;
-                var c = b + 1 > this._vertices.Count-1 ? 0 : b + 1;
-
-                var v1 = (this._vertices[a]-this._vertices[b]).Normalized();
-                var v2 = (this._vertices[c]-this._vertices[b]).Normalized();
-                var n = v1.Cross(v2);
-                if(prevN == null)
+                var a = this._vertices[i];
+                var b = this._vertices[i+1];
+                var currLength = a.DistanceTo(b);
+                var currVec = (b - a).Normalized();
+                if(totalLength <= d && totalLength + currLength >= d)
                 {
-                    prevN = n;
+                    return a + currVec * ((d-totalLength)/currLength);
                 }
-
-                // Naive flipping logic. We find a change in concavity/convexity
-                // by comparing the cross product of the vectors to the
-                // previous corner. If the vectors point in different directions
-                // then we offset in the opposite direction.
-                var dir = prevN.Dot(n) < 0 ? -1 : 1;
-
-                var theta = v1.AngleTo(v2);
-                var halfAngle = (Math.PI - theta)/2;
-                var d = offset/Math.Cos(halfAngle);
-
-                pts[i] = this._vertices[b] + v1.Average(v2) * d * dir;
+                totalLength += currLength;
             }
-            return new Polyline(pts);
+
+            return this.End;
         }
 
         /// <summary>
-        /// 
+        /// Tessellate the polyline.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<Vector3> GetEnumerator()
+        public IEnumerable<Vector3> Tessellate()
         {
-            return ((IEnumerable<Vector3>)_vertices).GetEnumerator();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<Vector3>)_vertices).GetEnumerator();
+            return this._vertices;
         }
     }
 }

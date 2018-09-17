@@ -209,7 +209,7 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="v"></param>
         /// <param name="c"></param>
-        public void AddTriangle(Vector3[] v, Color[] c = null)
+        public void AddTriangle(IList<Vector3> v, Color[] c = null)
         {
             if(c != null)
             {
@@ -264,7 +264,7 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="colors"></param>
-        public void AddQuad(Vector3[] vertices, Color[] colors = null)
+        public void AddQuad(IList<Vector3> vertices, Color[] colors = null)
         {
             var v1 = vertices[1] - vertices[0];
             var v2 = vertices[2] - vertices[0];
@@ -309,17 +309,17 @@ namespace Hypar.Geometry
         /// <param name="perimeter">The closed polyline representing the edge of the face.</param>
         /// <param name="height">A height at which the tessellated face will be offset.</param>
         /// <param name="reverse">A flag indicating whether the perimeter should be reversed.</param>
-        public void AddTesselatedFace(IEnumerable<Polyline> perimeter, double height=0.0, bool reverse = false)
+        public void AddTesselatedFace(IEnumerable<Polygon> perimeter, double height=0.0, bool reverse = false)
         {
             var tess = new Tess();
 
             foreach(var b in perimeter)
             {
-                var numPoints = b.Vertices.Count();
+                var numPoints = b.Vertices.Count;
                 var contour = new ContourVertex[numPoints];
                 for(var i=0; i<numPoints; i++)
                 {
-                    var v = b.Vertices.ElementAt(i);
+                    var v = b.Vertices[i];
                     contour[i].Position = new Vec3{X=v.X, Y=v.Y, Z=height};
                 }
                 tess.AddContour(contour, reverse?ContourOrientation.Clockwise:ContourOrientation.CounterClockwise);
@@ -375,20 +375,20 @@ IMin:{m_index_min}";
         /// <param name="height">The height of the extrusion.</param>
         /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
         /// <returns></returns>
-        public static Mesh Extrude(IEnumerable<Polyline> perimeters, double height, bool capped=true)
+        public static Mesh Extrude(IEnumerable<Polygon> perimeters, double height, bool capped=true)
         {
             var mesh = new Hypar.Geometry.Mesh();
 
             foreach(var boundary in perimeters)
             {
-                var verts = boundary.Vertices.ToArray();
+                var verts = boundary.Vertices;
 
-                for(var i=0; i<verts.Length; i++)
+                for(var i=0; i<verts.Count; i++)
                 {
                     Vector3 a;
                     Vector3 b;
 
-                    if(i == verts.Length-1)
+                    if(i == verts.Count-1)
                     {
                         a = verts[i];
                         b = verts[0];
@@ -423,9 +423,9 @@ IMin:{m_index_min}";
         /// <param name="perimeters">A collection of polylines to extrude.</param>
         /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
         /// <returns></returns>
-        public static Mesh ExtrudeAlongLine(Line line, IEnumerable<Polyline> perimeters, bool capped=true)
+        public static Mesh ExtrudeAlongLine(Line line, IEnumerable<Polygon> perimeters, bool capped=true)
         {
-            var height = line.Length();
+            var height = line.Length;
             return Mesh.Extrude(perimeters, height, capped);
         }
     }

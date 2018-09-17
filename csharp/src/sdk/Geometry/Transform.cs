@@ -35,9 +35,9 @@ namespace Hypar.Geometry
         public Transform()
         {
             this.Origin = new Vector3();
-            this.XAxis = Vector3.XAxis();
-            this.YAxis = Vector3.YAxis();
-            this.ZAxis = Vector3.ZAxis();
+            this.XAxis = Vector3.XAxis;
+            this.YAxis = Vector3.YAxis;
+            this.ZAxis = Vector3.ZAxis;
         }
 
         /// <summary>

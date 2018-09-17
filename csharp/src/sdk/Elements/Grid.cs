@@ -12,7 +12,8 @@ namespace Hypar.Elements
     {
         private double[] _uDiv;
         private double[] _vDiv;
-        private Polyline _perimeter;
+        private Line _bottom;
+        private Line _top;
 
         /// <summary>
         /// The number of columns in the grid.
@@ -46,9 +47,8 @@ namespace Hypar.Elements
         private Vector3[][] CalculateGridPoints()
         {
             var pts = new Vector3[this._uDiv.Length][];
-            var lines = this._perimeter.Segments();
-            var edge1 = lines.ElementAt(0).Reversed();
-            var edge2 = lines.ElementAt(2);
+            var edge1 = this._bottom;
+            var edge2 = this._top;
 
             for(var i=0; i<_uDiv.Length; i++)
             {
@@ -74,7 +74,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        public IEnumerable<Polyline> CellsInColumn(int n)
+        public IEnumerable<IEnumerable<Vector3>> CellsInColumn(int n)
         {
             if(n < 0 || n >= this._uDiv.Length - 1)
             {
@@ -91,7 +91,7 @@ namespace Hypar.Elements
                 var b = c1[i+1];
                 var c = c2[i+1];
                 var d = c2[i];
-                yield return new Polyline(new[]{a,b,c,d});
+                yield return new List<Vector3>(new[]{a,b,c,d});
             }
         }
 
@@ -100,7 +100,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        public IEnumerable<Polyline> CellsInRow(int n)
+        public IEnumerable<IEnumerable<Vector3>> CellsInRow(int n)
         {
             if(n < 0 || n >= this._vDiv.Length - 1)
             {
@@ -114,7 +114,7 @@ namespace Hypar.Elements
                 var b = pts[i][n+1];
                 var c = pts[i+1][n+1];
                 var d = pts[i+1][n];
-                yield return new Polyline(new[]{a, b, c, d});
+                yield return new List<Vector3>(new[]{a, b, c, d});
             }
         }
 
@@ -122,7 +122,7 @@ namespace Hypar.Elements
         /// Get all cells.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Polyline> AllCells()
+        public IEnumerable<IList<Vector3>> Cells()
         {
             var pts = CalculateGridPoints();
 
@@ -137,7 +137,7 @@ namespace Hypar.Elements
                     var b = rowA[j+1];
                     var c = rowB[j+1];
                     var d = rowB[j];
-                    yield return new Polyline(new[]{a,b,c,d});
+                    yield return new List<Vector3>(new[]{a,b,c,d});
                 }
             }
         }
@@ -148,9 +148,9 @@ namespace Hypar.Elements
         /// <returns></returns>
         public IEnumerable<Line> RowEdges()
         {
-            foreach(var c in this.AllCells())
+            foreach(var c in this.Cells())
             {
-                yield return c.Segment(0);
+                yield return new Line(c.ElementAt(0), c.ElementAt(1));
             }
         }
 
@@ -160,144 +160,40 @@ namespace Hypar.Elements
         /// <returns></returns>
         public IEnumerable<Line> ColumnEdges()
         {
-            foreach(var c in this.AllCells())
+            foreach(var c in this.Cells())
             {
-                yield return c.Segment(1);
+                yield return new Line(c.ElementAt(1), c.ElementAt(2));
             }
         }
 
         /// <summary>
         /// Construct a grid.
         /// </summary>
-        /// <param name="perimeter">The perimeter of the grid.</param>
+        /// <param name="bottom"></param>
+        /// <param name="top"></param>
         /// <param name="uDivisions">The number of grid divisions in the u direction.</param>
         /// <param name="vDivisions">The number of grid divisions in the v direction.</param>
-        public Grid(Polyline perimeter, int uDivisions = 1, int vDivisions = 1)
+        public Grid(Line bottom, Line top, int uDivisions = 1, int vDivisions = 1)
         {
-            this._perimeter = perimeter;
+            this._bottom = bottom;
+            this._top = top;
             this._uDiv = CalculateEqualDivisions(uDivisions);
             this._vDiv = CalculateEqualDivisions(vDivisions);
         }
 
         /// <summary>
-        /// Construct a grid within a perimeter.
+        /// Construct a grid.
         /// </summary>
-        /// <param name="perimeter"></param>
-        /// <returns></returns>
-        public static Grid WithinPerimeter(Polyline perimeter)
+        /// <param name="face">A face whose edges will be used to define the grid.</param>
+        /// <param name="uDivisions">The number of grid divisions in the u direction.</param>
+        /// <param name="vDivisions">The number of grid divisions in the v direction.</param>
+        public Grid(Face face, int uDivisions = 1, int vDivisions = 1)
         {
-            var grid = new Grid(perimeter);
-            return grid;
-        }
-
-        /// <summary>
-        /// Set the number of divisions of the grid in the u direction.
-        /// </summary>
-        /// <param name="u"></param>
-        /// <returns></returns>
-        public Grid WithUDivisions(int u)
-        {
-            this._uDiv = CalculateEqualDivisions(u);
-            return this;
-        }
-
-        /// <summary>
-        /// Set the number of divisions of the grid in the u direction.
-        /// </summary>
-        /// <param name="uDivisions"></param>
-        /// <returns></returns>
-        public Grid WithUDivisions(double[] uDivisions)
-        {
-            this._uDiv = uDivisions;
-            return this;
-        }
-
-        /// <summary>
-        /// Set the number of divisions of the grid in the v direction.
-        /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
-        public Grid WithVDivisions(int v)
-        {
-            this._vDiv = CalculateEqualDivisions(v);
-            return this;
-        }
-
-        /// <summary>
-        /// Set the number of divisions of the grid in the v direction.
-        /// </summary>
-        /// <param name="vDivisions"></param>
-        /// <returns></returns>
-        public Grid WithVDivisions(double[] vDivisions)
-        {
-            this._vDiv = vDivisions;
-            return this;
-        }
-    }
-
-    /// <summary>
-    /// Extensions methods for grids.
-    /// </summary>
-    public static class GridExtensions
-    {
-        /// <summary>
-        /// Set the number of divisions in the u direction for each grid.
-        /// </summary>
-        /// <param name="grids"></param>
-        /// <param name="u"></param>
-        /// <returns></returns>
-        public static IEnumerable<Grid> WithUDivisions(this IEnumerable<Grid> grids, int u)
-        {
-            foreach(var g in grids)
-            {
-                g.WithUDivisions(u);
-            }
-            return grids;
-        }
-
-        /// <summary>
-        /// Set the number of divisions in the u direction for each grid.
-        /// </summary>
-        /// <param name="grids"></param>
-        /// <param name="u"></param>
-        /// <returns></returns>
-        public static IEnumerable<Grid> WithUDivisions(this IEnumerable<Grid> grids, double[] u)
-        {
-            foreach(var g in grids)
-            {
-                g.WithUDivisions(u);
-            }
-            return grids;
-        }
-
-        /// <summary>
-        /// Set the number of divisions in the v direction for each grid.
-        /// </summary>
-        /// <param name="grids"></param>
-        /// <param name="v"></param>
-        /// <returns></returns>
-        public static IEnumerable<Grid> WithVDivisions(this IEnumerable<Grid> grids, int v)
-        {
-            foreach(var g in grids)
-            {
-                g.WithVDivisions(v);
-            }
-            return grids;
-        }
-
-        /// <summary>
-        /// Set the number of divisions in the v direction for each grid.
-        /// </summary>
-        /// <param name="grids"></param>
-        /// <param name="v"></param>
-        /// <returns></returns>
-        public static IEnumerable<Grid> WithVDivisions(this IEnumerable<Grid> grids, double[] v)
-        {
-            foreach(var g in grids)
-            {
-                g.WithVDivisions(v);
-            }
-            return grids;
+            var f = face.ToArray();
+            this._bottom = f[0];
+            this._top = f[2];
+            this._uDiv = CalculateEqualDivisions(uDivisions);
+            this._vDiv = CalculateEqualDivisions(vDivisions);
         }
     }
 }
