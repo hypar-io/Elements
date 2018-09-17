@@ -134,9 +134,9 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Get a point on the polygon at parameter u between 0.0 and 1.0.
+        /// Get a point on the polygon at parameter u.
         /// </summary>
-        /// <param name="u"></param>
+        /// <param name="u">A value between 0.0 and 1.0.</param>
         /// <returns></returns>
         public Vector3 PointAt(double u)
         {

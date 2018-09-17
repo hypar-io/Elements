@@ -109,7 +109,7 @@ namespace Hypar.Elements
         /// <param name="elevations">A collection of elevations at which floors will be created within the mass.</param>
         /// <param name="thickness">The thickness of the floors.</param>
         /// <param name="material">The floor material.</param>
-        public static IEnumerable<Floor> FromMass(this Mass mass, IList<double> elevations, double thickness, Material material)
+        public static IEnumerable<Floor> Floors(this Mass mass, IList<double> elevations, double thickness, Material material)
         {
             var floors = new List<Floor>();
             foreach(var e in elevations)

@@ -34,7 +34,7 @@ namespace Hypar.Tests
             foreach (var f in faces)
             {
                 var g = new Grid(f, 14, elevations.Count-1);
-                foreach(var cell in g.AllCells())
+                foreach(var cell in g.Cells())
                 {
                     var panel = new Panel(cell, BuiltInMaterials.Glass);
                     var edges = panel.Edges.ToArray();
@@ -46,7 +46,7 @@ namespace Hypar.Tests
                 }
             }
 
-            var floors = mass.CreateFloors(elevations, 0.2, BuiltInMaterials.Concrete);
+            var floors = mass.Floors(elevations, 0.2, BuiltInMaterials.Concrete);
             model.AddElements(floors);
 
             var shaft = Profiles.Rectangular(new Vector3(10,10), 5, 5);

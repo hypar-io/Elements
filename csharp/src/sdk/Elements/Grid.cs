@@ -122,7 +122,7 @@ namespace Hypar.Elements
         /// Get all cells.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IList<Vector3>> AllCells()
+        public IEnumerable<IList<Vector3>> Cells()
         {
             var pts = CalculateGridPoints();
 
@@ -148,7 +148,7 @@ namespace Hypar.Elements
         /// <returns></returns>
         public IEnumerable<Line> RowEdges()
         {
-            foreach(var c in this.AllCells())
+            foreach(var c in this.Cells())
             {
                 yield return new Line(c.ElementAt(0), c.ElementAt(1));
             }
@@ -160,7 +160,7 @@ namespace Hypar.Elements
         /// <returns></returns>
         public IEnumerable<Line> ColumnEdges()
         {
-            foreach(var c in this.AllCells())
+            foreach(var c in this.Cells())
             {
                 yield return new Line(c.ElementAt(1), c.ElementAt(2));
             }

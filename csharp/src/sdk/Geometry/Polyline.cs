@@ -10,7 +10,7 @@ namespace Hypar.Geometry
     /// <summary>
     /// A coplanar continuous set of lines.
     /// </summary>
-    public class Polyline
+    public class Polyline: ICurve
     {
         private List<Vector3> _vertices = new List<Vector3>();
 
@@ -22,6 +22,30 @@ namespace Hypar.Geometry
         public IList<Vector3> Vertices
         {
             get{return this._vertices;}
+        }
+
+        /// <summary>
+        /// The length of the polyline.
+        /// </summary>
+        public double Length
+        {
+            get{return this.Segments().Sum(s=>s.Length);}
+        }
+
+        /// <summary>
+        /// The start of the polyline.
+        /// </summary>
+        public Vector3 Start
+        {
+            get{return this._vertices[0];}
+        }
+
+        /// <summary>
+        /// The end of the polyline.
+        /// </summary>
+        public Vector3 End
+        {
+            get{return this._vertices[this._vertices.Count - 1];}
         }
 
         /// <summary>
@@ -91,6 +115,39 @@ namespace Hypar.Geometry
             var a = this._vertices[i];
             var b = this._vertices[i + 1];
             return new Line(a, b);
+        }
+
+        /// <summary>
+        /// Get the point at parameter u along the polyline.
+        /// </summary>
+        /// <param name="u">A value between 0.0 and 1.0.</param>
+        public Vector3 PointAt(double u)
+        {
+            var d = this.Length * u;
+            var totalLength = 0.0;
+            for(var i=0; i<this._vertices.Count-1; i++)
+            {
+                var a = this._vertices[i];
+                var b = this._vertices[i+1];
+                var currLength = a.DistanceTo(b);
+                var currVec = (b - a).Normalized();
+                if(totalLength <= d && totalLength + currLength >= d)
+                {
+                    return a + currVec * ((d-totalLength)/currLength);
+                }
+                totalLength += currLength;
+            }
+
+            return this.End;
+        }
+
+        /// <summary>
+        /// Tessellate the polyline.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Vector3> Tessellate()
+        {
+            return this._vertices;
         }
     }
 }
