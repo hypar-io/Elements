@@ -132,27 +132,6 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Create floors at the specified elevations within a mass.
-        /// </summary>
-        /// <param name="elevations"></param>
-        /// <param name="thickness"></param>
-        /// <param name="material"></param>
-        /// <returns></returns>
-        public IEnumerable<Floor> CreateFloors(IEnumerable<double> elevations, double thickness, Material material)
-        {
-            var floors = new List<Floor>();
-            foreach(var e in elevations)
-            {
-                if (e >= this.Elevation && e <= this.Elevation + this.Height)
-                {
-                    var f = new Floor(this.Perimeter, e, thickness, new Polygon[]{}, material);
-                    floors.Add(f);
-                }
-            }
-            return floors;
-        }
-
-        /// <summary>
         /// Tessellate the mass.
         /// </summary>
         /// <returns>A mesh representing the tessellated mass.</returns>

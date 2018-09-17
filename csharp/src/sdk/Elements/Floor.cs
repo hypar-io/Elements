@@ -97,4 +97,27 @@ namespace Hypar.Elements
             return Mesh.Extrude(polys, this.Thickness, true);
         }
     }
+
+    public static class FloorExtensions
+    {
+        /// <summary>
+        /// Create floors at the specified elevations within a mass.
+        /// </summary>
+        /// <param name="elevations">A collection of elevations at which floors will be created within the mass.</param>
+        /// <param name="thickness">The thickness of the floors.</param>
+        /// <param name="material">The floor material.</param>
+        public static IEnumerable<Floor> FromMass(this Mass mass, IList<double> elevations, double thickness, Material material)
+        {
+            var floors = new List<Floor>();
+            foreach(var e in elevations)
+            {
+                if (e >= mass.Elevation && e <= mass.Elevation + mass.Height)
+                {
+                    var f = new Floor(mass.Perimeter, e, thickness, new Polygon[]{}, material);
+                    floors.Add(f);
+                }
+            }
+            return floors;
+        }
+    }
 }
