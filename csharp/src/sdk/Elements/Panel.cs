@@ -9,64 +9,58 @@ namespace Hypar.Elements
     /// <summary>
     /// A zero-thickness planar panel with an arbitrary outline.
     /// </summary>
-    public class Panel : Element, ILocateable<Polyline>, ITessellate<Mesh>, IMaterialize
-    {
+    public class Panel : Element, ITessellate<Mesh>
+    {   
         /// <summary>
-        /// The normal of the panel, derived from the normal of the perimeter.
+        /// A CCW collection of points defining the corners of the panel.
         /// </summary>
-        /// <returns></returns>
-        [JsonProperty("normal")]
-        public Vector3 Normal
+        [JsonProperty("perimeter")]
+        public IList<Vector3> Perimeter{get;}
+
+        /// <summary>
+        /// The edges of the panel.
+        /// </summary>
+        [JsonProperty("edges")]
+        public IEnumerable<Line> Edges
         {
-            get{return this.Location.Normal();}
+            get
+            {
+                for(var i=0; i<this.Perimeter.Count-1; i++)
+                {
+                    yield return new Line(this.Perimeter[i], this.Perimeter[i+1]);
+                }
+            }
         }
 
         /// <summary>
-        /// The boundary of the panel.
+        /// The normal of the panel, defined using the first 3 vertices in the location.
         /// </summary>
         /// <value></value>
-        [JsonProperty("location")]
-        public Polyline Location {get;}
-
-        /// <summary>
-        /// The material of the panel.
-        /// </summary>
-        /// <value></value>
-        [JsonIgnore]
-        public Material Material{get;set;}
+        public Vector3 Normal
+        {
+            get
+            {
+                var verts = this.Perimeter.ToArray();
+                return new Plane(verts[0], verts).Normal;
+            }
+        }
 
         /// <summary>
         /// Construct a panel.
         /// </summary>
         /// <param name="perimeter">The perimeter of the panel.</param>
-        public Panel(Polyline perimeter)
+        /// <param name="material">The panel's material</param>
+        public Panel(IList<Vector3> perimeter, Material material = null)
         {
-            var vCount = perimeter.Vertices.Count();
+            var vCount = perimeter.Count();
             if (vCount > 4 || vCount < 3)
             {
                 throw new ArgumentException("Panels can only be constructed currently using perimeters with 3 or 4 vertices.", "perimeter");
             }
-            this.Location = perimeter;
-            this.Material = BuiltInMaterials.Default;
+            this.Perimeter = perimeter;
+            this.Material = material == null ? BuiltInMaterials.Default : material;
         }
 
-        /// <summary>
-        /// Construct a Panel.
-        /// </summary>
-        /// <param name="perimeter">The perimeter of the panel.</param>
-        /// <param name="material">The panel's material.</param>
-        /// <returns></returns>
-        public Panel(Polyline perimeter, Material material)
-        {
-            var vCount = perimeter.Vertices.Count();
-            if (vCount > 4 || vCount < 3)
-            {
-                throw new ArgumentException("Panels can only be constructed currently using perimeters with 3 or 4 vertices.", "perimeter");
-            }
-            this.Location = perimeter;
-            this.Material = material;
-        }
-        
         /// <summary>
         /// Tessellate the panel.
         /// </summary>
@@ -74,15 +68,15 @@ namespace Hypar.Elements
         public Mesh Tessellate()
         {
             var mesh = new Mesh();
-            var vCount = this.Location.Count();
+            var vCount = this.Perimeter.Count();
 
             if (vCount == 3)
             {
-                mesh.AddTriangle(this.Location.ToArray());
+                mesh.AddTriangle(this.Perimeter);
             }
             else if (vCount == 4)
             {
-                mesh.AddQuad(this.Location.ToArray());
+                mesh.AddQuad(this.Perimeter);
             }
             return mesh;
         }

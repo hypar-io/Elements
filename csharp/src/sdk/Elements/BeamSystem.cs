@@ -16,7 +16,7 @@ namespace Hypar.Elements
         /// A collection of Beams contained in the system.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Beam> Beams
+        public IList<Beam> Beams
         {
             get{return _beams;}
         }
@@ -30,7 +30,7 @@ namespace Hypar.Elements
         /// <param name="edge2"></param>
         /// <param name="material"></param>
         /// <param name="transform"></param>
-        public BeamSystem(int count, Polyline profile, Line edge1, Line edge2, Material material, Transform transform = null)
+        public BeamSystem(int count, IList<Polygon> profile, Line edge1, Line edge2, Material material, Transform transform = null)
         {
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material, transform);
         }
@@ -43,18 +43,19 @@ namespace Hypar.Elements
         /// <param name="profile"></param>
         /// <param name="material"></param>
         /// <param name="transform"></param>
-        public BeamSystem(Floor floor, int count, Polyline profile, Material material, Transform transform = null)
+        public BeamSystem(Floor floor, int count, IList<Polygon> profile, Material material, Transform transform = null)
         {
-            var edges = floor.Location.Segments().ToArray();
+            var edges = floor.Perimeter.Segments().ToArray();
             var e1 = edges[0];
             var e2 = edges[2].Reversed();
-            var depth = profile.BoundingBox.Max.Y - profile.BoundingBox.Min.Y;
+            var bbox = new BBox3(profile);
+            var depth = bbox.Max.Y - bbox.Min.Y;
             var edge1 = new Line(new Vector3(e1.Start.X, e1.Start.Y, floor.Elevation - depth/2), new Vector3(e1.End.X, e1.End.Y, floor.Elevation - depth/2));
             var edge2 = new Line(new Vector3(e2.Start.X, e2.Start.Y, floor.Elevation - depth/2), new Vector3(e2.End.X, e2.End.Y, floor.Elevation - depth/2));
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material, transform);
         }
 
-        private void CreateBeamsBetweenEdges(Line edge1, Line edge2, int count, Polyline profile, Material material, Transform transform)
+        private void CreateBeamsBetweenEdges(Line edge1, Line edge2, int count, IList<Polygon> profile, Material material, Transform transform)
         {
             var div = 1.0/((double)count + 1);
             for(var i=0; i<count; i++)

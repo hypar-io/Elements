@@ -1,6 +1,8 @@
 using Hypar.Geometry;
 using Hypar.Elements;
+using System;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace Hypar.Tests
@@ -8,27 +10,32 @@ namespace Hypar.Tests
     public class GridTests
     {
         [Fact]
-        public void ValidValues_Construct_Success()
+        public void Example()
         {
-
-            var pline =new Polyline(new[]{new Vector3(0,0,0), new Vector3(20,0,0), new Vector3(20,10,30), new Vector3(0,0,30)});
-            var grid = new Grid(pline, 5, 5);
-                                        
-            var profile = Profiles.WideFlangeProfile(0.5, 0.5, 0.1, 0.1, Profiles.VerticalAlignment.Center);
+            var a = new Vector3();
+            var b = new Vector3(10,0,0);
+            var c = new Vector3(0,0,10);
+            var d = new Vector3(10,0,10);
+            var grid = new Grid(new Line(a,b), new Line(c,d), 5, 5);
 
             var model = new Model();
-            foreach(var c in grid.AllCells())
+            foreach(var cell in grid.Cells())
             {
-                var panel = new Panel(c,BuiltInMaterials.Glass);
-
-                var beam1 = new Beam(c.Segment(0), profile, BuiltInMaterials.Steel, panel.Normal);
-                var beam2 = new Beam(c.Segment(2), profile, BuiltInMaterials.Steel, panel.Normal);
-                var beam3 = new Beam(c.Segment(1), profile, BuiltInMaterials.Steel, panel.Normal);
-                
-                model.AddElements(new Element[]{panel, beam1, beam2, beam3});
+                var panel = new Panel(cell);
+                model.AddElement(panel);
             }
-            Assert.Equal(100, model.Elements.Count);
-            model.SaveGlb("gridTests.glb");
+            model.SaveGlb("grid.glb");
+        }
+
+        [Fact]
+        public void ValidValues_Construct_Success()
+        {
+            var bottom = new Line(new Vector3(0,0,0), new Vector3(20,0,0));
+            var top = new Line(new Vector3(20,10,30), new Vector3(0,0,30));
+            var grid = new Grid(bottom, top, 5, 5);
+                                        
+            var profile = Profiles.WideFlangeProfile(0.5, 0.5, 0.1, 0.1, Profiles.VerticalAlignment.Center);
+            Assert.Equal(25, grid.Cells().Count());
         }
     }
 }

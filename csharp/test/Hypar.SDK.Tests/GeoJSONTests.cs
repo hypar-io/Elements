@@ -1,5 +1,4 @@
 using Hypar.GeoJSON;
-using Hypar.Geometry;
 using Newtonsoft.Json;
 using System;
 using Xunit;

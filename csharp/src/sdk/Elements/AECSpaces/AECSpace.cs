@@ -410,15 +410,14 @@ namespace AECSpaces
                     vertices.Add(new Hypar.Geometry.Vector3(point.X, point.Y, point.Z));
                 }
                 vertices.Reverse();
-                Hypar.Geometry.Polyline boundary = new Hypar.Geometry.Polyline(vertices);               
+                var boundary = new Hypar.Geometry.Polygon(vertices);               
                 var color = new Material(ID, new Hypar.Geometry.Color(red: Color.R / 255,
                                                                       green: Color.G / 255,
                                                                       blue: Color.B / 255,
                                                                       alpha: Color.A / 255),
                                                                       specularFactor: AECColor.Translucent / 255,
                                                                       glossinessFactor: AECColor.Translucent / 255);
-                var mass = new Mass(boundary, Level, boundary, Elevation);
-                mass.Material = color;
+                var mass = new Mass(boundary, Level, Elevation, color);
                 return mass;
             }
         }
