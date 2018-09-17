@@ -12,7 +12,7 @@ namespace Hypar.Geometry
     /// </summary>
     public class Polygon : ICurve
     {
-        private List<Vector3> _vertices = new List<Vector3>();
+        private IList<Vector3> _vertices;
 
         /// <summary>
         /// The area enclosed by the polygon.
@@ -72,19 +72,10 @@ namespace Hypar.Geometry
         /// <summary>
         /// Construct a Polygon from a collection of points.
         /// </summary>
-        /// <param name="vertices"></param>
-        public Polygon(IEnumerable<Vector3> vertices)
+        /// <param name="vertices">A collection of vertices.</param>
+        public Polygon(IList<Vector3> vertices)
         {
-            this._vertices.AddRange(vertices);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<Vector3> GetEnumerator()
-        {
-            return this._vertices.GetEnumerator();
+            this._vertices = vertices;
         }
 
         /// <summary>
@@ -173,9 +164,43 @@ namespace Hypar.Geometry
         /// <returns>Returns a new polgon with opposite winding.</returns>
         public Polygon Reversed()
         {
-            var verts = new List<Vector3>(_vertices);
-            verts.Reverse();
-            return new Polygon(verts);
+            return new Polygon(this._vertices.Reverse().ToArray());
+        }
+
+        /// <summary>
+        /// Is this polygon equal to the provided polygon?
+        /// </summary>
+        /// <param name="obj"></param>
+        public override bool Equals(object obj)
+        {
+            var p = obj as Polygon;
+            if(p == null)
+            {
+                return false;
+            }
+            if(this.Vertices.Count != p.Vertices.Count)
+            {
+                return false;
+            }
+
+            for(var i=0; i<this.Vertices.Count; i++)
+            {
+                if(!this.Vertices[i].Equals(p.Vertices[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get the hash code for the polygon.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.Vertices.GetHashCode();
         }
     }
 
@@ -203,7 +228,7 @@ namespace Hypar.Geometry
         internal static Polygon ToPolygon(this List<IntPoint> p)
         {
             var scale = 1024.0;
-            return new Polygon(p.Select(v=>new Vector3(v.X/scale, v.Y/scale)));
+            return new Polygon(p.Select(v=>new Vector3(v.X/scale, v.Y/scale)).ToArray());
         }
     }
 }

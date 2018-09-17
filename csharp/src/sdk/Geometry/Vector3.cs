@@ -46,12 +46,12 @@ namespace Hypar.Geometry
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if(obj.GetType() != typeof(Vector3))
+            var v = obj as Vector3;
+            if(v == null)
             {
                 return false;
             }
-
-            var v = (Vector3)obj;
+            
             return this.X == v.X && this.Y == v.Y && this.Z == v.Z;
         }
 
@@ -136,6 +136,7 @@ namespace Hypar.Geometry
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
+        [JsonConstructor]
         public Vector3(double x, double y, double z)
         {
             this.X = x;
@@ -157,7 +158,6 @@ namespace Hypar.Geometry
         /// <summary>
         /// Get the length of this vector.
         /// </summary>
-        /// <returns></returns>
         public double Length()
         {
             return Math.Sqrt(Math.Pow(X,2) + Math.Pow(Y,2) + Math.Pow(Z,2));

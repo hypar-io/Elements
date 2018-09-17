@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Hypar.Geometry
 {
     /// <summary>
@@ -8,25 +10,25 @@ namespace Hypar.Geometry
         /// <summary>
         /// The origin.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("origin")]
         public Vector3 Origin{get;}
 
         /// <summary>
         /// The X axis.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("x_axis")]
         public Vector3 XAxis{get;}
 
         /// <summary>
         /// The Y axis.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("y_axis")]
         public Vector3 YAxis{get;}
 
         /// <summary>
         /// The Z axis.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("z_axis")]
         public Vector3 ZAxis{get;}
 
         /// <summary>

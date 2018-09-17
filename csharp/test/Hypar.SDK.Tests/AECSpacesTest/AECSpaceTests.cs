@@ -931,7 +931,7 @@ namespace AECSpacesTest
                 {
                     vertices.Add(new Hypar.Geometry.Vector3(point.X, point.Y, point.Z));
                 }
-                boundary = new Hypar.Geometry.Polygon(vertices);
+                boundary = new Hypar.Geometry.Polygon(vertices.ToArray());
                 vertices.Clear();
                 var mass = new Mass(boundary, space.Level, space.Elevation);
                                                                                         

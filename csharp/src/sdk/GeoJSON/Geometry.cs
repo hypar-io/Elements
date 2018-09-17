@@ -280,7 +280,7 @@ namespace Hypar.GeoJSON
                 {
                     verts.Add(coords[j].ToVectorMeters());
                 }
-                var pline = new Hypar.Geometry.Polygon(verts);
+                var pline = new Hypar.Geometry.Polygon(verts.ToArray());
                 plineArr[i] = pline;
             }
             return plineArr;

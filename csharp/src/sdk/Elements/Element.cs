@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hypar.Geometry;
+using Newtonsoft.Json.Linq;
 
 namespace Hypar.Elements
 {
@@ -19,7 +20,16 @@ namespace Hypar.Elements
         /// </summary>
         /// <returns></returns>
         [JsonProperty("id")]
-        public Guid Id {get;}
+        public string Id {get;internal set;}
+
+        /// <summary>
+        /// The type of the element.
+        /// </summary>
+        [JsonProperty("type")]
+        public virtual string Type
+        {
+            get{ return "element";}
+        }
 
         /// <summary>
         /// A map of Parameters for the Element.
@@ -34,13 +44,13 @@ namespace Hypar.Elements
         /// <summary>
         /// The element's material.
         /// </summary>
-        /// <value></value>
+        [JsonProperty("material")]
         public Material Material{get; protected set;}
         
         /// <summary>
         /// The element's transform.
         /// </summary>
-        /// <value></value>
+        [JsonProperty("transform")]
         public Transform Transform{get; protected set;}
 
         /// <summary>
@@ -48,7 +58,7 @@ namespace Hypar.Elements
         /// </summary>
         public Element()
         {
-            this.Id = Guid.NewGuid();
+            this.Id = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -80,6 +90,54 @@ namespace Hypar.Elements
             } 
             
             throw new Exception("The specified parameter could not be found.");
+        }
+    }
+
+    public class ElementConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Element);
+        }
+
+        public override bool CanRead
+        {
+            get{return true;}
+        }
+
+        public override bool CanWrite
+        {
+            get{return false;}
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var obj = JObject.Load(reader);
+            var typeName = (string)obj.GetValue("type");
+            switch(typeName)
+            {
+                case "panel":
+                    return obj.ToObject<Panel>();
+                case "floor":
+                    return obj.ToObject<Floor>();
+                case "mass":
+                    return obj.ToObject<Mass>();
+                case "space":
+                    return obj.ToObject<Space>();
+                case "column":
+                    return obj.ToObject<Column>();
+                case "beam":
+                    return obj.ToObject<Beam>();
+                case "brace":
+                    return obj.ToObject<Brace>();
+                default:
+                    throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
+            }
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

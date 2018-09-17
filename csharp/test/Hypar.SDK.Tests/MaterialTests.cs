@@ -8,7 +8,7 @@ namespace Hypar.Tests
     public class MaterialTests
     {
         [Fact]
-        public void ValidValues_Construct_Success()
+        public void Construct()
         {
             var material = new Material("test", new Color(1.0f, 1.0f, 1.0f, 1.0f), 1.0f, 1.0f);
             Assert.NotNull(material);
@@ -25,6 +25,13 @@ namespace Hypar.Tests
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", new Color(-1.0f, 1,0f, 1.0f), 1.0f, 1.0f));
             Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", new Color(3.0f, 1,0f, 1.0f), 1.0f, 1.0f));
+        }
+
+        [Fact]
+        public void StaticColor()
+        {
+            var material = new Material("test", Color.Mint, 0.2f, 0.2f);
+            Assert.Equal(material.Color, Color.Mint);
         }
     }
 }
