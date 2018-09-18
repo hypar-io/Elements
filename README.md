@@ -29,10 +29,12 @@ dotnet add package HyparSDK
 ## Examples
 The best examples are those provided in the [tests](https://github.com/hypar-io/sdk/tree/master/csharp/test/Hypar.SDK.Tests), where we demonstrate usage of almost every function in the library.
 
-## Build
+## Building the SDK
+You'll only need to do this if you want to contribute to the SDK, otherwise you can use the Nuget packages that are published regularly.
+
 `dotnet build`
 
-## Test
+## Testing the SDK
 `dotnet test`
 
 ## Third Party Libraries
