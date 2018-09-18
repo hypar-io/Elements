@@ -38,6 +38,6 @@ The best examples are those provided in the [tests](https://github.com/hypar-io/
 ## Third Party Libraries
 
 - [LibTessDotNet](https://github.com/speps/LibTessDotNet)  
-- [Verb](https://github.com/pboyer/verb)
+- [Clipper](http://www.angusj.com/delphi/clipper.php)
 - [GeoJson](http://geojson.org/)
 - [glTF](https://www.khronos.org/gltf/).
