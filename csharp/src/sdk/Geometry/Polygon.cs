@@ -75,6 +75,20 @@ namespace Hypar.Geometry
         /// <param name="vertices">A collection of vertices.</param>
         public Polygon(IList<Vector3> vertices)
         {
+            for(var i=0; i<vertices.Count; i++)
+            {
+                for(var j=0; j<vertices.Count; j++)
+                {
+                    if(i == j)
+                    {
+                        continue;
+                    }
+                    if(vertices[i].IsAlmostEqualTo(vertices[j]))
+                    {
+                        throw new Exception($"The polygon could not be constructed. Two vertices were almost equal: a {vertices[i]} b {vertices[j]}.");
+                    }
+                }
+            }
             this._vertices = vertices;
         }
 

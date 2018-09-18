@@ -100,5 +100,13 @@ namespace Hypar.Tests
             var offset = plinew.Offset(-0.5);
             Assert.Equal(2, offset.Count());
         }
+
+        [Fact]
+        public void SameVertices_ThrowsException()
+        {
+            var a = new Vector3();
+            var b = new Vector3(0.000001,0,0);
+            Assert.Throws<Exception>(()=>new Polygon(new[]{a,a,a}));
+        }
     }
 }

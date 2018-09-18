@@ -53,7 +53,7 @@ namespace Hypar.Tests
             var model = new Model();
             model.AddElements(new Element[]{panel, floor, mass, beam, column, space});
             var json = model.ToJson();
-            Console.WriteLine(json);
+            // Console.WriteLine(json);
 
             var newModel = Model.FromJson(json);
             var elements = newModel.Values;
