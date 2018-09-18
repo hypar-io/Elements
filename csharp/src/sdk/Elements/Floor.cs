@@ -61,7 +61,7 @@ namespace Hypar.Elements
             }
 
             this.Perimeter = perimeter;
-            this.Voids = voids == null ? new List<Polygon>() : voids;
+            this.Voids = voids == null ? new List<Polygon>() : voids.Select(v=>v.Reversed()).ToList();
             this.Elevation = elevation;
             this.Thickness = thickness;
             this.Transform = new Transform(new Vector3(0, 0, elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));

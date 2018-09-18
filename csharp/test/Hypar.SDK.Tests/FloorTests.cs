@@ -42,8 +42,8 @@ namespace Hypar.Tests
         public void Area()
         {
             // A floor with two holes punched in it.
-            var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1).Reversed();
-            var p2 = Profiles.Rectangular(new Vector3(3,3,0), 1, 1).Reversed();
+            var p1 = Profiles.Rectangular(new Vector3(1,1,0), 1, 1);
+            var p2 = Profiles.Rectangular(new Vector3(3,3,0), 1, 1);
             var floor = new Floor(Profiles.Rectangular(Vector3.Origin, 10, 10), 0.0, 0.2, new []{p1, p2}, BuiltInMaterials.Concrete);
             Assert.Equal(100.0-2.0, floor.Area());
         }

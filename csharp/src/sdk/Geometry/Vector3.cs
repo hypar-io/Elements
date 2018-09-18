@@ -56,6 +56,15 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
+        /// Get the hash code for the vector.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return new[]{this.ToArray()}.GetHashCode();
+        }
+
+        /// <summary>
         /// Construct a vector along the X axis.
         /// </summary>
         /// <returns></returns>

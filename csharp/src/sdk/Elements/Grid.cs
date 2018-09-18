@@ -191,7 +191,7 @@ namespace Hypar.Elements
         {
             var f = face.ToArray();
             this._bottom = f[0];
-            this._top = f[2];
+            this._top = f[2].Reversed();
             this._uDiv = CalculateEqualDivisions(uDivisions);
             this._vDiv = CalculateEqualDivisions(vDivisions);
         }
