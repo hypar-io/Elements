@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <PackageReference Include="glTF2Loader" Version="1.1.1-alpha" />
-    <PackageReference Include="NetTopologySuite" Version="1.15.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
   </ItemGroup>
