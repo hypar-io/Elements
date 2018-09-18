@@ -1,18 +1,42 @@
 <img src="./hypar_logo.svg" width="300px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
 
-# Hypar SDK
+# SDK
 [![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/sdk)
 
-The Hypar SDK is a library for creating functions that execute on Hypar. A function is a piece of code that is executed in the cloud to build stuff. That stuff can be 3D geometry, which we store as glTF files, or data which we serialize to JSON and store in a document database. You create the function logic and publish the function to Hypar, then we execute it for you and store the results. The Hypar SDK provides object types that are useful for generating the built environment.
+The Hypar SDK is a library for creating generators that execute on Hypar. A generator is a piece of code that is executed in the cloud to create building elements. The Hypar SDK contains types for a variety of building elements like Walls, Beams, and Spaces.
 
-You can see some functions written using the Hypar SDK running on [Hypar Explore](https://explore.hypar.io/functions).
+You author the generator logic and publish the generator to Hypar, then we execute it for you and store the results. You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io/functions). Here's an example using the SDK to create a `Beam`:
+```c#
+var line = new Line(Vector3.Origin, new Vector3(5,5,5));
+var beam = new Beam(line, new[]{Profiles.WideFlangeProfile()});
+var model = new Model();
+model.AddElement(beam);
+var json = model.ToJson();
+```
 
-# Install
+## Getting Started the Easy Way
+The easiest way to get started is to clone the [starter](https://github.com/hypar-io/starter) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
+```bash
+git clone https://github.com/hypar-io/starter
+```
+
+## Getting Started the Less Easy Way
 The Hypar SDK is available as a [nuget package](https://www.nuget.org/packages/HyparSDK).
 To install for dotnet projects:
-```
+```bash
 dotnet add package HyparSDK
 ```
+
+## Examples
+The best examples are those provided in the [tests](https://github.com/hypar-io/sdk/tree/master/csharp/test/Hypar.SDK.Tests), where we demonstrate usage of almost every function in the library.
+
+## Building the SDK
+You'll only need to do this if you want to contribute to the SDK, otherwise you can use the Nuget packages that are published regularly.
+
+`dotnet build`
+
+## Testing the SDK
+`dotnet test`
 
 ## Words of Warning
 - The Hypar SDK is currently in alpha. Please do not use it for production work.
@@ -22,18 +46,9 @@ dotnet add package HyparSDK
   - Dotnet function packages are small. Smaller functions results in faster cold start times in serverless environments.
   - C# libraries can be reused in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
 
-## Examples
-The best examples are those provided in the [tests](https://github.com/hypar-io/sdk/tree/master/csharp/test/Hypar.SDK.Tests), where we demonstrate usage of almost every function in the library.
-
-## Build
-`dotnet build`
-
-## Test
-`dotnet test`
-
 ## Third Party Libraries
 
 - [LibTessDotNet](https://github.com/speps/LibTessDotNet)  
-- [Verb](https://github.com/pboyer/verb)
+- [Clipper](http://www.angusj.com/delphi/clipper.php)
 - [GeoJson](http://geojson.org/)
 - [glTF](https://www.khronos.org/gltf/).
