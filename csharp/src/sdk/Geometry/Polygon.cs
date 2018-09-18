@@ -83,7 +83,7 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
         /// <returns>A new polyline offset by offset.</returns>
-        public IEnumerable<Polygon> Offset(double offset)
+        public IList<Polygon> Offset(double offset)
         {
             var scale = 1024.0;
             var path = this.ToClipperPath();
