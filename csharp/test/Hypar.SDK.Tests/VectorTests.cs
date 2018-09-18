@@ -42,5 +42,16 @@ namespace Hypar.Tests
             var c = a.Negated();
             Assert.True(a.IsParallelTo(c));
         }
+
+        [Fact]
+        public void Project()
+        {
+            var p = new Plane(new Vector3(0,0,5), Vector3.ZAxis);
+            var v = new Vector3(5,5,0);
+            var v1 = p.Project(v);
+            Assert.Equal(v.X, v1.X);
+            Assert.Equal(v.Y, v1.Y);
+            Assert.Equal(5.0, v1.Z);
+        }
     }
 }
