@@ -3,9 +3,7 @@
 # SDK
 [![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/sdk)
 
-The Hypar SDK is a library for creating generators that execute on Hypar. A generator is a piece of code that is executed in the cloud to create building elements. The Hypar SDK contains types for a variety of building elements like Walls, Beams, and Spaces.
-
-You author the generator logic and publish the generator to Hypar, then we execute it for you and store the results. You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io/functions). Here's an example using the SDK to create a `Beam`:
+The Hypar SDK is a library for creating building elements like Walls, Beams, and Spaces. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings. Here's an example using the SDK to create a `Beam`:
 ```c#
 var line = new Line(Vector3.Origin, new Vector3(5,5,5));
 var beam = new Beam(line, new[]{Profiles.WideFlangeProfile()});
@@ -13,6 +11,8 @@ var model = new Model();
 model.AddElement(beam);
 var json = model.ToJson();
 ```
+
+The Hypar SDK is also at the heart of the Hypar platform. A Hypar generator is a piece of code that is executed in the cloud to generate a building or a set of building components. You author the generator logic referencing the Hypar SDK, and publish the generator to Hypar, then Hypar executes it for you and store the results. You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io/functions). 
 
 ## Getting Started the Easy Way
 The easiest way to get started is to clone the [starter](https://github.com/hypar-io/starter) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
