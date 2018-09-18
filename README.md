@@ -12,7 +12,7 @@ model.AddElement(beam);
 var json = model.ToJson();
 ```
 
-The Hypar SDK is also at the heart of the Hypar platform. A Hypar generator is a piece of code that is executed in the cloud to generate a building or a set of building components. You author the generator logic referencing the Hypar SDK, and publish the generator to Hypar, then Hypar executes it for you and store the results. You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io/functions). 
+The Hypar SDK is also at the heart of the Hypar platform. A Hypar generator is a piece of code that is executed in the cloud to generate a building or a set of building components. You author the generator logic referencing the Hypar SDK, and publish the generator to Hypar, then Hypar executes it for you and store the results. You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io). 
 
 ## Getting Started the Easy Way
 The easiest way to get started is to clone the [starter](https://github.com/hypar-io/starter) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
