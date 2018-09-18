@@ -428,6 +428,33 @@ IMin:{m_index_min}";
             var height = line.Length;
             return Mesh.Extrude(perimeters, height, capped);
         }
+
+        /// <summary>
+        /// Create a ruled loft between sections.
+        /// </summary>
+        /// <param name="sections"></param>
+        public static Mesh Loft(IList<Polygon> sections)
+        {
+            var mesh = new Hypar.Geometry.Mesh();
+
+            for(var i=0; i<sections.Count; i++)
+            {
+                var p1 = sections[i];
+                var p2 = i == sections.Count-1 ? sections[0] : sections[i+1];
+
+                for(var j=0; j<p1.Vertices.Count; j++)
+                {
+                    var j1 = j == p1.Vertices.Count - 1 ? 0 : j+1;
+                    var v1 = p1.Vertices[j];
+                    var v2 = p1.Vertices[j1];
+                    var v3 = p2.Vertices[j1];
+                    var v4 = p2.Vertices[j];
+                    mesh.AddQuad(new []{v1,v2,v3,v4});
+                }
+            }
+
+            return mesh;
+        }
     }
 
     internal static class TessExtensions

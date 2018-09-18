@@ -367,6 +367,19 @@ namespace Hypar.Geometry
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
         }
+
+        /// <summary>
+        /// Project the specified vector onto the plane.
+        /// </summary>
+        /// <param name="p"></param>
+        public Vector3 Project(Plane p)
+        {
+            //Ax+By+Cz+d=0
+            //p' = p - (n ⋅ (p - o)) * n
+            var d = -p.Origin.X * p.Normal.X - p.Origin.Y * p.Normal.Y - p.Origin.Z * p.Normal.Z;
+            var p1 = this - (p.Normal.Dot(this-p.Origin)) * p.Normal;
+            return p1;
+        }
     }
 
     /// <summary>

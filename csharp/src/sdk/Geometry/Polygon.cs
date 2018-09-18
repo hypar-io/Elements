@@ -216,6 +216,25 @@ namespace Hypar.Geometry
         {
             return this.Vertices.GetHashCode();
         }
+
+        /// <summary>
+        /// Project the specified vector onto the plane.
+        /// </summary>
+        /// <param name="p"></param>
+        public Polygon Project(Plane p)
+        {
+            return new Polygon(this.Vertices.Select(v=>v.Project(p)).ToList());
+        }
+
+        /// <summary>
+        /// Transform the polygon by the specified transform.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public Polygon Transform(Transform t)
+        {
+            return new Polygon(this.Vertices.Select(v=>t.OfPoint(v)).ToList());
+        }
     }
 
     /// <summary>
