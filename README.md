@@ -3,11 +3,15 @@
 # Hypar SDK
 [![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/sdk)
 
-The Hypar SDK is a library for creating generators that execute on Hypar. A generator is a piece of code that is executed in the cloud to build stuff. The Hypar SDK contains types for a variety of building elements. You author the generator logic and publish the generator to Hypar, then we execute it for you and store the results.
+The Hypar SDK is a library for creating generators that execute on Hypar. A generator is a piece of code that is executed in the cloud to build stuff. The Hypar SDK contains types for a variety of building elements. You author the generator logic and publish the generator to Hypar, then we execute it for you and store the results. You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io/functions).
 
-You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io/functions).
+## Getting Started the Easy Way
+The easiest way to get started is to clone the [starter](https://github.com/hypar-io/starter) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
+```
+git clone https://github.com/hypar-io/starter
+```
 
-# Install
+## Getting Started the Less Easy Way
 The Hypar SDK is available as a [nuget package](https://www.nuget.org/packages/HyparSDK).
 To install for dotnet projects:
 ```
