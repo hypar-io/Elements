@@ -300,7 +300,7 @@ namespace Hypar.Tests
 
             var plinew = new Polygon(new[]{a,b,c});
             var offset = plinew.Offset(0.2);
-            Assert.Single(offset);
+            Assert.True(offset.Count() == 1);
         }
 
         [Fact]
