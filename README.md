@@ -1,6 +1,6 @@
 <img src="./hypar_logo.svg" width="300px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
 
-# Hypar SDK
+# SDK
 [![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/sdk)
 
 The Hypar SDK is a library for creating generators that execute on Hypar. A generator is a piece of code that is executed in the cloud to build stuff. The Hypar SDK contains types for a variety of building elements. You author the generator logic and publish the generator to Hypar, then we execute it for you and store the results. You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io/functions).
