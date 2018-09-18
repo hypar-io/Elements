@@ -3,9 +3,9 @@
 # Hypar SDK
 [![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/sdk)
 
-The Hypar SDK is a library for creating functions that execute on Hypar. A function is a piece of code that is executed in the cloud to build stuff. That stuff can be 3D geometry, which we store as glTF files, or data which we serialize to JSON and store in a document database. You create the function logic and publish the function to Hypar, then we execute it for you and store the results. The Hypar SDK provides object types that are useful for generating the built environment.
+The Hypar SDK is a library for creating generators that execute on Hypar. A generator is a piece of code that is executed in the cloud to build stuff. The Hypar SDK contains types for a variety of building elements. You author the generator logic and publish the generator to Hypar, then we execute it for you and store the results.
 
-You can see some functions written using the Hypar SDK running on [Hypar Explore](https://explore.hypar.io/functions).
+You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io/functions).
 
 # Install
 The Hypar SDK is available as a [nuget package](https://www.nuget.org/packages/HyparSDK).
