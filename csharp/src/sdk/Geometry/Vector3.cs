@@ -371,7 +371,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// Project the specified vector onto the plane.
         /// </summary>
-        /// <param name="p"></param>
+        /// <param name="p">The plane on which to project the point.</param>
         public Vector3 Project(Plane p)
         {
             //Ax+By+Cz+d=0
