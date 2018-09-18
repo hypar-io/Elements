@@ -4,7 +4,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Hypar.SDK.Tests")]
 namespace Hypar.Geometry
 {
     /// <summary>
@@ -184,6 +186,14 @@ namespace Hypar.Geometry
     /// </summary>
     internal static class PolygonExtensions
     {
+        internal enum PolygonOps
+        {
+            Difference,
+            Intersection,
+            Union,
+            XOR
+        }
+
         /// <summary>
         /// Construct a clipper path from a Polygon.
         /// </summary>
@@ -200,10 +210,153 @@ namespace Hypar.Geometry
             return path;
         }
 
+        /// <summary>
+        /// Construct a Polygon from a clipper path 
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+
         internal static Polygon ToPolygon(this List<IntPoint> p)
         {
             var scale = 1024.0;
             return new Polygon(p.Select(v=>new Vector3(v.X/scale, v.Y/scale)));
+        }
+
+        /// <summary>
+        /// Returns true if the interior of the first polygon is coincident with every interior and boundary point of the second polygon.
+        /// </summary>
+        /// <param name="p1">The polygon boundary.</param>
+        /// <param name="p2">The polygon tested for containment within the boundary.</param>
+        /// <param name="cvr">If true, polygon is contained if boundary points are coincident.</param>
+        /// <returns></returns>
+        internal static bool Contains(Polygon p1, Polygon p2, bool cvr = false)
+        {
+            var p1Path = ToClipperPath(p1);
+            var p2Path = ToClipperPath(p2);
+            foreach (IntPoint point in p2Path)
+            {
+                if (cvr ? Clipper.PointInPolygon(point, p1Path) == 0 : Clipper.PointInPolygon(point, p1Path) <= 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if the two polygons have no interior or boundary points coincident.
+        /// </summary>
+        /// <param name="p1">The first polygon to compare.</param>
+        /// <param name="p2">The second polygon to compare.</param>
+        /// <returns></returns>
+        internal static bool Disjoint(Polygon p1, Polygon p2)
+        {
+            var p1Path = ToClipperPath(p1);
+            var p2Path = ToClipperPath(p2);
+            foreach (IntPoint point in p1Path)
+            {
+                if (Clipper.PointInPolygon(point, p2Path) != 0)
+                {
+                    return false;
+                }
+            }
+            foreach (IntPoint point in p2Path)
+            {
+                if (Clipper.PointInPolygon(point, p1Path) != 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if the interior of two polygons intersect.
+        /// </summary>
+        /// <param name="p1">The first polygon to compare.</param>
+        /// <param name="p2">The second polygon to compare.</param>
+        /// <returns></returns>
+        internal static bool Intersect(Polygon p1, Polygon p2)
+        {
+            var p1Path = ToClipperPath(p1);
+            var p2Path = ToClipperPath(p2);
+            foreach (IntPoint point in p1Path)
+            {
+                if (Clipper.PointInPolygon(point, p2Path) == 1)
+                {
+                    return true;
+                }
+            }
+            foreach (IntPoint point in p2Path)
+            {
+                if (Clipper.PointInPolygon(point, p1Path) == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if two polygons share at least one perimeter point without their interiors intersecting.
+        /// </summary>
+        /// <param name="p1">The first polygon for the comparison.</param>
+        /// <param name="p2">The second polygon for the comparison.</param>
+        /// <returns></returns>
+        internal static bool Touches(Polygon p1, Polygon p2)
+        {
+            var p1Path = ToClipperPath(p1);
+            var p2Path = ToClipperPath(p2);
+            bool touches = false;
+            foreach (IntPoint point in p2Path)
+            {
+                switch (Clipper.PointInPolygon(point, p1Path))
+                {
+                    case -1:
+                        touches = true;
+                        break;
+                    case 1: return false;
+                }
+            }
+            return touches;
+        }
+
+        /// <summary>
+        /// Performs difference,intersection, union, or XOR operations on two polygons.
+        /// </summary>
+        /// <param name="p1">The first intersecting polygon.</param>
+        /// <param name="p2">The second intersecting polygon.</param>
+        /// <param name="op">The polygon operation.</param>
+        /// <returns></returns>
+        internal static IEnumerable<Polygon> Ops(Polygon p1, Polygon p2, PolygonOps op)
+        {
+            var p1Path = ToClipperPath(p1);
+            var p2Path = ToClipperPath(p2);
+            Clipper clipper = new Clipper();
+            clipper.AddPath(p1Path, PolyType.ptSubject, true);
+            clipper.AddPath(p2Path, PolyType.ptClip, true);
+            var solution = new List<List<IntPoint>>();
+            switch (op)
+            {
+                case PolygonOps.Difference:
+                    clipper.Execute(ClipType.ctDifference, solution);
+                    break;
+                case PolygonOps.Intersection:
+                    clipper.Execute(ClipType.ctIntersection, solution);
+                    break;
+                case PolygonOps.Union:
+                    clipper.Execute(ClipType.ctUnion, solution);
+                    break;
+                case PolygonOps.XOR:
+                    clipper.Execute(ClipType.ctUnion, solution);
+                    break;
+            }
+            var polygons = new List<Polygon>();
+            foreach (List<IntPoint> path in solution)
+            {
+                polygons.Add(ToPolygon(path));
+            }
+            return polygons;
         }
     }
 }
