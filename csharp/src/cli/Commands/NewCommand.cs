@@ -75,7 +75,7 @@ namespace Hypar.Commands
         {
             Logger.LogInfo("Updating the hypar.json...");
             var configPath = Path.Combine(directory, Program.HYPAR_CONFIG);
-            var config = JsonConvert.DeserializeObject<Hypar.Configuration.HyparConfig>(File.ReadAllText(configPath));
+            var config = HyparConfig.FromJson(File.ReadAllText(configPath));
             config.FunctionId = name;
             config.Description = $"The {name} generator.";
             var json = JsonConvert.SerializeObject(config, Formatting.Indented);
