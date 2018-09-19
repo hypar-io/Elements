@@ -2,6 +2,7 @@
 
 using Hypar.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -47,151 +48,40 @@ namespace Hypar.Commands
         {
             var name = SanitizeFunctionName(functionName);
             var newDir = Path.Combine(Directory.GetCurrentDirectory(), name);
-            CreateProject(name);       
-            CreateHyparReference(name);
-            CreateLambdaReferences(name);
-            CreateHyparJson(newDir, name);
-            Logger.LogSuccess($"{functionName} project created successfully.");
+            CloneStarterRepo(name);
+            UpdateHyparJson(newDir, name);
+            Logger.LogSuccess($"{functionName} created successfully.");
             return;
         }
 
-        private void CreateProject(string functionName)
+        private void CloneStarterRepo(string name)
         {
-            CreateDotnetProject(functionName);
-            DeleteDefaultClass(functionName);
-            CreateHyparDefaultClass(functionName);
-        }
-
-        private void CreateDotnetProject(string functionName)
-        {
-            Logger.LogInfo($"Creating {functionName} project...");
+            Logger.LogInfo($"Cloning the starter repo...");
             var process = new Process()
             {
                 StartInfo = new ProcessStartInfo
                 {
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
-                    FileName="dotnet",
-                    Arguments=$"new classlib -n {functionName} --target-framework-override netcoreapp2.0"
+                    FileName="git",
+                    Arguments=$"clone https://github.com/hypar-io/starter {name}"
                 }
             };
             process.Start();
             process.WaitForExit();
         }
 
-        private void CreateHyparReference(string functionName)
+        private void UpdateHyparJson(string directory, string name)
         {
-            Logger.LogInfo($"Referencing Hypar SDK...");
-            var project = $"./{functionName}/{functionName}.csproj";
-            var process = new Process()
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    FileName="dotnet",
-                    Arguments=$"add {project} package HyparSDK -v 0.0.1-beta7"
-                }
-            };
-            process.Start();
-            process.WaitForExit();
-        }
-
-        private static void CreateLambdaReferences(string functionName)
-        {
-            var project = $"./{functionName}/{functionName}.csproj";
-            var process = new Process()
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    FileName="dotnet",
-                    Arguments=$"add {project} package Amazon.Lambda.Core"
-                }
-            };
-            process.Start();
-            process.WaitForExit();
-
-            project = $"./{functionName}/{functionName}.csproj";
-            process = new Process()
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    FileName="dotnet",
-                    Arguments=$"add {project} package Amazon.Lambda.Serialization.Json"
-                }
-            };
-            process.Start();
-            process.WaitForExit();
-        }
-
-        private void CreateHyparJson(string dir, string functionId)
-        {
-            Logger.LogInfo("Creating the hypar configuration file...");
-            var hyparPath = Path.Combine(dir, Program.HYPAR_CONFIG);
-            var className = ClassName(functionId);
-            var config = new HyparConfig();
-            config.Description = $"The {functionId} function.";
-            config.FunctionId = functionId;
-            config.Function = $"{functionId}::Hypar.Function::Handler";
-            config.Runtime = "dotnetcore2.0";
-            config.Parameters.Add("param1", new NumberParameter("The first parameter.", 0.0, 1.0, 0.1));
-            config.Parameters.Add("param2", new PointParameter("The second parameter"));
-
+            Logger.LogInfo("Updating the hypar.json...");
+            var configPath = Path.Combine(directory, Program.HYPAR_CONFIG);
+            var config = JsonConvert.DeserializeObject<Hypar.Configuration.HyparConfig>(File.ReadAllText(configPath));
+            config.FunctionId = name;
+            config.Description = $"The {name} generator.";
             var json = JsonConvert.SerializeObject(config, Formatting.Indented);
-            File.WriteAllText(hyparPath, json);
+            File.WriteAllText(configPath, json);
         }
         
-        private void DeleteDefaultClass(string functionName)
-        {
-            var classPath = Path.Combine(System.Environment.CurrentDirectory, $"{functionName}/Class1.cs");
-            if(File.Exists(classPath))
-            {
-                File.Delete(classPath);
-            }
-
-            var progPath = Path.Combine(System.Environment.CurrentDirectory, $"{functionName}/Program.cs");
-            if(File.Exists(progPath))
-            {
-                File.Delete(progPath);
-            }
-        }
-
-        private void CreateHyparDefaultClass(string functionName)
-        {
-            Logger.LogInfo("Creating default function class...");
-            var className = ClassName(functionName);
-            
-            string classStr = $@"using Hypar.Elements;
-using Amazon.Lambda.Core;
-using System.Collections.Generic;
-
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
-namespace Hypar
-{{
-    public class Function
-    {{
-        public Dictionary<string,object> Handler(Dictionary<string,object> input, ILambdaContext context)
-        {{
-            var profile = Profiles.Rectangular();
-
-            var mass = Mass.WithBottomProfile(profile)
-                            .WithBottomAtElevation(0)
-                            .WithTopAtElevation(1);
-
-            var model = new Model();
-            model.AddElement(mass);
-            return model.ToHypar();
-        }}
-    }}
-}}";
-            var classPath = Path.Combine(System.Environment.CurrentDirectory, $"{functionName}/{className}.cs");
-            File.WriteAllText(classPath, classStr);
-        }
-
         private string SanitizeFunctionName(string functionName)
         {
             var clean = functionName.Replace("_","-").ToLower();
