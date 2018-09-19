@@ -67,8 +67,8 @@ namespace Hypar.Commands
 
         public void Help()
         {
-            Console.WriteLine("Publish your function to Hypar.");
-            Console.WriteLine("Usage: hypar publish");
+            Logger.LogInfo("Publish your function to Hypar.");
+            Logger.LogInfo("Usage: hypar publish");
         }
 
         private void Publish()
@@ -111,7 +111,7 @@ namespace Hypar.Commands
 
             try
             {
-                PostFunction();
+                PostFunction(Cognito.IdToken);
                 CreateBucketAndUpload(credentials, _config.FunctionId, zipPath);
                 CreateOrUpdateLambda(credentials, _config.FunctionId);
             }
@@ -216,7 +216,7 @@ namespace Hypar.Commands
             return zipPath;
         }
 
-        private void PostFunction()
+        private void PostFunction(string idToken)
         {
             Logger.LogInfo("Updating function record...");
 
@@ -225,6 +225,7 @@ namespace Hypar.Commands
             // Find a function record
             var getRequest = new RestRequest($"functions/{_config.FunctionId}", Method.GET);
             getRequest.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+            getRequest.AddHeader("Authorization", idToken);
             var getResponse = client.Execute(getRequest);
             if(getResponse.StatusCode == HttpStatusCode.NotFound)
             {
@@ -232,7 +233,7 @@ namespace Hypar.Commands
                 // POST
                 var request = new RestRequest("functions", Method.POST);
                 request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
-
+                request.AddHeader("Authorization", idToken);
                 // Send raw json so we can use the json.net serializer.
                 request.AddParameter("application/json", JsonConvert.SerializeObject(_config), ParameterType.RequestBody);
                 request.RequestFormat = DataFormat.Json;
@@ -254,7 +255,7 @@ namespace Hypar.Commands
                 // PUT
                 var request = new RestRequest($"functions/{_config.FunctionId}", Method.PUT);
                 request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
-
+                request.AddHeader("Authorization", idToken);
                 // Send raw json so we can use the json.net serializer.
                 request.AddParameter("application/json", JsonConvert.SerializeObject(_config), ParameterType.RequestBody);
                 request.RequestFormat = DataFormat.Json;

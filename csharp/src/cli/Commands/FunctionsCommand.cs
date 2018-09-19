@@ -23,19 +23,25 @@ namespace Hypar.Commands
 
         public void Execute(object parameter)
         {
+            if(!Cognito.Login())
+            {
+                return;
+            }
             Functions();
         }
 
         public void Help()
         {
-            Console.WriteLine("List all functions available in Hypar.");
-            Console.WriteLine("Usage: hypar functions");
+            Logger.LogInfo("List all functions available in Hypar.");
+            Logger.LogInfo("Usage: hypar functions");
         }
 
         private void Functions()
         {
             var request = new RestRequest("functions", Method.GET);
             request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+            request.AddHeader("Authorization", Cognito.IdToken);
+
             var response = _client.Execute(request);
         
             if(response.StatusCode == HttpStatusCode.OK)
@@ -43,12 +49,12 @@ namespace Hypar.Commands
                 var functions = JsonConvert.DeserializeObject<List<Function>>(response.Content);
                 foreach(var f in functions)
                 {
-                    Console.WriteLine($"{f.Id}, {f.Description}");
+                    Logger.LogInfo($"{f.Id}, {f.Description}");
                 }
             }
             else
             {
-                Console.WriteLine("There was an error getting the functions from hypar.");
+                Logger.LogError("There was an error getting the functions from hypar.");
             }
             return;
         }

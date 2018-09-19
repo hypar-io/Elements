@@ -32,13 +32,13 @@ namespace Hypar.Commands
                 }
                 catch
                 {
-                    Console.WriteLine("The input could not be deserialized to an array of executions.");
+                    Logger.LogError("The input could not be deserialized to an array of executions.");
                     return false;
                 }
             }
             else
             {
-                Console.WriteLine("Hypar results requires an array of executions.");
+                Logger.LogError("Hypar results requires an array of executions.");
                 return false;
             }
 
@@ -52,8 +52,8 @@ namespace Hypar.Commands
 
         public void Help()
         {
-            Console.WriteLine("Read executions from stdin and write results to stdout.");
-            Console.WriteLine("Usage: hypar results");
+            Logger.LogInfo("Read executions from stdin and write results to stdout.");
+            Logger.LogInfo("Usage: hypar results");
         }
 
         private void Results()
@@ -73,7 +73,7 @@ namespace Hypar.Commands
                     }
                 }
             }
-            Console.WriteLine(string.Join(",",results.Keys));
+            Logger.LogInfo(string.Join(",",results.Keys));
 
             var length = results.Values.ElementAt(0).Count;
             for(var i=0; i<length; i++)
@@ -83,7 +83,7 @@ namespace Hypar.Commands
                 {
                     line.Add(kvp.Value.ElementAt(i));
                 }
-                Console.WriteLine(string.Join(",", line));
+                Logger.LogInfo(string.Join(",", line));
             }
         }
     }

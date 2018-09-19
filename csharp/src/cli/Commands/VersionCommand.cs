@@ -27,14 +27,14 @@ namespace Hypar.Commands
 
         public void Help()
         {
-            Console.WriteLine("Show the version of hypar and the hypar CLI.");
-            Console.WriteLine("Usage: hypar version");
+            Logger.LogInfo("Show the version of hypar and the hypar CLI.");
+            Logger.LogInfo("Usage: hypar version");
         }
-
+        
         private void Version()
         {
-            Console.WriteLine($"Hypar Version {typeof(Hypar.Elements.Model).Assembly.GetName().Version.ToString()}");
-            Console.WriteLine($"Hypar CLI Version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+            Logger.LogInfo($"Hypar Version {typeof(Hypar.Elements.Model).Assembly.GetName().Version.ToString()}");
+            Logger.LogInfo($"Hypar CLI Version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
             return;
         }
     }

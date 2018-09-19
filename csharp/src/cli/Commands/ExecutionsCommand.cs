@@ -26,7 +26,7 @@ namespace Hypar.Commands
 
             if(args.Length != 2)
             {
-                Console.WriteLine("Hypar executions requires a function id parameter.");
+                Logger.LogError("Hypar executions requires a function id parameter.");
                 return false;
             }
 
@@ -35,6 +35,11 @@ namespace Hypar.Commands
 
         public void Execute(object parameter)
         {
+            if(!Cognito.Login())
+            {
+                return;
+            }
+
             var args = (string[])parameter;
             var functionId = args[1];
             Executions(functionId);
@@ -42,24 +47,25 @@ namespace Hypar.Commands
 
         public void Help()
         {
-            Console.WriteLine("Gets all executions in Hypar for the specified function id and writes them to stdout.");
-            Console.WriteLine("Usage: hypar executions <function_id>");
+            Logger.LogInfo("Gets all executions in Hypar for the specified function id and writes them to stdout.");
+            Logger.LogInfo("Usage: hypar executions <function_id>");
         }
 
         private void Executions(string functionId)
         {
             var request = new RestRequest("executions", Method.GET);
             request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+            request.AddHeader("Authorization", Cognito.IdToken);
             request.AddParameter("function_id",functionId);
             var response = _client.Execute(request);
             if(response.StatusCode == HttpStatusCode.OK)
             {
                 var executions = JsonConvert.DeserializeObject<List<Execution>>(response.Content);
-                Console.WriteLine(JsonConvert.SerializeObject(executions, Formatting.Indented));
+                Logger.LogInfo(JsonConvert.SerializeObject(executions, Formatting.Indented));
             }
             else
             {
-                Console.WriteLine($"There was an error executing the function, {functionId}, on Hypar.");
+                Logger.LogError($"There was an error executing the function, {functionId}, on Hypar.");
             }
             return;
         }

@@ -28,7 +28,8 @@ namespace Hypar.Commands
 
         private void ShowHelp()
         {
-            Console.WriteLine(@"Hypar Command Line Usage:
+            Logger.LogInfo(
+@"Hypar Command Line Usage:
 
 hypar <command> <options>
 

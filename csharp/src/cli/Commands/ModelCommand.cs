@@ -32,13 +32,13 @@ namespace Hypar.Commands
 
             if(args.Length != 2)
             {
-                Console.WriteLine("The 'model' command requires an output directory to be specified.");
+                Logger.LogError("The 'model' command requires an output directory to be specified.");
                 return false;
             }
 
             if(!Directory.Exists((string)args[1]))
             {
-                Console.WriteLine("The specified output directory does not exist.");
+                Logger.LogError("The specified output directory does not exist.");
                 return false;
             }
 
@@ -51,13 +51,13 @@ namespace Hypar.Commands
                 }
                 catch
                 {
-                    Console.WriteLine("The input could not be deserialized to an array of executions.");
+                    Logger.LogError("The input could not be deserialized to an array of executions.");
                     return false;
                 }
             }
             else
             {
-                Console.WriteLine("Hypar results requires an array of executions.");
+                Logger.LogError("Hypar results requires an array of executions.");
                 return false;
             }
 
@@ -72,8 +72,8 @@ namespace Hypar.Commands
 
         public void Help()
         {
-            Console.WriteLine("Read executions from stdin and write models to 'output_directory'.");
-            Console.WriteLine("Usage: hypar model <output_directory>");
+            Logger.LogInfo("Read executions from stdin and write models to 'output_directory'.");
+            Logger.LogInfo("Usage: hypar model <output_directory>");
         }
 
         private void Model(string outputDirectory)

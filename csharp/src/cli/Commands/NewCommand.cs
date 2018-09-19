@@ -23,7 +23,7 @@ namespace Hypar.Commands
 
             if(args.Length < 2)
             {
-                Console.WriteLine("Hypar new expects a function id parameter.");
+                Logger.LogError("Hypar new expects a function id parameter.");
                 return false;
             }
 
@@ -39,8 +39,8 @@ namespace Hypar.Commands
 
         public void Help()
         {
-            Console.WriteLine("Create a new Hypar function.");
-            Console.WriteLine("Usage: hypar new <function_id>");
+            Logger.LogInfo("Create a new Hypar function.");
+            Logger.LogInfo("Usage: hypar new <function_id>");
         }
 
         private void New(string functionName)
