@@ -14,34 +14,31 @@ namespace Hypar.Commands
     {
         public event EventHandler CanExecuteChanged;
 
+        public string Name
+        {
+            get{return "new";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new[]{"function_id"};}
+        }
+
+        public string Description
+        {
+            get{return "Create a new Hypar function.";}
+        }
+
         public bool CanExecute(object parameter)
         {
-            var args = (string[])parameter;
-            if(args[0] != "new")
-            {
-                return false;
-            }
-
-            if(args.Length < 2)
-            {
-                Logger.LogError("Hypar new expects a function id parameter.");
-                return false;
-            }
-
             return true;
         }
 
         public void Execute(object parameter)
         {
             var args = (string[])parameter;
-            var functionId = args[1];
+            var functionId = args[0];
             New(functionId);
-        }
-
-        public void Help()
-        {
-            Logger.LogInfo("Create a new Hypar function.");
-            Logger.LogInfo("Usage: hypar new <function_id>");
         }
 
         private void New(string functionName)

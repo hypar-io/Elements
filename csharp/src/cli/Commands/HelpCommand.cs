@@ -10,10 +10,24 @@ namespace Hypar.Commands
 
         public event EventHandler CanExecuteChanged;
 
+        public string Name
+        {
+            get{return "help";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new string[]{};}
+        }
+
+        public string Description
+        {
+            get{return "";}
+        }
+
         public bool CanExecute(object parameter)
         {
-            var args = (string[])parameter;
-            return args[0] == "help";
+            return true;
         }
 
         public void Execute(object parameter)
@@ -34,14 +48,12 @@ namespace Hypar.Commands
 hypar <command> <options>
 
 Available Commands:
-    execute
-    executions
-    functions
-    help
-    model
-    publish
-    results
-    version
+    execute     Execute a generator.
+    generators  List all generators available in the system.
+    help        Show the help.
+    new         Create a new generator.
+    publish     Publish a generator to Hypar.
+    version     Show the version information.
 
 For additional command help:
     hypar <command> help");

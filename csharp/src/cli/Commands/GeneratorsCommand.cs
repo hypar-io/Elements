@@ -9,16 +9,30 @@ using System.Net;
 
 namespace Hypar.Commands
 {
-    internal class FunctionsCommand : IHyparCommand
+    internal class GeneratorsCommand : IHyparCommand
     {
         private RestClient _client = new RestClient(Program.Configuration["hypar_api_url"]);
 
         public event EventHandler CanExecuteChanged;
 
+        public string Name
+        {
+            get{return "generators";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new string[]{};}
+        }
+
+        public string Description
+        {
+            get{return "List all generators available in Hypar.";}
+        }
+
         public bool CanExecute(object parameter)
         {
-            var args = (string[])parameter;
-            return args[0] == "functions";
+            return true;
         }
 
         public void Execute(object parameter)
@@ -28,12 +42,6 @@ namespace Hypar.Commands
                 return;
             }
             Functions();
-        }
-
-        public void Help()
-        {
-            Logger.LogInfo("List all functions available in Hypar.");
-            Logger.LogInfo("Usage: hypar functions");
         }
 
         private void Functions()
@@ -54,7 +62,7 @@ namespace Hypar.Commands
             }
             else
             {
-                Logger.LogError("There was an error getting the functions from hypar.");
+                Logger.LogError("There was an error getting the generators from Hypar.");
             }
             return;
         }

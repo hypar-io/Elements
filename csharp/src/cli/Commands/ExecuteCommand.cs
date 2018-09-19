@@ -17,26 +17,23 @@ namespace Hypar.Commands
 
         public event EventHandler CanExecuteChanged;
 
+        public string Name
+        {
+            get{return "execute";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new []{"function_id"};}
+        }
+
+        public string Description
+        {
+            get{return "Execute a function on hypar by providing its function id.";}
+        }
+
         public bool CanExecute(object parameter)
         {
-            var args = (string[])parameter;
-            if(args[0] != "execute")
-            {
-                return false;
-            }
-
-            if(args.Length == 1)
-            {
-                Logger.LogError("Hypar execute requires a function_id parameter.");
-                return false;
-            }
-
-            // Avoid falling through to reading stdin.
-            if(args[1] == "help")
-            {
-                return true;
-            }
-
             if(!Console.IsInputRedirected)
             {
                 Logger.LogError("Hypar execute expects stdin to contain arguments.");
@@ -62,14 +59,8 @@ namespace Hypar.Commands
         public void Execute(object parameter)
         {
             var args = (string[])parameter;
-            var functionId = args[1];
+            var functionId = args[0];
             Execute(functionId);
-        }
-
-        public void Help()
-        {
-            Logger.LogInfo("Execute a function on hypar by providing its function id.");
-            Logger.LogInfo("Usage: hypar execute <function_id>");
         }
 
         private void Execute(string functionId, int? limit = null)

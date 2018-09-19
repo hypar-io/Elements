@@ -9,14 +9,23 @@ namespace Hypar.Commands
     {
         public event EventHandler CanExecuteChanged;
 
+        public string Name
+        {
+            get{return "version";}
+        }
+
+        public string Description
+        {
+            get{return "Show the version of hypar and the hypar CLI.";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new string[]{};}
+        }
+
         public bool CanExecute(object parameter)
         {
-            var args = (string[])parameter;
-
-            if(args[0] != "version")
-            {
-                return false;
-            }
             return true;
         }
 
@@ -25,11 +34,6 @@ namespace Hypar.Commands
             Version();
         }
 
-        public void Help()
-        {
-            Logger.LogInfo("Show the version of hypar and the hypar CLI.");
-            Logger.LogInfo("Usage: hypar version");
-        }
         
         private void Version()
         {

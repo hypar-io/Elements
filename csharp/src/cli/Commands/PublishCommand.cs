@@ -27,22 +27,26 @@ namespace Hypar.Commands
         private string _runtime = "linux-x64";
         private HyparConfig _config;
 
+        public string Name
+        {
+            get{return "publish";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new string[]{};}
+        }
+
+        public string Description
+        {
+            get{return "Publish your function to Hypar.";}
+        }
+
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
             var args = (string[])parameter;
-
-            if(args[0] != "publish")
-            {
-                return false;
-            }
-
-            // Avoid falling through to publish.
-            if(args.Length == 2 && args[1] == "help")
-            {
-                return true;
-            }
 
             var path = Path.Combine(System.Environment.CurrentDirectory, Program.HYPAR_CONFIG);
             if(!File.Exists(path))
@@ -64,13 +68,7 @@ namespace Hypar.Commands
             }
             Publish();
         }
-
-        public void Help()
-        {
-            Logger.LogInfo("Publish your function to Hypar.");
-            Logger.LogInfo("Usage: hypar publish");
-        }
-
+        
         private void Publish()
         {
             // Inject the logged in user's email into the config.
