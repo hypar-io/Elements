@@ -9,33 +9,47 @@ using System.Net;
 
 namespace Hypar.Commands
 {
-    internal class FunctionsCommand : IHyparCommand
+    internal class GeneratorsCommand : IHyparCommand
     {
         private RestClient _client = new RestClient(Program.Configuration["hypar_api_url"]);
 
         public event EventHandler CanExecuteChanged;
 
+        public string Name
+        {
+            get{return "generators";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new string[]{};}
+        }
+
+        public string Description
+        {
+            get{return "List all generators available in Hypar.";}
+        }
+
         public bool CanExecute(object parameter)
         {
-            var args = (string[])parameter;
-            return args[0] == "functions";
+            return true;
         }
 
         public void Execute(object parameter)
         {
+            if(!Cognito.Login())
+            {
+                return;
+            }
             Functions();
-        }
-
-        public void Help()
-        {
-            Console.WriteLine("List all functions available in Hypar.");
-            Console.WriteLine("Usage: hypar functions");
         }
 
         private void Functions()
         {
             var request = new RestRequest("functions", Method.GET);
             request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+            request.AddHeader("Authorization", Cognito.IdToken);
+
             var response = _client.Execute(request);
         
             if(response.StatusCode == HttpStatusCode.OK)
@@ -43,12 +57,12 @@ namespace Hypar.Commands
                 var functions = JsonConvert.DeserializeObject<List<Function>>(response.Content);
                 foreach(var f in functions)
                 {
-                    Console.WriteLine($"{f.Id}, {f.Description}");
+                    Logger.LogInfo($"{f.Id}, {f.Description}");
                 }
             }
             else
             {
-                Console.WriteLine("There was an error getting the functions from hypar.");
+                Logger.LogError("There was an error getting the generators from Hypar.");
             }
             return;
         }

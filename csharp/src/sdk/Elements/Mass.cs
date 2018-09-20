@@ -10,9 +10,17 @@ namespace Hypar.Elements
     /// <summary>
     /// A mass represents an extruded building mass.
     /// </summary>
-    public class Mass : Element, IRepresent<Mesh>
+    public class Mass : Element, ITessellate<Mesh>
     {
         private List<Polyline> _sides = new List<Polyline>();
+
+        /// <summary>
+        /// The type of the element.
+        /// </summary>
+        public override string Type
+        {
+            get{return "mass";}
+        }
 
         /// <summary>
         /// The perimeter of the mass.
@@ -43,26 +51,14 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Construct a default mass.
-        /// </summary>
-        public Mass()
-        {
-            var defaultProfile = Profiles.Rectangular();
-            this.Perimeter = defaultProfile;
-            this.Elevation = 0.0;
-            this.Height = 1.0;
-            this.Material = BuiltInMaterials.Mass;
-        }
-
-        /// <summary>
         /// Construct a mass from perimeters and elevations.
         /// </summary>
         /// <param name="perimeter">The bottom perimeter of the mass.</param>
         /// <param name="elevation">The elevation of the perimeter.</param>
         /// <param name="height">The height of the mass from the bottom elevation.</param>
         /// <param name="material">The mass' material. The default is the built in mass material.</param>
-        /// <returns></returns>
-        public Mass(Polygon perimeter, double elevation, double height, Material material = null)
+        [JsonConstructor]
+        public Mass(Polygon perimeter, double elevation = 0.0, double height = 1.0, Material material = null)
         {
             if (height <= 0)
             {
