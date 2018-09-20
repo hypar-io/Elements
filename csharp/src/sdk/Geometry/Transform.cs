@@ -151,11 +151,11 @@ namespace Hypar.Geometry
         /// Apply a project transformation.
         /// </summary>
         /// <param name="p">The plane on which to project.</param>
-        public void Project(Plane p)
-        {
-            var m = new Matrix();
-            m.SetupProject(p);
-            this._matrix = this._matrix * m;
-        }
+        // public void Project(Plane p)
+        // {
+        //     var m = new Matrix();
+        //     m.SetupProject(p);
+        //     this._matrix = this._matrix * m;
+        // }
     }
 }
