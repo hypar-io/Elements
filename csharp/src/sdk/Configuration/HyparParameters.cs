@@ -72,7 +72,7 @@ namespace Hypar.Configuration
         /// Construct a point parameter.
         /// </summary>
         /// <param name="description">The description of the point.</param>
-        public PointParameter(string description):base(description, "point"){}
+        public PointParameter(string description):base(description, ParameterType.Point){}
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ namespace Hypar.Configuration
         /// Construct a location parameter.
         /// </summary>
         /// <param name="description"></param>
-        public LocationParameter(string description):base(description, "location"){}
+        public LocationParameter(string description):base(description, ParameterType.Location){}
     }
 
     /// <summary>
@@ -121,7 +121,7 @@ namespace Hypar.Configuration
         /// <param name="max"></param>
         /// <param name="step"></param>
         /// <returns></returns>
-        public NumberParameter(string description, double min, double max, double step) : base(description, "number")
+        public NumberParameter(string description, double min, double max, double step) : base(description, ParameterType.Number)
         {
             if(min > max)
             {
