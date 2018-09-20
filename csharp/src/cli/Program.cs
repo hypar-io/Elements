@@ -49,25 +49,36 @@ namespace Hypar
                 help.Execute(args);
                 return 0;
             }
+
+            var commandName = args[0];
+            var commandArgs = args.Skip(1).ToArray();
+            var command = commands.FirstOrDefault(c=>c.Name == args[0]);
             
-            foreach(var c in commands)
+            if(command == null)
             {
-                if(c.CanExecute(args))
-                {
-                    if(args.Length > 1 && args[1] == "help")
-                    {
-                        c.Help();
-                        return 0;
-                    }
-                    else
-                    {
-                        c.Execute(args);
-                        return 0;
-                    }
-                }
+                Logger.LogError($"The {commandName} command was not recognized. Try 'hypar help'.");
+                return 1;
             }
 
-            Logger.LogError($"The {args[0]} command was not recognized. Try 'hypar help'.");
+            if(commandArgs.Length > 0 && commandArgs[0] == "help")
+            {
+                Logger.LogInfo(command.Description);
+                Logger.LogInfo($"Usage: hypar {command.Name} {string.Join(" ", command.Arguments)}");
+                return 0;
+            }
+
+            Console.WriteLine(string.Join(",", commandArgs));
+            if(command.Arguments.Length > 0 && commandArgs != command.Arguments)
+            {
+                Logger.LogError($"Usage: hypar {command.Name} {string.Join(" ", command.Arguments)}");
+                return 1;
+            }
+
+            if(command.CanExecute(commandArgs))
+            {
+                command.Execute(commandArgs);
+                return 0;
+            }
 
             return 0;
         } 

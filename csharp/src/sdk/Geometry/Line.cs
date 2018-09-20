@@ -28,7 +28,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// Get the length of the line.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("length")]
         public double Length
         {
             get{return this.Start.DistanceTo(this.End);}
@@ -37,7 +37,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// Get a normalized vector representing the direction of the line.
         /// </summary>
-        /// <returns>A vector representing the direction of the line.</returns>
+        [JsonProperty("direction")]
         public Vector3 Direction
         {
             get
@@ -51,31 +51,15 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
+        [JsonConstructor]
         public Line(Vector3 start, Vector3 end)
         {
             if (start.IsAlmostEqualTo(end))
             {
-                throw new ArgumentException("The line could not be constructed. The start and end points of the line cannot be the same.");
+                throw new ArgumentException($"The line could not be constructed. The start and end points of the line cannot be the same: start {start}, end {end}");
             }
             this.Start = start;
             this.End = end;
-        }
-
-        /// <summary>
-        /// Construct a line from a start point, pointing in a direction, with the specified length.
-        /// </summary>
-        /// <param name="start">The start of the line.</param>
-        /// <param name="direction">The direction of the line.</param>
-        /// <param name="length">The length of the line.</param>
-        public Line(Vector3 start, Vector3 direction, double length)
-        {
-            if(length <= 0)
-            {
-                throw new ArgumentException("The line could not be constructed. The length must be greater than zero.");
-            }
-
-            this.Start = start;
-            this.End = start + direction.Normalized() * length;
         }
 
         /// <summary>

@@ -27,22 +27,26 @@ namespace Hypar.Commands
         private string _runtime = "linux-x64";
         private HyparConfig _config;
 
+        public string Name
+        {
+            get{return "publish";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new string[]{};}
+        }
+
+        public string Description
+        {
+            get{return "Publish your function to Hypar.";}
+        }
+
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
             var args = (string[])parameter;
-
-            if(args[0] != "publish")
-            {
-                return false;
-            }
-
-            // Avoid falling through to publish.
-            if(args.Length == 2 && args[1] == "help")
-            {
-                return true;
-            }
 
             var path = Path.Combine(System.Environment.CurrentDirectory, Program.HYPAR_CONFIG);
             if(!File.Exists(path))
@@ -64,13 +68,7 @@ namespace Hypar.Commands
             }
             Publish();
         }
-
-        public void Help()
-        {
-            Console.WriteLine("Publish your function to Hypar.");
-            Console.WriteLine("Usage: hypar publish");
-        }
-
+        
         private void Publish()
         {
             // Inject the logged in user's email into the config.
@@ -111,7 +109,7 @@ namespace Hypar.Commands
 
             try
             {
-                PostFunction();
+                PostFunction(Cognito.IdToken);
                 CreateBucketAndUpload(credentials, _config.FunctionId, zipPath);
                 CreateOrUpdateLambda(credentials, _config.FunctionId);
             }
@@ -216,7 +214,7 @@ namespace Hypar.Commands
             return zipPath;
         }
 
-        private void PostFunction()
+        private void PostFunction(string idToken)
         {
             Logger.LogInfo("Updating function record...");
 
@@ -225,6 +223,7 @@ namespace Hypar.Commands
             // Find a function record
             var getRequest = new RestRequest($"functions/{_config.FunctionId}", Method.GET);
             getRequest.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
+            getRequest.AddHeader("Authorization", idToken);
             var getResponse = client.Execute(getRequest);
             if(getResponse.StatusCode == HttpStatusCode.NotFound)
             {
@@ -232,7 +231,7 @@ namespace Hypar.Commands
                 // POST
                 var request = new RestRequest("functions", Method.POST);
                 request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
-
+                request.AddHeader("Authorization", idToken);
                 // Send raw json so we can use the json.net serializer.
                 request.AddParameter("application/json", JsonConvert.SerializeObject(_config), ParameterType.RequestBody);
                 request.RequestFormat = DataFormat.Json;
@@ -254,7 +253,7 @@ namespace Hypar.Commands
                 // PUT
                 var request = new RestRequest($"functions/{_config.FunctionId}", Method.PUT);
                 request.AddHeader("x-api-key", Program.Configuration["hypar_api_key"]);
-
+                request.AddHeader("Authorization", idToken);
                 // Send raw json so we can use the json.net serializer.
                 request.AddParameter("application/json", JsonConvert.SerializeObject(_config), ParameterType.RequestBody);
                 request.RequestFormat = DataFormat.Json;

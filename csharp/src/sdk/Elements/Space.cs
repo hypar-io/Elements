@@ -10,8 +10,16 @@ namespace Hypar.Elements
     /// <summary>
     /// A space represents the extruded boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, ILocateable<Polygon>, ITessellate<Mesh>
+    public class Space : Element, ITessellate<Mesh>
     {
+        /// <summary>
+        /// The type of the element.
+        /// </summary>
+        public override string Type
+        {
+            get{return "space";}
+        }
+
         /// <summary>
         /// The elevation of the lower Space perimeter.
         /// </summary>
@@ -28,27 +36,15 @@ namespace Hypar.Elements
         /// The lower perimeter of the Space.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("location")]
-        public Polygon Location{get;}
+        [JsonProperty("perimeter")]
+        public Polygon Perimeter{get;}
 
         /// <summary>
         /// The voids within the Space.
         /// </summary>
         /// <value></value>
         [JsonProperty("voids")]
-        public IEnumerable<Polygon> Voids { get; }
-
-        /// <summary>
-        /// Construct a space.
-        /// </summary>
-        public Space()
-        {
-            this.Elevation = 0.0;
-            this.Height = 1.0;
-            this.Location = Profiles.Rectangular();
-            this.Material = BuiltInMaterials.Default;
-            this.Transform = new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
-        }
+        public IList<Polygon> Voids { get; }
 
         /// <summary>
         /// Construct a space.
@@ -57,22 +53,21 @@ namespace Hypar.Elements
         /// <param name="voids">A list of perimeters as vertical voids the same height as the space.</param>
         /// <param name="elevation">The elevation of the perimeter.</param>
         /// <param name="height">The height of the space above the lower elevation.</param>
-        /// <returns></returns>
-        public Space(Polygon perimeter, IEnumerable<Polygon> voids, double elevation, double height)
+        /// <param name="material">The space's material.</param>
+        [JsonConstructor]
+        public Space(Polygon perimeter, IList<Polygon> voids = null, double elevation = 0.0, double height = 1.0, Material material = null)
         {
             if (height <= 0.0)
             {
                 throw new ArgumentOutOfRangeException(Messages.HEIGHT_EXCEPTION, "height");
             }
 
-            // TODO: Test that voids are within perimeter. Add appropriate exception message.
-
-            this.Location = perimeter;
-            this.Voids = voids;
+            this.Perimeter = perimeter;
+            this.Voids = voids != null? voids : new List<Polygon>();
             this.Elevation = elevation;
             this.Height = height;
             
-            this.Material = BuiltInMaterials.Default;
+            this.Material = material != null? material : BuiltInMaterials.Default;
             this.Transform =  new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
         }
 
@@ -84,7 +79,7 @@ namespace Hypar.Elements
         {
             var polys = new List<Polygon>
             {
-                this.Location
+                this.Perimeter
             };
             if (this.Voids != null)
             {

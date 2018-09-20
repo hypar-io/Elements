@@ -11,56 +11,48 @@ namespace Hypar.Configuration
         /// <summary>
         /// The description of the function.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("description")]
         public string Description{get;set;}
 
         /// <summary>
         /// The fully-qualified name of the function.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("function")]
         public string Function{get;set;}
 
         /// <summary>
         /// The unique identifier of the function.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("function_id")]
         public string FunctionId{get;set;}
 
         /// <summary>
         /// The name of the function.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("name")]
         public string Name{get;set;}
 
         /// <summary>
         /// The runtime used to execute the function.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("runtime")]
         public string Runtime{get;set;}
 
         /// <summary>
         /// A map of input parameter data for the function.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("parameters")]
         public Dictionary<string,ParameterData> Parameters{get;set;}
 
         /// <summary>
         /// An optional git repository that stores your function.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("repository_url")]
         public string RepositoryUrl{get;set;}
 
         /// <summary>
         /// A map of return data for the function.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("returns")]
         public Dictionary<string,ReturnData> Returns{get;set;}
 
@@ -68,7 +60,6 @@ namespace Hypar.Configuration
         /// Construct a HyparConfig from json.
         /// </summary>
         /// <param name="json"></param>
-        /// <returns></returns>
         public static HyparConfig FromJson(string json)
         {
             var converters = new[]{new ParameterDataConverter()};
@@ -80,7 +71,6 @@ namespace Hypar.Configuration
         /// <summary>
         /// Serialize the configuration data to JSON.
         /// </summary>
-        /// <returns></returns>
         public string ToJson()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
