@@ -89,7 +89,7 @@ namespace Hypar.Geometry
         /// Get a point on the polygon at parameter u.
         /// </summary>
         /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <returns></returns>
+        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         public Vector3 PointAt(double u)
         {
             var d = this.Length * u;
@@ -106,19 +106,20 @@ namespace Hypar.Geometry
                 }
                 totalLength += currLength;
             }
-
             return this.End;
         }
 
         /// <summary>
-        /// Returns true if every vertex of the supplied Polygon falls within the perimeter of this Polygon.
+        /// Tests if the supplied Polygon is within the perimeter of this Polygon.
         /// </summary>
         /// <param name="polygon">The Polygon to compare.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns true if every vertex of the supplied Polygon falls within the perimeter of this Polygon.
+        /// </returns>
         public bool Contains(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             foreach (IntPoint vertex in polyPath)
             {
                 if (Clipper.PointInPolygon(vertex, thisPath) <= 0)
@@ -130,14 +131,16 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Returns true if every point of the supplied Polygon falls within or on the perimeter of this Polygon.
+        /// Tests if the supplied Polygon is within or coincident with the perimeter of this Polygon.
         /// </summary>
         /// <param name="polygon">The Polygon to compare.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns true if every vertex of the supplied Polygon falls within or on the perimeter of this Polygon.
+        /// </returns>
         public bool Covers(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             foreach (IntPoint vertex in polyPath)
             {
                 if (Clipper.PointInPolygon(vertex, thisPath) == 0)
@@ -149,14 +152,16 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Returns true if this Polygon and the supplied Polygon do not touch or intersect.
+        /// Tests if this Polygon and the supplied Polygon are coincident in any way.
         /// </summary>
         /// <param name="polygon">The Polygon to compare.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns true if this Polygon and the supplied Polygon do not intersect or touch.
+        /// </returns>
         public bool Disjoint(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             foreach (IntPoint vertex in thisPath)
             {
                 if (Clipper.PointInPolygon(vertex, polyPath) != 0)
@@ -175,14 +180,16 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Returns true if this Polygon and the supplied Polygon share areas within their perimeters.
+        /// Tests if this Polygon and the supplied Polygon share areas within their perimeters.
         /// </summary>
         /// <param name="polygon">The Polygon to compare.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns true if any vertex of either Polygon is within the perimeter of the other.
+        /// </returns>
         public bool Intersects(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             foreach (IntPoint vertex in thisPath)
             {
                 if (Clipper.PointInPolygon(vertex, polyPath) == 1)
@@ -201,14 +208,16 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Returns true if this Polygon and the supplied Polygon share at least one perimeter point without interesecting.
+        /// Tests if this Polygon and the supplied Polygon share at least one perimeter point without interesecting.
         /// </summary>
         /// <param name="polygon">The Polygon to compare.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns true if this Polygon and the supplied polygon share at least one perimeter point.
+        /// </returns>
         public bool Touches(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             bool touches = false;
             foreach (IntPoint vertex in polyPath)
             {
@@ -224,36 +233,42 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Returns a list of Polygons representing the difference between this Polygon and the supplied Polygon.
+        /// Constructs the geometric difference between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
-        /// <returns></returns>
-        public IEnumerable<Polygon> Difference(Polygon polygon)
+        /// <returns>
+        /// Returns a Polygon representing the subtraction of the supplied Polygon from this Polygon.
+        /// Returns null if the area of this Polygon is entirely subtracted.
+        /// Returns a Polygon representing the perimeter of this Polygon if the two Polygons do not intersect.
+        /// </returns>
+        public Polygon Difference(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
             clipper.Execute(ClipType.ctDifference, solution);
-            var polygons = new List<Polygon>();
-            foreach (List<IntPoint> path in solution)
+            if (solution.Count == 0)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path));
+                return null;
             }
-            return polygons;
+            return solution[0].ToPolygon();
         }
 
         /// <summary>
-        /// Returns a list of Polygons representing the intersections between this Polygon and the supplied Polygon.
+        /// Constructs the Polygon intersections between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns a list of Polygons representing the interesction of this Polygon with the supplied Polygon.
+        /// Returns null if the two Polygons do not intersect.
+        /// </returns>
         public IEnumerable<Polygon> Intersection(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);
@@ -268,36 +283,41 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Returns Polygons representing the attempted Union between this Polygon and the supplied Polygon.
+        /// Constructs the geometric union between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The Polygon to be combined with this Polygon.</param>
-        /// <returns></returns>
-        public IEnumerable<Polygon> Union(Polygon polygon)
+        /// <returns>
+        /// Returns a single Polygon from a successful union.
+        /// Returns null if a union cannot be performed on the two Polygons.
+        /// </returns>
+        public Polygon Union(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
             clipper.Execute(ClipType.ctUnion, solution);
-            var polygons = new List<Polygon>();
-            foreach (List<IntPoint> path in solution)
+            if (solution.Count > 1)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path));
+                return null;
             }
-            return polygons;
+            return solution[0].ToPolygon();
         }
 
         /// <summary>
         /// Returns Polygons representing the symmetric difference between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting polygon.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Returns a list of Polygons representing the symmetric difference of this Polygon and the supplied Polygon.
+        /// Returns a representation of this Polygon and the supplied Polygon if the Polygons do not intersect.
+        /// </returns>
         public IEnumerable<Polygon> XOR(Polygon polygon)
         {
-            var thisPath = PolygonExtensions.ToClipperPath(this);
-            var polyPath = PolygonExtensions.ToClipperPath(polygon);
+            var thisPath = this.ToClipperPath();
+            var polyPath = polygon.ToClipperPath();
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);

@@ -197,8 +197,7 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = p1.Difference(p2);
-            var polygon = polygons.ToArray()[0];
+            var polygon = p1.Difference(p2);
             var vertices = (List<Vector3>)polygon.Vertices;         
             
             Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 0));
@@ -265,8 +264,7 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = p1.Union(p2);
-            var polygon = polygons.ToArray()[0];
+            var polygon = p1.Union(p2);
             var vertices = (List<Vector3>)polygon.Vertices;
 
             Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 0));
