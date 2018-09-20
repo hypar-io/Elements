@@ -169,6 +169,7 @@ namespace Hypar
             }
 
             var parentId = 0;
+            
             if(transform != null)
             {
                 var a = transform.XAxis;
@@ -183,6 +184,7 @@ namespace Hypar
                     (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
                     (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
                 };
+
                 parentId = gltf.AddNode(transNode, 0);
             }
             // Add mesh node to gltf

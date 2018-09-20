@@ -42,7 +42,7 @@ namespace Hypar.Elements
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
         [JsonConstructor]
-        public Material(string name, Color color, float specularFactor, float glossinessFactor)
+        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f)
         {
             if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {

@@ -17,29 +17,26 @@ namespace Hypar.Commands
 
         public event EventHandler CanExecuteChanged;
 
+        public string Name
+        {
+            get{return "execute";}
+        }
+
+        public string[] Arguments
+        {
+            get{return new []{"function_id"};}
+        }
+
+        public string Description
+        {
+            get{return "Execute a function on hypar by providing its function id.";}
+        }
+
         public bool CanExecute(object parameter)
         {
-            var args = (string[])parameter;
-            if(args[0] != "execute")
-            {
-                return false;
-            }
-
-            if(args.Length == 1)
-            {
-                Console.WriteLine("Hypar execute requires a function_id parameter.");
-                return false;
-            }
-
-            // Avoid falling through to reading stdin.
-            if(args[1] == "help")
-            {
-                return true;
-            }
-
             if(!Console.IsInputRedirected)
             {
-                Console.WriteLine("Hypar execute expects stdin to contain arguments.");
+                Logger.LogError("Hypar execute expects stdin to contain arguments.");
                 return false;
             }
             else
@@ -51,7 +48,7 @@ namespace Hypar.Commands
                 }
                 catch
                 {
-                    Console.WriteLine("The input data could not be deserialized to execution arguments.");
+                    Logger.LogError("The input data could not be deserialized to execution arguments.");
                     return false;
                 }
             }
@@ -62,14 +59,8 @@ namespace Hypar.Commands
         public void Execute(object parameter)
         {
             var args = (string[])parameter;
-            var functionId = args[1];
+            var functionId = args[0];
             Execute(functionId);
-        }
-
-        public void Help()
-        {
-            Console.WriteLine("Execute a function on hypar by providing its function id.");
-            Console.WriteLine("Usage: hypar execute <function_id>");
         }
 
         private void Execute(string functionId, int? limit = null)
@@ -88,12 +79,12 @@ namespace Hypar.Commands
             if(response.StatusCode == HttpStatusCode.OK)
             {
                 var executions = JsonConvert.DeserializeObject<Execution>(response.Content);
-                Console.WriteLine(JsonConvert.SerializeObject(executions, Formatting.Indented));
+                Logger.LogInfo(JsonConvert.SerializeObject(executions, Formatting.Indented));
             }
             else
             {
-                Console.WriteLine($"There was an error executing {functionId} on Hypar.");
-                Console.WriteLine(response.Content);
+                Logger.LogInfo($"There was an error executing {functionId} on Hypar.");
+                Logger.LogInfo(response.Content);
             }
             return;
         }

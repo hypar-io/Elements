@@ -136,7 +136,6 @@ namespace Hypar.Elements
         public void SaveGlb(string path)
         {
             var gltf = InitializeGlTF();
-
             if(File.Exists(path))
             {
                 File.Delete(path);

@@ -2,6 +2,8 @@ namespace Hypar.Commands
 {    
     internal interface IHyparCommand : System.Windows.Input.ICommand
     {
-        void Help();
+        string[] Arguments{get;}
+        string Description{get;}
+        string Name{get;}
     }
 }

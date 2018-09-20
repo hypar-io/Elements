@@ -15,8 +15,8 @@ namespace Hypar.Commands
     public class Cognito 
     {
 
-        public static CognitoUser User{get;set;}
-
+        public static CognitoUser User{get;internal set;}
+        public static string IdToken{get;internal set;}
         private static bool GetCredsAsync(string username, string password)
         {
             var provider = new AmazonCognitoIdentityProviderClient(new Amazon.Runtime.AnonymousAWSCredentials(), RegionEndpoint.USWest2);
@@ -78,6 +78,7 @@ namespace Hypar.Commands
                 Logger.LogSuccess($"{user.Username} successfully authenticated.");
 
                 User = user;
+                IdToken = authResponse.AuthenticationResult.IdToken;
                 return true;
 
                 //TODO: Experiment with caching credentials

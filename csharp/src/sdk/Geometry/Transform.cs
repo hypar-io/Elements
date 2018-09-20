@@ -1,4 +1,6 @@
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace Hypar.Geometry
 {
@@ -7,29 +9,43 @@ namespace Hypar.Geometry
     /// </summary>
     public class Transform
     {
+        private Matrix _matrix;
+
         /// <summary>
         /// The origin.
         /// </summary>
         [JsonProperty("origin")]
-        public Vector3 Origin{get;}
+        public Vector3 Origin
+        {
+            get{return this._matrix.Translation;}
+        }
 
         /// <summary>
         /// The X axis.
         /// </summary>
         [JsonProperty("x_axis")]
-        public Vector3 XAxis{get;}
+        public Vector3 XAxis
+        {
+            get{return this._matrix.XAxis;}
+        }
 
         /// <summary>
         /// The Y axis.
         /// </summary>
         [JsonProperty("y_axis")]
-        public Vector3 YAxis{get;}
+        public Vector3 YAxis
+        {
+            get{return this._matrix.YAxis;}
+        }
 
         /// <summary>
         /// The Z axis.
         /// </summary>
         [JsonProperty("z_axis")]
-        public Vector3 ZAxis{get;}
+        public Vector3 ZAxis
+        {
+            get{return this._matrix.ZAxis;}
+        }
 
         /// <summary>
         /// The XY plane of the transform.
@@ -62,10 +78,7 @@ namespace Hypar.Geometry
         /// </summary>
         public Transform()
         {
-            this.Origin = new Vector3();
-            this.XAxis = Vector3.XAxis;
-            this.YAxis = Vector3.YAxis;
-            this.ZAxis = Vector3.ZAxis;
+            this._matrix = new Matrix();
         }
 
         /// <summary>
@@ -76,10 +89,10 @@ namespace Hypar.Geometry
         /// <param name="zAxis">The Z axis of the transform.</param>
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis)
         {
-            this.Origin = origin;
-            this.XAxis = xAxis.Normalized();
-            this.ZAxis = zAxis.Normalized();
-            this.YAxis = this.ZAxis.Cross(this.XAxis);
+            var x = xAxis.Normalized();
+            var z = zAxis.Normalized();
+            var y = z.Cross(x);
+            this._matrix = new Matrix(x, y, z, origin);
         }
 
         /// <summary>
@@ -88,19 +101,7 @@ namespace Hypar.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return $"X Axis:{this.XAxis}, Y Axis:{this.YAxis}, Z Axis: {this.ZAxis}";
-        }
-
-        /// <summary>
-        /// Get the 4x4 matrix defined by this transform.
-        /// </summary>
-        /// <returns></returns>
-        public double[] Matrix()
-        {
-            return new double[]{this.XAxis.X, this.YAxis.X, this.ZAxis.X, this.Origin.X, 
-                                this.XAxis.Y, this.YAxis.Y, this.ZAxis.Y, this.Origin.Y,
-                                this.XAxis.Z, this.YAxis.Z, this.ZAxis.Z, this.Origin.Z,
-                                0.0, 0.0, 0.0, 0.0};
+            return this._matrix.ToString();
         }
 
         /// <summary>
@@ -109,11 +110,52 @@ namespace Hypar.Geometry
         /// <param name="vector">The vector to be transformed.</param>
         public Vector3 OfPoint(Vector3 vector)
         {
-            var m = Matrix();
-            var v1 = new Vector3((m[0] * vector.X + m[1] * vector.Y + m[2] * vector.Z) + this.Origin.X, 
-                                (m[4] * vector.X + m[5] * vector.Y + m[6] * vector.Z) + this.Origin.Y,
-                                (m[8] * vector.X + m[9] * vector.Y + m[10] * vector.Z) + this.Origin.Z);
-            return v1;
+            return vector * this._matrix;
         }
+
+        /// <summary>
+        /// Apply a translation to the transform.
+        /// </summary>
+        /// <param name="translation">The translation to apply.</param>
+        public void Move(Vector3 translation)
+        {
+            var m = new Matrix();
+            m.SetupTranslation(translation);
+            this._matrix = this._matrix * m;
+        }
+
+        /// <summary>
+        /// Apply a rotation to the transform.
+        /// </summary>
+        /// <param name="axis">The axis of rotation.</param>
+        /// <param name="angle">The angle of rotation in degrees.</param>
+        public void Rotate(Vector3 axis, double angle)
+        {
+            var m = new Matrix();
+            m.SetupRotate(axis, angle * (Math.PI/180.0));
+            this._matrix = this._matrix * m;
+        }
+
+        /// <summary>
+        /// Apply a scale to the transform.
+        /// </summary>
+        /// <param name="amount">The amount to scale.</param>
+        public void Scale(Vector3 amount)
+        {
+            var m = new Matrix();
+            m.SetupScale(amount);
+            this._matrix = this._matrix * m;
+        }
+
+        /// <summary>
+        /// Apply a project transformation.
+        /// </summary>
+        /// <param name="p">The plane on which to project.</param>
+        // public void Project(Plane p)
+        // {
+        //     var m = new Matrix();
+        //     m.SetupProject(p);
+        //     this._matrix = this._matrix * m;
+        // }
     }
 }
