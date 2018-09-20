@@ -59,6 +59,8 @@ namespace Hypar.Elements
         public Element()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.Transform = new Transform();
+            this.Material = BuiltInMaterials.Default;
         }
 
         /// <summary>
