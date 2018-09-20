@@ -43,10 +43,35 @@ namespace Hypar.Tests
                 }
             );
 
-            Assert.False(PolygonExtensions.Contains(p1, p2));
-            Assert.True(PolygonExtensions.Contains(p1, p3));
-            Assert.False(PolygonExtensions.Contains(p3, p1));
-            Assert.True(PolygonExtensions.Contains(p1, p2, true));
+            Assert.False(p1.Contains(p2));
+            Assert.True(p1.Contains(p3));
+            Assert.False(p3.Contains(p1));
+        }
+
+        [Fact]
+        public void Covers()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(20, 0),
+                    new Vector3(20, 20),
+                    new Vector3(0, 20)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(10, 0),
+                    new Vector3(10, 10),
+                    new Vector3(0, 10)
+                }
+            );
+            Assert.True(p1.Covers(p2));
         }
 
         [Fact]
@@ -72,11 +97,11 @@ namespace Hypar.Tests
                     new Vector3(0, 20)
                 }
             );
-            Assert.True(PolygonExtensions.Disjoint(p1, p2));
+            Assert.True(p1.Disjoint(p2));
         }
 
         [Fact]
-        public void Intersect()
+        public void Intersects()
         {
             var p1 = new Polygon
             (
@@ -98,7 +123,7 @@ namespace Hypar.Tests
                     new Vector3(5, 8)
                 }
             );
-            Assert.True(PolygonExtensions.Intersect(p1, p2));
+            Assert.True(p1.Intersects(p2));
         }
 
         [Fact]
@@ -124,7 +149,7 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            Assert.False(PolygonExtensions.Touches(p1, p2));
+            Assert.False(p1.Touches(p2));
 
             p1 = new Polygon
             (
@@ -146,11 +171,11 @@ namespace Hypar.Tests
                     new Vector3(4, 0)
                 }
             );
-            Assert.True(PolygonExtensions.Touches(p1, p2));
+            Assert.True(p1.Touches(p2));
         }
 
         [Fact]
-        public void OpsDifference()
+        public void Difference()
         {
             var p1 = new Polygon
             (
@@ -172,7 +197,7 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = PolygonExtensions.Ops(p1, p2, PolygonExtensions.PolygonOps.Difference);
+            var polygons = p1.Difference(p2);
             var polygon = polygons.ToArray()[0];
             var vertices = (List<Vector3>)polygon.Vertices;         
             
@@ -185,7 +210,7 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void OpsIntersection()
+        public void Intersection()
         {
             var p1 = new Polygon
             (
@@ -207,7 +232,7 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = PolygonExtensions.Ops(p1, p2, PolygonExtensions.PolygonOps.Intersection);
+            var polygons = p1.Intersection(p2);
             var polygon = polygons.ToArray()[0];
             var vertices = (List<Vector3>)polygon.Vertices;
 
@@ -218,7 +243,7 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void OpsUnion()
+        public void Union()
         {
             var p1 = new Polygon
             (
@@ -240,7 +265,7 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = PolygonExtensions.Ops(p1, p2, PolygonExtensions.PolygonOps.Union);
+            var polygons = p1.Union(p2);
             var polygon = polygons.ToArray()[0];
             var vertices = (List<Vector3>)polygon.Vertices;
 
@@ -255,7 +280,7 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void OpsXOR()
+        public void XOR()
         {
             var p1 = new Polygon
             (
@@ -277,7 +302,7 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = (List<Polygon>)PolygonExtensions.Ops(p1, p2, PolygonExtensions.PolygonOps.XOR);
+            var polygons = p1.XOR(p2);
             var polygon = polygons.ToArray()[0];
             var vertices = (List<Vector3>)polygon.Vertices;
 
