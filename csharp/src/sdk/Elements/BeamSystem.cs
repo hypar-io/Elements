@@ -29,10 +29,9 @@ namespace Hypar.Elements
         /// <param name="edge1"></param>
         /// <param name="edge2"></param>
         /// <param name="material"></param>
-        /// <param name="transform"></param>
-        public BeamSystem(int count, IList<Polygon> profile, Line edge1, Line edge2, Material material, Transform transform = null)
+        public BeamSystem(int count, IList<Polygon> profile, Line edge1, Line edge2, Material material)
         {
-            CreateBeamsBetweenEdges(edge1, edge2, count, profile, material, transform);
+            CreateBeamsBetweenEdges(edge1, edge2, count, profile, material);
         }
 
         /// <summary>
@@ -42,8 +41,7 @@ namespace Hypar.Elements
         /// <param name="count"></param>
         /// <param name="profile"></param>
         /// <param name="material"></param>
-        /// <param name="transform"></param>
-        public BeamSystem(Floor floor, int count, IList<Polygon> profile, Material material, Transform transform = null)
+        public BeamSystem(Floor floor, int count, IList<Polygon> profile, Material material)
         {
             var edges = floor.Perimeter.Segments().ToArray();
             var e1 = edges[0];
@@ -52,10 +50,10 @@ namespace Hypar.Elements
             var depth = bbox.Max.Y - bbox.Min.Y;
             var edge1 = new Line(new Vector3(e1.Start.X, e1.Start.Y, floor.Elevation - depth/2), new Vector3(e1.End.X, e1.End.Y, floor.Elevation - depth/2));
             var edge2 = new Line(new Vector3(e2.Start.X, e2.Start.Y, floor.Elevation - depth/2), new Vector3(e2.End.X, e2.End.Y, floor.Elevation - depth/2));
-            CreateBeamsBetweenEdges(edge1, edge2, count, profile, material, transform);
+            CreateBeamsBetweenEdges(edge1, edge2, count, profile, material);
         }
 
-        private void CreateBeamsBetweenEdges(Line edge1, Line edge2, int count, IList<Polygon> profile, Material material, Transform transform)
+        private void CreateBeamsBetweenEdges(Line edge1, Line edge2, int count, IList<Polygon> profile, Material material)
         {
             var div = 1.0/((double)count + 1);
             for(var i=0; i<count; i++)

@@ -122,7 +122,7 @@ namespace Hypar.Elements
         /// Get all cells.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IList<Vector3>> Cells()
+        public IEnumerable<Vector3[]> Cells()
         {
             var pts = CalculateGridPoints();
 
@@ -137,7 +137,7 @@ namespace Hypar.Elements
                     var b = rowA[j+1];
                     var c = rowB[j+1];
                     var d = rowB[j];
-                    yield return new List<Vector3>(new[]{a,b,c,d});
+                    yield return new []{a,b,c,d};
                 }
             }
         }
@@ -191,7 +191,7 @@ namespace Hypar.Elements
         {
             var f = face.ToArray();
             this._bottom = f[0];
-            this._top = f[2];
+            this._top = f[2].Reversed();
             this._uDiv = CalculateEqualDivisions(uDivisions);
             this._vDiv = CalculateEqualDivisions(vDivisions);
         }

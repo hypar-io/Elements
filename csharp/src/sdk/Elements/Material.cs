@@ -1,4 +1,6 @@
+using Newtonsoft.Json;
 using System;
+using System.Collections;
 using Hypar.Geometry;
 
 namespace Hypar.Elements
@@ -11,32 +13,26 @@ namespace Hypar.Elements
         /// <summary>
         /// The RGBA Color of the Material.
         /// </summary>
-        /// <value></value>
+        [JsonProperty("color")]
         public Color Color{get;}
 
         /// <summary>
         /// The specular factor.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("specular_factor")]
         public float SpecularFactor{get;}
 
         /// <summary>
         /// The glossiness factor.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("glossiness_factor")]
         public float GlossinessFactor{get;}
 
         /// <summary>
         /// The name of the material.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("name")]
         public string Name {get; internal set;}
-
-        /// <summary>
-        /// A flag indicating whether the material uses per-vertex coloring.
-        /// </summary>
-        /// <returns></returns>
-        public bool UsesPerVertexColoring{get;set;}
         
         /// <summary>
         /// Construct a material.
@@ -45,7 +41,8 @@ namespace Hypar.Elements
         /// <param name="color">The RGBA color of the material.</param>
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
-        public Material(string name, Color color, float specularFactor, float glossinessFactor)
+        [JsonConstructor]
+        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f)
         {
             if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {
@@ -61,6 +58,29 @@ namespace Hypar.Elements
             this.Color = color;
             this.SpecularFactor = specularFactor;
             this.GlossinessFactor = glossinessFactor;
+        }
+
+        /// <summary>
+        /// Is this material equal to the provided material?
+        /// </summary>
+        /// <param name="obj"></param>
+        public override bool Equals(object obj)
+        {
+            var m = obj as Material;
+            if(m == null)
+            {
+                return false;
+            }
+            return this.Color.Equals(m.Color) && this.SpecularFactor == m.SpecularFactor && this.GlossinessFactor == m.GlossinessFactor && this.Name == m.Name;
+        }
+
+        /// <summary>
+        /// Get the hash code for the material.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return new ArrayList(){this.Name, this.Color, this.SpecularFactor, this.GlossinessFactor}.GetHashCode();
         }
     }
 }

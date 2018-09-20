@@ -37,11 +37,11 @@ namespace Hypar.Tests
                 foreach(var cell in g.Cells())
                 {
                     var panel = new Panel(cell, BuiltInMaterials.Glass);
-                    var edges = panel.Edges.ToArray();
+                    var edges = panel.Edges();
                     var bProfile = Profiles.WideFlangeProfile();
-                    var beam1 = new Beam(edges[0], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal);
-                    var beam2 = new Beam(edges[2], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal);
-                    var beam3 = new Beam(edges[1], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal);
+                    var beam1 = new Beam(edges[0], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal());
+                    var beam2 = new Beam(edges[2], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal());
+                    var beam3 = new Beam(edges[1], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal());
                     model.AddElements(new Element[]{panel, beam1, beam2, beam3});
                 }
             }

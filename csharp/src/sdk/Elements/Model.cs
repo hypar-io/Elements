@@ -136,7 +136,6 @@ namespace Hypar.Elements
         public void SaveGlb(string path)
         {
             var gltf = InitializeGlTF();
-
             if(File.Exists(path))
             {
                 File.Delete(path);
@@ -190,7 +189,21 @@ namespace Hypar.Elements
         {   
             return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.Auto
+                NullValueHandling = NullValueHandling.Ignore
+            });
+        }
+        
+        /// <summary>
+        /// Deserialize a model from JSON.
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static Model FromJson(string json)
+        {
+            return JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings
+            {
+                Converters = new []{new ElementConverter()},
+                NullValueHandling = NullValueHandling.Ignore
             });
         }
 
