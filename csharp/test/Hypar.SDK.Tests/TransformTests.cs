@@ -26,6 +26,11 @@ namespace Hypar.Tests
                 j += 1.0/(double)count;
             }
 
+            var m3 = new Mass(Profiles.Rectangular(),0.0, 1.0, new Material("navy", Color.Navy));
+            var p = new Plane(new Vector3(5,5,0), new Vector3(1,1,0).Normalized());
+            m3.Transform.Project(p);
+            model.AddElement(m3);
+
             model.SaveGlb("transform.glb");
         }
 

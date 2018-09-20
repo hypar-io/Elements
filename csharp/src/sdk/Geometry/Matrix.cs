@@ -203,10 +203,10 @@ namespace Hypar.Geometry
             m33 = 1.0 - n.Z * n.Z;
             
             m12 = m21 = -n.X * n.Y;
-            m13 = m32 = -n.X * n.Z;
+            m13 = m31 = -n.X * n.Z;
             m23 = m32 = -n.Y * n.Z;
             
-            tx = p.Origin.X; ty = p.Origin.Y; tz = p.Origin.Z;
+            tx = 0.0; ty = 0.0; tz = 0.0;
         }
 
         /// <summary>
