@@ -71,7 +71,7 @@ namespace Hypar.Geometry
         /// The centroid of the Polygon.
         /// </summary>
         /// <returns>
-        /// Vector3
+        /// Retruns a Vector3 representation of the Polygon centroid.
         /// </returns>
         [JsonIgnore]
         public Vector3 Centroid
