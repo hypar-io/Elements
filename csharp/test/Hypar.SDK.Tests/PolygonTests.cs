@@ -188,7 +188,7 @@ namespace Hypar.Tests
                     new Vector3(4, 0),
                     new Vector3(8, 0),
                     new Vector3(8, 4),
-                    new Vector3(4, 0)
+                    new Vector3(4, 8)
                 }
             );
             Assert.True(p1.Touches(p2));
@@ -217,10 +217,9 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = p1.Difference(p2);
-            var polygon = polygons.ToArray()[0];
-            var vertices = (List<Vector3>)polygon.Vertices;         
-            
+            var polygon = p1.Difference(p2);
+            var vertices = new List<Vector3>(polygon.Vertices);
+
             Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 0));
             Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 0));
             Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 1));
@@ -254,7 +253,7 @@ namespace Hypar.Tests
             );
             var polygons = p1.Intersection(p2);
             var polygon = polygons.ToArray()[0];
-            var vertices = (List<Vector3>)polygon.Vertices;
+            var vertices = new List<Vector3>(polygon.Vertices);
 
             Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 1));
             Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 1));
@@ -285,9 +284,8 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = p1.Union(p2);
-            var polygon = polygons.ToArray()[0];
-            var vertices = (List<Vector3>)polygon.Vertices;
+            var polygon = p1.Union(p2);
+            var vertices = new List<Vector3>(polygon.Vertices);
 
             Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 0));
             Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 0));
@@ -324,7 +322,7 @@ namespace Hypar.Tests
             );
             var polygons = p1.XOR(p2);
             var polygon = polygons.ToArray()[0];
-            var vertices = (List<Vector3>)polygon.Vertices;
+            var vertices = new List<Vector3>(polygon.Vertices);
 
             Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 1));
             Assert.True(vertices.Exists(vtx => vtx.X == 7 && vtx.Y == 1));
@@ -345,7 +343,8 @@ namespace Hypar.Tests
 
             var plinew = new Polygon(new[]{a,b,c});
             var offset = plinew.Offset(0.2);
-            Assert.Single(offset);
+
+            Assert.True(offset.Count == 1);
         }
 
         [Fact]
@@ -427,6 +426,14 @@ namespace Hypar.Tests
             var plinew = new Polygon(new[]{a,b,c,d,e,f});
             var offset = plinew.Offset(-0.5);
             Assert.Equal(2, offset.Count());
+        }
+
+        [Fact]
+        public void SameVertices_ThrowsException()
+        {
+            var a = new Vector3();
+            var b = new Vector3(0.000001,0,0);
+            Assert.Throws<Exception>(()=>new Polygon(new[]{a,a,a}));
         }
     }
 }

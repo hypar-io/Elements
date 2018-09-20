@@ -46,13 +46,22 @@ namespace Hypar.Geometry
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if(obj.GetType() != typeof(Vector3))
+            var v = obj as Vector3;
+            if(v == null)
             {
                 return false;
             }
-
-            var v = (Vector3)obj;
+            
             return this.X == v.X && this.Y == v.Y && this.Z == v.Z;
+        }
+
+        /// <summary>
+        /// Get the hash code for the vector.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return new[]{this.ToArray()}.GetHashCode();
         }
 
         /// <summary>
@@ -136,6 +145,7 @@ namespace Hypar.Geometry
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
+        [JsonConstructor]
         public Vector3(double x, double y, double z)
         {
             this.X = x;
@@ -157,7 +167,6 @@ namespace Hypar.Geometry
         /// <summary>
         /// Get the length of this vector.
         /// </summary>
-        /// <returns></returns>
         public double Length()
         {
             return Math.Sqrt(Math.Pow(X,2) + Math.Pow(Y,2) + Math.Pow(Z,2));
@@ -357,6 +366,19 @@ namespace Hypar.Geometry
         public double DistanceTo(Vector3 v)
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
+        }
+
+        /// <summary>
+        /// Project the specified vector onto the plane.
+        /// </summary>
+        /// <param name="p">The plane on which to project the point.</param>
+        public Vector3 Project(Plane p)
+        {
+            //Ax+By+Cz+d=0
+            //p' = p - (n ⋅ (p - o)) * n
+            var d = -p.Origin.X * p.Normal.X - p.Origin.Y * p.Normal.Y - p.Origin.Z * p.Normal.Z;
+            var p1 = this - (p.Normal.Dot(this-p.Origin)) * p.Normal;
+            return p1;
         }
     }
 

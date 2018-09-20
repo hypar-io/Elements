@@ -36,8 +36,7 @@ namespace Hypar
             switch(level)
             {
                 case LogLevel.Info:
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    prefix = "\t";
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                     break;
                 case LogLevel.Warning:
                     Console.ForegroundColor = ConsoleColor.Yellow;
