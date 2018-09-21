@@ -207,14 +207,24 @@ namespace Hypar.Tests
                     new Vector3(0, 4)
                 }
             );
+            //var p2 = new Polygon
+            //(
+            //    new[]
+            //    {
+            //        new Vector3(3, 1),
+            //        new Vector3(7, 1),
+            //        new Vector3(7, 5),
+            //        new Vector3(3, 5)
+            //    }
+            //);
             var p2 = new Polygon
             (
                 new[]
                 {
-                    new Vector3(3, 1),
-                    new Vector3(7, 1),
-                    new Vector3(7, 5),
-                    new Vector3(3, 5)
+                    new Vector3(2, -1),
+                    new Vector3(3, -1),
+                    new Vector3(3, 5),
+                    new Vector3(2, 5)
                 }
             );
             var polygon = p1.Difference(p2);

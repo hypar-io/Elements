@@ -273,11 +273,11 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
         /// <returns>
-        /// Returns a Polygon representing the subtraction of the supplied Polygon from this Polygon.
+        /// Returns a list of Polygons representing the subtraction of the supplied Polygon from this Polygon.
         /// Returns null if the area of this Polygon is entirely subtracted.
-        /// Returns a Polygon representing the perimeter of this Polygon if the two Polygons do not intersect.
+        /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
         /// </returns>
-        public Polygon Difference(Polygon polygon)
+        public IEnumerable<Polygon> Difference(Polygon polygon)
         {
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
@@ -290,7 +290,12 @@ namespace Hypar.Geometry
             {
                 return null;
             }
-            return solution[0].ToPolygon();
+            var polygons = new List<Polygon>();
+            foreach (List<IntPoint> path in solution)
+            {
+                polygons.Add(PolygonExtensions.ToPolygon(path));
+            }
+            return polygons;
         }
 
         /// <summary>
