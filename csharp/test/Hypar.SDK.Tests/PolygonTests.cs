@@ -197,17 +197,14 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var vertices = p1.Difference(p2).ToArray()[0].Vertices.ToList();
+            var vertices = p1.Difference(p2).First().Vertices;
 
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
             Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 1.0);
-
-
-            //Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 0));
-            //Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 0));
-            //Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 1));
-            //Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 1));
-            //Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 4));
-            //Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 4));
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
         }
 
         [Fact]
@@ -233,14 +230,12 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = p1.Intersection(p2);
-            var polygon = polygons.ToArray()[0];
-            var vertices = new List<Vector3>(polygon.Vertices);
+            var vertices = p1.Intersection(p2).First().Vertices;
 
-            Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 1));
-            Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 1));
-            Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 4));
-            Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 4));
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
         }
 
         [Fact]
@@ -266,17 +261,16 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygon = p1.Union(p2);
-            var vertices = new List<Vector3>(polygon.Vertices);
+            var vertices = p1.Union(p2).Vertices;
 
-            Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 0));
-            Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 0));
-            Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 1));
-            Assert.True(vertices.Exists(vtx => vtx.X == 7 && vtx.Y == 1));
-            Assert.True(vertices.Exists(vtx => vtx.X == 7 && vtx.Y == 5));
-            Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 5));
-            Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 4));
-            Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 4));
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
         }
 
         [Fact]
@@ -302,18 +296,16 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
-            var polygons = p1.XOR(p2);
-            var polygon = polygons.ToArray()[0];
-            var vertices = new List<Vector3>(polygon.Vertices);
+            var vertices = p1.XOR(p2).First().Vertices;
 
-            Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 1));
-            Assert.True(vertices.Exists(vtx => vtx.X == 7 && vtx.Y == 1));
-            Assert.True(vertices.Exists(vtx => vtx.X == 7 && vtx.Y == 5));
-            Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 5));
-            Assert.True(vertices.Exists(vtx => vtx.X == 3 && vtx.Y == 4));
-            Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 4));
-            Assert.True(vertices.Exists(vtx => vtx.X == 0 && vtx.Y == 0));
-            Assert.True(vertices.Exists(vtx => vtx.X == 4 && vtx.Y == 0));
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
         }
 
         [Fact]
