@@ -70,6 +70,35 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
+        /// The centroid of the Polygon.
+        /// </summary>
+        /// <returns>
+        /// Retruns a Vector3 representation of the Polygon centroid.
+        /// </returns>
+        [JsonIgnore]
+        public Vector3 Centroid
+        {
+            get
+            {
+                var x = 0.0;
+                var y = 0.0;
+                var factor = 0.0;
+                for (var i = 0; i < this._vertices.Count; i++)
+                {
+                    factor =
+                        (_vertices[i].X * _vertices[(i + 1) % _vertices.Count].Y) -
+                        (_vertices[(i + 1) % _vertices.Count].X * _vertices[i].Y);
+                    x += (_vertices[i].X + _vertices[(i + 1) % _vertices.Count].X) * factor;
+                    y += (_vertices[i].Y + _vertices[(i + 1) % _vertices.Count].Y) * factor;
+                }
+                var divisor = this.Area * 6;
+                x /= divisor;
+                y /= divisor;
+                return new Vector3(System.Math.Abs(x), System.Math.Abs(y));
+            }
+        }
+
+        /// <summary>
         /// Construct a Polygon from a collection of vertices.
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>

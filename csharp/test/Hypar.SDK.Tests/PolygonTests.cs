@@ -10,6 +10,26 @@ namespace Hypar.Tests
     public class PolygonTests
     {
         [Fact]
+        public void Centroid()
+        {
+            var polygon = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(3, 3),
+                    new Vector3(6, 0),
+                    new Vector3(6, 8),
+                    new Vector3(3, 5),
+                    new Vector3(0, 8)
+                }
+            );
+            var centroid = polygon.Centroid;
+            Assert.Equal(3, centroid.X);
+            Assert.Equal(4, centroid.Y);
+        }
+
+        [Fact]
         public void Contains()
         {
             var p1 = new Polygon
