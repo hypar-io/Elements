@@ -23,7 +23,7 @@ namespace Hypar.Elements
         public string Id {get;internal set;}
 
         /// <summary>
-        /// The type of the element.
+        /// The type of the eleme]]
         /// </summary>
         [JsonProperty("type")]
         public virtual string Type
@@ -34,7 +34,6 @@ namespace Hypar.Elements
         /// <summary>
         /// A map of Parameters for the Element.
         /// </summary>
-        /// <value></value>
         [JsonProperty("parameters")]
         public Dictionary<string, object> Parameters
         {
@@ -68,7 +67,6 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="parameter">The parameter to add.</param>
-        /// <returns></returns>
         public void AddParameter<T>(string name, Parameter<T> parameter)
         {
             if(!_parameters.ContainsKey(name))
@@ -83,7 +81,7 @@ namespace Hypar.Elements
         /// <summary>
         /// Remove a Parameter from the Parameters map.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name of the parameter to remove.</param>
         public void RemoveParameter(string name)
         {
             if(_parameters.ContainsKey(name))
