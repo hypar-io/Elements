@@ -1,5 +1,6 @@
 using Hypar.Geometry;
 using System.Collections.Generic;
+using System;
 
 namespace Hypar.Geometry
 {   
@@ -138,6 +139,22 @@ namespace Hypar.Geometry
             var m = new Vector3(o.X + width/2 + horizontalOffset, o.Y + height/2 + verticalOffset);
 
             return new Polygon(new []{a,b,c,e,f,g,h,i,j,k,l,m});
+        }
+
+        /// <summary>
+        /// A circle.
+        /// </summary>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="divisions">The number of divisions of the circle.</param>
+        /// <returns></returns>
+        public static Polygon Circle(double radius = 1.0, int divisions = 10)
+        {
+            var verts = new List<Vector3>();
+            for(var i=0.0; i<Math.PI*2; i += Math.PI*2/divisions)
+            {
+                verts.Add(new Vector3(radius * Math.Cos(i), radius * Math.Sin(i)));
+            }
+            return new Polygon(verts);
         }
     }
 }
