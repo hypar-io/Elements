@@ -25,6 +25,6 @@ namespace Hypar.Elements
         /// <param name="material">The Brace's material.</param>
         /// <param name="up">The Brace's up axis.</param>
         [JsonConstructor]
-        public Brace(Line centerLine, IList<Polygon> profile, Material material = null, Vector3 up = null) : base(centerLine, profile, material, up){}
+        public Brace(Line centerLine, Profile profile, Material material = null, Vector3 up = null) : base(centerLine, profile, material, up){}
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 namespace Hypar.Geometry
 {
     /// <summary>
-    /// A transform defined by an origin and x, y, and z axes.
+    /// A Transform defined by an origin and x, y, and z axes.
     /// </summary>
     public class Transform
     {
@@ -49,7 +49,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// The XY plane of the transform.
+        /// The XY plane of the Transform.
         /// </summary>
         public Plane XY
         {
@@ -57,7 +57,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// The YZ plane of the transform.
+        /// The YZ plane of the Transform.
         /// </summary>
         /// <value></value>
         public Plane YZ
@@ -66,7 +66,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// The XZ plane of the transform.
+        /// The XZ plane of the Transform.
         /// </summary>
         /// <value></value>
         public Plane XZ
@@ -75,7 +75,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Construct the identity transform.
+        /// Construct the identity Transform.
         /// </summary>
         public Transform()
         {
@@ -83,11 +83,33 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Construct a transform by origin and axes.
+        /// Construct a Transform with a translation.
         /// </summary>
-        /// <param name="origin">The origin of the transform.</param>
-        /// <param name="xAxis">The X axis of the transform.</param>
-        /// <param name="zAxis">The Z axis of the transform.</param>
+        /// <param name="origin">The origin of the Transform.</param>
+        public Transform(Vector3 origin)
+        {
+            this._matrix = new Matrix();
+            this._matrix.SetupTranslation(origin);
+        }
+
+        /// <summary>
+        /// Construct a Transform with a translation.
+        /// </summary>
+        /// <param name="x">The X component of translation.</param>
+        /// <param name="y">The Y component of translation.</param>
+        /// <param name="z">The Z component of translation.</param>
+        public Transform(double x, double y, double z)
+        {
+            this._matrix = new Matrix();
+            this._matrix.SetupTranslation(new Vector3(x,y,z));
+        }
+
+        /// <summary>
+        /// Construct a Transform by origin and axes.
+        /// </summary>
+        /// <param name="origin">The origin of the Transform.</param>
+        /// <param name="xAxis">The X axis of the Transform.</param>
+        /// <param name="zAxis">The Z axis of the Transform.</param>
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis)
         {
             var x = xAxis.Normalized();
@@ -97,7 +119,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Get a string representation of the transform.
+        /// Get a string representation of the Transform.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -108,17 +130,17 @@ namespace Hypar.Geometry
         /// <summary>
         /// Transform a Vector into the coordinate space defined by this Transform.
         /// </summary>
-        /// <param name="vector">The vector to be transformed.</param>
-        /// <returns>A new Vector transformed by this transform.</returns>
+        /// <param name="vector">The vector to transform.</param>
+        /// <returns>A new Vector transformed by this Transform.</returns>
         public Vector3 OfPoint(Vector3 vector)
         {
             return vector * this._matrix;
         }
 
         /// <summary>
-        /// Transform a Polygon using this Transform.
+        /// Transform the specified Polygon.
         /// </summary>
-        /// <param name="polygon">The polygon to transform.</param>
+        /// <param name="polygon">The polygon to Transform.</param>
         /// <returns>A new Polygon transformed by this Transform.</returns>
         public Polygon OfPolygon(Polygon polygon)
         {
@@ -126,9 +148,9 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Transform a Line using this Transform.
+        /// Transform the specified Line.
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="line">The Line to transform.</param>
         /// <returns>A new Line transformed by this Transform.</returns>
         public Line OfLine(Line line)
         {
@@ -136,7 +158,18 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Apply a translation to the transform.
+        /// Transform the specified Profile.
+        /// </summary>
+        /// <param name="profile">The Profile to transform.</param>
+        /// <returns>A new Profile transformed by this Transform.</returns>
+        public Profile OfProfile(Profile profile)
+        {
+            var voids = profile.Voids == null ? null : profile.Voids.Select(v=>OfPolygon(v)).ToList();
+            return new Profile(OfPolygon(profile.Perimeter), voids);
+        }
+
+        /// <summary>
+        /// Apply a translation to the Transform.
         /// </summary>
         /// <param name="translation">The translation to apply.</param>
         public void Move(Vector3 translation)
@@ -147,7 +180,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Apply a rotation to the transform.
+        /// Apply a rotation to the Transform.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
         /// <param name="angle">The angle of rotation in degrees.</param>
@@ -159,7 +192,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Apply a scale to the transform.
+        /// Apply a scale to the Transform.
         /// </summary>
         /// <param name="amount">The amount to scale.</param>
         public void Scale(Vector3 amount)

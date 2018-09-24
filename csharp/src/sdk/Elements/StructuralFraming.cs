@@ -12,45 +12,47 @@ namespace Hypar.Elements
     public abstract class StructuralFraming : Element, ITessellate<Mesh>
     {
         private readonly Line _centerLine;
+        private readonly Profile _profile;
 
         /// <summary>
-        /// The cross-section profile of the Beam.
+        /// The cross-section profile of the framing element.
         /// </summary>
         [JsonProperty("profile")]
-        public IList<Polygon> Profile { get; }
+        public Profile Profile
+        {
+            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
+        }
 
         /// <summary>
-        /// The up axis of the Beam.
+        /// The up axis of the framing element.
         /// </summary>
         [JsonProperty("up_axis")]
         public Vector3 UpAxis { get; }
 
         /// <summary>
-        /// The center line of the Beam.
+        /// The center line of the framing element.
         /// </summary>
         [JsonProperty("center_line")]
         public Line CenterLine
         {
-            get{return this.Transform != null ? this.Transform.OfLine(this._centerLine) : this._centerLine;}
+            get { return this.Transform != null ? this.Transform.OfLine(this._centerLine) : this._centerLine; }
         }
 
         /// <summary>
         /// Construct a beam.
         /// </summary>
         /// <param name="centerLine">The center line of the Beam.</param>
-        /// <param name="profile">The structural profile of the Beam.</param>
+        /// <param name="profile">The structural Profile of the Beam.</param>
         /// <param name="material">The Beam's material.</param>
         /// <param name="up">The up axis of the Beam.</param>
         [JsonConstructor]
-        public StructuralFraming(Line centerLine, IList<Polygon> profile, Material material = null, Vector3 up = null)
+        public StructuralFraming(Line centerLine, Profile profile, Material material = null, Vector3 up = null)
         {
-            this.Profile = profile;
+            this._profile = profile;
             this._centerLine = centerLine;
             this.Material = material == null ? BuiltInMaterials.Steel : material;
-
-            var t = centerLine.GetTransform(up);
+            var t = centerLine.GetTransform(0.0, up);
             this.UpAxis = up == null ? t.YAxis : up;
-            this.Transform = t;
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Hypar.Elements
         /// <returns>A mesh representing the tessellated Beam.</returns>
         public Mesh Tessellate()
         {
-            return Mesh.ExtrudeAlongLine(this._centerLine, this.Profile);
+            return Mesh.ExtrudeAlongLine(this._centerLine, this._profile.Perimeter, this._profile.Voids);
         }
     }
 }

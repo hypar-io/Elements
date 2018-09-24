@@ -12,8 +12,7 @@ namespace Hypar.Elements
     /// </summary>
     public class Space : Element, ITessellate<Mesh>
     {
-        private readonly Polygon _perimeter;
-        private readonly IList<Polygon> _voids;
+        private readonly Profile _profile;
 
         /// <summary>
         /// The type of the element.
@@ -36,41 +35,30 @@ namespace Hypar.Elements
         public double Height { get; }
 
         /// <summary>
-        /// The lower perimeter of the Space.
+        /// The Profile of the Space.
         /// </summary>
-        [JsonProperty("perimeter")]
-        public Polygon Perimeter
+        [JsonProperty("profile")]
+        public Profile Profile
         {
-            get { return this.Transform != null? this.Transform.OfPolygon(_perimeter) : this._perimeter; }
-        }
-
-        /// <summary>
-        /// The voids with the Space.
-        /// </summary>
-        [JsonProperty("voids")]
-        public IList<Polygon> Voids
-        {
-            get{return this._voids.Select(v=>this.Transform.OfPolygon(v)).ToList();}
+            get { return this.Transform != null? this.Transform.OfProfile(this._profile) : this._profile; }
         }
 
         /// <summary>
         /// Construct a space.
         /// </summary>
-        /// <param name="perimeter">The perimeter of the space.</param>
-        /// <param name="voids">A list of perimeters as vertical voids the same height as the space.</param>
+        /// <param name="profile">The Profile of the space.</param>
         /// <param name="elevation">The elevation of the perimeter.</param>
         /// <param name="height">The height of the space above the lower elevation.</param>
         /// <param name="material">The space's material.</param>
         [JsonConstructor]
-        public Space(Polygon perimeter, IList<Polygon> voids = null, double elevation = 0.0, double height = 1.0, Material material = null)
+        public Space(Profile profile, double elevation = 0.0, double height = 1.0, Material material = null)
         {
             if (height <= 0.0)
             {
                 throw new ArgumentOutOfRangeException(Messages.HEIGHT_EXCEPTION, "height");
             }
 
-            this._perimeter = perimeter;
-            this._voids = voids != null ? voids : new List<Polygon>();
+            this._profile = profile;
             this.Elevation = elevation;
             this.Height = height;
 
@@ -84,15 +72,7 @@ namespace Hypar.Elements
         /// <returns>The Mesh representing the Space.</returns>
         public Mesh Tessellate()
         {
-            var polys = new List<Polygon>
-            {
-                this._perimeter
-            };
-            if (this._voids != null)
-            {
-                polys.AddRange(this.Voids);
-            }
-            return Mesh.Extrude(polys, this.Height, true);
+            return Mesh.Extrude(this._profile.Perimeter, this.Height, this._profile.Voids, true);
         }
     }
 }

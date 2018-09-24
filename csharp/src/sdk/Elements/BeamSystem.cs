@@ -8,7 +8,7 @@ namespace Hypar.Elements
     /// <summary>
     /// BeamSystem represents a collection of beams within a perimeter.
     /// </summary>
-    public class BeamSystem : IEnumerable<Beam>
+    public class BeamSystem
     {
         private List<Beam> _beams = new List<Beam>();
 
@@ -24,12 +24,12 @@ namespace Hypar.Elements
         /// <summary>
         /// Construct a BeamSystem between two edges.
         /// </summary>
-        /// <param name="count"></param>
-        /// <param name="profile"></param>
-        /// <param name="edge1"></param>
-        /// <param name="edge2"></param>
-        /// <param name="material"></param>
-        public BeamSystem(int count, IList<Polygon> profile, Line edge1, Line edge2, Material material)
+        /// <param name="count">The number of Beams to create.</param>
+        /// <param name="profile">The Profile to be used for all Beams.</param>
+        /// <param name="edge1">The first edge of the system.</param>
+        /// <param name="edge2">The second edge of the system.</param>
+        /// <param name="material">The Beam material.</param>
+        public BeamSystem(int count, Profile profile, Line edge1, Line edge2, Material material = null)
         {
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material);
         }
@@ -37,13 +37,13 @@ namespace Hypar.Elements
         /// <summary>
         /// Construct a beam system under a slab.
         /// </summary>
-        /// <param name="floor"></param>
-        /// <param name="count"></param>
-        /// <param name="profile"></param>
-        /// <param name="material"></param>
-        public BeamSystem(Floor floor, int count, IList<Polygon> profile, Material material)
+        /// <param name="floor">The Floor under which to create Beams.</param>
+        /// <param name="count">The number of Beams to create.</param>
+        /// <param name="profile">The Profile to be used for all Beams.</param>
+        /// <param name="material">The Beam material.</param>
+        public BeamSystem(Floor floor, int count, Profile profile, Material material = null)
         {
-            var edges = floor.Perimeter.Segments().ToArray();
+            var edges = floor.Profile.Perimeter.Segments().ToArray();
             var e1 = edges[0];
             var e2 = edges[2].Reversed();
             var bbox = new BBox3(profile);
@@ -53,7 +53,7 @@ namespace Hypar.Elements
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material);
         }
 
-        private void CreateBeamsBetweenEdges(Line edge1, Line edge2, int count, IList<Polygon> profile, Material material)
+        private void CreateBeamsBetweenEdges(Line edge1, Line edge2, int count, Profile profile, Material material)
         {
             var div = 1.0/((double)count + 1);
             for(var i=0; i<count; i++)
@@ -65,24 +65,6 @@ namespace Hypar.Elements
                 var beam = new Beam(line, profile, material, null);
                 this._beams.Add(beam);
             }
-        }
-
-        /// <summary>
-        /// Get the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<Beam> GetEnumerator()
-        {
-            return ((IEnumerable<Beam>)_beams).GetEnumerator();
-        }
-
-        /// <summary>
-        /// Get the enumerator.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<Beam>)_beams).GetEnumerator();
         }
     }
 }

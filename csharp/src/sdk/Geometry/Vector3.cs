@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hypar.Geometry
 {
@@ -392,7 +393,7 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public static bool AreCoplanar(this IEnumerable<Vector3> points)
+        public static bool AreCoplanar(this IList<Vector3> points)
         {
             //TODO: https://github.com/hypar-io/sdk/issues/54
             throw new NotImplementedException();
@@ -403,9 +404,38 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public static BBox3 BBox(this IEnumerable<Vector3> points)
+        public static BBox3 BBox(this IList<Vector3> points)
         {
             return new BBox3(points);
+        }
+
+        /// <summary>
+        /// Find the average of a collection of Vector3.
+        /// </summary>
+        /// <param name="points">The Vector3 collection to average.</param>
+        /// <returns>A Vector3 representing the average.</returns>
+        public static Vector3 Average(this IList<Vector3> points)
+        {
+            double x = 0.0, y = 0.0, z = 0.0;
+            foreach(var p in points)
+            {
+                x += p.X;
+                y += p.Y;
+                z += p.Z;
+            }
+            return new Vector3(x/points.Count, y/points.Count, z/points.Count);
+        }
+
+        /// <summary>
+        /// Shrink a collection of Vector3 towards their average.
+        /// </summary>
+        /// <param name="points">The collection of Vector3 to shrink.</param>
+        /// <param name="distance">The distance to shrink along the vector to average.</param>
+        /// <returns></returns>
+        public static IList<Vector3> Shrink(this IList<Vector3> points, double distance)
+        {
+            var avg = points.Average();
+            return points.Select(p=>p + (avg - p).Normalized() * distance).ToList();
         }
     }
 }

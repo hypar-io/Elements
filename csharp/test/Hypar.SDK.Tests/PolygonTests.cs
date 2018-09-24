@@ -49,10 +49,10 @@ namespace Hypar.Tests
         [Fact]
         public void Area()
         {
-            var a = Profiles.Rectangular();
+            var a = Polygon.Rectangle();
             Assert.Equal(1.0, a.Area);
 
-            var b = Profiles.Rectangular(Vector3.Origin, 2.0,2.0);
+            var b = Polygon.Rectangle(Vector3.Origin, 2.0,2.0);
             Assert.Equal(4.0, b.Area);
 
             var p1 = Vector3.Origin;

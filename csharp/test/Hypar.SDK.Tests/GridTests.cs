@@ -21,7 +21,7 @@ namespace Hypar.Tests
             var model = new Model();
             foreach(var cell in grid.Cells())
             {
-                var panel = new Panel(cell);
+                var panel = new Panel(cell.Shrink(0.2));
                 model.AddElement(panel);
             }
             model.SaveGlb("grid.glb");
@@ -34,7 +34,7 @@ namespace Hypar.Tests
             var top = new Line(new Vector3(20,10,30), new Vector3(0,0,30));
             var grid = new Grid(bottom, top, 5, 5);
                                         
-            var profile = Profiles.WideFlangeProfile(0.5, 0.5, 0.1, 0.1, Profiles.VerticalAlignment.Center);
+            var profile = Polygon.WideFlange(0.5, 0.5, 0.1, 0.1, Polygon.VerticalAlignment.Center);
             Assert.Equal(25, grid.Cells().Count());
         }
     }

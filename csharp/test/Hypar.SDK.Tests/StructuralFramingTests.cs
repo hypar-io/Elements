@@ -9,8 +9,8 @@ namespace Hypar.Tests
         [Fact]
         public void Example()
         {
-            var l = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var b = new Beam(l, new[]{Profiles.WideFlangeProfile()});
+            var l = new Line(Vector3.Origin, new Vector3(2,0,0));
+            var b = new Beam(l, Polygon.WideFlange());
 
             var model = new Model();
             model.AddElement(b);
@@ -21,7 +21,7 @@ namespace Hypar.Tests
         public void Construct_Beam()
         {
             var l = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var b = new Beam(l, new[]{Profiles.WideFlangeProfile()});
+            var b = new Beam(l, Polygon.WideFlange());
             Assert.Equal(BuiltInMaterials.Steel, b.Material);
             Assert.Equal(l, b.CenterLine);
         }
@@ -29,7 +29,7 @@ namespace Hypar.Tests
         [Fact]
         public void Construct_Column()
         {
-            var c = new Column(Vector3.Origin, 10.0, new[]{Profiles.WideFlangeProfile()});
+            var c = new Column(Vector3.Origin, 10.0, Polygon.WideFlange());
             Assert.Equal(BuiltInMaterials.Steel, c.Material);
             Assert.Equal(10.0, c.CenterLine.Length);
         }
@@ -38,7 +38,7 @@ namespace Hypar.Tests
         public void Construct_Brace()
         {
             var l = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var b = new Brace(l, new[]{Profiles.WideFlangeProfile()});
+            var b = new Brace(l, Polygon.WideFlange());
             Assert.Equal(BuiltInMaterials.Steel, b.Material);
             Assert.Equal(l, b.CenterLine);
         }

@@ -1,12 +1,12 @@
 using Hypar.Geometry;
 using System.Collections.Generic;
 
-namespace Hypar.Elements
+namespace Hypar.Geometry
 {   
     /// <summary>
     /// Construct profiles.
     /// </summary>
-    public static class Profiles
+    public partial class Polygon
     {
         /// <summary>
         /// Construct a rectangular profile
@@ -17,7 +17,7 @@ namespace Hypar.Elements
         /// <param name="verticalOffset"></param>
         /// <param name="horizontalOffset"></param>
         /// <returns></returns>
-        public static Polygon Rectangular(Vector3 origin = null, double width = 1.0, double height = 1.0, double verticalOffset = 0.0, double horizontalOffset = 0.0)
+        public static Polygon Rectangle(Vector3 origin = null, double width = 1.0, double height = 1.0, double verticalOffset = 0.0, double horizontalOffset = 0.0)
         {
             if(origin == null)
             {
@@ -82,7 +82,7 @@ namespace Hypar.Elements
         /// <param name="verticalOffset"></param>
         /// <param name="horizontalOffset"></param>
         /// <returns></returns>
-        public static Polygon WideFlangeProfile(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, 
+        public static Polygon WideFlange(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, 
                                                         VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
                                                         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
                                                         double verticalOffset = 0.0, double horizontalOffset = 0.0)

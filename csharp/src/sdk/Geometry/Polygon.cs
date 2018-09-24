@@ -10,7 +10,7 @@ namespace Hypar.Geometry
     /// <summary>
     /// A closed planar polygon.
     /// </summary>
-    public class Polygon : ICurve
+    public partial class Polygon : ICurve
     {
         private IList<Vector3> _vertices;
 
@@ -234,6 +234,15 @@ namespace Hypar.Geometry
         public Polygon Transform(Transform t)
         {
             return new Polygon(this.Vertices.Select(v=>t.OfPoint(v)).ToList());
+        }
+        
+        /// <summary>
+        /// Create a Profile from this Polygon.
+        /// </summary>
+        /// <returns>A new Profile.</returns>
+        public static implicit operator Profile(Polygon p)
+        {
+            return new Profile(p);
         }
     }
 

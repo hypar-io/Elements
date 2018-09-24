@@ -15,7 +15,7 @@ namespace Hypar.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polygon(new[]{a,b,c,d});
-            var space = new Space(profile, null,  0, 10);
+            var space = new Space(profile, 0, 10);
             var model = new Model();
             model.AddElement(space);
             model.SaveGlb("space.glb");
@@ -30,17 +30,17 @@ namespace Hypar.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polygon(new[]{a,b,c,d});
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Space(profile, null, 0, -10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Space(profile, 0, -10));
         }
 
         [Fact]
         public void Transform()
         {
-            var p = Profiles.Rectangular();
+            var p = Polygon.Rectangle();
             var space = new Space(p);
             var t = new Vector3(5,5,5);
             space.Transform.Move(t);
-            var p1 = space.Perimeter;
+            var p1 = space.Profile.Perimeter;
             for(var i=0; i<p.Vertices.Count; i++)
             {
                 Assert.Equal(p.Vertices[i] + t, p1.Vertices[i]);

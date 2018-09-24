@@ -25,6 +25,6 @@ namespace Hypar.Elements
         /// <param name="material">The Beam's material.</param>
         /// <param name="up">The Beam's up axis.</param>
         [JsonConstructor]
-        public Beam(Line centerLine, IList<Polygon> profile, Material material = null, Vector3 up = null) : base(centerLine, profile, material, up){}
+        public Beam(Line centerLine, Profile profile, Material material = null, Vector3 up = null) : base(centerLine, profile, material, up){}
     }
 }

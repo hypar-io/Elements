@@ -12,7 +12,7 @@ namespace Hypar.Elements
     /// </summary>
     public class Floor : Element, ITessellate<Mesh>
     {
-        private readonly Polygon _perimeter;
+        private readonly Profile _profile;
 
         /// <summary>
         /// The type of the element.
@@ -23,19 +23,13 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// The boundary of the Floor.
+        /// The Profile of the Floor.
         /// </summary>
-        [JsonProperty("perimeter")]
-        public Polygon Perimeter
+        [JsonProperty("profile")]
+        public Profile Profile
         {
-            get{return this.Transform != null ? this.Transform.OfPolygon(this._perimeter) : this._perimeter;}
+            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
         }
-
-        /// <summary>
-        /// The voids in the Floor.
-        /// </summary>
-        [JsonProperty("voids")]
-        public IList<Polygon> Voids { get; }
 
         /// <summary>
         /// The elevation from which the Floor is extruded.
@@ -52,24 +46,22 @@ namespace Hypar.Elements
         /// <summary>
         /// Construct a Floor.
         /// </summary>
-        /// <param name="perimeter">The perimeter of the Floor.</param>
+        /// <param name="profile">The Profile of the Floor.</param>
         /// <param name="elevation">The elevation of the Floor.</param>
         /// <param name="thickness">The thickness of the Floor.</param>
-        /// <param name="voids">The voids in the Floor.</param>
         /// <param name="material">The Floor's material.</param>
         [JsonConstructor]
-        public Floor(Polygon perimeter, double elevation = 0.0, double thickness = 0.1, IList<Polygon> voids = null, Material material = null)
+        public Floor(Profile profile, double elevation = 0.0, double thickness = 0.1, Material material = null)
         {
             if (thickness <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("thickness", "The slab thickness must be greater than 0.0.");
             }
 
-            this._perimeter = perimeter;
-            this.Voids = voids == null ? new List<Polygon>() : voids.Select(v => v.Reversed()).ToList();
+            this._profile = profile;
             this.Elevation = elevation;
             this.Thickness = thickness;
-            this.Transform = new Transform(new Vector3(0, 0, elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+            this.Transform = new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
         }
 
@@ -80,13 +72,20 @@ namespace Hypar.Elements
         public Mesh Tessellate()
         {
             var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this._perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            clipper.AddPath(this._profile.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            clipper.AddPaths(this._profile.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             var solution = new List<List<ClipperLib.IntPoint>>();
             var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-            var polys = solution.Select(s => s.ToPolygon());
+            var polys = solution.Select(s => s.ToPolygon()).ToList();
 
-            return Mesh.Extrude(polys, this.Thickness, true);
+            if(polys.Count > 1)
+            {
+                return Mesh.Extrude(polys.First(), this.Thickness, polys.Skip(1).ToList(), true);
+            } 
+            else 
+            {
+                return Mesh.Extrude(polys.First(), this.Thickness, null, true);
+            }
         }
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace Hypar.Elements
         /// </summary>
         public double Area()
         {
-            return this._perimeter.Area + this.Voids.Sum(o => o.Area);
+            return this._profile.Area;
         }
     }
 
@@ -119,7 +118,7 @@ namespace Hypar.Elements
             {
                 if (e >= mass.Elevation && e <= mass.Elevation + mass.Height)
                 {
-                    var f = new Floor(mass.Perimeter, e, thickness, new Polygon[]{}, material);
+                    var f = new Floor(mass.Profile, e, thickness, material);
                     Floors.Add(f);
                 }
             }

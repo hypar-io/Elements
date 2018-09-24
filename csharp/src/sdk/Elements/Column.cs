@@ -38,7 +38,7 @@ namespace Hypar.Elements
         /// <param name="profile">The Column's profile.</param>
         /// <param name="material">The Column's material.</param>
         [JsonConstructor]
-        public Column(Vector3 location, double height, IList<Polygon> profile, Material material = null) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material)
+        public Column(Vector3 location, double height, Profile profile, Material material = null) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material)
         {
             this.Location = location;
             this.Height = height;
