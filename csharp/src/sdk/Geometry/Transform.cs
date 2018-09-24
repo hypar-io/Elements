@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hypar.Geometry
 {
@@ -105,12 +106,33 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Transform a vector into the coordinate space defined by this transform.
+        /// Transform a Vector into the coordinate space defined by this Transform.
         /// </summary>
         /// <param name="vector">The vector to be transformed.</param>
+        /// <returns>A new Vector transformed by this transform.</returns>
         public Vector3 OfPoint(Vector3 vector)
         {
             return vector * this._matrix;
+        }
+
+        /// <summary>
+        /// Transform a Polygon using this Transform.
+        /// </summary>
+        /// <param name="polygon">The polygon to transform.</param>
+        /// <returns>A new Polygon transformed by this Transform.</returns>
+        public Polygon OfPolygon(Polygon polygon)
+        {
+            return new Polygon(polygon.Vertices.Select(v=>OfPoint(v)).ToList());
+        }
+
+        /// <summary>
+        /// Transform a Line using this Transform.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns>A new Line transformed by this Transform.</returns>
+        public Line OfLine(Line line)
+        {
+            return new Line(OfPoint(line.Start), OfPoint(line.End));
         }
 
         /// <summary>
@@ -146,16 +168,5 @@ namespace Hypar.Geometry
             m.SetupScale(amount);
             this._matrix = this._matrix * m;
         }
-
-        /// <summary>
-        /// Apply a project transformation.
-        /// </summary>
-        /// <param name="p">The plane on which to project.</param>
-        // public void Project(Plane p)
-        // {
-        //     var m = new Matrix();
-        //     m.SetupProject(p);
-        //     this._matrix = this._matrix * m;
-        // }
     }
 }

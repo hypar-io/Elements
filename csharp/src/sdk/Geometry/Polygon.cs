@@ -85,7 +85,7 @@ namespace Hypar.Geometry
                     }
                     if(vertices[i].IsAlmostEqualTo(vertices[j]))
                     {
-                        throw new Exception($"The polygon could not be constructed. Two vertices were almost equal: a {vertices[i]} b {vertices[j]}.");
+                        throw new Exception($"The polygon could not be constructed. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
                     }
                 }
             }

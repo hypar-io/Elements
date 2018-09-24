@@ -99,5 +99,18 @@ namespace Hypar.Tests
             var mass = new Mass(profile, 0.0, 5.0);
             Assert.Equal(125, mass.Volume);
         }
+
+        [Fact]
+        public void Transform()
+        {
+            var profile = Profiles.Rectangular();
+            var mass = new Mass(profile, 0.0, 5.0);
+            var t = new Vector3(5,0,0);
+            mass.Transform.Move(t);
+            for(var i=0; i<profile.Vertices.Count; i++)
+            {
+                Assert.Equal(profile.Vertices[i] + t, mass.Perimeter.Vertices[i]);
+            }
+        }
     }
 }

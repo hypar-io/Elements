@@ -8,50 +8,55 @@ using System.Collections.Generic;
 namespace Hypar.Elements
 {
     /// <summary>
-    /// A Floor is a horizontal element defined by an outer boundary and one or several holes.
+    /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
     public class Floor : Element, ITessellate<Mesh>
     {
+        private readonly Polygon _perimeter;
+
         /// <summary>
         /// The type of the element.
         /// </summary>
         public override string Type
         {
-            get{return "floor";}
+            get { return "floor"; }
         }
 
         /// <summary>
-        /// The boundary of the floor.
+        /// The boundary of the Floor.
         /// </summary>
         [JsonProperty("perimeter")]
-        public Polygon Perimeter{get;}
+        public Polygon Perimeter
+        {
+            get{return this.Transform != null ? this.Transform.OfPolygon(this._perimeter) : this._perimeter;}
+        }
 
         /// <summary>
-        /// The voids in the slab.
+        /// The voids in the Floor.
         /// </summary>
         [JsonProperty("voids")]
-        public IList<Polygon> Voids{get;}
+        public IList<Polygon> Voids { get; }
 
         /// <summary>
-        /// The elevation from which the floor is extruded.
+        /// The elevation from which the Floor is extruded.
         /// </summary>
         [JsonProperty("elevation")]
-        public double Elevation{get;}
+        public double Elevation { get; }
 
         /// <summary>
-        /// The thickness of the floor.
+        /// The thickness of the Floor.
         /// </summary>
         [JsonProperty("thickness")]
-        public double Thickness{get;}
-        
+        public double Thickness { get; }
+
         /// <summary>
-        /// Construct a floor.
+        /// Construct a Floor.
         /// </summary>
-        /// <param name="perimeter">The perimeter of the floor.</param>
-        /// <param name="elevation">The elevation of the floor.</param>
-        /// <param name="thickness">The thickness of the floor.</param>
-        /// <param name="voids">The voids in the floor.</param>
-        /// <param name="material">The floor's material.</param>
+        /// <param name="perimeter">The perimeter of the Floor.</param>
+        /// <param name="elevation">The elevation of the Floor.</param>
+        /// <param name="thickness">The thickness of the Floor.</param>
+        /// <param name="voids">The voids in the Floor.</param>
+        /// <param name="material">The Floor's material.</param>
         [JsonConstructor]
         public Floor(Polygon perimeter, double elevation = 0.0, double thickness = 0.1, IList<Polygon> voids = null, Material material = null)
         {
@@ -60,8 +65,8 @@ namespace Hypar.Elements
                 throw new ArgumentOutOfRangeException("thickness", "The slab thickness must be greater than 0.0.");
             }
 
-            this.Perimeter = perimeter;
-            this.Voids = voids == null ? new List<Polygon>() : voids.Select(v=>v.Reversed()).ToList();
+            this._perimeter = perimeter;
+            this.Voids = voids == null ? new List<Polygon>() : voids.Select(v => v.Reversed()).ToList();
             this.Elevation = elevation;
             this.Thickness = thickness;
             this.Transform = new Transform(new Vector3(0, 0, elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
@@ -69,80 +74,56 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Tessellate the floor.
+        /// Tessellate the Floor.
         /// </summary>
         /// <returns></returns>
         public Mesh Tessellate()
         {
             var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            clipper.AddPaths(this.Voids.Select(p=>p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            clipper.AddPath(this._perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             var solution = new List<List<ClipperLib.IntPoint>>();
             var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-            var polys = solution.Select(s=>s.ToPolygon());
+            var polys = solution.Select(s => s.ToPolygon());
 
             return Mesh.Extrude(polys, this.Thickness, true);
         }
 
         /// <summary>
-        /// The area of the floor.
-        /// Overlapping openings and openings which are outside of the floor's perimeter,
+        /// The area of the Floor.
+        /// Overlapping openings and openings which are outside of the Floor's perimeter,
         /// will result in incorrect area results.
         /// </summary>
         public double Area()
         {
-            return this.Perimeter.Area + this.Voids.Sum(o=>o.Area);
-        }
-
-        /// <summary>
-        /// Is this floor equal to the provided floor?
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            var f = obj as Floor;
-            if(f == null)
-            {
-                return false;
-            }
-            return this.Perimeter.Equals(f.Perimeter) && this.Voids.Equals(f.Voids) && this.Elevation == f.Elevation && this.Thickness == f.Thickness;
-        }
-
-        /// <summary>
-        /// Get the hash code for the floor.
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return new ArrayList(){this.Id, this.Perimeter, this.Voids, this.Elevation, this.Thickness}.GetHashCode();
+            return this._perimeter.Area + this.Voids.Sum(o => o.Area);
         }
     }
 
     /// <summary>
-    /// Extension methods for floors.
+    /// Extension methods for Floors.
     /// </summary>
     public static class FloorExtensions
     {
         /// <summary>
-        /// Create floors at the specified elevations within a mass.
+        /// Create Floors at the specified elevations within a mass.
         /// </summary>
         /// <param name="mass"></param>
-        /// <param name="elevations">A collection of elevations at which floors will be created within the mass.</param>
-        /// <param name="thickness">The thickness of the floors.</param>
-        /// <param name="material">The floor material.</param>
+        /// <param name="elevations">A collection of elevations at which Floors will be created within the mass.</param>
+        /// <param name="thickness">The thickness of the Floors.</param>
+        /// <param name="material">The Floor material.</param>
         public static IList<Floor> Floors(this Mass mass, IList<double> elevations, double thickness, Material material)
         {
-            var floors = new List<Floor>();
+            var Floors = new List<Floor>();
             foreach(var e in elevations)
             {
                 if (e >= mass.Elevation && e <= mass.Elevation + mass.Height)
                 {
                     var f = new Floor(mass.Perimeter, e, thickness, new Polygon[]{}, material);
-                    floors.Add(f);
+                    Floors.Add(f);
                 }
             }
-            return floors;
+            return Floors;
         }
     }
 }

@@ -8,29 +8,37 @@ using System.Linq;
 namespace Hypar.Elements
 {
     /// <summary>
-    /// A zero-thickness planar panel with an arbitrary outline.
+    /// A zero-thickness planar Panel defined by 3 or 4 points.
     /// </summary>
     public class Panel : Element, ITessellate<Mesh>
-    {   
+    {
+        private IList<Vector3> _perimeter;
+
         /// <summary>
         /// The type of the element.
         /// </summary>
         public override string Type
         {
-            get{return "panel";}
+            get { return "panel"; }
         }
 
         /// <summary>
-        /// A CCW collection of points defining the corners of the panel.
+        /// A CCW collection of points defining the corners of the Panel.
         /// </summary>
         [JsonProperty("perimeter")]
-        public IList<Vector3> Perimeter{get;set;}
+        public IList<Vector3> Perimeter 
+        { 
+            get
+            {
+                return this.Transform != null ? this._perimeter.Select(v=>this.Transform.OfPoint(v)).ToList()  : this._perimeter;
+            }
+        }
 
         /// <summary>
-        /// Construct a panel.
+        /// Construct a Panel.
         /// </summary>
-        /// <param name="perimeter">The perimeter of the panel.</param>
-        /// <param name="material">The panel's material</param>
+        /// <param name="perimeter">The perimeter of the Panel.</param>
+        /// <param name="material">The Panel's material</param>
         [JsonConstructor]
         public Panel(IList<Vector3> perimeter, Material material = null)
         {
@@ -39,74 +47,51 @@ namespace Hypar.Elements
             {
                 throw new ArgumentException("Panels can only be constructed currently using perimeters with 3 or 4 vertices.", "perimeter");
             }
-            this.Perimeter = perimeter;
+            this._perimeter = perimeter;
             this.Material = material == null ? BuiltInMaterials.Default : material;
         }
 
         /// <summary>
-        /// The edges of the panel.
+        /// The edges of the Panel.
         /// </summary>
         public IList<Line> Edges()
         {
-            var result = new Line[this.Perimeter.Count];
-            for(var i=0; i<this.Perimeter.Count-1; i++)
+            var p = this.Perimeter;
+            var result = new Line[p.Count];
+            for (var i = 0; i < p.Count - 1; i++)
             {
-                result[i] = new Line(this.Perimeter[i], this.Perimeter[i+1]);
+                result[i] = new Line(p[i], p[i + 1]);
             }
             return result;
         }
 
         /// <summary>
-        /// The normal of the panel, defined using the first 3 vertices in the location.
+        /// The normal of the Panel, defined using the first 3 vertices in the location.
         /// </summary>
         public Vector3 Normal()
         {
-            var verts = this.Perimeter.ToArray();
-            return new Plane(verts[0], verts).Normal;
+            var verts = this.Perimeter;
+            return new Plane(verts[0], this.Perimeter).Normal;
         }
 
         /// <summary>
-        /// Tessellate the panel.
+        /// Tessellate the Panel.
         /// </summary>
-        /// <returns>A mesh representing the tessellated panel.</returns>
+        /// <returns>A mesh representing the tessellated Panel.</returns>
         public Mesh Tessellate()
         {
             var mesh = new Mesh();
-            var vCount = this.Perimeter.Count();
+            var vCount = this._perimeter.Count();
 
             if (vCount == 3)
             {
-                mesh.AddTriangle(this.Perimeter);
+                mesh.AddTriangle(this._perimeter);
             }
             else if (vCount == 4)
             {
-                mesh.AddQuad(this.Perimeter);
+                mesh.AddQuad(this._perimeter);
             }
             return mesh;
-        }
-
-        /// <summary>
-        /// Is this panel equal to the provided panel?
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            var p = obj as Panel;
-            if(p == null)
-            {
-                return false;
-            }
-            return this.Perimeter.Equals(p.Perimeter) && this.Material.Equals(p.Material);
-        }
-
-        /// <summary>
-        /// Get the hash code for the panel.
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return new ArrayList(){this.Id, this.Perimeter, this.Material}.GetHashCode();
         }
     }
 }

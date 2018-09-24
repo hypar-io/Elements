@@ -7,47 +7,36 @@ namespace Hypar.Geometry
     /// <summary>
     /// A face bounded by a set of edges.
     /// </summary>
-    public class Face : IEnumerable<Line>
+    public class Face
     {
-        private List<Line> _lines = new List<Line>();
+        private List<Line> _edges = new List<Line>();
         
         private List<Vector3> _vertices = new List<Vector3>();
 
         /// <summary>
-        /// The vertices which form the face.
+        /// The vertices which form the Face.
         /// </summary>
-        /// <value></value>
-        public IEnumerable<Vector3> Vertices
+        public IList<Vector3> Vertices
         {
             get {return this._vertices;}
         }
 
         /// <summary>
-        /// Construct a face.
+        /// The edges of the Face.
         /// </summary>
-        /// <param name="edges"></param>
-        public Face(IEnumerable<Line> edges)
+        public IList<Line> Edges
         {
-            this._lines.AddRange(edges);
-            this._vertices = this._lines.Select(l=>l.End).ToList();
+            get{return this._edges;}
         }
 
         /// <summary>
-        /// 
+        /// Construct a Face.
         /// </summary>
-        /// <returns></returns>
-        public IEnumerator<Line> GetEnumerator()
+        /// <param name="edges">A collection of Lines which bound the Face.</param>
+        public Face(IList<Line> edges)
         {
-            return this._lines.GetEnumerator();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this._lines.GetEnumerator();
+            this._edges.AddRange(edges);
+            this._vertices = this._edges.Select(l=>l.End).ToList();
         }
     }
 }

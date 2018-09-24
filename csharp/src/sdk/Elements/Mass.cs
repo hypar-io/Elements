@@ -13,13 +13,14 @@ namespace Hypar.Elements
     public class Mass : Element, ITessellate<Mesh>
     {
         private List<Polyline> _sides = new List<Polyline>();
+        private readonly Polygon _perimeter;
 
         /// <summary>
         /// The type of the element.
         /// </summary>
         public override string Type
         {
-            get{return "mass";}
+            get { return "mass"; }
         }
 
         /// <summary>
@@ -27,19 +28,22 @@ namespace Hypar.Elements
         /// </summary>
         /// <returns></returns>
         [JsonProperty("perimeter")]
-        public Polygon Perimeter{get;}
+        public Polygon Perimeter
+        {
+            get{return this.Transform != null ? this.Transform.OfPolygon(this._perimeter) : this._perimeter;}
+        }
 
         /// <summary>
         /// The elevation of the bottom perimeter.
         /// </summary>
         [JsonProperty("elevation")]
-        public double Elevation{get;}
+        public double Elevation { get; }
 
         /// <summary>
         /// The height of the mass.
         /// </summary>
         [JsonProperty("height")]
-        public double Height{get;}
+        public double Height { get; }
 
         /// <summary>
         /// The volume of the mass.
@@ -47,7 +51,7 @@ namespace Hypar.Elements
         [JsonProperty("volume")]
         public double Volume
         {
-            get{return this.Perimeter.Area * this.Height;}
+            get { return this._perimeter.Area * this.Height; }
         }
 
         /// <summary>
@@ -64,67 +68,62 @@ namespace Hypar.Elements
             {
                 throw new ArgumentOutOfRangeException("The mass could not be constructed. The height must be greater than zero.");
             }
-            this.Perimeter = perimeter;
+            this._perimeter = perimeter;
             this.Elevation = elevation;
             this.Height = height;
-            this.Material = material != null?material: BuiltInMaterials.Mass;
+            this.Material = material != null ? material : BuiltInMaterials.Mass;
         }
 
         /// <summary>
         /// A collection of curves representing the vertical edges of the mass.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Line> VerticalEdges()
+        public IList<Line> VerticalEdges()
         {
-            foreach(var f in Faces())
-            {
-                yield return f.ElementAt(1);
-            }
+            return Faces().Select(f=>f.Edges[1]).ToList();
         }
 
         /// <summary>
         /// A collection of curves representing the horizontal edges of the mass.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Line> HorizontalEdges()
+        public IList<Line> HorizontalEdges()
         {
-            foreach(var f in Faces())
-            {
-                yield return f.ElementAt(0);
-                yield return f.ElementAt(2);
-            }
+            return Faces().SelectMany(f=>new[]{f.Edges[0], f.Edges[2]}).ToList();
         }
 
         /// <summary>
         /// A collection of polylines representing the perimeter of each face of the mass.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Face> Faces()
+        public IList<Face> Faces()
         {
-            var b = this.Perimeter.Vertices;
-            var t = this.Perimeter.Vertices;
+            return FacesInternal(this.Perimeter.Vertices);
+        }
 
-            for (var i = 0; i < b.Count; i++)
+        private IList<Face> FacesInternal(IList<Vector3> v)
+        {
+            var faces = new List<Face>();
+            for (var i = 0; i < v.Count; i++)
             {
                 var next = i + 1;
-                if (i == b.Count - 1)
+                if (i == v.Count - 1)
                 {
                     next = 0;
                 }
-                var v1 = b[i];
-                var v2 = b[next];
-                var v3 = t[next];
-                var v4 = t[i];
+                var v1 = v[i];
+                var v2 = v[next];
                 var v1n = new Vector3(v1.X, v1.Y, this.Elevation);
                 var v2n = new Vector3(v2.X, v2.Y, this.Elevation);
-                var v3n = new Vector3(v3.X, v3.Y, this.Elevation + this.Height);
-                var v4n = new Vector3(v4.X, v4.Y, this.Elevation + this.Height);
+                var v3n = new Vector3(v2.X, v2.Y, this.Elevation + this.Height);
+                var v4n = new Vector3(v1.X, v1.Y, this.Elevation + this.Height);
                 var l1 = new Line(v1n, v2n);
                 var l2 = new Line(v2n, v3n);
                 var l3 = new Line(v3n, v4n);
                 var l4 = new Line(v4n, v1n);
-                yield return new Face(new[]{l1,l2,l3,l4});
+                faces.Add(new Face(new[] { l1, l2, l3, l4 }));
             }
+            return faces;
         }
 
         /// <summary>
@@ -133,14 +132,17 @@ namespace Hypar.Elements
         /// <returns>A mesh representing the tessellated mass.</returns>
         public Mesh Tessellate()
         {
+            // We use the untransformed faces here,
+            // as the transform will be applied on the rendering node.
+
             var mesh = new Mesh();
-            foreach (var f in Faces())
+            foreach (var f in FacesInternal(this._perimeter.Vertices))
             {
                 mesh.AddQuad(f.Vertices.ToArray());
             }
 
-            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.Elevation);
-            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.Elevation + this.Height, true);
+            mesh.AddTesselatedFace(new[] { this._perimeter }, this.Elevation);
+            mesh.AddTesselatedFace(new[] { this._perimeter }, this.Elevation + this.Height, true);
             return mesh;
         }
     }

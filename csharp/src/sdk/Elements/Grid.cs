@@ -189,7 +189,7 @@ namespace Hypar.Elements
         /// <param name="vDivisions">The number of grid divisions in the v direction.</param>
         public Grid(Face face, int uDivisions = 1, int vDivisions = 1)
         {
-            var f = face.ToArray();
+            var f = face.Edges;
             this._bottom = f[0];
             this._top = f[2].Reversed();
             this._uDiv = CalculateEqualDivisions(uDivisions);

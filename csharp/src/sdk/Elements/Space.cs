@@ -12,16 +12,19 @@ namespace Hypar.Elements
     /// </summary>
     public class Space : Element, ITessellate<Mesh>
     {
+        private readonly Polygon _perimeter;
+        private readonly IList<Polygon> _voids;
+
         /// <summary>
         /// The type of the element.
         /// </summary>
         public override string Type
         {
-            get{return "space";}
+            get { return "space"; }
         }
 
         /// <summary>
-        /// The elevation of the lower Space perimeter.
+        /// The elevation of the Space perimeter.
         /// </summary>
         [JsonProperty("elevation")]
         public double Elevation { get; }
@@ -35,16 +38,20 @@ namespace Hypar.Elements
         /// <summary>
         /// The lower perimeter of the Space.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("perimeter")]
-        public Polygon Perimeter{get;}
+        public Polygon Perimeter
+        {
+            get { return this.Transform != null? this.Transform.OfPolygon(_perimeter) : this._perimeter; }
+        }
 
         /// <summary>
-        /// The voids within the Space.
+        /// The voids with the Space.
         /// </summary>
-        /// <value></value>
         [JsonProperty("voids")]
-        public IList<Polygon> Voids { get; }
+        public IList<Polygon> Voids
+        {
+            get{return this._voids.Select(v=>this.Transform.OfPolygon(v)).ToList();}
+        }
 
         /// <summary>
         /// Construct a space.
@@ -62,26 +69,26 @@ namespace Hypar.Elements
                 throw new ArgumentOutOfRangeException(Messages.HEIGHT_EXCEPTION, "height");
             }
 
-            this.Perimeter = perimeter;
-            this.Voids = voids != null? voids : new List<Polygon>();
+            this._perimeter = perimeter;
+            this._voids = voids != null ? voids : new List<Polygon>();
             this.Elevation = elevation;
             this.Height = height;
-            
-            this.Material = material != null? material : BuiltInMaterials.Default;
-            this.Transform =  new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+
+            this.Material = material != null ? material : BuiltInMaterials.Default;
+            this.Transform = new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
         }
 
         /// <summary>
         /// Tessellate the Space.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The Mesh representing the Space.</returns>
         public Mesh Tessellate()
         {
             var polys = new List<Polygon>
             {
-                this.Perimeter
+                this._perimeter
             };
-            if (this.Voids != null)
+            if (this._voids != null)
             {
                 polys.AddRange(this.Voids);
             }

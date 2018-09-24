@@ -32,5 +32,19 @@ namespace Hypar.Tests
             var profile = new Polygon(new[]{a,b,c,d});
             Assert.Throws<ArgumentOutOfRangeException>(() => new Space(profile, null, 0, -10));
         }
+
+        [Fact]
+        public void Transform()
+        {
+            var p = Profiles.Rectangular();
+            var space = new Space(p);
+            var t = new Vector3(5,5,5);
+            space.Transform.Move(t);
+            var p1 = space.Perimeter;
+            for(var i=0; i<p.Vertices.Count; i++)
+            {
+                Assert.Equal(p.Vertices[i] + t, p1.Vertices[i]);
+            }
+        }
     }
 }
