@@ -70,6 +70,35 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
+        /// The centroid of the Polygon.
+        /// </summary>
+        /// <returns>
+        /// Retruns a Vector3 representation of the Polygon centroid.
+        /// </returns>
+        [JsonIgnore]
+        public Vector3 Centroid
+        {
+            get
+            {
+                var x = 0.0;
+                var y = 0.0;
+                var factor = 0.0;
+                for (var i = 0; i < this._vertices.Count; i++)
+                {
+                    factor =
+                        (_vertices[i].X * _vertices[(i + 1) % _vertices.Count].Y) -
+                        (_vertices[(i + 1) % _vertices.Count].X * _vertices[i].Y);
+                    x += (_vertices[i].X + _vertices[(i + 1) % _vertices.Count].X) * factor;
+                    y += (_vertices[i].Y + _vertices[(i + 1) % _vertices.Count].Y) * factor;
+                }
+                var divisor = this.Area * 6;
+                x /= divisor;
+                y /= divisor;
+                return new Vector3(System.Math.Abs(x), System.Math.Abs(y));
+            }
+        }
+
+        /// <summary>
         /// Construct a Polygon from a collection of vertices.
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
@@ -244,11 +273,11 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
         /// <returns>
-        /// Returns a Polygon representing the subtraction of the supplied Polygon from this Polygon.
+        /// Returns a list of Polygons representing the subtraction of the supplied Polygon from this Polygon.
         /// Returns null if the area of this Polygon is entirely subtracted.
-        /// Returns a Polygon representing the perimeter of this Polygon if the two Polygons do not intersect.
+        /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
         /// </returns>
-        public Polygon Difference(Polygon polygon)
+        public IEnumerable<Polygon> Difference(Polygon polygon)
         {
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
@@ -261,7 +290,12 @@ namespace Hypar.Geometry
             {
                 return null;
             }
-            return solution[0].ToPolygon();
+            var polygons = new List<Polygon>();
+            foreach (List<IntPoint> path in solution)
+            {
+                polygons.Add(PolygonExtensions.ToPolygon(path));
+            }
+            return polygons;
         }
 
         /// <summary>
