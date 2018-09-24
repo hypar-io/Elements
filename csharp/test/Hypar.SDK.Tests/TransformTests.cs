@@ -11,7 +11,7 @@ namespace Hypar.Tests
         public void Example()
         {
             var model = new Model();
-            var m1 = new Mass(Polygon.Rectangle(),0.0, 1.0, new Material("yellow", Color.Yellow));
+            var m1 = new Mass(Polygon.Rectangle(),0.0, 1.0, new Material("yellow", Colors.Yellow));
             model.AddElement(m1);
 
             var j = 1.0;

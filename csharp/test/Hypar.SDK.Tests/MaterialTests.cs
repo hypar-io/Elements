@@ -30,8 +30,8 @@ namespace Hypar.Tests
         [Fact]
         public void StaticColor()
         {
-            var material = new Material("test", Color.Mint, 0.2f, 0.2f);
-            Assert.Equal(material.Color, Color.Mint);
+            var material = new Material("test", Colors.Mint, 0.2f, 0.2f);
+            Assert.Equal(material.Color, Colors.Mint);
         }
     }
 }
