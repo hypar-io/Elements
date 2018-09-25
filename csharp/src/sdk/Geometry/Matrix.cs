@@ -122,6 +122,7 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="axis">The axis of rotation. 1-x, 2-y, 3-z</param>
         /// <param name="theta">The angle of rotation in radians.</param>
+        /// <exception cref="System.ArgumentException">Thrown when the provided axis is not 1-3.</exception>
         public void SetupRotate(int axis, double theta)
         {
             double s = Math.Sin(theta);
@@ -144,7 +145,7 @@ namespace Hypar.Geometry
                     m31 = 0.0;  m32 = 0.0;  m33 = 1.0;
                     break;
                 default:
-                    throw new Exception("You must specify and axis 1-3.");
+                    throw new ArgumentException("You must specify and axis 1-3.");
             }
 
             tx = ty = tz = 0.0;
@@ -202,6 +203,7 @@ namespace Hypar.Geometry
         /// Setup the matrix to project.
         /// </summary>
         /// <param name="p">The plane on which to project.</param>
+        /// <exception cref="System.Exception">Thrown when provided Plane's normal is not unit length.</exception>
         public void SetupProject(Plane p)
         {   
             var n = p.Normal;

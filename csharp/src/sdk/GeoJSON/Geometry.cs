@@ -106,6 +106,7 @@ namespace Hypar.GeoJSON
         /// Construct a Point.
         /// </summary>
         /// <param name="coordinates"></param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the provided coordinates are null.</exception>
         public Point(Position coordinates)
         {
             if(coordinates == null)
@@ -132,11 +133,12 @@ namespace Hypar.GeoJSON
         /// Construct a Line.
         /// </summary>
         /// <param name="coordinates"></param>
+        ///<exception cref="System.ArgumentException">Thrown when the coordinates provides does not contain 2 items.</exception>
         public Line(Position[] coordinates)
         {
             if(coordinates == null || coordinates.Length != 2)
             {
-                throw new Exception("A line type must have exactly two points.");
+                throw new ArgumentException("A line type must have exactly two points.");
             }
             this.Coordinates = coordinates;
         }
@@ -158,11 +160,12 @@ namespace Hypar.GeoJSON
         /// Construct a MultiPoint.
         /// </summary>
         /// <param name="coordinates"></param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the coordinates provided contains 1 item or less.</exception>
         public MultiPoint(Position[] coordinates)
         {
             if(coordinates == null || coordinates.Length <= 1)
             {
-                throw new Exception("A multipoint type must have more than one point.");
+                throw new ArgumentException("A multipoint type must have more than one point.");
             }
             this.Coordinates = coordinates;
         }

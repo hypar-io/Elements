@@ -39,6 +39,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="perimeter">The perimeter of the Panel.</param>
         /// <param name="material">The Panel's material</param>
+        /// <exception cref="System.ArgumentException">Thrown when the number of perimeter points is less than 3 or greater than 4.</exception>
         [JsonConstructor]
         public Panel(IList<Vector3> perimeter, Material material = null)
         {

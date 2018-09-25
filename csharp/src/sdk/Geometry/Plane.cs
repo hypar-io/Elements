@@ -39,6 +39,8 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="origin">The origin of the plane.</param>
         /// <param name="points">An array of vectors to be used to determine the normal of the plane.</param>
+        /// <exception cref="System.ArgumentException">Thrown when less than three points are provided.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when coincident points are provided.</exception>
         public Plane(Vector3 origin, IList<Vector3> points)
         {
             if(points.Count < 3)

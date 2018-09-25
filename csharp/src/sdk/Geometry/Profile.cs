@@ -7,6 +7,44 @@ using System.Linq;
 namespace Hypar.Geometry
 {
     /// <summary>
+    /// The vertical alignment of the profile.
+    /// </summary>
+    public enum VerticalAlignment
+    {
+        /// <summary>
+        /// Align the profile along its top.
+        /// </summary>
+        Top,
+        /// <summary>
+        /// Align the profile along its center.
+        /// </summary>
+        Center,
+        /// <summary>
+        /// Align the profile along its bottom.
+        /// </summary>
+        Bottom
+    }
+
+    /// <summary>
+    /// The horizontal alignment of the profile.
+    /// </summary>
+    public enum HorizontalAlignment
+    {
+        /// <summary>
+        /// Align the profile along its left edge.
+        /// </summary>
+        Left,
+        /// <summary>
+        /// Align the profile along its center.
+        /// </summary>
+        Center, 
+        /// <summary>
+        /// Align the profile along its right edge.
+        /// </summary>
+        Right
+    }
+
+    /// <summary>
     /// A Profile describes 
     /// </summary>
     public class Profile
@@ -24,13 +62,13 @@ namespace Hypar.Geometry
         /// The perimeter of the Profile.
         /// </summary>
         [JsonProperty("perimeter")]
-        public Polygon Perimeter{get;}
+        public Polygon Perimeter{get; protected set;}
 
         /// <summary>
         /// A collection of Polygons representing voids in the Profile.
         /// </summary>
         [JsonProperty("voids")]
-        public IList<Polygon> Voids{get;}
+        public IList<Polygon> Voids{get; protected set;}
         
         /// <summary>
         /// Construct a Profile.
@@ -43,6 +81,8 @@ namespace Hypar.Geometry
             this.Perimeter = perimeter;
             this.Voids = voids;
         }
+
+        protected Profile(){}
 
         /// <summary>
         /// Construct a Profile.

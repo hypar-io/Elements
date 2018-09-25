@@ -39,6 +39,18 @@ namespace Hypar.Elements
         }
 
         /// <summary>
+        /// The volume of the StructuralFraming element.
+        /// </summary>
+        [JsonProperty("volume")]
+        public double Volume
+        {
+            get
+            {
+                return this._profile.Area * this._centerLine.Length;   
+            }
+        }
+
+        /// <summary>
         /// Construct a beam.
         /// </summary>
         /// <param name="centerLine">The center line of the Beam.</param>

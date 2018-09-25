@@ -38,7 +38,7 @@ namespace Hypar.Tests
                 {
                     var panel = new Panel(cell, BuiltInMaterials.Glass);
                     var edges = panel.Edges();
-                    var bProfile = Polygon.WideFlange();
+                    var bProfile = new WideFlangeProfile();
                     var beam1 = new Beam(edges[0], bProfile, BuiltInMaterials.Steel, panel.Normal());
                     var beam2 = new Beam(edges[2], bProfile, BuiltInMaterials.Steel, panel.Normal());
                     var beam3 = new Beam(edges[1], bProfile, BuiltInMaterials.Steel, panel.Normal());

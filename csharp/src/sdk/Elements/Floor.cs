@@ -50,6 +50,7 @@ namespace Hypar.Elements
         /// <param name="elevation">The elevation of the Floor.</param>
         /// <param name="thickness">The thickness of the Floor.</param>
         /// <param name="material">The Floor's material.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the slab's thickness is less than or equal to 0.0.</exception>
         [JsonConstructor]
         public Floor(Profile profile, double elevation = 0.0, double thickness = 0.1, Material material = null)
         {

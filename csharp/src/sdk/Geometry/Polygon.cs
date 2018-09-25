@@ -73,6 +73,7 @@ namespace Hypar.Geometry
         /// Construct a Polygon from a collection of points.
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
+        /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
         public Polygon(IList<Vector3> vertices)
         {
             for(var i=0; i<vertices.Count; i++)
@@ -85,7 +86,7 @@ namespace Hypar.Geometry
                     }
                     if(vertices[i].IsAlmostEqualTo(vertices[j]))
                     {
-                        throw new Exception($"The polygon could not be constructed. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
+                        throw new ArgumentException($"The polygon could not be constructed. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
                     }
                 }
             }

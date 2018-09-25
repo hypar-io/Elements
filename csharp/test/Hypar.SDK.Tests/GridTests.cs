@@ -34,7 +34,7 @@ namespace Hypar.Tests
             var top = new Line(new Vector3(20,10,30), new Vector3(0,0,30));
             var grid = new Grid(bottom, top, 5, 5);
                                         
-            var profile = Polygon.WideFlange(0.5, 0.5, 0.1, 0.1, Polygon.VerticalAlignment.Center);
+            var profile = new WideFlangeProfile(0.5, 0.5, 0.1, 0.1, VerticalAlignment.Center);
             Assert.Equal(25, grid.Cells().Count());
         }
     }

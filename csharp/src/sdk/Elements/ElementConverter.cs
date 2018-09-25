@@ -46,7 +46,7 @@ namespace Hypar.Elements
         /// <param name="objectType"></param>
         /// <param name="existingValue"></param>
         /// <param name="serializer"></param>
-        /// <returns></returns>
+        /// <exception cref="System.Exception">Thrown when a type matching the deserialized type name cannot be found.</exception>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);

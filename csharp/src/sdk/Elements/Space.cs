@@ -50,6 +50,7 @@ namespace Hypar.Elements
         /// <param name="elevation">The elevation of the perimeter.</param>
         /// <param name="height">The height of the space above the lower elevation.</param>
         /// <param name="material">The space's material.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
         [JsonConstructor]
         public Space(Profile profile, double elevation = 0.0, double height = 1.0, Material material = null)
         {
