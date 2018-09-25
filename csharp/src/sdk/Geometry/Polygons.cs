@@ -49,41 +49,41 @@ namespace Hypar.Geometry
             return new Polygon(verts);
         }
 
-        public static Polygon HSS(double d, double b, double t, 
-                                    VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
-                                    HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
-                                    double verticalOffset = 0.0, double horizontalOffset = 0.0)
-        {
-            var height = d;
-            var width = b;
+        // public static Polygon HSS(double d, double b, double t, 
+        //                             VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
+        //                             HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
+        //                             double verticalOffset = 0.0, double horizontalOffset = 0.0)
+        // {
+        //     var height = d;
+        //     var width = b;
 
-            if(verticalOffset == 0.0)
-            {
-                switch(verticalAlignment)
-                {
-                    case VerticalAlignment.Top:
-                        verticalOffset = height/2;
-                        break;
-                    case VerticalAlignment.Center:
-                        verticalOffset = 0.0;
-                        break;
-                    case VerticalAlignment.Bottom:
-                        verticalOffset = -height/2;
-                    break;
-                }
-            }
+        //     if(verticalOffset == 0.0)
+        //     {
+        //         switch(verticalAlignment)
+        //         {
+        //             case VerticalAlignment.Top:
+        //                 verticalOffset = height/2;
+        //                 break;
+        //             case VerticalAlignment.Center:
+        //                 verticalOffset = 0.0;
+        //                 break;
+        //             case VerticalAlignment.Bottom:
+        //                 verticalOffset = -height/2;
+        //             break;
+        //         }
+        //     }
 
-            var o1 = new Vector3(- width/2 + horizontalOffset, - height/2 + verticalOffset);
-            var o2 = new Vector3(width/2 + horizontalOffset, - height/2 + verticalOffset);
-            var o3 = new Vector3(width/2 + horizontalOffset, height/2 + verticalOffset);
-            var o4 = new Vector3(width/2 + horizontalOffset, height/2 + verticalOffset);
+        //     var o1 = new Vector3(- width/2 + horizontalOffset, - height/2 + verticalOffset);
+        //     var o2 = new Vector3(width/2 + horizontalOffset, - height/2 + verticalOffset);
+        //     var o3 = new Vector3(width/2 + horizontalOffset, height/2 + verticalOffset);
+        //     var o4 = new Vector3(width/2 + horizontalOffset, height/2 + verticalOffset);
 
-            var i1 = o1 + new Vector3(t, t);
-            var i2 = o2 + new Vector3(-t, t);
-            var i3 = o3 + new Vector3(-t, -t);
-            var i4 = o4 + new Vector3(t, -t);
+        //     var i1 = o1 + new Vector3(t, t);
+        //     var i2 = o2 + new Vector3(-t, t);
+        //     var i3 = o3 + new Vector3(-t, -t);
+        //     var i4 = o4 + new Vector3(t, -t);
 
-            return new Polygon(new []{o1, o2, o3, o4});
-        }
+        //     return new Polygon(new []{o1, o2, o3, o4});
+        // }
     }
 }

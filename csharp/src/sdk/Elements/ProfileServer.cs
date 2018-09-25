@@ -4,10 +4,19 @@ using System.Collections.Generic;
 
 namespace Hypar.Elements
 {
+    /// <summary>
+    /// Base class for types which serve Profiles.
+    /// </summary>
     public abstract class ProfileServer
     {
+        /// <summary>
+        /// A conversion factor from inches to meters.
+        /// </summary>
         protected const double InchesToMeters = 0.0254;
-
+        
+        /// <summary>
+        /// The map of Profiles.
+        /// </summary>
         protected Dictionary<string, Profile> _profiles = new Dictionary<string, Profile>();
 
         /// <summary>

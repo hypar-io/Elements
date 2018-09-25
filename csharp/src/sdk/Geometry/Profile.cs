@@ -82,6 +82,9 @@ namespace Hypar.Geometry
             this.Voids = voids;
         }
 
+        /// <summary>
+        /// Default constructor for Profile.
+        /// </summary>
         protected Profile(){}
 
         /// <summary>

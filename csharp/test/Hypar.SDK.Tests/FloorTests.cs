@@ -29,7 +29,7 @@ namespace Hypar.Tests
             var floor = new Floor(profile, 1.0, 0.2);
             Assert.Equal(1.0, floor.Elevation);
             Assert.Equal(0.2, floor.Thickness);
-            Assert.Equal(floor.Transform.Origin.Z, 1.0);
+            Assert.Equal(1.0, floor.Transform.Origin.Z);
         }
 
         [Fact]
