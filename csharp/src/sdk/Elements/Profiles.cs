@@ -74,21 +74,26 @@ namespace Hypar.Geometry
         /// <summary>
         /// Construct a wide-flange profile.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="thicknessFlange"></param>
-        /// <param name="thicknessWeb"></param>
+        /// <param name="bf">The width.</param>
+        /// <param name="d">The depth.</param>
+        /// <param name="tf">The thickness of the flange.</param>
+        /// <param name="tw">The thickness of the web.</param>
         /// <param name="verticalAlignment"></param>
         /// <param name="horizontalAlignment"></param>
         /// <param name="verticalOffset"></param>
         /// <param name="horizontalOffset"></param>
         /// <returns></returns>
-        public static Polygon WideFlange(double width = 0.1, double height = 0.05, double thicknessFlange = 0.005, double thicknessWeb = 0.005, 
+        public static Polygon WideFlange(double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, 
                                                         VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
                                                         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
                                                         double verticalOffset = 0.0, double horizontalOffset = 0.0)
         {
             var o = new Vector3();
+
+            var height = d;
+            var width = bf;
+            var thicknessWeb = tw;
+            var thicknessFlange = tf;
 
             if(verticalOffset == 0.0)
             {

@@ -1,5 +1,7 @@
 using Hypar.Elements;
 using Hypar.Geometry;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace Hypar.Tests
@@ -9,21 +11,34 @@ namespace Hypar.Tests
         [Fact]
         public void Example()
         {
-            var l1= new Line(Vector3.Origin, new Vector3(2,0,0));
-            var b1 = new Beam(l1, Polygon.WideFlange(), new Material("x", Colors.Red));
-
-            var l2 = new Line(Vector3.Origin, new Vector3(0,0,2));
-            var b2 = new Beam(l2, Polygon.Circle(0.2, 10), new Material("z", Colors.Blue));
-
-            var l3 = new Line(Vector3.Origin, new Vector3(0,2,0));
-            var b3 = new Beam(l3, Polygon.Rectangle(Vector3.Origin, 0.2, 0.2), new Material("y", Colors.Green));
-
-            var l4 = new Line(Vector3.Origin, new Vector3(2,2,2));
-            var b4 = new Beam(l4, Polygon.Rectangle(Vector3.Origin, 0.2, 0.2), new Material("d", Colors.Pink));
-
+            var line = new Line(Vector3.Origin, new Vector3(2,0,0));
+            var beam = new Beam(line, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), new Material("x", Colors.Red));
             var model = new Model();
-            model.AddElements(new[]{b1,b2,b3,b4});
+            model.AddElement(beam);
             model.SaveGlb("beam.glb");
+        }
+
+        [Fact]
+        public void Example2()
+        {
+            var x = 0.0;
+            var z = 0.0;
+            var model = new Model();
+            var profiles = WideFlangeProfileServer.Instance.AllProfiles().ToList();
+            foreach(var profile in profiles)
+            {
+                var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
+                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                model.AddElement(beam);
+                x += 2.0;
+                if (x > 20.0)
+                {
+                    z += 2.0;
+                    x = 0.0;
+                }
+            }
+            model.SaveGlb("wide_flanges.glb");
         }
 
         [Fact]
