@@ -2,12 +2,332 @@ using Hypar.Elements;
 using Hypar.Geometry;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Hypar.Tests
 {
     public class PolygonTests
     {
+        [Fact]
+        public void Centroid()
+        {
+            var polygon = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(3, 3),
+                    new Vector3(6, 0),
+                    new Vector3(6, 8),
+                    new Vector3(3, 5),
+                    new Vector3(0, 8)
+                }
+            );
+            var centroid = polygon.Centroid;
+            Assert.Equal(3, centroid.X);
+            Assert.Equal(4, centroid.Y);
+        }
+
+        [Fact]
+        public void Contains()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(20, 0),
+                    new Vector3(20, 20),
+                    new Vector3(0, 20)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(10, 5),
+                    new Vector3(10, 10),
+                    new Vector3(5, 10)
+                }
+            );
+            var p3 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(5, 5),
+                    new Vector3(10, 5),
+                    new Vector3(10, 10),
+                    new Vector3(5, 10)
+                }
+            );
+
+            Assert.False(p1.Contains(p2));
+            Assert.True(p1.Contains(p3));
+            Assert.False(p3.Contains(p1));
+        }
+
+        [Fact]
+        public void Covers()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(20, 0),
+                    new Vector3(20, 20),
+                    new Vector3(0, 20)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(10, 0),
+                    new Vector3(10, 10),
+                    new Vector3(0, 10)
+                }
+            );
+            Assert.True(p1.Covers(p2));
+        }
+
+        [Fact]
+        public void Disjoint()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(10, 0),
+                    new Vector3(10, 10),
+                    new Vector3(0, 10)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(20, 20),
+                    new Vector3(40, 0),
+                    new Vector3(40, 40),
+                    new Vector3(0, 20)
+                }
+            );
+            Assert.True(p1.Disjoint(p2));
+        }
+
+        [Fact]
+        public void Intersects()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 5),
+                    new Vector3(4, 5),
+                    new Vector3(4, 10),
+                    new Vector3(0, 10)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(1, 4),
+                    new Vector3(5, 0),
+                    new Vector3(8, 4),
+                    new Vector3(5, 8)
+                }
+            );
+            Assert.True(p1.Intersects(p2));
+        }
+
+        [Fact]
+        public void Touches()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(4, 0),
+                    new Vector3(4, 4),
+                    new Vector3(0, 4)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(3, 1),
+                    new Vector3(7, 1),
+                    new Vector3(7, 5),
+                    new Vector3(3, 5)
+                }
+            );
+            Assert.False(p1.Touches(p2));
+
+            p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(4, 0),
+                    new Vector3(4, 4),
+                    new Vector3(0, 4)
+                }
+            );
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(4, 0),
+                    new Vector3(8, 0),
+                    new Vector3(8, 4),
+                    new Vector3(4, 8)
+                }
+            );
+            Assert.True(p1.Touches(p2));
+        }
+
+        [Fact]
+        public void Difference()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(4, 0),
+                    new Vector3(4, 4),
+                    new Vector3(0, 4)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(3, 1),
+                    new Vector3(7, 1),
+                    new Vector3(7, 5),
+                    new Vector3(3, 5)
+                }
+            );
+            var vertices = p1.Difference(p2).First().Vertices;
+
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+        }
+
+        [Fact]
+        public void Intersection()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(4, 0),
+                    new Vector3(4, 4),
+                    new Vector3(0, 4)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(3, 1),
+                    new Vector3(7, 1),
+                    new Vector3(7, 5),
+                    new Vector3(3, 5)
+                }
+            );
+            var vertices = p1.Intersection(p2).First().Vertices;
+
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+        }
+
+        [Fact]
+        public void Union()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(4, 0),
+                    new Vector3(4, 4),
+                    new Vector3(0, 4)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(3, 1),
+                    new Vector3(7, 1),
+                    new Vector3(7, 5),
+                    new Vector3(3, 5)
+                }
+            );
+            var vertices = p1.Union(p2).Vertices;
+
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+        }
+
+        [Fact]
+        public void XOR()
+        {
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(4, 0),
+                    new Vector3(4, 4),
+                    new Vector3(0, 4)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(3, 1),
+                    new Vector3(7, 1),
+                    new Vector3(7, 5),
+                    new Vector3(3, 5)
+                }
+            );
+            var vertices = p1.XOR(p2).First().Vertices;
+
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
+        }
+
         [Fact]
         public void Offset()
         {
@@ -17,6 +337,7 @@ namespace Hypar.Tests
 
             var plinew = new Polygon(new[]{a,b,c});
             var offset = plinew.Offset(0.2);
+
             Assert.True(offset.Count == 1);
         }
 
