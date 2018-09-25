@@ -107,6 +107,11 @@ namespace Hypar.Geometry
 
         private double ClippedArea()
         {
+            if(this.Voids == null || this.Voids.Count == 0)
+            {
+                return this.Perimeter.Area;
+            }
+
             var clipper = new ClipperLib.Clipper();
             clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
             clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);

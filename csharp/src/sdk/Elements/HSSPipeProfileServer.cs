@@ -5,26 +5,9 @@ using System.IO;
 
 namespace Hypar.Elements
 {
-    public class HSSPipeProfile : Profile
-    {
-        public string Shape{get; internal set;}
-        public double OD {get; internal set;}
-        public double ID {get; internal set;}
-        public double t {get; internal set;}
-        public double wt {get; internal set;}
-        public double A {get;internal set;}
-        public double I {get;internal set;}
-        public double S {get;internal set;}
-        public double r {get;internal set;}
-        public double J {get;internal set;}
-
-        public HSSPipeProfile(double OD, double ID, double t)
-        {
-            this.Perimeter = Polygon.Circle(OD);
-            this.Voids = new List<Polygon>(){Polygon.Circle(ID)};
-        }
-    }
-
+    /// <summary>
+    /// A singleton class which serves every HSS pipe section as defined by AISC.
+    /// </summary>
     public sealed class HSSPipeProfileServer : ProfileServer
     {
         private static string _data = @"
@@ -220,7 +203,7 @@ HSS1.660x0.140,1.66,1.4,0.13,2.27,0.625,0.184,0.222,0.543,0.368";
         }
 
         /// <summary>
-        /// The WideFlangeServer singleton.
+        /// The HSSPipeProfileServer singleton.
         /// </summary>
         public static HSSPipeProfileServer Instance
         {
