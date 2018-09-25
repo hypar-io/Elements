@@ -120,7 +120,8 @@ namespace Hypar.Configuration
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <param name="step"></param>
-        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">Thrown when the minimum value is less than the maximum value.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the step is equal to zero.</exception>
         public NumberParameter(string description, double min, double max, double step) : base(description, ParameterType.Number)
         {
             if(min > max)

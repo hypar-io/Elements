@@ -67,6 +67,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="parameter">The parameter to add.</param>
+        /// <exception cref="System.Exception">Thrown when an parameter with the same name already exists.</exception>
         public void AddParameter<T>(string name, Parameter<T> parameter)
         {
             if(!_parameters.ContainsKey(name))
@@ -82,6 +83,8 @@ namespace Hypar.Elements
         /// Remove a Parameter from the Parameters map.
         /// </summary>
         /// <param name="name">The name of the parameter to remove.</param>
+        /// <exception cref="System.Exception">Thrown when the specified parameter cannot be found.</exception>
+
         public void RemoveParameter(string name)
         {
             if(_parameters.ContainsKey(name))

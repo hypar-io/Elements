@@ -42,6 +42,9 @@ namespace Hypar.Elements
         /// <param name="thickness">The thickness of the wall.</param>
         /// <param name="height">The height of the wall.</param>
         /// <param name="material">The wall's material.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the Wall is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the Wall is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of Wall's start and end points are not the same.</exception>
         public Wall(Line centerLine, double thickness, double height, Material material = null)
         {
             if (thickness <= 0.0)

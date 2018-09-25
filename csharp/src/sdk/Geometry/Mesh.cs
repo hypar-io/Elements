@@ -448,42 +448,16 @@ IMin:{m_index_min}";
         {
             var mesh = new Hypar.Geometry.Mesh();
 
-            var perimeters = new List<Polygon>();
-            perimeters.Add(perimeter);
-
-            if(voids != null)
-            {
-                perimeters.AddRange(voids);
-            }
-
             var tStart = line.GetTransform(0.0);
             var tEnd = line.GetTransform(1.0);
 
-            foreach(var p in perimeters)
-            {   
-                var start = tStart.OfPolygon(p);
-                var end = tEnd.OfPolygon(p);
+            ExtrudePolygon(ref mesh, perimeter, tStart, tEnd);
 
-                for(var i=0; i<start.Vertices.Count; i++)
+            if(voids != null)
+            {
+                foreach(var p in voids)
                 {
-                    Vector3 a, b, c, d;
-
-                    if(i == start.Vertices.Count-1)
-                    {
-                        a = start.Vertices[i];
-                        b = start.Vertices[0];
-                        c = end.Vertices[0];
-                        d = end.Vertices[i];
-                    }
-                    else
-                    {
-                        a = start.Vertices[i];
-                        b = start.Vertices[i+1];
-                        c = end.Vertices[i+1];
-                        d = end.Vertices[i];
-                    }
-
-                    mesh.AddQuad(new []{a,b,c,d});
+                    ExtrudePolygon(ref mesh, p, tStart, tEnd, true);
                 }
             }
 
@@ -494,6 +468,41 @@ IMin:{m_index_min}";
             }
 
             return mesh;
+        }
+
+        private static void ExtrudePolygon(ref Mesh mesh, Polygon p, Transform tStart, Transform tEnd, bool reverse = false)
+        {
+            var start = tStart.OfPolygon(p);
+            var end = tEnd.OfPolygon(p);
+
+            for(var i=0; i<start.Vertices.Count; i++)
+            {
+                Vector3 a, b, c, d;
+
+                if(i == start.Vertices.Count-1)
+                {
+                    a = start.Vertices[i];
+                    b = start.Vertices[0];
+                    c = end.Vertices[0];
+                    d = end.Vertices[i];
+                }
+                else
+                {
+                    a = start.Vertices[i];
+                    b = start.Vertices[i+1];
+                    c = end.Vertices[i+1];
+                    d = end.Vertices[i];
+                }
+
+                if(reverse)
+                {
+                    mesh.AddQuad(new []{a,d,c,b});
+                }
+                else
+                {
+                    mesh.AddQuad(new []{a,b,c,d});
+                }
+            }
         }
 
         /// <summary>

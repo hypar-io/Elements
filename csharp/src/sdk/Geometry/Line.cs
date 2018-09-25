@@ -51,6 +51,7 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
+        /// <exception cref="System.ArgumentException">Thrown when the start and end points are the same.</exception>
         [JsonConstructor]
         public Line(Vector3 start, Vector3 end)
         {

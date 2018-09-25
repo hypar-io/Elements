@@ -427,7 +427,7 @@ namespace Hypar.Tests
         {
             var a = new Vector3();
             var b = new Vector3(0.000001,0,0);
-            Assert.Throws<Exception>(()=>new Polygon(new[]{a,a,a}));
+            Assert.Throws<ArgumentException>(()=>new Polygon(new[]{a,a,a}));
         }
     }
 }
