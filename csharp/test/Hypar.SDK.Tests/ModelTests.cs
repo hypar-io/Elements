@@ -44,12 +44,14 @@ namespace Hypar.Tests
             panel.AddParameter("param1", new NumericParameter(42.0, NumericParameterType.Area));
             panel.AddParameter("param2", new NumericParameter(42.0, NumericParameterType.Force));
 
-            var floor = new Floor(Profiles.Rectangular(), 5.0, 0.2, new []{Profiles.Rectangular(new Vector3(2,2), 1.0, 1.0)});
-            var mass = new Mass(Profiles.Rectangular(), 5.0, 1.0);
+            var profile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
+            var floor = new Floor(profile, 5.0, 0.2);
+            var mass = new Mass(Polygon.Rectangle(), 5.0, 1.0);
             var line = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var beam = new Beam(line, new[]{Profiles.WideFlangeProfile()}, BuiltInMaterials.Steel);
-            var column = new Column(new Vector3(5,5,5), 5.0, new[]{Profiles.WideFlangeProfile()}, BuiltInMaterials.Steel);
-            var space = new Space(Profiles.Rectangular(), new []{Profiles.Rectangular(new Vector3(2,2), 1.0, 1.0)}, 5.0, 5.0);
+            var beam = new Beam(line, Polygon.WideFlange(), BuiltInMaterials.Steel);
+            var column = new Column(new Vector3(5,5,5), 5.0, Polygon.WideFlange(), BuiltInMaterials.Steel);
+            var spaceProfile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
+            var space = new Space(spaceProfile, 5.0, 5.0);
             var model = new Model();
             model.AddElements(new Element[]{panel, floor, mass, beam, column, space});
             var json = model.ToJson();
@@ -67,15 +69,15 @@ namespace Hypar.Tests
             Assert.Equal(panel.Id, newPanel.Id);
             Assert.Equal(floor.Id, newFloor.Id);
             Assert.Equal(floor.Material, newFloor.Material);
-            Assert.Equal(floor.Perimeter.Vertices.Count, newFloor.Perimeter.Vertices.Count);
+            Assert.Equal(floor.Profile.Perimeter.Vertices.Count, newFloor.Profile.Perimeter.Vertices.Count);
             Assert.Equal(floor.Thickness, newFloor.Thickness);
             Assert.Equal(floor.Elevation, newFloor.Elevation);
-            Assert.Equal(mass.Perimeter.Vertices.Count, newMass.Perimeter.Vertices.Count);
+            Assert.Equal(mass.Profile.Perimeter.Vertices.Count, newMass.Profile.Perimeter.Vertices.Count);
             Assert.Equal(mass.Elevation, newMass.Elevation);
             Assert.Equal(mass.Height, newMass.Height);
             Assert.Equal(space.Elevation, newSpace.Elevation);
             Assert.Equal(space.Height, newSpace.Height);
-            Assert.Equal(space.Perimeter, newSpace.Perimeter);
+            Assert.Equal(space.Profile.Perimeter, newSpace.Profile.Perimeter);
         }
 
         private Model QuadPanelModel()

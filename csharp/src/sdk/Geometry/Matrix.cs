@@ -20,21 +20,33 @@ namespace Hypar.Geometry
         double ty = 0.0;
         double tz = 0.0;
 
+        /// <summary>
+        /// The X axis of the Matrix.
+        /// </summary>
         public Vector3 XAxis
         {
             get{return new Vector3(m11, m12, m13);}
         }
 
+        /// <summary>
+        /// The Y axis of the Matrix.
+        /// </summary>
         public Vector3 YAxis
         {
             get{return new Vector3(m21, m22, m23);}
         }
 
+        /// <summary>
+        /// The Z axis of the Matrix.
+        /// </summary>
         public Vector3 ZAxis
         {
             get{return new Vector3(m31, m32, m33);}
         }
 
+        /// <summary>
+        /// The translation component of the Matrix.
+        /// </summary>
         public Vector3 Translation
         {
             get{return new Vector3(tx, ty, tz);}
@@ -218,8 +230,8 @@ namespace Hypar.Geometry
         public static Vector3 operator *(Vector3 p, Matrix m)
         {
             return new Vector3(
-                p.X*m.m11 + p.Y*m.m21 * p.Z*m.m31 + m.tx,
-                p.X*m.m12 + p.Y*m.m22 * p.Z*m.m32 + m.ty,
+                p.X*m.m11 + p.Y*m.m21 + p.Z*m.m31 + m.tx,
+                p.X*m.m12 + p.Y*m.m22 + p.Z*m.m32 + m.ty,
                 p.X*m.m13 + p.Y*m.m23 + p.Z*m.m33 + m.tz
             );
         }

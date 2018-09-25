@@ -10,7 +10,7 @@ namespace Hypar.Geometry
     /// <summary>
     /// A closed planar polygon.
     /// </summary>
-    public class Polygon : ICurve
+    public partial class Polygon : ICurve
     {
         private IList<Vector3> _vertices;
 
@@ -114,7 +114,7 @@ namespace Hypar.Geometry
                     }
                     if(vertices[i].IsAlmostEqualTo(vertices[j]))
                     {
-                        throw new Exception($"The polygon could not be constructed. Two vertices were almost equal: a {vertices[i]} b {vertices[j]}.");
+                        throw new Exception($"The polygon could not be constructed. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
                     }
                 }
             }
@@ -489,6 +489,15 @@ namespace Hypar.Geometry
         public Polygon Transform(Transform t)
         {
             return new Polygon(this.Vertices.Select(v=>t.OfPoint(v)).ToList());
+        }
+        
+        /// <summary>
+        /// Create a Profile from this Polygon.
+        /// </summary>
+        /// <returns>A new Profile.</returns>
+        public static implicit operator Profile(Polygon p)
+        {
+            return new Profile(p);
         }
     }
 

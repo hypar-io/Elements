@@ -11,25 +11,20 @@ namespace Hypar.Tests
         public void Example()
         {
             var model = new Model();
-            var m1 = new Mass(Profiles.Rectangular(),0.0, 1.0, new Material("yellow", Color.Yellow));
+            var m1 = new Mass(Polygon.Rectangle(),0.0, 1.0, new Material("yellow", Colors.Yellow));
             model.AddElement(m1);
 
             var j = 1.0;
             var count = 10;
             for(var i=0.0; i<360.0; i+= 360.0/(double)count)
             {
-                var m2 = new Mass(Profiles.Rectangular(), 0.0, 1.0, new Material($"color_{j}", new Color((float)j - 1.0f, 0.0f, 0.0f, 1.0f)));
+                var m2 = new Mass(Polygon.Rectangle(), 0.0, 1.0, new Material($"color_{j}", new Color((float)j - 1.0f, 0.0f, 0.0f, 1.0f)));
                 m2.Transform.Scale(new Vector3(j,j,j));
                 m2.Transform.Move(new Vector3(3, 0, 0));
                 m2.Transform.Rotate(Vector3.ZAxis, i);
                 model.AddElement(m2);
                 j += 1.0/(double)count;
             }
-
-            // var m3 = new Mass(Profiles.Rectangular(),0.0, 1.0, new Material("navy", Color.Navy));
-            // var p = new Plane(new Vector3(5,5,0), new Vector3(1,1,0).Normalized());
-            // m3.Transform.Project(p);
-            // model.AddElement(m3);
 
             model.SaveGlb("transform.glb");
         }

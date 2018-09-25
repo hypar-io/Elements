@@ -332,3 +332,4 @@ ASALocalRun/
 .DS_Store
 appsettings.json
 appsettings.dev.json
+docs

@@ -38,10 +38,10 @@ namespace Hypar.Tests
                 {
                     var panel = new Panel(cell, BuiltInMaterials.Glass);
                     var edges = panel.Edges();
-                    var bProfile = Profiles.WideFlangeProfile();
-                    var beam1 = new Beam(edges[0], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal());
-                    var beam2 = new Beam(edges[2], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal());
-                    var beam3 = new Beam(edges[1], new[]{bProfile}, BuiltInMaterials.Steel, panel.Normal());
+                    var bProfile = Polygon.WideFlange();
+                    var beam1 = new Beam(edges[0], bProfile, BuiltInMaterials.Steel, panel.Normal());
+                    var beam2 = new Beam(edges[2], bProfile, BuiltInMaterials.Steel, panel.Normal());
+                    var beam3 = new Beam(edges[1], bProfile, BuiltInMaterials.Steel, panel.Normal());
                     model.AddElements(new Element[]{panel, beam1, beam2, beam3});
                 }
             }
@@ -49,7 +49,7 @@ namespace Hypar.Tests
             var floors = mass.Floors(elevations, 0.2, BuiltInMaterials.Concrete);
             model.AddElements(floors);
 
-            var shaft = Profiles.Rectangular(new Vector3(10,10), 5, 5);
+            var shaft = Polygon.Rectangle(new Vector3(10,10), 5, 5);
             var walls = shaft.Segments().Select(l=>{
                 return new Wall(l, 0.1, buildingHeight, BuiltInMaterials.Concrete);
             });
@@ -61,7 +61,7 @@ namespace Hypar.Tests
                 var sideColumns = new List<Column>();
                 foreach(var t in ts)
                 {
-                    sideColumns.Add(new Column(l.PointAt(t), buildingHeight, new[]{Profiles.Rectangular(width:1.0, height:1.0)}, BuiltInMaterials.Concrete));
+                    sideColumns.Add(new Column(l.PointAt(t), buildingHeight, Polygon.Rectangle(width:1.0, height:1.0), BuiltInMaterials.Concrete));
                 }
                 return sideColumns;
             });

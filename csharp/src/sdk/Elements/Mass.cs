@@ -8,139 +8,140 @@ using Hypar.Geometry;
 namespace Hypar.Elements
 {
     /// <summary>
-    /// A mass represents an extruded building mass.
+    /// A Mass represents an extruded building Mass.
     /// </summary>
     public class Mass : Element, ITessellate<Mesh>
     {
         private List<Polyline> _sides = new List<Polyline>();
+        private readonly Profile _profile;
 
         /// <summary>
         /// The type of the element.
         /// </summary>
         public override string Type
         {
-            get{return "mass";}
+            get { return "mass"; }
         }
 
         /// <summary>
-        /// The perimeter of the mass.
+        /// The Profile of the Mass.
         /// </summary>
-        /// <returns></returns>
-        [JsonProperty("perimeter")]
-        public Polygon Perimeter{get;}
+        [JsonProperty("profile")]
+        public Profile Profile
+        {
+            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
+        }
 
         /// <summary>
         /// The elevation of the bottom perimeter.
         /// </summary>
         [JsonProperty("elevation")]
-        public double Elevation{get;}
+        public double Elevation { get; }
 
         /// <summary>
-        /// The height of the mass.
+        /// The height of the Mass.
         /// </summary>
         [JsonProperty("height")]
-        public double Height{get;}
+        public double Height { get; }
 
         /// <summary>
-        /// The volume of the mass.
+        /// The volume of the Mass.
         /// </summary>
         [JsonProperty("volume")]
         public double Volume
         {
-            get{return this.Perimeter.Area * this.Height;}
+            get { return this._profile.Area * this.Height; }
         }
 
         /// <summary>
-        /// Construct a mass from perimeters and elevations.
+        /// Construct a Mass.
         /// </summary>
-        /// <param name="perimeter">The bottom perimeter of the mass.</param>
+        /// <param name="profile">The Profile of the Mass.</param>
         /// <param name="elevation">The elevation of the perimeter.</param>
-        /// <param name="height">The height of the mass from the bottom elevation.</param>
-        /// <param name="material">The mass' material. The default is the built in mass material.</param>
+        /// <param name="height">The height of the Mass from the bottom elevation.</param>
+        /// <param name="material">The Mass' material. The default is the built in Mass material.</param>
         [JsonConstructor]
-        public Mass(Polygon perimeter, double elevation = 0.0, double height = 1.0, Material material = null)
+        public Mass(Profile profile, double elevation = 0.0, double height = 1.0, Material material = null)
         {
             if (height <= 0)
             {
-                throw new ArgumentOutOfRangeException("The mass could not be constructed. The height must be greater than zero.");
+                throw new ArgumentOutOfRangeException("The Mass could not be constructed. The height must be greater than zero.");
             }
-            this.Perimeter = perimeter;
+            this._profile = profile;
             this.Elevation = elevation;
             this.Height = height;
-            this.Material = material != null?material: BuiltInMaterials.Mass;
+            this.Material = material != null ? material : BuiltInMaterials.Mass;
         }
 
         /// <summary>
-        /// A collection of curves representing the vertical edges of the mass.
+        /// A collection of curves representing the vertical edges of the Mass.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Line> VerticalEdges()
+        public IList<Line> VerticalEdges()
         {
-            foreach(var f in Faces())
-            {
-                yield return f.ElementAt(1);
-            }
+            return Faces().Select(f=>f.Edges[1]).ToList();
         }
 
         /// <summary>
-        /// A collection of curves representing the horizontal edges of the mass.
+        /// A collection of curves representing the horizontal edges of the Mass.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Line> HorizontalEdges()
+        public IList<Line> HorizontalEdges()
         {
-            foreach(var f in Faces())
-            {
-                yield return f.ElementAt(0);
-                yield return f.ElementAt(2);
-            }
+            return Faces().SelectMany(f=>new[]{f.Edges[0], f.Edges[2]}).ToList();
         }
 
         /// <summary>
-        /// A collection of polylines representing the perimeter of each face of the mass.
+        /// A collection of polylines representing the perimeter of each face of the Mass.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Face> Faces()
+        public IList<Face> Faces()
         {
-            var b = this.Perimeter.Vertices;
-            var t = this.Perimeter.Vertices;
+            return FacesInternal(this.Profile.Perimeter.Vertices);
+        }
 
-            for (var i = 0; i < b.Count; i++)
+        private IList<Face> FacesInternal(IList<Vector3> v)
+        {
+            var faces = new List<Face>();
+            for (var i = 0; i < v.Count; i++)
             {
                 var next = i + 1;
-                if (i == b.Count - 1)
+                if (i == v.Count - 1)
                 {
                     next = 0;
                 }
-                var v1 = b[i];
-                var v2 = b[next];
-                var v3 = t[next];
-                var v4 = t[i];
+                var v1 = v[i];
+                var v2 = v[next];
                 var v1n = new Vector3(v1.X, v1.Y, this.Elevation);
                 var v2n = new Vector3(v2.X, v2.Y, this.Elevation);
-                var v3n = new Vector3(v3.X, v3.Y, this.Elevation + this.Height);
-                var v4n = new Vector3(v4.X, v4.Y, this.Elevation + this.Height);
+                var v3n = new Vector3(v2.X, v2.Y, this.Elevation + this.Height);
+                var v4n = new Vector3(v1.X, v1.Y, this.Elevation + this.Height);
                 var l1 = new Line(v1n, v2n);
                 var l2 = new Line(v2n, v3n);
                 var l3 = new Line(v3n, v4n);
                 var l4 = new Line(v4n, v1n);
-                yield return new Face(new[]{l1,l2,l3,l4});
+                faces.Add(new Face(new[] { l1, l2, l3, l4 }));
             }
+            return faces;
         }
 
         /// <summary>
-        /// Tessellate the mass.
+        /// Tessellate the Mass.
         /// </summary>
-        /// <returns>A mesh representing the tessellated mass.</returns>
+        /// <returns>A mesh representing the tessellated Mass.</returns>
         public Mesh Tessellate()
         {
+            // We use the untransformed faces here,
+            // as the transform will be applied on the rendering node.
+
             var mesh = new Mesh();
-            foreach (var f in Faces())
+            foreach (var f in FacesInternal(this._profile.Perimeter.Vertices))
             {
                 mesh.AddQuad(f.Vertices.ToArray());
             }
 
-            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.Elevation);
-            mesh.AddTesselatedFace(new[] { this.Perimeter }, this.Elevation + this.Height, true);
+            mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation));
+            mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation + this.Height), true);
             return mesh;
         }
     }
