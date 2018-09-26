@@ -85,6 +85,7 @@ namespace Hypar.Elements
         /// Add an element to the model.
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
+        /// <exception cref="System.ArgumentException">Thrown when an element with the same Id already exists in the model.</exception>
         public void AddElement(Element element)
         {
             if(!this._elements.ContainsKey(element.Id.ToString()))
@@ -97,7 +98,7 @@ namespace Hypar.Elements
             }
             else
             {
-                throw new Exception("An Element with the same Id already exists in the Model.");
+                throw new ArgumentException("An Element with the same Id already exists in the Model.");
             }
         }
 
@@ -297,6 +298,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <exception cref="System.ArgumentException">Thrown when an Element with the same Id already exists in the Model.</exception>
         public void Add(string key, Element value)
         {
             if(!this._elements.ContainsKey(key))

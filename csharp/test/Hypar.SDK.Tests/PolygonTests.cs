@@ -370,10 +370,10 @@ namespace Hypar.Tests
         [Fact]
         public void Area()
         {
-            var a = Profiles.Rectangular();
+            var a = Polygon.Rectangle();
             Assert.Equal(1.0, a.Area);
 
-            var b = Profiles.Rectangular(Vector3.Origin, 2.0,2.0);
+            var b = Polygon.Rectangle(Vector3.Origin, 2.0,2.0);
             Assert.Equal(4.0, b.Area);
 
             var p1 = Vector3.Origin;
@@ -427,7 +427,7 @@ namespace Hypar.Tests
         {
             var a = new Vector3();
             var b = new Vector3(0.000001,0,0);
-            Assert.Throws<Exception>(()=>new Polygon(new[]{a,a,a}));
+            Assert.Throws<ArgumentException>(()=>new Polygon(new[]{a,a,a}));
         }
     }
 }

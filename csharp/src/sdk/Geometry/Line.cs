@@ -51,6 +51,7 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
+        /// <exception cref="System.ArgumentException">Thrown when the start and end points are the same.</exception>
         [JsonConstructor]
         public Line(Vector3 start, Vector3 end)
         {
@@ -66,9 +67,10 @@ namespace Hypar.Geometry
         /// Get a transform whose XY plane is perpendicular to the curve, and whose
         /// positive Z axis points along the curve.
         /// </summary>
+        /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
         /// <param name="up">The vector which will become the Y vector of the transform.</param>
         /// <returns>A transform.</returns>
-        public Transform GetTransform(Vector3 up = null)
+        public Transform GetTransform(double u, Vector3 up = null)
         {
             var v = Direction;
             var x = new Vector3(1, 0, 0);
@@ -81,11 +83,18 @@ namespace Hypar.Geometry
             }
             if (up.IsParallelTo(v))
             {
-                up = x;
+                if(v.IsAlmostEqualTo(x))
+                {
+                    up = y;
+                }
+                else
+                {
+                    up = x;
+                }
             }
 
             var xAxis = v.Cross(up).Normalized();
-            var t = new Transform(this.Start, xAxis, v);
+            var t = new Transform(PointAt(u), xAxis, v);
 
             return t;
         }
@@ -136,6 +145,30 @@ namespace Hypar.Geometry
             var c = this.End - (offsetN * (amount/2));
             var d = this.Start - (offsetN * (amount/2));
             return new Polygon(new[]{a, b, c, d});
+        }
+
+        /// <summary>
+        /// Does this Line equal the provided Line?
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            var line = obj as Line;
+            if(line == null)
+            {
+                return false;
+            }
+            return this.Start.Equals(line.Start) && this.End.Equals(line.End);
+        }
+
+        /// <summary>
+        /// Get the hash code for the Line.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return new[]{this.Start, this.End}.GetHashCode();
         }
     }
 }

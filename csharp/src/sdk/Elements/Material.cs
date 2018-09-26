@@ -41,6 +41,8 @@ namespace Hypar.Elements
         /// <param name="color">The RGBA color of the material.</param>
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is less than 0.0.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is greater than 1.0.</exception>
         [JsonConstructor]
         public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f)
         {

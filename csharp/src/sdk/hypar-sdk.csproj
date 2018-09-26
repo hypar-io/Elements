@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Hypar.SDK</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Title>Hypar SDK</Title>
     <Authors>Hypar</Authors>
     <PackageId>HyparSDK</PackageId>
@@ -13,7 +14,7 @@
     <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.0.2-alpha8</Version>
+    <Version>0.0.2-alpha9</Version>
     <Tags>AEC</Tags>
   </PropertyGroup>
 

@@ -7,28 +7,33 @@ namespace Hypar.Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall: Element, ITessellate<Mesh>
+    public class Wall : Element, ITessellate<Mesh>
     {
+        private readonly Line _centerLine;
+
         /// <summary>
         /// The center line of the wall.
         /// </summary>
         /// <value></value>
         [JsonProperty("center_line")]
-        public Line CenterLine{get;}
+        public Line CenterLine
+        {
+            get{return this.Transform != null ? this.Transform.OfLine(this._centerLine) : this._centerLine;}
+        }
 
         /// <summary>
         /// The thickness of the wall.
         /// </summary>
         /// <value></value>
         [JsonProperty("thickness")]
-        public double Thickness{get;set;}
+        public double Thickness { get; set; }
 
         /// <summary>
         /// The height of the wall.
         /// </summary>
         /// <value></value>
         [JsonProperty("height")]
-        public double Height{get;}
+        public double Height { get; }
 
         /// <summary>
         /// Construct a wall along a line.
@@ -37,26 +42,29 @@ namespace Hypar.Elements
         /// <param name="thickness">The thickness of the wall.</param>
         /// <param name="height">The height of the wall.</param>
         /// <param name="material">The wall's material.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the Wall is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the Wall is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of Wall's start and end points are not the same.</exception>
         public Wall(Line centerLine, double thickness, double height, Material material = null)
         {
-            if(thickness <= 0.0)
+            if (thickness <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("The wall could not be constructed. The thickness of the wall must be greater than 0.0.");
             }
-            
-            if(height <= 0.0)
+
+            if (height <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("The wall could not be constructed. The height of the wall must be greater than 0.0.");
             }
 
-            if(centerLine.Start.Z != centerLine.End.Z)
+            if (centerLine.Start.Z != centerLine.End.Z)
             {
                 throw new ArgumentException("The wall could not be constructed. The Z component of the start and end points of the wall's center line must be the same.");
             }
 
-            this.CenterLine = centerLine;
+            this._centerLine = centerLine;
             this.Thickness = thickness;
-            this.Material = material == null? BuiltInMaterials.Concrete: material;
+            this.Material = material == null ? BuiltInMaterials.Concrete : material;
             this.Height = height;
         }
 
@@ -66,7 +74,7 @@ namespace Hypar.Elements
         /// <returns></returns>
         public Mesh Tessellate()
         {
-            return Mesh.Extrude(new[] { this.CenterLine.Thicken(this.Thickness) }, this.Height);
+            return Mesh.Extrude(this._centerLine.Thicken(this.Thickness), this.Height);
         }
     }
 }

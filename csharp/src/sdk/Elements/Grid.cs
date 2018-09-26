@@ -73,7 +73,7 @@ namespace Hypar.Elements
         /// Get all cells in a column.
         /// </summary>
         /// <param name="n"></param>
-        /// <returns></returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specified column index is greater than the number of available columns.</exception>
         public IEnumerable<IEnumerable<Vector3>> CellsInColumn(int n)
         {
             if(n < 0 || n >= this._uDiv.Length - 1)
@@ -99,7 +99,7 @@ namespace Hypar.Elements
         /// Get all cells in a row.
         /// </summary>
         /// <param name="n"></param>
-        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">Thrown when the row index is greater than number of rows.</exception>
         public IEnumerable<IEnumerable<Vector3>> CellsInRow(int n)
         {
             if(n < 0 || n >= this._vDiv.Length - 1)
@@ -189,7 +189,7 @@ namespace Hypar.Elements
         /// <param name="vDivisions">The number of grid divisions in the v direction.</param>
         public Grid(Face face, int uDivisions = 1, int vDivisions = 1)
         {
-            var f = face.ToArray();
+            var f = face.Edges;
             this._bottom = f[0];
             this._top = f[2].Reversed();
             this._uDiv = CalculateEqualDivisions(uDivisions);

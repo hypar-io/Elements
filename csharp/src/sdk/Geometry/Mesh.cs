@@ -306,32 +306,45 @@ namespace Hypar.Geometry
         /// <summary>
         /// Add a tessellated face to the mesh.
         /// </summary>
-        /// <param name="perimeter">The closed polyline representing the edge of the face.</param>
-        /// <param name="height">A height at which the tessellated face will be offset.</param>
-        /// <param name="reverse">A flag indicating whether the perimeter should be reversed.</param>
-        public void AddTesselatedFace(IEnumerable<Polygon> perimeter, double height=0.0, bool reverse = false)
+        /// <param name="perimeter">A Polygon representing the perimeter of the face.</param>
+        /// <param name="voids">A collection of Polygons representing voids in the face.</param>
+        /// <param name="transform">A Transform to apply to all vertices of the supplied perimeter.</param>
+        /// <param name="reversed">A flag indicating whether the winding of the Polygons should be reversed.</param>
+        public void AddTesselatedFace(Polygon perimeter, IList<Polygon> voids, Transform transform, bool reversed = false)
         {
             var tess = new Tess();
 
-            foreach(var b in perimeter)
+            AddContour(tess, perimeter, reversed);
+
+            if(voids != null)
             {
-                var numPoints = b.Vertices.Count;
-                var contour = new ContourVertex[numPoints];
-                for(var i=0; i<numPoints; i++)
+                foreach(var p in voids)
                 {
-                    var v = b.Vertices[i];
-                    contour[i].Position = new Vec3{X=v.X, Y=v.Y, Z=height};
+                    AddContour(tess, p, reversed);
                 }
-                tess.AddContour(contour, reverse?ContourOrientation.Clockwise:ContourOrientation.CounterClockwise);
             }
+            
             tess.Tessellate(WindingRule.EvenOdd, ElementType.Polygons, 3);
+
             for(var i=0; i<tess.ElementCount; i++)
             {
                 var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
                 var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
                 var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
-                AddTriangle(a,b,c);
+                AddTriangle(transform.OfPoint(a), transform.OfPoint(b), transform.OfPoint(c));
             }
+        }
+
+        private void AddContour(Tess tess, Polygon p, bool reversed = false)
+        {
+            var numPoints = p.Vertices.Count;
+            var contour = new ContourVertex[numPoints];
+            for(var i=0; i<numPoints; i++)
+            {
+                var v = p.Vertices[i];
+                contour[i].Position = new Vec3{X=v.X, Y=v.Y, Z=v.Z};
+            }
+            tess.AddContour(contour, reversed ? ContourOrientation.Clockwise : ContourOrientation.CounterClockwise);
         }
 
         /// <summary>
@@ -368,16 +381,23 @@ IMin:{m_index_min}";
         }
 
         /// <summary>
-        /// Extrude a collection of polylines.
+        /// Extrude a Polyon.
         /// </summary>
-        /// <param name="perimeters">A collection of polylines. The first polyline represents the outer edge of the extrusion.
-        /// Additional polylines represent holes in the extrusion.</param>
+        /// <param name="perimeter">The Polygon to extrude.</param>
+        /// <param name="voids">A collection of Polygons representing voids in the extrusion.</param> 
         /// <param name="height">The height of the extrusion.</param>
         /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
         /// <returns></returns>
-        public static Mesh Extrude(IEnumerable<Polygon> perimeters, double height, bool capped=true)
+        public static Mesh Extrude(Polygon perimeter, double height, IList<Polygon> voids = null, bool capped=true)
         {
             var mesh = new Hypar.Geometry.Mesh();
+
+            var perimeters = new List<Polygon>();
+            perimeters.Add(perimeter);
+            if(voids != null)
+            {
+                perimeters.AddRange(voids);
+            }
 
             foreach(var boundary in perimeters)
             {
@@ -409,24 +429,80 @@ IMin:{m_index_min}";
 
             if(capped)
             {
-                mesh.AddTesselatedFace(perimeters);
-                mesh.AddTesselatedFace(perimeters, height, true);
+                mesh.AddTesselatedFace(perimeter, voids, new Transform());
+                mesh.AddTesselatedFace(perimeter, voids, new Transform(new Vector3(0,0,height)), true);
             }
 
             return mesh;
         }
 
         /// <summary>
-        /// Extrude a polyline profile along a curve.
+        /// Extrude a Polygon along a Line.
         /// </summary>
-        /// <param name="line">The line along which to extrude.</param>
-        /// <param name="perimeters">A collection of polylines to extrude.</param>
+        /// <param name="line">The Line along which to extrude.</param>
+        /// <param name="perimeter">A Polygon to extrude.</param>
+        /// <param name="voids">A collection of Polygons representing voids in the extrusion.</param>
         /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
         /// <returns></returns>
-        public static Mesh ExtrudeAlongLine(Line line, IEnumerable<Polygon> perimeters, bool capped=true)
+        public static Mesh ExtrudeAlongLine(Line line, Polygon perimeter, IList<Polygon> voids = null, bool capped=true)
         {
-            var height = line.Length;
-            return Mesh.Extrude(perimeters, height, capped);
+            var mesh = new Hypar.Geometry.Mesh();
+
+            var tStart = line.GetTransform(0.0);
+            var tEnd = line.GetTransform(1.0);
+
+            ExtrudePolygon(ref mesh, perimeter, tStart, tEnd);
+
+            if(voids != null)
+            {
+                foreach(var p in voids)
+                {
+                    ExtrudePolygon(ref mesh, p, tStart, tEnd, true);
+                }
+            }
+
+            if(capped)
+            {
+                mesh.AddTesselatedFace(perimeter, voids, tStart);
+                mesh.AddTesselatedFace(perimeter, voids, tEnd, true);
+            }
+
+            return mesh;
+        }
+
+        private static void ExtrudePolygon(ref Mesh mesh, Polygon p, Transform tStart, Transform tEnd, bool reverse = false)
+        {
+            var start = tStart.OfPolygon(p);
+            var end = tEnd.OfPolygon(p);
+
+            for(var i=0; i<start.Vertices.Count; i++)
+            {
+                Vector3 a, b, c, d;
+
+                if(i == start.Vertices.Count-1)
+                {
+                    a = start.Vertices[i];
+                    b = start.Vertices[0];
+                    c = end.Vertices[0];
+                    d = end.Vertices[i];
+                }
+                else
+                {
+                    a = start.Vertices[i];
+                    b = start.Vertices[i+1];
+                    c = end.Vertices[i+1];
+                    d = end.Vertices[i];
+                }
+
+                if(reverse)
+                {
+                    mesh.AddQuad(new []{a,d,c,b});
+                }
+                else
+                {
+                    mesh.AddQuad(new []{a,b,c,d});
+                }
+            }
         }
 
         /// <summary>

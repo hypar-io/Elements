@@ -11,26 +11,49 @@ namespace Hypar.Geometry
         /// <summary>
         /// The maximum extent of the bounding box.
         /// </summary>
-        public Vector3 Max{get;}
+        public Vector3 Max{get; private set;}
 
         /// <summary>
         /// The minimum extent of the bounding box.
         /// </summary>
-        public Vector3 Min{get;}
+        public Vector3 Min{get; private set;}
 
         /// <summary>
         /// Construct a bounding box from a collection of points.
         /// </summary>
         /// <param name="points">The points which are contained within the bounding box.</param>
-        /// <returns>A bounding box.</returns>
         public BBox3(IEnumerable<Vector3> points)
         {
             this.Min = Vector3.Origin;
             this.Max = Vector3.Origin;
             foreach(var p in points)
             {
-                if(p < this.Min) this.Min = p;
-                if(p > this.Max) this.Max = p;
+                this.Extend(p);
+            }
+        }
+
+        private void Extend(Vector3 v)
+        {
+            if(v < this.Min) this.Min = v;
+            if(v > this.Max) this.Max = v;
+        }
+
+        /// <summary>
+        /// Construct the BBox3 for a Profile.
+        /// </summary>
+        /// <param name="profile">The Profile.</param>
+        public BBox3(Profile profile)
+        {
+            this.Min = Vector3.Origin;
+            this.Max = Vector3.Origin;
+            foreach(var v in profile.Perimeter.Vertices)
+            {
+                this.Extend(v);
+            }
+
+            foreach(var v in profile.Voids.SelectMany(o=>o.Vertices))
+            {
+                this.Extend(v);
             }
         }
 

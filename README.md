@@ -2,6 +2,7 @@
 
 # SDK
 [![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/sdk)
+![NuGet](https://img.shields.io/nuget/v/HyparSDK.svg)
 
 The Hypar SDK is a library for creating building elements like Walls, Beams, and Spaces. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings. Here's an example using the SDK to create a `Beam`:
 ```c#

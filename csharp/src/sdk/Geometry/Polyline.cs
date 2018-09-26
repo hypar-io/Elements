@@ -104,12 +104,12 @@ namespace Hypar.Geometry
         /// Get segment i of this polyline.
         /// </summary>
         /// <param name="i"></param>
-        /// <returns></returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specified index is greater than the number of available segments.</exception>
         public Line Segment(int i)
         {
             if (this._vertices.Count <= i)
             {
-                throw new Exception($"The specified index is greater than the number of segments.");
+                throw new ArgumentOutOfRangeException($"The specified index is greater than the number of segments.");
             }
 
             var a = this._vertices[i];
