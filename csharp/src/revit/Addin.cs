@@ -40,7 +40,7 @@ namespace Hypar.Revit
             CreateColumns(model, symbol, levels, doc, app);
 
             trans.Commit();
-
+            
             return Result.Succeeded;
         }
 
@@ -48,14 +48,14 @@ namespace Hypar.Revit
         {
             var model = new Model();
             var line = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var beam = new Beam(line, new[]{Profiles.WideFlangeProfile()}, BuiltInMaterials.Steel);
+            var beam = new Beam(line, new WideFlangeProfile(), BuiltInMaterials.Steel);
             model.AddElement(beam);
 
             var wallLine = new Line(new Vector3(10,0,0), new Vector3(15,10,0));
             var wall = new Wall(wallLine, 0.2, 5.0, BuiltInMaterials.Concrete);
             model.AddElement(wall);
 
-            var column = new Column(Vector3.Origin, 5.0, new[]{Profiles.WideFlangeProfile()}, BuiltInMaterials.Steel);
+            var column = new Column(Vector3.Origin, 5.0, new WideFlangeProfile(), BuiltInMaterials.Steel);
             model.AddElement(column);
 
             return model;
