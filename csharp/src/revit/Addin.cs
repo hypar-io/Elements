@@ -7,7 +7,9 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.UI.Selection;
 using Hypar.Elements;
 using Hypar.Geometry;
+using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Line = Hypar.Geometry.Line;
@@ -28,13 +30,16 @@ namespace Hypar.Revit
             var doc = uiapp.ActiveUIDocument.Document;
             var app = doc.Application;
 
+            var json = File.ReadAllText(@"C:\Users\Ian\Downloads\8a803288-5c13-46de-a2b7-c591f7cf31a3_elements\elements.json");
+            var model = Model.FromJson(json);
+
             var beamSymbol = GetStructuralSymbol(doc, BuiltInCategory.OST_StructuralFraming, "200UB25.4");
             var columnSymbol = GetStructuralSymbol(doc, BuiltInCategory.OST_StructuralColumns, "450 x 450mm");
             var floorType = GetFloorType(doc, "Insitu Concrete");
             var fec = new FilteredElementCollector(doc);
             var levels = fec.OfClass(typeof(Level)).Cast<Level>().ToList();
 
-            var model = CreateTestModel();
+            // var model = CreateTestModel();
 
             Transaction trans = new Transaction(doc);
             trans.Start("Hypar");

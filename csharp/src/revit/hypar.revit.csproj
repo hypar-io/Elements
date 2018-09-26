@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="HyparSDK" Version="0.0.2-alpha9" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
 </Project>
