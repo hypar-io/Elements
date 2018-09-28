@@ -109,7 +109,7 @@ namespace Hypar.Tests
             mass.Transform.Move(t);
             for(var i=0; i<profile.Vertices.Count; i++)
             {
-                Assert.Equal(profile.Vertices[i] + t, mass.Profile.Perimeter.Vertices[i]);
+                Assert.Equal(profile.Vertices[i] + t, mass.Profile.Perimeter.Vertices[i] + t);
             }
         }
     }

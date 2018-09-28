@@ -50,8 +50,9 @@ namespace Hypar.Tests
             model.AddElements(floors);
 
             var shaft = Polygon.Rectangle(new Vector3(10,10), 5, 5);
+            var shaftWallType = new WallType("ShaftWall", 0.1);
             var walls = shaft.Segments().Select(l=>{
-                return new Wall(l, 0.1, buildingHeight, null, BuiltInMaterials.Concrete);
+                return new Wall(l, shaftWallType, buildingHeight, null, BuiltInMaterials.Concrete);
             });
             model.AddElements(walls);
 

@@ -35,7 +35,7 @@ namespace Hypar.Elements
         [JsonProperty("center_line")]
         public Line CenterLine
         {
-            get { return this.Transform != null ? this.Transform.OfLine(this._centerLine) : this._centerLine; }
+            get { return this._centerLine; }
         }
 
         /// <summary>

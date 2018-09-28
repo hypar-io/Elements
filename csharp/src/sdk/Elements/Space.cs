@@ -17,6 +17,7 @@ namespace Hypar.Elements
         /// <summary>
         /// The type of the element.
         /// </summary>
+        [JsonProperty("type")]
         public override string Type
         {
             get { return "space"; }
@@ -40,7 +41,7 @@ namespace Hypar.Elements
         [JsonProperty("profile")]
         public Profile Profile
         {
-            get { return this.Transform != null? this.Transform.OfProfile(this._profile) : this._profile; }
+            get { return this._profile; }
         }
 
         /// <summary>

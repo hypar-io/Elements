@@ -53,17 +53,23 @@ namespace Hypar.Tests
             var spaceProfile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
             var space = new Space(spaceProfile, 5.0, 5.0);
             var model = new Model();
-            model.AddElements(new Element[]{panel, floor, mass, beam, column, space});
+
+            var wallLine = new Line(Vector3.Origin, new Vector3(10,0,0));
+            var wallType = new WallType("test", 0.1, "A test wall type.");
+            var wall = new Wall(wallLine, wallType, 4.0);
+
+            model.AddElements(new Element[]{panel, floor, mass, beam, column, space, wall});
             var json = model.ToJson();
-            // Console.WriteLine(json);
+            Console.WriteLine(json);
 
             var newModel = Model.FromJson(json);
-            var elements = newModel.Values;
-            var newPanel = elements.OfType<Panel>().FirstOrDefault();
-            var newFloor = elements.OfType<Floor>().FirstOrDefault();
-            var newMass = elements.OfType<Mass>().FirstOrDefault();
-            var newBeam = elements.OfType<Beam>().FirstOrDefault();
-            var newSpace = elements.OfType<Space>().FirstOrDefault();
+            var elements = newModel.Elements;
+            var newPanel = elements.Values.OfType<Panel>().FirstOrDefault();
+            var newFloor = elements.Values.OfType<Floor>().FirstOrDefault();
+            var newMass = elements.Values.OfType<Mass>().FirstOrDefault();
+            var newBeam = elements.Values.OfType<Beam>().FirstOrDefault();
+            var newSpace = elements.Values.OfType<Space>().FirstOrDefault();
+            var newWall = elements.Values.OfType<Wall>().FirstOrDefault();
 
             Assert.Equal(panel.Perimeter.Count, newPanel.Perimeter.Count);
             Assert.Equal(panel.Id, newPanel.Id);
@@ -78,6 +84,9 @@ namespace Hypar.Tests
             Assert.Equal(space.Elevation, newSpace.Elevation);
             Assert.Equal(space.Height, newSpace.Height);
             Assert.Equal(space.Profile.Perimeter, newSpace.Profile.Perimeter);
+            Assert.Equal(wall.Height, newWall.Height);
+            Assert.Equal(wall.CenterLine, newWall.CenterLine);
+            Assert.Equal(wall.ElementType, model.GetElementTypeById("test"));
         }
 
         private Model QuadPanelModel()

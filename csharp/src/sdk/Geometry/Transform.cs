@@ -51,6 +51,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// The XY plane of the Transform.
         /// </summary>
+        [JsonIgnore]
         public Plane XY
         {
             get{return new Plane(this.Origin, this.ZAxis);}
@@ -59,7 +60,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// The YZ plane of the Transform.
         /// </summary>
-        /// <value></value>
+        [JsonIgnore]
         public Plane YZ
         {
             get{return new Plane(this.Origin, this.XAxis);}
@@ -68,7 +69,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// The XZ plane of the Transform.
         /// </summary>
-        /// <value></value>
+        [JsonIgnore]
         public Plane XZ
         {
             get{return new Plane(this.Origin, this.YAxis);}
