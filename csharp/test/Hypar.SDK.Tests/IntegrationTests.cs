@@ -51,7 +51,7 @@ namespace Hypar.Tests
 
             var shaft = Polygon.Rectangle(new Vector3(10,10), 5, 5);
             var walls = shaft.Segments().Select(l=>{
-                return new Wall(l, 0.1, buildingHeight, BuiltInMaterials.Concrete);
+                return new Wall(l, 0.1, buildingHeight, null, BuiltInMaterials.Concrete);
             });
             model.AddElements(walls);
 
