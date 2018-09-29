@@ -75,11 +75,11 @@ namespace Hypar.Elements.Serialization
             writer.WriteRawValue(JsonConvert.SerializeObject(model.Elements, new JsonSerializerSettings(){
                 Formatting = Formatting.Indented,
                 Converters = new JsonConverter[]
-                            {
-                                new ElementConverter(), 
-                                new MaterialToIdConverter(model.Materials),
-                                new ElementTypeToIdConverter(model.ElementTypes)
-                            }
+                    {
+                        new ElementConverter(), 
+                        new MaterialToIdConverter(model.Materials),
+                        new ElementTypeToIdConverter(model.ElementTypes)
+                    }
             }));
             
             // Serialize materials

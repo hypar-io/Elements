@@ -5,18 +5,38 @@ using Newtonsoft.Json.Linq;
 
 namespace Hypar.Elements.Serialization
 {
+    /// <summary>
+    /// Converter for objects of type ElementType.
+    /// </summary>
     public class ElementTypeConverter : JsonConverter
     {
+        /// <summary>
+        /// Can this converter convert an object of type objectType?
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(ElementType);
         }
 
+        /// <summary>
+        /// Can this converter write json?
+        /// </summary>
+        /// <value></value>
         public override bool CanWrite
         {
             get{return false;}
         }
-
+        
+        /// <summary>
+        /// Read json.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="objectType"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
@@ -30,6 +50,12 @@ namespace Hypar.Elements.Serialization
             }
         }
 
+        /// <summary>
+        /// Write json.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="serializer"></param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
@@ -59,7 +85,7 @@ namespace Hypar.Elements.Serialization
         /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(ElementType);
+            return typeof(ElementType).IsAssignableFrom(objectType);
         }
 
         /// <summary>
