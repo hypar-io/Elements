@@ -145,13 +145,13 @@ namespace Hypar.Elements
         /// <param name="material">The material to add to the model.</param>
         private void AddMaterial(Material material)
         {
-            if(!this._materials.ContainsKey(material.Name))
+            if(!this._materials.ContainsKey(material.Id))
             {
-                this._materials.Add(material.Name, material);
+                this._materials.Add(material.Id, material);
             }
             else
             {
-                this._materials[material.Name] = material;
+                this._materials[material.Id] = material;
             }
         }
 

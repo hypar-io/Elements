@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 namespace Hypar.Elements
@@ -10,6 +11,7 @@ namespace Hypar.Elements
         /// <summary>
         /// The thickness of the Floor.
         /// </summary>
+        [JsonProperty("thickness")]
         public double Thickness{get;}
 
         /// <summary>

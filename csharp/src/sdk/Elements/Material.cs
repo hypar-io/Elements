@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using Hypar.Geometry;
+using Hypar.Elements.Serialization;
 
 namespace Hypar.Elements
 {

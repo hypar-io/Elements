@@ -41,8 +41,8 @@ namespace Hypar.Tests
             var c = new Vector3(1,0,1);
             var d = new Vector3(0,0,1);
             var panel = new Panel(new []{a,b,c,d,}, BuiltInMaterials.Glass);
-            panel.AddParameter("param1", new NumericParameter(42.0, NumericParameterType.Area));
-            panel.AddParameter("param2", new NumericParameter(42.0, NumericParameterType.Force));
+            panel.AddParameter("param1", new Parameter(42.0, ParameterType.Area));
+            panel.AddParameter("param2", new Parameter(42.0, ParameterType.Force));
 
             var profile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
             var floorType = new FloorType("test", 0.2);

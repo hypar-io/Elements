@@ -60,7 +60,7 @@ namespace Hypar.Elements.Serialization
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var material = (Material)value;
-            writer.WriteValue(material.Name);
+            writer.WriteValue(material.Id);
         }
     }
 }

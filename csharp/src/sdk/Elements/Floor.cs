@@ -62,7 +62,10 @@ namespace Hypar.Elements
         {
             var clipper = new ClipperLib.Clipper();
             clipper.AddPath(this._profile.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            clipper.AddPaths(this._profile.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            if(this._profile.Voids != null)
+            {
+                clipper.AddPaths(this._profile.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            }
             var solution = new List<List<ClipperLib.IntPoint>>();
             var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
             var polys = solution.Select(s => s.ToPolygon()).ToList();

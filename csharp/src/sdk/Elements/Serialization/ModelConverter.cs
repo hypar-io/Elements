@@ -79,7 +79,8 @@ namespace Hypar.Elements.Serialization
                         new ElementConverter(), 
                         new MaterialToIdConverter(model.Materials),
                         new ElementTypeToIdConverter(model.ElementTypes)
-                    }
+                    },
+                NullValueHandling = NullValueHandling.Ignore
             }));
             
             // Serialize materials

@@ -66,7 +66,7 @@ namespace Hypar.Elements
         /// <param name="name">The name of the parameter.</param>
         /// <param name="parameter">The parameter to add.</param>
         /// <exception cref="System.Exception">Thrown when an parameter with the same name already exists.</exception>
-        public void AddParameter<T>(string name, Parameter<T> parameter)
+        public void AddParameter(string name, Parameter parameter)
         {
             if(!_parameters.ContainsKey(name))
             {

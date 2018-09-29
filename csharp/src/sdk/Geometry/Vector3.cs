@@ -1,3 +1,4 @@
+using Hypar.Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ namespace Hypar.Geometry
     /// <summary>
     /// A 3D vector.
     /// </summary>
+    [JsonConverter(typeof(Vector3Converter))]
     public class Vector3
     {
         /// <summary>

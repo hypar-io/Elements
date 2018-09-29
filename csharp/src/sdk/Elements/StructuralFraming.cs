@@ -26,7 +26,7 @@ namespace Hypar.Elements
         /// <summary>
         /// The up axis of the framing element.
         /// </summary>
-        [JsonProperty("up_axis")]
+        [JsonIgnore]
         public Vector3 UpAxis { get; }
 
         /// <summary>
