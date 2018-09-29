@@ -84,9 +84,10 @@ namespace Hypar.Tests
             var mass3 = new Mass(profile3, 20.0, 10.0, material3);
             model.AddElements(new[]{mass1,mass2,mass3});
             
-            var f1 = new Floor(profile1, 0.0, 0.2);
-            var f2 = new Floor(profile2, 10.0, 0.2);
-            var f3 = new Floor(profile3, 20.0, 0.2);
+            var floorType = new FloorType("test", 0.2);
+            var f1 = new Floor(profile1, floorType, 0.0);
+            var f2 = new Floor(profile2, floorType, 10.0);
+            var f3 = new Floor(profile3, floorType, 20.0);
             model.AddElements(new[]{f1,f2,f3});
 
             model.SaveGlb("transformed_masses.glb");

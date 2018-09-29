@@ -88,6 +88,12 @@ namespace Hypar.Elements
                     var wall = (Wall)element;
                     AddElementType(wall.ElementType);
                 }
+
+                if(element is Floor)
+                {
+                    var floor = (Floor)element;
+                    AddElementType(floor.ElementType);
+                }
             }
             else
             {
@@ -109,13 +115,13 @@ namespace Hypar.Elements
 
         private void AddElementType(ElementType elementType)
         {
-            if(!this._elementTypes.ContainsKey(elementType.Name.ToString()))
+            if(!this._elementTypes.ContainsKey(elementType.Id))
             {
-                this._elementTypes.Add(elementType.Name, elementType);
+                this._elementTypes.Add(elementType.Id, elementType);
             }
             else
             {
-                this._elementTypes[elementType.Name] = elementType;
+                this._elementTypes[elementType.Id] = elementType;
             }
         }
 
@@ -150,31 +156,23 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Get a Material by Id.
+        /// Get a Material by name.
         /// </summary>
-        /// <param name="id">The identifier of the Material.</param>
+        /// <param name="name">The name of the Material.</param>
         /// <returns>A Material or null if no Material with the specified id can be found.</returns>
-        public Material GetMaterialById(string id)
+        public Material GetMaterialByName(string name)
         {
-            if(this._materials.ContainsKey(id))
-            {
-                return this._materials[id];
-            }
-            return null;
+            return this._materials.Values.FirstOrDefault(m=>m.Name == name);
         }
 
         /// <summary>
-        /// Get an ElementType by Id.
+        /// Get an ElementType by name.
         /// </summary>
-        /// <param name="id">The identifier of the ElementType.</param>
+        /// <param name="name">The name of the ElementType.</param>
         /// <returns>An ElementType or null if no ElementType with the specified id can be found.</returns>
-        public ElementType GetElementTypeById(string id)
+        public ElementType GetElementTypeByName(string name)
         {
-            if(this._elementTypes.ContainsKey(id))
-            {
-                return this._elementTypes[id];
-            }
-            return null;
+            return this._elementTypes.Values.FirstOrDefault(et=>et.Name == name);
         }
 
         /// <summary>

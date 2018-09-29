@@ -46,7 +46,8 @@ namespace Hypar.Tests
                 }
             }
 
-            var floors = mass.Floors(elevations, 0.2, BuiltInMaterials.Concrete);
+            var floorType = new FloorType("test", 0.2);
+            var floors = mass.Floors(elevations, floorType, BuiltInMaterials.Concrete);
             model.AddElements(floors);
 
             var shaft = Polygon.Rectangle(new Vector3(10,10), 5, 5);

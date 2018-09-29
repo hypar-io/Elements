@@ -45,7 +45,8 @@ namespace Hypar.Tests
             panel.AddParameter("param2", new NumericParameter(42.0, NumericParameterType.Force));
 
             var profile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
-            var floor = new Floor(profile, 5.0, 0.2);
+            var floorType = new FloorType("test", 0.2);
+            var floor = new Floor(profile, floorType, 5.0);
             var mass = new Mass(Polygon.Rectangle(), 5.0, 1.0);
             var line = new Line(Vector3.Origin, new Vector3(5,5,5));
             var beam = new Beam(line, new WideFlangeProfile(), BuiltInMaterials.Steel);
@@ -76,7 +77,7 @@ namespace Hypar.Tests
             Assert.Equal(floor.Id, newFloor.Id);
             Assert.Equal(floor.Material, newFloor.Material);
             Assert.Equal(floor.Profile.Perimeter.Vertices.Count, newFloor.Profile.Perimeter.Vertices.Count);
-            Assert.Equal(floor.Thickness, newFloor.Thickness);
+            Assert.Equal(floor.ElementType.Thickness, newFloor.ElementType.Thickness);
             Assert.Equal(floor.Elevation, newFloor.Elevation);
             Assert.Equal(mass.Profile.Perimeter.Vertices.Count, newMass.Profile.Perimeter.Vertices.Count);
             Assert.Equal(mass.Elevation, newMass.Elevation);
@@ -86,7 +87,7 @@ namespace Hypar.Tests
             Assert.Equal(space.Profile.Perimeter, newSpace.Profile.Perimeter);
             Assert.Equal(wall.Height, newWall.Height);
             Assert.Equal(wall.CenterLine, newWall.CenterLine);
-            Assert.Equal(wall.ElementType, model.GetElementTypeById("test"));
+            Assert.Equal(wall.ElementType, model.ElementTypes[newWall.ElementType.Id]);
         }
 
         private Model QuadPanelModel()

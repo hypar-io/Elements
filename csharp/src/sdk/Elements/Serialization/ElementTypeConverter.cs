@@ -45,6 +45,8 @@ namespace Hypar.Elements.Serialization
             {
                 case "wall_type":
                     return obj.ToObject<WallType>(serializer);
+                case "floor_type":
+                    return obj.ToObject<FloorType>(serializer);
                 default:
                     throw new Exception($"The ElementType with type name, {typeName}, could not be deserialzed.");
             }
@@ -118,7 +120,7 @@ namespace Hypar.Elements.Serialization
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var et = (ElementType)value;
-            writer.WriteValue(et.Name);
+            writer.WriteValue(et.Id);
         }
     }
 }

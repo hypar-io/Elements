@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 
 namespace Hypar.Elements
 {
@@ -7,6 +8,12 @@ namespace Hypar.Elements
     /// </summary>
     public abstract class ElementType
     {
+        /// <summary>
+        /// The unique identifier of an ElementType.
+        /// </summary>
+        [JsonProperty("id")]
+        public string Id{get;internal set;}
+
         /// <summary>
         /// The type of the ElementType.
         /// Used during serialization.
@@ -33,6 +40,7 @@ namespace Hypar.Elements
         /// <param name="description">A description.</param>
         public ElementType(string name, string description = null)
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Name = name;
             this.Description = description;
         }
