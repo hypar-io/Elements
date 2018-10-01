@@ -9,7 +9,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A linear structural element with a cross section.
     /// </summary>
-    public abstract class StructuralFraming : Element, ITessellate<Mesh>
+    public abstract class StructuralFraming : Element, ITessellateMesh, ITessellateCurves
     {
         private readonly Line _centerLine;
         private readonly Profile _profile;
@@ -19,6 +19,16 @@ namespace Hypar.Elements
         /// </summary>
         [JsonProperty("profile")]
         public Profile Profile
+        {
+            get{return this._profile;}
+        }
+
+        /// <summary>
+        /// The cross-section profile of the framing element transformed by the Element's Transform.
+        /// </summary>
+        /// <value></value>
+        [JsonIgnore]
+        public Profile ProfileTransformed
         {
             get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
         }
@@ -71,9 +81,32 @@ namespace Hypar.Elements
         /// Tessellate the Beam.
         /// </summary>
         /// <returns>A mesh representing the tessellated Beam.</returns>
-        public Mesh Tessellate()
+        public Mesh Mesh()
         {
-            return Mesh.ExtrudeAlongLine(this._centerLine, this._profile.Perimeter, this._profile.Voids);
+            return Hypar.Geometry.Mesh.ExtrudeAlongLine(this._centerLine, this._profile.Perimeter, this._profile.Voids);
+        }
+
+        /// <summary>
+        /// Tessellate the Beam's Profile.
+        /// </summary>
+        /// <returns>A collection of curves representing the tessellated Profile.</returns>
+        public IList<IList<Vector3>> Curves()
+        {
+            var curves = new List<IList<Vector3>>();
+            var prof = this.CenterLine.GetTransform(0.0).OfProfile(this.Profile);
+
+            curves.Add(prof.Perimeter.Vertices);
+            if(this.Profile.Voids == null)
+            {
+                return curves;
+            }
+            
+            foreach(var v in prof.Voids)
+            {
+                curves.Add(v.Vertices);
+            }
+
+            return curves;
         }
     }
 }

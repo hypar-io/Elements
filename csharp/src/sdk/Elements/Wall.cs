@@ -9,7 +9,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall : ElementOfType<WallType>, ITessellate<Mesh>
+    public class Wall : ElementOfType<WallType>, ITessellateMesh
     {
         private readonly Line _centerLine;
 
@@ -103,9 +103,9 @@ namespace Hypar.Elements
         /// <summary>
         /// Generate a mesh of the wall.
         /// </summary>
-        public Mesh Tessellate()
+        public Mesh Mesh()
         {
-            return Mesh.Extrude(this._profile.Perimeter, this.ElementType.Thickness, this._profile.Voids, true);
+            return Hypar.Geometry.Mesh.Extrude(this._profile.Perimeter, this.ElementType.Thickness, this._profile.Voids, true);
         }
     }
 }

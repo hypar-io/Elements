@@ -59,6 +59,7 @@ namespace Hypar.Elements
         public Model()
         {
             this.Origin = new Position(0,0);
+            AddMaterial(BuiltInMaterials.Black);
         }
 
         internal Model(Dictionary<string, Element> elements, Dictionary<string, Material> materials, Dictionary<string,ElementType> elementTypes)
@@ -66,6 +67,8 @@ namespace Hypar.Elements
             this._elements = elements;
             this._materials = materials;
             this._elementTypes = elementTypes;
+
+            AddMaterial(BuiltInMaterials.Black);
         }
 
         /// <summary>
@@ -315,10 +318,10 @@ namespace Hypar.Elements
             foreach(var kvp in this._elements)
             {
                 var e = kvp.Value;
-                if(e is ITessellate<Hypar.Geometry.Mesh>)
+                if(e is ITessellateMesh)
                 {
-                    var mp = e as ITessellate<Hypar.Geometry.Mesh>;
-                    var mesh = mp.Tessellate();
+                    var mp = e as ITessellateMesh;
+                    var mesh = mp.Mesh();
                     Transform transform = null;
                     if(e.Transform != null)
                     {
@@ -329,6 +332,20 @@ namespace Hypar.Elements
                                         mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax, 
                                         mesh.IMin, mesh.IMax, materials[e.Material.Name], null, transform);
 
+                }
+
+                if(e is ITessellateCurves)
+                {
+                    var cp = e as ITessellateCurves;
+                    var curves = cp.Curves();
+                    var counter = 0;
+                    foreach(var c in curves)
+                    {
+                        var vBuff = c.ToArray();
+                        var indices = Enumerable.Range(0, c.Count).Select(i=>(ushort)i).ToArray();
+                        var bbox = new BBox3(c);
+                        gltf.AddLineLoop($"{e.Id}_curve_{counter}", _buffer, vBuff, indices, bbox.Min.ToArray(), bbox.Max.ToArray(), 0, (ushort)(c.Count - 1), materials[BuiltInMaterials.Black.Name], e.Transform);
+                    }
                 }
             }
 

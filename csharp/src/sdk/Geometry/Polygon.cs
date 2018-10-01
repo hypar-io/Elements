@@ -402,8 +402,9 @@ namespace Hypar.Geometry
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
-        public IEnumerable<Line> Segments()
+        public IList<Line> Segments()
         {
+            var lines = new List<Line>();
             for(var i=0; i<_vertices.Count; i++)
             {
                 var a = _vertices[i];
@@ -416,18 +417,18 @@ namespace Hypar.Geometry
                 {
                     b = _vertices[i+1];
                 }
-                
-                yield return new Line(a, b);
+                lines.Add(new Line(a, b));
             }
+            return lines;
         }
 
         /// <summary>
         /// Tessellate the polygon.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Vector3> Tessellate()
+        public IList<IList<Vector3>> Curves()
         {
-            return this._vertices;
+            return new[]{this.Vertices};
         }
 
         /// <summary>

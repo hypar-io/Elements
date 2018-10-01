@@ -10,7 +10,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A Mass represents an extruded building Mass.
     /// </summary>
-    public class Mass : Element, ITessellate<Mesh>
+    public class Mass : Element, ITessellateMesh
     {
         private List<Polyline> _sides = new List<Polyline>();
         private readonly Profile _profile;
@@ -138,7 +138,7 @@ namespace Hypar.Elements
         /// Tessellate the Mass.
         /// </summary>
         /// <returns>A mesh representing the tessellated Mass.</returns>
-        public Mesh Tessellate()
+        public Mesh Mesh()
         {
             // We use the untransformed faces here,
             // as the transform will be applied on the rendering node.
@@ -146,7 +146,7 @@ namespace Hypar.Elements
             var mesh = new Mesh();
             foreach (var f in FacesInternal(this._profile.Perimeter.Vertices))
             {
-                mesh.AddQuad(f.Vertices.ToArray());
+                mesh.AddQuad(f.Vertices);
             }
 
             mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation));

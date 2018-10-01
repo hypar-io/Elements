@@ -10,7 +10,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : ElementOfType<FloorType>, ITessellate<Mesh>
+    public class Floor : ElementOfType<FloorType>, ITessellateMesh
     {
         private readonly Profile _profile;
 
@@ -67,7 +67,7 @@ namespace Hypar.Elements
         /// <summary>
         /// Tessellate the Floor.
         /// </summary>
-        public Mesh Tessellate()
+        public Mesh Mesh()
         {
             var clipper = new ClipperLib.Clipper();
             clipper.AddPath(this._profile.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
@@ -81,11 +81,11 @@ namespace Hypar.Elements
 
             if(polys.Count > 1)
             {
-                return Mesh.Extrude(polys.First(), this.ElementType.Thickness, polys.Skip(1).ToList(), true);
+                return Hypar.Geometry.Mesh.Extrude(polys.First(), this.ElementType.Thickness, polys.Skip(1).ToList(), true);
             } 
             else 
             {
-                return Mesh.Extrude(polys.First(), this.ElementType.Thickness, null, true);
+                return Hypar.Geometry.Mesh.Extrude(polys.First(), this.ElementType.Thickness, null, true);
             }
         }
 

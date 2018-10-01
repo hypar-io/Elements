@@ -3,15 +3,14 @@ using Hypar.Geometry;
 namespace Hypar.Geometry
 {
     /// <summary>
-    /// ITessellate is implemented by all types for which visualization is required.
+    /// ITessellateMesh is implemented by all types which provide a Mesh for visualization.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ITessellate<T>
+    public interface ITessellateMesh
     {
         /// <summary>
         /// Tessellate.
         /// </summary>
         /// <returns>An object of type T containing the tessellation results.</returns>
-        T Tessellate();
+        Mesh Mesh();
     }
 }

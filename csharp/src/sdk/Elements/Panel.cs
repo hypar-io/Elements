@@ -10,7 +10,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A zero-thickness planar Panel defined by 3 or 4 points.
     /// </summary>
-    public class Panel : Element, ITessellate<Mesh>
+    public class Panel : Element, ITessellateMesh
     {
         private IList<Vector3> _perimeter;
 
@@ -79,7 +79,7 @@ namespace Hypar.Elements
         /// Tessellate the Panel.
         /// </summary>
         /// <returns>A mesh representing the tessellated Panel.</returns>
-        public Mesh Tessellate()
+        public Mesh Mesh()
         {
             var mesh = new Mesh();
             var vCount = this._perimeter.Count();
