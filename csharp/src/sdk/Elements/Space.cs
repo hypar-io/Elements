@@ -45,6 +45,15 @@ namespace Hypar.Elements
         }
 
         /// <summary>
+        /// The transformed Profile of the Space.
+        /// </summary>
+        [JsonIgnore]
+        public Profile TransformedProfile
+        {
+            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
+        }
+
+        /// <summary>
         /// Construct a space.
         /// </summary>
         /// <param name="profile">The Profile of the space.</param>

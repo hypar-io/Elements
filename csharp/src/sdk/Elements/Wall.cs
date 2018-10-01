@@ -16,12 +16,21 @@ namespace Hypar.Elements
         private readonly Profile _profile;
 
         /// <summary>
-        /// The Profile of the wall.
+        /// The Profile of the Wall.
         /// </summary>
         [JsonProperty("profile")]
         public Profile Profile
         {
             get{ return this._profile; }
+        }
+
+        /// <summary>
+        /// The transformed Profile of the Wall.
+        /// </summary>
+        [JsonIgnore]
+        public Profile ProfileTransformed
+        {
+            get{return this.Transform != null? this.Transform.OfProfile(this._profile) : this._profile;}
         }
 
         /// <summary>

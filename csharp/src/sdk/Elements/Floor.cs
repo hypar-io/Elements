@@ -32,6 +32,15 @@ namespace Hypar.Elements
         }
 
         /// <summary>
+        /// The transformed Profile of the Floor.
+        /// </summary>
+        [JsonIgnore]
+        public Profile ProfileTransformed
+        {
+            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
+        }
+
+        /// <summary>
         /// The elevation from which the Floor is extruded.
         /// </summary>
         [JsonProperty("elevation")]
@@ -40,7 +49,7 @@ namespace Hypar.Elements
         /// <summary>
         /// Construct a Floor.
         /// </summary>
-        /// <param name="profile">The Profile of the Floor.</param>
+        /// <param name="profile">The <see cref="Hypar.Geometry.Profile"/>of the Floor.</param>
         /// <param name="elevation">The elevation of the Floor.</param>
         /// <param name="floorType">The FloorType of the Floor.</param>
         /// <param name="material">The Floor's material.</param>
