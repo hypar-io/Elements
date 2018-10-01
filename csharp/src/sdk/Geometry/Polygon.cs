@@ -1,4 +1,5 @@
 using ClipperLib;
+using Hypar.Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -10,6 +11,7 @@ namespace Hypar.Geometry
     /// <summary>
     /// A closed planar polygon.
     /// </summary>
+    // [JsonConverter(typeof(PolygonConverter))]
     public partial class Polygon : ICurve
     {
         private IList<Vector3> _vertices;
@@ -18,7 +20,7 @@ namespace Hypar.Geometry
         /// The area enclosed by the polygon.
         /// </summary>
         /// <value></value>
-        [JsonProperty("area")]
+        [JsonIgnore]
         public double Area
         {
             get {
@@ -45,7 +47,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// The length of the polygon.
         /// </summary>
-        [JsonProperty("length")]
+        [JsonIgnore]
         public double Length
         {
             get{return this.Segments().Sum(s=>s.Length);}

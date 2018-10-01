@@ -10,7 +10,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : Element, ITessellate<Mesh>
+    public class Floor : ElementOfType<FloorType>, ITessellate<Mesh>
     {
         private readonly Profile _profile;
 
@@ -28,6 +28,15 @@ namespace Hypar.Elements
         [JsonProperty("profile")]
         public Profile Profile
         {
+            get{return this._profile;}
+        }
+
+        /// <summary>
+        /// The transformed Profile of the Floor.
+        /// </summary>
+        [JsonIgnore]
+        public Profile ProfileTransformed
+        {
             get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
         }
 
@@ -38,30 +47,19 @@ namespace Hypar.Elements
         public double Elevation { get; }
 
         /// <summary>
-        /// The thickness of the Floor.
-        /// </summary>
-        [JsonProperty("thickness")]
-        public double Thickness { get; }
-
-        /// <summary>
         /// Construct a Floor.
         /// </summary>
-        /// <param name="profile">The Profile of the Floor.</param>
+        /// <param name="profile">The <see cref="Hypar.Geometry.Profile"/>of the Floor.</param>
         /// <param name="elevation">The elevation of the Floor.</param>
-        /// <param name="thickness">The thickness of the Floor.</param>
+        /// <param name="floorType">The FloorType of the Floor.</param>
         /// <param name="material">The Floor's material.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the slab's thickness is less than or equal to 0.0.</exception>
         [JsonConstructor]
-        public Floor(Profile profile, double elevation = 0.0, double thickness = 0.1, Material material = null)
+        public Floor(Profile profile, FloorType floorType, double elevation = 0.0, Material material = null)
         {
-            if (thickness <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException("thickness", "The slab thickness must be greater than 0.0.");
-            }
-
             this._profile = profile;
             this.Elevation = elevation;
-            this.Thickness = thickness;
+            this.ElementType = floorType;
             this.Transform = new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
         }
@@ -69,23 +67,25 @@ namespace Hypar.Elements
         /// <summary>
         /// Tessellate the Floor.
         /// </summary>
-        /// <returns></returns>
         public Mesh Tessellate()
         {
             var clipper = new ClipperLib.Clipper();
             clipper.AddPath(this._profile.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            clipper.AddPaths(this._profile.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            if(this._profile.Voids != null)
+            {
+                clipper.AddPaths(this._profile.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            }
             var solution = new List<List<ClipperLib.IntPoint>>();
             var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
             var polys = solution.Select(s => s.ToPolygon()).ToList();
 
             if(polys.Count > 1)
             {
-                return Mesh.Extrude(polys.First(), this.Thickness, polys.Skip(1).ToList(), true);
+                return Mesh.Extrude(polys.First(), this.ElementType.Thickness, polys.Skip(1).ToList(), true);
             } 
             else 
             {
-                return Mesh.Extrude(polys.First(), this.Thickness, null, true);
+                return Mesh.Extrude(polys.First(), this.ElementType.Thickness, null, true);
             }
         }
 
@@ -110,16 +110,16 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="mass"></param>
         /// <param name="elevations">A collection of elevations at which Floors will be created within the mass.</param>
-        /// <param name="thickness">The thickness of the Floors.</param>
+        /// <param name="floorType">The FloorType of the Floors.</param>
         /// <param name="material">The Floor material.</param>
-        public static IList<Floor> Floors(this Mass mass, IList<double> elevations, double thickness, Material material)
+        public static IList<Floor> Floors(this Mass mass, IList<double> elevations, FloorType floorType, Material material)
         {
             var Floors = new List<Floor>();
             foreach(var e in elevations)
             {
                 if (e >= mass.Elevation && e <= mass.Elevation + mass.Height)
                 {
-                    var f = new Floor(mass.Profile, e, thickness, material);
+                    var f = new Floor(mass.Profile, floorType, e, material);
                     Floors.Add(f);
                 }
             }

@@ -29,6 +29,15 @@ namespace Hypar.Elements
         [JsonProperty("profile")]
         public Profile Profile
         {
+            get{return this._profile;}
+        }
+        
+        /// <summary>
+        /// The transformed Profile of the Mass.
+        /// </summary>
+        [JsonIgnore]
+        public Profile ProfileTransformed
+        {
             get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
         }
 

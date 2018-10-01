@@ -1,28 +1,42 @@
+using Hypar.Elements.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
+using System;
 
 namespace Hypar.Elements
 {
     /// <summary>
     /// ParameterValue represents both the value and the type of a parameter.
     /// </summary>
-    /// <typeparam name="TValue">The type of the value.</typeparam>
-    public abstract class Parameter<TValue>
+    [JsonConverter(typeof(ParameterConverter))]
+    public class Parameter
     {
         /// <summary>
-        /// The value of the parameter.
+        /// The value of the Parameter.
         /// </summary>
         [JsonProperty("value")]
-        public TValue Value{get;}
+        public object Value{get;}
+
+        /// <summary>
+        /// The type of the Parameter.
+        /// </summary>
+        /// <value></value>
+        public ParameterType Type{get;}
 
         /// <summary>
         /// Construct a parameter value given a value and a type.
         /// </summary>
         /// <param name="value">The value of the parameter.</param>
-        public Parameter(TValue value)
+        /// <param name="parameterType">The type of the parameter.</param>
+        public Parameter(object value, ParameterType parameterType)
         {
+            if(value.GetType() != typeof(string) && value.GetType() != typeof(double))
+            {
+                throw new ArgumentException("The provided parameter value must be a string or a double.");
+            }
             this.Value = value;
+            this.Type = parameterType;
         }
     }
 
@@ -30,7 +44,7 @@ namespace Hypar.Elements
     /// An enumeration of unit types for a numeric parameter.
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum NumericParameterType
+    public enum ParameterType
     {
         /// <summary>
         /// No unit assigned.
@@ -61,43 +75,11 @@ namespace Hypar.Elements
         /// A force in Newtons.
         /// </summary>
         [EnumMember(Value = "force")]
-        Force
-    }
-
-    /// <summary>
-    /// A parameter whose value is a number.
-    /// </summary>
-    public class NumericParameter  : Parameter<double>
-    {
+        Force,
         /// <summary>
-        /// The type of the value.
+        /// A string value.
         /// </summary>
-        /// <value></value>
-        [JsonProperty("type")]
-        public NumericParameterType Type{get;}
-
-        /// <summary>
-        /// Construct a numeric parameter.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public NumericParameter(double value, NumericParameterType type) : base(value)
-        {
-            this.Type = type;
-        }
-    }
-
-    /// <summary>
-    /// A parameter whose value is a string.
-    /// </summary>
-    public class StringParameter : Parameter<string>
-    {
-        /// <summary>
-        /// Construct a string parameter.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public StringParameter(string value) : base(value){}
+        [EnumMember(Value = "text")]
+        Text
     }
 }

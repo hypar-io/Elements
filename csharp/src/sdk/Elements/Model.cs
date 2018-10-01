@@ -1,5 +1,6 @@
 using glTFLoader;
 using glTFLoader.Schema;
+using Hypar.Elements.Serialization;
 using Hypar.Geometry;
 using Hypar.GeoJSON;
 using System;
@@ -14,11 +15,12 @@ namespace Hypar.Elements
     /// <summary>
     /// A model is a map of elements, keyed by their unique identifier. 
     /// </summary>
-    public class Model : IDictionary<string, Element>
+    public class Model
     {
         private List<byte> _buffer = new List<byte>();
         private Dictionary<string, Material> _materials = new Dictionary<string, Material>();
         private Dictionary<string, Element> _elements = new Dictionary<string, Element>();
+        private Dictionary<String, ElementType> _elementTypes = new Dictionary<string, ElementType>();
 
         /// <summary>
         /// The origin of the model.
@@ -28,49 +30,27 @@ namespace Hypar.Elements
         public Position Origin {get;set;}
 
         /// <summary>
-        /// The identifiers of all elements in the model.
+        /// All Elements in the Model.
         /// </summary>
-        /// <value></value>
-        public ICollection<string> Keys
+        public Dictionary<string,Element> Elements
         {
-            get{return _elements.Keys;}
+            get{return this._elements;}
         }
 
         /// <summary>
-        /// The elements in the model.
+        /// All Materials in the Model.
         /// </summary>
-        /// <value></value>
-        public ICollection<Element> Values
+        public Dictionary<string,Material> Materials
         {
-            get{return _elements.Values;}
+            get{return this._materials;}
         }
 
         /// <summary>
-        /// The number of elements in the model.
+        /// All ElementTypes in the Model.
         /// </summary>
-        /// <value></value>
-        public int Count
+        public Dictionary<string, ElementType> ElementTypes
         {
-            get{return _elements.Count;}
-        }
-
-        /// <summary>
-        /// Is the model read only?
-        /// </summary>
-        /// <value></value>
-        public bool IsReadOnly
-        {
-            get{return false;}
-        }
-
-        /// <summary>
-        /// Return an element by its identifier.
-        /// </summary>
-        /// <value></value>
-        public Element this[string key]
-        {
-            get{return this._elements[key];}
-            set{this._elements[key] = value;}
+            get{return this._elementTypes;}
         }
 
         /// <summary>
@@ -79,6 +59,13 @@ namespace Hypar.Elements
         public Model()
         {
             this.Origin = new Position(0,0);
+        }
+
+        internal Model(Dictionary<string, Element> elements, Dictionary<string, Material> materials, Dictionary<string,ElementType> elementTypes)
+        {
+            this._elements = elements;
+            this._materials = materials;
+            this._elementTypes = elementTypes;
         }
 
         /// <summary>
@@ -94,6 +81,18 @@ namespace Hypar.Elements
                 if(element.Material != null)
                 {
                     AddMaterial(element.Material);
+                }
+
+                if(element is Wall)
+                {
+                    var wall = (Wall)element;
+                    AddElementType(wall.ElementType);
+                }
+
+                if(element is Floor)
+                {
+                    var floor = (Floor)element;
+                    AddElementType(floor.ElementType);
                 }
             }
             else
@@ -114,20 +113,66 @@ namespace Hypar.Elements
             }
         }
 
+        private void AddElementType(ElementType elementType)
+        {
+            if(!this._elementTypes.ContainsKey(elementType.Id))
+            {
+                this._elementTypes.Add(elementType.Id, elementType);
+            }
+            else
+            {
+                this._elementTypes[elementType.Id] = elementType;
+            }
+        }
+
+        /// <summary>
+        /// Get an Element by id from the Model.
+        /// </summary>
+        /// <param name="id">The identifier of the Element.</param>
+        /// <returns>An Element or null if no Element can be found with the provided id.</returns>
+        public Element GetElementById(string id)
+        {
+            if(this._elements.ContainsKey(id))
+            {
+                return this._elements[id];
+            }
+            return null;
+        }
+
         /// <summary>
         /// Add a material to the model.
         /// </summary>
         /// <param name="material">The material to add to the model.</param>
         private void AddMaterial(Material material)
         {
-            if(!this._materials.ContainsKey(material.Name))
+            if(!this._materials.ContainsKey(material.Id))
             {
-                this._materials.Add(material.Name, material);
+                this._materials.Add(material.Id, material);
             }
             else
             {
-                this._materials[material.Name] = material;
+                this._materials[material.Id] = material;
             }
+        }
+
+        /// <summary>
+        /// Get a Material by name.
+        /// </summary>
+        /// <param name="name">The name of the Material.</param>
+        /// <returns>A Material or null if no Material with the specified id can be found.</returns>
+        public Material GetMaterialByName(string name)
+        {
+            return this._materials.Values.FirstOrDefault(m=>m.Name == name);
+        }
+
+        /// <summary>
+        /// Get an ElementType by name.
+        /// </summary>
+        /// <param name="name">The name of the ElementType.</param>
+        /// <returns>An ElementType or null if no ElementType with the specified id can be found.</returns>
+        public ElementType GetElementTypeByName(string name)
+        {
+            return this._elementTypes.Values.FirstOrDefault(et=>et.Name == name);
         }
 
         /// <summary>
@@ -190,6 +235,7 @@ namespace Hypar.Elements
         {   
             return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
             {
+                Converters = new []{new ModelConverter()},
                 NullValueHandling = NullValueHandling.Ignore
             });
         }
@@ -203,7 +249,7 @@ namespace Hypar.Elements
         {
             return JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings
             {
-                Converters = new []{new ElementConverter()},
+                Converters = new []{new ModelConverter()},
                 NullValueHandling = NullValueHandling.Ignore
             });
         }
@@ -291,134 +337,6 @@ namespace Hypar.Elements
             gltf.Buffers = new[]{buff};
 
             return gltf;
-        }
-
-        /// <summary>
-        /// Add an element to the model.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <exception cref="System.ArgumentException">Thrown when an Element with the same Id already exists in the Model.</exception>
-        public void Add(string key, Element value)
-        {
-            if(!this._elements.ContainsKey(key))
-            {
-                this._elements.Add(key, value);
-                AddMaterial(value.Material);
-            }
-            else
-            {
-                throw new Exception("An Element with the same Id already exists in the Model.");
-            }
-        }
-
-        /// <summary>
-        /// Does an element with specified key exist in the model?
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public bool ContainsKey(string key)
-        {
-            return this.ContainsKey(key);
-        }
-        
-        /// <summary>
-        /// Remove an element from the model.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public bool Remove(string key)
-        {
-            if(this.ContainsKey(key))
-            {
-                this.Remove(key);
-                return true;
-            } else 
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Try and get an element from the model given an identifier.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public bool TryGetValue(string key, out Element value)
-        {
-            return this._elements.TryGetValue(key, out value);
-        }
-
-        /// <summary>
-        /// And an element to the model.
-        /// </summary>
-        /// <param name="item"></param>
-        public void Add(KeyValuePair<string, Element> item)
-        {
-            this._elements.Add(item.Key, item.Value);
-        }
-
-        /// <summary>
-        /// Remove all elements from the model.
-        /// </summary>
-        public void Clear()
-        {
-            this._elements.Clear();
-        }
-
-        /// <summary>
-        /// Does the model contain the specified element?
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public bool Contains(KeyValuePair<string, Element> item)
-        {
-            return this._elements.Contains(item);
-        }
-
-        /// <summary>
-        /// Copy the elements in the model to the specified array.
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="arrayIndex"></param>
-        public void CopyTo(KeyValuePair<string, Element>[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-        
-        /// <summary>
-        /// Remove an element from the model.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public bool Remove(KeyValuePair<string, Element> item)
-        {
-            if(this._elements.ContainsKey(item.Key))
-            {
-                this._elements.Remove(item.Key);
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Get the enumerator for elements in the model.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<KeyValuePair<string, Element>> GetEnumerator()
-        {
-            return this._elements.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Get the enumerator for elements in the model.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this._elements.GetEnumerator();
         }
     }
 }

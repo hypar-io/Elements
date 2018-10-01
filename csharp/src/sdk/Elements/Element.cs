@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hypar.Geometry;
+using Hypar.Elements.Serialization;
 using Newtonsoft.Json.Linq;
 
 namespace Hypar.Elements
@@ -26,10 +27,7 @@ namespace Hypar.Elements
         /// The type of the eleme]]
         /// </summary>
         [JsonProperty("type")]
-        public virtual string Type
-        {
-            get{ return "element";}
-        }
+        public abstract string Type{get;}
 
         /// <summary>
         /// A map of Parameters for the Element.
@@ -49,7 +47,7 @@ namespace Hypar.Elements
         /// <summary>
         /// The element's transform.
         /// </summary>
-        [JsonProperty("transform")]
+        [JsonIgnore]
         public Transform Transform{get; protected set;}
 
         /// <summary>
@@ -68,7 +66,7 @@ namespace Hypar.Elements
         /// <param name="name">The name of the parameter.</param>
         /// <param name="parameter">The parameter to add.</param>
         /// <exception cref="System.Exception">Thrown when an parameter with the same name already exists.</exception>
-        public void AddParameter<T>(string name, Parameter<T> parameter)
+        public void AddParameter(string name, Parameter parameter)
         {
             if(!_parameters.ContainsKey(name))
             {

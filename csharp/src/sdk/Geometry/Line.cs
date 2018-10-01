@@ -37,7 +37,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// Get a normalized vector representing the direction of the line.
         /// </summary>
-        [JsonProperty("direction")]
+        [JsonIgnore]
         public Vector3 Direction
         {
             get

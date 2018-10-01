@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using System;
 
-namespace Hypar.Elements
+namespace Hypar.Elements.Serialization
 {
 
     /// <summary>
@@ -54,19 +54,21 @@ namespace Hypar.Elements
             switch(typeName)
             {
                 case "panel":
-                    return obj.ToObject<Panel>();
+                    return obj.ToObject<Panel>(serializer);
                 case "floor":
-                    return obj.ToObject<Floor>();
+                    return obj.ToObject<Floor>(serializer);
                 case "mass":
-                    return obj.ToObject<Mass>();
+                    return obj.ToObject<Mass>(serializer);
                 case "space":
-                    return obj.ToObject<Space>();
+                    return obj.ToObject<Space>(serializer);
                 case "column":
-                    return obj.ToObject<Column>();
+                    return obj.ToObject<Column>(serializer);
                 case "beam":
-                    return obj.ToObject<Beam>();
+                    return obj.ToObject<Beam>(serializer);
                 case "brace":
-                    return obj.ToObject<Brace>();
+                    return obj.ToObject<Brace>(serializer);
+                case "wall":
+                    return obj.ToObject<Wall>(serializer);
                 default:
                     throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
             }

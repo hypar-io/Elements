@@ -137,7 +137,7 @@ namespace Hypar
             
             while(buffer.Count() % 4 != 0)
             {
-                Console.WriteLine("Padding...");
+                // Console.WriteLine("Padding...");
                 buffer.Add(0);
             }
 

@@ -30,7 +30,7 @@ namespace Hypar.Elements
         { 
             get
             {
-                return this.Transform != null ? this._perimeter.Select(v=>this.Transform.OfPoint(v)).ToList()  : this._perimeter;
+                return this._perimeter;
             }
         }
 

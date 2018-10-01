@@ -94,7 +94,7 @@ namespace Hypar.Geometry
         public Profile(Polygon perimeter)
         {
             this.Perimeter = perimeter;
-            this.Voids = new List<Polygon>();
+            // this.Voids = new List<Polygon>();
         }
         
         /// <summary>
