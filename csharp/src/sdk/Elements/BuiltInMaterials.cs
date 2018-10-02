@@ -17,7 +17,7 @@ namespace Hypar.Elements
         /// Steel.
         /// </summary>
         /// <returns></returns>
-        public static Material Steel = new Material("steel", new Color(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0.0f);
+        public static Material Steel = new Material("steel", new Color(0.6f, 0.5f, 0.5f, 1.0f), 0.0f, 0.0f);
 
         /// <summary>
         /// The default material.

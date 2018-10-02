@@ -69,6 +69,8 @@ namespace Hypar.Elements.Serialization
                     return obj.ToObject<Brace>(serializer);
                 case "wall":
                     return obj.ToObject<Wall>(serializer);
+                case "truss":
+                    return obj.ToObject<Truss>(serializer);
                 default:
                     throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
             }

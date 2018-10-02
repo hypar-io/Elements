@@ -17,6 +17,11 @@ namespace Hypar.Elements
         private Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
         /// <summary>
+        /// A collection of Elements aggregated by this Element.
+        /// </summary>
+        protected List<Element> _subElements = new List<Element>();
+
+        /// <summary>
         /// The unique identifier of the Element.
         /// </summary>
         /// <returns></returns>
@@ -45,6 +50,15 @@ namespace Hypar.Elements
         [JsonProperty("material")]
         public Material Material{get; protected set;}
         
+        /// <summary>
+        /// A collection of Elements aggregated by this Element.
+        /// </summary>
+        [JsonProperty("sub_elements")]
+        public IList<Element> SubElements
+        {
+            get{return this._subElements;}
+        }
+
         /// <summary>
         /// The element's transform.
         /// </summary>

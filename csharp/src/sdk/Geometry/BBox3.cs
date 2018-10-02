@@ -24,8 +24,8 @@ namespace Hypar.Geometry
         /// <param name="points">The points which are contained within the bounding box.</param>
         public BBox3(IList<Vector3> points)
         {
-            this.Min = Vector3.Origin;
-            this.Max = Vector3.Origin;
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
             foreach(var p in points)
             {
                 this.Extend(p);
@@ -49,8 +49,8 @@ namespace Hypar.Geometry
         /// <param name="profile">The Profile.</param>
         public BBox3(Profile profile)
         {
-            this.Min = Vector3.Origin;
-            this.Max = Vector3.Origin;
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
             foreach(var v in profile.Perimeter.Vertices)
             {
                 this.Extend(v);
@@ -68,8 +68,8 @@ namespace Hypar.Geometry
         /// <param name="curve"></param>
         public BBox3(ICurve curve)
         {
-            this.Min = Vector3.Origin;
-            this.Max = Vector3.Origin;
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
             foreach(var p in curve.Vertices)
             {
                 if(p < this.Min) this.Min = p;
@@ -84,8 +84,8 @@ namespace Hypar.Geometry
         public BBox3(IEnumerable<Polygon> polygons)
         {
             var verts = polygons.SelectMany(p=>p.Curves().SelectMany(v=>v));
-            this.Min = Vector3.Origin;
-            this.Max = Vector3.Origin;
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
             foreach(var p in verts)
             {
                 if(p < this.Min) this.Min = p;

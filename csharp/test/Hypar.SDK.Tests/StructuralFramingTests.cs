@@ -11,7 +11,7 @@ namespace Hypar.Tests
         [Fact]
         public void Example()
         {
-            var line = new Line(Vector3.Origin, new Vector3(2,0,0));
+            var line = new Line(new Vector3(1,1,1), new Vector3(2,2,2));
             var beam = new Beam(line, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), BuiltInMaterials.Steel, null, 0.05, 0.05);
             var model = new Model();        
             model.AddElement(beam);

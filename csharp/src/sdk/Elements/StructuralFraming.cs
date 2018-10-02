@@ -116,19 +116,6 @@ namespace Hypar.Elements
         {
             var curves = new List<IList<Vector3>>();
             curves.Add(this.CenterLine.Vertices);
-
-            // var prof = this.CenterLine.GetTransform(0.0).OfProfile(this.Profile);
-
-            // curves.Add(prof.Perimeter.Vertices);
-            // if(this.Profile.Voids == null)
-            // {
-            //     return curves;
-            // }
-            
-            // foreach(var v in prof.Voids)
-            // {
-            //     curves.Add(v.Vertices);
-            // }
             return curves;
         }
     }

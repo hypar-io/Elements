@@ -98,9 +98,10 @@ namespace Hypar.Geometry
         /// <param name="n">The number of samples along the line.</param>
         /// <param name="includeEnds">A flag indicating whether or not to include points for the start and end of the line.</param>
         /// <returns></returns>
-        public static IEnumerable<Vector3> AtNEqualSpacesAlongLine(Line line, int n, bool includeEnds = false)
+        public static IList<Vector3> AtNEqualSpacesAlongLine(Line line, int n, bool includeEnds = false)
         {   
             var div = 1.0/(double)(n + 1);
+            var pts = new List<Vector3>();
             for(var t=0.0; t<=1.0; t+=div)
             {
                 var pt = line.PointAt(t);
@@ -109,8 +110,9 @@ namespace Hypar.Geometry
                 {
                     continue;
                 }
-                yield return pt;
+                pts.Add(pt);
             }
+            return pts;
         }
 
         /// <summary>
