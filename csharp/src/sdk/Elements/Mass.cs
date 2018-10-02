@@ -56,7 +56,7 @@ namespace Hypar.Elements
         /// <summary>
         /// The volume of the Mass.
         /// </summary>
-        [JsonProperty("volume")]
+        [JsonIgnore]
         public double Volume
         {
             get { return this._profile.Area * this.Height; }
