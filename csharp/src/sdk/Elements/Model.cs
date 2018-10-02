@@ -20,7 +20,9 @@ namespace Hypar.Elements
         private List<byte> _buffer = new List<byte>();
         private Dictionary<string, Material> _materials = new Dictionary<string, Material>();
         private Dictionary<string, Element> _elements = new Dictionary<string, Element>();
-        private Dictionary<String, ElementType> _elementTypes = new Dictionary<string, ElementType>();
+        private Dictionary<string, ElementType> _elementTypes = new Dictionary<string, ElementType>();
+
+        private Dictionary<string, Profile> _profiles = new Dictionary<string, Profile>();
 
         /// <summary>
         /// The origin of the model.
@@ -54,6 +56,14 @@ namespace Hypar.Elements
         }
 
         /// <summary>
+        /// All Profiles in the model.
+        /// </summary>
+        public Dictionary<string, Profile> Profiles
+        {
+            get{return this._profiles;}
+        }
+
+        /// <summary>
         /// Construct an empty model.
         /// </summary>
         public Model()
@@ -62,12 +72,13 @@ namespace Hypar.Elements
             AddMaterial(BuiltInMaterials.Black);
         }
 
-        internal Model(Dictionary<string, Element> elements, Dictionary<string, Material> materials, Dictionary<string,ElementType> elementTypes)
+        internal Model(Dictionary<string, Element> elements, Dictionary<string, Material> materials, Dictionary<string,ElementType> elementTypes,
+                        Dictionary<string, Profile> profiles)
         {
             this._elements = elements;
             this._materials = materials;
             this._elementTypes = elementTypes;
-
+            this._profiles = profiles;
             AddMaterial(BuiltInMaterials.Black);
         }
 
@@ -86,16 +97,22 @@ namespace Hypar.Elements
                     AddMaterial(element.Material);
                 }
 
-                if(element is Wall)
+                if(element is IElementTypeProvider<WallType>)
                 {
-                    var wall = (Wall)element;
-                    AddElementType(wall.ElementType);
+                    var wtp = (IElementTypeProvider<WallType>)element;
+                    AddElementType(wtp.ElementType);
                 }
 
-                if(element is Floor)
+                if(element is IElementTypeProvider<FloorType>)
                 {
-                    var floor = (Floor)element;
-                    AddElementType(floor.ElementType);
+                    var ftp = (IElementTypeProvider<FloorType>)element;
+                    AddElementType(ftp.ElementType);
+                }
+
+                if(element is IProfileProvider)
+                {
+                    var ipp = (IProfileProvider)element;
+                    AddProfile(ipp.Profile);
                 }
             }
             else
@@ -125,6 +142,18 @@ namespace Hypar.Elements
             else
             {
                 this._elementTypes[elementType.Id] = elementType;
+            }
+        }
+
+        private void AddProfile(Profile profile)
+        {
+            if(!this._profiles.ContainsKey(profile.Id))
+            {
+                this._profiles.Add(profile.Id, profile);
+            }
+            else
+            {
+                this._profiles[profile.Id] = profile;
             }
         }
 
@@ -172,10 +201,20 @@ namespace Hypar.Elements
         /// Get an ElementType by name.
         /// </summary>
         /// <param name="name">The name of the ElementType.</param>
-        /// <returns>An ElementType or null if no ElementType with the specified id can be found.</returns>
+        /// <returns>An ElementType or null if no ElementType with the specified name can be found.</returns>
         public ElementType GetElementTypeByName(string name)
         {
             return this._elementTypes.Values.FirstOrDefault(et=>et.Name == name);
+        }
+
+        /// <summary>
+        /// Get a Profile by name.
+        /// </summary>
+        /// <param name="name">The name of the Profile.</param>
+        /// <returns>A Profile or null if no Profile with the specified name can be found.</returns>
+        public Profile GetProfileByName(string name)
+        {
+            return this._profiles.Values.FirstOrDefault(p=> p.Name != null && p.Name == name);
         }
 
         /// <summary>

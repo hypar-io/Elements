@@ -49,8 +49,8 @@ namespace Hypar.Tests
             var floor = new Floor(profile, floorType, 5.0);
             var mass = new Mass(Polygon.Rectangle(), 5.0, 1.0);
             var line = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var beam = new Beam(line, new WideFlangeProfile(), BuiltInMaterials.Steel);
-            var column = new Column(new Vector3(5,5,5), 5.0, new WideFlangeProfile(), BuiltInMaterials.Steel);
+            var beam = new Beam(line, new WideFlangeProfile("test_beam"), BuiltInMaterials.Steel);
+            var column = new Column(new Vector3(5,5,5), 5.0, new WideFlangeProfile("test_column"), BuiltInMaterials.Steel);
             var spaceProfile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
             var space = new Space(spaceProfile, 5.0, 5.0);
             var model = new Model();

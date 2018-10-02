@@ -7,7 +7,6 @@ namespace Hypar.Elements
 {
     public class HSSPipeProfile : Profile
     {
-        public string Shape{get; internal set;}
         public double OD {get; internal set;}
         public double ID {get; internal set;}
         public double t {get; internal set;}
@@ -18,7 +17,7 @@ namespace Hypar.Elements
         public double r {get;internal set;}
         public double J {get;internal set;}
 
-        public HSSPipeProfile(double OD, double ID, double t)
+        public HSSPipeProfile(string name, double OD, double ID, double t) : base(name)
         {
             this.Perimeter = Polygon.Circle(OD);
             this.Voids = new List<Polygon>(){Polygon.Circle(ID)};

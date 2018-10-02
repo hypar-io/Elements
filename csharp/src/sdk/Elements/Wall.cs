@@ -9,7 +9,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall : ElementOfType<WallType>, ITessellateMesh
+    public class Wall : Element, IElementTypeProvider<WallType>, ITessellateMesh, IProfileProvider
     {
         private readonly Line _centerLine;
 
@@ -58,17 +58,23 @@ namespace Hypar.Elements
         }
 
         /// <summary>
+        /// The WallType of the Wall.
+        /// </summary>
+        [JsonProperty("element_type")]
+        public WallType ElementType{get;}
+
+        /// <summary>
         /// Construct a wall along a line.
         /// </summary>
         /// <param name="centerLine">The center line of the Wall.</param>
-        /// <param name="wallType">The WallType of the Wall.</param>
+        /// <param name="elementType">The WallType of the Wall.</param>
         /// <param name="height">The height of the Wall.</param>
         /// <param name="openings">A collection of Openings in the Wall.</param>
         /// <param name="material">The Wall's material.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of Wall's start and end points are not the same.</exception>
-        public Wall(Line centerLine, WallType wallType, double height, IList<Opening> openings = null, Material material = null)
+        public Wall(Line centerLine, WallType elementType, double height, IList<Opening> openings = null, Material material = null)
         {
             if (height <= 0.0)
             {
@@ -83,7 +89,7 @@ namespace Hypar.Elements
             this._centerLine = centerLine;
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
             this.Height = height;
-            this.ElementType = wallType;
+            this.ElementType = elementType;
             
             if(openings != null && openings.Count > 0)
             {

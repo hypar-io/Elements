@@ -11,7 +11,7 @@ namespace Hypar.Tests
         [Fact]
         public void Example()
         {
-            var profile = new WideFlangeProfile(1.0, 2.0, 0.1, 0.1);
+            var profile = new WideFlangeProfile("test", 1.0, 2.0, 0.1, 0.1);
             var a = new Vector3(0,0,0);
             var b = new Vector3(20,0,0);
             var d = new Vector3(20,20,10);
@@ -26,7 +26,7 @@ namespace Hypar.Tests
         [Fact]
         public void BeamSystem()
         {
-            var profile = new WideFlangeProfile(1.0, 2.0, 0.1, 0.1);
+            var profile = new WideFlangeProfile("test", 1.0, 2.0, 0.1, 0.1);
             var a = new Vector3(0,0,0);
             var b = new Vector3(20,0,0);
             var d = new Vector3(20,20,10);

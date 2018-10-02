@@ -9,10 +9,10 @@ namespace Hypar.Elements
     /// <summary>
     /// A linear structural element with a cross section.
     /// </summary>
-    public abstract class StructuralFraming : Element, ITessellateMesh, ITessellateCurves
+    public abstract class StructuralFraming : Element, ITessellateMesh, ITessellateCurves, IProfileProvider
     {
-        private readonly Line _centerLine;
-        private readonly Profile _profile;
+        private Line _centerLine;
+        private Profile _profile;
 
         /// <summary>
         /// The cross-section profile of the framing element.
@@ -51,7 +51,7 @@ namespace Hypar.Elements
         /// <summary>
         /// The volume of the StructuralFraming element.
         /// </summary>
-        [JsonProperty("volume")]
+        [JsonIgnore]
         public double Volume
         {
             get

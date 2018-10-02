@@ -12,7 +12,7 @@ namespace Hypar.Elements
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
-    public abstract class Element
+    public abstract class Element : IIdentifiable
     {
         private Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
@@ -20,13 +20,14 @@ namespace Hypar.Elements
         /// The unique identifier of the Element.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("id")]
+        [JsonProperty("id", Order=-2)]
         public string Id {get;internal set;}
 
         /// <summary>
-        /// The type of the eleme]]
+        /// The type of the element.
+        /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type")]
+        [JsonProperty("type", Order=-1)]
         public abstract string Type{get;}
 
         /// <summary>

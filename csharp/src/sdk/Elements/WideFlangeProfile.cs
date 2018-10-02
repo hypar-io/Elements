@@ -8,9 +8,6 @@ namespace Hypar.Elements
     public class WideFlangeProfile : Profile
     {
         [JsonIgnore]
-        public string Shape{get; internal set;}
-
-        [JsonIgnore]
         public double A {get; internal set;}
 
         [JsonIgnore]
@@ -85,17 +82,17 @@ namespace Hypar.Elements
         [JsonIgnore]
         public double Qw {get;internal set;}
 
-        public WideFlangeProfile(double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, 
+        public WideFlangeProfile(string name, double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, 
                                     VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
                                     HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
-                                    double verticalOffset = 0.0, double horizontalOffset = 0.0)
+                                    double verticalOffset = 0.0, double horizontalOffset = 0.0) : base(name)
         {
             
 
             this.Perimeter = CreateProfile(bf, d, tf, tw, verticalAlignment, horizontalAlignment, verticalOffset, horizontalOffset);
         }
 
-        public WideFlangeProfile()
+        public WideFlangeProfile(string name) : base(name)
         {
             this.Perimeter = CreateProfile(0.1, 0.05, 0.005, 0.005, VerticalAlignment.Center, HorizontalAlignment.Center, 0.0, 0.0);
         }

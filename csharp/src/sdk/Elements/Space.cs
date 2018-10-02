@@ -10,7 +10,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A space represents the extruded boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, ITessellateMesh
+    public class Space : Element, ITessellateMesh, IProfileProvider
     {
         private readonly Profile _profile;
 
