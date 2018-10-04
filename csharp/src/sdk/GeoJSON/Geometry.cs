@@ -277,11 +277,11 @@ namespace Hypar.GeoJSON
             for(var i=0; i<plineArr.Length; i++)
             {
                 var coords = this.Coordinates[i];
-                var verts = new List<Vector3>();
+                var verts = new Vector3[coords.Length];
                 // Drop the last position.
                 for(var j=0; j<coords.Length-1; j++)
                 {
-                    verts.Add(coords[j].ToVectorMeters());
+                    verts[j] = coords[j].ToVectorMeters();
                 }
                 var pline = new Hypar.Geometry.Polygon(verts);
                 plineArr[i] = pline;
