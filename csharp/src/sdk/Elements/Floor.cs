@@ -10,7 +10,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : ElementOfType<FloorType>, ITessellate<Mesh>
+    public class Floor : Element, IElementTypeProvider<FloorType>, ITessellateMesh, IProfileProvider
     {
         private readonly Profile _profile;
 
@@ -21,6 +21,12 @@ namespace Hypar.Elements
         {
             get { return "floor"; }
         }
+
+        /// <summary>
+        /// The FloorType of the Floor.
+        /// </summary>
+        [JsonProperty("element_type")]
+        public FloorType ElementType{get;}
 
         /// <summary>
         /// The Profile of the Floor.
@@ -51,15 +57,15 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="profile">The <see cref="Hypar.Geometry.Profile"/>of the Floor.</param>
         /// <param name="elevation">The elevation of the Floor.</param>
-        /// <param name="floorType">The FloorType of the Floor.</param>
+        /// <param name="elementType">The FloorType of the Floor.</param>
         /// <param name="material">The Floor's material.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the slab's thickness is less than or equal to 0.0.</exception>
         [JsonConstructor]
-        public Floor(Profile profile, FloorType floorType, double elevation = 0.0, Material material = null)
+        public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Material material = null)
         {
             this._profile = profile;
             this.Elevation = elevation;
-            this.ElementType = floorType;
+            this.ElementType = elementType;
             this.Transform = new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
         }
@@ -67,7 +73,7 @@ namespace Hypar.Elements
         /// <summary>
         /// Tessellate the Floor.
         /// </summary>
-        public Mesh Tessellate()
+        public Mesh Mesh()
         {
             var clipper = new ClipperLib.Clipper();
             clipper.AddPath(this._profile.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
@@ -81,11 +87,11 @@ namespace Hypar.Elements
 
             if(polys.Count > 1)
             {
-                return Mesh.Extrude(polys.First(), this.ElementType.Thickness, polys.Skip(1).ToList(), true);
+                return Hypar.Geometry.Mesh.Extrude(polys.First(), this.ElementType.Thickness, polys.Skip(1).ToList(), true);
             } 
             else 
             {
-                return Mesh.Extrude(polys.First(), this.ElementType.Thickness, null, true);
+                return Hypar.Geometry.Mesh.Extrude(polys.First(), this.ElementType.Thickness, null, true);
             }
         }
 

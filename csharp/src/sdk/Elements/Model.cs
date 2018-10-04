@@ -20,7 +20,9 @@ namespace Hypar.Elements
         private List<byte> _buffer = new List<byte>();
         private Dictionary<string, Material> _materials = new Dictionary<string, Material>();
         private Dictionary<string, Element> _elements = new Dictionary<string, Element>();
-        private Dictionary<String, ElementType> _elementTypes = new Dictionary<string, ElementType>();
+        private Dictionary<string, ElementType> _elementTypes = new Dictionary<string, ElementType>();
+
+        private Dictionary<string, Profile> _profiles = new Dictionary<string, Profile>();
 
         /// <summary>
         /// The origin of the model.
@@ -54,18 +56,30 @@ namespace Hypar.Elements
         }
 
         /// <summary>
+        /// All Profiles in the model.
+        /// </summary>
+        public Dictionary<string, Profile> Profiles
+        {
+            get{return this._profiles;}
+        }
+
+        /// <summary>
         /// Construct an empty model.
         /// </summary>
         public Model()
         {
             this.Origin = new Position(0,0);
+            AddMaterial(BuiltInMaterials.Black);
         }
 
-        internal Model(Dictionary<string, Element> elements, Dictionary<string, Material> materials, Dictionary<string,ElementType> elementTypes)
+        internal Model(Dictionary<string, Element> elements, Dictionary<string, Material> materials, Dictionary<string,ElementType> elementTypes,
+                        Dictionary<string, Profile> profiles)
         {
             this._elements = elements;
             this._materials = materials;
             this._elementTypes = elementTypes;
+            this._profiles = profiles;
+            AddMaterial(BuiltInMaterials.Black);
         }
 
         /// <summary>
@@ -78,26 +92,50 @@ namespace Hypar.Elements
             if(!this._elements.ContainsKey(element.Id.ToString()))
             {
                 this._elements.Add(element.Id.ToString(), element);
-                if(element.Material != null)
-                {
-                    AddMaterial(element.Material);
-                }
-
-                if(element is Wall)
-                {
-                    var wall = (Wall)element;
-                    AddElementType(wall.ElementType);
-                }
-
-                if(element is Floor)
-                {
-                    var floor = (Floor)element;
-                    AddElementType(floor.ElementType);
-                }
+                GetRootLevelElementData(element);
             }
             else
             {
                 throw new ArgumentException("An Element with the same Id already exists in the Model.");
+            }
+        }
+
+        /// <summary>
+        /// Recursively gather element data to be referenced at the root.
+        /// This includes things like profiles, materials, and element types.
+        /// </summary>
+        /// <param name="element">The Element from which to gather data.</param>
+        private void GetRootLevelElementData(Element element)
+        {
+            if(element.Material != null)
+            {
+                AddMaterial(element.Material);
+            }
+
+            if(element is IElementTypeProvider<WallType>)
+            {
+                var wtp = (IElementTypeProvider<WallType>)element;
+                AddElementType(wtp.ElementType);
+            }
+
+            if(element is IElementTypeProvider<FloorType>)
+            {
+                var ftp = (IElementTypeProvider<FloorType>)element;
+                AddElementType(ftp.ElementType);
+            }
+
+            if(element is IProfileProvider)
+            {
+                var ipp = (IProfileProvider)element;
+                AddProfile(ipp.Profile);
+            }
+
+            if(element.SubElements.Count > 0)
+            {
+                foreach(var esub in element.SubElements)
+                {
+                    GetRootLevelElementData(esub);
+                }
             }
         }
 
@@ -122,6 +160,18 @@ namespace Hypar.Elements
             else
             {
                 this._elementTypes[elementType.Id] = elementType;
+            }
+        }
+
+        private void AddProfile(Profile profile)
+        {
+            if(!this._profiles.ContainsKey(profile.Id))
+            {
+                this._profiles.Add(profile.Id, profile);
+            }
+            else
+            {
+                this._profiles[profile.Id] = profile;
             }
         }
 
@@ -169,10 +219,30 @@ namespace Hypar.Elements
         /// Get an ElementType by name.
         /// </summary>
         /// <param name="name">The name of the ElementType.</param>
-        /// <returns>An ElementType or null if no ElementType with the specified id can be found.</returns>
+        /// <returns>An ElementType or null if no ElementType with the specified name can be found.</returns>
         public ElementType GetElementTypeByName(string name)
         {
             return this._elementTypes.Values.FirstOrDefault(et=>et.Name == name);
+        }
+
+        /// <summary>
+        /// Get a Profile by name.
+        /// </summary>
+        /// <param name="name">The name of the Profile.</param>
+        /// <returns>A Profile or null if no Profile with the specified name can be found.</returns>
+        public Profile GetProfileByName(string name)
+        {
+            return this._profiles.Values.FirstOrDefault(p=> p.Name != null && p.Name == name);
+        }
+
+        /// <summary>
+        /// Get all Elements of the specified Type.
+        /// </summary>
+        /// <typeparam name="T">The Type of element to return.</typeparam>
+        /// <returns>A collection of Elements of the specified type.</returns>
+        public IEnumerable<T> ElementsOfType<T>()
+        {
+            return this._elements.Values.OfType<T>();
         }
 
         /// <summary>
@@ -315,21 +385,7 @@ namespace Hypar.Elements
             foreach(var kvp in this._elements)
             {
                 var e = kvp.Value;
-                if(e is ITessellate<Hypar.Geometry.Mesh>)
-                {
-                    var mp = e as ITessellate<Hypar.Geometry.Mesh>;
-                    var mesh = mp.Tessellate();
-                    Transform transform = null;
-                    if(e.Transform != null)
-                    {
-                        transform = e.Transform;
-                    }
-                    gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), 
-                                        mesh.Indices.ToArray(), mesh.VertexColors.ToArray(), 
-                                        mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax, 
-                                        mesh.IMin, mesh.IMax, materials[e.Material.Name], null, transform);
-
-                }
+                GetRenderDataForElement(e, gltf, materials);
             }
 
             var buff = new glTFLoader.Schema.Buffer();
@@ -337,6 +393,48 @@ namespace Hypar.Elements
             gltf.Buffers = new[]{buff};
 
             return gltf;
+        }
+
+        private void GetRenderDataForElement(Element e, Gltf gltf, Dictionary<string, int> materials)
+        {
+            if(e is ITessellateMesh)
+            {
+                var mp = e as ITessellateMesh;
+                var mesh = mp.Mesh();
+                Transform transform = null;
+                if(e.Transform != null)
+                {
+                    transform = e.Transform;
+                }
+                gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), 
+                                    mesh.Indices.ToArray(), mesh.VertexColors.ToArray(), 
+                                    mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax, 
+                                    mesh.IMin, mesh.IMax, materials[e.Material.Name], null, transform);
+
+            }
+
+            if(e is ITessellateCurves)
+            {
+                var cp = e as ITessellateCurves;
+                var curves = cp.Curves();
+                var counter = 0;
+                foreach(var c in curves)
+                {
+                    var vBuff = c.ToArray();
+                    var indices = Enumerable.Range(0, c.Count).Select(i=>(ushort)i).ToArray();
+                    var bbox = new BBox3(c);
+                    gltf.AddLineLoop($"{e.Id}_curve_{counter}", _buffer, vBuff, indices, bbox.Min.ToArray(), 
+                                    bbox.Max.ToArray(), 0, (ushort)(c.Count - 1), materials[BuiltInMaterials.Black.Name], e.Transform);
+                }
+            }
+            
+            if(e.SubElements.Count > 0)
+            {
+                foreach(var esub in e.SubElements)
+                {
+                    GetRenderDataForElement(esub, gltf, materials);
+                }
+            }
         }
     }
 }

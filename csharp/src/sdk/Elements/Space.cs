@@ -1,8 +1,5 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Hypar.Geometry;
 
 namespace Hypar.Elements
@@ -10,7 +7,7 @@ namespace Hypar.Elements
     /// <summary>
     /// A space represents the extruded boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, ITessellate<Mesh>
+    public class Space : Element, ITessellateMesh, IProfileProvider
     {
         private readonly Profile _profile;
 
@@ -81,9 +78,9 @@ namespace Hypar.Elements
         /// Tessellate the Space.
         /// </summary>
         /// <returns>The Mesh representing the Space.</returns>
-        public Mesh Tessellate()
+        public Mesh Mesh()
         {
-            return Mesh.Extrude(this._profile.Perimeter, this.Height, this._profile.Voids, true);
+            return Hypar.Geometry.Mesh.Extrude(this._profile.Perimeter, this.Height, this._profile.Voids, true);
         }
     }
 }

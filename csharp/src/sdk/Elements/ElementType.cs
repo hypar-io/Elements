@@ -1,3 +1,4 @@
+using Hypar.Geometry;
 using Newtonsoft.Json;
 using System;
 
@@ -6,7 +7,7 @@ namespace Hypar.Elements
     /// <summary>
     /// Base class for all ElementTypes
     /// </summary>
-    public abstract class ElementType
+    public abstract class ElementType : IIdentifiable
     {
         /// <summary>
         /// The unique identifier of an ElementType.

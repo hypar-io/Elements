@@ -1,3 +1,4 @@
+using Hypar.Geometry;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -33,6 +34,7 @@ namespace Hypar.Elements.Serialization
             var materials = JsonConvert.DeserializeObject<Dictionary<string,Material>>(obj.GetValue("materials").ToString());
             var elementTypes = JsonConvert.DeserializeObject<Dictionary<string,ElementType>>(obj.GetValue("element_types").ToString(), 
                                 new []{new ElementTypeConverter()});
+            var profiles = JsonConvert.DeserializeObject<Dictionary<string,Profile>>(obj.GetValue("profiles").ToString());
             var elements = JsonConvert.DeserializeObject<Dictionary<string,Element>>(obj.GetValue("elements").ToString(),
                             new JsonSerializerSettings()
                             {
@@ -40,11 +42,13 @@ namespace Hypar.Elements.Serialization
                                                 {
                                                     new ElementConverter(),
                                                     new MaterialToIdConverter(materials),
-                                                    new ElementTypeToIdConverter(elementTypes)
+                                                    new ElementTypeToIdConverter(elementTypes),
+                                                    new ProfileToIdConverter(profiles)
                                                 },
-                                Formatting = Formatting.Indented
+                                Formatting = Formatting.Indented,
+                                NullValueHandling = NullValueHandling.Ignore
                             });                                                
-            return new Model(elements, materials, elementTypes);
+            return new Model(elements, materials, elementTypes, profiles);
         }
 
         /// <summary>
@@ -70,15 +74,22 @@ namespace Hypar.Elements.Serialization
                 Formatting = Formatting.Indented
             }));
 
+            // Write profiles
+            writer.WritePropertyName("profiles");
+            writer.WriteRawValue(JsonConvert.SerializeObject(model.Profiles, new JsonSerializerSettings(){
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore
+            }));
+
             // Write elements
             writer.WritePropertyName("elements");
             writer.WriteRawValue(JsonConvert.SerializeObject(model.Elements, new JsonSerializerSettings(){
                 Formatting = Formatting.Indented,
                 Converters = new JsonConverter[]
                     {
-                        new ElementConverter(), 
                         new MaterialToIdConverter(model.Materials),
-                        new ElementTypeToIdConverter(model.ElementTypes)
+                        new ElementTypeToIdConverter(model.ElementTypes),
+                        new ProfileToIdConverter(model.Profiles)
                     },
                 NullValueHandling = NullValueHandling.Ignore
             }));

@@ -92,15 +92,6 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Convert this polyline to an array of vectors.
-        /// </summary>
-        /// <returns></returns>
-        public Vector3[] ToArray()
-        {
-            return this._vertices.ToArray();
-        }
-
-        /// <summary>
         /// Get segment i of this polyline.
         /// </summary>
         /// <param name="i"></param>
@@ -145,9 +136,9 @@ namespace Hypar.Geometry
         /// Tessellate the polyline.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Vector3> Tessellate()
+        public IList<IList<Vector3>> Curves()
         {
-            return this._vertices;
+            return new[]{this._vertices};
         }
     }
 }
