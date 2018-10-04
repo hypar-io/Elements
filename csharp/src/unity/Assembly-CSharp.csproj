@@ -269,23 +269,23 @@
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
+ <Reference Include="Newtonsoft.Json">
+ <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/Newtonsoft.Json.dll</HintPath>
+ </Reference>
+ <Reference Include="Hypar.SDK">
+ <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/Hypar.SDK.dll</HintPath>
+ </Reference>
+ <Reference Include="glTFLoader">
+ <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/glTFLoader.dll</HintPath>
+ </Reference>
+ <Reference Include="LibTessDotNet">
+ <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/LibTessDotNet.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Users/ikeough/Library/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.StandardEvents">
  <HintPath>/Users/ikeough/Library/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
- </Reference>
- <Reference Include="LibTessDotNet">
- <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/LibTessDotNet.dll</HintPath>
- </Reference>
- <Reference Include="Newtonsoft.Json">
- <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/Newtonsoft.Json.dll</HintPath>
- </Reference>
- <Reference Include="glTFLoader">
- <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/glTFLoader.dll</HintPath>
- </Reference>
- <Reference Include="Hypar.SDK">
- <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/Hypar.SDK.dll</HintPath>
  </Reference>
  <Reference Include="netstandard">
  <HintPath>/Applications/Unity/Unity.app/Contents/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

@@ -277,7 +277,7 @@ namespace Hypar.GeoJSON
             for(var i=0; i<plineArr.Length; i++)
             {
                 var coords = this.Coordinates[i];
-                var verts = new Vector3[coords.Length];
+                var verts = new Vector3[coords.Length-1];
                 // Drop the last position.
                 for(var j=0; j<coords.Length-1; j++)
                 {
