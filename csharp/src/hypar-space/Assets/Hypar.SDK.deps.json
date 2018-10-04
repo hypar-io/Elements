@@ -1,0 +1,99 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.0/",
+    "signature": "5e63fd66b0310fcaa69711f3136b50098f006fed"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.0": {},
+    ".NETStandard,Version=v2.0/": {
+      "Hypar.SDK/0.0.2-alpha11": {
+        "dependencies": {
+          "NETStandard.Library": "2.0.3",
+          "Newtonsoft.Json": "11.0.2",
+          "Unofficial.LibTessDotNet": "2.0.0",
+          "glTF2Loader": "1.1.1-alpha"
+        },
+        "runtime": {
+          "Hypar.SDK.dll": {}
+        }
+      },
+      "glTF2Loader/1.1.1-alpha": {
+        "dependencies": {
+          "NETStandard.Library": "2.0.3",
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard1.3/glTFLoader.dll": {
+            "assemblyVersion": "1.1.1.0",
+            "fileVersion": "1.1.1.0"
+          }
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.0": {},
+      "NETStandard.Library/2.0.3": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.2.21924"
+          }
+        }
+      },
+      "Unofficial.LibTessDotNet/2.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/LibTessDotNet.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Hypar.SDK/0.0.2-alpha11": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "glTF2Loader/1.1.1-alpha": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1rp7mOK+ZhnhtyYHVpAjyo+yfPSDKcJx6B5/Hh8NoloOwItI3u+RAb/Egqh/UIdLDt+omkwkzAMf34/fAKwWjA==",
+      "path": "gltf2loader/1.1.1-alpha",
+      "hashPath": "gltf2loader.1.1.1-alpha.nupkg.sha512"
+    },
+    "Microsoft.NETCore.Platforms/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "path": "microsoft.netcore.platforms/1.1.0",
+      "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
+    },
+    "NETStandard.Library/2.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+      "path": "netstandard.library/2.0.3",
+      "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
+    },
+    "Newtonsoft.Json/11.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
+      "path": "newtonsoft.json/11.0.2",
+      "hashPath": "newtonsoft.json.11.0.2.nupkg.sha512"
+    },
+    "Unofficial.LibTessDotNet/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8JZwPm90vy6INQW2nsqNWLJuyst86UeQj98TlN4rfiBxOrLrJyYQ9SbXQWZmPOdiQq7nxXdd2ddVDDViWtWPfw==",
+      "path": "unofficial.libtessdotnet/2.0.0",
+      "hashPath": "unofficial.libtessdotnet.2.0.0.nupkg.sha512"
+    }
+  }
+}
