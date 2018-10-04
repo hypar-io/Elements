@@ -15,11 +15,13 @@ namespace Hypar.Elements
         private Line _bottom;
         private Line _top;
 
+        private Vector3[][] _pts;
+
         /// <summary>
         /// The number of columns in the grid.
         /// </summary>
         /// <returns></returns>
-        public int Columns
+        public int ColumnCount
         {
             get{return _uDiv.Length - 1;}
         }
@@ -28,7 +30,7 @@ namespace Hypar.Elements
         /// The number of rows in the grid.
         /// </summary>
         /// <returns></returns>
-        public int Rows
+        public int RowCount
         {
             get{return _vDiv.Length - 1;}
         }
@@ -74,25 +76,28 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="n"></param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specified column index is greater than the number of available columns.</exception>
-        public IEnumerable<IEnumerable<Vector3>> CellsInColumn(int n)
+        public Vector3[][] CellsInColumn(int n)
         {
             if(n < 0 || n >= this._uDiv.Length - 1)
             {
                 throw new ArgumentOutOfRangeException("The column index must be greater than or equal to zero and less than the number of columns.");
             }
 
-            var pts = CalculateGridPoints();
+            var c1 = this._pts[n];
+            var c2 = this._pts[n+1];
 
-            var c1 = pts[n];
-            var c2 = pts[n+1];
+            var results = new Vector3[c1.Length][];
+
             for(var i=0; i<c1.Length-1; i++)
             {
                 var a = c1[i];
                 var b = c1[i+1];
                 var c = c2[i+1];
                 var d = c2[i];
-                yield return new List<Vector3>(new[]{a,b,c,d});
+                results[i] = new[]{a,b,c,d};
             }
+
+            return results;
         }
 
         /// <summary>
@@ -100,70 +105,51 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="n"></param>
         /// <exception cref="System.ArgumentException">Thrown when the row index is greater than number of rows.</exception>
-        public IEnumerable<IEnumerable<Vector3>> CellsInRow(int n)
+        public Vector3[][] CellsInRow(int n)
         {
             if(n < 0 || n >= this._vDiv.Length - 1)
             {
                 throw new ArgumentOutOfRangeException("The column index must be greater than or equal to zero and less than the number of columns.");
             }
 
-            var pts = CalculateGridPoints();
-            for(var i=0; i<pts.Length-1; i++)
+            var results = new Vector3[this._pts.Length][];
+
+            for(var i=0; i<this._pts.Length-1; i++)
             {
-                var a = pts[i][n];
-                var b = pts[i][n+1];
-                var c = pts[i+1][n+1];
-                var d = pts[i+1][n];
-                yield return new List<Vector3>(new[]{a, b, c, d});
+                var a = this._pts[i][n];
+                var b = this._pts[i][n+1];
+                var c = this._pts[i+1][n+1];
+                var d = this._pts[i+1][n];
+                results[i] = new[]{a, b, c, d};
             }
+
+            return results;
         }
 
         /// <summary>
         /// Get all cells.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Vector3[]> Cells()
+        public Vector3[,][] Cells()
         {
-            var pts = CalculateGridPoints();
+            var results  = new Vector3[this._pts.GetLength(0)-1,this._pts[0].Length-1][];
 
-            for(var i=0; i<pts.GetLength(0)-1; i++)
+            for(var i=0; i<this._pts.GetLength(0)-1; i++)
             {   
-                var rowA = pts[i];
-                var rowB = pts[i+1];
+                var rowA = this._pts[i];
+                var rowB = this._pts[i+1];
 
-                for(var j=0; j<pts[i].Length-1; j++)
+                for(var j=0; j<this._pts[i].Length-1; j++)
                 {
                     var a = rowA[j];
                     var b = rowA[j+1];
                     var c = rowB[j+1];
                     var d = rowB[j];
-                    yield return new []{a,b,c,d};
+                    results[i,j] = new[]{a,b,c,d};
                 }
             }
-        }
 
-        /// <summary>
-        /// Get the edges of all rows.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Line> RowEdges()
-        {
-            foreach(var c in this.Cells())
-            {
-                yield return new Line(c.ElementAt(0), c.ElementAt(1));
-            }
-        }
-
-        /// <summary>
-        /// Get the edges of all columns.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Line> ColumnEdges()
-        {
-            foreach(var c in this.Cells())
-            {
-                yield return new Line(c.ElementAt(1), c.ElementAt(2));
-            }
+            return results;
         }
 
         /// <summary>
@@ -179,6 +165,7 @@ namespace Hypar.Elements
             this._top = top;
             this._uDiv = CalculateEqualDivisions(uDivisions);
             this._vDiv = CalculateEqualDivisions(vDivisions);
+            this._pts = CalculateGridPoints();
         }
 
         /// <summary>
@@ -194,6 +181,7 @@ namespace Hypar.Elements
             this._top = f[2].Reversed();
             this._uDiv = CalculateEqualDivisions(uDivisions);
             this._vDiv = CalculateEqualDivisions(vDivisions);
+            this._pts = CalculateGridPoints();
         }
     }
 }

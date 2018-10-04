@@ -280,7 +280,7 @@ namespace Hypar.Geometry
         /// Returns null if the area of this Polygon is entirely subtracted.
         /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
         /// </returns>
-        public IEnumerable<Polygon> Difference(Polygon polygon)
+        public IList<Polygon> Difference(Polygon polygon)
         {
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
@@ -309,7 +309,7 @@ namespace Hypar.Geometry
         /// Returns a list of Polygons representing the interesction of this Polygon with the supplied Polygon.
         /// Returns null if the two Polygons do not intersect.
         /// </returns>
-        public IEnumerable<Polygon> Intersection(Polygon polygon)
+        public IList<Polygon> Intersection(Polygon polygon)
         {
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
@@ -358,7 +358,7 @@ namespace Hypar.Geometry
         /// Returns a list of Polygons representing the symmetric difference of this Polygon and the supplied Polygon.
         /// Returns a representation of this Polygon and the supplied Polygon if the Polygons do not intersect.
         /// </returns>
-        public IEnumerable<Polygon> XOR(Polygon polygon)
+        public IList<Polygon> XOR(Polygon polygon)
         {
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
