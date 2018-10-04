@@ -14,7 +14,7 @@ model.AddElement(beam);
 var json = model.ToJson();
 ```
 ## Why
-When @hummingburd and @ikeough started Hypar, they needed a small library of building elements that could run in microservices executing on Linux, and was therefore free of dependencies on host applications like Rhino or Revit. They wanted it to have an API that took the best parts from the various object models and programming APIs available in the AEC space. And they wanted it to serialize to formats like JSON and IFC that were useful to architects, engineers, and contractors. They looked around and nothing fit the bill, so they started building this. 
+When @hummingburd and @ikeough started Hypar, they needed a small library of building elements that could run in microservices executing on Linux, and was therefore free of dependencies on host applications like Rhino or Revit. They wanted it to have an API that took the best parts from the various object models and programming APIs available in the AEC space. They wanted it to serialize to formats like JSON and IFC that were useful to architects, engineers, and contractors. And even though the library needed to stand alone, they wanted it to be usable in addins to other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity. They looked around and nothing fit the bill, so they started building this. 
 
 ## Donate
 The Hypar SDK is open source and will remain so **forever**. Your donation will directly support the development of the Hypar SDK. Currently the SDK has been demonstrated to work in Revit addins, Unity projects, and as Lambdas running on AWS. Send us a donation and tell us what you'd like it to do.  
@@ -43,11 +43,6 @@ dotnet test
 
 ## Words of Warning
 - The Hypar SDK is currently in alpha. Please do not use it for production work.
-- Why we chose C#:
-  - C# is a strongly typed language. We want the code checking tools and the compiler to help you write code that you can publish with confidence. 
-  - Microsoft is investing heavily in C# performance. There are lots of articles out there about Lambda performance. [Here's](https://read.acloud.guru/comparing-aws-lambda-performance-of-node-js-python-java-c-and-go-29c1163c2581) a good one.
-  - Dotnet function packages are small. Smaller functions results in faster cold start times in serverless environments.
-  - C# libraries can be reused in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
 
 ## Third Party Libraries and Specifications
 
