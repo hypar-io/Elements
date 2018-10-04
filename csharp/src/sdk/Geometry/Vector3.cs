@@ -116,22 +116,6 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Construct vectors at n equal spaces along a collection of lines.
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <param name="n"></param>
-        /// <param name="includeEnds"></param>
-        /// <returns></returns>
-        public static IEnumerable<IEnumerable<Vector3>> AtNEqualSpacesAlongLines(IEnumerable<Line> lines, int n, bool includeEnds = false)
-        {
-            foreach(var l in lines)
-            {
-                var vs1 = Vector3.AtNEqualSpacesAlongLine(l, n, includeEnds);
-                yield return vs1;
-            }
-        }
-
-        /// <summary>
         /// Construct a default vector at the origin.
         /// </summary>
         public Vector3()

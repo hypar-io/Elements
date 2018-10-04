@@ -81,7 +81,7 @@ namespace Hypar.Geometry
         /// Construct a bounding box for a collection of polygons.
         /// </summary>
         /// <param name="polygons"></param>
-        public BBox3(IEnumerable<Polygon> polygons)
+        public BBox3(IList<Polygon> polygons)
         {
             var verts = polygons.SelectMany(p=>p.Curves().SelectMany(v=>v));
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);

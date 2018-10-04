@@ -35,7 +35,7 @@ namespace Hypar.Tests
             var grid = new Grid(bottom, top, 5, 5);
                                         
             var profile = new WideFlangeProfile("test", 0.5, 0.5, 0.1, 0.1, VerticalAlignment.Center);
-            Assert.Equal(25, grid.Cells().Count());
+            Assert.Equal(25, grid.Cells().Length);
         }
     }
 }

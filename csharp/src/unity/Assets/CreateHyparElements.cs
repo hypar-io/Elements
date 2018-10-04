@@ -67,7 +67,7 @@ public class CreateHyparElements : MonoBehaviour {
 		var poly = new Polygon(new[]{Vector3.Origin, new Vector3(l1,0,0), new Vector3(l1, width, 0), new Vector3(width, width, 0), new Vector3(width, l2, 0), new Vector3(0,l2,0)});
 		var hole = Polygon.Rectangle(new Vector3(2,2), new Vector3(4,4));
 		var profile = new Profile(poly,hole);
-		// var mass = new Mass(profile, 0.0, height);
+		
 		var floorType  = new FloorType("100mm", 0.1);
 
 		var inset = poly.Offset(-columnSetback);
@@ -85,6 +85,24 @@ public class CreateHyparElements : MonoBehaviour {
 			{
 				continue;
 			}
+
+			var mass = new Mass(new Profile(poly), i, floorToFloor);
+			foreach(var f in mass.Faces())
+			{
+				var g = new Hypar.Elements.Grid(f, 10, 3);
+				for(var c=0;c<g.Columns; c++)
+				{	
+					var colCells =g.CellsInColumn(c);
+					var c1 = colCells.ElementAt(0);
+					var c2 = colCells.ElementAt(1);
+					var c3 = colCells.ElementAt(2);
+					var p1 = new Panel(c1.Reverse().ToList(), BuiltInMaterials.Default);
+					var p2 = new Panel(c2.Reverse().ToList(), BuiltInMaterials.Glass);
+					var p3 = new Panel(c3.Reverse().ToList(), BuiltInMaterials.Default);
+					model.AddElements(new[]{p1,p2,p3});
+				}
+			}
+
 			foreach(var l in inset.First().Segments())
 			{
 				var divs = Mathf.Ceil((float)(l.Length/columnSpacing));
@@ -292,6 +310,8 @@ public static class HyparExtensions
 			uMaterial.DisableKeyword("_ALPHATEST_ON");
 			uMaterial.DisableKeyword("_ALPHABLEND_ON");
 			uMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+			uMaterial.SetFloat("_Glossiness", material.GlossinessFactor);
+			// uMaterial.SetFloat("_Metallic", material.SpecularFactor);
 			uMaterial.renderQueue = 3000;
 		}
 		return uMaterial;

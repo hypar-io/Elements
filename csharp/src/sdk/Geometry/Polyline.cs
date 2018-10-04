@@ -81,14 +81,16 @@ namespace Hypar.Geometry
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
-        public IEnumerable<Line> Segments()
+        public Line[] Segments()
         {
+            var result = new Line[_vertices.Count-1];
             for (var i = 0; i < _vertices.Count-1; i++)
             {
                 var a = _vertices[i];
                 var b = _vertices[i+1];
-                yield return new Line(a, b);
+                result[i] = new Line(a, b);
             }
+            return result;
         }
 
         /// <summary>
