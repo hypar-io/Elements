@@ -21,7 +21,7 @@ Hypar Elements is open source and will remain so **forever**. Your donation will
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
 ## Getting Started
-Hypar Elements is available as a [nuget package](https://www.nuget.org/packages/HyparSDK).
+Hypar Elements is available as a [NuGet package](https://www.nuget.org/packages/HyparSDK).
 To install for dotnet projects:
 ```bash
 dotnet add package HyparSDK
