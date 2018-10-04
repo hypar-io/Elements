@@ -54,7 +54,7 @@ dotnet test
 ## The Hypar SDK at Work
 The Hypar SDK is at the heart of the Hypar platform. A Hypar generator is a piece of code that is executed in the cloud to generate a building or a set of building components. You author the generator logic referencing the Hypar SDK, and publish the generator to Hypar, then Hypar executes it for you and store the results. You can see some generators written using the Hypar SDK running on [Hypar](https://hypar.io). Hypar is just one example of a business that can be built on top of this tool. We fully expect you'll go and build your own cool thing.
 
-## Getting Started the Easy Way
+## Getting Started Developing for the Hypar Platform
 The easiest way to get started is to clone the [starter](https://github.com/hypar-io/starter) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
 ```bash
 git clone https://github.com/hypar-io/starter
