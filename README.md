@@ -51,7 +51,7 @@ dotnet test
 - [GeoJson](http://geojson.org/)
 - [glTF](https://www.khronos.org/gltf/).
 
-## The Hypar SDK at Work
+## Hypar Elements
 Hypar Elements is at the heart of the Hypar platform. A Hypar generator is a piece of code that is executed in the cloud to generate a building or a set of building components. You author the generator logic referencing the Hypar Elements library, and publish the generator to Hypar, then Hypar executes it for you and store the results. You can see some generators written using Hypar Elements running on [Hypar](https://hypar.io). Hypar is just one example of a business that can be built on top of this tool. We fully expect you'll go and build your own cool thing.
 
 ## Getting Started Developing for the Hypar Platform
