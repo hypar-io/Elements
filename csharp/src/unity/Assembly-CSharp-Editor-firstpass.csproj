@@ -309,18 +309,6 @@
  <Reference Include="UnityEditor.OSXStandalone.Extensions">
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
- <Reference Include="Newtonsoft.Json">
- <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Newtonsoft.Json.dll</HintPath>
- </Reference>
- <Reference Include="Hypar.SDK">
- <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar.SDK.dll</HintPath>
- </Reference>
- <Reference Include="glTFLoader">
- <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/glTFLoader.dll</HintPath>
- </Reference>
- <Reference Include="LibTessDotNet">
- <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/LibTessDotNet.dll</HintPath>
- </Reference>
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Users/ikeough/Library/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
@@ -335,6 +323,18 @@
  </Reference>
  <Reference Include="UnityEngine.StandardEvents">
  <HintPath>/Users/ikeough/Library/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
+ </Reference>
+ <Reference Include="LibTessDotNet">
+ <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/LibTessDotNet.dll</HintPath>
+ </Reference>
+ <Reference Include="Newtonsoft.Json">
+ <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/Newtonsoft.Json.dll</HintPath>
+ </Reference>
+ <Reference Include="glTFLoader">
+ <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/glTFLoader.dll</HintPath>
+ </Reference>
+ <Reference Include="Hypar.SDK">
+ <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Assets/Hypar/Hypar.SDK.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>/Applications/Unity/Unity.app/Contents/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

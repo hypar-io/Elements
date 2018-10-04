@@ -86,16 +86,16 @@ public class CreateHyparElements : MonoBehaviour {
 				continue;
 			}
 
-			var mass = new Mass(new Profile(poly), i, floorToFloor);
+			var mass = new Mass(new Profile(poly.Offset(0.001)[0]), i, floorToFloor);
 			foreach(var f in mass.Faces())
 			{
 				var g = new Hypar.Elements.Grid(f, 10, 3);
-				for(var c=0;c<g.Columns; c++)
+				for(var c=0;c<g.ColumnCount; c++)
 				{	
 					var colCells =g.CellsInColumn(c);
-					var c1 = colCells.ElementAt(0);
-					var c2 = colCells.ElementAt(1);
-					var c3 = colCells.ElementAt(2);
+					var c1 = colCells[0];
+					var c2 = colCells[1];
+					var c3 = colCells[2];
 					var p1 = new Panel(c1.Reverse().ToList(), BuiltInMaterials.Default);
 					var p2 = new Panel(c2.Reverse().ToList(), BuiltInMaterials.Glass);
 					var p3 = new Panel(c3.Reverse().ToList(), BuiltInMaterials.Default);
