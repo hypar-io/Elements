@@ -300,11 +300,45 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
+        /// Constructs the geometric difference between this Polygon and the supplied Polygons.
+        /// </summary>
+        /// <param name="difPolys">The list of intersecting Polygons.</param>
+        /// <returns>
+        /// Returns a list of Polygons representing the subtraction of the supplied Polygons from this Polygon.
+        /// Returns null if the area of this Polygon is entirely subtracted.
+        /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
+        /// </returns>
+        public IEnumerable<Polygon> Difference(IEnumerable<Polygon> difPolys)
+        {
+            var thisPath = this.ToClipperPath();
+            var polyPaths = new List<List<IntPoint>>();
+            foreach(Polygon polygon in difPolys)
+            {
+                polyPaths.Add(polygon.ToClipperPath());
+            }
+            Clipper clipper = new Clipper();
+            clipper.AddPath(thisPath, PolyType.ptSubject, true);
+            clipper.AddPaths(polyPaths, PolyType.ptClip, true);
+            var solution = new List<List<IntPoint>>();
+            clipper.Execute(ClipType.ctDifference, solution);
+            if (solution.Count == 0)
+            {
+                return null;
+            }
+            var polygons = new List<Polygon>();
+            foreach (List<IntPoint> path in solution)
+            {
+                polygons.Add(PolygonExtensions.ToPolygon(path));
+            }
+            return polygons;
+        }
+
+        /// <summary>
         /// Constructs the Polygon intersections between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
         /// <returns>
-        /// Returns a list of Polygons representing the interesction of this Polygon with the supplied Polygon.
+        /// Returns a list of Polygons representing the intersection of this Polygon with the supplied Polygon.
         /// Returns null if the two Polygons do not intersect.
         /// </returns>
         public IEnumerable<Polygon> Intersection(Polygon polygon)
@@ -316,6 +350,10 @@ namespace Hypar.Geometry
             clipper.AddPath(polyPath, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
             clipper.Execute(ClipType.ctIntersection, solution);
+            if (solution.Count == 0)
+            {
+                return null;
+            }
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
@@ -339,6 +377,34 @@ namespace Hypar.Geometry
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);
+            var solution = new List<List<IntPoint>>();
+            clipper.Execute(ClipType.ctUnion, solution);
+            if (solution.Count > 1)
+            {
+                return null;
+            }
+            return solution[0].ToPolygon();
+        }
+
+        /// <summary>
+        /// Constructs the geometric union between this Polygon and the supplied Polygon.
+        /// </summary>
+        /// <param name="polygons">The Polygons to be combined with this Polygon.</param>
+        /// <returns>
+        /// Returns a single Polygon from a successful union.
+        /// Returns null if a union cannot be performed on the complete list of Polygons.
+        /// </returns>
+        public Polygon Union(IEnumerable<Polygon> polygons)
+        {
+            var thisPath = this.ToClipperPath();
+            var polyPaths = new List<List<IntPoint>>();
+            foreach (Polygon polygon in polygons)
+            {
+                polyPaths.Add(polygon.ToClipperPath());
+            }
+            Clipper clipper = new Clipper();
+            clipper.AddPath(thisPath, PolyType.ptSubject, true);
+            clipper.AddPaths(polyPaths, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
             clipper.Execute(ClipType.ctUnion, solution);
             if (solution.Count > 1)

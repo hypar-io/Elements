@@ -217,6 +217,16 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
+            var p3 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(1, 3),
+                    new Vector3(2, 3),
+                    new Vector3(2, 6),
+                    new Vector3(1, 6)
+                }
+            );
             var vertices = p1.Difference(p2).First().Vertices;
 
             Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
@@ -224,6 +234,19 @@ namespace Hypar.Tests
             Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
             Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 1.0);
             Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+
+            vertices = p1.Difference(new List<Polygon> { p2, p3 }).First().Vertices;
+
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 2.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 2.0 && p.Y == 3.0);
+            Assert.Contains(vertices, p => p.X == 1.0 && p.Y == 3.0);
+            Assert.Contains(vertices, p => p.X == 1.0 && p.Y == 4.0);
             Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
         }
 
@@ -248,6 +271,16 @@ namespace Hypar.Tests
                     new Vector3(7, 1),
                     new Vector3(7, 5),
                     new Vector3(3, 5)
+                }
+            );
+            var p3 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(3, 3),
+                    new Vector3(4, 3),
+                    new Vector3(4, 0),
+                    new Vector3(3, 0),
                 }
             );
             var vertices = p1.Intersection(p2).First().Vertices;
@@ -281,6 +314,16 @@ namespace Hypar.Tests
                     new Vector3(3, 5)
                 }
             );
+            var p3 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(1, 3),
+                    new Vector3(2, 3),
+                    new Vector3(2, 6),
+                    new Vector3(1, 6)
+                }
+            );
             var vertices = p1.Union(p2).Vertices;
 
             Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
@@ -291,6 +334,19 @@ namespace Hypar.Tests
             Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
             Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
             Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+
+            vertices = p1.Union(new List<Polygon> { p2, p3 }).Vertices;
+
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 1.0);
+            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
+            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.X == 2.0 && p.Y == 6.0);
+            Assert.Contains(vertices, p => p.X == 1.0 && p.Y == 6.0);
         }
 
         [Fact]
