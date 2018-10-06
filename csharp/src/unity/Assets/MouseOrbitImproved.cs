@@ -40,11 +40,14 @@ public class MouseOrbitImproved : MonoBehaviour {
     {
         if (target) 
         {
-            x += Input.GetAxis("Mouse X") * xSpeed * distance * 0.02f;
-            y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
- 
-            y = ClampAngle(y, yMinLimit, yMaxLimit);
- 
+            if(Input.GetMouseButton(0))
+            {
+                x += Input.GetAxis("Mouse X") * xSpeed * distance * 0.02f;
+                y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
+    
+                y = ClampAngle(y, yMinLimit, yMaxLimit);
+            }
+
             Quaternion rotation = Quaternion.Euler(y, x, 0);
  
             distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel")*5, distanceMin, distanceMax);
@@ -61,7 +64,7 @@ public class MouseOrbitImproved : MonoBehaviour {
             transform.position = position;
         }
     }
- 
+    
     public static float ClampAngle(float angle, float min, float max)
     {
         if (angle < -360F)

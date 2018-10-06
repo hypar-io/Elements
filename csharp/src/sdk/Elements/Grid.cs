@@ -17,24 +17,6 @@ namespace Hypar.Elements
 
         private Vector3[][] _pts;
 
-        /// <summary>
-        /// The number of columns in the grid.
-        /// </summary>
-        /// <returns></returns>
-        public int ColumnCount
-        {
-            get{return _uDiv.Length - 1;}
-        }
-
-        /// <summary>
-        /// The number of rows in the grid.
-        /// </summary>
-        /// <returns></returns>
-        public int RowCount
-        {
-            get{return _vDiv.Length - 1;}
-        }
-        
         private double[] CalculateEqualDivisions(int n)
         {
             var uStep = 1.0/(double)n;
@@ -69,61 +51,6 @@ namespace Hypar.Elements
                 pts[i]=col;
             }
             return pts;
-        }
-
-        /// <summary>
-        /// Get all cells in a column.
-        /// </summary>
-        /// <param name="n"></param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specified column index is greater than the number of available columns.</exception>
-        public Vector3[][] CellsInColumn(int n)
-        {
-            if(n < 0 || n >= this._uDiv.Length - 1)
-            {
-                throw new ArgumentOutOfRangeException("The column index must be greater than or equal to zero and less than the number of columns.");
-            }
-
-            var c1 = this._pts[n];
-            var c2 = this._pts[n+1];
-
-            var results = new Vector3[c1.Length][];
-
-            for(var i=0; i<c1.Length-1; i++)
-            {
-                var a = c1[i];
-                var b = c1[i+1];
-                var c = c2[i+1];
-                var d = c2[i];
-                results[i] = new[]{a,b,c,d};
-            }
-
-            return results;
-        }
-
-        /// <summary>
-        /// Get all cells in a row.
-        /// </summary>
-        /// <param name="n"></param>
-        /// <exception cref="System.ArgumentException">Thrown when the row index is greater than number of rows.</exception>
-        public Vector3[][] CellsInRow(int n)
-        {
-            if(n < 0 || n >= this._vDiv.Length - 1)
-            {
-                throw new ArgumentOutOfRangeException("The column index must be greater than or equal to zero and less than the number of columns.");
-            }
-
-            var results = new Vector3[this._pts.Length][];
-
-            for(var i=0; i<this._pts.Length-1; i++)
-            {
-                var a = this._pts[i][n];
-                var b = this._pts[i][n+1];
-                var c = this._pts[i+1][n+1];
-                var d = this._pts[i+1][n];
-                results[i] = new[]{a, b, c, d};
-            }
-
-            return results;
         }
 
         /// <summary>
@@ -171,6 +98,22 @@ namespace Hypar.Elements
         /// <summary>
         /// Construct a grid.
         /// </summary>
+        /// <param name="bottom">The bottom edge of the Grid.</param>
+        /// <param name="top">The top edge of the Grid.</param>
+        /// <param name="uDistance">The distance along the u parameter at which points will be created.</param>
+        /// <param name="vDistance">The distance along the v parameter at which points will be created.</param>
+        public Grid (Line bottom, Line top, double uDistance, double vDistance)
+        {
+            this._bottom = bottom;
+            this._top = top;
+            this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(bottom.Length/uDistance));
+            this._vDiv = CalculateEqualDivisions((int)Math.Ceiling(top.Length/vDistance));
+            this._pts = CalculateGridPoints();
+        }
+
+        /// <summary>
+        /// Construct a grid.
+        /// </summary>
         /// <param name="face">A face whose edges will be used to define the grid.</param>
         /// <param name="uDivisions">The number of grid divisions in the u direction.</param>
         /// <param name="vDivisions">The number of grid divisions in the v direction.</param>
@@ -181,6 +124,22 @@ namespace Hypar.Elements
             this._top = f[2].Reversed();
             this._uDiv = CalculateEqualDivisions(uDivisions);
             this._vDiv = CalculateEqualDivisions(vDivisions);
+            this._pts = CalculateGridPoints();
+        }
+
+        /// <summary>
+        /// Construct a Grid.
+        /// </summary>
+        /// <param name="face">A face whose edges will be used to define the grid.</param>
+        /// <param name="uDistance">The distance along the u parameter at which points will be created.</param>
+        /// <param name="vDistance">The distance along the v parameter at which points will be created.</param>
+        public Grid(Face face, double uDistance, double vDistance)
+        {
+            var f = face.Edges;
+            this._bottom = f[0];
+            this._top = f[2].Reversed();
+            this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(this._bottom.Length/uDistance));
+            this._vDiv = CalculateEqualDivisions((int)Math.Ceiling(f[1].Length/vDistance));
             this._pts = CalculateGridPoints();
         }
     }

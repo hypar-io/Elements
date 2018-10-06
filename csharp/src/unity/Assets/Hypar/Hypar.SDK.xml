@@ -563,32 +563,6 @@
             A grid comprised of rows and columns with each cell represented by a polyline.
             </summary>
         </member>
-        <member name="P:Hypar.Elements.Grid.ColumnCount">
-            <summary>
-            The number of columns in the grid.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Hypar.Elements.Grid.RowCount">
-            <summary>
-            The number of rows in the grid.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Hypar.Elements.Grid.CellsInColumn(System.Int32)">
-            <summary>
-            Get all cells in a column.
-            </summary>
-            <param name="n"></param>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the specified column index is greater than the number of available columns.</exception>
-        </member>
-        <member name="M:Hypar.Elements.Grid.CellsInRow(System.Int32)">
-            <summary>
-            Get all cells in a row.
-            </summary>
-            <param name="n"></param>
-            <exception cref="T:System.ArgumentException">Thrown when the row index is greater than number of rows.</exception>
-        </member>
         <member name="M:Hypar.Elements.Grid.Cells">
             <summary>
             Get all cells.
@@ -604,6 +578,15 @@
             <param name="uDivisions">The number of grid divisions in the u direction.</param>
             <param name="vDivisions">The number of grid divisions in the v direction.</param>
         </member>
+        <member name="M:Hypar.Elements.Grid.#ctor(Hypar.Geometry.Line,Hypar.Geometry.Line,System.Double,System.Double)">
+            <summary>
+            Construct a grid.
+            </summary>
+            <param name="bottom">The bottom edge of the Grid.</param>
+            <param name="top">The top edge of the Grid.</param>
+            <param name="uDistance">The distance along the u parameter at which points will be created.</param>
+            <param name="vDistance">The distance along the v parameter at which points will be created.</param>
+        </member>
         <member name="M:Hypar.Elements.Grid.#ctor(Hypar.Geometry.Face,System.Int32,System.Int32)">
             <summary>
             Construct a grid.
@@ -611,6 +594,14 @@
             <param name="face">A face whose edges will be used to define the grid.</param>
             <param name="uDivisions">The number of grid divisions in the u direction.</param>
             <param name="vDivisions">The number of grid divisions in the v direction.</param>
+        </member>
+        <member name="M:Hypar.Elements.Grid.#ctor(Hypar.Geometry.Face,System.Double,System.Double)">
+            <summary>
+            Construct a Grid.
+            </summary>
+            <param name="face">A face whose edges will be used to define the grid.</param>
+            <param name="uDistance">The distance along the u parameter at which points will be created.</param>
+            <param name="vDistance">The distance along the v parameter at which points will be created.</param>
         </member>
         <member name="T:Hypar.Elements.HSSPipeProfileServer">
             <summary>
