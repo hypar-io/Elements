@@ -53,8 +53,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Cores.cs" />
      <Compile Include="Assets\CreateHyparElements.cs" />
+     <Compile Include="Assets\Facade.cs" />
+     <Compile Include="Assets\Floors.cs" />
      <Compile Include="Assets\MouseOrbitImproved.cs" />
+     <Compile Include="Assets\Structure.cs" />
      <None Include="Assets\Hypar\Hypar.SDK.xml" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>/Users/ikeough/Documents/hypar/elements/csharp/src/unity/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
