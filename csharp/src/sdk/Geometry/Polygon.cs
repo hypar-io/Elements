@@ -147,6 +147,22 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
+        /// Tests if the supplied 2D point is within, on, or outside the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="point">The Vector3 to compare.</param>
+        /// <returns>
+        /// Returns 0 if the supplied Vector3 is outside this Polygon.
+        /// Returns 1 if the supplied Vector3 is inside this Polygon.
+        /// Returns -1 if the supplied Vector3 is on the Polygon perimeter.
+        /// </returns>
+        public int PointWithin(Vector3 point)
+        {
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(point.X, point.Y);
+            return Clipper.PointInPolygon(intPoint, thisPath);
+        }
+
+        /// <summary>
         /// Tests if the supplied Polygon is within the perimeter of this Polygon.
         /// </summary>
         /// <param name="polygon">The Polygon to compare.</param>
