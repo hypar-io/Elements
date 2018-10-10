@@ -218,7 +218,7 @@ namespace Hypar
             var prim = new MeshPrimitive();
             prim.Indices = iAccess;
             prim.Material = materialId;
-            prim.Mode = MeshPrimitive.ModeEnum.LINE_LOOP;
+            prim.Mode = MeshPrimitive.ModeEnum.LINE_STRIP;
             prim.Attributes = new Dictionary<string,int>{
                 {"POSITION",vAccess}
             };
