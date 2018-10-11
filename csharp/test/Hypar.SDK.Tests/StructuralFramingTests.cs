@@ -28,7 +28,7 @@ namespace Hypar.Tests
             model.AddElement(curvedBeam);
             model.AddElement(plineBeam);
             model.AddElement(ngonBeam);
-            model.SaveGltf("beam.gltf");
+            model.SaveGlb("beam.glb");
         }
 
         [Fact]
