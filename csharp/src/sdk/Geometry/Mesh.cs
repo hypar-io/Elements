@@ -443,13 +443,18 @@ IMin:{m_index_min}";
         /// <param name="perimeter">A Polygon to extrude.</param>
         /// <param name="voids">A collection of Polygons representing voids in the extrusion.</param>
         /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
+        /// <param name="startSetback">The setback trom the start of the line of the extrusion.</param>
+        /// <param name="endSetback">The setback from the end of the line of the end of the extrusion.</param>
         /// <returns></returns>
-        public static Mesh ExtrudeAlongLine(Line line, Polygon perimeter, IList<Polygon> voids = null, bool capped=true)
+        public static Mesh ExtrudeAlongLine(Line line, Polygon perimeter, IList<Polygon> voids = null, bool capped=true, double startSetback = 0.0, double endSetback = 0.0)
         {
             var mesh = new Hypar.Geometry.Mesh();
 
-            var tStart = line.GetTransform(0.0);
-            var tEnd = line.GetTransform(1.0);
+            var l = line.Length;
+            var ssb = startSetback/l;
+            var esb = endSetback/l;
+            var tStart = line.GetTransform(0.0 + ssb);
+            var tEnd = line.GetTransform(1.0 - esb);
 
             ExtrudePolygon(ref mesh, perimeter, tStart, tEnd);
 

@@ -96,6 +96,7 @@ namespace Hypar
 
             return gltf.BufferViews.Length - 1;
         }
+        
         private static int AddNode(this Gltf gltf, Node n, int? parent)
         {
             var nodes = gltf.Nodes.ToList();
@@ -137,7 +138,7 @@ namespace Hypar
             
             while(buffer.Count() % 4 != 0)
             {
-                Console.WriteLine("Padding...");
+                // Console.WriteLine("Padding...");
                 buffer.Add(0);
             }
 
@@ -187,6 +188,75 @@ namespace Hypar
 
                 parentId = gltf.AddNode(transNode, 0);
             }
+            // Add mesh node to gltf
+            var node = new Node();
+            node.Mesh = gltf.Meshes.Length - 1;
+            gltf.AddNode(node, parentId);
+            
+            return gltf.Meshes.Length - 1;
+        }
+    
+        internal static int AddLineLoop(this Gltf gltf, string name, List<byte> buffer, double[] vertices, ushort[] indices, double[] vMin, double[] vMax, ushort iMin, ushort iMax, int materialId, Transform transform = null)
+        {
+            var m = new glTFLoader.Schema.Mesh();
+            m.Name = name;
+            var vBuff = gltf.AddBufferView(0, buffer.Count(), vertices.Length * sizeof(float), null, null);
+            var iBuff = gltf.AddBufferView(0, buffer.Count() + vertices.Length * sizeof(float), indices.Length * sizeof(ushort), null, null);
+
+            buffer.AddRange(vertices.SelectMany(v=>BitConverter.GetBytes((float)v)));
+            buffer.AddRange(indices.SelectMany(v=>BitConverter.GetBytes(v)));
+
+            while(buffer.Count() % 4 != 0)
+            {
+                // Console.WriteLine("Padding...");
+                buffer.Add(0);
+            }
+            
+            var vAccess = gltf.AddAccessor(vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length/3, new[]{(float)vMin[0], (float)vMin[1], (float)vMin[2]}, new[]{(float)vMax[0],(float)vMax[1],(float)vMax[2]}, Accessor.TypeEnum.VEC3);
+            var iAccess = gltf.AddAccessor(iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_SHORT, indices.Length, new[]{(float)iMin}, new[]{(float)iMax}, Accessor.TypeEnum.SCALAR);
+
+            var prim = new MeshPrimitive();
+            prim.Indices = iAccess;
+            prim.Material = materialId;
+            prim.Mode = MeshPrimitive.ModeEnum.LINE_LOOP;
+            prim.Attributes = new Dictionary<string,int>{
+                {"POSITION",vAccess}
+            };
+
+            m.Primitives = new[]{prim};
+            
+            // Add mesh to gltf
+            if(gltf.Meshes != null) 
+            {
+                var meshes = gltf.Meshes.ToList();
+                meshes.Add(m);
+                gltf.Meshes = meshes.ToArray();
+            }
+            else
+            {
+                gltf.Meshes = new[]{m};
+            }
+
+            var parentId = 0;
+
+            if(transform != null)
+            {
+                var a = transform.XAxis;
+                var b = transform.YAxis;
+                var c = transform.ZAxis;
+
+                var transNode = new Node();
+
+                transNode.Matrix = new[]{
+                    (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
+                    (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
+                    (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
+                    (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
+                };
+
+                parentId = gltf.AddNode(transNode, 0);
+            }
+
             // Add mesh node to gltf
             var node = new Node();
             node.Mesh = gltf.Meshes.Length - 1;

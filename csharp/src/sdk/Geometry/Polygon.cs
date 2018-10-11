@@ -1,4 +1,5 @@
 using ClipperLib;
+using Hypar.Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -10,6 +11,7 @@ namespace Hypar.Geometry
     /// <summary>
     /// A closed planar polygon.
     /// </summary>
+    // [JsonConverter(typeof(PolygonConverter))]
     public partial class Polygon : ICurve
     {
         private IList<Vector3> _vertices;
@@ -18,7 +20,7 @@ namespace Hypar.Geometry
         /// The area enclosed by the polygon.
         /// </summary>
         /// <value></value>
-        [JsonProperty("area")]
+        [JsonIgnore]
         public double Area
         {
             get {
@@ -45,7 +47,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// The length of the polygon.
         /// </summary>
-        [JsonProperty("length")]
+        [JsonIgnore]
         public double Length
         {
             get{return this.Segments().Sum(s=>s.Length);}
@@ -294,7 +296,7 @@ namespace Hypar.Geometry
         /// Returns null if the area of this Polygon is entirely subtracted.
         /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
         /// </returns>
-        public IEnumerable<Polygon> Difference(Polygon polygon)
+        public IList<Polygon> Difference(Polygon polygon)
         {
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
@@ -357,7 +359,7 @@ namespace Hypar.Geometry
         /// Returns a list of Polygons representing the intersection of this Polygon with the supplied Polygon.
         /// Returns null if the two Polygons do not intersect.
         /// </returns>
-        public IEnumerable<Polygon> Intersection(Polygon polygon)
+        public IList<Polygon> Intersection(Polygon polygon)
         {
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
@@ -438,7 +440,7 @@ namespace Hypar.Geometry
         /// Returns a list of Polygons representing the symmetric difference of this Polygon and the supplied Polygon.
         /// Returns a representation of this Polygon and the supplied Polygon if the Polygons do not intersect.
         /// </returns>
-        public IEnumerable<Polygon> XOR(Polygon polygon)
+        public IList<Polygon> XOR(Polygon polygon)
         {
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
@@ -482,8 +484,9 @@ namespace Hypar.Geometry
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
-        public IEnumerable<Line> Segments()
+        public IList<Line> Segments()
         {
+            var lines = new List<Line>();
             for(var i=0; i<_vertices.Count; i++)
             {
                 var a = _vertices[i];
@@ -496,18 +499,18 @@ namespace Hypar.Geometry
                 {
                     b = _vertices[i+1];
                 }
-                
-                yield return new Line(a, b);
+                lines.Add(new Line(a, b));
             }
+            return lines;
         }
 
         /// <summary>
         /// Tessellate the polygon.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Vector3> Tessellate()
+        public IList<IList<Vector3>> Curves()
         {
-            return this._vertices;
+            return new[]{this.Vertices};
         }
 
         /// <summary>

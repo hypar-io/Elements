@@ -6,14 +6,14 @@ using Xunit;
 
 namespace Hypar.Tests
 {
-    public class BeamTests
+    public class StructuralFramingTests
     {
         [Fact]
         public void Example()
         {
-            var line = new Line(Vector3.Origin, new Vector3(2,0,0));
-            var beam = new Beam(line, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), BuiltInMaterials.Steel);
-            var model = new Model();
+            var line = new Line(new Vector3(1,1,1), new Vector3(2,2,2));
+            var beam = new Beam(line, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), BuiltInMaterials.Steel, null, 0.05, 0.05);
+            var model = new Model();        
             model.AddElement(beam);
             model.SaveGlb("beam.glb");
         }
@@ -68,7 +68,7 @@ namespace Hypar.Tests
         public void Construct_Beam()
         {
             var l = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var b = new Beam(l, new WideFlangeProfile());
+            var b = new Beam(l, new WideFlangeProfile("test"));
             Assert.Equal(BuiltInMaterials.Steel, b.Material);
             Assert.Equal(l, b.CenterLine);
         }
@@ -76,7 +76,7 @@ namespace Hypar.Tests
         [Fact]
         public void Construct_Column()
         {
-            var c = new Column(Vector3.Origin, 10.0, new WideFlangeProfile());
+            var c = new Column(Vector3.Origin, 10.0, new WideFlangeProfile("test"));
             Assert.Equal(BuiltInMaterials.Steel, c.Material);
             Assert.Equal(10.0, c.CenterLine.Length);
         }
@@ -85,7 +85,7 @@ namespace Hypar.Tests
         public void Construct_Brace()
         {
             var l = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var b = new Brace(l, new WideFlangeProfile());
+            var b = new Brace(l, new WideFlangeProfile("test"));
             Assert.Equal(BuiltInMaterials.Steel, b.Material);
             Assert.Equal(l, b.CenterLine);
         }

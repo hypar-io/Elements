@@ -81,23 +81,16 @@ namespace Hypar.Geometry
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
-        public IEnumerable<Line> Segments()
+        public Line[] Segments()
         {
+            var result = new Line[_vertices.Count-1];
             for (var i = 0; i < _vertices.Count-1; i++)
             {
                 var a = _vertices[i];
                 var b = _vertices[i+1];
-                yield return new Line(a, b);
+                result[i] = new Line(a, b);
             }
-        }
-
-        /// <summary>
-        /// Convert this polyline to an array of vectors.
-        /// </summary>
-        /// <returns></returns>
-        public Vector3[] ToArray()
-        {
-            return this._vertices.ToArray();
+            return result;
         }
 
         /// <summary>
@@ -145,9 +138,9 @@ namespace Hypar.Geometry
         /// Tessellate the polyline.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Vector3> Tessellate()
+        public IList<IList<Vector3>> Curves()
         {
-            return this._vertices;
+            return new[]{this._vertices};
         }
     }
 }

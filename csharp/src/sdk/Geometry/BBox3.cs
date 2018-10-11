@@ -22,10 +22,10 @@ namespace Hypar.Geometry
         /// Construct a bounding box from a collection of points.
         /// </summary>
         /// <param name="points">The points which are contained within the bounding box.</param>
-        public BBox3(IEnumerable<Vector3> points)
+        public BBox3(IList<Vector3> points)
         {
-            this.Min = Vector3.Origin;
-            this.Max = Vector3.Origin;
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
             foreach(var p in points)
             {
                 this.Extend(p);
@@ -34,8 +34,13 @@ namespace Hypar.Geometry
 
         private void Extend(Vector3 v)
         {
-            if(v < this.Min) this.Min = v;
-            if(v > this.Max) this.Max = v;
+            if(v.X < this.Min.X) this.Min.X = v.X;
+            if(v.Y < this.Min.Y) this.Min.Y = v.Y;
+            if(v.Z < this.Min.Z) this.Min.Z = v.Z;
+
+            if(v.X > this.Max.X) this.Max.X = v.X;
+            if(v.Y > this.Max.Y) this.Max.Y = v.Y;
+            if(v.Z > this.Max.Z) this.Max.Z = v.Z;
         }
 
         /// <summary>
@@ -44,8 +49,8 @@ namespace Hypar.Geometry
         /// <param name="profile">The Profile.</param>
         public BBox3(Profile profile)
         {
-            this.Min = Vector3.Origin;
-            this.Max = Vector3.Origin;
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
             foreach(var v in profile.Perimeter.Vertices)
             {
                 this.Extend(v);
@@ -63,10 +68,9 @@ namespace Hypar.Geometry
         /// <param name="curve"></param>
         public BBox3(ICurve curve)
         {
-            var verts = curve.Tessellate();
-            this.Min = Vector3.Origin;
-            this.Max = Vector3.Origin;
-            foreach(var p in verts)
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
+            foreach(var p in curve.Vertices)
             {
                 if(p < this.Min) this.Min = p;
                 if(p > this.Max) this.Max = p;
@@ -77,11 +81,11 @@ namespace Hypar.Geometry
         /// Construct a bounding box for a collection of polygons.
         /// </summary>
         /// <param name="polygons"></param>
-        public BBox3(IEnumerable<Polygon> polygons)
+        public BBox3(IList<Polygon> polygons)
         {
-            var verts = polygons.SelectMany(p=>p.Tessellate());
-            this.Min = Vector3.Origin;
-            this.Max = Vector3.Origin;
+            var verts = polygons.SelectMany(p=>p.Curves().SelectMany(v=>v));
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
             foreach(var p in verts)
             {
                 if(p < this.Min) this.Min = p;

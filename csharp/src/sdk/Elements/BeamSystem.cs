@@ -43,7 +43,7 @@ namespace Hypar.Elements
         /// <param name="material">The Beam material.</param>
         public BeamSystem(Floor floor, int count, Profile profile, Material material = null)
         {
-            var edges = floor.Profile.Perimeter.Segments().ToArray();
+            var edges = floor.Profile.Perimeter.Segments();
             var e1 = edges[0];
             var e2 = edges[2].Reversed();
             var bbox = new BBox3(profile);

@@ -47,12 +47,24 @@ namespace Hypar.Geometry
     /// <summary>
     /// A Profile describes 
     /// </summary>
-    public class Profile
+    public class Profile : IIdentifiable
     {
+        /// <summary>
+        /// The identifier of the Profile.
+        /// </summary>
+        [JsonProperty("id")]
+        public string Id{get; internal set;}
+
+        /// <summary>
+        /// The name of the Profile.
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name{get;}
+
         /// <summary>
         /// The area of the Profile.
         /// </summary>
-        [JsonProperty("area")]
+        [JsonIgnore]
         public double Area
         {
             get{return ClippedArea();}
@@ -69,43 +81,54 @@ namespace Hypar.Geometry
         /// </summary>
         [JsonProperty("voids")]
         public IList<Polygon> Voids{get; protected set;}
-        
+
         /// <summary>
         /// Construct a Profile.
         /// </summary>
+        /// <param name="name">The name of the Profile.</param>
         /// <param name="perimeter">The perimeter of the Profile.</param>
         /// <param name="voids">A collection of Polygons representing voids in the Profile.</param>
         [JsonConstructor]
-        public Profile(Polygon perimeter, IList<Polygon> voids = null)
+        public Profile(Polygon perimeter, IList<Polygon> voids, string name = null)
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Perimeter = perimeter;
             this.Voids = voids;
+            this.Name = name;
         }
 
         /// <summary>
         /// Default constructor for Profile.
         /// </summary>
-        protected Profile(){}
+        protected Profile(string name){
+            this.Id = Guid.NewGuid().ToString();
+            this.Name = name;
+        }
 
         /// <summary>
         /// Construct a Profile.
         /// </summary>
+        /// <param name="name">The name of the Profile.</param>
         /// <param name="perimeter">The perimeter of the Profile</param>
-        public Profile(Polygon perimeter)
+        public Profile(Polygon perimeter, string name = null)
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Perimeter = perimeter;
-            this.Voids = new List<Polygon>();
+            this.Name = name;
         }
-        
+
         /// <summary>
         /// Construct a Profile.
         /// </summary>
+        /// <param name="name">The name of the Profile.</param>
         /// <param name="perimeter">The perimeter of the Profile.</param>
         /// <param name="singleVoid">A void in the Profile.</param>
-        public Profile(Polygon perimeter, Polygon singleVoid)
+        public Profile(Polygon perimeter, Polygon singleVoid, string name = null)
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Perimeter = perimeter;
             this.Voids = new []{singleVoid};
+            this.Name = name;
         }
 
         private double ClippedArea()

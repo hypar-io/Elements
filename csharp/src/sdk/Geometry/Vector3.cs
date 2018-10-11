@@ -1,3 +1,4 @@
+using Hypar.Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,28 +9,29 @@ namespace Hypar.Geometry
     /// <summary>
     /// A 3D vector.
     /// </summary>
-    public class Vector3
+    [JsonConverter(typeof(Vector3Converter))]
+    public class Vector3 : IComparable<Vector3>
     {
         /// <summary>
         /// The X component of the vector.
         /// </summary>
         /// <returns></returns>
         [JsonProperty("x")]
-        public double X{get;}
+        public double X{get;internal set;}
 
         /// <summary>
         /// The Y component of the vector.
         /// </summary>
         /// <returns></returns>
         [JsonProperty("y")]
-        public double Y{get;}
+        public double Y{get;internal set;}
 
         /// <summary>
         /// The Z component of the vector.
         /// </summary>
         /// <returns></returns>
         [JsonProperty("z")]
-        public double Z{get;}
+        public double Z{get;internal set;}
 
         /// <summary>
         /// Construct a vector at the origin.
@@ -44,7 +46,6 @@ namespace Hypar.Geometry
         /// Is this vector equal to the provide vector?
         /// </summary>
         /// <param name="obj"></param>
-        /// <returns></returns>
         public override bool Equals(object obj)
         {
             var v = obj as Vector3;
@@ -68,7 +69,6 @@ namespace Hypar.Geometry
         /// <summary>
         /// Construct a vector along the X axis.
         /// </summary>
-        /// <returns></returns>
         public static Vector3 XAxis
         {
             get{return new Vector3(1.0,0.0,0.0);}
@@ -77,7 +77,6 @@ namespace Hypar.Geometry
         /// <summary>
         /// Construct a vector along the Y axis.
         /// </summary>
-        /// <returns></returns>
         public static Vector3 YAxis
         {
             get{return new Vector3(0.0,1.0,0.0);}
@@ -99,9 +98,10 @@ namespace Hypar.Geometry
         /// <param name="n">The number of samples along the line.</param>
         /// <param name="includeEnds">A flag indicating whether or not to include points for the start and end of the line.</param>
         /// <returns></returns>
-        public static IEnumerable<Vector3> AtNEqualSpacesAlongLine(Line line, int n, bool includeEnds = false)
+        public static IList<Vector3> AtNEqualSpacesAlongLine(Line line, int n, bool includeEnds = false)
         {   
             var div = 1.0/(double)(n + 1);
+            var pts = new List<Vector3>();
             for(var t=0.0; t<=1.0; t+=div)
             {
                 var pt = line.PointAt(t);
@@ -110,24 +110,9 @@ namespace Hypar.Geometry
                 {
                     continue;
                 }
-                yield return pt;
+                pts.Add(pt);
             }
-        }
-
-        /// <summary>
-        /// Construct vectors at n equal spaces along a collection of lines.
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <param name="n"></param>
-        /// <param name="includeEnds"></param>
-        /// <returns></returns>
-        public static IEnumerable<IEnumerable<Vector3>> AtNEqualSpacesAlongLines(IEnumerable<Line> lines, int n, bool includeEnds = false)
-        {
-            foreach(var l in lines)
-            {
-                var vs1 = Vector3.AtNEqualSpacesAlongLine(l, n, includeEnds);
-                yield return vs1;
-            }
+            return pts;
         }
 
         /// <summary>
@@ -381,6 +366,20 @@ namespace Hypar.Geometry
             var p1 = this - (p.Normal.Dot(this-p.Origin)) * p.Normal;
             return p1;
         }
+
+        int IComparable<Vector3>.CompareTo(Vector3 v)
+        {
+            if(this > v)
+            {
+                return -1;
+            }
+            if(this.Equals(v))
+            {
+                return 0;
+            }
+            
+            return 1;
+        }
     }
 
     /// <summary>
@@ -436,6 +435,26 @@ namespace Hypar.Geometry
         {
             var avg = points.Average();
             return points.Select(p=>p + (avg - p).Normalized() * distance).ToList();
+        }
+
+        /// <summary>
+        /// Convert a collection of Vector3 to a flat array of double.
+        /// </summary>
+        /// <param name="points">The collection of Vector3 to convert.</param>
+        /// <returns>An array containing x,y,z,x1,y1,z1,x2,y2,z2,...</returns>
+        public static double[] ToArray(this IList<Vector3> points)
+        {
+            var arr = new double[points.Count*3];
+            var c = 0;
+            for(var i=0; i<points.Count; i++)
+            {
+                var v = points[i];
+                arr[c] = v.X;
+                arr[c + 1] = v.Y;
+                arr[c + 2] = v.Z;
+                c+=3;
+            }
+            return arr;
         }
     }
 }
