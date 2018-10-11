@@ -176,10 +176,9 @@ HSS1.660x0.140,1.66,1.4,0.13,2.27,0.625,0.184,0.222,0.543,0.368";
                     {
                         var values = line.Split(',');
                         try{
-                            var profile = new HSSPipeProfile(double.Parse(values[1]) * InchesToMeters, 
+                            var profile = new HSSPipeProfile(values[0], double.Parse(values[1]) * InchesToMeters, 
                                                             double.Parse(values[2]) * InchesToMeters,
                                                             double.Parse(values[3]) * InchesToMeters){
-                                Shape = values[0],
                                 wt = double.Parse(values[4]),
                                 A = double.Parse(values[5]),
                                 I = double.Parse(values[6]),

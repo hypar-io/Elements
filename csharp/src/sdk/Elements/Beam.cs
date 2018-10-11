@@ -24,7 +24,9 @@ namespace Hypar.Elements
         /// <param name="profile">The Beam's profile.</param>
         /// <param name="material">The Beam's material.</param>
         /// <param name="up">The Beam's up axis.</param>
+        /// <param name="startSetback">The setback of the Beam's geometry at the start.</param>
+        /// <param name="endSetback">The setback of the Beam's geometry at the end.</param>
         [JsonConstructor]
-        public Beam(Line centerLine, Profile profile, Material material = null, Vector3 up = null) : base(centerLine, profile, material, up){}
+        public Beam(Line centerLine, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0) : base(centerLine, profile, material, up, startSetback, endSetback){}
     }
 }

@@ -1,6 +1,7 @@
 using Hypar.Elements;
 using Hypar.Geometry;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Hypar.Tests
@@ -43,7 +44,7 @@ namespace Hypar.Tests
             var p1 = space.Profile.Perimeter;
             for(var i=0; i<p.Vertices.Count; i++)
             {
-                Assert.Equal(p.Vertices[i] + t, p1.Vertices[i]);
+                Assert.Equal(p.Vertices[i] + t, p1.Vertices[i] + t);
             }
         }
     }

@@ -14,17 +14,24 @@ namespace Hypar.Geometry
         /// <summary>
         /// The start of the line.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("start")]
         public Vector3 Start{get;}
 
         /// <summary>
         /// The end of the line.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("end")]
         public Vector3 End{get;}
 
+        /// <summary>
+        /// The line's vertices.
+        /// </summary>
+        [JsonIgnore]
+        public IList<Vector3> Vertices
+        {
+            get{return new[]{this.Start, this.End};}
+        }
+        
         /// <summary>
         /// Get the length of the line.
         /// </summary>
@@ -37,7 +44,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// Get a normalized vector representing the direction of the line.
         /// </summary>
-        [JsonProperty("direction")]
+        [JsonIgnore]
         public Vector3 Direction
         {
             get
@@ -127,9 +134,9 @@ namespace Hypar.Geometry
         /// Tessellate the curve.
         /// </summary>
         /// <returns>A collection of points sampled along the curve.</returns>
-        public IEnumerable<Vector3> Tessellate()
+        public IList<IList<Vector3>> Curves()
         {
-            return new[]{Start, End};
+            return new[]{new[]{this.Start, this.End}};
         }
 
         /// <summary>

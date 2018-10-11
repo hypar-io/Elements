@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hypar.Geometry;
+using Hypar.Elements.Serialization;
 using Newtonsoft.Json.Linq;
 
 namespace Hypar.Elements
@@ -11,25 +12,28 @@ namespace Hypar.Elements
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
-    public abstract class Element
+    public abstract class Element : IIdentifiable
     {
         private Dictionary<string, object> _parameters = new Dictionary<string, object>();
+
+        /// <summary>
+        /// A collection of Elements aggregated by this Element.
+        /// </summary>
+        protected List<Element> _subElements = new List<Element>();
 
         /// <summary>
         /// The unique identifier of the Element.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("id")]
+        [JsonProperty("id", Order=-2)]
         public string Id {get;internal set;}
 
         /// <summary>
-        /// The type of the eleme]]
+        /// The type of the element.
+        /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type")]
-        public virtual string Type
-        {
-            get{ return "element";}
-        }
+        [JsonProperty("type", Order=-1)]
+        public abstract string Type{get;}
 
         /// <summary>
         /// A map of Parameters for the Element.
@@ -47,9 +51,18 @@ namespace Hypar.Elements
         public Material Material{get; protected set;}
         
         /// <summary>
+        /// A collection of Elements aggregated by this Element.
+        /// </summary>
+        [JsonProperty("sub_elements")]
+        public IList<Element> SubElements
+        {
+            get{return this._subElements;}
+        }
+
+        /// <summary>
         /// The element's transform.
         /// </summary>
-        [JsonProperty("transform")]
+        [JsonIgnore]
         public Transform Transform{get; protected set;}
 
         /// <summary>
@@ -68,7 +81,7 @@ namespace Hypar.Elements
         /// <param name="name">The name of the parameter.</param>
         /// <param name="parameter">The parameter to add.</param>
         /// <exception cref="System.Exception">Thrown when an parameter with the same name already exists.</exception>
-        public void AddParameter<T>(string name, Parameter<T> parameter)
+        public void AddParameter(string name, Parameter parameter)
         {
             if(!_parameters.ContainsKey(name))
             {

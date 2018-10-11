@@ -1,74 +1,98 @@
 #pragma warning disable CS1591
 
 using Hypar.Geometry;
+using Newtonsoft.Json;
 
 namespace Hypar.Elements
 {
     public class WideFlangeProfile : Profile
     {
-        public string Shape{get; internal set;}
-
+        [JsonIgnore]
         public double A {get; internal set;}
 
+        [JsonIgnore]
         public double d {get; internal set;}
 
+        [JsonIgnore]
         public double tw {get;internal set;}
 
+        [JsonIgnore]
         public double bf {get;internal set;}
 
+        [JsonIgnore]
         public double tf {get;internal set;}
 
+        [JsonIgnore]
         public string T {get;internal set;}
 
+        [JsonIgnore]
         public double k {get;internal set;}
 
+        [JsonIgnore]
         public double k1 {get;internal set;}
 
+        [JsonIgnore]
         public string gage {get;internal set;}
 
+        [JsonIgnore]
         public double rt {get;internal set;}
 
+        [JsonIgnore]
         public double dAf {get;internal set;}
 
+        [JsonIgnore]
         public double Ix {get;internal set;}
 
+        [JsonIgnore]
         public double Sx {get;internal set;}
 
+        [JsonIgnore]
         public double rx {get;internal set;}
 
+        [JsonIgnore]
         public double Iy {get;internal set;}
 
+        [JsonIgnore]
         public double Sy {get;internal set;}
 
+        [JsonIgnore]
         public double ry {get;internal set;}
 
+        [JsonIgnore]
         public double Zx {get;internal set;}
 
+        [JsonIgnore]
         public double Zy {get;internal set;}
 
+        [JsonIgnore]
         public double J {get;internal set;}
 
+        [JsonIgnore]
         public double Cw {get;internal set;}
 
+        [JsonIgnore]
         public double Wno {get;internal set;}
 
+        [JsonIgnore]
         public double Sw {get;internal set;}
 
+        [JsonIgnore]
         public double Qf {get;internal set;}
 
+        [JsonIgnore]
         public double Qw {get;internal set;}
 
-        public WideFlangeProfile(double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, 
+        public WideFlangeProfile(string name, double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, 
                                     VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
                                     HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
-                                    double verticalOffset = 0.0, double horizontalOffset = 0.0)
+                                    double verticalOffset = 0.0, double horizontalOffset = 0.0) : base(name)
         {
             
 
             this.Perimeter = CreateProfile(bf, d, tf, tw, verticalAlignment, horizontalAlignment, verticalOffset, horizontalOffset);
         }
 
-        public WideFlangeProfile()
+        public WideFlangeProfile(string name) : base(name)
         {
             this.Perimeter = CreateProfile(0.1, 0.05, 0.005, 0.005, VerticalAlignment.Center, HorizontalAlignment.Center, 0.0, 0.0);
         }

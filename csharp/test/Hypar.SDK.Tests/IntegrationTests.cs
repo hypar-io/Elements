@@ -38,7 +38,7 @@ namespace Hypar.Tests
                 {
                     var panel = new Panel(cell, BuiltInMaterials.Glass);
                     var edges = panel.Edges();
-                    var bProfile = new WideFlangeProfile();
+                    var bProfile = new WideFlangeProfile("test_beam");
                     var beam1 = new Beam(edges[0], bProfile, BuiltInMaterials.Steel, panel.Normal());
                     var beam2 = new Beam(edges[2], bProfile, BuiltInMaterials.Steel, panel.Normal());
                     var beam3 = new Beam(edges[1], bProfile, BuiltInMaterials.Steel, panel.Normal());
@@ -46,12 +46,14 @@ namespace Hypar.Tests
                 }
             }
 
-            var floors = mass.Floors(elevations, 0.2, BuiltInMaterials.Concrete);
+            var floorType = new FloorType("test", 0.2);
+            var floors = mass.Floors(elevations, floorType, BuiltInMaterials.Concrete);
             model.AddElements(floors);
 
             var shaft = Polygon.Rectangle(new Vector3(10,10), 5, 5);
+            var shaftWallType = new WallType("ShaftWall", 0.1);
             var walls = shaft.Segments().Select(l=>{
-                return new Wall(l, 0.1, buildingHeight, BuiltInMaterials.Concrete);
+                return new Wall(l, shaftWallType, buildingHeight, null, BuiltInMaterials.Concrete);
             });
             model.AddElements(walls);
 

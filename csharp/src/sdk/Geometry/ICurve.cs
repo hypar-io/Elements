@@ -5,7 +5,7 @@ namespace Hypar.Geometry
     /// <summary>
     /// ICurve is implemented by all curve types.
     /// </summary>
-    public interface ICurve: ITessellate<IEnumerable<Vector3>>
+    public interface ICurve
     {
         /// <summary>
         /// Get the length of the curve.
@@ -22,6 +22,11 @@ namespace Hypar.Geometry
         /// The end of the curve.
         /// </summary>
         Vector3 End{get;}
+
+        /// <summary>
+        /// A collection of curve vertices.
+        /// </summary>
+        IList<Vector3> Vertices{get;}
 
         /// <summary>
         /// Get a point along the curve at parameter u.
