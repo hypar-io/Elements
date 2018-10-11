@@ -479,7 +479,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Get a collection a lines representing each segment of this polyline.
+        /// Get a collection a lines representing each segment of this polygon.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
         public IEnumerable<Line> Segments()

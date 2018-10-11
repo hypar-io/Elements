@@ -30,28 +30,6 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void PointWithin()
-        {
-            var p1 = new Polygon
-            (
-                new[]
-                {
-                    new Vector3(0, 0),
-                    new Vector3(20, 0),
-                    new Vector3(20, 20),
-                    new Vector3(0, 20)
-                }
-            );
-            var v1 = new Vector3(-1, -1);
-            var v2 = new Vector3(10, 10);
-            var v3 = new Vector3(0, 0);
-
-            Assert.Equal(0, p1.PointWithin(v1));
-            Assert.Equal(1, p1.PointWithin(v2));
-            Assert.Equal(-1, p1.PointWithin(v3));
-        }
-
-        [Fact]
         public void Contains()
         {
             var p1 = new Polygon
