@@ -11,7 +11,7 @@ namespace Hypar.Elements
     /// </summary>
     public abstract class StructuralFraming : Element, ITessellateMesh, ITessellateCurves, IProfileProvider
     {
-        private Line _centerLine;
+        private ICurve _centerLine;
         private Profile _profile;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Hypar.Elements
         /// The center line of the framing element.
         /// </summary>
         [JsonProperty("center_line")]
-        public Line CenterLine
+        public ICurve CenterLine
         {
             get { return this._centerLine; }
         }
@@ -82,12 +82,12 @@ namespace Hypar.Elements
         /// <param name="startSetback">The setback of the framing's extrusion at its start.</param>
         /// <param name="endSetback">The setback of the framing's extrusion at its end.</param>
         [JsonConstructor]
-        public StructuralFraming(Line centerLine, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0)
+        public StructuralFraming(ICurve centerLine, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0)
         {
             this._profile = profile;
             this._centerLine = centerLine;
             this.Material = material == null ? BuiltInMaterials.Steel : material;
-            var t = centerLine.GetTransform(0.0, up);
+            var t = centerLine.TransformAt(0.0, up);
             this.UpAxis = up == null ? t.YAxis : up;
 
             var l = centerLine.Length;
@@ -105,7 +105,7 @@ namespace Hypar.Elements
         /// <returns>A mesh representing the tessellated Beam.</returns>
         public Mesh Mesh()
         {
-            return Hypar.Geometry.Mesh.ExtrudeAlongLine(this._centerLine, this._profile.Perimeter, this._profile.Voids, true, this.StartSetback, this.EndSetback);
+            return Hypar.Geometry.Mesh.ExtrudeAlongCurve(this._centerLine, this._profile.Perimeter, this._profile.Voids, true, this.StartSetback, this.EndSetback);
         }
 
         /// <summary>

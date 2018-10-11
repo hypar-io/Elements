@@ -272,6 +272,8 @@ namespace Hypar.Geometry
             if(Double.IsNaN(n1.X) || Double.IsNaN(n1.Y) || Double.IsNaN(n1.Z))
             {
                 Console.WriteLine("Degenerate triangle found.");
+                Console.WriteLine(v1);
+                Console.WriteLine(v2);
                 return;
             }
 
@@ -437,39 +439,58 @@ IMin:{m_index_min}";
         }
 
         /// <summary>
-        /// Extrude a Polygon along a Line.
+        /// Extrude an Polygon along an ICurve.
         /// </summary>
-        /// <param name="line">The Line along which to extrude.</param>
+        /// <param name="curve">The ICurve along which to extrude.</param>
         /// <param name="perimeter">A Polygon to extrude.</param>
         /// <param name="voids">A collection of Polygons representing voids in the extrusion.</param>
         /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
         /// <param name="startSetback">The setback trom the start of the line of the extrusion.</param>
         /// <param name="endSetback">The setback from the end of the line of the end of the extrusion.</param>
         /// <returns></returns>
-        public static Mesh ExtrudeAlongLine(Line line, Polygon perimeter, IList<Polygon> voids = null, bool capped=true, double startSetback = 0.0, double endSetback = 0.0)
+        public static Mesh ExtrudeAlongCurve(ICurve curve, Polygon perimeter, IList<Polygon> voids = null, bool capped=true, double startSetback = 0.0, double endSetback = 0.0)
         {
             var mesh = new Hypar.Geometry.Mesh();
 
-            var l = line.Length;
+            var l = curve.Length;
             var ssb = startSetback/l;
             var esb = endSetback/l;
-            var tStart = line.GetTransform(0.0 + ssb);
-            var tEnd = line.GetTransform(1.0 - esb);
 
-            ExtrudePolygon(ref mesh, perimeter, tStart, tEnd);
+            var transforms = new List<Transform>();
+            var polys = new List<Polygon>();
+            
+            transforms.AddRange(curve.Frames(ssb, esb));
 
-            if(voids != null)
+            for(var i = 0; i < transforms.Count - 1; i++)
             {
-                foreach(var p in voids)
+                ExtrudePolygon(ref mesh, perimeter, transforms[i], transforms[i+1]);
+
+                if(voids != null)
                 {
-                    ExtrudePolygon(ref mesh, p, tStart, tEnd, true);
+                    foreach(var p in voids)
+                    {
+                        ExtrudePolygon(ref mesh, p, transforms[i], transforms[i+1], true);
+                    }
                 }
             }
 
+            if(curve is Polygon)
+            {
+                ExtrudePolygon(ref mesh, perimeter, transforms[transforms.Count-1], transforms[0]);
+
+                if(voids != null)
+                {
+                    foreach(var p in voids)
+                    {
+                        ExtrudePolygon(ref mesh, p, transforms[transforms.Count-1], transforms[0], true);
+                    }
+                }
+            }
+            
             if(capped)
             {
-                mesh.AddTesselatedFace(perimeter, voids, tStart);
-                mesh.AddTesselatedFace(perimeter, voids, tEnd, true);
+                mesh.AddTesselatedFace(perimeter, voids, transforms[0]);
+                mesh.AddTesselatedFace(perimeter, voids, transforms[transforms.Count-1], true);
             }
 
             return mesh;
@@ -477,8 +498,13 @@ IMin:{m_index_min}";
 
         private static void ExtrudePolygon(ref Mesh mesh, Polygon p, Transform tStart, Transform tEnd, bool reverse = false)
         {
-            var start = tStart.OfPolygon(p);
-            var end = tEnd.OfPolygon(p);
+            // Transform the polygon to the mid plane between two transforms.
+            var mid = new Line(tStart.Origin, tEnd.Origin).TransformAt(0.5).OfPolygon(p); 
+            var v = (tEnd.Origin - tStart.Origin).Normalized();
+            // var start = tStart.OfPolygon(p);
+            // var end = tEnd.OfPolygon(p);
+            var start = mid.ProjectAlong(v, tStart.XY);
+            var end = mid.ProjectAlong(v, tEnd.XY);
 
             for(var i=0; i<start.Vertices.Count; i++)
             {

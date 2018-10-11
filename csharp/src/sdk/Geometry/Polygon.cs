@@ -12,10 +12,8 @@ namespace Hypar.Geometry
     /// A closed planar polygon.
     /// </summary>
     // [JsonConverter(typeof(PolygonConverter))]
-    public partial class Polygon : ICurve
+    public partial class Polygon : Polyline
     {
-        private IList<Vector3> _vertices;
-
         /// <summary>
         /// The area enclosed by the polygon.
         /// </summary>
@@ -33,42 +31,6 @@ namespace Hypar.Geometry
                 }
                 return area/2.0;
             }
-        }
-
-        /// <summary>
-        /// The vertices of the polygon.
-        /// </summary>
-        [JsonProperty("vertices")]
-        public IList<Vector3> Vertices
-        {
-            get{return this._vertices;}
-        }
-
-        /// <summary>
-        /// The length of the polygon.
-        /// </summary>
-        [JsonIgnore]
-        public double Length
-        {
-            get{return this.Segments().Sum(s=>s.Length);}
-        }
-
-        /// <summary>
-        /// The start of the polygon.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 Start
-        {
-            get{return this._vertices[0];}
-        }
-
-        /// <summary>
-        /// The end of the polygon.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 End
-        {
-            get{return this._vertices[this._vertices.Count - 1];}
         }
 
         /// <summary>
@@ -105,48 +67,7 @@ namespace Hypar.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
-        public Polygon(IList<Vector3> vertices)
-        {
-            for(var i=0; i<vertices.Count; i++)
-            {
-                for(var j=0; j<vertices.Count; j++)
-                {
-                    if(i == j)
-                    {
-                        continue;
-                    }
-                    if(vertices[i].IsAlmostEqualTo(vertices[j]))
-                    {
-                        throw new ArgumentException($"The polygon could not be constructed. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
-                    }
-                }
-            }
-            this._vertices = vertices;
-        }
-
-        /// <summary>
-        /// Get a point on the polygon at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        public Vector3 PointAt(double u)
-        {
-            var d = this.Length * u;
-            var totalLength = 0.0;
-            for (var i = 0; i < this._vertices.Count - 1; i++)
-            {
-                var a = this._vertices[i];
-                var b = this._vertices[i + 1];
-                var currLength = a.DistanceTo(b);
-                var currVec = (b - a).Normalized();
-                if (totalLength <= d && totalLength + currLength >= d)
-                {
-                    return a + currVec * ((d - totalLength) / currLength);
-                }
-                totalLength += currLength;
-            }
-            return this.End;
-        }
+        public Polygon(IList<Vector3> vertices) : base(vertices){}
 
         /// <summary>
         /// Tests if the supplied Polygon is within the perimeter of this Polygon.
@@ -402,9 +323,9 @@ namespace Hypar.Geometry
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
-        public IList<Line> Segments()
+        public override Line[] Segments()
         {
-            var lines = new List<Line>();
+            var lines = new Line[_vertices.Count];
             for(var i=0; i<_vertices.Count; i++)
             {
                 var a = _vertices[i];
@@ -417,25 +338,16 @@ namespace Hypar.Geometry
                 {
                     b = _vertices[i+1];
                 }
-                lines.Add(new Line(a, b));
+                lines[i] = new Line(a, b);
             }
             return lines;
-        }
-
-        /// <summary>
-        /// Tessellate the polygon.
-        /// </summary>
-        /// <returns></returns>
-        public IList<IList<Vector3>> Curves()
-        {
-            return new[]{this.Vertices};
         }
 
         /// <summary>
         /// Reverse the direction of a polygon.
         /// </summary>
         /// <returns>Returns a new polgon with opposite winding.</returns>
-        public Polygon Reversed()
+        public new Polygon Reversed()
         {
             return new Polygon(this._vertices.Reverse().ToArray());
         }
@@ -486,6 +398,17 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
+        /// Project this Polygon onto a Plane along a vector.
+        /// </summary>
+        /// <param name="direction">The projection vector.</param>
+        /// <param name="p">The Plane onto which to project the Polygon.</param>
+        /// <returns>A Polygon projected onto the Plane.</returns>
+        public Polygon ProjectAlong(Vector3 direction, Plane p)
+        {
+            return new Polygon(this.Vertices.Select(v=>v.ProjectAlong(direction, p)).ToList());
+        }
+
+        /// <summary>
         /// Transform the polygon by the specified transform.
         /// </summary>
         /// <param name="t"></param>
@@ -494,7 +417,7 @@ namespace Hypar.Geometry
         {
             return new Polygon(this.Vertices.Select(v=>t.OfPoint(v)).ToList());
         }
-        
+
         /// <summary>
         /// Create a Profile from this Polygon.
         /// </summary>
@@ -502,6 +425,17 @@ namespace Hypar.Geometry
         public static implicit operator Profile(Polygon p)
         {
             return new Profile(p);
+        }
+
+        /// <summary>
+        /// Get the transforms used to transform a Profile extruded along this Polyline.
+        /// </summary>
+        /// <param name="startSetback"></param>
+        /// <param name="endSetback"></param>
+        /// <returns></returns>
+        public override Transform[] Frames(double startSetback, double endSetback)
+        {
+            return FramesInternal(startSetback, endSetback, true);
         }
     }
 

@@ -13,9 +13,22 @@ namespace Hypar.Tests
         {
             var line = new Line(new Vector3(1,1,1), new Vector3(2,2,2));
             var beam = new Beam(line, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), BuiltInMaterials.Steel, null, 0.05, 0.05);
-            var model = new Model();        
+            
+            var arc = new Arc(new Vector3(2,0,0), 5.0, 0.0, 45.0);
+            var curvedBeam = new Beam(arc, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), BuiltInMaterials.Steel, null, 0.05, 0.05);
+
+            var pline = new Polyline(new []{new Vector3(1,0), new Vector3(1,2), new Vector3(0,3,0)});
+            var plineBeam = new Beam(pline, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), BuiltInMaterials.Steel, null, 0.05, 0.05);
+
+            var ngon = Polygon.Ngon(5, 2);
+            var ngonBeam = new Beam(ngon, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), BuiltInMaterials.Steel, null, 0.05, 0.05);
+
+            var model = new Model();
             model.AddElement(beam);
-            model.SaveGlb("beam.glb");
+            model.AddElement(curvedBeam);
+            model.AddElement(plineBeam);
+            model.AddElement(ngonBeam);
+            model.SaveGltf("beam.gltf");
         }
 
         [Fact]

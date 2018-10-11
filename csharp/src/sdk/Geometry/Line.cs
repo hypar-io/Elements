@@ -77,26 +77,23 @@ namespace Hypar.Geometry
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
         /// <param name="up">The vector which will become the Y vector of the transform.</param>
         /// <returns>A transform.</returns>
-        public Transform GetTransform(double u, Vector3 up = null)
+        public Transform TransformAt(double u, Vector3 up = null)
         {
             var v = Direction;
-            var x = new Vector3(1, 0, 0);
-            var y = new Vector3(0, 1, 0);
-            var z = new Vector3(0, 0, 1);
 
             if (up == null)
             {
-                up = z;
+                up = Vector3.ZAxis;
             }
             if (up.IsParallelTo(v))
             {
-                if(v.IsAlmostEqualTo(x))
+                if(v.IsAlmostEqualTo(Vector3.XAxis))
                 {
-                    up = y;
+                    up = Vector3.YAxis;
                 }
                 else
                 {
-                    up = x;
+                    up = Vector3.XAxis;
                 }
             }
 
@@ -176,6 +173,17 @@ namespace Hypar.Geometry
         public override int GetHashCode()
         {
             return new[]{this.Start, this.End}.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get a collection of Transforms which represent frames along this ICurve.
+        /// </summary>
+        /// <param name="startSetback">The offset from the start of the ICurve.</param>
+        /// <param name="endSetback">The offset from the end of the ICurve.</param>
+        /// <returns>A collection of Transforms.</returns>
+        public Transform[] Frames(double startSetback, double endSetback)
+        {
+            return new Transform[]{TransformAt(0.0 + startSetback/this.Length), TransformAt(1.0 - endSetback/this.Length)};
         }
     }
 }

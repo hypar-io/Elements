@@ -209,7 +209,7 @@ namespace Hypar.Geometry
         /// <returns></returns>
         public Vector3 Average(Vector3 v)
         {
-            return new Vector3((this.X + v.X)/2, (this.Y + v.Y)/2, (this.Z + v.Z)/2).Normalized();
+            return new Vector3((this.X + v.X)/2, (this.Y + v.Y)/2, (this.Z + v.Z)/2);
         }
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Project the specified vector onto the plane.
+        /// Project this vector onto the plane.
         /// </summary>
         /// <param name="p">The plane on which to project the point.</param>
         public Vector3 Project(Plane p)
@@ -365,6 +365,18 @@ namespace Hypar.Geometry
             var d = -p.Origin.X * p.Normal.X - p.Origin.Y * p.Normal.Y - p.Origin.Z * p.Normal.Z;
             var p1 = this - (p.Normal.Dot(this-p.Origin)) * p.Normal;
             return p1;
+        }
+
+        /// <summary>
+        /// Project this vector onto the plane along a vector.
+        /// </summary>
+        /// <param name="v">The vector along which t project.</param>
+        /// <param name="p">The plane on which to project.</param>
+        /// <returns>A point on the plane.</returns>
+        public Vector3 ProjectAlong(Vector3 v, Plane p)
+        {
+            var x = ((p.Origin - this).Dot(p.Normal))/p.Normal.Dot(v.Normalized());
+            return this + x * v;
         }
 
         int IComparable<Vector3>.CompareTo(Vector3 v)
