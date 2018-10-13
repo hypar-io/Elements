@@ -159,8 +159,9 @@ namespace Hypar.Geometry
         /// </returns>
         public int PointWithin(Vector3 point)
         {
+            var scale = 1024.0;
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(point.X, point.Y);
+            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
             return Clipper.PointInPolygon(intPoint, thisPath);
         }
 
