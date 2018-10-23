@@ -26,7 +26,6 @@ namespace Hypar.Tests
             var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,10,0), 1.0, 10, profile, profile, profile, BuiltInMaterials.Steel, 0.1, 0.1);
             model.AddElement(truss);
             var json = model.ToJson();
-            Console.WriteLine(json);
             var newModel = Model.FromJson(json);
             var newTruss = newModel.ElementsOfType<Truss>().FirstOrDefault();
             Assert.Equal(truss.Divisions, newTruss.Divisions);
