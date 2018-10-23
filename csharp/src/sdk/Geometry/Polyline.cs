@@ -33,6 +33,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// The start of the polyline.
         /// </summary>
+        [JsonIgnore]
         public Vector3 Start
         {
             get{return this._vertices[0];}
@@ -41,6 +42,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// The end of the polyline.
         /// </summary>
+        [JsonIgnore]
         public Vector3 End
         {
             get{return this._vertices[this._vertices.Count - 1];}
