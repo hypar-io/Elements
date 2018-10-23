@@ -87,7 +87,7 @@ namespace Hypar.Tests
           Assert.True(File.Exists(Path.Combine(tmp, "Box.cs")));
           Assert.True(File.Exists(Path.Combine(tmp, "Input.g.cs")));
           Assert.True(File.Exists(Path.Combine(tmp, "Output.g.cs")));
-          Assert.True(File.Exists(Path.Combine(tmp, "BoxAdapter.g.cs")));
+          Assert.True(File.Exists(Path.Combine(tmp, "Function.g.cs")));
         }
     }
 }
