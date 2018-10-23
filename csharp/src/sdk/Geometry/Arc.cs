@@ -58,6 +58,9 @@ namespace Hypar.Geometry
             get{return PointAt(1.0);}
         }
 
+        /// <summary>
+        /// The vertices of the Arc.
+        /// </summary>
         [JsonIgnore]
         public IList<Vector3> Vertices
         {
@@ -77,7 +80,6 @@ namespace Hypar.Geometry
         /// <summary>
         /// The radius of the Arc.
         /// </summary>
-        /// <value></value>
         [JsonProperty("radius")]
         public double Radius{get;}
 
