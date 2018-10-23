@@ -82,7 +82,6 @@ namespace Hypar.Tests
           var config = HyparConfig.FromJson(configStr);
           var codeGen = new CodeGen(config);
           var tmp = Path.GetTempPath();
-          Console.WriteLine(tmp);
           codeGen.EmitCSharp(tmp);
           Assert.True(File.Exists(Path.Combine(tmp, "Box.cs")));
           Assert.True(File.Exists(Path.Combine(tmp, "Input.g.cs")));

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hypar.Geometry;
+using Hypar.Elements.Serialization;
 
 namespace Hypar.Elements
 {
@@ -43,6 +44,7 @@ namespace Hypar.Elements
         /// The center line of the framing element.
         /// </summary>
         [JsonProperty("center_line")]
+        [JsonConverter(typeof(ICurveConverter))]
         public ICurve CenterLine
         {
             get { return this._centerLine; }
