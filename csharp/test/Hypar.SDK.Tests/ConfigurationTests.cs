@@ -14,6 +14,7 @@ namespace Hypar.Tests
         private string configStr = @"{
   ""description"": ""A test function."",
   ""function_id"": ""box"",
+  ""name"":""Box Function"",
   ""inputs"": {
     ""height"": {
       ""description"": ""The height of the box."",
@@ -57,6 +58,7 @@ namespace Hypar.Tests
             Assert.Equal(4, config.Inputs.Values.Count);
             Assert.Equal(1, config.Outputs.Count);
             Assert.NotNull(config.Outputs["volume"]);
+            Assert.Equal("Box Function", config.Name);
         }
 
         [Fact]
