@@ -2,8 +2,9 @@
 
 using Xunit;
 using Newtonsoft.Json;
-using Hypar.Configuration;
+using Hypar.Functions;
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace Hypar.Tests
@@ -12,37 +13,35 @@ namespace Hypar.Tests
     {
         private string configStr = @"{
   ""description"": ""A test function."",
-  ""function"": ""box.box"",
   ""function_id"": ""box"",
-  ""runtime"": ""python3.6"",
-  ""parameters"": {
+  ""inputs"": {
     ""height"": {
       ""description"": ""The height of the box."",
       ""max"": 11,
       ""min"": 1,
       ""step"": 5,
-      ""type"": ""number""
+      ""type"": ""range""
     },
     ""length"": {
       ""description"": ""The length of the box."",
       ""max"": 11,
       ""min"": 1,
       ""step"": 5,
-      ""type"": ""number""
+      ""type"": ""range""
     },
     ""width"": {
       ""description"": ""The width of the box."",
       ""max"": 11,
       ""min"": 1,
       ""step"": 5,
-      ""type"": ""number""
+      ""type"": ""range""
     },
-    ""point_1"":{
+    ""location"":{
         ""description"": ""The location."",
         ""type"":""location""
     }
   },
-  ""returns"": {
+  ""outputs"": {
     ""volume"": {
       ""description"": ""The volume of the box."",
       ""type"":""number""
@@ -54,21 +53,16 @@ namespace Hypar.Tests
         [Fact]
         public void Valid_Config_Deserialize()
         {
-         
-            var converters = new[]{new ParameterDataConverter()};
-            var settings = new JsonSerializerSettings(){Converters = converters};
-            var config = JsonConvert.DeserializeObject<HyparConfig>(configStr, settings);
-
-            Assert.Equal("box.box", config.Function);
-            Assert.Equal(4, config.Parameters.Values.Count);
-            Assert.Equal(1, config.Returns.Count);
-            Assert.NotNull(config.Returns["volume"]);
+            var config = HyparConfig.FromJson(configStr);
+            Assert.Equal(4, config.Inputs.Values.Count);
+            Assert.Equal(1, config.Outputs.Count);
+            Assert.NotNull(config.Outputs["volume"]);
         }
 
         [Fact]
         public void Valid_Config_Serialize()
         {
-            var converters = new[]{new ParameterDataConverter()};
+            var converters = new[]{new InputOutputConverter()};
             var settings = new JsonSerializerSettings(){Converters = converters};
             var config = JsonConvert.DeserializeObject<HyparConfig>(configStr, settings);
             var result = JsonConvert.SerializeObject(config, Formatting.Indented, settings);
@@ -78,6 +72,20 @@ namespace Hypar.Tests
         public void Valid_JSON_Static_Construct_Success()
         {
             HyparConfig.FromJson(configStr);
+        }
+
+        [Fact]
+        public void Emit()
+        {
+          var config = HyparConfig.FromJson(configStr);
+          var codeGen = new CodeGen(config);
+          var tmp = Path.GetTempPath();
+          Console.WriteLine(tmp);
+          codeGen.EmitCSharp(tmp);
+          Assert.True(File.Exists(Path.Combine(tmp, "Box.cs")));
+          Assert.True(File.Exists(Path.Combine(tmp, "Input.g.cs")));
+          Assert.True(File.Exists(Path.Combine(tmp, "Output.g.cs")));
+          Assert.True(File.Exists(Path.Combine(tmp, "BoxAdapter.g.cs")));
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Hypar.Functions
     /// <summary>
     /// Converter for types which inherit from ParameterData
     /// </summary>
-    public class ParameterDataConverter : JsonConverter
+    public class InputOutputConverter : JsonConverter
     {
         /// <summary>
         /// Can this converter convert an object of the specified type?
@@ -16,7 +16,7 @@ namespace Hypar.Functions
         /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(ParameterBase);
+            return objectType == typeof(InputOutputBase);
         }
 
         /// <summary>
@@ -42,12 +42,14 @@ namespace Hypar.Functions
             {
                 case "number":
                     return jsonObject.ToObject<NumberParameter>(serializer);
+                case "range":
+                    return jsonObject.ToObject<RangeParameter>(serializer);
                 case "point":
                     return jsonObject.ToObject<PointParameter>(serializer);
                 case "location":
                     return jsonObject.ToObject<LocationParameter>(serializer);
                 default:
-                    return jsonObject.ToObject<ParameterBase>(serializer);
+                    return jsonObject.ToObject<InputOutputBase>(serializer);
             }
         }
 

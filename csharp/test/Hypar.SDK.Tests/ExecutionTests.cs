@@ -31,27 +31,27 @@ namespace Hypar.Tests
 
     public class ExecutionTests
     {
-        [Fact]
-        public void Execution()
-        {
-            var str = File.ReadAllText("execution.json");
-            var request = (JObject)JsonConvert.DeserializeObject(str);
-            var features = ((JArray)request["location"]).ToObject<Feature[]>();
+        // [Fact]
+        // public void Execution()
+        // {
+        //     var str = File.ReadAllText("execution.json");
+        //     var request = (JObject)JsonConvert.DeserializeObject(str);
+        //     var features = ((JArray)request["location"]).ToObject<Feature[]>();
 
-            var outline = (Hypar.GeoJSON.Polygon)features[0].Geometry;
-            var origin = outline.Coordinates[0][0].ToVectorMeters();
+        //     var outline = (Hypar.GeoJSON.Polygon)features[0].Geometry;
+        //     var origin = outline.Coordinates[0][0].ToVectorMeters();
 
-            var plines = outline.ToPolygons();
-            var transformed = plines.Select(pline=>new Hypar.Geometry.Polygon(pline.Vertices.Select(v=>new Vector3(v.X - origin.X, v.Y - origin.Y, v.Z)).ToArray()).Reversed()).ToArray();
+        //     var plines = outline.ToPolygons();
+        //     var transformed = plines.Select(pline=>new Hypar.Geometry.Polygon(pline.Vertices.Select(v=>new Vector3(v.X - origin.X, v.Y - origin.Y, v.Z)).ToArray()).Reversed()).ToArray();
 
-            // Compare the request to the 
-            // Execute the function
-            var func = new TestFunction();
-            var model = func.Execute(new Model(), )
+        //     // Compare the request to the 
+        //     // Execute the function
+        //     var func = new TestFunction();
+        //     var model = func.Execute(new Model(), )
 
-            model.SaveGlb("siteMass.glb");
+        //     model.SaveGlb("siteMass.glb");
             
-            var json = JsonConvert.SerializeObject(model);
-        }
+        //     var json = JsonConvert.SerializeObject(model);
+        // }
     }
 }
