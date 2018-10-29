@@ -41,17 +41,24 @@ namespace Hypar.Functions
             EmitClass(this._config.Outputs, outputClassName, outputDirectory);
         }
 
-        private string SanitizedName(string name, bool capitalizeFirstLetter)
-        {
-            var cleanName = name.Replace(" ", "").Replace("-", "");
-            if (capitalizeFirstLetter)
+        private string SanitizedName(string name, bool camelCase)
+        {   
+            var splits = name.Split(new[]{' ','-'});
+            
+            var cleanName = "";
+
+            foreach(var split in splits)
             {
-                return cleanName.First().ToString().ToUpper() + cleanName.Substring(1);
+                if(camelCase)
+                {
+                    cleanName += split.First().ToString().ToUpper() + split.Substring(1);
+                }
+                else
+                {
+                    cleanName += split.First().ToString().ToLower() + cleanName.Substring(1);
+                }
             }
-            else
-            {
-                return cleanName.First().ToString().ToLower() + cleanName.Substring(1);
-            }
+            return cleanName;
         }
 
         private string TypeName(HyparParameterType t)
@@ -141,13 +148,13 @@ using Newtonsoft.Json;
 
 namespace Hypar.Functions
 {{
-	public class Input
+	public class {className}
 	{{
 {propSb.ToString()}
 		[JsonIgnore]
 		public Model Model{{get;set;}}
 
-		public Output({string.Join(", ", args)})
+		public {className}({string.Join(", ", args)})
 		{{
 {assignSb.ToString()}
 		}}
