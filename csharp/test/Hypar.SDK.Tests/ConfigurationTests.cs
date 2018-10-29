@@ -76,17 +76,17 @@ namespace Hypar.Tests
             HyparConfig.FromJson(configStr);
         }
 
-        [Fact]
-        public void Emit()
-        {
-          var config = HyparConfig.FromJson(configStr);
-          var codeGen = new CodeGen(config);
-          var tmp = Path.GetTempPath();
-          codeGen.EmitCSharp(tmp);
-          Assert.True(File.Exists(Path.Combine(tmp, "BoxOfStuff.cs")));
-          Assert.True(File.Exists(Path.Combine(tmp, "Input.g.cs")));
-          Assert.True(File.Exists(Path.Combine(tmp, "Output.g.cs")));
-          Assert.True(File.Exists(Path.Combine(tmp, "Function.g.cs")));
-        }
+        // [Fact]
+        // public void Emit()
+        // {
+        //   var config = HyparConfig.FromJson(configStr);
+        //   var codeGen = new CodeGen(config);
+        //   var tmp = Path.GetTempPath();
+        //   codeGen.EmitCSharp(tmp);
+        //   Assert.True(File.Exists(Path.Combine(tmp, "BoxOfStuff.cs")));
+        //   Assert.True(File.Exists(Path.Combine(tmp, "Input.g.cs")));
+        //   Assert.True(File.Exists(Path.Combine(tmp, "Output.g.cs")));
+        //   Assert.True(File.Exists(Path.Combine(tmp, "Function.g.cs")));
+        // }
     }
 }
