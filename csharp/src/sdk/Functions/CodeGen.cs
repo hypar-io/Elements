@@ -55,7 +55,7 @@ namespace Hypar.Functions
                 }
                 else
                 {
-                    cleanName += split.First().ToString().ToLower() + cleanName.Substring(1);
+                    cleanName += split.First().ToString().ToLower() + split.Substring(1);
                 }
             }
             return cleanName;

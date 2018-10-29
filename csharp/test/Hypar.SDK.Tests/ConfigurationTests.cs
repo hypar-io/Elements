@@ -13,7 +13,7 @@ namespace Hypar.Tests
     {
         private string configStr = @"{
   ""description"": ""A test function."",
-  ""function_id"": ""box"",
+  ""function_id"": ""box-Of-stuff"",
   ""name"":""Box Function"",
   ""inputs"": {
     ""height"": {
@@ -83,7 +83,7 @@ namespace Hypar.Tests
           var codeGen = new CodeGen(config);
           var tmp = Path.GetTempPath();
           codeGen.EmitCSharp(tmp);
-          Assert.True(File.Exists(Path.Combine(tmp, "Box.cs")));
+          Assert.True(File.Exists(Path.Combine(tmp, "BoxOfStuff.cs")));
           Assert.True(File.Exists(Path.Combine(tmp, "Input.g.cs")));
           Assert.True(File.Exists(Path.Combine(tmp, "Output.g.cs")));
           Assert.True(File.Exists(Path.Combine(tmp, "Function.g.cs")));
