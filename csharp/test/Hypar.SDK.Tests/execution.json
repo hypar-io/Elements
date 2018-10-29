@@ -1,7 +1,7 @@
 {
-	"louverCount":3,
-	"louverWidth":1.0,
-	"location": [
+	"louverCount":{"type":"number", "value":3},
+	"louverWidth":{"type":"number", "value":1.0},
+	"location":{"type:": "location", "value": [
 		{
 			"geometry": {
 				"type": "Polygon",
@@ -46,5 +46,5 @@
 				"situszip_5": "90230"
 			}
 		}
-	]
+	]}
 }

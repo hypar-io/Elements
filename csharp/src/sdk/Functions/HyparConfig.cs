@@ -1,7 +1,8 @@
 using Newtonsoft.Json;
+using System.IO;
 using System.Collections.Generic;
 
-namespace Hypar.Configuration
+namespace Hypar.Functions
 {
     /// <summary>
     /// A container for Hypar configuration information.
@@ -13,12 +14,6 @@ namespace Hypar.Configuration
         /// </summary>
         [JsonProperty("description")]
         public string Description{get;set;}
-
-        /// <summary>
-        /// The fully-qualified name of the function.
-        /// </summary>
-        [JsonProperty("function")]
-        public string Function{get;set;}
 
         /// <summary>
         /// The unique identifier of the function.
@@ -33,16 +28,10 @@ namespace Hypar.Configuration
         public string Name{get;set;}
 
         /// <summary>
-        /// The runtime used to execute the function.
-        /// </summary>
-        [JsonProperty("runtime")]
-        public string Runtime{get;set;}
-
-        /// <summary>
         /// A map of input parameter data for the function.
         /// </summary>
-        [JsonProperty("parameters")]
-        public Dictionary<string,ParameterData> Parameters{get;set;}
+        [JsonProperty("inputs")]
+        public Dictionary<string,InputOutputBase> Inputs{get;set;}
 
         /// <summary>
         /// An optional git repository that stores your function.
@@ -53,8 +42,8 @@ namespace Hypar.Configuration
         /// <summary>
         /// A map of return data for the function.
         /// </summary>
-        [JsonProperty("returns")]
-        public Dictionary<string,ReturnData> Returns{get;set;}
+        [JsonProperty("outputs")]
+        public Dictionary<string,InputOutputBase> Outputs{get;set;}
 
         /// <summary>
         /// Construct a HyparConfig from json.
@@ -62,7 +51,7 @@ namespace Hypar.Configuration
         /// <param name="json"></param>
         public static HyparConfig FromJson(string json)
         {
-            var converters = new[]{new ParameterDataConverter()};
+            var converters = new[]{new InputOutputConverter()};
             var settings = new JsonSerializerSettings(){Converters = converters};
             var config = JsonConvert.DeserializeObject<HyparConfig>(json, settings);
             return config;
@@ -81,8 +70,8 @@ namespace Hypar.Configuration
         /// </summary>
         public HyparConfig()
         {
-            this.Parameters = new Dictionary<string, ParameterData>();
-            this.Returns = new Dictionary<string, ReturnData>();
+            this.Inputs = new Dictionary<string, InputOutputBase>();
+            this.Outputs = new Dictionary<string, InputOutputBase>();
         }
     }
 }

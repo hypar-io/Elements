@@ -83,7 +83,7 @@ namespace Hypar.Geometry
         /// <param name="polygons"></param>
         public BBox3(IList<Polygon> polygons)
         {
-            var verts = polygons.SelectMany(p=>p.Curves().SelectMany(v=>v));
+            var verts = polygons.SelectMany(p=>p.Vertices);
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
             this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
             foreach(var p in verts)
