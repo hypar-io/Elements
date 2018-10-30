@@ -1,0 +1,5 @@
+lib
+HyparRevit.bundle/Contents/*.dll
+HyparRevit.bundle/Contents/*.deps.json
+*.0*.rvt
+*.zip
