@@ -10,6 +10,9 @@ namespace Hypar.Geometry
     /// </summary>
     public class Polyline: ICurve
     {
+        /// <summary>
+        /// The internal collection of vertices.
+        /// </summary>
         protected IList<Vector3> _vertices;
 
         /// <summary>
