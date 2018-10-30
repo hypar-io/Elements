@@ -34,6 +34,7 @@ namespace Hypar.Elements
         /// <summary>
         /// All Elements in the Model.
         /// </summary>
+        [JsonProperty("elements")]
         public Dictionary<string,Element> Elements
         {
             get{return this._elements;}
@@ -42,6 +43,7 @@ namespace Hypar.Elements
         /// <summary>
         /// All Materials in the Model.
         /// </summary>
+        [JsonProperty("materials")]
         public Dictionary<string,Material> Materials
         {
             get{return this._materials;}
@@ -50,6 +52,7 @@ namespace Hypar.Elements
         /// <summary>
         /// All ElementTypes in the Model.
         /// </summary>
+        [JsonProperty("element_types")]
         public Dictionary<string, ElementType> ElementTypes
         {
             get{return this._elementTypes;}
@@ -58,6 +61,7 @@ namespace Hypar.Elements
         /// <summary>
         /// All Profiles in the model.
         /// </summary>
+        [JsonProperty("profiles")]
         public Dictionary<string, Profile> Profiles
         {
             get{return this._profiles;}
@@ -334,7 +338,7 @@ namespace Hypar.Elements
 
             var result = new Dictionary<string, object>();
             result["model"] = model;
-            result["elements"] = JsonConvert.SerializeObject(this._elements);
+            result["elements"] = JsonConvert.SerializeObject(this);
             result["origin"] = this.Origin;
             
             return result;
