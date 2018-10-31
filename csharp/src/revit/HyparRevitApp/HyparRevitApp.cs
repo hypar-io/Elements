@@ -21,21 +21,39 @@ using WallType = Hypar.Elements.WallType;
 
 namespace Hypar.Revit
 {
+    internal class Execution
+    {
+        [JsonProperty("id")]
+        public string Id{get;set;}
+
+        [JsonProperty("model")]
+        public Model Model{get;set;}
+
+        public Execution(string id, Model model)
+        {
+            this.Id = id;
+            this.Model = model;
+        }
+    }
+
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class HyparRevitApp : IExternalDBApplication
     {
         public void CreateHyparModel(DesignAutomationData data)
-        {
-            var model = ParseModel();
+        {   
+            #if !DEBUG
+            var exec = ParseExecution("execution.json");
+            #else
+            var exec = ParseExecution(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "execution.json"));
+            #endif
+            var model = exec.Model;
 
             var beamSymbol = GetStructuralSymbol(data.RevitDoc, BuiltInCategory.OST_StructuralFraming, "200UB25.4");
             var columnSymbol = GetStructuralSymbol(data.RevitDoc, BuiltInCategory.OST_StructuralColumns, "450 x 450mm");
             var floorType = GetFloorType(data.RevitDoc, "Insitu Concrete");
             var fec = new FilteredElementCollector(data.RevitDoc);
             var levels = fec.OfClass(typeof(Level)).Cast<Level>().ToList();
-
-            // var model = CreateTestModel();
 
             Transaction trans = new Transaction(data.RevitDoc);
             trans.Start("Hypar");
@@ -47,48 +65,27 @@ namespace Hypar.Revit
 
             trans.Commit();
 
-            data.RevitDoc.SaveAs(Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"hypar_new.rvt"));
+            #if !DEBUG
+            var path = ModelPathUtils.ConvertUserVisiblePathToModelPath($"{exec.Id}.rvt");
+            data.RevitDoc.SaveAs(path, new SaveAsOptions());
+            #else
+            data.RevitDoc.SaveAs(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{exec.Id}.rvt"));
+            #endif
         }
 
-        private Model ParseModel()
+        private Execution ParseExecution(string jsonPath)
         {
             try
             {
-                var jsonPath = "model.json";
-                if(!File.Exists(jsonPath))
-                {
-                    return new Model(); 
-                }
                 var json = File.ReadAllText(jsonPath);
-                return JsonConvert.DeserializeObject<Model>(json);
+                var dict = JsonConvert.DeserializeObject<Dictionary<string,string>>(json);
+                return new Execution(dict["id"], Model.FromJson(dict["model"]));
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"The model.json file could not be parsed: {ex.Message}");
+                Console.WriteLine($"The execution.json file could not be parsed: {ex.Message}");
                 return null;
             }
-        }
-
-        private Model CreateTestModel()
-        {
-            var model = new Model();
-            var line = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var beam = new Beam(line, WideFlangeProfileServer.Instance.GetProfileByName("W6x25"), BuiltInMaterials.Steel);
-            model.AddElement(beam);
-
-            var wallLine = new Line(new Vector3(10,0,0), new Vector3(15,10,0));
-            var wallType = new WallType("concrete", 0.1);
-            var wall = new Wall(wallLine, wallType, 5.0, null, BuiltInMaterials.Concrete);
-            model.AddElement(wall);
-
-            var column = new Column(Vector3.Origin, 5.0, WideFlangeProfileServer.Instance.GetProfileByName("W6x25"), BuiltInMaterials.Steel);
-            model.AddElement(column);
-
-            var floorType = new FloorType("concrete", 0.1);
-            var floor = new Floor(Polygon.Rectangle(Vector3.Origin, 10, 10), floorType, 5.0, BuiltInMaterials.Concrete);
-            model.AddElement(floor);
-
-            return model;
         }
 
         private FamilySymbol GetStructuralSymbol(Document doc, BuiltInCategory category, string symbolName)
@@ -177,11 +174,11 @@ namespace Hypar.Revit
 
         public ExternalDBApplicationResult OnStartup(ControlledApplication application)
         {
-            // For production use.
-            DesignAutomationBridge.DesignAutomationReadyEvent += HandleDesignAutomationReadyEvent;
-
-            // For testing locally
+            #if DEBUG
             application.ApplicationInitialized += HandleApplicationInitializedEvent;
+            #else
+            DesignAutomationBridge.DesignAutomationReadyEvent += HandleDesignAutomationReadyEvent;
+            #endif
 
             return ExternalDBApplicationResult.Succeeded;
         }
@@ -192,13 +189,14 @@ namespace Hypar.Revit
             e.Succeeded = true;
         }
 
+        #if DEBUG
         public void HandleApplicationInitializedEvent(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
         {
             Autodesk.Revit.ApplicationServices.Application app = sender as Autodesk.Revit.ApplicationServices.Application;
-            // We don't need to provide the file
-            DesignAutomationData data = new DesignAutomationData(app, @"C:\Users\Ian\Documents\sdk\csharp\src\revit\HyparRevitApp\hypar.rvt");
+            DesignAutomationData data = new DesignAutomationData(app, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sdk/csharp/src/revit/HyparRevitApp/hypar.rvt"));
             CreateHyparModel(data);
         }
+        #endif
 
         public ExternalDBApplicationResult OnShutdown(ControlledApplication application)
         {
