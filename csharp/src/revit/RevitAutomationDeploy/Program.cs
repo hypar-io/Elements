@@ -334,9 +334,7 @@ namespace RevitAutomationDeploy
                     BucketName = Environment.GetEnvironmentVariable(REVIT_AUTOMATION_BUCKET_NAME, EnvironmentVariableTarget.User),
                     Key = $"{key}.rvt",
                     Expires = DateTime.Now.AddMinutes(60),
-                    Verb = HttpVerb.PUT,
-                    // ContentType = "application/octet-stream",
-                    // Protocol = Protocol.HTTPS
+                    Verb = HttpVerb.PUT
                 };
                 urlString = s3Client.GetPreSignedURL(request1);
             }
@@ -422,7 +420,7 @@ namespace RevitAutomationDeploy
                         LocalName = "result.rvt"
                     },
                     Execution = new Parameter(){
-                        Zip = false,
+                        Zip = true,
                         OnDemand = false,
                         Verb = "get",
                         Description = " Hypar execution.",
