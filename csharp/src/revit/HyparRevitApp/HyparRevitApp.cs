@@ -7,6 +7,7 @@ using DesignAutomationFramework;
 using Hypar.Elements;
 using Hypar.Geometry;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,7 @@ using WallType = Hypar.Elements.WallType;
 
 namespace Hypar.Revit
 {
+    [JsonConverter(typeof(ExecutionConverter))]
     internal class Execution
     {
         [JsonProperty("id")]
@@ -33,6 +35,32 @@ namespace Hypar.Revit
         {
             this.Id = id;
             this.Model = model;
+        }
+    }
+
+    internal class ExecutionConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Execution);
+        }
+
+        public override bool CanWrite
+        {
+            get{return false;}
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var obj = JObject.Load(reader);
+            var id = obj.GetValue("id");
+            var model = obj.GetValue("model");
+            return new Execution(id.ToString(), Model.FromJson(model.ToString()));
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -66,10 +94,10 @@ namespace Hypar.Revit
             trans.Commit();
 
             #if !DEBUG
-            var path = ModelPathUtils.ConvertUserVisiblePathToModelPath($"{exec.Id}.rvt");
+            var path = ModelPathUtils.ConvertUserVisiblePathToModelPath($"result.rvt");
             data.RevitDoc.SaveAs(path, new SaveAsOptions());
             #else
-            data.RevitDoc.SaveAs(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{exec.Id}.rvt"));
+            data.RevitDoc.SaveAs(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"result.rvt"));
             #endif
         }
 
@@ -78,8 +106,7 @@ namespace Hypar.Revit
             try
             {
                 var json = File.ReadAllText(jsonPath);
-                var dict = JsonConvert.DeserializeObject<Dictionary<string,string>>(json);
-                return new Execution(dict["id"], Model.FromJson(dict["model"]));
+                return JsonConvert.DeserializeObject<Execution>(json);
             }
             catch(Exception ex)
             {

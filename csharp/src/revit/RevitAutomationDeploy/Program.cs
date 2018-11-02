@@ -20,8 +20,8 @@ namespace RevitAutomationDeploy
     {
         private const string FORGE_CLIENT_ID = "FORGE_CLIENT_ID";
         private const string FORGE_CLIENT_SECRET = "FORGE_CLIENT_SECRET";
-        private const string REVIT_AUTOMATION_BUCKET_NAME = "HYPAR_REVIT_BUCKET_NAME";
-        private const string REVIT_AUTOMATION_KEY = "HYPAR_REVIT_KEY";
+        private const string REVIT_AUTOMATION_BUCKET_NAME = "REVIT_AUTOMATION_BUCKET_NAME";
+        private const string REVIT_AUTOMATION_KEY = "REVIT_AUTOMATION_KEY";
         
         private static RestSharp.RestClient _client;
 
@@ -43,9 +43,12 @@ namespace RevitAutomationDeploy
             var modelUrl = "https://s3-us-west-1.amazonaws.com/hypar-revit/hypar.rvt";
 
             var token = GetAccessToken(clientId);
-
-            Console.WriteLine(token);
-
+            if(args[0] == "-token")
+            {
+                Console.WriteLine(token);
+                return;
+            }
+            
             if(args[0] == "-t")
             {
                 var model = CreateTestModel();
@@ -69,8 +72,12 @@ namespace RevitAutomationDeploy
 
             if(args[0] == "-w")
             {
-                var url = GeneratePreSignedURL();
-                CreateTestWorkItem(url, modelUrl, token, nickname, activityId, activityAlias);
+                if(args.Length == 1)
+                {
+                    throw new Exception("You must supply an execution id as the second argument.");
+                }
+                var url = GeneratePreSignedURL(args[1]);
+                CreateTestWorkItem(args[1], url, modelUrl, token, nickname, activityId, activityAlias);
                 return;
             }
 
@@ -82,7 +89,7 @@ namespace RevitAutomationDeploy
             CreateActivity(token, activityId, nickname, appId, appAlias, engine, activityAlias);
         }
 
-        private static void CreateTestWorkItem(string presignedUrl, string modelUrl, string token, string nickname, string activityId, string activityAlias)
+        private static void CreateTestWorkItem(string executionId, string presignedUrl, string modelUrl, string token, string nickname, string activityId, string activityAlias)
         {
             var request = new RestSharp.RestRequest("/workitems", RestSharp.Method.POST);
             request.AddHeader("Authorization", $"Bearer {token}");
@@ -102,13 +109,11 @@ namespace RevitAutomationDeploy
                         {"url", presignedUrl}
                     }},
                     {"execution",new Dictionary<string,object>(){
-                        {"url", $"data:application/json,{{'id': '{Guid.NewGuid().ToString()}', 'model': {modelJson}}}"}
+                        {"url", $"data:application/json,{{'id': '{executionId}', 'model': {modelJson}}}"}
                     }}
                 }}
             };
             var bodyJson = JsonConvert.SerializeObject(body);
-            Console.WriteLine(bodyJson);
-
             request.AddParameter("application/json", bodyJson, RestSharp.ParameterType.RequestBody);
 
             var response = _client.Execute(request);
@@ -312,11 +317,11 @@ namespace RevitAutomationDeploy
             {
                 File.Delete(zipPath);
             }
-            ZipFile.CreateFromDirectory(bundleDir, zipPath);
+            ZipFile.CreateFromDirectory(bundleDir, zipPath, CompressionLevel.Optimal, true);
             return zipPath;
         }
 
-        private static string GeneratePreSignedURL()
+        private static string GeneratePreSignedURL(string key)
         {
             //https://docs.aws.amazon.com/AmazonS3/latest/dev/ShareObjectPreSignedURLDotNetSDK.html
 
@@ -327,11 +332,11 @@ namespace RevitAutomationDeploy
                 GetPreSignedUrlRequest request1 = new GetPreSignedUrlRequest
                 {
                     BucketName = Environment.GetEnvironmentVariable(REVIT_AUTOMATION_BUCKET_NAME, EnvironmentVariableTarget.User),
-                    Key = Environment.GetEnvironmentVariable(REVIT_AUTOMATION_KEY, EnvironmentVariableTarget.User),
+                    Key = $"{key}.rvt",
                     Expires = DateTime.Now.AddMinutes(60),
                     Verb = HttpVerb.PUT,
-                    ContentType = "application/octet-stream",
-                    Protocol = Protocol.HTTPS
+                    // ContentType = "application/octet-stream",
+                    // Protocol = Protocol.HTTPS
                 };
                 urlString = s3Client.GetPreSignedURL(request1);
             }
@@ -400,7 +405,7 @@ namespace RevitAutomationDeploy
                 Id = activityId,
                 CommandLine = new[]{$"$(engine.path)\\\\revitcoreconsole.exe /i $(args[rvtFile].path) /al $(appbundles[{appId}].path)"},
                 Parameters = new ActivityParameters(){
-                    RvtFile = new RvtFile(){
+                    RvtFile = new Parameter(){
                         Zip = false,
                         OnDemand = false,
                         Verb = "get",
@@ -408,13 +413,21 @@ namespace RevitAutomationDeploy
                         Required = true,
                         LocalName = "$(rvtFile)"
                     },
-                    Result = new Result(){
+                    Result = new Parameter(){
                         Zip = false,
                         OnDemand = false,
                         Verb = "put",
                         Description = "Results",
                         Required = true,
                         LocalName = "result.rvt"
+                    },
+                    Execution = new Parameter(){
+                        Zip = false,
+                        OnDemand = false,
+                        Verb = "get",
+                        Description = " Hypar execution.",
+                        Required = true,
+                        LocalName = "execution.json"
                     }
                 },
                 Engine = engine,

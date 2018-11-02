@@ -21,28 +21,14 @@ namespace RevitAutomationDeploy
     internal class ActivityParameters
     {
         [JsonProperty("rvtFile")]
-        public RvtFile RvtFile{get;set;}
+        public Parameter RvtFile{get;set;}
         [JsonProperty("result")]
-        public Result Result{get;set;}
+        public Parameter Result{get;set;}
+        [JsonProperty("execution")]
+        public Parameter Execution{get;set;}
     }
 
-    internal class RvtFile
-    {
-        [JsonProperty("zip")]
-        public bool Zip{get;set;}
-        [JsonProperty("ondemand")]
-        public bool OnDemand{get;set;}
-        [JsonProperty("verb")]
-        public string Verb{get;set;}
-        [JsonProperty("description")]
-        public string Description{get;set;}
-        [JsonProperty("required")]
-        public bool Required{get;set;}
-        [JsonProperty("localName")]
-        public string LocalName{get;set;}
-    }
-
-    internal class Result
+    internal class Parameter
     {
         [JsonProperty("zip")]
         public bool Zip{get;set;}
