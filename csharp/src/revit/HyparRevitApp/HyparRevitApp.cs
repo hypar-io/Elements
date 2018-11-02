@@ -71,11 +71,10 @@ namespace Hypar.Revit
         public void CreateHyparModel(DesignAutomationData data)
         {   
             #if !DEBUG
-            var exec = ParseExecution("execution.json");
+            var model = ParseExecution("execution.json"); 
             #else
-            var exec = ParseExecution(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "execution.json"));
+            var model = ParseExecution(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "execution.json"));
             #endif
-            var model = exec.Model;
 
             var beamSymbol = GetStructuralSymbol(data.RevitDoc, BuiltInCategory.OST_StructuralFraming, "200UB25.4");
             var columnSymbol = GetStructuralSymbol(data.RevitDoc, BuiltInCategory.OST_StructuralColumns, "450 x 450mm");
@@ -101,12 +100,12 @@ namespace Hypar.Revit
             #endif
         }
 
-        private Execution ParseExecution(string jsonPath)
+        private Model ParseExecution(string jsonPath)
         {
             try
             {
                 var json = File.ReadAllText(jsonPath);
-                return JsonConvert.DeserializeObject<Execution>(json);
+                return Model.FromJson(json);
             }
             catch(Exception ex)
             {
