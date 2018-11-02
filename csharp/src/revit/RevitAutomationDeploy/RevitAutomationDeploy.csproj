@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="Autodesk.Forge" Version="1.4.0" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.26.5" />
+    <PackageReference Include="HyparSDK" Version="0.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 

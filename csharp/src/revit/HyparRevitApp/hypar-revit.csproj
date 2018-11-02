@@ -20,6 +20,10 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
   
   <Target Name="CopyToBundle" AfterTargets="Publish">
     <Copy SourceFiles="$(OutDir)publish\HyparRevit.dll" DestinationFolder="HyparRevit.bundle\Contents" ContinueOnError="true" />
