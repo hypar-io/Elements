@@ -178,7 +178,7 @@ namespace Hypar.Revit
             foreach(var f in hyparFloors)
             {
                 var l = FindClosestLevel(f.Elevation.ToFeet(), levels);
-                doc.Create.NewFloor(f.Profile.ToRevitCurveArray(app), floorType, l, false);
+                doc.Create.NewFloor(f.ProfileTransformed.ToRevitCurveArray(app), floorType, l, false);
             }
         }
 
