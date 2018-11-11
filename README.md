@@ -1,4 +1,4 @@
-<img src="./hypar_logo.svg" width="300px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
+<img src="./hypar_logo.svg" width="200px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
 
 # elements
 [![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/elements)
