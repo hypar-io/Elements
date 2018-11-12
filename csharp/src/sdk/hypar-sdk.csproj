@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <Tags>AEC</Tags>
   </PropertyGroup>
 
