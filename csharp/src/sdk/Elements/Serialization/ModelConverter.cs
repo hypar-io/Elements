@@ -43,9 +43,8 @@ namespace Hypar.Elements.Serialization
                                                     new ElementConverter(),
                                                     new MaterialToIdConverter(materials),
                                                     new ElementTypeToIdConverter(elementTypes),
-                                                    new ProfileToIdConverter(profiles)
+                                                    new ProfileToIdConverter(profiles),
                                                 },
-                                Formatting = Formatting.Indented,
                                 NullValueHandling = NullValueHandling.Ignore
                             });                                                
             return new Model(elements, materials, elementTypes, profiles);

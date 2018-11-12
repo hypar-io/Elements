@@ -305,13 +305,21 @@ namespace Hypar.Elements
         /// Serialize the model to JSON.
         /// </summary>
         /// <returns></returns>
-        public string ToJson()
+        public string ToJson(bool indented = false)
         {   
-            return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+            var result = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
             {
                 Converters = new []{new ModelConverter()},
                 NullValueHandling = NullValueHandling.Ignore
             });
+            if(indented)
+            {
+                return result.Replace("\n","").Replace("\r\n","").Replace("\t","").Replace("  ","");
+            }
+            else
+            {
+                return result;
+            }
         }
         
         /// <summary>
