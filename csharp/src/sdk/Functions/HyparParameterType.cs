@@ -26,6 +26,11 @@ namespace Hypar.Functions
         /// A point parameter.
         /// </summary>
         [EnumMember(Value = "point")]
-        Point
+        Point,
+        /// <summary>
+        /// A data parameter.
+        /// </summary>
+        [EnumMember(Value = "data")]
+        Data
     }
 }
