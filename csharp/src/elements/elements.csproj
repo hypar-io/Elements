@@ -8,14 +8,16 @@
     <Title>Hypar Elements</Title>
     <Authors>Hypar</Authors>
     <PackageId>Hypar.Elements</PackageId>
-    <Description>A building elements library for AEC.</Description>
+    <PackageDescription>A building elements library for AEC.</PackageDescription>
     <Summary>The Elements library provides object types for creating the built environment.</Summary>
     <Copyright>Hypar LLC, 2018</Copyright>
     <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Version>0.1.3</Version>
-    <Tags>AEC, Architecture, Structure, Engineering</Tags>
+    <PackageTags>AEC, Architecture, Structure, Engineering</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
