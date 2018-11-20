@@ -11,19 +11,19 @@ namespace Hypar.Functions
         /// <summary>
         /// The minimum value of the parameter.
         /// </summary>
-        [JsonProperty("min")]
+        [JsonProperty("min", Required = Required.Always)]
         public double Min{get;}
 
         /// <summary>
         /// The maximum value of the parameter.
         /// </summary>
-        [JsonProperty("max")]
+        [JsonProperty("max", Required = Required.Always)]
         public double Max{get;}
 
         /// <summary>
         /// The step of the parameter.
         /// </summary>
-        [JsonProperty("step")]
+        [JsonProperty("step", Required = Required.Always)]
         public double Step{get;}
 
         /// <summary>

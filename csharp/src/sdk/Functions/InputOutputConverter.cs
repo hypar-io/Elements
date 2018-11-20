@@ -48,6 +48,8 @@ namespace Hypar.Functions
                     return jsonObject.ToObject<PointParameter>(serializer);
                 case "location":
                     return jsonObject.ToObject<LocationParameter>(serializer);
+                case "data":
+                    return jsonObject.ToObject<DataParameter>(serializer);
                 default:
                     return jsonObject.ToObject<InputOutputBase>(serializer);
             }

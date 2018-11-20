@@ -40,6 +40,11 @@ namespace Hypar.Tests
     ""location"":{
         ""description"": ""The location."",
         ""type"":""location""
+    },
+    ""data"":{
+        ""description"": ""Some test data."",
+        ""type"":""data"",
+        ""content_type"":""application/json""
     }
   },
   ""outputs"": {
@@ -55,10 +60,12 @@ namespace Hypar.Tests
         public void Valid_Config_Deserialize()
         {
             var config = HyparConfig.FromJson(configStr);
-            Assert.Equal(4, config.Inputs.Values.Count);
+            Assert.Equal(5, config.Inputs.Values.Count);
             Assert.Equal(1, config.Outputs.Count);
             Assert.NotNull(config.Outputs["volume"]);
             Assert.Equal("Box Function", config.Name);
+            Assert.Equal(config.Inputs["data"].Type, HyparParameterType.Data);
+            Assert.Equal(config.Inputs["data"].Description, "Some test data.");
         }
 
         [Fact]
