@@ -3,19 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Hypar.SDK</AssemblyName>
+    <AssemblyName>Hypar.Elements</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Title>Hypar SDK</Title>
+    <Title>Hypar Elements</Title>
     <Authors>Hypar</Authors>
-    <PackageId>HyparSDK</PackageId>
-    <Description>Function Execution for AEC</Description>
-    <Summary>The Hypar SDK allows developers to create functions which runs on the Hypar platform.</Summary>
+    <PackageId>Hypar.Elements</PackageId>
+    <Description>A building elements library for AEC.</Description>
+    <Summary>The Elements library provides object types for creating the built environment.</Summary>
     <Copyright>Hypar LLC, 2018</Copyright>
-    <PackageProjectUrl>https://www.hypar.io</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <Version>0.1.3</Version>
-    <Tags>AEC</Tags>
+    <Tags>AEC, Architecture, Structure, Engineering</Tags>
   </PropertyGroup>
 
   <ItemGroup>
