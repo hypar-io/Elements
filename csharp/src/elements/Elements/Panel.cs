@@ -1,4 +1,5 @@
 using Hypar.Geometry;
+using Hypar.Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -25,7 +26,7 @@ namespace Hypar.Elements
         /// <summary>
         /// A CCW collection of points defining the corners of the Panel.
         /// </summary>
-        [JsonProperty("perimeter")]
+        [JsonProperty("perimeter"),JsonConverter(typeof(IListVector3Converter))]
         public IList<Vector3> Perimeter 
         { 
             get

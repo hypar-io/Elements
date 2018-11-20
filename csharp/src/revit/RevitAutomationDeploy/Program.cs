@@ -95,8 +95,8 @@ namespace RevitAutomationDeploy
             request.AddHeader("Authorization", $"Bearer {token}");
             request.AddHeader("Content-Type", "application/json");
 
-            var model = CreateTestModel();
-            var modelJson = model.ToJson().Replace("\"","'").Replace("\r\n","").Replace("\t","").Replace("  ","");
+            // var model = CreateTestModel();
+            // var modelJson = model.ToJson().Replace("\"","'").Replace("\r\n","").Replace("\t","").Replace("  ","");
             
             var body = new Dictionary<string,object>(){
                 {"activityId", $"{nickname}.{activityId}+{activityAlias}"},
@@ -109,7 +109,8 @@ namespace RevitAutomationDeploy
                         {"url", presignedUrl}
                     }},
                     {"execution",new Dictionary<string,object>(){
-                        {"url", $"data:application/json,{{'id': '{executionId}', 'model': {modelJson}}}"}
+                        // {"url", $"data:application/json,{{'id': '{executionId}', 'model': {modelJson}}}"}
+                        {"url", $"https://s3-us-west-1.amazonaws.com/hypar-executions-dev/{executionId}_elements.json"}
                     }}
                 }}
             };
