@@ -292,7 +292,11 @@ namespace Hypar.Elements
             gltf.SaveModel(path);
         }
 
-        private string SaveBase64()
+        /// <summary>
+        /// Convert the Model to a base64 encoded string.
+        /// </summary>
+        /// <returns></returns>
+        public string ToBase64String()
         {
             var tmp = Path.GetTempFileName();
             var gltf = InitializeGlTF();
@@ -334,22 +338,6 @@ namespace Hypar.Elements
                 Converters = new []{new ModelConverter()},
                 NullValueHandling = NullValueHandling.Ignore
             });
-        }
-
-        /// <summary>
-        /// Construct a representation of the model for sending to Hypar.
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<string,object> ToHypar()
-        {
-            var model = SaveBase64();
-
-            var result = new Dictionary<string, object>();
-            result["model"] = model;
-            result["elements"] = ToJson();
-            result["origin"] = this.Origin;
-            
-            return result;
         }
 
         private Gltf InitializeGlTF()
