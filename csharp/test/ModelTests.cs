@@ -34,6 +34,15 @@ namespace Hypar.Tests
         }
 
         [Fact]
+        public void TestModel_SaveToBase64_Success()
+        {
+            var model = QuadPanelModel();
+            var base64 = model.ToBase64String();
+            var bytes = Convert.FromBase64String(base64);
+            File.WriteAllBytes("saveFromBase64String.glb", bytes);
+        }
+
+        [Fact]
         public void JsonSerialization()
         {
             var a = new Vector3(0,0,0);
