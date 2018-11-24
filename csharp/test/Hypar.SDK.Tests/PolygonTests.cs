@@ -388,8 +388,8 @@ namespace Hypar.Tests
         public void Offset()
         {
             var a = new Vector3();
-            var b = new Vector3(2, 5);
-            var c = new Vector3(-3, 5);
+            var b = new Vector3(2.0, 5.0);
+            var c = new Vector3(-3.0, 5.0);
 
             var plinew = new Polygon(new[]{a,b,c});
             var offset = plinew.Offset(0.2);
@@ -467,11 +467,11 @@ namespace Hypar.Tests
         public void TwoPeaks_Offset_2Polylines()
         {
             var a = new Vector3();
-            var b = new Vector3(5, 0);
-            var c = new Vector3(5, 5);
-            var d = new Vector3(0, 1);
-            var e = new Vector3(-5, 5);
-            var f = new Vector3(-5, 0);
+            var b = new Vector3(5.0, 0.0);
+            var c = new Vector3(5.0, 5.0);
+            var d = new Vector3(0.0, 1.0);
+            var e = new Vector3(-5.0, 5.0);
+            var f = new Vector3(-5.0, 0.0);
 
             var plinew = new Polygon(new[]{a,b,c,d,e,f});
             var offset = plinew.Offset(-0.5);
