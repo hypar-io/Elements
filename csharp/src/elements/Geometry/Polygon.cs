@@ -70,6 +70,47 @@ namespace Hypar.Geometry
         public Polygon(IList<Vector3> vertices) : base(vertices){}
 
         /// <summary>
+        /// Tests if the supplied 2D point is within the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="point">The 2D Vector3 point to compare.</param>
+        /// <returns>
+        /// Returns true if the supplied Vector3 point is inside this Polygon.
+        /// </returns>
+        public bool Contains(Vector3 point)
+        {
+            var scale = 1024.0;
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+            if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if all the supplied 2D Vector3 points fall within the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="points">The collection of 2D Vector3 points to compare.</param>
+        /// <returns>
+        /// Returns true if the supplied Vector3 point is inside this Polygon.
+        /// </returns>
+        public bool Contains(IList<Vector3> points)
+        {
+            var scale = 1024.0;
+            var thisPath = this.ToClipperPath();
+            foreach (Vector3 point in points)
+            {
+                var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+                if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Tests if the supplied Polygon is within the perimeter of this Polygon.
         /// </summary>
         /// <param name="polygon">The Polygon to compare.</param>
@@ -82,7 +123,7 @@ namespace Hypar.Geometry
             var polyPath = polygon.ToClipperPath();
             foreach (IntPoint vertex in polyPath)
             {
-                if (Clipper.PointInPolygon(vertex, thisPath) <= 0)
+                if (Clipper.PointInPolygon(vertex, thisPath) != 1)
                 {
                     return false;
                 }
@@ -91,19 +132,163 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Polygon is within or coincident with the perimeter of this Polygon.
+        /// Tests if all Polygons in the supplied collection are within the perimeter of this Polygon.
         /// </summary>
-        /// <param name="polygon">The Polygon to compare.</param>
+        /// <param name="polygons">The collection of Polygons to compare.</param>
         /// <returns>
-        /// Returns true if every vertex of the supplied Polygon falls within or on the perimeter of this Polygon.
+        /// Returns true if every supplied Polygon falls within the perimeter of this Polygon.
+        /// </returns>
+        public bool Contains(IList<Polygon> polygons)
+        {
+            var thisPath = this.ToClipperPath();
+            foreach (Polygon polygon in polygons)
+            {
+                var polyPath = polygon.ToClipperPath();
+                foreach (IntPoint vertex in polyPath)
+                {
+                    if (Clipper.PointInPolygon(vertex, thisPath) != 1)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if the supplied 2D Vector3 point is within or touches the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="point">The 2D Vector3 point to compare.</param>
+        /// <returns>
+        /// Returns true if the supplied 2D Vector3 point falls within or touches the perimeter of this Polygon.
+        /// </returns>
+        public bool Covers(Vector3 point)
+        {
+            var scale = 1024.0;
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+            if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if all the 2D Vector3 points in the supplied list fall within or on the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="points">The list of 2D Vector3 points to compare.</param>
+        /// <returns>
+        /// Returns true if any of the supplied 2D Vector3 points fall within or on the perimeter of this Polygon.
+        /// </returns>
+        public bool Covers(IList<Vector3> points)
+        {
+            var scale = 1024.0;
+            var thisPath = this.ToClipperPath();
+            foreach (Vector3 point in points)
+            {
+                var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+                if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if this Polygon covers the supplied Polygon. This Polygon covers the supplied Polygon if all points of the supplied Polygon fall within or on the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="polygon">The Polygon to test for coverage by this Polygon.</param>
+        /// <returns>
+        /// Returns true if the supplied Polygon is contained by or coincides with the perimeter of the supplied Polygon.
         /// </returns>
         public bool Covers(Polygon polygon)
         {
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
-            foreach (IntPoint vertex in polyPath)
+            var tolerance = 0.00001;
+            var clipper = new Clipper();
+            var solution = new List<List<IntPoint>>();
+            clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
+            clipper.Execute(ClipType.ctIntersection, solution);
+            if (solution.Count != 1)
             {
-                if (Clipper.PointInPolygon(vertex, thisPath) == 0)
+                return false;
+            }
+            var testPolygon = solution.First().ToPolygon();
+            if (Math.Abs(polygon.Area - testPolygon.Area) > tolerance)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if this Polygon covers all of the supplied Polygons. This Polygon covers the supplied Polygons if all points of the supplied Polygons fall within or on the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="polygons">The list of Polygons to compare.</param>
+        /// <returns>
+        /// Returns true if any of the supplied Polygons intersects with this Polygon.
+        /// </returns>
+        public bool Covers(IList<Polygon> polygons)
+        {
+            var tolerance = 0.00001;
+            var clipper = new Clipper();
+            var solution = new List<List<IntPoint>>();
+            foreach (Polygon polygon in polygons)
+            {
+                clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
+                clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
+                clipper.Execute(ClipType.ctIntersection, solution);
+                if (solution.Count == 0)
+                {
+                    return false;
+                }
+                var testPolygon = solution.First().ToPolygon();
+                if (Math.Abs(polygon.Area - testPolygon.Area) > tolerance)
+                {
+                    return false;
+                }
+                solution.Clear();
+                clipper.Clear();
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if the supplied 2D Vector3 point is outside the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="point">The 2D Vector3 point to compare.</param>
+        /// <returns>
+        /// Returns true if the supplied 2D Vector3 point falls outside the perimeter of this Polygon.
+        /// </returns>
+        public bool Disjoint(Vector3 point)
+        {
+            var scale = 1024.0;
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+            if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if all the supplied 2D Vector3 points are outside the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="points">The collection of 2D Vector3 points to compare.</param>
+        /// <returns>
+        /// Returns true if any of the supplied 2D Vector3 points fall outside the perimeter of this Polygon.
+        /// </returns>
+        public bool Disjoint(IList<Vector3> points)
+        {
+            var scale = 1024.0;
+            var thisPath = this.ToClipperPath();
+            foreach (Vector3 point in points)
+            {
+                var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+                if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
                 {
                     return false;
                 }
@@ -140,31 +325,124 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if this Polygon and the supplied Polygon share areas within their perimeters.
+        /// Tests if any of the supplied Polygons are coincident with this Polygon.
         /// </summary>
-        /// <param name="polygon">The Polygon to compare.</param>
+        /// <param name="polygons">The collection of Polygons to compare.</param>
         /// <returns>
-        /// Returns true if any vertex of either Polygon is within the perimeter of the other.
+        /// Returns true if any of the supplied Polygons do not intersect or touch.
+        /// </returns>
+        public bool Disjoint(IList<Polygon> polygons)
+        {
+            var thisPath = this.ToClipperPath();
+            foreach (Polygon polygon in polygons)
+            {
+                var polyPath = polygon.ToClipperPath();
+                foreach (IntPoint vertex in thisPath)
+                {
+                    if (Clipper.PointInPolygon(vertex, polyPath) != 0)
+                    {
+                        return false;
+                    }
+                }
+                foreach (IntPoint vertex in polyPath)
+                {
+                    if (Clipper.PointInPolygon(vertex, thisPath) != 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if the supplied Polygon shares areas with this Polygon.
+        /// </summary>
+        /// <param name="polygon">The Polygon to compare with this Polygon.</param>
+        /// <returns>
+        /// Returns true if the two Polygons intersect at least once.
         /// </returns>
         public bool Intersects(Polygon polygon)
         {
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
-            foreach (IntPoint vertex in thisPath)
+            if (polygon == null)
             {
-                if (Clipper.PointInPolygon(vertex, polyPath) == 1)
-                {
-                    return true;
-                }
+                return false;
             }
-            foreach (IntPoint vertex in polyPath)
+            var clipper = new Clipper();
+            var solution = new List<List<IntPoint>>();
+            clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
+            clipper.Execute(ClipType.ctIntersection, solution);
+            return solution.Count != 0;
+        }
+
+        /// <summary>
+        /// Tests if any of the supplied Polygons share areas with this Polygon.
+        /// </summary>
+        /// <param name="polygons">The list of Polygons to compare.</param>
+        /// <returns>
+        /// Returns true if any of the supplied Polygons intersects with this Polygon.
+        /// </returns>
+        public bool Intersects(IList<Polygon> polygons)
+        {
+            if (polygons == null)
             {
-                if (Clipper.PointInPolygon(vertex, thisPath) == 1)
-                {
-                    return true;
-                }
+                return false;
+            }
+            var clipper = new Clipper();
+            var solution = new List<List<IntPoint>>();
+            clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
+            foreach (Polygon polygon in polygons)
+            {
+                clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
+            }
+            clipper.Execute(ClipType.ctIntersection, solution);
+            if (solution.Count != 0)
+            {
+                return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Tests if the supplied 2D Vector3 point is on the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="point">The 2D Vector3 point to compare.</param>
+        /// <returns>
+        /// Returns true if the supplied 2D Vector3 point coincides with the perimeter of this Polygon.
+        /// </returns>
+        public bool Touches(Vector3 point)
+        {
+            var scale = 1024.0;
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+            if (Clipper.PointInPolygon(intPoint, thisPath) != -1)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if all the 2D Vector3 points in the supplied collection are on the perimeter of this Polygon.
+        /// </summary>
+        /// <param name="points">The 2D Vector3 point to compare.</param>
+        /// <returns>
+        /// Returns true if all the supplied 2D Vector3 points coincide with the perimeter of this Polygon.
+        /// </returns>
+        public bool Touches(IList<Vector3> points)
+        {
+            var scale = 1024.0;
+            var thisPath = this.ToClipperPath();
+            foreach (Vector3 point in points)
+            {
+                var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+                if (Clipper.PointInPolygon(intPoint, thisPath) != -1)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -176,20 +454,52 @@ namespace Hypar.Geometry
         /// </returns>
         public bool Touches(Polygon polygon)
         {
+            if (this.Intersects(polygon))
+            {
+                return false;
+            }
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
-            bool touches = false;
-            foreach (IntPoint vertex in polyPath)
+            foreach (IntPoint vertex in thisPath)
             {
-                switch (Clipper.PointInPolygon(vertex, thisPath))
+                if (Clipper.PointInPolygon(vertex, polyPath) == -1)
                 {
-                    case -1:
-                        touches = true;
-                        break;
-                    case 1: return false;
+                    return true;
                 }
             }
-            return touches;
+            return false;
+        }
+
+        /// <summary>
+        /// Tests if the all the Polygons in the supplied collection share at least one perimeter point without interesecting.
+        /// </summary>
+        /// <param name="polygons">The Polygons to compare.</param>
+        /// <returns>
+        /// Returns true if this Polygon and any of the supplied Polygons share at least one perimeter point and do not intersect.
+        /// </returns>
+        public bool Touches(IList<Polygon> polygons)
+        {
+            if (polygons == null)
+            {
+                return false;
+            }
+            var thisPath = this.ToClipperPath();
+            foreach (Polygon polygon in polygons)
+            {
+                if (this.Intersects(polygon))
+                {
+                    return false;
+                }
+                var polyPath = polygon.ToClipperPath();
+                foreach (IntPoint vertex in thisPath)
+                {
+                    if (Clipper.PointInPolygon(vertex, polyPath) == -1)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -223,11 +533,45 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
+        /// Constructs the geometric difference between this Polygon and the supplied Polygons.
+        /// </summary>
+        /// <param name="difPolys">The list of intersecting Polygons.</param>
+        /// <returns>
+        /// Returns a list of Polygons representing the subtraction of the supplied Polygons from this Polygon.
+        /// Returns null if the area of this Polygon is entirely subtracted.
+        /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
+        /// </returns>
+        public IList<Polygon> Difference(IList<Polygon> difPolys)
+        {
+            var thisPath = this.ToClipperPath();
+            var polyPaths = new List<List<IntPoint>>();
+            foreach (Polygon polygon in difPolys)
+            {
+                polyPaths.Add(polygon.ToClipperPath());
+            }
+            Clipper clipper = new Clipper();
+            clipper.AddPath(thisPath, PolyType.ptSubject, true);
+            clipper.AddPaths(polyPaths, PolyType.ptClip, true);
+            var solution = new List<List<IntPoint>>();
+            clipper.Execute(ClipType.ctDifference, solution);
+            if (solution.Count == 0)
+            {
+                return null;
+            }
+            var polygons = new List<Polygon>();
+            foreach (List<IntPoint> path in solution)
+            {
+                polygons.Add(PolygonExtensions.ToPolygon(path));
+            }
+            return polygons;
+        }
+
+        /// <summary>
         /// Constructs the Polygon intersections between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
         /// <returns>
-        /// Returns a list of Polygons representing the interesction of this Polygon with the supplied Polygon.
+        /// Returns a list of Polygons representing the intersection of this Polygon with the supplied Polygon.
         /// Returns null if the two Polygons do not intersect.
         /// </returns>
         public IList<Polygon> Intersection(Polygon polygon)
@@ -239,6 +583,10 @@ namespace Hypar.Geometry
             clipper.AddPath(polyPath, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
             clipper.Execute(ClipType.ctIntersection, solution);
+            if (solution.Count == 0)
+            {
+                return null;
+            }
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
@@ -268,7 +616,35 @@ namespace Hypar.Geometry
             {
                 return null;
             }
-            return solution[0].ToPolygon();
+            return solution.First().ToPolygon();
+        }
+
+        /// <summary>
+        /// Constructs the geometric union between this Polygon and the supplied Polygon.
+        /// </summary>
+        /// <param name="polygons">The Polygons to be combined with this Polygon.</param>
+        /// <returns>
+        /// Returns a single Polygon from a successful union.
+        /// Returns null if a union cannot be performed on the complete list of Polygons.
+        /// </returns>
+        public Polygon Union(IList<Polygon> polygons)
+        {
+            var thisPath = this.ToClipperPath();
+            var polyPaths = new List<List<IntPoint>>();
+            foreach (Polygon polygon in polygons)
+            {
+                polyPaths.Add(polygon.ToClipperPath());
+            }
+            Clipper clipper = new Clipper();
+            clipper.AddPath(thisPath, PolyType.ptSubject, true);
+            clipper.AddPaths(polyPaths, PolyType.ptClip, true);
+            var solution = new List<List<IntPoint>>();
+            clipper.Execute(ClipType.ctUnion, solution);
+            if (solution.Count > 1)
+            {
+                return null;
+            }
+            return solution.First().Distinct().ToList().ToPolygon();
         }
 
         /// <summary>
@@ -468,7 +844,6 @@ namespace Hypar.Geometry
         internal static Polygon ToPolygon(this List<IntPoint> p)
         {
             var scale = 1024.0;
-
             return new Polygon(p.Select(v=>new Vector3(v.X/scale, v.Y/scale)).ToArray());
         }
     }
