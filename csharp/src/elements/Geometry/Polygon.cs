@@ -95,29 +95,6 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if all the supplied Vector3 points are within this Polygon without coincidence with an edge when compared on a shared plane.
-        /// </summary>
-        /// <param name="points">The list of Vector3 points to compare to this Polygon.</param>
-        /// <returns>
-        /// Returns true if all the supplied Vector3 points are within this Polygon when compared on a shared plane. Returns false if any of the Vector3 points are outside this Polygon or if the supplied Vector3 point list is null.
-        /// </returns>
-        public bool Contains(IList<Vector3> points)
-        {
-            if (points == null)
-            {
-                return false;
-            }
-            foreach (Vector3 point in points)
-            {
-                if (!this.Contains(point))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
         /// Tests if the supplied Polygon is within this Polygon without coincident edges when compared on a shared plane.
         /// </summary>
         /// <param name="polygon">The Polygon to compare to this Polygon.</param>
@@ -135,29 +112,6 @@ namespace Hypar.Geometry
             foreach (IntPoint vertex in polyPath)
             {
                 if (Clipper.PointInPolygon(vertex, thisPath) != 1)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Tests if all the supplied Polygons are within this Polygon without coincident edges when compared on a shared plane.
-        /// </summary>
-        /// <param name="polygons">The list of Polygons to compare to this Polygon.</param>
-        /// <returns>
-        /// Returns true if every vertex of the supplied Polygons are within this Polygon when compared on a shared plane. Returns false if any of the supplied Polygons is not entirely within this Polygon, or if the supplied list of Polygons is null.
-        /// </returns>
-        public bool Contains(IList<Polygon> polygons)
-        {
-            if (polygons == null)
-            {
-                return false;
-            }
-            foreach (Polygon polygon in polygons)
-            {
-                if (!this.Contains(polygon))
                 {
                     return false;
                 }
@@ -187,30 +141,7 @@ namespace Hypar.Geometry
             return true;
         }
 
-        /// <summary>
-        /// Tests if all the supplied Vector3 points are within this Polygon or coincident with an edge when compared on a shared plane.
-        /// </summary>
-        /// <param name="points">The list of Vector3 points to compare to this Polygon.</param>
-        /// <returns>
-        /// Returns true if all the supplied Vector3 points are within this Polygon or coincident with an edge when compared on a shared plane. Returns false if all the supplied point are outside this Polygon, or if the supplied list Vector3 points is null.
-        /// </returns>
-        public bool Covers(IList<Vector3> points)
-        {
-            if (points == null)
-            {
-                return false;
-            }
-            foreach (Vector3 point in points)
-            {
-                if (!this.Covers(point))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
+         /// <summary>
         /// Tests if the supplied Polygon is within this Polygon with or without edge coincident vertices when compared on a shared plane.
         /// </summary>
         /// <param name="polygon">The Polygon to compare to this Polygon.</param>
@@ -240,30 +171,7 @@ namespace Hypar.Geometry
             return true;
         }
 
-        /// <summary>
-        /// Tests if all the supplied Polygons are within this Polygon with or without edge coincident vertices when compared on a shared plane.
-        /// </summary>
-        /// <param name="polygons">The Polygon to compare to this Polygon.</param>
-        /// <returns>
-        /// Returns true if every vertex of the supplied Polygons is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if any vertex of the supplied Polygons is outside this Polygon, or if the supplied list of Polygons is null.
-        /// </returns>
-        public bool Covers(IList<Polygon> polygons)
-        {
-            if (polygons == null)
-            {
-                return false;
-            }
-            foreach (Polygon polygon in polygons)
-            {
-                if(!this.Covers(polygon))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
+         /// <summary>
         /// Tests if the supplied Vector3 point is outside this Polygon when compared on a shared plane.
         /// </summary>
         /// <param name="point">The Vector3 point to compare to this Polygon.</param>
@@ -281,29 +189,6 @@ namespace Hypar.Geometry
             if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
             {
                 return false;
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Tests if all the supplied Vector3 points are outside this Polygon when compared on a shared plane.
-        /// </summary>
-        /// <param name="points">The list of Vector3 points to compare to this Polygon.</param>
-        /// <returns>
-        /// Returns true if all the supplied Vector3 points are outside this Polygon when compared on a shared plane or if the supplied Vector3 point list is null.
-        /// </returns>
-        public bool Disjoint(IList<Vector3> points)
-        {
-            if (points == null)
-            {
-                return true;
-            }
-            foreach (Vector3 point in points)
-            {
-                if (!this.Disjoint(point))
-                {
-                    return false;
-                }
             }
             return true;
         }
@@ -341,29 +226,6 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if all the supplied Polygons are coincident in any way when compared on a shared plane.
-        /// </summary>
-        /// <param name="polygons">The list of Polygons to compare to this Polygon.</param>
-        /// <returns>
-        /// Returns true if none of the supplied Polygons do not intersect or touch this Polygon when compared on a shared plane or if the supplied list of Polygons is null.
-        /// </returns>
-        public bool Disjoint(IList<Polygon> polygons)
-        {
-            if (polygons == null)
-            {
-                return true;
-            }
-            foreach (Polygon polygon in polygons)
-            {
-                if (!this.Disjoint(polygon))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
         /// Tests if the supplied Polygon shares one or more areas with this Polygon when compared on a shared plane.
         /// </summary>
         /// <param name="polygon">The Polygon to compare with this Polygon.</param>
@@ -382,34 +244,6 @@ namespace Hypar.Geometry
             clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
             clipper.Execute(ClipType.ctIntersection, solution);
             return solution.Count != 0;
-        }
-
-        /// <summary>
-        /// Tests if any of the supplied Polygons share one or more areas with this Polygon when compared on a shared plane.
-        /// </summary>
-        /// <param name="polygons">The Polygon to compare with this Polygon.</param>
-        /// <returns>
-        /// Returns true if any of the supplied Polygons share one or more areas with this Polygon when compared on a shared plane or if the list of supplied Polygons is null. Returns false if the none of the supplied Polygons share an area with this Polygon or if the supplied list of Polygons is null.
-        /// </returns>
-        public bool Intersects(IList<Polygon> polygons)
-        {
-            if (polygons == null)
-            {
-                return false;
-            }
-            var clipper = new Clipper();
-            var solution = new List<List<IntPoint>>();
-            clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
-            foreach (Polygon polygon in polygons)
-            {
-                clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
-            }
-            clipper.Execute(ClipType.ctIntersection, solution);
-            if (solution.Count != 0)
-            {
-                return true;
-            }
-            return false;
         }
 
         /// <summary>
@@ -435,29 +269,6 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if the all supplied Vector3 point are coincident with an edge of this Polygon when compared on a shared plane.
-        /// </summary>
-        /// <param name="points">The list of Vector3 points to compare to this Polygon.</param>
-        /// <returns>
-        /// Returns true if all the supplied Vector3 points coincide with an edge of this Polygon when compared on a shared plane. Returns false if at least one of the supplied Vector3 points are not coincident with an edge of this Polygon, or if the supplied list of Vector3 points is null.
-        /// </returns>
-        public bool Touches(IList<Vector3> points)
-        {
-            if (points == null)
-            {
-                return false;
-            }
-            foreach (Vector3 point in points)
-            {
-                if (!this.Touches(point))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
         /// Tests if at least one point of an edge of the supplied Polygon is shared with an edge of this Polygon without the Polygons interesecting when compared on a shared plane.
         /// </summary>
         /// <param name="polygon">The Polygon to compare to this Polygon.</param>
@@ -477,30 +288,6 @@ namespace Hypar.Geometry
                 if (Clipper.PointInPolygon(vertex, polyPath) == -1)
                 {
                     return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Tests if all the supplied Polygons share at least one point of an edge with an edge of this Polygon without the Polygons interesecting when compared on a shared plane.
-        /// </summary>
-        /// <param name="polygons">The list of Polygons to compare to this Polygon.</param>
-        /// <returns>
-        /// Returns true if all the supplied Polygon share at least one edge point with this Polygon without the Polygons intersecting when compared on a shared plane. Returns false if any of the Polygons intersect, is disjoint, or if the supplied list of Polygons is null.
-        /// </returns>
-        public bool Touches(IList<Polygon> polygons)
-        {
-            if (polygons == null)
-            {
-                return false;
-            }
-            var thisPath = this.ToClipperPath();
-            foreach (Polygon polygon in polygons)
-            {
-                if (!this.Touches(polygon))
-                {
-                    return false;
                 }
             }
             return false;
@@ -624,9 +411,9 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Constructs the geometric union between this Polygon and the supplied Polygon.
+        /// Constructs the geometric union between this Polygon and the supplied list of Polygons.
         /// </summary>
-        /// <param name="polygons">The Polygons to be combined with this Polygon.</param>
+        /// <param name="polygons">The list of Polygons to be combined with this Polygon.</param>
         /// <returns>
         /// Returns a single Polygon from a successful union.
         /// Returns null if a union cannot be performed on the complete list of Polygons.

@@ -34,7 +34,6 @@ namespace Hypar.Tests
         {
             var v1 = new Vector3();
             var v2 = new Vector3(7.5, 7.5);
-            var vs = new List<Vector3> { v1, v2 };
             var p1 = new Polygon
             (
                 new[]
@@ -65,15 +64,12 @@ namespace Hypar.Tests
                     new Vector3(5.0, 10.0)
                 }
             );
-            var ps = new List<Polygon> { p2, p3 };
 
             Assert.False(p1.Contains(v1));
             Assert.True(p1.Contains(v2));
-            Assert.False(p1.Contains(vs));
             Assert.False(p1.Contains(p2));
             Assert.True(p1.Contains(p3));
             Assert.False(p3.Contains(p1));
-            Assert.False(p1.Contains(ps));
         }
 
         [Fact]
@@ -81,7 +77,6 @@ namespace Hypar.Tests
         {
             var v1 = new Vector3();
             var v2 = new Vector3(7.5, 7.5);
-            var vs = new List<Vector3> { v1, v2 };
             var p1 = new Polygon
             (
                 new[]
@@ -112,16 +107,12 @@ namespace Hypar.Tests
                 new Vector3(5.0, 10.0)
                 }
             );
-            var ps = new List<Polygon> { p2, p3 };
-
             Assert.True(p1.Covers(v1));
             Assert.True(p3.Covers(v2));
             Assert.False(p3.Covers(v1));
-            Assert.False(p3.Covers(vs));
             Assert.True(p1.Covers(p3));
             Assert.True(p1.Covers(p2));
             Assert.False(p3.Covers(p1));
-            Assert.True(p1.Covers(ps));
         }
 
         [Fact]
@@ -129,7 +120,6 @@ namespace Hypar.Tests
         {
             var v1 = new Vector3();
             var v2 = new Vector3(27.5, 27.5);
-            var vs = new List<Vector3> { v1, v2 };
             var p1 = new Polygon
             (
                 new[]
@@ -164,10 +154,8 @@ namespace Hypar.Tests
 
             Assert.True(p1.Disjoint(v2));
             Assert.False(p1.Disjoint(v1));
-            Assert.False(p1.Disjoint(vs));
             Assert.True(p1.Disjoint(p3));
             Assert.False(p1.Disjoint(p2));
-            Assert.False(p1.Disjoint(ps));
         }
 
         [Fact]
@@ -203,11 +191,9 @@ namespace Hypar.Tests
                 new Vector3(25.0, 210.0)
                 }
             );
-            var ps = new List<Polygon> { p2, p3 };
 
             Assert.True(p1.Intersects(p2));
             Assert.False(p1.Intersects(p3));
-            Assert.True(p1.Intersects(ps));
         }
 
         [Fact]
