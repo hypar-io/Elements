@@ -73,20 +73,20 @@ namespace Hypar.Geometry
         public Polygon(IList<Vector3> vertices) : base(vertices){}
 
         /// <summary>
-        /// Tests if the supplied Vector3 point is within this Polygon without coincidence with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
         /// </summary>
-        /// <param name="point">The Vector3 point to compare to this Polygon.</param>
+        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if the supplied Vector3 point is within this Polygon when compared on a shared plane. Returns false if the Vector3 point is outside this Polygon or if the supplied Vector3 point is null.
+        /// Returns true if the supplied Vector3 is within this Polygon when compared on a shared plane. Returns false if the Vector3 is outside this Polygon or if the supplied Vector3 is null.
         /// </returns>
-        public bool Contains(Vector3 point)
+        public bool Contains(Vector3 vector)
         {
-            if (point == null)
+            if (vector == null)
             {
                 return false;
             }
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
             {
                 return false;
@@ -120,20 +120,20 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 point is within this Polygon or coincident with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane.
         /// </summary>
-        /// <param name="point">The Vector3 point to compare to this Polygon.</param>
+        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if the supplied Vector3 point is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if the supplied point is outside this Polygon, or if the supplied Vector3 point is null.
+        /// Returns true if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if the supplied Vector3 is outside this Polygon, or if the supplied Vector3 is null.
         /// </returns>
-        public bool Covers(Vector3 point)
+        public bool Covers(Vector3 vector)
         {
-            if (point == null)
+            if (vector == null)
             {
                 return false;
             }
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
             {
                 return false;
@@ -171,21 +171,21 @@ namespace Hypar.Geometry
             return true;
         }
 
-         /// <summary>
-        /// Tests if the supplied Vector3 point is outside this Polygon when compared on a shared plane.
+        /// <summary>
+        /// Tests if the supplied Vector3 is outside this Polygon when compared on a shared plane.
         /// </summary>
-        /// <param name="point">The Vector3 point to compare to this Polygon.</param>
+        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if the supplied Vector3 point is outside this Polygon when compared on a shared plane or if the supplied Vector3 point is null.
+        /// Returns true if the supplied Vector3 is outside this Polygon when compared on a shared plane or if the supplied Vector3 is null.
         /// </returns>
-        public bool Disjoint(Vector3 point)
+        public bool Disjoint(Vector3 vector)
         {
-            if (point == null)
+            if (vector == null)
             {
                 return true;
             }
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
             {
                 return false;
@@ -247,20 +247,20 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 point is coincident with an edge of this Polygon when compared on a shared plane.
+        /// Tests if the supplied Vector3 is coincident with an edge of this Polygon when compared on a shared plane.
         /// </summary>
-        /// <param name="point">The Vector3 point to compare to this Polygon.</param>
+        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if the supplied Vector3 point coincides with an edge of this Polygon when compared on a shared plane. Returns false if the supplied Vector3 point is not coincident with an edge of this Polygon, or if the supplied Vector3 point is null.
+        /// Returns true if the supplied Vector3 coincides with an edge of this Polygon when compared on a shared plane. Returns false if the supplied Vector3 is not coincident with an edge of this Polygon, or if the supplied Vector3 is null.
         /// </returns>
-        public bool Touches(Vector3 point)
+        public bool Touches(Vector3 vector)
         {
-            if (point == null)
+            if (vector == null)
             {
                 return false;
             }
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(point.X * scale, point.Y * scale);
+            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != -1)
             {
                 return false;
