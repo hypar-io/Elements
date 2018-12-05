@@ -1,4 +1,4 @@
-namespace Hypar.Interfaces
+namespace Elements.Interfaces
 {
     public interface IExtrude: IGeometry3D, IProfileProvider
     {

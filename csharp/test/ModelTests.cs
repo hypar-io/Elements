@@ -3,8 +3,8 @@ using System;
 using System.IO;
 using System.Linq;
 using Xunit;
-using Hypar.Elements;
-using Hypar.Geometry;
+using Elements;
+using Elements.Geometry;
 
 namespace Hypar.Tests
 {

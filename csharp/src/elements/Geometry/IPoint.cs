@@ -1,4 +1,4 @@
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// The IPoint interface is implemented by classes which wish to

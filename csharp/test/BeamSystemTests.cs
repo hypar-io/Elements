@@ -1,5 +1,5 @@
-using Hypar.Elements;
-using Hypar.Geometry;
+using Elements;
+using Elements.Geometry;
 using System.IO;
 using System.Linq;
 using Xunit;

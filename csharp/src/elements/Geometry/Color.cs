@@ -1,8 +1,8 @@
-using Hypar.Elements.Serialization;
+using Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// Color represents an RGBA color.

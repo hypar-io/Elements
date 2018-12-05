@@ -1,10 +1,10 @@
-using Hypar.Elements.Serialization;
+using Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// A coplanar continuous set of lines.

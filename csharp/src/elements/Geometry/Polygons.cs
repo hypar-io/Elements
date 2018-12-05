@@ -1,8 +1,7 @@
-using Hypar.Geometry;
 using System.Collections.Generic;
 using System;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {   
     /// <summary>
     /// Construct profiles.

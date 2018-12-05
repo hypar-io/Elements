@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// A Transform defined by an origin and x, y, and z axes.

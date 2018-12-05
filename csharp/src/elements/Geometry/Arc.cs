@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// Arc represents an arc defined between a start angle and an end angle.

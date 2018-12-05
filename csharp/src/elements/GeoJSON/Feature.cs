@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
-namespace Hypar.GeoJSON
+namespace Elements.GeoJSON
 {
     /// <summary>
     /// A GeoJSON feature.

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// A face bounded by a set of edges.

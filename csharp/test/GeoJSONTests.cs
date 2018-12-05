@@ -1,8 +1,8 @@
-using Hypar.GeoJSON;
+using Elements.GeoJSON;
 using Newtonsoft.Json;
 using System;
 using Xunit;
-using Line = Hypar.GeoJSON.Line;
+using Line = Elements.GeoJSON.Line;
 
 namespace Hypar.Tests
 {

@@ -1,7 +1,7 @@
-using Hypar.Geometry;
+using Elements.Geometry;
 using System.Collections.Generic;
 
-namespace Hypar.Interfaces
+namespace Elements.Interfaces
 {
     public interface IPanel : IGeometry3D
     {

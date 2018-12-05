@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Hypar.GeoJSON
+namespace Elements.GeoJSON
 {
     /// <summary>
     /// A GeoJSON feature collection.

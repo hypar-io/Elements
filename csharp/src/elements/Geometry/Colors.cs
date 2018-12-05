@@ -1,4 +1,4 @@
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// Commonly used Colors.

@@ -1,6 +1,6 @@
-using Hypar.Geometry;
+using Elements.Geometry;
 
-namespace Hypar.Interfaces
+namespace Elements.Interfaces
 {
     public interface ITransformable
     {

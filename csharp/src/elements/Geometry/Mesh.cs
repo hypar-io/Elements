@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// An indexed mesh.
@@ -326,7 +326,7 @@ namespace Hypar.Geometry
                 }
             }
             
-            tess.Tessellate(WindingRule.EvenOdd, ElementType.Polygons, 3);
+            tess.Tessellate(WindingRule.EvenOdd, LibTessDotNet.Double.ElementType.Polygons, 3);
 
             for(var i=0; i<tess.ElementCount; i++)
             {
@@ -378,7 +378,7 @@ IMin:{m_index_min}";
             var normals = new[]{0.0,0.0,1.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,0.0,1.0};
             var indices = new ushort[]{0,1,2,0,2,3};
 
-            var mesh = new Hypar.Geometry.Mesh(vertices, normals, indices);
+            var mesh = new Elements.Geometry.Mesh(vertices, normals, indices);
             return mesh;
         }
 
@@ -392,7 +392,7 @@ IMin:{m_index_min}";
         /// <returns></returns>
         public static Mesh Extrude(Polygon perimeter, double height, IList<Polygon> voids = null, bool capped=true)
         {
-            var mesh = new Hypar.Geometry.Mesh();
+            var mesh = new Elements.Geometry.Mesh();
 
             var perimeters = new List<Polygon>();
             perimeters.Add(perimeter);
@@ -450,7 +450,7 @@ IMin:{m_index_min}";
         /// <returns></returns>
         public static Mesh ExtrudeAlongCurve(ICurve curve, Polygon perimeter, IList<Polygon> voids = null, bool capped=true, double startSetback = 0.0, double endSetback = 0.0)
         {
-            var mesh = new Hypar.Geometry.Mesh();
+            var mesh = new Elements.Geometry.Mesh();
 
             var l = curve.Length();
             var ssb = startSetback/l;
@@ -542,7 +542,7 @@ IMin:{m_index_min}";
         /// <param name="sections"></param>
         public static Mesh Loft(IList<Polygon> sections)
         {
-            var mesh = new Hypar.Geometry.Mesh();
+            var mesh = new Elements.Geometry.Mesh();
 
             for(var i=0; i<sections.Count; i++)
             {

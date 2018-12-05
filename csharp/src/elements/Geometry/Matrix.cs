@@ -1,6 +1,6 @@
 using System;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {   
     /// <summary>
     /// A column-ordered 4x3 matrix.

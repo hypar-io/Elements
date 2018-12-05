@@ -1,12 +1,12 @@
 using ClipperLib;
-using Hypar.Elements.Serialization;
+using Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// A closed planar polygon.

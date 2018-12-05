@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Hypar.Elements;
-using Hypar.Geometry;
+using Elements;
+using Elements.Geometry;
 using Xunit;
 
 namespace Hypar.Tests

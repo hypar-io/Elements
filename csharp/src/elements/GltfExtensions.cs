@@ -1,10 +1,10 @@
-using Hypar.Geometry;
+using Elements.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using glTFLoader.Schema;
 
-namespace Hypar
+namespace Elements
 {
     internal static class GltfExtensions
     {

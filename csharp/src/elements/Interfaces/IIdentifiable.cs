@@ -1,4 +1,4 @@
-namespace Hypar.Interfaces
+namespace Elements.Interfaces
 {
     /// <summary>
     /// The interface for all elements which can be identified with a unique identifier.

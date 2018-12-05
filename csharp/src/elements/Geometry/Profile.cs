@@ -1,12 +1,10 @@
-using Hypar.Geometry;
-using Hypar.Elements;
-using Hypar.Interfaces;
+using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// The vertical alignment of the profile.

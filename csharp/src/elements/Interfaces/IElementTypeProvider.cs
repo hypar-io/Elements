@@ -1,6 +1,4 @@
-using Hypar.Elements;
-
-namespace Hypar.Interfaces
+namespace Elements.Interfaces
 {
     /// <summary>
     /// Interface implemented by classes which provide and ElementType.

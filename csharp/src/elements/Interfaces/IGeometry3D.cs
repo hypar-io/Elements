@@ -1,8 +1,7 @@
-using Hypar.Elements;
-using Hypar.Geometry;
+using Elements.Geometry;
 using System.Collections.Generic;
 
-namespace Hypar.Interfaces
+namespace Elements.Interfaces
 {
     /// <summary>
     /// ITessellateMesh is implemented by all types which provide a Mesh for visualization.

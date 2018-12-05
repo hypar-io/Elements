@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// ICurve is implemented by all curve types.

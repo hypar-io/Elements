@@ -1,7 +1,7 @@
 using System;
-using Hypar.Geometry;
+using Elements.Geometry;
 
-namespace Hypar.GeoJSON
+namespace Elements.GeoJSON
 {
     /// <summary>
     /// Methods for computing geographic coordinates.

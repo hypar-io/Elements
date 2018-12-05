@@ -1,4 +1,4 @@
-using Hypar.Geometry;
+using Elements.Geometry;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 // https://tools.ietf.org/html/rfc7946#section-5
-namespace Hypar.GeoJSON
+namespace Elements.GeoJSON
 {
     /// <summary>
     /// The base class for all GeoJSON geometry types.
@@ -271,9 +271,9 @@ namespace Hypar.GeoJSON
         /// The last position of the polygon is dropped.
         /// </summary>
         /// <returns></returns>
-        public Hypar.Geometry.Polygon[] ToPolygons()
+        public Elements.Geometry.Polygon[] ToPolygons()
         {
-            var plineArr = new Hypar.Geometry.Polygon[Coordinates.Length];
+            var plineArr = new Elements.Geometry.Polygon[Coordinates.Length];
             for(var i=0; i<plineArr.Length; i++)
             {
                 var coords = this.Coordinates[i];
@@ -283,7 +283,7 @@ namespace Hypar.GeoJSON
                 {
                     verts[j] = coords[j].ToVectorMeters();
                 }
-                var pline = new Hypar.Geometry.Polygon(verts);
+                var pline = new Elements.Geometry.Polygon(verts);
                 plineArr[i] = pline;
             }
             return plineArr;

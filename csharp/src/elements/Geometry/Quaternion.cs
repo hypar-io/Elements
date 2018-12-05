@@ -1,6 +1,6 @@
 using System;
 
-namespace Hypar.Geometry
+namespace Elements.Geometry
 {
     /// <summary>
     /// A quaternion.
