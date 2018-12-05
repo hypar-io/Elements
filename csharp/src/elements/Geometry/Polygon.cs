@@ -14,6 +14,9 @@ namespace Hypar.Geometry
     // [JsonConverter(typeof(PolygonConverter))]
     public partial class Polygon : Polyline
     {
+        private const double scale = 1024.0;
+        private const double areaTolerance = 0.00001;
+
         /// <summary>
         /// The area enclosed by the polygon.
         /// </summary>
@@ -70,19 +73,45 @@ namespace Hypar.Geometry
         public Polygon(IList<Vector3> vertices) : base(vertices){}
 
         /// <summary>
-        /// Tests if the supplied Polygon is within the perimeter of this Polygon.
+        /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
         /// </summary>
-        /// <param name="polygon">The Polygon to compare.</param>
+        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if every vertex of the supplied Polygon falls within the perimeter of this Polygon.
+        /// Returns true if the supplied Vector3 is within this Polygon when compared on a shared plane. Returns false if the Vector3 is outside this Polygon or if the supplied Vector3 is null.
+        /// </returns>
+        public bool Contains(Vector3 vector)
+        {
+            if (vector == null)
+            {
+                return false;
+            }
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if the supplied Polygon is within this Polygon without coincident edges when compared on a shared plane.
+        /// </summary>
+        /// <param name="polygon">The Polygon to compare to this Polygon.</param>
+        /// <returns>
+        /// Returns true if every vertex of the supplied Polygon is within this Polygon when compared on a shared plane. Returns false if the supplied Polygon is not entirely within this Polygon, or if the supplied Polygon is null.
         /// </returns>
         public bool Contains(Polygon polygon)
         {
+            if (polygon == null)
+            {
+                return false;
+            }
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
             foreach (IntPoint vertex in polyPath)
             {
-                if (Clipper.PointInPolygon(vertex, thisPath) <= 0)
+                if (Clipper.PointInPolygon(vertex, thisPath) != 1)
                 {
                     return false;
                 }
@@ -91,35 +120,92 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Polygon is within or coincident with the perimeter of this Polygon.
+        /// Tests if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane.
         /// </summary>
-        /// <param name="polygon">The Polygon to compare.</param>
+        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if every vertex of the supplied Polygon falls within or on the perimeter of this Polygon.
+        /// Returns true if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if the supplied Vector3 is outside this Polygon, or if the supplied Vector3 is null.
+        /// </returns>
+        public bool Covers(Vector3 vector)
+        {
+            if (vector == null)
+            {
+                return false;
+            }
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+         /// <summary>
+        /// Tests if the supplied Polygon is within this Polygon with or without edge coincident vertices when compared on a shared plane.
+        /// </summary>
+        /// <param name="polygon">The Polygon to compare to this Polygon.</param>
+        /// <returns>
+        /// Returns true if every vertex of the supplied Polygon is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if any vertex of the supplied Polygon is outside this Polygon, or if the supplied Polygon is null.
         /// </returns>
         public bool Covers(Polygon polygon)
         {
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
-            foreach (IntPoint vertex in polyPath)
+            if (polygon == null)
             {
-                if (Clipper.PointInPolygon(vertex, thisPath) == 0)
-                {
-                    return false;
-                }
+                return false;
+            }
+            var clipper = new Clipper();
+            var solution = new List<List<IntPoint>>();
+            clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
+            clipper.Execute(ClipType.ctIntersection, solution);
+            if (solution.Count != 1)
+            {
+                return false;
+            }
+            var testPolygon = solution.First().ToPolygon();
+            if (Math.Abs(polygon.Area - testPolygon.Area) > areaTolerance)
+            {
+                return false;
             }
             return true;
         }
 
         /// <summary>
-        /// Tests if this Polygon and the supplied Polygon are coincident in any way.
+        /// Tests if the supplied Vector3 is outside this Polygon when compared on a shared plane.
         /// </summary>
-        /// <param name="polygon">The Polygon to compare.</param>
+        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if this Polygon and the supplied Polygon do not intersect or touch.
+        /// Returns true if the supplied Vector3 is outside this Polygon when compared on a shared plane or if the supplied Vector3 is null.
+        /// </returns>
+        public bool Disjoint(Vector3 vector)
+        {
+            if (vector == null)
+            {
+                return true;
+            }
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if the supplied Polygon and this Polygon are coincident in any way when compared on a shared plane.
+        /// </summary>
+        /// <param name="polygon">The Polygon to compare to this Polygon.</param>
+        /// <returns>
+        /// Returns true if the supplied Polygon do not intersect or touch this Polygon when compared on a shared plane or if the supplied Polygon is null.
         /// </returns>
         public bool Disjoint(Polygon polygon)
         {
+            if (polygon == null)
+            {
+                return true;
+            }
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
             foreach (IntPoint vertex in thisPath)
@@ -140,56 +226,71 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// Tests if this Polygon and the supplied Polygon share areas within their perimeters.
+        /// Tests if the supplied Polygon shares one or more areas with this Polygon when compared on a shared plane.
         /// </summary>
-        /// <param name="polygon">The Polygon to compare.</param>
+        /// <param name="polygon">The Polygon to compare with this Polygon.</param>
         /// <returns>
-        /// Returns true if any vertex of either Polygon is within the perimeter of the other.
+        /// Returns true if the supplied Polygon shares one or more areas with this Polygon when compared on a shared plane. Returns false if the supplied Polygon does not share an area with this Polygon or if the supplied Polygon is null.
         /// </returns>
         public bool Intersects(Polygon polygon)
         {
+            if (polygon == null)
+            {
+                return false;
+            }
+            var clipper = new Clipper();
+            var solution = new List<List<IntPoint>>();
+            clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
+            clipper.Execute(ClipType.ctIntersection, solution);
+            return solution.Count != 0;
+        }
+
+        /// <summary>
+        /// Tests if the supplied Vector3 is coincident with an edge of this Polygon when compared on a shared plane.
+        /// </summary>
+        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
+        /// <returns>
+        /// Returns true if the supplied Vector3 coincides with an edge of this Polygon when compared on a shared plane. Returns false if the supplied Vector3 is not coincident with an edge of this Polygon, or if the supplied Vector3 is null.
+        /// </returns>
+        public bool Touches(Vector3 vector)
+        {
+            if (vector == null)
+            {
+                return false;
+            }
+            var thisPath = this.ToClipperPath();
+            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            if (Clipper.PointInPolygon(intPoint, thisPath) != -1)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if at least one point of an edge of the supplied Polygon is shared with an edge of this Polygon without the Polygons interesecting when compared on a shared plane.
+        /// </summary>
+        /// <param name="polygon">The Polygon to compare to this Polygon.</param>
+        /// <returns>
+        /// Returns true if the supplied Polygon shares at least one edge point with this Polygon without the Polygons intersecting when compared on a shared plane. Returns false if the Polygons intersect, are disjoint, or if the supplied Polygon is null.
+        /// </returns>
+        public bool Touches(Polygon polygon)
+        {
+            if (polygon == null || this.Intersects(polygon))
+            {
+                return false;
+            }
             var thisPath = this.ToClipperPath();
             var polyPath = polygon.ToClipperPath();
             foreach (IntPoint vertex in thisPath)
             {
-                if (Clipper.PointInPolygon(vertex, polyPath) == 1)
-                {
-                    return true;
-                }
-            }
-            foreach (IntPoint vertex in polyPath)
-            {
-                if (Clipper.PointInPolygon(vertex, thisPath) == 1)
+                if (Clipper.PointInPolygon(vertex, polyPath) == -1)
                 {
                     return true;
                 }
             }
             return false;
-        }
-
-        /// <summary>
-        /// Tests if this Polygon and the supplied Polygon share at least one perimeter point without interesecting.
-        /// </summary>
-        /// <param name="polygon">The Polygon to compare.</param>
-        /// <returns>
-        /// Returns true if this Polygon and the supplied polygon share at least one perimeter point.
-        /// </returns>
-        public bool Touches(Polygon polygon)
-        {
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
-            bool touches = false;
-            foreach (IntPoint vertex in polyPath)
-            {
-                switch (Clipper.PointInPolygon(vertex, thisPath))
-                {
-                    case -1:
-                        touches = true;
-                        break;
-                    case 1: return false;
-                }
-            }
-            return touches;
         }
 
         /// <summary>
@@ -223,11 +324,45 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
+        /// Constructs the geometric difference between this Polygon and the supplied Polygons.
+        /// </summary>
+        /// <param name="difPolys">The list of intersecting Polygons.</param>
+        /// <returns>
+        /// Returns a list of Polygons representing the subtraction of the supplied Polygons from this Polygon.
+        /// Returns null if the area of this Polygon is entirely subtracted.
+        /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
+        /// </returns>
+        public IList<Polygon> Difference(IList<Polygon> difPolys)
+        {
+            var thisPath = this.ToClipperPath();
+            var polyPaths = new List<List<IntPoint>>();
+            foreach (Polygon polygon in difPolys)
+            {
+                polyPaths.Add(polygon.ToClipperPath());
+            }
+            Clipper clipper = new Clipper();
+            clipper.AddPath(thisPath, PolyType.ptSubject, true);
+            clipper.AddPaths(polyPaths, PolyType.ptClip, true);
+            var solution = new List<List<IntPoint>>();
+            clipper.Execute(ClipType.ctDifference, solution);
+            if (solution.Count == 0)
+            {
+                return null;
+            }
+            var polygons = new List<Polygon>();
+            foreach (List<IntPoint> path in solution)
+            {
+                polygons.Add(PolygonExtensions.ToPolygon(path));
+            }
+            return polygons;
+        }
+
+        /// <summary>
         /// Constructs the Polygon intersections between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
         /// <returns>
-        /// Returns a list of Polygons representing the interesction of this Polygon with the supplied Polygon.
+        /// Returns a list of Polygons representing the intersection of this Polygon with the supplied Polygon.
         /// Returns null if the two Polygons do not intersect.
         /// </returns>
         public IList<Polygon> Intersection(Polygon polygon)
@@ -239,6 +374,10 @@ namespace Hypar.Geometry
             clipper.AddPath(polyPath, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
             clipper.Execute(ClipType.ctIntersection, solution);
+            if (solution.Count == 0)
+            {
+                return null;
+            }
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
@@ -268,7 +407,35 @@ namespace Hypar.Geometry
             {
                 return null;
             }
-            return solution[0].ToPolygon();
+            return solution.First().ToPolygon();
+        }
+
+        /// <summary>
+        /// Constructs the geometric union between this Polygon and the supplied list of Polygons.
+        /// </summary>
+        /// <param name="polygons">The list of Polygons to be combined with this Polygon.</param>
+        /// <returns>
+        /// Returns a single Polygon from a successful union.
+        /// Returns null if a union cannot be performed on the complete list of Polygons.
+        /// </returns>
+        public Polygon Union(IList<Polygon> polygons)
+        {
+            var thisPath = this.ToClipperPath();
+            var polyPaths = new List<List<IntPoint>>();
+            foreach (Polygon polygon in polygons)
+            {
+                polyPaths.Add(polygon.ToClipperPath());
+            }
+            Clipper clipper = new Clipper();
+            clipper.AddPath(thisPath, PolyType.ptSubject, true);
+            clipper.AddPaths(polyPaths, PolyType.ptClip, true);
+            var solution = new List<List<IntPoint>>();
+            clipper.Execute(ClipType.ctUnion, solution);
+            if (solution.Count > 1)
+            {
+                return null;
+            }
+            return solution.First().Distinct().ToList().ToPolygon();
         }
 
         /// <summary>
@@ -303,7 +470,6 @@ namespace Hypar.Geometry
         /// <returns>A new polyline offset by offset.</returns>
         public IList<Polygon> Offset(double offset)
         {
-            var scale = 1024.0;
             var path = this.ToClipperPath();
 
             var solution = new List<List<IntPoint>>();
@@ -444,6 +610,8 @@ namespace Hypar.Geometry
     /// </summary>
     internal static class PolygonExtensions
     {
+        private const double scale = 1024.0;
+
         /// <summary>
         /// Construct a clipper path from a Polygon.
         /// </summary>
@@ -451,7 +619,6 @@ namespace Hypar.Geometry
         /// <returns></returns>
         internal static List<IntPoint> ToClipperPath(this Polygon p)
         {
-            var scale = 1024.0;
             var path = new List<IntPoint>();
             foreach(var v in p.Vertices)
             {
@@ -467,8 +634,6 @@ namespace Hypar.Geometry
         /// <returns></returns>
         internal static Polygon ToPolygon(this List<IntPoint> p)
         {
-            var scale = 1024.0;
-
             return new Polygon(p.Select(v=>new Vector3(v.X/scale, v.Y/scale)).ToArray());
         }
     }
