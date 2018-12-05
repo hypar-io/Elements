@@ -9,9 +9,9 @@ namespace Hypar.Elements
 {
     public class ProfileToIdConverter : JsonConverter
     {
-        private Dictionary<string, Profile> _profiles;
+        private Dictionary<long, Profile> _profiles;
 
-        public ProfileToIdConverter(Dictionary<string, Profile> profiles)
+        public ProfileToIdConverter(Dictionary<long, Profile> profiles)
         {
             this._profiles = profiles;
         }
@@ -33,7 +33,7 @@ namespace Hypar.Elements
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var id = (string)reader.Value;
+            var id = (long)reader.Value;
             
             if(this._profiles.ContainsKey(id))
             {

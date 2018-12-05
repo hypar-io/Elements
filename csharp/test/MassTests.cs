@@ -98,7 +98,7 @@ namespace Hypar.Tests
         {
             var profile = Polygon.Rectangle(Vector3.Origin, 5, 5);
             var mass = new Mass(profile, 0.0, 5.0);
-            Assert.Equal(125, mass.Volume);
+            Assert.Equal(125, mass.Volume());
         }
 
         [Fact]

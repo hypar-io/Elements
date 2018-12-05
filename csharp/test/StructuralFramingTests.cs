@@ -83,7 +83,7 @@ namespace Hypar.Tests
             var l = new Line(Vector3.Origin, new Vector3(5,5,5));
             var b = new Beam(l, new WideFlangeProfile("test"));
             Assert.Equal(BuiltInMaterials.Steel, b.Material);
-            Assert.Equal(l, b.CenterLine);
+            Assert.Equal(l, b.Curve);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace Hypar.Tests
         {
             var c = new Column(Vector3.Origin, 10.0, new WideFlangeProfile("test"));
             Assert.Equal(BuiltInMaterials.Steel, c.Material);
-            Assert.Equal(10.0, c.CenterLine.Length);
+            Assert.Equal(10.0, c.Curve.Length());
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Hypar.Tests
             var l = new Line(Vector3.Origin, new Vector3(5,5,5));
             var b = new Brace(l, new WideFlangeProfile("test"));
             Assert.Equal(BuiltInMaterials.Steel, b.Material);
-            Assert.Equal(l, b.CenterLine);
+            Assert.Equal(l, b.Curve);
         }
     }
 }

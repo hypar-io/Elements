@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hypar.Geometry;
+using Hypar.Interfaces;
 using Hypar.Elements.Serialization;
 using Newtonsoft.Json.Linq;
 
@@ -12,51 +13,33 @@ namespace Hypar.Elements
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
-    public abstract class Element : IIdentifiable
+    public abstract class Element : IElement
     {
-        private Dictionary<string, object> _parameters = new Dictionary<string, object>();
-
-        /// <summary>
-        /// A collection of Elements aggregated by this Element.
-        /// </summary>
-        protected List<Element> _subElements = new List<Element>();
+        private Dictionary<string, IProperty> _properties = new Dictionary<string, IProperty>();
 
         /// <summary>
         /// The unique identifier of the Element.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("id", Order=-2)]
-        public string Id {get;internal set;}
+        public long Id {get;internal set;}
 
         /// <summary>
         /// The type of the element.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
         [JsonProperty("type", Order=-1)]
-        public abstract string Type{get;}
-
-        /// <summary>
-        /// A map of Parameters for the Element.
-        /// </summary>
-        [JsonProperty("parameters")]
-        public Dictionary<string, object> Parameters
+        public string Type
         {
-            get{return _parameters;}
+            get{return this.GetType().Name.ToLower();}
         }
 
         /// <summary>
-        /// The element's material.
+        /// A map of Properties for the Element.
         /// </summary>
-        [JsonProperty("material")]
-        public Material Material{get; protected set;}
-        
-        /// <summary>
-        /// A collection of Elements aggregated by this Element.
-        /// </summary>
-        [JsonProperty("sub_elements")]
-        public IList<Element> SubElements
+        [JsonProperty("properties"), JsonConverter(typeof(PropertyDictionaryConverter))]
+        public Dictionary<string, IProperty> Properties
         {
-            get{return this._subElements;}
+            get{return _properties;}
         }
 
         /// <summary>
@@ -70,39 +53,38 @@ namespace Hypar.Elements
         /// </summary>
         public Element()
         {
-            this.Id = Guid.NewGuid().ToString();
+            this.Id = IdProvider.Instance.GetNextId();
             this.Transform = new Transform();
-            this.Material = BuiltInMaterials.Default;
         }
 
         /// <summary>
-        /// Add a Parameter to the Element.
+        /// Add a Property to the Element.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
-        /// <param name="parameter">The parameter to add.</param>
+        /// <param name="property">The parameter to add.</param>
         /// <exception cref="System.Exception">Thrown when an parameter with the same name already exists.</exception>
-        public void AddParameter(string name, Parameter parameter)
+        public void AddProperty(string name, IProperty property)
         {
-            if(!_parameters.ContainsKey(name))
+            if(!_properties.ContainsKey(name))
             {
-                _parameters.Add(name, parameter);
+                _properties.Add(name, property);
                 return;
             }
 
-            throw new Exception($"The parameter, {name}, already exists");
+            throw new Exception($"The property, {name}, already exists");
         }
 
         /// <summary>
-        /// Remove a Parameter from the Parameters map.
+        /// Remove a Property from the Properties map.
         /// </summary>
         /// <param name="name">The name of the parameter to remove.</param>
         /// <exception cref="System.Exception">Thrown when the specified parameter cannot be found.</exception>
 
-        public void RemoveParameter(string name)
+        public void RemoveProperty(string name)
         {
-            if(_parameters.ContainsKey(name))
+            if(_properties.ContainsKey(name))
             {
-                _parameters.Remove(name);
+                _properties.Remove(name);
             } 
             
             throw new Exception("The specified parameter could not be found.");

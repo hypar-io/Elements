@@ -10,13 +10,13 @@ namespace Hypar.Elements.Serialization
     /// </summary>
     public class MaterialToIdConverter : JsonConverter
     {
-        private Dictionary<string, Material> _materials;
+        private Dictionary<long, Material> _materials;
 
         /// <summary>
         /// Construct a MaterialConverter.
         /// </summary>
         /// <param name="materials">A collection of Materials.</param>
-        public MaterialToIdConverter(Dictionary<string, Material> materials)
+        public MaterialToIdConverter(Dictionary<long, Material> materials)
         {
             this._materials = materials;
         }
@@ -40,7 +40,7 @@ namespace Hypar.Elements.Serialization
         /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var id = (string)reader.Value;
+            var id = (long)reader.Value;
             if(this._materials.ContainsKey(id))
             {
                 return this._materials[id]; 

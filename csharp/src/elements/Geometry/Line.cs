@@ -33,12 +33,11 @@ namespace Hypar.Geometry
         }
         
         /// <summary>
-        /// Get the length of the line.
+        /// Calculate the length of the line.
         /// </summary>
-        [JsonProperty("length")]
-        public double Length
+        public double Length()
         {
-            get{return this.Start.DistanceTo(this.End);}
+            return this.Start.DistanceTo(this.End);
         }
 
         /// <summary>
@@ -114,7 +113,7 @@ namespace Hypar.Geometry
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
             }
-            var offset = this.Length* u;
+            var offset = this.Length() * u;
             return this.Start + offset * this.Direction;
         }
 
@@ -183,7 +182,8 @@ namespace Hypar.Geometry
         /// <returns>A collection of Transforms.</returns>
         public Transform[] Frames(double startSetback, double endSetback)
         {
-            return new Transform[]{TransformAt(0.0 + startSetback/this.Length), TransformAt(1.0 - endSetback/this.Length)};
+            var l = this.Length();
+            return new Transform[]{TransformAt(0.0 + startSetback/l), TransformAt(1.0 - endSetback/l)};
         }
     }
 }

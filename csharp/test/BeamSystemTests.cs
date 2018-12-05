@@ -19,7 +19,7 @@ namespace Hypar.Tests
             var polygon = new Polygon(new[]{a,b,c,d});
             var system = new BeamSystem(5, profile, new Line(a,b), new Line(c,d), BuiltInMaterials.Steel);
             var model = new Model();
-            model.AddElements(system.Beams);
+            model.AddElements(system.Elements);
             model.SaveGlb("beam_system.glb");
         }
 
@@ -33,7 +33,7 @@ namespace Hypar.Tests
             var c = new Vector3(0,20,0);
             var polygon = new Polygon(new[]{a,b,c,d});
             var system = new BeamSystem(5, profile, new Line(a,b), new Line(c,d), BuiltInMaterials.Steel);
-            Assert.True(system.Beams.Count() == 5);
+            Assert.True(system.Elements.Count() == 5);
         }
     }
 }

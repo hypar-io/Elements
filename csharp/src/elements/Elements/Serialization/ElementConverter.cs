@@ -67,8 +67,6 @@ namespace Hypar.Elements.Serialization
                     return obj.ToObject<Beam>(serializer);
                 case "brace":
                     return obj.ToObject<Brace>(serializer);
-                case "point":
-                    return obj.ToObject<Point>(serializer);
                 case "wall":
                     return obj.ToObject<Wall>(serializer);
                 case "truss":

@@ -1,3 +1,4 @@
+using Hypar.Interfaces;
 using Newtonsoft.Json;
 using System;
 using Hypar.Geometry;
@@ -7,19 +8,8 @@ namespace Hypar.Elements
     /// <summary>
     /// A space represents the extruded boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, ITessellateMesh, IProfileProvider
+    public class Space : Element, IExtrude
     {
-        private readonly Profile _profile;
-
-        /// <summary>
-        /// The type of the element.
-        /// </summary>
-        [JsonProperty("type")]
-        public override string Type
-        {
-            get { return "space"; }
-        }
-
         /// <summary>
         /// The elevation of the Space perimeter.
         /// </summary>
@@ -36,9 +26,22 @@ namespace Hypar.Elements
         /// The Profile of the Space.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile
+        public Profile Profile{get;}
+        
+        /// <summary>
+        /// The Space's Material.
+        /// </summary>
+        [JsonProperty("material")]
+        public Material Material{get;}
+
+        /// <summary>
+        /// The Thickness of the Space's extrusion.
+        /// </summary>
+        /// <value></value>
+        [JsonIgnore]
+        public double Thickness
         {
-            get { return this._profile; }
+            get{return this.Height;}
         }
 
         /// <summary>
@@ -47,7 +50,7 @@ namespace Hypar.Elements
         [JsonIgnore]
         public Profile TransformedProfile
         {
-            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
+            get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
 
         /// <summary>
@@ -66,21 +69,12 @@ namespace Hypar.Elements
                 throw new ArgumentOutOfRangeException(Messages.HEIGHT_EXCEPTION, "height");
             }
 
-            this._profile = profile;
+            this.Profile = profile;
             this.Elevation = elevation;
             this.Height = height;
 
             this.Material = material != null ? material : BuiltInMaterials.Default;
             this.Transform = new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
-        }
-
-        /// <summary>
-        /// Tessellate the Space.
-        /// </summary>
-        /// <returns>The Mesh representing the Space.</returns>
-        public Mesh Mesh()
-        {
-            return Hypar.Geometry.Mesh.Extrude(this._profile.Perimeter, this.Height, this._profile.Voids, true);
         }
     }
 }

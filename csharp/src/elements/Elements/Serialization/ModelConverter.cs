@@ -31,11 +31,11 @@ namespace Hypar.Elements.Serialization
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
-            var materials = JsonConvert.DeserializeObject<Dictionary<string,Material>>(obj.GetValue("materials").ToString());
-            var elementTypes = JsonConvert.DeserializeObject<Dictionary<string,ElementType>>(obj.GetValue("element_types").ToString(), 
+            var materials = JsonConvert.DeserializeObject<Dictionary<long,Material>>(obj.GetValue("materials").ToString());
+            var elementTypes = JsonConvert.DeserializeObject<Dictionary<long,ElementType>>(obj.GetValue("element_types").ToString(), 
                                 new []{new ElementTypeConverter()});
-            var profiles = JsonConvert.DeserializeObject<Dictionary<string,Profile>>(obj.GetValue("profiles").ToString());
-            var elements = JsonConvert.DeserializeObject<Dictionary<string,Element>>(obj.GetValue("elements").ToString(),
+            var profiles = JsonConvert.DeserializeObject<Dictionary<long,Profile>>(obj.GetValue("profiles").ToString());
+            var elements = JsonConvert.DeserializeObject<Dictionary<long,Element>>(obj.GetValue("elements").ToString(),
                             new JsonSerializerSettings()
                             {
                                 Converters = new JsonConverter[]

@@ -7,7 +7,6 @@ namespace Hypar.Geometry
     /// <summary>
     /// Color represents an RGBA color.
     /// </summary>
-    [JsonConverter(typeof(ColorConverter))]
     public class Color
     {
         /// <summary>

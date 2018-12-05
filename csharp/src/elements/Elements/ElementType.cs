@@ -1,4 +1,5 @@
 using Hypar.Geometry;
+using Hypar.Interfaces;
 using Newtonsoft.Json;
 using System;
 
@@ -13,7 +14,7 @@ namespace Hypar.Elements
         /// The unique identifier of an ElementType.
         /// </summary>
         [JsonProperty("id")]
-        public string Id{get;internal set;}
+        public long Id{get;internal set;}
 
         /// <summary>
         /// The type of the ElementType.
@@ -41,7 +42,7 @@ namespace Hypar.Elements
         /// <param name="description">A description.</param>
         public ElementType(string name, string description = null)
         {
-            this.Id = Guid.NewGuid().ToString();
+            this.Id = IdProvider.Instance.GetNextId();
             this.Name = name;
             this.Description = description;
         }

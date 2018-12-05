@@ -106,8 +106,8 @@ namespace Hypar.Elements
         {
             this._bottom = bottom;
             this._top = top;
-            this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(bottom.Length/uDistance));
-            this._vDiv = CalculateEqualDivisions((int)Math.Ceiling(top.Length/vDistance));
+            this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(bottom.Length()/uDistance));
+            this._vDiv = CalculateEqualDivisions((int)Math.Ceiling(top.Length()/vDistance));
             this._pts = CalculateGridPoints();
         }
 
@@ -138,8 +138,8 @@ namespace Hypar.Elements
             var f = face.Edges;
             this._bottom = f[0];
             this._top = f[2].Reversed();
-            this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(this._bottom.Length/uDistance));
-            this._vDiv = CalculateEqualDivisions((int)Math.Ceiling(f[1].Length/vDistance));
+            this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(this._bottom.Length()/uDistance));
+            this._vDiv = CalculateEqualDivisions((int)Math.Ceiling(f[1].Length()/vDistance));
             this._pts = CalculateGridPoints();
         }
     }

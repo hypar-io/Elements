@@ -1,13 +1,13 @@
-namespace Hypar.Geometry
+namespace Hypar.Interfaces
 {
     /// <summary>
-    /// The interface for all elements which can be identified with a string identifier.
+    /// The interface for all elements which can be identified with a unique identifier.
     /// </summary>
     public interface IIdentifiable
     {
         /// <summary>
         /// The unique identifier of the element.
         /// </summary>
-        string Id{get;}
+        long Id{get;}
     }
 }

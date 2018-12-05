@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hypar.Geometry;
+using Hypar.Interfaces;
 using Hypar.Elements.Serialization;
 
 namespace Hypar.Elements
@@ -10,28 +11,21 @@ namespace Hypar.Elements
     /// <summary>
     /// A linear structural element with a cross section.
     /// </summary>
-    public abstract class StructuralFraming : Element, ITessellateMesh, ITessellateCurves, IProfileProvider
+    public abstract class StructuralFraming : Element, IExtrudeAlongCurve
     {
-        private ICurve _centerLine;
-        private Profile _profile;
-
         /// <summary>
         /// The cross-section profile of the framing element.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile
-        {
-            get{return this._profile;}
-        }
+        public Profile Profile{get;}
 
         /// <summary>
         /// The cross-section profile of the framing element transformed by the Element's Transform.
         /// </summary>
-        /// <value></value>
         [JsonIgnore]
         public Profile ProfileTransformed
         {
-            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
+            get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
 
         /// <summary>
@@ -43,24 +37,9 @@ namespace Hypar.Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        [JsonProperty("center_line")]
+        [JsonProperty("curve")]
         [JsonConverter(typeof(ICurveConverter))]
-        public ICurve CenterLine
-        {
-            get { return this._centerLine; }
-        }
-
-        /// <summary>
-        /// The volume of the StructuralFraming element.
-        /// </summary>
-        [JsonIgnore]
-        public double Volume
-        {
-            get
-            {
-                return this._profile.Area * this._centerLine.Length;   
-            }
-        }
+        public ICurve Curve{get;}
 
         /// <summary>
         /// The setback of the beam's extrusion at the start.
@@ -75,24 +54,30 @@ namespace Hypar.Elements
         public double EndSetback{get;}
 
         /// <summary>
+        /// The Material of the StructuralFramingElement
+        /// </summary>
+        [JsonProperty("material")]
+        public Material Material{get;}
+
+        /// <summary>
         /// Construct a beam.
         /// </summary>
-        /// <param name="centerLine">The center line of the Beam.</param>
+        /// <param name="curve">The center line of the Beam.</param>
         /// <param name="profile">The structural Profile of the Beam.</param>
         /// <param name="material">The Beam's material.</param>
         /// <param name="up">The up axis of the Beam.</param>
         /// <param name="startSetback">The setback of the framing's extrusion at its start.</param>
         /// <param name="endSetback">The setback of the framing's extrusion at its end.</param>
         [JsonConstructor]
-        public StructuralFraming(ICurve centerLine, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0)
+        public StructuralFraming(ICurve curve, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0)
         {
-            this._profile = profile;
-            this._centerLine = centerLine;
+            this.Profile = profile;
+            this.Curve = curve;
             this.Material = material == null ? BuiltInMaterials.Steel : material;
-            var t = centerLine.TransformAt(0.0, up);
+            var t = this.Curve.TransformAt(0.0, up);
             this.UpAxis = up == null ? t.YAxis : up;
 
-            var l = centerLine.Length;
+            var l = this.Curve.Length();
             if(startSetback > l || endSetback > l)
             {
                 throw new ArgumentOutOfRangeException($"The start and end setbacks ({startSetback},{endSetback}) must be less than the length of the beam ({l}).");
@@ -102,23 +87,11 @@ namespace Hypar.Elements
         }
 
         /// <summary>
-        /// Tessellate the Beam.
+        /// Calculate the volume of the element.
         /// </summary>
-        /// <returns>A mesh representing the tessellated Beam.</returns>
-        public Mesh Mesh()
+        public double Volume()
         {
-            return Hypar.Geometry.Mesh.ExtrudeAlongCurve(this._centerLine, this._profile.Perimeter, this._profile.Voids, true, this.StartSetback, this.EndSetback);
-        }
-
-        /// <summary>
-        /// Tessellate the Beam's Profile.
-        /// </summary>
-        /// <returns>A collection of curves representing the tessellated Profile.</returns>
-        public IList<IList<Vector3>> Curves()
-        {
-            var curves = new List<IList<Vector3>>();
-            curves.Add(this.CenterLine.Vertices);
-            return curves;
+            return this.Profile.Area() * this.Curve.Length();   
         }
     }
 }

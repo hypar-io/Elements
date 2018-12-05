@@ -1,4 +1,5 @@
 using Hypar.Geometry;
+using Hypar.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,20 +10,13 @@ namespace Hypar.Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall : Element, IElementTypeProvider<WallType>, ITessellateMesh, IProfileProvider
+    public class Wall : Element, IElementTypeProvider<WallType>, IExtrude
     {
-        private readonly Line _centerLine;
-
-        private readonly Profile _profile;
-
         /// <summary>
         /// The Profile of the Wall.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile
-        {
-            get{ return this._profile; }
-        }
+        public Profile Profile{get;}
 
         /// <summary>
         /// The transformed Profile of the Wall.
@@ -30,17 +24,14 @@ namespace Hypar.Elements
         [JsonIgnore]
         public Profile ProfileTransformed
         {
-            get{return this.Transform != null? this.Transform.OfProfile(this._profile) : this._profile;}
+            get{return this.Transform != null? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
 
         /// <summary>
         /// The center line of the wall.
         /// </summary>
         [JsonProperty("center_line")]
-        public Line CenterLine
-        {
-            get{ return this._centerLine;}
-        }
+        public Line CenterLine{get;}
 
         /// <summary>
         /// The height of the wall.
@@ -49,19 +40,27 @@ namespace Hypar.Elements
         public double Height { get; }
 
         /// <summary>
-        /// The type of the Element.
-        /// </summary>
-        [JsonProperty("type")]
-        public override string Type
-        {
-            get{return "wall";}
-        }
-
-        /// <summary>
         /// The WallType of the Wall.
         /// </summary>
         [JsonProperty("element_type")]
         public WallType ElementType{get;}
+
+        /// <summary>
+        /// The thickness of the Wall's extrusion.
+        /// </summary>
+        /// <value></value>
+        [JsonIgnore]
+        public double Thickness
+        {
+            get{return this.ElementType.Thickness;}
+        }
+
+        /// <summary>
+        /// The Wall's material.
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("material")]
+        public Material Material{get;}
 
         /// <summary>
         /// Construct a wall along a line.
@@ -86,7 +85,7 @@ namespace Hypar.Elements
                 throw new ArgumentException("The wall could not be constructed. The Z component of the start and end points of the wall's center line must be the same.");
             }
 
-            this._centerLine = centerLine;
+            this.CenterLine = centerLine;
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
             this.Height = height;
             this.ElementType = elementType;
@@ -94,11 +93,11 @@ namespace Hypar.Elements
             if(openings != null && openings.Count > 0)
             {
                 var voids = openings.Select(o=>Polygon.Rectangle(new Vector3(o.DistanceAlongWall, o.BaseHeight), new Vector3(o.DistanceAlongWall + o.Width, o.BaseHeight + o.Height))).ToList();
-                this._profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length, height)), voids);
+                this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)), voids);
             }
             else
             {
-                this._profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length, height)));
+                this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
             }
             
             // Construct a transform whose X axis is the centerline of the wall.
@@ -111,7 +110,7 @@ namespace Hypar.Elements
         /// </summary>
         public Mesh Mesh()
         {
-            return Hypar.Geometry.Mesh.Extrude(this._profile.Perimeter, this.ElementType.Thickness, this._profile.Voids, true);
+            return Hypar.Geometry.Mesh.Extrude(this.Profile.Perimeter, this.ElementType.Thickness, this.Profile.Voids, true);
         }
     }
 }

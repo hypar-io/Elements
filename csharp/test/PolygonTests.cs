@@ -392,7 +392,7 @@ namespace Hypar.Tests
             var c = new Vector3(1,1);
             var d = new Vector3(0,1);
             var p = new Polygon(new[]{a,b,c,d});
-            Assert.Equal(4, p.Length);
+            Assert.Equal(4, p.Length());
         }
 
         [Fact]

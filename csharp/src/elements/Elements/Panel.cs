@@ -1,5 +1,6 @@
 using Hypar.Geometry;
 using Hypar.Elements.Serialization;
+using Hypar.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -11,29 +12,19 @@ namespace Hypar.Elements
     /// <summary>
     /// A zero-thickness planar Panel defined by 3 or 4 points.
     /// </summary>
-    public class Panel : Element, ITessellateMesh
+    public class Panel : Element, IPanel
     {
-        private IList<Vector3> _perimeter;
-
-        /// <summary>
-        /// The type of the element.
-        /// </summary>
-        public override string Type
-        {
-            get { return "panel"; }
-        }
-
         /// <summary>
         /// A CCW collection of points defining the corners of the Panel.
         /// </summary>
         [JsonProperty("perimeter"),JsonConverter(typeof(IListVector3Converter))]
-        public IList<Vector3> Perimeter 
-        { 
-            get
-            {
-                return this._perimeter;
-            }
-        }
+        public IList<Vector3> Perimeter {get;}
+
+        /// <summary>
+        /// The Panel's Material.
+        /// </summary>
+        [JsonProperty("material")]
+        public Material Material{get;}
 
         /// <summary>
         /// Construct a Panel.
@@ -49,7 +40,7 @@ namespace Hypar.Elements
             {
                 throw new ArgumentException("Panels can only be constructed currently using perimeters with 3 or 4 vertices.", "perimeter");
             }
-            this._perimeter = perimeter;
+            this.Perimeter = perimeter;
             this.Material = material == null ? BuiltInMaterials.Default : material;
         }
 
@@ -80,20 +71,20 @@ namespace Hypar.Elements
         /// Tessellate the Panel.
         /// </summary>
         /// <returns>A mesh representing the tessellated Panel.</returns>
-        public Mesh Mesh()
-        {
-            var mesh = new Mesh();
-            var vCount = this._perimeter.Count();
+        // public Mesh Mesh()
+        // {
+        //     var mesh = new Mesh();
+        //     var vCount = this._perimeter.Count();
 
-            if (vCount == 3)
-            {
-                mesh.AddTriangle(this._perimeter);
-            }
-            else if (vCount == 4)
-            {
-                mesh.AddQuad(this._perimeter);
-            }
-            return mesh;
-        }
+        //     if (vCount == 3)
+        //     {
+        //         mesh.AddTriangle(this._perimeter);
+        //     }
+        //     else if (vCount == 4)
+        //     {
+        //         mesh.AddQuad(this._perimeter);
+        //     }
+        //     return mesh;
+        // }
     }
 }

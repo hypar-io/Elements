@@ -26,12 +26,11 @@ namespace Hypar.Geometry
         }
 
         /// <summary>
-        /// The length of the polygon.
+        /// Calculate the length of the polygon.
         /// </summary>
-        [JsonIgnore]
-        public double Length
+        public double Length()
         {
-            get{return this.Segments().Sum(s=>s.Length);}
+            return this.Segments().Sum(s=>s.Length());
         }
 
         /// <summary>
@@ -135,7 +134,7 @@ namespace Hypar.Geometry
                 throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
             }
 
-            var d = this.Length * u;
+            var d = this.Length() * u;
             var totalLength = 0.0;
             for (var i = 0; i < this._vertices.Count - 1; i++)
             {
@@ -196,13 +195,13 @@ namespace Hypar.Geometry
             }
             else
             {
-                var d = this.Length * u;
+                var d = this.Length() * u;
                 var totalLength = 0.0;
                 var segments = Segments();
                 for (var i = 0; i < segments.Length; i++)
                 {
                     var s = segments[i];
-                    var currLength = s.Length;
+                    var currLength = s.Length();
                     if (totalLength <= d && totalLength + currLength >= d)
                     {
                         o = s.PointAt((d - totalLength) / currLength);

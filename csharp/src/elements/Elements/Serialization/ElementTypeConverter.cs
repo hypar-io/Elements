@@ -69,13 +69,13 @@ namespace Hypar.Elements.Serialization
     /// </summary>
     public class ElementTypeToIdConverter : JsonConverter
     {
-        private Dictionary<string, ElementType> _elementTypes;
+        private Dictionary<long, ElementType> _elementTypes;
 
         /// <summary>
         /// Construct an ElementTypeConverter.
         /// </summary>
         /// <param name="elementTypes"></param>
-        public ElementTypeToIdConverter(Dictionary<string, ElementType> elementTypes)
+        public ElementTypeToIdConverter(Dictionary<long, ElementType> elementTypes)
         {
             this._elementTypes = elementTypes;
         }
@@ -100,7 +100,7 @@ namespace Hypar.Elements.Serialization
         /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var id = (string)reader.Value;
+            var id = (long)reader.Value;
             if(this._elementTypes.ContainsKey(id))
             {
                 return this._elementTypes[id]; 

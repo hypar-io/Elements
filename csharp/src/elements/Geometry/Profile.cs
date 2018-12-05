@@ -1,4 +1,6 @@
 using Hypar.Geometry;
+using Hypar.Elements;
+using Hypar.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -53,22 +55,13 @@ namespace Hypar.Geometry
         /// The identifier of the Profile.
         /// </summary>
         [JsonProperty("id")]
-        public string Id{get; internal set;}
+        public long Id{get; internal set;}
 
         /// <summary>
         /// The name of the Profile.
         /// </summary>
         [JsonProperty("name")]
         public string Name{get;}
-
-        /// <summary>
-        /// The area of the Profile.
-        /// </summary>
-        [JsonIgnore]
-        public double Area
-        {
-            get{return ClippedArea();}
-        }
 
         /// <summary>
         /// The perimeter of the Profile.
@@ -91,7 +84,7 @@ namespace Hypar.Geometry
         [JsonConstructor]
         public Profile(Polygon perimeter, IList<Polygon> voids, string name = null)
         {
-            this.Id = Guid.NewGuid().ToString();
+            this.Id = IdProvider.Instance.GetNextId();
             this.Perimeter = perimeter;
             this.Voids = voids;
             this.Name = name;
@@ -101,7 +94,7 @@ namespace Hypar.Geometry
         /// Default constructor for Profile.
         /// </summary>
         protected Profile(string name){
-            this.Id = Guid.NewGuid().ToString();
+            this.Id = IdProvider.Instance.GetNextId();
             this.Name = name;
         }
 
@@ -112,7 +105,7 @@ namespace Hypar.Geometry
         /// <param name="perimeter">The perimeter of the Profile</param>
         public Profile(Polygon perimeter, string name = null)
         {
-            this.Id = Guid.NewGuid().ToString();
+            this.Id = IdProvider.Instance.GetNextId();
             this.Perimeter = perimeter;
             this.Name = name;
         }
@@ -125,10 +118,18 @@ namespace Hypar.Geometry
         /// <param name="singleVoid">A void in the Profile.</param>
         public Profile(Polygon perimeter, Polygon singleVoid, string name = null)
         {
-            this.Id = Guid.NewGuid().ToString();
+            this.Id = IdProvider.Instance.GetNextId();
             this.Perimeter = perimeter;
             this.Voids = new []{singleVoid};
             this.Name = name;
+        }
+
+        /// <summary>
+        /// The area of the Profile.
+        /// </summary>
+        public double Area()
+        {
+            return ClippedArea();
         }
 
         private double ClippedArea()

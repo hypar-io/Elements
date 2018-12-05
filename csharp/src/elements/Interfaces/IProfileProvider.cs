@@ -1,4 +1,6 @@
-namespace Hypar.Geometry
+using Hypar.Geometry;
+
+namespace Hypar.Interfaces
 {
     /// <summary>
     /// Interface implemented by types which provide a Profile.

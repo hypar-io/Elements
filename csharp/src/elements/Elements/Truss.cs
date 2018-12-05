@@ -1,4 +1,5 @@
 using Hypar.Geometry;
+using Hypar.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,20 +9,17 @@ namespace Hypar.Elements
     /// <summary>
     /// A Truss is an aggregation of StructuralFraming Elements.
     /// </summary>
-    public class Truss : Element
+    public class Truss : Element, IAggregateElement
     {
         private List<Beam> _web = new List<Beam>();
         private List<Beam> _topChord = new List<Beam>();
         private List<Beam> _bottomChord = new List<Beam>();
         
         /// <summary>
-        /// The type of the Element.
+        /// The Elements aggregated by this Element.
         /// </summary>
-        [JsonProperty("type")]
-        public override string Type
-        {
-            get{return "truss";}
-        }
+        [JsonProperty("elements")]
+        public List<Element> Elements{get;}
 
         /// <summary>
         /// The start of the Truss.
@@ -109,9 +107,11 @@ namespace Hypar.Elements
                 var wb = new Line(pts[i], pts[i] - new Vector3(0,0,depth));
                 this._web.Add(new Beam(wb, webProfile, material, null, startSetback, endSetback));
             }
-            this._subElements.AddRange(this._topChord);
-            this._subElements.AddRange(this._bottomChord);
-            this._subElements.AddRange(this._web);
+
+            this.Elements = new List<Element>();
+            this.Elements.AddRange(this._topChord);
+            this.Elements.AddRange(this._bottomChord);
+            this.Elements.AddRange(this._web);
         }
     }
 }

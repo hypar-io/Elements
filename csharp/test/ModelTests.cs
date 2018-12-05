@@ -50,8 +50,8 @@ namespace Hypar.Tests
             var c = new Vector3(1,0,1);
             var d = new Vector3(0,0,1);
             var panel = new Panel(new []{a,b,c,d,}, BuiltInMaterials.Glass);
-            panel.AddParameter("param1", new Parameter(42.0, ParameterType.Area));
-            panel.AddParameter("param2", new Parameter(42.0, ParameterType.Force));
+            panel.AddProperty("param1", new NumericProperty(42.0, UnitType.Area));
+            panel.AddProperty("param2", new NumericProperty(42.0, UnitType.Force));
 
             var profile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
             var floorType = new FloorType("test", 0.2);
@@ -70,7 +70,8 @@ namespace Hypar.Tests
 
             model.AddElements(new Element[]{panel, floor, mass, beam, column, space, wall});
             var json = model.ToJson();
-            
+            Console.WriteLine(json);
+
             var json2 = JsonConvert.SerializeObject(model, Formatting.Indented);
             Console.WriteLine($"Json serialization comparison (char length): serializer={json.Length}, unmodified={json2.Length}, {((double)json.Length/(double)json2.Length)*100.0}%");
 

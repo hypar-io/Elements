@@ -1,0 +1,87 @@
+using Hypar.Elements.Serialization;
+using Hypar.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
+using System;
+
+namespace Hypar.Elements
+{
+    public class StringProperty : IPropertySingleValue<string>
+    {
+        /// <summary>
+        /// The value of the Property.
+        /// </summary>
+        [JsonProperty("value")]
+        public string Value{get;}
+
+        /// <summary>
+        /// The UnitType of the Property.
+        /// </summary>
+        [JsonProperty("unit_type"),JsonConverter(typeof(StringEnumConverter))]
+        public UnitType UnitType{get;}
+
+        /// <summary>
+        /// The description of the Property.
+        /// </summary>
+        [JsonProperty("description")]
+        public string Description{get;}
+
+        /// <summary>
+        /// Construct a Property.
+        /// </summary>
+        /// <param name="value">The value of the Property.</param>
+        /// <param name="unitType">The unit type of the Property.</param>
+        /// <param name="description">The description of the Property.</param>
+        [JsonConstructor]
+        public StringProperty(string value, UnitType unitType, string description = null)
+        {
+            if(value.GetType() != typeof(string) && value.GetType() != typeof(double))
+            {
+                throw new ArgumentException("The provided parameter value must be a string or a double.");
+            }
+            this.Value = value;
+            this.UnitType = unitType;
+            this.Description = description;
+        }
+    }
+
+    public class NumericProperty : IPropertySingleValue<double>
+    {
+        /// <summary>
+        /// The value of the Property.
+        /// </summary>
+        [JsonProperty("value")]
+        public double Value{get;}
+
+        /// <summary>
+        /// The UnitType of the Property.
+        /// </summary>
+        [JsonProperty("unit_type"), JsonConverter(typeof(StringEnumConverter))]
+        public UnitType UnitType{get;}
+
+        /// <summary>
+        /// The description of the Property.
+        /// </summary>
+        [JsonProperty("description")]
+        public string Description{get;}
+
+        /// <summary>
+        /// Construct a Property.
+        /// </summary>
+        /// <param name="value">The value of the Property.</param>
+        /// <param name="unitType">The unit type of the Property.</param>
+        /// <param name="description">The description of the Property.</param>
+        [JsonConstructor]
+        public NumericProperty(double value, UnitType unitType, string description = null)
+        {
+            if(value.GetType() != typeof(string) && value.GetType() != typeof(double))
+            {
+                throw new ArgumentException("The provided parameter value must be a string or a double.");
+            }
+            this.Value = value;
+            this.UnitType = unitType;
+            this.Description = description;
+        }
+    }
+}

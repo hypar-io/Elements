@@ -452,7 +452,7 @@ IMin:{m_index_min}";
         {
             var mesh = new Hypar.Geometry.Mesh();
 
-            var l = curve.Length;
+            var l = curve.Length();
             var ssb = startSetback/l;
             var esb = endSetback/l;
 

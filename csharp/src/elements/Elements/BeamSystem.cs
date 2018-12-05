@@ -1,4 +1,5 @@
 using Hypar.Geometry;
+using Hypar.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +9,12 @@ namespace Hypar.Elements
     /// <summary>
     /// BeamSystem represents a collection of beams within a perimeter.
     /// </summary>
-    public class BeamSystem
+    public class BeamSystem: IAggregateElement
     {
-        private List<Beam> _beams = new List<Beam>();
-
         /// <summary>
-        /// A collection of Beams contained in the system.
+        /// The Beams that make up the BeamSystem.
         /// </summary>
-        /// <returns></returns>
-        public IList<Beam> Beams
-        {
-            get{return _beams;}
-        }
+        public List<Element> Elements{get;}
 
         /// <summary>
         /// Construct a BeamSystem between two edges.
@@ -31,6 +26,7 @@ namespace Hypar.Elements
         /// <param name="material">The Beam material.</param>
         public BeamSystem(int count, Profile profile, Line edge1, Line edge2, Material material = null)
         {
+            this.Elements = new List<Element>();
             CreateBeamsBetweenEdges(edge1, edge2, count, profile, material);
         }
 
@@ -43,6 +39,7 @@ namespace Hypar.Elements
         /// <param name="material">The Beam material.</param>
         public BeamSystem(Floor floor, int count, Profile profile, Material material = null)
         {
+            this.Elements = new List<Element>();
             var edges = floor.Profile.Perimeter.Segments();
             var e1 = edges[0];
             var e2 = edges[2].Reversed();
@@ -63,7 +60,7 @@ namespace Hypar.Elements
                 var b = edge2.PointAt(t);
                 var line = new Line(a, b);
                 var beam = new Beam(line, profile, material, null);
-                this._beams.Add(beam);
+                this.Elements.Add(beam);
             }
         }
     }

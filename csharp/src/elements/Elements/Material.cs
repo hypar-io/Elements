@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using Hypar.Geometry;
+using Hypar.Interfaces;
 using Hypar.Elements.Serialization;
 
 namespace Hypar.Elements
@@ -9,14 +10,14 @@ namespace Hypar.Elements
     /// <summary>
     /// A material with red, green, blue, alpha, and metallic factor components.
     /// </summary>
-    public class Material
+    public class Material: IIdentifiable
     {   
         /// <summary>
         /// The unique identifier of the Material.
         /// </summary>
         /// <value></value>
         [JsonProperty("id")]
-        public string Id{get; internal set;}
+        public long Id{get; internal set;}
 
         /// <summary>
         /// The RGBA Color of the Material.
@@ -64,7 +65,7 @@ namespace Hypar.Elements
                 throw new ArgumentOutOfRangeException("Color, specular, and glossiness values must be less than 1.0.");
             }
             
-            this.Id = Guid.NewGuid().ToString();
+            this.Id = IdProvider.Instance.GetNextId();
             this.Name = name;
             this.Color = color;
             this.SpecularFactor = specularFactor;

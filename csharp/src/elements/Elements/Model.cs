@@ -3,6 +3,7 @@ using glTFLoader.Schema;
 using Hypar.Elements.Serialization;
 using Hypar.Geometry;
 using Hypar.GeoJSON;
+using Hypar.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,11 +19,11 @@ namespace Hypar.Elements
     public class Model
     {
         private List<byte> _buffer = new List<byte>();
-        private Dictionary<string, Material> _materials = new Dictionary<string, Material>();
-        private Dictionary<string, Element> _elements = new Dictionary<string, Element>();
-        private Dictionary<string, ElementType> _elementTypes = new Dictionary<string, ElementType>();
+        private Dictionary<long, Material> _materials = new Dictionary<long, Material>();
+        private Dictionary<long, Element> _elements = new Dictionary<long, Element>();
+        private Dictionary<long, ElementType> _elementTypes = new Dictionary<long, ElementType>();
 
-        private Dictionary<string, Profile> _profiles = new Dictionary<string, Profile>();
+        private Dictionary<long, Profile> _profiles = new Dictionary<long, Profile>();
 
         /// <summary>
         /// The origin of the model.
@@ -35,7 +36,7 @@ namespace Hypar.Elements
         /// All Elements in the Model.
         /// </summary>
         [JsonProperty("elements")]
-        public Dictionary<string,Element> Elements
+        public Dictionary<long,Element> Elements
         {
             get{return this._elements;}
         }
@@ -44,7 +45,7 @@ namespace Hypar.Elements
         /// All Materials in the Model.
         /// </summary>
         [JsonProperty("materials")]
-        public Dictionary<string,Material> Materials
+        public Dictionary<long,Material> Materials
         {
             get{return this._materials;}
         }
@@ -53,7 +54,7 @@ namespace Hypar.Elements
         /// All ElementTypes in the Model.
         /// </summary>
         [JsonProperty("element_types")]
-        public Dictionary<string, ElementType> ElementTypes
+        public Dictionary<long, ElementType> ElementTypes
         {
             get{return this._elementTypes;}
         }
@@ -62,7 +63,7 @@ namespace Hypar.Elements
         /// All Profiles in the model.
         /// </summary>
         [JsonProperty("profiles")]
-        public Dictionary<string, Profile> Profiles
+        public Dictionary<long, Profile> Profiles
         {
             get{return this._profiles;}
         }
@@ -76,8 +77,8 @@ namespace Hypar.Elements
             AddMaterial(BuiltInMaterials.Black);
         }
 
-        internal Model(Dictionary<string, Element> elements, Dictionary<string, Material> materials, Dictionary<string,ElementType> elementTypes,
-                        Dictionary<string, Profile> profiles)
+        internal Model(Dictionary<long, Element> elements, Dictionary<long, Material> materials, Dictionary<long,ElementType> elementTypes,
+                        Dictionary<long, Profile> profiles)
         {
             this._elements = elements;
             this._materials = materials;
@@ -93,9 +94,9 @@ namespace Hypar.Elements
         /// <exception cref="System.ArgumentException">Thrown when an element with the same Id already exists in the model.</exception>
         public void AddElement(Element element)
         {
-            if(!this._elements.ContainsKey(element.Id.ToString()))
+            if(!this._elements.ContainsKey(element.Id))
             {
-                this._elements.Add(element.Id.ToString(), element);
+                this._elements.Add(element.Id, element);
                 GetRootLevelElementData(element);
             }
             else
@@ -109,11 +110,12 @@ namespace Hypar.Elements
         /// This includes things like profiles, materials, and element types.
         /// </summary>
         /// <param name="element">The Element from which to gather data.</param>
-        private void GetRootLevelElementData(Element element)
+        private void GetRootLevelElementData(IElement element)
         {
-            if(element.Material != null)
+            if(element is IGeometry3D)
             {
-                AddMaterial(element.Material);
+                var geo = (IGeometry3D)element;
+                AddMaterial(geo.Material);
             }
 
             if(element is IElementTypeProvider<WallType>)
@@ -134,11 +136,15 @@ namespace Hypar.Elements
                 AddProfile(ipp.Profile);
             }
 
-            if(element.SubElements.Count > 0)
+            if(element is IAggregateElement)
             {
-                foreach(var esub in element.SubElements)
+                var ae = (IAggregateElement)element;
+                if(ae.Elements.Count > 0)
                 {
-                    GetRootLevelElementData(esub);
+                    foreach(var esub in ae.Elements)
+                    {
+                        GetRootLevelElementData(esub);
+                    }
                 }
             }
         }
@@ -184,7 +190,7 @@ namespace Hypar.Elements
         /// </summary>
         /// <param name="id">The identifier of the Element.</param>
         /// <returns>An Element or null if no Element can be found with the provided id.</returns>
-        public Element GetElementById(string id)
+        public Element GetElementById(int id)
         {
             if(this._elements.ContainsKey(id))
             {
@@ -395,12 +401,64 @@ namespace Hypar.Elements
             return gltf;
         }
 
-        private void GetRenderDataForElement(Element e, Gltf gltf, Dictionary<string, int> materials)
+        private void GetRenderDataForElement(IElement e, Gltf gltf, Dictionary<string, int> materials)
         {
-            if(e is ITessellateMesh)
+            if(e is IGeometry3D)
             {
-                var mp = e as ITessellateMesh;
-                var mesh = mp.Mesh();
+                var geo = e as IGeometry3D;
+
+                Hypar.Geometry.Mesh mesh = null;
+                if(e is IExtrude)
+                {
+                    var extrude = (IExtrude)e;
+                    var clipper = new ClipperLib.Clipper();
+                    clipper.AddPath(extrude.Profile.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+                    if(extrude.Profile.Voids != null)
+                    {
+                        clipper.AddPaths(extrude.Profile.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+                    }
+                    var solution = new List<List<ClipperLib.IntPoint>>();
+                    var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
+                    var polys = solution.Select(s => s.ToPolygon()).ToList();
+
+                    if(polys.Count > 1)
+                    {
+                        mesh = Hypar.Geometry.Mesh.Extrude(polys.First(), extrude.Thickness, polys.Skip(1).ToList(), true);
+                    } 
+                    else 
+                    {
+                        mesh = Hypar.Geometry.Mesh.Extrude(polys.First(), extrude.Thickness, null, true);
+                    }
+                }
+                else if(e is IExtrudeAlongCurve)
+                {   
+                    var eac = (IExtrudeAlongCurve)e;
+                    mesh = Hypar.Geometry.Mesh.ExtrudeAlongCurve(eac.Curve, eac.Profile.Perimeter, eac.Profile.Voids, true, eac.StartSetback, eac.EndSetback);
+
+                    // Add the center curve
+                    var vBuff = eac.Curve.Vertices.ToArray();
+                    var vCount = eac.Curve.Vertices.Count();
+                    var indices = Enumerable.Range(0, vCount).Select(i=>(ushort)i).ToArray();
+                    var bbox = new BBox3(eac.Curve.Vertices);
+                    gltf.AddLineLoop($"{e.Id}_curve", _buffer, vBuff, indices, bbox.Min.ToArray(), 
+                                    bbox.Max.ToArray(), 0, (ushort)(vCount - 1), materials[BuiltInMaterials.Black.Name], e.Transform);
+                }
+                else if (e is IPanel)
+                {
+                    mesh = new Hypar.Geometry.Mesh();
+                    var panel = (IPanel)e;
+                    var vCount = panel.Perimeter.Count();
+
+                    if (vCount == 3)
+                    {
+                        mesh.AddTriangle(panel.Perimeter);
+                    }
+                    else if (vCount == 4)
+                    {
+                        mesh.AddQuad(panel.Perimeter);
+                    }
+                }
+
                 Transform transform = null;
                 if(e.Transform != null)
                 {
@@ -409,32 +467,38 @@ namespace Hypar.Elements
                 gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(), 
                                     mesh.Indices.ToArray(), mesh.VertexColors.ToArray(), 
                                     mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax, 
-                                    mesh.IMin, mesh.IMax, materials[e.Material.Name], null, transform);
+                                    mesh.IMin, mesh.IMax, materials[geo.Material.Name], null, transform);
 
             }
 
-            if(e is ITessellateCurves)
+            // if(e is ITessellateCurves)
+            // {
+            //     var cp = e as ITessellateCurves;
+            //     var curves = cp.Curves();
+            //     var counter = 0;
+            //     foreach(var c in curves)
+            //     {
+            //         var vBuff = c.ToArray();
+            //         var indices = Enumerable.Range(0, c.Count).Select(i=>(ushort)i).ToArray();
+            //         var bbox = new BBox3(c);
+            //         gltf.AddLineLoop($"{e.Id}_curve_{counter}", _buffer, vBuff, indices, bbox.Min.ToArray(), 
+            //                         bbox.Max.ToArray(), 0, (ushort)(c.Count - 1), materials[BuiltInMaterials.Black.Name], e.Transform);
+            //     }
+            // }
+            
+            if(e is IAggregateElement)
             {
-                var cp = e as ITessellateCurves;
-                var curves = cp.Curves();
-                var counter = 0;
-                foreach(var c in curves)
+                var ae = (IAggregateElement)e;
+
+                if(ae.Elements.Count > 0)
                 {
-                    var vBuff = c.ToArray();
-                    var indices = Enumerable.Range(0, c.Count).Select(i=>(ushort)i).ToArray();
-                    var bbox = new BBox3(c);
-                    gltf.AddLineLoop($"{e.Id}_curve_{counter}", _buffer, vBuff, indices, bbox.Min.ToArray(), 
-                                    bbox.Max.ToArray(), 0, (ushort)(c.Count - 1), materials[BuiltInMaterials.Black.Name], e.Transform);
+                    foreach(var esub in ae.Elements)
+                    {
+                        GetRenderDataForElement(esub, gltf, materials);
+                    }
                 }
             }
             
-            if(e.SubElements.Count > 0)
-            {
-                foreach(var esub in e.SubElements)
-                {
-                    GetRenderDataForElement(esub, gltf, materials);
-                }
-            }
         }
     }
 }

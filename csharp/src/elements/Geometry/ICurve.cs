@@ -8,10 +8,9 @@ namespace Hypar.Geometry
     public interface ICurve
     {
         /// <summary>
-        /// Get the length of the curve.
+        /// Calculate the length of the curve.
         /// </summary>
-        /// <returns></returns>
-        double Length { get; }
+        double Length();
 
         /// <summary>
         /// The start of the curve.

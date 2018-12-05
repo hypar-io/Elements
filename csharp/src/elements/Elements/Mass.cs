@@ -1,3 +1,4 @@
+using Hypar.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -10,27 +11,15 @@ namespace Hypar.Elements
     /// <summary>
     /// A Mass represents an extruded building Mass.
     /// </summary>
-    public class Mass : Element, ITessellateMesh, IProfileProvider
+    public class Mass : Element, IExtrude
     {
         private List<Polyline> _sides = new List<Polyline>();
-        private readonly Profile _profile;
-
-        /// <summary>
-        /// The type of the element.
-        /// </summary>
-        public override string Type
-        {
-            get { return "mass"; }
-        }
 
         /// <summary>
         /// The Profile of the Mass.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile
-        {
-            get{return this._profile;}
-        }
+        public Profile Profile{get;}
         
         /// <summary>
         /// The transformed Profile of the Mass.
@@ -38,7 +27,7 @@ namespace Hypar.Elements
         [JsonIgnore]
         public Profile ProfileTransformed
         {
-            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
+            get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
 
         /// <summary>
@@ -54,13 +43,19 @@ namespace Hypar.Elements
         public double Height { get; }
 
         /// <summary>
-        /// The volume of the Mass.
+        /// The thickness of the Mass' extrusion.
         /// </summary>
         [JsonIgnore]
-        public double Volume
+        public double Thickness
         {
-            get { return this._profile.Area * this.Height; }
+            get{return this.Height;}
         }
+        
+        /// <summary>
+        /// The Mass' Material.
+        /// </summary>
+        [JsonProperty("material")]
+        public Material Material{get;}
 
         /// <summary>
         /// Construct a Mass.
@@ -76,7 +71,7 @@ namespace Hypar.Elements
             {
                 throw new ArgumentOutOfRangeException("The Mass could not be constructed. The height must be greater than zero.");
             }
-            this._profile = profile;
+            this.Profile = profile;
             this.Elevation = elevation;
             this.Height = height;
             this.Material = material != null ? material : BuiltInMaterials.Mass;
@@ -135,23 +130,31 @@ namespace Hypar.Elements
         }
 
         /// <summary>
+        /// The volume of the Mass.
+        /// </summary>
+        public double Volume()
+        {
+            return this.Profile.Area() * this.Height;
+        }
+
+        /// <summary>
         /// Tessellate the Mass.
         /// </summary>
         /// <returns>A mesh representing the tessellated Mass.</returns>
-        public Mesh Mesh()
-        {
-            // We use the untransformed faces here,
-            // as the transform will be applied on the rendering node.
+        // public Mesh Mesh()
+        // {
+        //     // We use the untransformed faces here,
+        //     // as the transform will be applied on the rendering node.
 
-            var mesh = new Mesh();
-            foreach (var f in FacesInternal(this._profile.Perimeter.Vertices))
-            {
-                mesh.AddQuad(f.Vertices);
-            }
+        //     var mesh = new Mesh();
+        //     foreach (var f in FacesInternal(this._profile.Perimeter.Vertices))
+        //     {
+        //         mesh.AddQuad(f.Vertices);
+        //     }
 
-            mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation));
-            mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation + this.Height), true);
-            return mesh;
-        }
+        //     mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation));
+        //     mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation + this.Height), true);
+        //     return mesh;
+        // }
     }
 }

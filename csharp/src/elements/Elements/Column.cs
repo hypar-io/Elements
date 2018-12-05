@@ -10,14 +10,6 @@ namespace Hypar.Elements
     public class Column : StructuralFraming
     {
         /// <summary>
-        /// The type of the element.
-        /// </summary>
-        public override string Type
-        {
-            get{return "column";}
-        }
-
-        /// <summary>
         /// The location of the base of the Column.
         /// </summary>
         [JsonProperty("location")]

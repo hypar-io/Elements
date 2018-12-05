@@ -1,4 +1,5 @@
 using Hypar.Geometry;
+using Hypar.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -10,17 +11,13 @@ namespace Hypar.Elements
     /// <summary>
     /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : Element, IElementTypeProvider<FloorType>, ITessellateMesh, IProfileProvider
+    public class Floor : Element, IElementTypeProvider<FloorType>, IExtrude
     {
-        private readonly Profile _profile;
-
         /// <summary>
-        /// The type of the element.
+        /// The elevation from which the Floor is extruded.
         /// </summary>
-        public override string Type
-        {
-            get { return "floor"; }
-        }
+        [JsonProperty("elevation")]
+        public double Elevation { get; }
 
         /// <summary>
         /// The FloorType of the Floor.
@@ -29,13 +26,16 @@ namespace Hypar.Elements
         public FloorType ElementType{get;}
 
         /// <summary>
+        /// The Material of the Floor.
+        /// </summary>
+        [JsonProperty("material")]
+        public Material Material{get;}
+
+        /// <summary>
         /// The Profile of the Floor.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile
-        {
-            get{return this._profile;}
-        }
+        public Profile Profile{get;}
 
         /// <summary>
         /// The transformed Profile of the Floor.
@@ -43,14 +43,17 @@ namespace Hypar.Elements
         [JsonIgnore]
         public Profile ProfileTransformed
         {
-            get{return this.Transform != null ? this.Transform.OfProfile(this._profile) : this._profile;}
+            get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
 
         /// <summary>
-        /// The elevation from which the Floor is extruded.
+        /// The thickness of the Floor's extrusion.
         /// </summary>
-        [JsonProperty("elevation")]
-        public double Elevation { get; }
+        [JsonIgnore]
+        public double Thickness
+        {
+            get{return this.ElementType.Thickness;}
+        }
 
         /// <summary>
         /// Construct a Floor.
@@ -63,36 +66,11 @@ namespace Hypar.Elements
         [JsonConstructor]
         public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Material material = null)
         {
-            this._profile = profile;
+            this.Profile = profile;
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
-        }
-
-        /// <summary>
-        /// Tessellate the Floor.
-        /// </summary>
-        public Mesh Mesh()
-        {
-            var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this._profile.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            if(this._profile.Voids != null)
-            {
-                clipper.AddPaths(this._profile.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
-            }
-            var solution = new List<List<ClipperLib.IntPoint>>();
-            var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-            var polys = solution.Select(s => s.ToPolygon()).ToList();
-
-            if(polys.Count > 1)
-            {
-                return Hypar.Geometry.Mesh.Extrude(polys.First(), this.ElementType.Thickness, polys.Skip(1).ToList(), true);
-            } 
-            else 
-            {
-                return Hypar.Geometry.Mesh.Extrude(polys.First(), this.ElementType.Thickness, null, true);
-            }
         }
 
         /// <summary>
@@ -102,7 +80,7 @@ namespace Hypar.Elements
         /// </summary>
         public double Area()
         {
-            return this._profile.Area;
+            return this.Profile.Area();
         }
     }
 

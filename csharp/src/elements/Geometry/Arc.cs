@@ -32,12 +32,11 @@ namespace Hypar.Geometry
         public double EndAngle { get; }
 
         /// <summary>
-        /// The length of the Arc.
+        /// Calculate the length of the Arc.
         /// </summary>
-        [JsonIgnore]
-        public double Length
+        public double Length()
         {
-            get{ return 2*Math.PI*this.Radius * (Math.Abs(this.EndAngle-this.StartAngle))/360.0;}
+            return 2*Math.PI*this.Radius * (Math.Abs(this.EndAngle-this.StartAngle))/360.0;
         }
 
         /// <summary>

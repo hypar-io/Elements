@@ -20,7 +20,7 @@ namespace Hypar.Tests
             var a = new Vector3();
             var b = new Vector3(1, 0);
             var l = new Line(a,b);
-            Assert.Equal(1.0, l.Length);
+            Assert.Equal(1.0, l.Length());
             Assert.Equal(new Vector3(0.5,0), l.PointAt(0.5));
         }
 
