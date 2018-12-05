@@ -21,20 +21,20 @@ Hypar Elements is open source and will remain so **forever**. Your donation will
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
 ## Getting Started the Easy Way
-The easiest way to get started is to clone the [starter](https://github.com/hypar-io/starter) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
+The easiest way to get started is to clone the [starter](https://github.com/hypar-io/generator) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
 ```bash
 git clone https://github.com/hypar-io/starter
 ```
 
 ## Getting Started the Less Easy Way
-The Hypar SDK is available as a [NuGet package](https://www.nuget.org/packages/HyparSDK).
+The Hypar SDK is available as a [NuGet package](https://www.nuget.org/packages/Hypar.Elements).
 To install for dotnet projects:
 ```bash
 dotnet add package HyparSDK
 ```
 
 ## Examples
-The best examples are those provided in the [tests](https://github.com/hypar-io/sdk/tree/master/csharp/test/Hypar.SDK.Tests), where we demonstrate usage of almost every function in the library.
+The best examples are those provided in the [tests](https://github.com/hypar-io/sdk/tree/master/test), where we demonstrate usage of almost every function in the library.
 
 ## Building the SDK
 You'll only need to do this if you want to contribute to the SDK, otherwise you can use the NuGet packages that are published regularly.

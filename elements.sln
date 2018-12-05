@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0A35A48B-BC06-4486-A690-61AEF09E0B27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hypar-elements", "src\elements\elements.csproj", "{9212CEE6-60CE-4118-83C2-2FBAF405CDA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hypar-elements", "src\Elements\elements.csproj", "{9212CEE6-60CE-4118-83C2-2FBAF405CDA1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{85C86F25-3507-4533-8EA4-FA34E9A01112}"
 EndProject
