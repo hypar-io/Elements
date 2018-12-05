@@ -19,7 +19,7 @@ namespace Hypar.Geometry
         /// <summary>
         /// The vertices of the polygon.
         /// </summary>
-        [JsonProperty("vertices"), JsonConverter(typeof(IListVector3Converter))]
+        [JsonProperty("vertices")]
         public IList<Vector3> Vertices
         {
             get{return this._vertices;}

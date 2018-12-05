@@ -17,7 +17,7 @@ namespace Hypar.Elements
         /// <summary>
         /// A CCW collection of points defining the corners of the Panel.
         /// </summary>
-        [JsonProperty("perimeter"),JsonConverter(typeof(IListVector3Converter))]
+        [JsonProperty("perimeter")]
         public IList<Vector3> Perimeter {get;}
 
         /// <summary>

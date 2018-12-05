@@ -9,7 +9,6 @@ namespace Hypar.Geometry
     /// <summary>
     /// A 3D vector.
     /// </summary>
-    [JsonConverter(typeof(Vector3Converter))]
     public class Vector3 : IComparable<Vector3>
     {
         /// <summary>
