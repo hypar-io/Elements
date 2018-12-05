@@ -346,7 +346,7 @@ namespace Hypar.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path));
+                polygons.Add(PolygonExtensions.ToPolygon(path.Distinct().ToList()));
             }
             return polygons;
         }
