@@ -135,25 +135,5 @@ namespace Elements
         {
             return this.Profile.Area() * this.Height;
         }
-
-        /// <summary>
-        /// Tessellate the Mass.
-        /// </summary>
-        /// <returns>A mesh representing the tessellated Mass.</returns>
-        // public Mesh Mesh()
-        // {
-        //     // We use the untransformed faces here,
-        //     // as the transform will be applied on the rendering node.
-
-        //     var mesh = new Mesh();
-        //     foreach (var f in FacesInternal(this._profile.Perimeter.Vertices))
-        //     {
-        //         mesh.AddQuad(f.Vertices);
-        //     }
-
-        //     mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation));
-        //     mesh.AddTesselatedFace(this._profile.Perimeter, this._profile.Voids, new Transform(0.0,0.0,this.Elevation + this.Height), true);
-        //     return mesh;
-        // }
     }
 }

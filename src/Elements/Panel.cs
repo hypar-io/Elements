@@ -66,25 +66,5 @@ namespace Elements
             var verts = this.Perimeter;
             return new Plane(verts[0], this.Perimeter).Normal;
         }
-
-        /// <summary>
-        /// Tessellate the Panel.
-        /// </summary>
-        /// <returns>A mesh representing the tessellated Panel.</returns>
-        // public Mesh Mesh()
-        // {
-        //     var mesh = new Mesh();
-        //     var vCount = this._perimeter.Count();
-
-        //     if (vCount == 3)
-        //     {
-        //         mesh.AddTriangle(this._perimeter);
-        //     }
-        //     else if (vCount == 4)
-        //     {
-        //         mesh.AddQuad(this._perimeter);
-        //     }
-        //     return mesh;
-        // }
     }
 }

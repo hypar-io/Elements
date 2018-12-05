@@ -1,3 +1,5 @@
+#pragma warning disable CS1591
+
 using Elements.Interfaces;
 using System;
 using System.Collections.Generic;

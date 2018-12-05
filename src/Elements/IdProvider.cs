@@ -1,5 +1,8 @@
 namespace Elements
 {
+    /// <summary>
+    /// A singleton which provides integer Ids.
+    /// </summary>
     public class IdProvider
     {
         private static int _currentId = 0;
@@ -7,6 +10,9 @@ namespace Elements
 
         private IdProvider(){}
 
+        /// <summary>
+        /// The singleton instance.
+        /// </summary>
         public static IdProvider Instance
         {
             get
@@ -19,6 +25,9 @@ namespace Elements
             }
         }
 
+        /// <summary>
+        /// Get the next valid integer Id.
+        /// </summary>
         public int GetNextId()
         {
             var result = _currentId;

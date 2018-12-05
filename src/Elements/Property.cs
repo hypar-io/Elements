@@ -7,6 +7,9 @@ using System;
 
 namespace Elements
 {
+    /// <summary>
+    /// A property with a string value.
+    /// </summary>
     public class StringProperty : IPropertySingleValue<string>
     {
         /// <summary>
@@ -46,6 +49,9 @@ namespace Elements
         }
     }
 
+    /// <summary>
+    /// A property with a numeric value.
+    /// </summary>
     public class NumericProperty : IPropertySingleValue<double>
     {
         /// <summary>

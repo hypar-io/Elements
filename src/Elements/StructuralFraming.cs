@@ -48,7 +48,7 @@ namespace Elements
         public double StartSetback{get;}
 
         /// <summary>
-        /// Thet setback of the Beam's extrusion at the end.
+        /// The setback of the Beam's extrusion at the end.
         /// </summary>
         [JsonProperty("end_setback")]
         public double EndSetback{get;}

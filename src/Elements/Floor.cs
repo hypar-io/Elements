@@ -58,10 +58,10 @@ namespace Elements
         /// <summary>
         /// Construct a Floor.
         /// </summary>
-        /// <param name="profile">The <see cref="Hypar.Geometry.Profile"/>of the Floor.</param>
+        /// <param name="profile">The <see cref="Elements.Geometry.Profile"/>of the Floor.</param>
         /// <param name="elevation">The elevation of the Floor.</param>
-        /// <param name="elementType">The FloorType of the Floor.</param>
-        /// <param name="material">The Floor's material.</param>
+        /// <param name="elementType">The <see cref="Elements.ElementType"/> of the Floor.</param>
+        /// <param name="material">The Floor's <see cref="Elements.Material"/>.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the slab's thickness is less than or equal to 0.0.</exception>
         [JsonConstructor]
         public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Material material = null)
