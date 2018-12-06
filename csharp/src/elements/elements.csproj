@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.1.5</Version>
+    <Version>0.1.6</Version>
     <Tags>AEC, Architecture, Structure, Engineering</Tags>
   </PropertyGroup>
 
