@@ -30,7 +30,7 @@ namespace Elements
         [JsonProperty("type", Order=-1)]
         public string Type
         {
-            get{return this.GetType().Name.ToLower();}
+            get{return this.GetType().FullName.ToLower();}
         }
 
         /// <summary>
