@@ -1,7 +1,11 @@
+using Elements.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Elements.Serialization
 {
@@ -11,6 +15,23 @@ namespace Elements.Serialization
     /// </summary>
     public class ElementConverter : JsonConverter
     {
+        private List<Type> _elementTypes;
+
+        public ElementConverter()
+        {
+            try
+            {
+                _elementTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t=>typeof(IElement).IsAssignableFrom(t)).ToList();
+            }
+            catch(System.Reflection.ReflectionTypeLoadException ex)
+            {
+                foreach(var x in ex.LoaderExceptions)
+                {
+                    Console.WriteLine(x.Message);
+                }
+            }
+        }
+
         /// <summary>
         /// Can this converter converter objects of the provided type?
         /// </summary>
@@ -51,29 +72,14 @@ namespace Elements.Serialization
         {
             var obj = JObject.Load(reader);
             var typeName = (string)obj.GetValue("type");
-            switch(typeName)
+
+            // Find a type with the fullname 
+            var foundType = _elementTypes.FirstOrDefault(t=>t.FullName.ToLower() == typeName);
+            if(foundType == null)
             {
-                case "panel":
-                    return obj.ToObject<Panel>(serializer);
-                case "floor":
-                    return obj.ToObject<Floor>(serializer);
-                case "mass":
-                    return obj.ToObject<Mass>(serializer);
-                case "space":
-                    return obj.ToObject<Space>(serializer);
-                case "column":
-                    return obj.ToObject<Column>(serializer);
-                case "beam":
-                    return obj.ToObject<Beam>(serializer);
-                case "brace":
-                    return obj.ToObject<Brace>(serializer);
-                case "wall":
-                    return obj.ToObject<Wall>(serializer);
-                case "truss":
-                    return obj.ToObject<Truss>(serializer);
-                default:
-                    throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
+                throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
             }
+            return obj.ToObject(foundType, serializer);
         }
 
         /// <summary>
