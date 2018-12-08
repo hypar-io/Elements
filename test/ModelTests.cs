@@ -102,13 +102,6 @@ namespace Hypar.Tests
             Assert.Equal(wall.ElementType, model.ElementTypes[newWall.ElementType.Id]);
         }
 
-        // [Fact]
-        // public void DeserializeFoo()
-        // {
-        //     var file = File.ReadAllText("/Users/ikeough/Downloads/ec600c0b-65e0-43ea-a5ac-6491c951ebe6_elements.json");
-        //     var model = Model.FromJson(file);
-        // }
-
         private Model QuadPanelModel()
         {
             var model = new Model();
