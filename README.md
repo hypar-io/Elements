@@ -1,8 +1,8 @@
 <img src="./hypar_logo.svg" width="200px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
 
 # elements
-[![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/elements)
-![NuGet](https://img.shields.io/nuget/v/HyparSDK.svg)
+[![Build Status](https://travis-ci.org/hypar-io/elements.svg?branch=master)](https://travis-ci.org/hypar-io/elements)
+![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
 Elements is a library for creating building elements like Walls, Beams, and Spaces. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings. Here's an example using Elements to create a `Beam`:
