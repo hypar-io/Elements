@@ -65,7 +65,25 @@ dotnet test
 Hypar Elements is at the heart of the Hypar platform. A Hypar generator is a piece of code that is executed in the cloud to generate a building or a set of building components. You author the generator logic referencing the Hypar Elements library, and publish the generator to Hypar, then Hypar executes it for you and store the results. You can see some generators written using Hypar Elements running on [Hypar](https://hypar.io). Hypar is just one example of a business that can be built on top of this tool. We fully expect you'll go and build your own cool thing.
 
 ## Getting Started Developing for the Hypar Platform
-The easiest way to get started is to clone the [starter](https://github.com/hypar-io/starter) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
-```bash
-git clone https://github.com/hypar-io/starter
-```
+1. Install the CLI
+The Hypar command line interface (CLI) is a tool that helps you publish your generator to Hypar. The CLI works on Windows from the windows command line and on Mac and Linux from your favorite terminal.
+- Download for:
+  - [Windows](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-win-x64.zip)
+  - [Mac](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-osx.10.12-x64.zip)
+  - [Linux](https://s3-us-west-1.amazonaws.com/hypar-cli/hypar-linux-x64.zip)
+- Link the executable to make it available from your command line:
+  - On Mac and Linux: `ln -s <path to hypar executable> /usr/local/bin/hypar`
+  - On windows add `<path to hypar>` to your user `PATH`.
+2. Create a generator.
+Using the CLI, you can create a new generator by doing `hypar init <generator id>`. This will clone the generator repo to the folder `<generator id>`. Of course, you can replace `<generator-id>` with anything you like. 
+3. Edit the `hypar.json`.
+The `hypar.json` file describes the interface for your generator. The `inputs` in your generator will describe the data that needs to be supplied to your generator for it to run. These inputs will show up in Hypar (https://hypar.io/) as controls for the user to add some data. The supported input types are:
+- `location` - A location defined as GEOJson.
+- `range` - A numeric range from `min` to `max`, with intermediate values defined by `step`.
+- `data` - A data input with an optional `content-type` property. 
+  - `content-type` can be one of the following:
+    - `text/csv` - CSV data.
+    - `text/plain` - Raw text.
+    - `application/json` - JSON.
+4. Use the CLI to generate input and output classes and a function stub. From the same directory as your `hypar.json` do:
+`hypar init`. This will generate `Input.gs.cs` and `Output.g.cs` classes which have properties which match your input and output properties. Addtionally, it will generate a `<function-id>.g.cs` whose `Execute(...)` method is where you put your business logic.
