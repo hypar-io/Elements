@@ -35,14 +35,7 @@ The Hypar command line interface (CLI) is a tool that helps you publish your gen
 2. Create a generator.
 Using the CLI, you can create a new generator by doing `hypar init <generator id>`. This will clone the generator repo to the folder `<generator id>`. Of course, you can replace `<generator-id>` with anything you like. The generator project is a buildable .net class library which references the Elements [NuGet package](https://www.nuget.org/packages/Hypar.Elements/).
 3. Edit the `hypar.json`.
-The `hypar.json` file describes the interface for your generator. The `inputs` in your generator will describe the data that needs to be supplied to your generator for it to run. These inputs will show up in Hypar (https://hypar.io/) as controls for the user to add some data. The supported input types are:
-- `location` - A location defined as GEOJson.
-- `range` - A numeric range from `min` to `max`, with intermediate values defined by `step`.
-- `data` - A data input with an optional `content-type` property. 
-  - `content-type` can be one of the following:
-    - `text/csv` - CSV data.
-    - `text/plain` - Raw text.
-    - `application/json` - JSON.
+The `hypar.json` file describes the interface for your generator. A the top of the `hypar.json` file, the `hypar-schema` is referenced. In Visual Studio Code you'll get code completion and documentation as you author the `hypar.json`.
 4. Use the CLI to generate input and output classes and a function stub. From the same directory as your `hypar.json` do:
 `hypar init`. This will generate `Input.gs.cs` and `Output.g.cs` classes which have properties which match your input and output properties. Addtionally, it will generate a `<function-id>.g.cs` whose `Execute(...)` method is where you put your business logic.
 
