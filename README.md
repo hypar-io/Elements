@@ -61,10 +61,9 @@ dotnet test
 - [GeoJson](http://geojson.org/)
 - [glTF](https://www.khronos.org/gltf/).
 
-## Hypar Elements
+## Getting Started Developing for the Hypar Platform
 Hypar Elements is at the heart of the Hypar platform. A Hypar generator is a piece of code that is executed in the cloud to generate a building or a set of building components. You author the generator logic referencing the Hypar Elements library, and publish the generator to Hypar, then Hypar executes it for you and store the results. You can see some generators written using Hypar Elements running on [Hypar](https://hypar.io). Hypar is just one example of a business that can be built on top of this tool. We fully expect you'll go and build your own cool thing.
 
-## Getting Started Developing for the Hypar Platform
 1. Install the CLI
 The Hypar command line interface (CLI) is a tool that helps you publish your generator to Hypar. The CLI works on Windows from the windows command line and on Mac and Linux from your favorite terminal.
 - Download for:
