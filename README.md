@@ -34,7 +34,9 @@ The best examples are those provided in the [tests](https://github.com/hypar-io/
 ## Build
 You'll only need to do this if you want to contribute to the SDK, otherwise you can use the NuGet packages that are published regularly.
 
-`dotnet build`
+```
+dotnet build
+```
 
 ## Test
 ```
