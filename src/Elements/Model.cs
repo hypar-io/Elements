@@ -10,7 +10,11 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Collections;
+using System.Reflection;
 using Mesh = Elements.Geometry.Mesh;
+using IFC;
+using STEP;
+using IFC.Storage;
 
 namespace Elements
 {
@@ -27,9 +31,14 @@ namespace Elements
         private Dictionary<long, Profile> _profiles = new Dictionary<long, Profile>();
 
         /// <summary>
+        /// The version of the assembly.
+        /// </summary>
+        [JsonProperty("version")]
+        public string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+        /// <summary>
         /// The origin of the model.
         /// </summary>
-        /// <returns></returns>
         [JsonProperty("origin")]
         public Position Origin {get;set;}
 
@@ -95,6 +104,11 @@ namespace Elements
         /// <exception cref="System.ArgumentException">Thrown when an element with the same Id already exists in the model.</exception>
         public void AddElement(Element element)
         {
+            if(element == null)
+            {
+                return;
+            }
+            
             if(!this._elements.ContainsKey(element.Id))
             {
                 this._elements.Add(element.Id, element);
@@ -500,6 +514,29 @@ namespace Elements
                 }
             }
             
+        }
+
+        /// <summary>
+        /// Construct a Model from an IFC STEP file.
+        /// </summary>
+        /// <param name="ifcPath">The path to the IFC file on disk.</param>
+        public static Model FromIFC(string ifcPath)
+        {
+            IList<STEPError> errors;
+            var ifcModel = new IFC.Model(ifcPath, new LocalStorageProvider(), out errors);
+
+            var floorType = new FloorType("IFC Floor", 0.1);
+            var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
+            var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
+
+            // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
+            var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
+            var slabs = ifcSlabs.Select(s=>s.ToFloor(relContains));
+            var spaces = ifcSpaces.Select(sp=>sp.ToSpace());
+            var model = new Model();
+            model.AddElements(slabs);
+            model.AddElements(spaces);
+            return model;
         }
     }
 }

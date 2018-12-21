@@ -62,7 +62,7 @@ namespace Elements
         /// <param name="material">The space's material.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
         [JsonConstructor]
-        public Space(Profile profile, double elevation = 0.0, double height = 1.0, Material material = null)
+        public Space(Profile profile, double elevation = 0.0, double height = 1.0, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
             {
@@ -74,7 +74,7 @@ namespace Elements
             this.Height = height;
 
             this.Material = material != null ? material : BuiltInMaterials.Default;
-            this.Transform = new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+            this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
         }
     }
 }

@@ -16,12 +16,13 @@
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.1.6</Version>
+    <Version>0.1.7</Version>
     <PackageTags>AEC, Architecture, Structure, Engineering</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="glTF2Loader" Version="1.1.1-alpha" />
+    <PackageReference Include="Hypar.IFC" Version="0.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
   </ItemGroup>

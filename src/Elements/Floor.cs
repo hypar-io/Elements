@@ -64,12 +64,12 @@ namespace Elements
         /// <param name="material">The Floor's <see cref="Elements.Material"/>.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the slab's thickness is less than or equal to 0.0.</exception>
         [JsonConstructor]
-        public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Material material = null)
+        public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
         {
             this.Profile = profile;
             this.Elevation = elevation;
             this.ElementType = elementType;
-            this.Transform = new Transform(new Vector3(0, 0, elevation));
+            this.Transform = transform!=null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
         }
 

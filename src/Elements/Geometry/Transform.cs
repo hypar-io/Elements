@@ -170,6 +170,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Concatenate the transform.
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        public void Concatenate(Transform transform)
+        {
+            this._matrix = this._matrix * transform._matrix;
+        }
+
+        /// <summary>
         /// Apply a translation to the Transform.
         /// </summary>
         /// <param name="translation">The translation to apply.</param>
