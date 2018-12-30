@@ -352,12 +352,10 @@ W4x13,3.83,4.16,0.28,4.06,0.345,2-5/8,0.595,0.5,2-1/4,1.1,2.97,11.3,5.46,1.72,3.
                     {
                         var values = line.Split(',');
                         try{
-                            var profile = new WideFlangeProfile(values[0]){
+                            var profile = new WideFlangeProfile(values[0], double.Parse(values[4]) * InchesToMeters, 
+                            double.Parse(values[2]) * InchesToMeters, double.Parse(values[5]) * InchesToMeters, 
+                            double.Parse(values[3]) * InchesToMeters){
                                 A = double.Parse(values[1]),
-                                d = double.Parse(values[2]) * InchesToMeters,
-                                tw = double.Parse(values[3]) * InchesToMeters,
-                                bf = double.Parse(values[4]) * InchesToMeters,
-                                tf = double.Parse(values[5]) * InchesToMeters,
                                 T = values[6],
                                 k = double.Parse(values[7]),
                                 k1 = double.Parse(values[8]),
