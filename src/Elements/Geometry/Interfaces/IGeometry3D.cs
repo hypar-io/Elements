@@ -3,7 +3,7 @@
 using Elements.Geometry;
 using System.Collections.Generic;
 
-namespace Elements.Interfaces
+namespace Elements.Geometry.Interfaces
 {
     /// <summary>
     /// ITessellateMesh is implemented by all types which provide a Mesh for visualization.

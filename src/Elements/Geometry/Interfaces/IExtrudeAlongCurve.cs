@@ -1,10 +1,8 @@
 #pragma warning disable CS1591
 
-using Elements.Geometry;
-
-namespace Elements.Interfaces
+namespace Elements.Geometry.Interfaces
 {
-    public interface IExtrudeAlongCurve : IGeometry3D, IProfileProvider
+    public interface IExtrudeAlongCurve : IProfileProvider, IBRep
     {
         double StartSetback{get;}
         double EndSetback{get;}

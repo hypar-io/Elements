@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using LibTessDotNet.Double;
 using System;
 using System.Collections;
@@ -169,7 +170,7 @@ namespace Elements.Geometry
         /// <param name="ac"></param>
         /// <param name="bc"></param>
         /// <param name="cc"></param>
-        public void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Color ac = null, Color bc = null, Color cc = null)
+        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Color ac = null, Color bc = null, Color cc = null)
         {
             var v1 = b - a;
             var v2 = c - a;
@@ -209,7 +210,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="v"></param>
         /// <param name="c"></param>
-        public void AddTriangle(IList<Vector3> v, Color[] c = null)
+        internal void AddTriangle(IList<Vector3> v, Color[] c = null)
         {
             if(c != null)
             {
@@ -221,7 +222,7 @@ namespace Elements.Geometry
             }
         }
 
-        private void AddVertex(Vector3 v, Vector3 n, Color c = null)
+        internal void AddVertex(Vector3 v, Vector3 n, Color c = null)
         {
             var vArr = v.ToArray();
             var nArr = n.ToArray();
@@ -264,7 +265,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="colors"></param>
-        public void AddQuad(IList<Vector3> vertices, Color[] colors = null)
+        internal void AddQuad(IList<Vector3> vertices, Color[] colors = null)
         {
             var v1 = vertices[1] - vertices[0];
             var v2 = vertices[2] - vertices[0];
@@ -305,39 +306,25 @@ namespace Elements.Geometry
             m_current_vertex_index += 4;
         }
 
-        /// <summary>
-        /// Add a tessellated face to the mesh.
-        /// </summary>
-        /// <param name="perimeter">A Polygon representing the perimeter of the face.</param>
-        /// <param name="voids">A collection of Polygons representing voids in the face.</param>
-        /// <param name="transform">A Transform to apply to all vertices of the supplied perimeter.</param>
-        /// <param name="reversed">A flag indicating whether the winding of the Polygons should be reversed.</param>
-        public void AddTesselatedFace(Polygon perimeter, IList<Polygon> voids, Transform transform, bool reversed = false)
+        internal static Tess TessFromPolygon(Polygon polygon, IList<Polygon> voids = null)
         {
             var tess = new Tess();
+            tess.NoEmptyPolygons = true;
 
-            AddContour(tess, perimeter, reversed);
+            AddContour(tess, polygon);
 
             if(voids != null)
             {
                 foreach(var p in voids)
                 {
-                    AddContour(tess, p, reversed);
+                    AddContour(tess, p);
                 }
             }
-            
-            tess.Tessellate(WindingRule.EvenOdd, LibTessDotNet.Double.ElementType.Polygons, 3);
 
-            for(var i=0; i<tess.ElementCount; i++)
-            {
-                var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
-                var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
-                var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
-                AddTriangle(transform.OfPoint(a), transform.OfPoint(b), transform.OfPoint(c));
-            }
+            return tess;
         }
 
-        private void AddContour(Tess tess, Polygon p, bool reversed = false)
+        internal static void AddContour(Tess tess, Polygon p)
         {
             var numPoints = p.Vertices.Count;
             var contour = new ContourVertex[numPoints];
@@ -346,7 +333,8 @@ namespace Elements.Geometry
                 var v = p.Vertices[i];
                 contour[i].Position = new Vec3{X=v.X, Y=v.Y, Z=v.Z};
             }
-            tess.AddContour(contour, reversed ? ContourOrientation.Clockwise : ContourOrientation.CounterClockwise);
+
+            tess.AddContour(contour);
         }
 
         /// <summary>
@@ -365,175 +353,6 @@ NMax:{string.Join(",", m_n_max.Select(v=>v.ToString()))},
 NMin:{string.Join(",", m_n_min.Select(v=>v.ToString()))}, 
 IMax:{m_index_max}, 
 IMin:{m_index_min}";
-        }
-
-        /// <summary>
-        /// Add a Plane to the Model.
-        /// </summary>
-        /// <param name="width"></param>
-        /// <param name="length"></param>
-        public static Mesh Plane(double width, double length)
-        {
-            var vertices = new[]{-width,-length,0.0,width,-length,0.0,width,length,0.0,-width,length,0.0};
-            var normals = new[]{0.0,0.0,1.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,0.0,1.0};
-            var indices = new ushort[]{0,1,2,0,2,3};
-
-            var mesh = new Elements.Geometry.Mesh(vertices, normals, indices);
-            return mesh;
-        }
-
-        /// <summary>
-        /// Extrude a Polyon.
-        /// </summary>
-        /// <param name="perimeter">The Polygon to extrude.</param>
-        /// <param name="voids">A collection of Polygons representing voids in the extrusion.</param> 
-        /// <param name="height">The height of the extrusion.</param>
-        /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
-        /// <returns></returns>
-        public static Mesh Extrude(Polygon perimeter, double height, IList<Polygon> voids = null, bool capped=true)
-        {
-            var mesh = new Elements.Geometry.Mesh();
-
-            var perimeters = new List<Polygon>();
-            perimeters.Add(perimeter);
-            if(voids != null)
-            {
-                perimeters.AddRange(voids);
-            }
-
-            foreach(var boundary in perimeters)
-            {
-                var verts = boundary.Vertices;
-
-                for(var i=0; i<verts.Count; i++)
-                {
-                    Vector3 a;
-                    Vector3 b;
-
-                    if(i == verts.Count-1)
-                    {
-                        a = verts[i];
-                        b = verts[0];
-                    }
-                    else
-                    {
-                        a = verts[i];
-                        b = verts[i+1];
-                    }
-
-                    var v1 = new Vector3(a.X, a.Y, 0.0);
-                    var v2 = new Vector3(b.X, b.Y, 0.0);
-                    var v3 = new Vector3(b.X, b.Y, height);
-                    var v4 = new Vector3(a.X, a.Y, height);
-                    mesh.AddQuad(new []{v1,v2,v3,v4});
-                }
-            }
-
-            if(capped)
-            {
-                mesh.AddTesselatedFace(perimeter, voids, new Transform());
-                mesh.AddTesselatedFace(perimeter, voids, new Transform(new Vector3(0,0,height)), true);
-            }
-
-            return mesh;
-        }
-
-        /// <summary>
-        /// Extrude an Polygon along an ICurve.
-        /// </summary>
-        /// <param name="curve">The ICurve along which to extrude.</param>
-        /// <param name="perimeter">A Polygon to extrude.</param>
-        /// <param name="voids">A collection of Polygons representing voids in the extrusion.</param>
-        /// <param name="capped">A flag indicating whether the extrusion should be capped.</param>
-        /// <param name="startSetback">The setback trom the start of the line of the extrusion.</param>
-        /// <param name="endSetback">The setback from the end of the line of the end of the extrusion.</param>
-        /// <returns></returns>
-        public static Mesh ExtrudeAlongCurve(ICurve curve, Polygon perimeter, IList<Polygon> voids = null, bool capped=true, double startSetback = 0.0, double endSetback = 0.0)
-        {
-            var mesh = new Elements.Geometry.Mesh();
-
-            var l = curve.Length();
-            var ssb = startSetback/l;
-            var esb = endSetback/l;
-
-            var transforms = new List<Transform>();
-            var polys = new List<Polygon>();
-            
-            transforms.AddRange(curve.Frames(ssb, esb));
-
-            for(var i = 0; i < transforms.Count - 1; i++)
-            {
-                ExtrudePolygon(ref mesh, perimeter, transforms[i], transforms[i+1]);
-
-                if(voids != null)
-                {
-                    foreach(var p in voids)
-                    {
-                        ExtrudePolygon(ref mesh, p, transforms[i], transforms[i+1], true);
-                    }
-                }
-            }
-
-            if(curve is Polygon)
-            {
-                ExtrudePolygon(ref mesh, perimeter, transforms[transforms.Count-1], transforms[0]);
-
-                if(voids != null)
-                {
-                    foreach(var p in voids)
-                    {
-                        ExtrudePolygon(ref mesh, p, transforms[transforms.Count-1], transforms[0], true);
-                    }
-                }
-            }
-            
-            if(capped)
-            {
-                mesh.AddTesselatedFace(perimeter, voids, transforms[0]);
-                mesh.AddTesselatedFace(perimeter, voids, transforms[transforms.Count-1], true);
-            }
-
-            return mesh;
-        }
-
-        private static void ExtrudePolygon(ref Mesh mesh, Polygon p, Transform tStart, Transform tEnd, bool reverse = false)
-        {
-            // Transform the polygon to the mid plane between two transforms.
-            var mid = new Line(tStart.Origin, tEnd.Origin).TransformAt(0.5).OfPolygon(p); 
-            var v = (tEnd.Origin - tStart.Origin).Normalized();
-            // var start = tStart.OfPolygon(p);
-            // var end = tEnd.OfPolygon(p);
-            var start = mid.ProjectAlong(v, tStart.XY);
-            var end = mid.ProjectAlong(v, tEnd.XY);
-
-            for(var i=0; i<start.Vertices.Count; i++)
-            {
-                Vector3 a, b, c, d;
-
-                if(i == start.Vertices.Count-1)
-                {
-                    a = start.Vertices[i];
-                    b = start.Vertices[0];
-                    c = end.Vertices[0];
-                    d = end.Vertices[i];
-                }
-                else
-                {
-                    a = start.Vertices[i];
-                    b = start.Vertices[i+1];
-                    c = end.Vertices[i+1];
-                    d = end.Vertices[i];
-                }
-
-                if(reverse)
-                {
-                    mesh.AddQuad(new []{a,d,c,b});
-                }
-                else
-                {
-                    mesh.AddQuad(new []{a,b,c,d});
-                }
-            }
         }
 
         /// <summary>

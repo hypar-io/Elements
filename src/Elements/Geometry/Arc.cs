@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,9 +138,12 @@ namespace Elements.Geometry
         public Transform TransformAt(double u, Vector3 up = null)
         {
             var o = PointAt(u);
-            var x = (o-this.Center).Normalized().Negated();
-            var z = up != null ? up : Vector3.ZAxis;
-            return new Transform(o, x, x.Cross(z));
+            var x = (this.Center-o).Negated().Normalized();
+            if(up == null)
+            {
+                up = Vector3.ZAxis;
+            }
+            return new Transform(o, x, up.Cross(x));
         }
 
         /// <summary>
@@ -171,6 +175,14 @@ namespace Elements.Geometry
                 result[i] = t;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Get an Arc which is the reverse of this Arc.
+        /// </summary>
+        public ICurve Reversed()
+        {
+            return new Arc(this.Center, this.Radius, this.EndAngle, this.StartAngle);
         }
     }
 }

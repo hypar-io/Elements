@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using Elements.Serialization;
 using Newtonsoft.Json;
 using System;
@@ -78,7 +79,7 @@ namespace Elements.Geometry
         /// Reverse the direction of a polyline.
         /// </summary>
         /// <returns>Returns a new polyline with opposite winding.</returns>
-        public Polyline Reversed()
+        public ICurve Reversed()
         {
             return new Polyline(this._vertices.Reverse().ToArray());
         }
@@ -227,39 +228,44 @@ namespace Elements.Geometry
 
         internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed=false)
         {
+            // Create an array of transforms with the same
+            // number of items as the vertices.
             var result = new Transform[this._vertices.Count];
             for(var i=0; i<result.Length; i++)
             {
                 var a = this._vertices[i];
                 if(closed)
                 {
+                    // Create transforms at 'miter' planes.
                     var b = i == 0 ? this._vertices[this._vertices.Count - 1] : this._vertices[i-1];
                     var c = i == this._vertices.Count - 1 ? this._vertices[0] : this._vertices[i+1];
-                    var x = (b-a).Average(c-a);
-                    result[i] = new Transform(this._vertices[i], x, x.Cross(Vector3.ZAxis));
+                    var x = (b-a).Normalized().Average((c-a).Normalized()).Negated();
+                    var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
+                    result[i] = new Transform(this._vertices[i], x, up.Cross(x));
                 }
                 else
                 {
-                    Vector3 b,c,x;
+                    Vector3 b,x,c;
 
                     if(i == this.Vertices.Count - 1)
                     {
                         b = this._vertices[i-1];
-                        x = (b-a).Normalized().Negated();
-                        result[i] = new Transform(this._vertices[i], x.Cross(Vector3.ZAxis), x);
+                        result[i] = new Transform(a, b, a, null);
                     }
                     else if(i == 0)
                     {
                         b = this._vertices[i+1];
-                        x = (b-a).Normalized();
-                        result[i] = new Transform(this._vertices[i], x.Cross(Vector3.ZAxis), x);
+                        result[i] = new Transform(a, a, b, null);
                     }
                     else 
                     {
                         b = this._vertices[i-1];
                         c = this._vertices[i+1];
-                        x = (b-a).Normalized().Average((c-a).Normalized());
-                        result[i] = new Transform(this._vertices[i], x, x.Cross(Vector3.ZAxis));
+                        var v1 = (b-a).Normalized();
+                        var v2 = (c-a).Normalized();
+                        x = v1.Average(v2).Negated();
+                        var up = v2.Cross(v1);
+                        result[i] = new Transform(this._vertices[i], x, up.Cross(x));
                     }
                 }
             }

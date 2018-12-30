@@ -70,7 +70,7 @@ namespace Hypar.Tests
 
             model.AddElements(new Element[]{panel, floor, mass, beam, column, space, wall});
             var json = model.ToJson();
-            Console.WriteLine(json);
+            // Console.WriteLine(json);
 
             var json2 = JsonConvert.SerializeObject(model, Formatting.Indented);
             Console.WriteLine($"Json serialization comparison (char length): serializer={json.Length}, unmodified={json2.Length}, {((double)json.Length/(double)json2.Length)*100.0}%");
@@ -84,7 +84,7 @@ namespace Hypar.Tests
             var newSpace = elements.Values.OfType<Space>().FirstOrDefault();
             var newWall = elements.Values.OfType<Wall>().FirstOrDefault();
 
-            Assert.Equal(panel.Perimeter.Count, newPanel.Perimeter.Count);
+            Assert.Equal(panel.Faces().ToArray()[0].Vertices.Count(), newPanel.Faces().ToArray()[0].Vertices.Count());
             Assert.Equal(panel.Id, newPanel.Id);
             Assert.Equal(floor.Id, newFloor.Id);
             Assert.Equal(floor.Material, newFloor.Material);

@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using Elements.Serialization;
 using Elements.Interfaces;
 using Newtonsoft.Json;
@@ -12,10 +13,10 @@ namespace Elements
     /// <summary>
     /// A zero-thickness planar Panel defined by 3 or 4 points.
     /// </summary>
-    public class Panel : Element, IPanel
+    public class Panel : Element, IBRep
     {
         /// <summary>
-        /// A CCW collection of points defining the corners of the Panel.
+        /// The vertices forming the perimeter of the panel.
         /// </summary>
         [JsonProperty("perimeter")]
         public IList<Vector3> Perimeter {get;}
@@ -45,17 +46,12 @@ namespace Elements
         }
 
         /// <summary>
-        /// The edges of the Panel.
+        /// A collection of Faces which describe the Panel.
         /// </summary>
-        public IList<Line> Edges()
+        public IFace[] Faces()
         {
-            var p = this.Perimeter;
-            var result = new Line[p.Count];
-            for (var i = 0; i < p.Count - 1; i++)
-            {
-                result[i] = new Line(p[i], p[i + 1]);
-            }
-            return result;
+            var planarFace = new PlanarFace(new Profile(new Polygon(this.Perimeter)));
+            return new[]{planarFace};
         }
 
         /// <summary>
@@ -63,8 +59,7 @@ namespace Elements
         /// </summary>
         public Vector3 Normal()
         {
-            var verts = this.Perimeter;
-            return new Plane(verts[0], this.Perimeter).Normal;
+            return new Plane(this.Perimeter[0], this.Perimeter).Normal;
         }
     }
 }

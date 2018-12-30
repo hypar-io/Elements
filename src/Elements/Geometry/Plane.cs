@@ -34,11 +34,32 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a plane.
+        /// Construct a Plane by three points.
+        /// The Plane is constructed as a->b * b->c.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <exception cref="System.ArgumentNullException">Thrown when any of a, b, or c are null.</exception>
+        public Plane(Vector3 a, Vector3 b, Vector3 c)
+        {
+            if(a == null || b == null || c == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            this.Origin = a;
+            var ab = (b-a).Normalized();
+            var bc = (c-a).Normalized();
+            this.Normal = ab.Cross(bc).Normalized();
+        }
+
+        /// <summary>
+        /// Construct a Plane.
         /// Only the first three points of the points array will be used.
         /// </summary>
-        /// <param name="origin">The origin of the plane.</param>
-        /// <param name="points">An array of vectors to be used to determine the normal of the plane.</param>
+        /// <param name="origin">The origin of the Plane.</param>
+        /// <param name="points">An array of vectors to be used to determine the normal of the Plane.</param>
         /// <exception cref="System.ArgumentException">Thrown when less than three points are provided.</exception>
         /// <exception cref="System.ArgumentException">Thrown when coincident points are provided.</exception>
         public Plane(Vector3 origin, IList<Vector3> points)
@@ -54,5 +75,7 @@ namespace Elements.Geometry
             this.Origin = origin;
             this.Normal = (points[0]-points[1]).Normalized().Cross((points[2] - points[0]).Normalized());
         }
+
+        
     }
 }

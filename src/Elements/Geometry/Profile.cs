@@ -1,4 +1,5 @@
 using Elements.Interfaces;
+using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -47,31 +48,34 @@ namespace Elements.Geometry
     /// <summary>
     /// A Profile describes 
     /// </summary>
-    public class Profile : IIdentifiable
+    public class Profile : IIdentifiable, IProfile
     {
+        protected Polygon _perimeter;
+        protected IList<Polygon> _voids;
+
         /// <summary>
         /// The identifier of the Profile.
         /// </summary>
         [JsonProperty("id")]
-        public long Id{get; internal set;}
+        public long Id { get; internal set; }
 
         /// <summary>
         /// The name of the Profile.
         /// </summary>
         [JsonProperty("name")]
-        public string Name{get;}
+        public string Name { get; }
 
         /// <summary>
         /// The perimeter of the Profile.
         /// </summary>
         [JsonProperty("perimeter")]
-        public Polygon Perimeter{get; protected set;}
+        public Polygon Perimeter { get => _perimeter; protected set => _perimeter = value; }
 
         /// <summary>
         /// A collection of Polygons representing voids in the Profile.
         /// </summary>
         [JsonProperty("voids")]
-        public IList<Polygon> Voids{get; protected set;}
+        public IList<Polygon> Voids { get => _voids; protected set => _voids = value; }
 
         /// <summary>
         /// Construct a Profile.
@@ -85,13 +89,19 @@ namespace Elements.Geometry
             this.Id = IdProvider.Instance.GetNextId();
             this.Perimeter = perimeter;
             this.Voids = voids;
+            
             this.Name = name;
+            if(!IsPlanar())
+            {
+                throw new Exception("To construct a Profile, all points must line in the same Plane.");
+            }
         }
 
         /// <summary>
         /// Default constructor for Profile.
         /// </summary>
-        protected Profile(string name){
+        protected Profile(string name)
+        {
             this.Id = IdProvider.Instance.GetNextId();
             this.Name = name;
         }
@@ -106,6 +116,10 @@ namespace Elements.Geometry
             this.Id = IdProvider.Instance.GetNextId();
             this.Perimeter = perimeter;
             this.Name = name;
+            if(!IsPlanar())
+            {
+                throw new Exception("To construct a Profile, all points must line in the same Plane.");
+            }
         }
 
         /// <summary>
@@ -118,8 +132,21 @@ namespace Elements.Geometry
         {
             this.Id = IdProvider.Instance.GetNextId();
             this.Perimeter = perimeter;
-            this.Voids = new []{singleVoid};
+            this.Voids = new[] { singleVoid };
             this.Name = name;
+            if(!IsPlanar())
+            {
+                throw new Exception("To construct a Profile, all points must line in the same Plane.");
+            }
+        }
+
+        /// <summary>
+        /// Get a new Profile which is the reverse of this Profile.
+        /// </summary>
+        public IProfile Reversed()
+        {
+            var voids = this.Voids != null ? this.Voids.Select(v=>v.Reversed()).ToList() : null;
+            return new Profile(this.Perimeter.Reversed(), voids);
         }
 
         /// <summary>
@@ -132,7 +159,7 @@ namespace Elements.Geometry
 
         private double ClippedArea()
         {
-            if(this.Voids == null || this.Voids.Count == 0)
+            if (this.Voids == null || this.Voids.Count == 0)
             {
                 return this.Perimeter.Area;
             }
@@ -142,7 +169,33 @@ namespace Elements.Geometry
             clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             var solution = new List<List<ClipperLib.IntPoint>>();
             clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-            return solution.Sum(s=>ClipperLib.Clipper.Area(s))/Math.Pow(1024.0, 2);
+            return solution.Sum(s => ClipperLib.Clipper.Area(s)) / Math.Pow(1024.0, 2);
+        }
+    
+        private Transform ComputeTransform()
+        {
+            var v = this.Perimeter.Vertices.ToList();
+            var x = (v[0] - v[1]).Normalized();
+            var b = (v[2] - v[1]).Normalized();
+            var z = x.Cross(b);
+            return new Transform(v[0], x, z);
+        }
+
+        private bool IsPlanar()
+        {
+            var t = ComputeTransform();
+            var vertices = this.Perimeter.Vertices;
+            var p = t.XY;
+            foreach(var v in vertices)
+            {
+                var d = v.DistanceTo(p);
+                if(Math.Abs(d) > Vector3.Tolerance)
+                {
+                    Console.WriteLine($"Out of plane distance: {d}.");
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

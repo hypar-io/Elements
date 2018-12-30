@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
@@ -16,13 +17,13 @@ namespace Elements
         /// The Profile of the Wall.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile{get;}
+        public IProfile Profile{get;}
 
         /// <summary>
         /// The transformed Profile of the Wall.
         /// </summary>
         [JsonIgnore]
-        public Profile ProfileTransformed
+        public IProfile ProfileTransformed
         {
             get{return this.Transform != null? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
@@ -101,16 +102,17 @@ namespace Elements
             }
             
             // Construct a transform whose X axis is the centerline of the wall.
-            var z = centerLine.Direction.Cross(Vector3.ZAxis);
+            var z = Vector3.ZAxis.Cross(centerLine.Direction);
             this.Transform = new Transform(centerLine.Start, centerLine.Direction, z);
         }
-
+        
         /// <summary>
-        /// Generate a mesh of the wall.
+        /// A collection of Faces which comprise the Wall.
         /// </summary>
-        public Mesh Mesh()
+        public IFace[] Faces()
         {
-            return Elements.Geometry.Mesh.Extrude(this.Profile.Perimeter, this.ElementType.Thickness, this.Profile.Voids, true);
+            return Extrusions.Extrude(this.Profile, this.Thickness);
         }
+
     }
 }

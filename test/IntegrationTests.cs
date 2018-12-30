@@ -37,7 +37,7 @@ namespace Hypar.Tests
                 foreach(var cell in g.Cells())
                 {
                     var panel = new Panel(cell, BuiltInMaterials.Glass);
-                    var edges = panel.Edges();
+                    var edges = panel.Faces().ToArray()[0].Edges.ToArray();
                     var bProfile = new WideFlangeProfile("test_beam");
                     var beam1 = new Beam(edges[0], bProfile, BuiltInMaterials.Steel, panel.Normal());
                     var beam2 = new Beam(edges[2], bProfile, BuiltInMaterials.Steel, panel.Normal());
@@ -63,7 +63,7 @@ namespace Hypar.Tests
                 var sideColumns = new List<Column>();
                 foreach(var t in ts)
                 {
-                    sideColumns.Add(new Column(l.PointAt(t), buildingHeight, Polygon.Rectangle(width:1.0, height:1.0), BuiltInMaterials.Concrete));
+                    sideColumns.Add(new Column(l.PointAt(t), buildingHeight, new Profile(Polygon.Rectangle(width:1.0, height:1.0)), BuiltInMaterials.Concrete));
                 }
                 return sideColumns;
             });

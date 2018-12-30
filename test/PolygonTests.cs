@@ -4,11 +4,19 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Hypar.Tests
 {
     public class PolygonTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public PolygonTests(ITestOutputHelper output)
+        {
+            this._output = output;
+        }
+
         [Fact]
         public void Centroid()
         {
@@ -516,6 +524,46 @@ namespace Hypar.Tests
             var a = new Vector3();
             var b = new Vector3(0.000001,0,0);
             Assert.Throws<ArgumentException>(()=>new Polygon(new[]{a,a,a}));
+        }
+
+        [Fact]
+        public void Reverse()
+        {
+            var a = Polygon.Ngon(3, 1.0);
+            var b = a.Reversed();
+
+            // Check that the vertices are properly reversed.
+            Assert.Equal(a.Vertices.Reverse(), b.Vertices);
+            var t = new Transform();
+            var c = t.OfPolygon(a);
+            var l = new Line(Vector3.Origin, new Vector3(0.0,0.5,0.5));
+            var transforms = l.Frames(0.0,0.0);
+
+            _output.WriteLine("Transforms:");
+            _output.WriteLine(transforms[0].ToString());
+            _output.WriteLine(transforms[1].ToString());
+            _output.WriteLine("");
+
+            var start = transforms[0].OfPolygon(a);
+            var end = transforms[1].OfPolygon(b);
+            
+            _output.WriteLine("Polygons:");
+            _output.WriteLine(start.ToString());
+            _output.WriteLine(end.ToString());
+            _output.WriteLine("");
+
+            var n1 = start.Plane().Normal;
+            var n2 = end.Plane().Normal;
+
+            _output.WriteLine("Normals:");
+            _output.WriteLine(n1.ToString());
+            _output.WriteLine(n2.ToString());
+            _output.WriteLine("");
+
+            // Check that the start and end have opposing normals.
+            var dot = n1.Dot(n2);
+            _output.WriteLine(dot.ToString());
+            Assert.Equal(-1.0, dot, 5);
         }
     }
 }

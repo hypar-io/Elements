@@ -77,6 +77,9 @@ namespace Hypar.Tests
             var o2 = new Opening(3.0, 1.0, 1.0, 1.0);
             var testWallType = new WallType("test", 0.1);
             var wall = new Wall(line, testWallType, 4.0, new []{o1,o2});
+            var model = new Model();
+            model.AddElement(wall);
+            model.SaveGlb("wall_twoHoles.glb");
             Assert.Equal(2, wall.Profile.Voids.Count);
         }
     }

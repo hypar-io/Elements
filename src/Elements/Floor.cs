@@ -1,5 +1,6 @@
 using Elements.Geometry;
 using Elements.Interfaces;
+using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -35,13 +36,13 @@ namespace Elements
         /// The Profile of the Floor.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile{get;}
+        public IProfile Profile{get;}
 
         /// <summary>
         /// The transformed Profile of the Floor.
         /// </summary>
         [JsonIgnore]
-        public Profile ProfileTransformed
+        public IProfile ProfileTransformed
         {
             get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
@@ -61,12 +62,29 @@ namespace Elements
         /// <param name="profile">The <see cref="Elements.Geometry.Profile"/>of the Floor.</param>
         /// <param name="elevation">The elevation of the Floor.</param>
         /// <param name="elementType">The <see cref="Elements.ElementType"/> of the Floor.</param>
-        /// <param name="material">The Floor's <see cref="Elements.Material"/>.</param>
+        /// <param name="material">The Floor's Material.<see cref="Elements.Material"/>.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the slab's thickness is less than or equal to 0.0.</exception>
         [JsonConstructor]
-        public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
+        public Floor(IProfile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
         {
             this.Profile = profile;
+            this.Elevation = elevation;
+            this.ElementType = elementType;
+            this.Transform = transform!=null ? transform : new Transform(new Vector3(0, 0, elevation));
+            this.Material = material == null ? BuiltInMaterials.Concrete : material;
+        }
+        
+        /// <summary>
+        /// Construct a Floor.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="elementType"></param>
+        /// <param name="elevation"></param>
+        /// <param name="material"></param>
+        /// <param name="transform"></param>
+        public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
+        {
+            this.Profile = new Profile(profile);
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform!=null ? transform : new Transform(new Vector3(0, 0, elevation));
@@ -81,6 +99,14 @@ namespace Elements
         public double Area()
         {
             return this.Profile.Area();
+        }
+
+        /// <summary>
+        /// A collection of Faces which comprise the Floor.
+        /// </summary>
+        public IFace[] Faces()
+        {
+            return Extrusions.Extrude(this.Profile, this.Thickness);
         }
     }
 

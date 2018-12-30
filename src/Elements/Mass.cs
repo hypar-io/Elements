@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
@@ -18,13 +19,13 @@ namespace Elements
         /// The Profile of the Mass.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile{get;}
+        public IProfile Profile{get;}
         
         /// <summary>
         /// The transformed Profile of the Mass.
         /// </summary>
         [JsonIgnore]
-        public Profile ProfileTransformed
+        public IProfile ProfileTransformed
         {
             get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
@@ -77,55 +78,30 @@ namespace Elements
         }
 
         /// <summary>
-        /// A collection of curves representing the vertical edges of the Mass.
+        /// Construct a Mass.
         /// </summary>
-        /// <returns></returns>
-        public IList<Line> VerticalEdges()
+        /// <param name="profile"></param>
+        /// <param name="elevation"></param>
+        /// <param name="height"></param>
+        /// <param name="material"></param>
+        public Mass(Polygon profile, double elevation = 0.0, double height = 1.0, Material material = null)
         {
-            return Faces().Select(f=>f.Edges[1]).ToList();
-        }
-
-        /// <summary>
-        /// A collection of curves representing the horizontal edges of the Mass.
-        /// </summary>
-        /// <returns></returns>
-        public IList<Line> HorizontalEdges()
-        {
-            return Faces().SelectMany(f=>new[]{f.Edges[0], f.Edges[2]}).ToList();
-        }
-
-        /// <summary>
-        /// A collection of polylines representing the perimeter of each face of the Mass.
-        /// </summary>
-        /// <returns></returns>
-        public IList<Face> Faces()
-        {
-            return FacesInternal(this.Profile.Perimeter.Vertices);
-        }
-
-        private IList<Face> FacesInternal(IList<Vector3> v)
-        {
-            var faces = new List<Face>();
-            for (var i = 0; i < v.Count; i++)
+            if (height <= 0)
             {
-                var next = i + 1;
-                if (i == v.Count - 1)
-                {
-                    next = 0;
-                }
-                var v1 = v[i];
-                var v2 = v[next];
-                var v1n = new Vector3(v1.X, v1.Y, this.Elevation);
-                var v2n = new Vector3(v2.X, v2.Y, this.Elevation);
-                var v3n = new Vector3(v2.X, v2.Y, this.Elevation + this.Height);
-                var v4n = new Vector3(v1.X, v1.Y, this.Elevation + this.Height);
-                var l1 = new Line(v1n, v2n);
-                var l2 = new Line(v2n, v3n);
-                var l3 = new Line(v3n, v4n);
-                var l4 = new Line(v4n, v1n);
-                faces.Add(new Face(new[] { l1, l2, l3, l4 }));
+                throw new ArgumentOutOfRangeException("The Mass could not be constructed. The height must be greater than zero.");
             }
-            return faces;
+            this.Profile = new Profile(profile);
+            this.Elevation = elevation;
+            this.Height = height;
+            this.Material = material != null ? material : BuiltInMaterials.Mass;
+        }
+
+        /// <summary>
+        /// The Faces of the Mass.
+        /// </summary>
+        public IFace[] Faces()
+        {
+            return Extrusions.Extrude(this.Profile, this.Height, this.Elevation);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using glTFLoader.Schema;
 using Elements.Serialization;
 using Elements.Geometry;
 using Elements.GeoJSON;
+using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -148,7 +149,7 @@ namespace Elements
             if(element is IProfileProvider)
             {
                 var ipp = (IProfileProvider)element;
-                AddProfile(ipp.Profile);
+                AddProfile((Profile)ipp.Profile);
             }
 
             if(element is IAggregateElement)
@@ -403,6 +404,13 @@ namespace Elements
                 materials.Add(m.Name, mId);
             }
 
+            var tmId = gltf.AddMaterial("x_axis", 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+            materials.Add("x_axis", tmId);
+            tmId = gltf.AddMaterial("y_axis", 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+            materials.Add("y_axis", tmId);
+            tmId = gltf.AddMaterial("z_axis", 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+            materials.Add("z_axis", tmId);
+
             foreach(var kvp in this._elements)
             {
                 var e = kvp.Value;
@@ -423,54 +431,35 @@ namespace Elements
                 var geo = e as IGeometry3D;
 
                 Elements.Geometry.Mesh mesh = null;
-                if(e is IExtrude)
-                {
-                    var extrude = (IExtrude)e;
-                    var clipper = new ClipperLib.Clipper();
-                    clipper.AddPath(extrude.Profile.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-                    if(extrude.Profile.Voids != null)
-                    {
-                        clipper.AddPaths(extrude.Profile.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
-                    }
-                    var solution = new List<List<ClipperLib.IntPoint>>();
-                    var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-                    var polys = solution.Select(s => s.ToPolygon()).ToList();
 
-                    if(polys.Count > 1)
-                    {
-                        mesh = Mesh.Extrude(polys.First(), extrude.Thickness, polys.Skip(1).ToList(), true);
-                    } 
-                    else 
-                    {
-                        mesh = Mesh.Extrude(polys.First(), extrude.Thickness, null, true);
-                    }
-                }
-                else if(e is IExtrudeAlongCurve)
-                {   
-                    var eac = (IExtrudeAlongCurve)e;
-                    mesh = Mesh.ExtrudeAlongCurve(eac.Curve, eac.Profile.Perimeter, eac.Profile.Voids, true, eac.StartSetback, eac.EndSetback);
+                // if(e is IExtrudeAlongCurve)
+                // {   
+                //     var eac = (IExtrudeAlongCurve)e;
 
-                    // Add the center curve
-                    var vBuff = eac.Curve.Vertices.ToArray();
-                    var vCount = eac.Curve.Vertices.Count();
-                    var indices = Enumerable.Range(0, vCount).Select(i=>(ushort)i).ToArray();
-                    var bbox = new BBox3(eac.Curve.Vertices);
-                    gltf.AddLineLoop($"{e.Id}_curve", _buffer, vBuff, indices, bbox.Min.ToArray(), 
-                                    bbox.Max.ToArray(), 0, (ushort)(vCount - 1), materials[BuiltInMaterials.Black.Name], e.Transform);
-                }
-                else if (e is IPanel)
+                //     var frames = eac.Curve.Frames(0,0);
+                //     foreach(var f in frames)
+                //     {
+                //         var x = new Elements.Geometry.Line(f.Origin, f.Origin + f.XAxis * 2);
+                //         AddCurve(e.Id+10000, x, gltf, materials["x_axis"],e.Transform);
+                //         var y = new Elements.Geometry.Line(f.Origin, f.Origin + f.YAxis * 2);
+                //         AddCurve(e.Id+10001, y, gltf, materials["y_axis"],e.Transform);
+                //         var z = new Elements.Geometry.Line(f.Origin, f.Origin + f.ZAxis * 2);
+                //         AddCurve(e.Id+10002, z, gltf, materials["z_axis"],e.Transform);
+                //     }
+                //     // Add the center curve
+                //     AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Black.Name], e.Transform);
+
+                // }
+                
+                if(e is IBRep)
                 {
                     mesh = new Elements.Geometry.Mesh();
-                    var panel = (IPanel)e;
-                    var vCount = panel.Perimeter.Count();
-
-                    if (vCount == 3)
+                    var brep = (IBRep)e;
+                    foreach(var f in brep.Faces())
                     {
-                        mesh.AddTriangle(panel.Perimeter);
-                    }
-                    else if (vCount == 4)
-                    {
-                        mesh.AddQuad(panel.Perimeter);
+                        // Draw a winding indicator
+                        // AddArrow(e.Id + 10003, f.Vertices[0], (f.Vertices[1] - f.Vertices[0]).Normalized(), gltf, materials["z_axis"], e.Transform);
+                        f.Tessellate(mesh);
                     }
                 }
 
@@ -486,21 +475,6 @@ namespace Elements
 
             }
 
-            // if(e is ITessellateCurves)
-            // {
-            //     var cp = e as ITessellateCurves;
-            //     var curves = cp.Curves();
-            //     var counter = 0;
-            //     foreach(var c in curves)
-            //     {
-            //         var vBuff = c.ToArray();
-            //         var indices = Enumerable.Range(0, c.Count).Select(i=>(ushort)i).ToArray();
-            //         var bbox = new BBox3(c);
-            //         gltf.AddLineLoop($"{e.Id}_curve_{counter}", _buffer, vBuff, indices, bbox.Min.ToArray(), 
-            //                         bbox.Max.ToArray(), 0, (ushort)(c.Count - 1), materials[BuiltInMaterials.Black.Name], e.Transform);
-            //     }
-            // }
-            
             if(e is IAggregateElement)
             {
                 var ae = (IAggregateElement)e;
@@ -514,6 +488,35 @@ namespace Elements
                 }
             }
             
+        }
+
+        private void AddCurve(long id, ICurve curve, Gltf gltf, int material, Transform t)
+        {
+            var vBuff = curve.Vertices.ToArray();
+            var vCount = curve.Vertices.Count();
+            var indices = Enumerable.Range(0, vCount).Select(i=>(ushort)i).ToArray();
+            var bbox = new BBox3(curve.Vertices);
+            gltf.AddLineLoop($"{id}_curve", _buffer, vBuff, indices, bbox.Min.ToArray(), 
+                            bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, t);
+
+        }
+
+        private void AddArrow(long id, Vector3 origin, Vector3 direction, Gltf gltf, int material, Transform t)
+        {   
+            var scale = 0.5;
+            var end = origin + direction * scale;
+            var up = direction.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
+            var tr = new Transform(Vector3.Origin, direction.Cross(up), direction);
+            tr.Rotate(up, -45.0);
+            var arrow1 = tr.OfPoint(Vector3.XAxis * 0.1);
+            var pts = new []{origin, end, end + arrow1};
+            var vBuff = pts.ToArray();
+            var vCount = 3;
+            var indices = Enumerable.Range(0, vCount).Select(i=>(ushort)i).ToArray();
+            var bbox = new BBox3(pts);
+            gltf.AddLineLoop($"{id}_curve", _buffer, vBuff, indices, bbox.Min.ToArray(), 
+                            bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, t);
+
         }
 
         /// <summary>

@@ -54,7 +54,7 @@ namespace Elements
             transform.Concatenate(solid.Position.ToTransform());
             var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
             var outline = pline.ToPolygon();
-            var floor = new Floor(outline, floorType, transform.Origin.Z, BuiltInMaterials.Concrete, transform);
+            var floor = new Floor(new Profile(outline), floorType, transform.Origin.Z, BuiltInMaterials.Concrete, transform);
             return floor;
         }
 
@@ -220,7 +220,7 @@ namespace Elements
                 transform.Concatenate(solid.Position.ToTransform());
                 var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
                 var outline = pline.ToPolygon();
-                var result = new Space(outline, 0.0, (IfcLengthMeasure)solid.Depth, BuiltInMaterials.Glass, transform);
+                var result = new Space(new Profile(outline), 0.0, (IfcLengthMeasure)solid.Depth, BuiltInMaterials.Glass, transform);
                 return result;
             }
             else if(foundSolid.GetType() == typeof(IFC.IfcFacetedBrep))
@@ -233,7 +233,7 @@ namespace Elements
                     {
                         var loop = (IFC.IfcPolyLoop)b.Bound;
                         var poly = loop.Polygon.ToPolygon();
-                        Console.WriteLine(poly);
+                        // Console.WriteLine(poly);
                     }
                 }
             }

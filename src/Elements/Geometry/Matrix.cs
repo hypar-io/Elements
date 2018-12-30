@@ -286,7 +286,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{m11} {m12} {m13}\n{m21} {m22} {m23}\n{m31} {m32} {m33}\n{tx} {ty} {tz}";
+            return $"X: {m11} {m12} {m13}\nY: {m21} {m22} {m23}\nZ: {m31} {m32} {m33}\nOrigin: {tx} {ty} {tz}";
         }
 
     }

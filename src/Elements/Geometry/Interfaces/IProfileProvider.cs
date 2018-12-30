@@ -1,8 +1,6 @@
 #pragma warning disable CS1591
 
-using Elements.Geometry;
-
-namespace Elements.Interfaces
+namespace Elements.Geometry.Interfaces
 {
     /// <summary>
     /// Interface implemented by types which provide a Profile.
@@ -12,6 +10,6 @@ namespace Elements.Interfaces
         /// <summary>
         /// A Profile.
         /// </summary>
-        Profile Profile {get;}
+        IProfile Profile {get;}
     }
 }

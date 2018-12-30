@@ -1,7 +1,9 @@
+using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using Elements.Geometry;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -26,7 +28,7 @@ namespace Elements
         /// The Profile of the Space.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile{get;}
+        public IProfile Profile{get;}
         
         /// <summary>
         /// The Space's Material.
@@ -48,7 +50,7 @@ namespace Elements
         /// The transformed Profile of the Space.
         /// </summary>
         [JsonIgnore]
-        public Profile TransformedProfile
+        public IProfile ProfileTransformed
         {
             get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
@@ -75,6 +77,37 @@ namespace Elements
 
             this.Material = material != null ? material : BuiltInMaterials.Default;
             this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+        }
+
+        /// <summary>
+        /// Construct a Space.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="elevation"></param>
+        /// <param name="height"></param>
+        /// <param name="material"></param>
+        /// <param name="transform"></param>
+        public Space(Polygon profile, double elevation = 0.0, double height = 1.0, Material material = null, Transform transform = null)
+        {
+            if (height <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException(Messages.HEIGHT_EXCEPTION, "height");
+            }
+
+            this.Profile = new Profile(profile);
+            this.Elevation = elevation;
+            this.Height = height;
+
+            this.Material = material != null ? material : BuiltInMaterials.Default;
+            this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+        }
+
+        /// <summary>
+        /// A collection of Faces which comprise this Space.
+        /// </summary>
+        public IFace[] Faces()
+        {
+            return Extrusions.Extrude(this.Profile, this.Height, this.Elevation);
         }
     }
 }

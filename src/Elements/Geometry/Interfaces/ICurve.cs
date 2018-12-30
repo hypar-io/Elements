@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Elements.Geometry
+namespace Elements.Geometry.Interfaces
 {
     /// <summary>
     /// ICurve is implemented by all curve types.
@@ -49,5 +49,10 @@ namespace Elements.Geometry
         /// <param name="endSetback">The offset from the end of the ICurve.</param>
         /// <returns>A collection of Transforms.</returns>
         Transform[] Frames(double startSetback, double endSetback);
+
+        /// <summary>
+        /// Get an ICurve which is the reverse of this curve.
+        /// </summary>
+        ICurve Reversed();
     }
 }

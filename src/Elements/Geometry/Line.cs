@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -41,7 +42,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a normalized vector representing the direction of the line.
+        /// A normalized vector representing the direction of the line.
         /// </summary>
         [JsonIgnore]
         public Vector3 Direction
@@ -78,28 +79,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public Transform TransformAt(double u, Vector3 up = null)
         {
-            var v = Direction;
-
-            if (up == null)
-            {
-                up = Vector3.ZAxis;
-            }
-            if (up.IsParallelTo(v))
-            {
-                if(v.IsAlmostEqualTo(Vector3.XAxis))
-                {
-                    up = Vector3.YAxis;
-                }
-                else
-                {
-                    up = Vector3.XAxis;
-                }
-            }
-
-            var xAxis = v.Cross(up).Normalized();
-            var t = new Transform(PointAt(u), xAxis, v);
-
-            return t;
+            return new Transform(PointAt(u), this.Start, this.End, up);
         }
 
         /// <summary>
@@ -109,6 +89,16 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public Vector3 PointAt(double u)
         {
+            if(u == 0.0)
+            {
+                return this.Start;
+            }
+
+            if(u == 1.0)
+            {
+                return this.End;
+            }
+            
             if (u > 1.0 || u < 0.0)
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
@@ -121,18 +111,9 @@ namespace Elements.Geometry
         /// Get a new line that is the reverse of the original line.
         /// </summary>
         /// <returns></returns>
-        public Line Reversed()
+        public ICurve Reversed()
         {
             return new Line(End, Start);
-        }
-
-        /// <summary>
-        /// Tessellate the curve.
-        /// </summary>
-        /// <returns>A collection of points sampled along the curve.</returns>
-        public IList<IList<Vector3>> Curves()
-        {
-            return new[]{new[]{this.Start, this.End}};
         }
 
         /// <summary>

@@ -11,6 +11,8 @@ namespace Elements.Geometry
     /// </summary>
     public class Vector3 : IComparable<Vector3>
     {
+        public static double Tolerance = 0.000000001;
+
         /// <summary>
         /// The X component of the vector.
         /// </summary>
@@ -182,13 +184,13 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Compute the dot product of this vector a v.
+        /// Compute the dot product of this vector and v.
         /// </summary>
         /// <param name="v"></param>
-        /// <returns></returns>
+        /// <returns>The dot product.</returns>
         public double Dot(Vector3 v)
         {
-            return v.X * X + v.Y * Y + v.Z * Z;
+            return v.X * this.X + v.Y * this.Y + v.Z * this.Z;
         }
 
         /// <summary>
@@ -202,10 +204,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Compute the average of this vector and v.
+        /// Compute the average of this Vector3 and v.
         /// </summary>
         /// <param name="v"></param>
-        /// <returns></returns>
+        /// <returns>A Vector3 which is the average of this and v.</returns>
         public Vector3 Average(Vector3 v)
         {
             return new Vector3((this.X + v.X)/2, (this.Y + v.Y)/2, (this.Z + v.Z)/2);
@@ -215,7 +217,7 @@ namespace Elements.Geometry
         /// Project vector a onto this vector.
         /// </summary>
         /// <param name="a"></param>
-        /// <returns></returns>
+        /// <returns>A new Vector3 which is the projection of a onto this Vector3.</returns>
         public Vector3 ProjectOnto(Vector3 a)
         {   
             var b = this;
@@ -227,7 +229,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="v"></param>
         /// <param name="a"></param>
-        /// <returns></returns>
+        /// <returns>A Vector3 whose magnitude is multiplied by a.</returns>
         public static Vector3 operator * (Vector3 v, double a)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
@@ -323,20 +325,19 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return $"X:{X},Y:{Y},Z:{Z}";
+            return $"X:{this.X.ToString("F4")},Y:{this.Y.ToString("F4")},Z:{this.Z.ToString("F4")}";
         }
 
         /// <summary>
         /// Determine whether this vector's components are equal to those of v, within tolerance.
         /// </summary>
         /// <param name="v"></param>
-        /// <param name="tolerance">The tolerance.</param>
         /// <returns></returns>
-        public bool IsAlmostEqualTo(Vector3 v, double tolerance = 0.00001)
+        public bool IsAlmostEqualTo(Vector3 v)
         {
-            if(Math.Abs(this.X - v.X) < tolerance &&
-                Math.Abs(this.Y - v.Y) < tolerance &&
-                Math.Abs(this.Z - v.Z) < tolerance)
+            if(Math.Abs(this.X - v.X) < Tolerance &&
+                Math.Abs(this.Y - v.Y) < Tolerance &&
+                Math.Abs(this.Z - v.Z) < Tolerance)
             {
                 return true;
             }
@@ -351,6 +352,18 @@ namespace Elements.Geometry
         public double DistanceTo(Vector3 v)
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
+        }
+        
+        /// <summary>
+        /// The distance from this Point to p.
+        /// The distance will be negative when this Point lies
+        /// "behind" the plane.
+        /// </summary>
+        /// <param name="p"></param>
+        public double DistanceTo(Plane p)
+        {
+            var d = p.Origin.Dot(p.Normal);
+            return this.Dot(p.Normal) - d;
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace Hypar.Tests
             var p = Polygon.Rectangle();
             var panel = new Panel(p.Vertices);
             Assert.Equal(BuiltInMaterials.Default, panel.Material);
-            Assert.Equal(panel.Perimeter, p.Vertices);
+            Assert.Equal(panel.Faces().ToArray()[0].Vertices, p.Vertices);
         }
     }
 }

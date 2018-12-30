@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -115,8 +116,42 @@ namespace Elements.Geometry
         {
             var x = xAxis.Normalized();
             var z = zAxis.Normalized();
-            var y = z.Cross(x);
+            var y = x.Cross(z);
             this._matrix = new Matrix(x, y, z, origin);
+        }
+
+        /// <summary>
+        /// Compute the Transform with origin at o,
+        /// whose Z axis points from a to b, and whose
+        /// up direction is up.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="up"></param>
+        internal Transform(Vector3 o, Vector3 a, Vector3 b, Vector3 up = null)
+        {
+            var z = (b-a).Normalized();
+
+            if (up == null)
+            {
+                up = Vector3.ZAxis;
+                if (up.IsParallelTo(z))
+                {
+                    if(z.IsParallelTo(Vector3.XAxis))
+                    {
+                        up = Vector3.YAxis;
+                    }
+                    else
+                    {
+                        up = Vector3.XAxis;
+                    }
+                }
+            }
+            
+            var x = z.Cross(up).Normalized();
+            var y = x.Cross(z);
+            this._matrix = new Matrix(x, y, z, o);
         }
 
         /// <summary>
@@ -135,6 +170,7 @@ namespace Elements.Geometry
         /// <returns>A new Vector transformed by this Transform.</returns>
         public Vector3 OfPoint(Vector3 vector)
         {
+            var v = vector * this._matrix;
             return vector * this._matrix;
         }
 
@@ -145,7 +181,8 @@ namespace Elements.Geometry
         /// <returns>A new Polygon transformed by this Transform.</returns>
         public Polygon OfPolygon(Polygon polygon)
         {
-            return new Polygon(polygon.Vertices.Select(v=>OfPoint(v)).ToList());
+            var p = new Polygon(polygon.Vertices.Select(v=>OfPoint(v)).ToList());
+            return p;
         }
 
         /// <summary>
@@ -163,17 +200,17 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="profile">The Profile to transform.</param>
         /// <returns>A new Profile transformed by this Transform.</returns>
-        public Profile OfProfile(Profile profile)
+        public Profile OfProfile(IProfile profile)
         {
             var voids = profile.Voids == null ? null : profile.Voids.Select(v=>OfPolygon(v)).ToList();
-            return new Profile(OfPolygon(profile.Perimeter), voids);
+            var p = new Profile(OfPolygon(profile.Perimeter), voids);
+            return p;
         }
 
         /// <summary>
         /// Concatenate the transform.
         /// </summary>
         /// <param name="transform"></param>
-        /// <returns></returns>
         public void Concatenate(Transform transform)
         {
             this._matrix = this._matrix * transform._matrix;

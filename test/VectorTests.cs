@@ -53,5 +53,23 @@ namespace Hypar.Tests
             Assert.Equal(v.Y, v1.Y);
             Assert.Equal(5.0, v1.Z);
         }
+
+        [Fact]
+        public void DistanceToPlane()
+        {
+            var v = new Vector3(0.5,0.5,1.0);
+            var p = new Plane(Vector3.Origin, Vector3.ZAxis);
+            Assert.Equal(1.0, v.DistanceTo(p));
+
+            v = new Vector3(0.5,0.5,-1.0);
+            Assert.Equal(-1.0, v.DistanceTo(p));
+
+            p = new Plane(Vector3.Origin, Vector3.YAxis);
+            v = new Vector3(0.5, 1.0, 0.5);
+            Assert.Equal(1.0, v.DistanceTo(p));
+
+            v = Vector3.Origin;
+            Assert.Equal(0.0, v.DistanceTo(p));
+        }
     }
 }

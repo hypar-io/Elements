@@ -21,6 +21,7 @@ namespace Elements
         {
             this.Perimeter = Polygon.Circle(OD);
             this.Voids = new List<Polygon>(){Polygon.Circle(ID)};
+            // Clip(Polygon.Circle(OD), new List<Polygon>(){Polygon.Circle(ID)}, out this._perimeter, out this._voids);
         }
     }
 }

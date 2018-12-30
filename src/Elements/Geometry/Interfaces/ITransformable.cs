@@ -1,8 +1,6 @@
 #pragma warning disable CS1591
 
-using Elements.Geometry;
-
-namespace Elements.Interfaces
+namespace Elements.Geometry.Interfaces
 {
     public interface ITransformable
     {

@@ -1,4 +1,5 @@
 using ClipperLib;
+using Elements.Geometry.Interfaces;
 using Elements.Serialization;
 using Newtonsoft.Json;
 using System;
@@ -464,10 +465,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Offset this polyline by the specified amount.
+        /// Offset this Polygon by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
-        /// <returns>A new polyline offset by offset.</returns>
+        /// <returns>A new Polygon offset by offset.</returns>
         public IList<Polygon> Offset(double offset)
         {
             var path = this.ToClipperPath();
@@ -512,7 +513,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Reverse the direction of a polygon.
         /// </summary>
-        /// <returns>Returns a new polgon with opposite winding.</returns>
+        /// <returns>Returns a new Polygon whose vertices are reversed.</returns>
         public new Polygon Reversed()
         {
             return new Polygon(this._vertices.Reverse().ToArray());
@@ -575,25 +576,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform the polygon by the specified transform.
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
-        public Polygon Transform(Transform t)
-        {
-            return new Polygon(this.Vertices.Select(v=>t.OfPoint(v)).ToList());
-        }
-
-        /// <summary>
-        /// Create a Profile from this Polygon.
-        /// </summary>
-        /// <returns>A new Profile.</returns>
-        public static implicit operator Profile(Polygon p)
-        {
-            return new Profile(p);
-        }
-
-        /// <summary>
         /// Get the transforms used to transform a Profile extruded along this Polyline.
         /// </summary>
         /// <param name="startSetback"></param>
@@ -602,6 +584,24 @@ namespace Elements.Geometry
         public override Transform[] Frames(double startSetback, double endSetback)
         {
             return FramesInternal(startSetback, endSetback, true);
+        }
+
+        /// <summary>
+        /// Compute the Plane defined by the first three vertices of the Polygon.
+        /// </summary>
+        /// <returns>A Plane.</returns>
+        public Plane Plane()
+        {
+            return new Plane(this._vertices[0], this._vertices[1], this._vertices[2]);
+        }
+
+        /// <summary>
+        /// The string representation of the Polygon.
+        /// </summary>
+        /// <returns>A string containing the string representations of this Polygon's vertices.</returns>
+        public override string ToString()
+        {
+            return string.Join(", ", this._vertices.Select(v=>v.ToString()));
         }
     }
 

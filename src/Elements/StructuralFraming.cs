@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
 using Elements.Serialization;
 
@@ -17,13 +18,13 @@ namespace Elements
         /// The cross-section profile of the framing element.
         /// </summary>
         [JsonProperty("profile")]
-        public Profile Profile{get;}
+        public IProfile Profile{get;}
 
         /// <summary>
         /// The cross-section profile of the framing element transformed by the Element's Transform.
         /// </summary>
         [JsonIgnore]
-        public Profile ProfileTransformed
+        public IProfile ProfileTransformed
         {
             get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
@@ -92,6 +93,14 @@ namespace Elements
         public double Volume()
         {
             return this.Profile.Area() * this.Curve.Length();   
+        }
+
+        /// <summary>
+        /// A collection of Faces which comprise this StructuralFraming.
+        /// </summary>
+        public IFace[] Faces()
+        {
+            return Extrusions.ExtrudeAlongCurve(this.Profile, this.Curve);
         }
     }
 }

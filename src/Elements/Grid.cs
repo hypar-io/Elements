@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace Elements
     {
         private double[] _uDiv;
         private double[] _vDiv;
-        private Line _bottom;
-        private Line _top;
+        private ICurve _bottom;
+        private ICurve _top;
 
         private Vector3[][] _pts;
 
@@ -117,9 +118,9 @@ namespace Elements
         /// <param name="face">A face whose edges will be used to define the grid.</param>
         /// <param name="uDivisions">The number of grid divisions in the u direction.</param>
         /// <param name="vDivisions">The number of grid divisions in the v direction.</param>
-        public Grid(Face face, int uDivisions = 1, int vDivisions = 1)
+        public Grid(IFace face, int uDivisions = 1, int vDivisions = 1)
         {
-            var f = face.Edges;
+            var f = face.Edges.ToList();
             this._bottom = f[0];
             this._top = f[2].Reversed();
             this._uDiv = CalculateEqualDivisions(uDivisions);
@@ -133,9 +134,9 @@ namespace Elements
         /// <param name="face">A face whose edges will be used to define the grid.</param>
         /// <param name="uDistance">The distance along the u parameter at which points will be created.</param>
         /// <param name="vDistance">The distance along the v parameter at which points will be created.</param>
-        public Grid(Face face, double uDistance, double vDistance)
+        public Grid(IFace face, double uDistance, double vDistance)
         {
-            var f = face.Edges;
+            var f = face.Edges.ToList();
             this._bottom = f[0];
             this._top = f[2].Reversed();
             this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(this._bottom.Length()/uDistance));

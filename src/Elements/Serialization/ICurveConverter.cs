@@ -1,6 +1,7 @@
 #pragma warning disable CS1591
 
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
