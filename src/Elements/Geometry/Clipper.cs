@@ -68,7 +68,7 @@ namespace ClipperLib
   using Path = List<IntPoint>;
   using Paths = List<List<IntPoint>>;
 
-  public struct DoublePoint
+  internal struct DoublePoint
   {
     public double X;
     public double Y;
@@ -92,7 +92,7 @@ namespace ClipperLib
   // PolyTree & PolyNode classes
   //------------------------------------------------------------------------------
 
-  public class PolyTree : PolyNode
+  internal class PolyTree : PolyNode
   {
       internal List<PolyNode> m_AllPolys = new List<PolyNode>();
 
@@ -128,7 +128,7 @@ namespace ClipperLib
 
   }
         
-  public class PolyNode 
+  internal class PolyNode 
   {
       internal PolyNode m_Parent;
       internal Path m_polygon = new Path();
@@ -351,7 +351,7 @@ namespace ClipperLib
   //------------------------------------------------------------------------------
   //------------------------------------------------------------------------------
 
-  public struct IntPoint
+  internal struct IntPoint
   {
     public cInt X;
     public cInt Y;
@@ -422,7 +422,7 @@ namespace ClipperLib
 
   }// end struct IntPoint
 
-  public struct IntRect
+  internal struct IntRect
   {
     public cInt left;
     public cInt top;
@@ -441,17 +441,17 @@ namespace ClipperLib
     }
   }
 
-  public enum ClipType { ctIntersection, ctUnion, ctDifference, ctXor };
-  public enum PolyType { ptSubject, ptClip };
+  internal enum ClipType { ctIntersection, ctUnion, ctDifference, ctXor };
+  internal enum PolyType { ptSubject, ptClip };
   
   //By far the most widely used winding rules for polygon filling are
   //EvenOdd & NonZero (GDI, GDI+, XLib, OpenGL, Cairo, AGG, Quartz, SVG, Gr32)
   //Others rules include Positive, Negative and ABS_GTR_EQ_TWO (only in OpenGL)
   //see http://glprogramming.com/red/chapter11.html
-  public enum PolyFillType { pftEvenOdd, pftNonZero, pftPositive, pftNegative };
+  internal enum PolyFillType { pftEvenOdd, pftNonZero, pftPositive, pftNegative };
   
-  public enum JoinType { jtSquare, jtRound, jtMiter };
-  public enum EndType { etClosedPolygon, etClosedLine, etOpenButt, etOpenSquare, etOpenRound };
+  internal enum JoinType { jtSquare, jtRound, jtMiter };
+  internal enum EndType { etClosedPolygon, etClosedLine, etOpenButt, etOpenSquare, etOpenRound };
 
   internal enum EdgeSide {esLeft, esRight};
   internal enum Direction {dRightToLeft, dLeftToRight};
@@ -477,14 +477,14 @@ namespace ClipperLib
     internal TEdge PrevInSEL;
   };
 
-  public class IntersectNode
+  internal class IntersectNode
   {
       internal TEdge Edge1;
       internal TEdge Edge2;
       internal IntPoint Pt;
   };
 
-  public class MyIntersectNodeSort : IComparer<IntersectNode>
+  internal class MyIntersectNodeSort : IComparer<IntersectNode>
   {
     public int Compare(IntersectNode node1, IntersectNode node2)
     {
@@ -544,7 +544,7 @@ namespace ClipperLib
     internal IntPoint OffPt;
   };
 
-  public class ClipperBase
+  internal class ClipperBase
   {    
     internal const double horizontal = -3.4E+38;
     internal const int Skip = -2;
@@ -1355,7 +1355,7 @@ namespace ClipperLib
 
   } //end ClipperBase
 
-  public class Clipper : ClipperBase
+  internal class Clipper : ClipperBase
   {
       //InitOptions that can be passed to the constructor ...
       public const int ioReverseSolution = 1;
@@ -4430,7 +4430,7 @@ namespace ClipperLib
 
   } //end Clipper
 
-  public class ClipperOffset
+  internal class ClipperOffset
   {
     private Paths m_destPolys;
     private Path m_srcPoly;
