@@ -9,6 +9,11 @@ namespace Elements.Geometry.Interfaces
     public interface IProfile
     {
         /// <summary>
+        /// The name of the Profile.
+        /// </summary>
+        string Name{get;}
+
+        /// <summary>
         /// The outer perimeter of the Profile.
         /// </summary>
         Polygon Perimeter{get;}
