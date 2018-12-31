@@ -4,9 +4,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 // https://tools.ietf.org/html/rfc7946#section-5
 namespace Elements.GeoJSON

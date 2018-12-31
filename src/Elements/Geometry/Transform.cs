@@ -1,8 +1,6 @@
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -19,7 +17,7 @@ namespace Elements.Geometry
         [JsonProperty("origin")]
         public Vector3 Origin
         {
-            get{return this._matrix.Translation;}
+            get { return this._matrix.Translation; }
         }
 
         /// <summary>
@@ -28,7 +26,7 @@ namespace Elements.Geometry
         [JsonProperty("x_axis")]
         public Vector3 XAxis
         {
-            get{return this._matrix.XAxis;}
+            get { return this._matrix.XAxis; }
         }
 
         /// <summary>
@@ -37,7 +35,7 @@ namespace Elements.Geometry
         [JsonProperty("y_axis")]
         public Vector3 YAxis
         {
-            get{return this._matrix.YAxis;}
+            get { return this._matrix.YAxis; }
         }
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace Elements.Geometry
         [JsonProperty("z_axis")]
         public Vector3 ZAxis
         {
-            get{return this._matrix.ZAxis;}
+            get { return this._matrix.ZAxis; }
         }
 
         /// <summary>
@@ -55,7 +53,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Plane XY
         {
-            get{return new Plane(this.Origin, this.ZAxis);}
+            get { return new Plane(this.Origin, this.ZAxis); }
         }
 
         /// <summary>
@@ -64,7 +62,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Plane YZ
         {
-            get{return new Plane(this.Origin, this.XAxis);}
+            get { return new Plane(this.Origin, this.XAxis); }
         }
 
         /// <summary>
@@ -73,7 +71,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Plane XZ
         {
-            get{return new Plane(this.Origin, this.YAxis);}
+            get { return new Plane(this.Origin, this.YAxis); }
         }
 
         /// <summary>
@@ -103,7 +101,7 @@ namespace Elements.Geometry
         public Transform(double x, double y, double z)
         {
             this._matrix = new Matrix();
-            this._matrix.SetupTranslation(new Vector3(x,y,z));
+            this._matrix.SetupTranslation(new Vector3(x, y, z));
         }
 
         /// <summary>
@@ -131,14 +129,14 @@ namespace Elements.Geometry
         /// <param name="up"></param>
         internal Transform(Vector3 o, Vector3 a, Vector3 b, Vector3 up = null)
         {
-            var z = (b-a).Normalized();
+            var z = (b - a).Normalized();
 
             if (up == null)
             {
                 up = Vector3.ZAxis;
                 if (up.IsParallelTo(z))
                 {
-                    if(z.IsParallelTo(Vector3.XAxis))
+                    if (z.IsParallelTo(Vector3.XAxis))
                     {
                         up = Vector3.YAxis;
                     }
@@ -148,7 +146,7 @@ namespace Elements.Geometry
                     }
                 }
             }
-            
+
             var x = z.Cross(up).Normalized();
             var y = x.Cross(z);
             this._matrix = new Matrix(x, y, z, o);
@@ -181,7 +179,12 @@ namespace Elements.Geometry
         /// <returns>A new Polygon transformed by this Transform.</returns>
         public Polygon OfPolygon(Polygon polygon)
         {
-            var p = new Polygon(polygon.Vertices.Select(v=>OfPoint(v)).ToList());
+            var transformed = new Vector3[polygon.Vertices.Length];
+            for (var i = 0; i < transformed.Length; i++)
+            {
+                transformed[i] = OfPoint(polygon.Vertices[i]);
+            }
+            var p = new Polygon(transformed);
             return p;
         }
 
@@ -202,7 +205,15 @@ namespace Elements.Geometry
         /// <returns>A new Profile transformed by this Transform.</returns>
         public Profile OfProfile(IProfile profile)
         {
-            var voids = profile.Voids == null ? null : profile.Voids.Select(v=>OfPolygon(v)).ToList();
+            Polygon[] voids = null;
+            if (profile.Voids != null)
+            {
+                voids = new Polygon[profile.Voids.Length];
+                for (var i = 0; i < voids.Length; i++)
+                {
+                    voids[i] = OfPolygon(profile.Voids[i]);
+                }
+            }
             var p = new Profile(OfPolygon(profile.Perimeter), voids);
             return p;
         }
@@ -235,7 +246,7 @@ namespace Elements.Geometry
         public void Rotate(Vector3 axis, double angle)
         {
             var m = new Matrix();
-            m.SetupRotate(axis, angle * (Math.PI/180.0));
+            m.SetupRotate(axis, angle * (Math.PI / 180.0));
             this._matrix = this._matrix * m;
         }
 

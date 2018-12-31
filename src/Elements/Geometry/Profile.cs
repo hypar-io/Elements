@@ -38,7 +38,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Align the profile along its center.
         /// </summary>
-        Center, 
+        Center,
         /// <summary>
         /// Align the profile along its right edge.
         /// </summary>
@@ -51,7 +51,7 @@ namespace Elements.Geometry
     public class Profile : IIdentifiable, IProfile
     {
         protected Polygon _perimeter;
-        protected IList<Polygon> _voids;
+        protected Polygon[] _voids;
 
         /// <summary>
         /// The identifier of the Profile.
@@ -75,7 +75,7 @@ namespace Elements.Geometry
         /// A collection of Polygons representing voids in the Profile.
         /// </summary>
         [JsonProperty("voids")]
-        public IList<Polygon> Voids { get => _voids; protected set => _voids = value; }
+        public Polygon[] Voids { get => _voids; protected set => _voids = value; }
 
         /// <summary>
         /// Construct a Profile.
@@ -84,14 +84,14 @@ namespace Elements.Geometry
         /// <param name="perimeter">The perimeter of the Profile.</param>
         /// <param name="voids">A collection of Polygons representing voids in the Profile.</param>
         [JsonConstructor]
-        public Profile(Polygon perimeter, IList<Polygon> voids, string name = null)
+        public Profile(Polygon perimeter, Polygon[] voids, string name = null)
         {
             this.Id = IdProvider.Instance.GetNextId();
             this.Perimeter = perimeter;
             this.Voids = voids;
-            
+
             this.Name = name;
-            if(!IsPlanar())
+            if (!IsPlanar())
             {
                 throw new Exception("To construct a Profile, all points must line in the same Plane.");
             }
@@ -116,7 +116,7 @@ namespace Elements.Geometry
             this.Id = IdProvider.Instance.GetNextId();
             this.Perimeter = perimeter;
             this.Name = name;
-            if(!IsPlanar())
+            if (!IsPlanar())
             {
                 throw new Exception("To construct a Profile, all points must line in the same Plane.");
             }
@@ -134,7 +134,7 @@ namespace Elements.Geometry
             this.Perimeter = perimeter;
             this.Voids = new[] { singleVoid };
             this.Name = name;
-            if(!IsPlanar())
+            if (!IsPlanar())
             {
                 throw new Exception("To construct a Profile, all points must line in the same Plane.");
             }
@@ -145,7 +145,15 @@ namespace Elements.Geometry
         /// </summary>
         public IProfile Reversed()
         {
-            var voids = this.Voids != null ? this.Voids.Select(v=>v.Reversed()).ToList() : null;
+            Polygon[] voids = null;
+            if (this.Voids != null)
+            {
+                voids = new Polygon[this.Voids.Length];
+                for (var i = 0; i < this.Voids.Length; i++)
+                {
+                    voids[i] = this.Voids[i].Reversed();
+                }
+            }
             return new Profile(this.Perimeter.Reversed(), voids);
         }
 
@@ -159,7 +167,7 @@ namespace Elements.Geometry
 
         private double ClippedArea()
         {
-            if (this.Voids == null || this.Voids.Count == 0)
+            if (this.Voids == null || this.Voids.Length == 0)
             {
                 return this.Perimeter.Area;
             }
@@ -171,7 +179,7 @@ namespace Elements.Geometry
             clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
             return solution.Sum(s => ClipperLib.Clipper.Area(s)) / Math.Pow(1024.0, 2);
         }
-    
+
         private Transform ComputeTransform()
         {
             var v = this.Perimeter.Vertices.ToList();
@@ -186,10 +194,10 @@ namespace Elements.Geometry
             var t = ComputeTransform();
             var vertices = this.Perimeter.Vertices;
             var p = t.XY;
-            foreach(var v in vertices)
+            foreach (var v in vertices)
             {
                 var d = v.DistanceTo(p);
-                if(Math.Abs(d) > Vector3.Tolerance)
+                if (Math.Abs(d) > Vector3.Tolerance)
                 {
                     Console.WriteLine($"Out of plane distance: {d}.");
                     return false;

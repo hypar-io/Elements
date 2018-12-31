@@ -2,9 +2,6 @@ using Elements.Geometry;
 using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Elements
@@ -24,19 +21,19 @@ namespace Elements
         /// The FloorType of the Floor.
         /// </summary>
         [JsonProperty("element_type")]
-        public FloorType ElementType{get;}
+        public FloorType ElementType { get; }
 
         /// <summary>
         /// The Material of the Floor.
         /// </summary>
         [JsonProperty("material")]
-        public Material Material{get;}
+        public Material Material { get; }
 
         /// <summary>
         /// The Profile of the Floor.
         /// </summary>
         [JsonProperty("profile")]
-        public IProfile Profile{get;}
+        public IProfile Profile { get; }
 
         /// <summary>
         /// The transformed Profile of the Floor.
@@ -44,7 +41,7 @@ namespace Elements
         [JsonIgnore]
         public IProfile ProfileTransformed
         {
-            get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
+            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
         }
 
         /// <summary>
@@ -53,7 +50,7 @@ namespace Elements
         [JsonIgnore]
         public double Thickness
         {
-            get{return this.ElementType.Thickness;}
+            get { return this.ElementType.Thickness; }
         }
 
         /// <summary>
@@ -70,10 +67,10 @@ namespace Elements
             this.Profile = profile;
             this.Elevation = elevation;
             this.ElementType = elementType;
-            this.Transform = transform!=null ? transform : new Transform(new Vector3(0, 0, elevation));
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
         }
-        
+
         /// <summary>
         /// Construct a Floor.
         /// </summary>
@@ -87,7 +84,7 @@ namespace Elements
             this.Profile = new Profile(profile);
             this.Elevation = elevation;
             this.ElementType = elementType;
-            this.Transform = transform!=null ? transform : new Transform(new Vector3(0, 0, elevation));
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Concrete : material;
         }
 
@@ -125,7 +122,7 @@ namespace Elements
         public static IList<Floor> Floors(this Mass mass, IList<double> elevations, FloorType floorType, Material material)
         {
             var Floors = new List<Floor>();
-            foreach(var e in elevations)
+            foreach (var e in elevations)
             {
                 if (e >= mass.Elevation && e <= mass.Elevation + mass.Height)
                 {

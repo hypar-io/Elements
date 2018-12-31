@@ -19,7 +19,7 @@ namespace Elements
         /// The vertices forming the perimeter of the panel.
         /// </summary>
         [JsonProperty("perimeter")]
-        public IList<Vector3> Perimeter {get;}
+        public Vector3[] Perimeter {get;}
 
         /// <summary>
         /// The Panel's Material.
@@ -34,7 +34,7 @@ namespace Elements
         /// <param name="material">The Panel's material</param>
         /// <exception cref="System.ArgumentException">Thrown when the number of perimeter points is less than 3 or greater than 4.</exception>
         [JsonConstructor]
-        public Panel(IList<Vector3> perimeter, Material material = null)
+        public Panel(Vector3[] perimeter, Material material = null)
         {
             var vCount = perimeter.Count();
             if (vCount > 4 || vCount < 3)

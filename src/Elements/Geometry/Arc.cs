@@ -1,7 +1,5 @@
 using Elements.Geometry.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry
@@ -37,7 +35,7 @@ namespace Elements.Geometry
         /// </summary>
         public double Length()
         {
-            return 2*Math.PI*this.Radius * (Math.Abs(this.EndAngle-this.StartAngle))/360.0;
+            return 2 * Math.PI * this.Radius * (Math.Abs(this.EndAngle - this.StartAngle)) / 360.0;
         }
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Vector3 Start
         {
-            get{return PointAt(0.0);}
+            get { return PointAt(0.0); }
         }
 
         /// <summary>
@@ -55,20 +53,20 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Vector3 End
         {
-            get{return PointAt(1.0);}
+            get { return PointAt(1.0); }
         }
 
         /// <summary>
         /// The vertices of the Arc.
         /// </summary>
         [JsonIgnore]
-        public IList<Vector3> Vertices
+        public Vector3[] Vertices
         {
             get
             {
                 var verts = new Vector3[11];
                 var count = 0;
-                for(var u=0.0; u<1.0; u+=1.0/10.0)
+                for (var u = 0.0; u < 1.0; u += 1.0 / 10.0)
                 {
                     verts[count] = PointAt(u);
                     count++;
@@ -81,7 +79,7 @@ namespace Elements.Geometry
         /// The radius of the Arc.
         /// </summary>
         [JsonProperty("radius")]
-        public double Radius{get;}
+        public double Radius { get; }
 
         /// <summary>
         /// An Arc.
@@ -92,21 +90,21 @@ namespace Elements.Geometry
         /// <param name="endAngle">The end angle of the Arc in degrees.</param>
         public Arc(Vector3 center, double radius, double startAngle, double endAngle)
         {
-            if(endAngle > 360.0 || startAngle > 360.00)
+            if (endAngle > 360.0 || startAngle > 360.00)
             {
                 throw new ArgumentOutOfRangeException("The start and end angles must be greater than -360.0");
             }
 
-            if(endAngle == startAngle)
+            if (endAngle == startAngle)
             {
                 throw new ArgumentException($"The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
             }
 
-            if(radius <= 0.0)
+            if (radius <= 0.0)
             {
                 throw new ArgumentOutOfRangeException($"The provided radius ({radius}) must be greater than 0.0.");
             }
-        
+
             this.EndAngle = endAngle;
             this.StartAngle = startAngle;
             this.Center = center;
@@ -120,13 +118,13 @@ namespace Elements.Geometry
         /// <returns>A Vector3 representing the point along the Arc.</returns>
         public Vector3 PointAt(double u)
         {
-            if(u > 1.0 || u < 0.0)
+            if (u > 1.0 || u < 0.0)
             {
                 throw new ArgumentOutOfRangeException($"The value provided for parameter u ({u}) must be between 0.0 and 1.0.");
             }
 
             var angle = (this.EndAngle - this.StartAngle) * u;
-            return new Vector3(this.Center.X + this.Radius * Math.Cos(angle * Math.PI/180), this.Center.Y + this.Radius * Math.Sin(angle * Math.PI/180));
+            return new Vector3(this.Center.X + this.Radius * Math.Cos(angle * Math.PI / 180), this.Center.Y + this.Radius * Math.Sin(angle * Math.PI / 180));
         }
 
         /// <summary>
@@ -138,8 +136,8 @@ namespace Elements.Geometry
         public Transform TransformAt(double u, Vector3 up = null)
         {
             var o = PointAt(u);
-            var x = (this.Center-o).Negated().Normalized();
-            if(up == null)
+            var x = (this.Center - o).Negated().Normalized();
+            if (up == null)
             {
                 up = Vector3.ZAxis;
             }
@@ -155,22 +153,22 @@ namespace Elements.Geometry
         public Transform[] Frames(double startSetback, double endSetback)
         {
             var div = 10;
-            var step = 1.0/div;
-            var result = new Transform[div+1];
-            for(var i = 0; i <= div ; i++)
+            var step = 1.0 / div;
+            var result = new Transform[div + 1];
+            for (var i = 0; i <= div; i++)
             {
                 Transform t;
-                if(i == 0)
+                if (i == 0)
                 {
                     t = TransformAt(0.0 + startSetback);
                 }
-                else if(i == div)
+                else if (i == div)
                 {
                     t = TransformAt(1.0 - endSetback);
                 }
                 else
                 {
-                    t = TransformAt(i*step);
+                    t = TransformAt(i * step);
                 }
                 result[i] = t;
             }

@@ -1,6 +1,5 @@
 using Elements.Geometry.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -12,12 +11,12 @@ namespace Elements.Geometry
         /// <summary>
         /// The maximum extent of the bounding box.
         /// </summary>
-        public Vector3 Max{get; private set;}
+        public Vector3 Max { get; private set; }
 
         /// <summary>
         /// The minimum extent of the bounding box.
         /// </summary>
-        public Vector3 Min{get; private set;}
+        public Vector3 Min { get; private set; }
 
         /// <summary>
         /// Construct a bounding box from a collection of points.
@@ -27,7 +26,7 @@ namespace Elements.Geometry
         {
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
             this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
-            foreach(var p in points)
+            foreach (var p in points)
             {
                 this.Extend(p);
             }
@@ -35,13 +34,13 @@ namespace Elements.Geometry
 
         private void Extend(Vector3 v)
         {
-            if(v.X < this.Min.X) this.Min.X = v.X;
-            if(v.Y < this.Min.Y) this.Min.Y = v.Y;
-            if(v.Z < this.Min.Z) this.Min.Z = v.Z;
+            if (v.X < this.Min.X) this.Min.X = v.X;
+            if (v.Y < this.Min.Y) this.Min.Y = v.Y;
+            if (v.Z < this.Min.Z) this.Min.Z = v.Z;
 
-            if(v.X > this.Max.X) this.Max.X = v.X;
-            if(v.Y > this.Max.Y) this.Max.Y = v.Y;
-            if(v.Z > this.Max.Z) this.Max.Z = v.Z;
+            if (v.X > this.Max.X) this.Max.X = v.X;
+            if (v.Y > this.Max.Y) this.Max.Y = v.Y;
+            if (v.Z > this.Max.Z) this.Max.Z = v.Z;
         }
 
         /// <summary>
@@ -52,14 +51,17 @@ namespace Elements.Geometry
         {
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
             this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
-            foreach(var v in profile.Perimeter.Vertices)
+            foreach (var v in profile.Perimeter.Vertices)
             {
                 this.Extend(v);
             }
 
-            foreach(var v in profile.Voids.SelectMany(o=>o.Vertices))
+            foreach (var v in profile.Voids)
             {
-                this.Extend(v);
+                foreach (var vtx in v.Vertices)
+                {
+                    this.Extend(vtx);
+                }
             }
         }
 
@@ -71,10 +73,10 @@ namespace Elements.Geometry
         {
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
             this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
-            foreach(var p in curve.Vertices)
+            foreach (var p in curve.Vertices)
             {
-                if(p < this.Min) this.Min = p;
-                if(p > this.Max) this.Max = p;
+                if (p < this.Min) this.Min = p;
+                if (p > this.Max) this.Max = p;
             }
         }
 
@@ -84,13 +86,16 @@ namespace Elements.Geometry
         /// <param name="polygons"></param>
         public BBox3(IList<Polygon> polygons)
         {
-            var verts = polygons.SelectMany(p=>p.Vertices);
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
             this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
-            foreach(var p in verts)
+
+            foreach (var p in polygons)
             {
-                if(p < this.Min) this.Min = p;
-                if(p > this.Max) this.Max = p;
+                foreach (var v in p.Vertices)
+                {
+                    if (v < this.Min) this.Min = v;
+                    if (v > this.Max) this.Max = v;
+                }
             }
         }
 

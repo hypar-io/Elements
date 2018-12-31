@@ -1,8 +1,6 @@
 using Elements;
 using Elements.Geometry;
 using System;
-using System.Linq;
-using System.IO;
 using Xunit;
 
 namespace Hypar.Tests

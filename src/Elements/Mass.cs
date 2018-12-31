@@ -1,10 +1,8 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements
 {
@@ -19,15 +17,15 @@ namespace Elements
         /// The Profile of the Mass.
         /// </summary>
         [JsonProperty("profile")]
-        public IProfile Profile{get;}
-        
+        public IProfile Profile { get; }
+
         /// <summary>
         /// The transformed Profile of the Mass.
         /// </summary>
         [JsonIgnore]
         public IProfile ProfileTransformed
         {
-            get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
+            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
         }
 
         /// <summary>
@@ -48,14 +46,14 @@ namespace Elements
         [JsonIgnore]
         public double Thickness
         {
-            get{return this.Height;}
+            get { return this.Height; }
         }
-        
+
         /// <summary>
         /// The Mass' Material.
         /// </summary>
         [JsonProperty("material")]
-        public Material Material{get;}
+        public Material Material { get; }
 
         /// <summary>
         /// Construct a Mass.

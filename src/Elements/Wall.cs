@@ -3,8 +3,6 @@ using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements
 {
@@ -74,7 +72,7 @@ namespace Elements
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of Wall's start and end points are not the same.</exception>
-        public Wall(Line centerLine, WallType elementType, double height, IList<Opening> openings = null, Material material = null)
+        public Wall(Line centerLine, WallType elementType, double height, Opening[] openings = null, Material material = null)
         {
             if (height <= 0.0)
             {
@@ -91,9 +89,14 @@ namespace Elements
             this.Height = height;
             this.ElementType = elementType;
             
-            if(openings != null && openings.Count > 0)
+            if(openings != null && openings.Length > 0)
             {
-                var voids = openings.Select(o=>Polygon.Rectangle(new Vector3(o.DistanceAlongWall, o.BaseHeight), new Vector3(o.DistanceAlongWall + o.Width, o.BaseHeight + o.Height))).ToList();
+                var voids = new Polygon[openings.Length];
+                for(var i = 0; i< voids.Length; i++)
+                {
+                    var o = openings[i];
+                    voids[i] = Polygon.Rectangle(new Vector3(o.DistanceAlongWall, o.BaseHeight), new Vector3(o.DistanceAlongWall + o.Width, o.BaseHeight + o.Height));
+                }
                 this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)), voids);
             }
             else

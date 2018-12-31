@@ -15,9 +15,10 @@ namespace Hypar.Tests
             var testWallType = new WallType("test", 0.1);
 
             var triangle = Polygon.Ngon(7, 15.0);
-            var openings = new List<Opening>();
-            openings.Add(new Opening(1.0, 1.0, 2.0, 1.0));
-            openings.Add(new Opening(4.0, 0.0, 2.0, 1.0));
+            var openings = new Opening[]{
+                new Opening(1.0, 1.0, 2.0, 1.0),
+                new Opening(4.0, 0.0, 2.0, 1.0)
+            };
             foreach(var l in triangle.Segments())
             {
                 var w = new Wall(l, testWallType, 5.0, openings);
@@ -80,7 +81,7 @@ namespace Hypar.Tests
             var model = new Model();
             model.AddElement(wall);
             model.SaveGlb("wall_twoHoles.glb");
-            Assert.Equal(2, wall.Profile.Voids.Count);
+            Assert.Equal(2, wall.Profile.Voids.Length);
         }
     }
 }

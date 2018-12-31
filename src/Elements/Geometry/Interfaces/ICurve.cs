@@ -25,7 +25,7 @@ namespace Elements.Geometry.Interfaces
         /// <summary>
         /// A collection of curve vertices.
         /// </summary>
-        IList<Vector3> Vertices{get;}
+        Vector3[] Vertices{get;}
 
         /// <summary>
         /// Get a point along the curve at parameter u.

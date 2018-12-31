@@ -1,9 +1,6 @@
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -16,23 +13,23 @@ namespace Elements.Geometry
         /// The start of the line.
         /// </summary>
         [JsonProperty("start")]
-        public Vector3 Start{get;}
+        public Vector3 Start { get; }
 
         /// <summary>
         /// The end of the line.
         /// </summary>
         [JsonProperty("end")]
-        public Vector3 End{get;}
+        public Vector3 End { get; }
 
         /// <summary>
         /// The line's vertices.
         /// </summary>
         [JsonIgnore]
-        public IList<Vector3> Vertices
+        public Vector3[] Vertices
         {
-            get{return new[]{this.Start, this.End};}
+            get { return new[] { this.Start, this.End }; }
         }
-        
+
         /// <summary>
         /// Calculate the length of the line.
         /// </summary>
@@ -89,16 +86,16 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public Vector3 PointAt(double u)
         {
-            if(u == 0.0)
+            if (u == 0.0)
             {
                 return this.Start;
             }
 
-            if(u == 1.0)
+            if (u == 1.0)
             {
                 return this.End;
             }
-            
+
             if (u > 1.0 || u < 0.0)
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
@@ -124,11 +121,11 @@ namespace Elements.Geometry
         public Polygon Thicken(double amount)
         {
             var offsetN = this.Direction.Cross(Vector3.ZAxis);
-            var a = this.Start + (offsetN * (amount/2));
-            var b = this.End + (offsetN * (amount/2));
-            var c = this.End - (offsetN * (amount/2));
-            var d = this.Start - (offsetN * (amount/2));
-            return new Polygon(new[]{a, b, c, d});
+            var a = this.Start + (offsetN * (amount / 2));
+            var b = this.End + (offsetN * (amount / 2));
+            var c = this.End - (offsetN * (amount / 2));
+            var d = this.Start - (offsetN * (amount / 2));
+            return new Polygon(new[] { a, b, c, d });
         }
 
         /// <summary>
@@ -139,7 +136,7 @@ namespace Elements.Geometry
         public override bool Equals(object obj)
         {
             var line = obj as Line;
-            if(line == null)
+            if (line == null)
             {
                 return false;
             }
@@ -152,7 +149,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return new[]{this.Start, this.End}.GetHashCode();
+            return new[] { this.Start, this.End }.GetHashCode();
         }
 
         /// <summary>
@@ -164,7 +161,7 @@ namespace Elements.Geometry
         public Transform[] Frames(double startSetback, double endSetback)
         {
             var l = this.Length();
-            return new Transform[]{TransformAt(0.0 + startSetback/l), TransformAt(1.0 - endSetback/l)};
+            return new Transform[] { TransformAt(0.0 + startSetback / l), TransformAt(1.0 - endSetback / l) };
         }
     }
 }

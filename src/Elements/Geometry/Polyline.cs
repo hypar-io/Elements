@@ -15,13 +15,13 @@ namespace Elements.Geometry
         /// <summary>
         /// The internal collection of vertices.
         /// </summary>
-        protected IList<Vector3> _vertices;
+        protected Vector3[] _vertices;
 
         /// <summary>
         /// The vertices of the polygon.
         /// </summary>
         [JsonProperty("vertices")]
-        public IList<Vector3> Vertices
+        public Vector3[] Vertices
         {
             get{return this._vertices;}
         }
@@ -49,18 +49,18 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Vector3 End
         {
-            get{return this._vertices[this._vertices.Count - 1];}
+            get{return this._vertices[this._vertices.Length - 1];}
         }
 
         /// <summary>
         /// Construct a polyline from a collection of vertices.
         /// </summary>
         /// <param name="vertices">A CCW wound set of vertices.</param>
-        public Polyline(IList<Vector3> vertices)
+        public Polyline(Vector3[] vertices)
         {
-            for(var i=0; i<vertices.Count; i++)
+            for(var i=0; i<vertices.Length; i++)
             {
-                for(var j=0; j<vertices.Count; j++)
+                for(var j=0; j<vertices.Length; j++)
                 {
                     if(i == j)
                     {
@@ -90,7 +90,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Join(",", this._vertices);
+            return string.Join(",", this._vertices.ToList());
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace Elements.Geometry
         /// <returns>A collection of Lines.</returns>
         public virtual Line[] Segments()
         {
-            var result = new Line[_vertices.Count-1];
-            for (var i = 0; i < _vertices.Count-1; i++)
+            var result = new Line[_vertices.Length-1];
+            for (var i = 0; i < _vertices.Length-1; i++)
             {
                 var a = _vertices[i];
                 var b = _vertices[i+1];
@@ -137,7 +137,7 @@ namespace Elements.Geometry
 
             var d = this.Length() * u;
             var totalLength = 0.0;
-            for (var i = 0; i < this._vertices.Count - 1; i++)
+            for (var i = 0; i < this._vertices.Length - 1; i++)
             {
                 var a = this._vertices[i];
                 var b = this._vertices[i + 1];
@@ -150,7 +150,7 @@ namespace Elements.Geometry
                 }
                 totalLength += currLength;
             }
-            segmentIndex = this._vertices.Count - 1;
+            segmentIndex = this._vertices.Length - 1;
             return this.End;
         }
 
@@ -177,12 +177,12 @@ namespace Elements.Geometry
             var a = this.Vertices.FirstOrDefault(vtx=>vtx.Equals(o));
             if(o != null)
             {
-                var idx = Vertices.IndexOf(o);
+                var idx = Array.IndexOf(this.Vertices, o);
                 Vector3 b;
                 Vector3 c;
                 if(idx == 0)
                 {
-                    b = this.Vertices[this.Vertices.Count-1];
+                    b = this.Vertices[this.Vertices.Length-1];
                 }
                 else
                 {
@@ -230,15 +230,15 @@ namespace Elements.Geometry
         {
             // Create an array of transforms with the same
             // number of items as the vertices.
-            var result = new Transform[this._vertices.Count];
+            var result = new Transform[this._vertices.Length];
             for(var i=0; i<result.Length; i++)
             {
                 var a = this._vertices[i];
                 if(closed)
                 {
                     // Create transforms at 'miter' planes.
-                    var b = i == 0 ? this._vertices[this._vertices.Count - 1] : this._vertices[i-1];
-                    var c = i == this._vertices.Count - 1 ? this._vertices[0] : this._vertices[i+1];
+                    var b = i == 0 ? this._vertices[this._vertices.Length - 1] : this._vertices[i-1];
+                    var c = i == this._vertices.Length - 1 ? this._vertices[0] : this._vertices[i+1];
                     var x = (b-a).Normalized().Average((c-a).Normalized()).Negated();
                     var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
                     result[i] = new Transform(this._vertices[i], x, up.Cross(x));
@@ -247,7 +247,7 @@ namespace Elements.Geometry
                 {
                     Vector3 b,x,c;
 
-                    if(i == this.Vertices.Count - 1)
+                    if(i == this.Vertices.Length - 1)
                     {
                         b = this._vertices[i-1];
                         result[i] = new Transform(a, b, a, null);

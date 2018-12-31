@@ -326,7 +326,7 @@ namespace Elements.Geometry
 
         internal static void AddContour(Tess tess, Polygon p)
         {
-            var numPoints = p.Vertices.Count;
+            var numPoints = p.Vertices.Length;
             var contour = new ContourVertex[numPoints];
             for(var i=0; i<numPoints; i++)
             {
@@ -368,9 +368,9 @@ IMin:{m_index_min}";
                 var p1 = sections[i];
                 var p2 = i == sections.Count-1 ? sections[0] : sections[i+1];
 
-                for(var j=0; j<p1.Vertices.Count; j++)
+                for(var j=0; j<p1.Vertices.Length; j++)
                 {
-                    var j1 = j == p1.Vertices.Count - 1 ? 0 : j+1;
+                    var j1 = j == p1.Vertices.Length - 1 ? 0 : j+1;
                     var v1 = p1.Vertices[j];
                     var v2 = p1.Vertices[j1];
                     var v3 = p2.Vertices[j1];

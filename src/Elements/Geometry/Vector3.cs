@@ -1,8 +1,6 @@
-using Elements.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -18,21 +16,21 @@ namespace Elements.Geometry
         /// </summary>
         /// <returns></returns>
         [JsonProperty("x")]
-        public double X{get;internal set;}
+        public double X { get; internal set; }
 
         /// <summary>
         /// The Y component of the vector.
         /// </summary>
         /// <returns></returns>
         [JsonProperty("y")]
-        public double Y{get;internal set;}
+        public double Y { get; internal set; }
 
         /// <summary>
         /// The Z component of the vector.
         /// </summary>
         /// <returns></returns>
         [JsonProperty("z")]
-        public double Z{get;internal set;}
+        public double Z { get; internal set; }
 
         /// <summary>
         /// Construct a vector at the origin.
@@ -40,7 +38,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static Vector3 Origin
         {
-            get{return new Vector3();}
+            get { return new Vector3(); }
         }
 
         /// <summary>
@@ -50,11 +48,11 @@ namespace Elements.Geometry
         public override bool Equals(object obj)
         {
             var v = obj as Vector3;
-            if(v == null)
+            if (v == null)
             {
                 return false;
             }
-            
+
             return this.X == v.X && this.Y == v.Y && this.Z == v.Z;
         }
 
@@ -64,7 +62,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return new[]{this.ToArray()}.GetHashCode();
+            return new[] { this.ToArray() }.GetHashCode();
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace Elements.Geometry
         /// </summary>
         public static Vector3 XAxis
         {
-            get{return new Vector3(1.0,0.0,0.0);}
+            get { return new Vector3(1.0, 0.0, 0.0); }
         }
 
         /// <summary>
@@ -80,7 +78,7 @@ namespace Elements.Geometry
         /// </summary>
         public static Vector3 YAxis
         {
-            get{return new Vector3(0.0,1.0,0.0);}
+            get { return new Vector3(0.0, 1.0, 0.0); }
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static Vector3 ZAxis
         {
-            get{return new Vector3(0.0,0.0,1.0);}
+            get { return new Vector3(0.0, 0.0, 1.0); }
         }
 
         /// <summary>
@@ -100,14 +98,14 @@ namespace Elements.Geometry
         /// <param name="includeEnds">A flag indicating whether or not to include points for the start and end of the line.</param>
         /// <returns></returns>
         public static IList<Vector3> AtNEqualSpacesAlongLine(Line line, int n, bool includeEnds = false)
-        {   
-            var div = 1.0/(double)(n + 1);
+        {
+            var div = 1.0 / (double)(n + 1);
             var pts = new List<Vector3>();
-            for(var t=0.0; t<=1.0; t+=div)
+            for (var t = 0.0; t <= 1.0; t += div)
             {
                 var pt = line.PointAt(t);
-                
-                if((t == 0.0 && !includeEnds) || (t == 1.0 && !includeEnds))
+
+                if ((t == 0.0 && !includeEnds) || (t == 1.0 && !includeEnds))
                 {
                     continue;
                 }
@@ -125,7 +123,7 @@ namespace Elements.Geometry
             this.Y = 0;
             this.Z = 0;
         }
-        
+
         /// <summary>
         /// Construct a vector from x, y, and z components.
         /// </summary>
@@ -156,7 +154,7 @@ namespace Elements.Geometry
         /// </summary>
         public double Length()
         {
-            return Math.Sqrt(Math.Pow(X,2) + Math.Pow(Y,2) + Math.Pow(Z,2));
+            return Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
         }
 
         /// <summary>
@@ -166,7 +164,7 @@ namespace Elements.Geometry
         public Vector3 Normalized()
         {
             var length = Length();
-            return new Vector3(X/length, Y/length, Z/length);
+            return new Vector3(X / length, Y / length, Z / length);
         }
 
         /// <summary>
@@ -175,7 +173,7 @@ namespace Elements.Geometry
         /// <param name="v"></param>
         /// <returns></returns>
         public Vector3 Cross(Vector3 v)
-        {   
+        {
             var x = Y * v.Z - Z * v.Y;
             var y = Z * v.X - X * v.Z;
             var z = X * v.Y - Y * v.X;
@@ -200,7 +198,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public double AngleTo(Vector3 v)
         {
-            return Math.Acos((Dot(v)/(Length()*v.Length())));
+            return Math.Acos((Dot(v) / (Length() * v.Length())));
         }
 
         /// <summary>
@@ -210,7 +208,7 @@ namespace Elements.Geometry
         /// <returns>A Vector3 which is the average of this and v.</returns>
         public Vector3 Average(Vector3 v)
         {
-            return new Vector3((this.X + v.X)/2, (this.Y + v.Y)/2, (this.Z + v.Z)/2);
+            return new Vector3((this.X + v.X) / 2, (this.Y + v.Y) / 2, (this.Z + v.Z) / 2);
         }
 
         /// <summary>
@@ -219,9 +217,9 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <returns>A new Vector3 which is the projection of a onto this Vector3.</returns>
         public Vector3 ProjectOnto(Vector3 a)
-        {   
+        {
             var b = this;
-            return (a.Dot(b)/Math.Pow(a.Length(),2)) * a;
+            return (a.Dot(b) / Math.Pow(a.Length(), 2)) * a;
         }
 
         /// <summary>
@@ -230,7 +228,7 @@ namespace Elements.Geometry
         /// <param name="v"></param>
         /// <param name="a"></param>
         /// <returns>A Vector3 whose magnitude is multiplied by a.</returns>
-        public static Vector3 operator * (Vector3 v, double a)
+        public static Vector3 operator *(Vector3 v, double a)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
         }
@@ -241,7 +239,7 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <param name="v"></param>
         /// <returns></returns>
-        public static Vector3 operator * (double a, Vector3 v)
+        public static Vector3 operator *(double a, Vector3 v)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
         }
@@ -252,7 +250,7 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Vector3 operator - (Vector3 a, Vector3 b)
+        public static Vector3 operator -(Vector3 a, Vector3 b)
         {
             return new Vector3((a.X - b.X), (a.Y - b.Y), (a.Z - b.Z));
         }
@@ -263,7 +261,7 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Vector3 operator + (Vector3 a, Vector3 b)
+        public static Vector3 operator +(Vector3 a, Vector3 b)
         {
             return new Vector3((a.X + b.X), (a.Y + b.Y), (a.Z + b.Z));
         }
@@ -274,7 +272,7 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static bool operator > (Vector3 a, Vector3 b)
+        public static bool operator >(Vector3 a, Vector3 b)
         {
             return a.X > b.X && a.Y > b.Y && a.Z > b.Z;
         }
@@ -285,7 +283,7 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static bool operator < (Vector3 a, Vector3 b)
+        public static bool operator <(Vector3 a, Vector3 b)
         {
             return a.X < b.X && a.Y < b.Y && a.Z < b.Z;
         }
@@ -316,7 +314,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public double[] ToArray()
         {
-            return new[]{X, Y, Z};
+            return new[] { X, Y, Z };
         }
 
         /// <summary>
@@ -335,7 +333,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public bool IsAlmostEqualTo(Vector3 v)
         {
-            if(Math.Abs(this.X - v.X) < Tolerance &&
+            if (Math.Abs(this.X - v.X) < Tolerance &&
                 Math.Abs(this.Y - v.Y) < Tolerance &&
                 Math.Abs(this.Z - v.Z) < Tolerance)
             {
@@ -353,7 +351,7 @@ namespace Elements.Geometry
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
         }
-        
+
         /// <summary>
         /// The distance from this Point to p.
         /// The distance will be negative when this Point lies
@@ -375,7 +373,7 @@ namespace Elements.Geometry
             //Ax+By+Cz+d=0
             //p' = p - (n ⋅ (p - o)) * n
             var d = -p.Origin.X * p.Normal.X - p.Origin.Y * p.Normal.Y - p.Origin.Z * p.Normal.Z;
-            var p1 = this - (p.Normal.Dot(this-p.Origin)) * p.Normal;
+            var p1 = this - (p.Normal.Dot(this - p.Origin)) * p.Normal;
             return p1;
         }
 
@@ -387,21 +385,21 @@ namespace Elements.Geometry
         /// <returns>A point on the plane.</returns>
         public Vector3 ProjectAlong(Vector3 v, Plane p)
         {
-            var x = ((p.Origin - this).Dot(p.Normal))/p.Normal.Dot(v.Normalized());
+            var x = ((p.Origin - this).Dot(p.Normal)) / p.Normal.Dot(v.Normalized());
             return this + x * v;
         }
 
         int IComparable<Vector3>.CompareTo(Vector3 v)
         {
-            if(this > v)
+            if (this > v)
             {
                 return -1;
             }
-            if(this.Equals(v))
+            if (this.Equals(v))
             {
                 return 0;
             }
-            
+
             return 1;
         }
     }
@@ -440,13 +438,13 @@ namespace Elements.Geometry
         public static Vector3 Average(this IList<Vector3> points)
         {
             double x = 0.0, y = 0.0, z = 0.0;
-            foreach(var p in points)
+            foreach (var p in points)
             {
                 x += p.X;
                 y += p.Y;
                 z += p.Z;
             }
-            return new Vector3(x/points.Count, y/points.Count, z/points.Count);
+            return new Vector3(x / points.Count, y / points.Count, z / points.Count);
         }
 
         /// <summary>
@@ -455,10 +453,16 @@ namespace Elements.Geometry
         /// <param name="points">The collection of Vector3 to shrink.</param>
         /// <param name="distance">The distance to shrink along the vector to average.</param>
         /// <returns></returns>
-        public static IList<Vector3> Shrink(this IList<Vector3> points, double distance)
+        public static Vector3[] Shrink(this Vector3[] points, double distance)
         {
             var avg = points.Average();
-            return points.Select(p=>p + (avg - p).Normalized() * distance).ToList();
+            var shrink = new Vector3[points.Length];
+            for (var i = 0; i < shrink.Length; i++)
+            {
+                var p = points[i];
+                shrink[i] = p + (avg - p).Normalized() * distance;
+            }
+            return shrink;
         }
 
         /// <summary>
@@ -468,15 +472,15 @@ namespace Elements.Geometry
         /// <returns>An array containing x,y,z,x1,y1,z1,x2,y2,z2,...</returns>
         public static double[] ToArray(this IList<Vector3> points)
         {
-            var arr = new double[points.Count*3];
+            var arr = new double[points.Count * 3];
             var c = 0;
-            for(var i=0; i<points.Count; i++)
+            for (var i = 0; i < points.Count; i++)
             {
                 var v = points[i];
                 arr[c] = v.X;
                 arr[c + 1] = v.Y;
                 arr[c + 2] = v.Z;
-                c+=3;
+                c += 3;
             }
             return arr;
         }

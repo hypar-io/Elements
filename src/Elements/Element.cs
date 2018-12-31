@@ -1,12 +1,9 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Elements.Geometry;
 using Elements.Interfaces;
 using Elements.Serialization;
-using Newtonsoft.Json.Linq;
 
 namespace Elements
 {
@@ -20,17 +17,17 @@ namespace Elements
         /// <summary>
         /// The unique identifier of the Element.
         /// </summary>
-        [JsonProperty("id", Order=-2)]
-        public long Id {get;internal set;}
+        [JsonProperty("id", Order = -2)]
+        public long Id { get; internal set; }
 
         /// <summary>
         /// The type of the element.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order=-1)]
+        [JsonProperty("type", Order = -1)]
         public string Type
         {
-            get{return this.GetType().FullName.ToLower();}
+            get { return this.GetType().FullName.ToLower(); }
         }
 
         /// <summary>
@@ -39,14 +36,14 @@ namespace Elements
         [JsonProperty("properties"), JsonConverter(typeof(PropertyDictionaryConverter))]
         public Dictionary<string, IProperty> Properties
         {
-            get{return _properties;}
+            get { return _properties; }
         }
 
         /// <summary>
         /// The element's transform.
         /// </summary>
         [JsonIgnore]
-        public Transform Transform{get; protected set;}
+        public Transform Transform { get; protected set; }
 
         /// <summary>
         /// Construct a default Element.
@@ -65,7 +62,7 @@ namespace Elements
         /// <exception cref="System.Exception">Thrown when an parameter with the same name already exists.</exception>
         public void AddProperty(string name, IProperty property)
         {
-            if(!_properties.ContainsKey(name))
+            if (!_properties.ContainsKey(name))
             {
                 _properties.Add(name, property);
                 return;
@@ -82,11 +79,11 @@ namespace Elements
 
         public void RemoveProperty(string name)
         {
-            if(_properties.ContainsKey(name))
+            if (_properties.ContainsKey(name))
             {
                 _properties.Remove(name);
-            } 
-            
+            }
+
             throw new Exception("The specified parameter could not be found.");
         }
     }

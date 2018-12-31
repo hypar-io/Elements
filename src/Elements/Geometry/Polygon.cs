@@ -27,9 +27,9 @@ namespace Elements.Geometry
         {
             get {
                 var area = 0.0;
-                for(var i = 0; i<= _vertices.Count-1; i++)
+                for(var i = 0; i<= _vertices.Length-1; i++)
                 {
-                    var j = (i+1) % _vertices.Count;
+                    var j = (i+1) % _vertices.Length;
                     area += _vertices[i].X * _vertices[j].Y;
                     area -= _vertices[i].Y * _vertices[j].X;
                 }
@@ -51,13 +51,13 @@ namespace Elements.Geometry
                 var x = 0.0;
                 var y = 0.0;
                 var factor = 0.0;
-                for (var i = 0; i < this._vertices.Count; i++)
+                for (var i = 0; i < this._vertices.Length; i++)
                 {
                     factor =
-                        (_vertices[i].X * _vertices[(i + 1) % _vertices.Count].Y) -
-                        (_vertices[(i + 1) % _vertices.Count].X * _vertices[i].Y);
-                    x += (_vertices[i].X + _vertices[(i + 1) % _vertices.Count].X) * factor;
-                    y += (_vertices[i].Y + _vertices[(i + 1) % _vertices.Count].Y) * factor;
+                        (_vertices[i].X * _vertices[(i + 1) % _vertices.Length].Y) -
+                        (_vertices[(i + 1) % _vertices.Length].X * _vertices[i].Y);
+                    x += (_vertices[i].X + _vertices[(i + 1) % _vertices.Length].X) * factor;
+                    y += (_vertices[i].Y + _vertices[(i + 1) % _vertices.Length].Y) * factor;
                 }
                 var divisor = this.Area * 6;
                 x /= divisor;
@@ -71,7 +71,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
-        public Polygon(IList<Vector3> vertices) : base(vertices){}
+        public Polygon(Vector3[] vertices) : base(vertices){}
 
         /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
@@ -492,12 +492,12 @@ namespace Elements.Geometry
         /// <returns>A collection of Lines.</returns>
         public override Line[] Segments()
         {
-            var lines = new Line[_vertices.Count];
-            for(var i=0; i<_vertices.Count; i++)
+            var lines = new Line[_vertices.Length];
+            for(var i=0; i<_vertices.Length; i++)
             {
                 var a = _vertices[i];
                 Vector3 b;
-                if(i == _vertices.Count-1)
+                if(i == _vertices.Length-1)
                 {
                     b = _vertices[0];
                 }
@@ -530,12 +530,12 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            if(this.Vertices.Count != p.Vertices.Count)
+            if(this.Vertices.Length != p.Vertices.Length)
             {
                 return false;
             }
 
-            for(var i=0; i<this.Vertices.Count; i++)
+            for(var i=0; i<this.Vertices.Length; i++)
             {
                 if(!this.Vertices[i].Equals(p.Vertices[i]))
                 {
@@ -561,7 +561,12 @@ namespace Elements.Geometry
         /// <param name="p"></param>
         public Polygon Project(Plane p)
         {
-            return new Polygon(this.Vertices.Select(v=>v.Project(p)).ToList());
+            var projected = new Vector3[this.Vertices.Length];
+            for(var i=0; i<projected.Length; i++)
+            {
+                projected[i] = this.Vertices[i].Project(p);
+            }
+            return new Polygon(projected);
         }
 
         /// <summary>
@@ -572,7 +577,12 @@ namespace Elements.Geometry
         /// <returns>A Polygon projected onto the Plane.</returns>
         public Polygon ProjectAlong(Vector3 direction, Plane p)
         {
-            return new Polygon(this.Vertices.Select(v=>v.ProjectAlong(direction, p)).ToList());
+            var projected = new Vector3[this.Vertices.Length];
+            for(var i=0; i<this.Vertices.Length; i++)
+            {
+                projected[i] = this.Vertices[i].ProjectAlong(direction, p);
+            }
+            return new Polygon(projected);
         }
 
         /// <summary>
@@ -634,7 +644,13 @@ namespace Elements.Geometry
         /// <returns></returns>
         internal static Polygon ToPolygon(this List<IntPoint> p)
         {
-            return new Polygon(p.Select(v=>new Vector3(v.X/scale, v.Y/scale)).ToArray());
+            var converted = new Vector3[p.Count];
+            for(var i=0; i<converted.Length; i++)
+            {
+                var v = p[i];
+                converted[i] = new Vector3(v.X/scale, v.Y/scale);
+            }
+            return new Polygon(converted);
         }
     }
 }

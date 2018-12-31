@@ -42,7 +42,7 @@ namespace Hypar.Tests
             var t = new Vector3(5,5,5);
             space.Transform.Move(t);
             var p1 = space.Profile.Perimeter;
-            for(var i=0; i<p.Vertices.Count; i++)
+            for(var i=0; i<p.Vertices.Length; i++)
             {
                 Assert.Equal(p.Vertices[i] + t, p1.Vertices[i] + t);
             }

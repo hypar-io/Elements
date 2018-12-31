@@ -84,14 +84,14 @@ namespace Hypar.Tests
             var newSpace = elements.Values.OfType<Space>().FirstOrDefault();
             var newWall = elements.Values.OfType<Wall>().FirstOrDefault();
 
-            Assert.Equal(panel.Faces().ToArray()[0].Vertices.Count(), newPanel.Faces().ToArray()[0].Vertices.Count());
+            Assert.Equal(panel.Faces()[0].Vertices.Length, newPanel.Faces()[0].Vertices.Length);
             Assert.Equal(panel.Id, newPanel.Id);
             Assert.Equal(floor.Id, newFloor.Id);
             Assert.Equal(floor.Material, newFloor.Material);
-            Assert.Equal(floor.Profile.Perimeter.Vertices.Count, newFloor.Profile.Perimeter.Vertices.Count);
+            Assert.Equal(floor.Profile.Perimeter.Vertices.Length, newFloor.Profile.Perimeter.Vertices.Length);
             Assert.Equal(floor.ElementType.Thickness, newFloor.ElementType.Thickness);
             Assert.Equal(floor.Elevation, newFloor.Elevation);
-            Assert.Equal(mass.Profile.Perimeter.Vertices.Count, newMass.Profile.Perimeter.Vertices.Count);
+            Assert.Equal(mass.Profile.Perimeter.Vertices.Length, newMass.Profile.Perimeter.Vertices.Length);
             Assert.Equal(mass.Elevation, newMass.Elevation);
             Assert.Equal(mass.Height, newMass.Height);
             Assert.Equal(space.Elevation, newSpace.Elevation);

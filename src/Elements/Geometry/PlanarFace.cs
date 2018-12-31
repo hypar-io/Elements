@@ -1,9 +1,6 @@
 using Elements.Geometry.Interfaces;
 using LibTessDotNet.Double;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -18,20 +15,20 @@ namespace Elements.Geometry
         /// A Transform with its origin at the Face's first vertex,
         /// and its normal defined by the first and second edges of the Face.
         /// </summary>
-        public Transform Transform{get;}
+        public Transform Transform { get; }
 
         /// <summary>
         /// The vertices of Face.
         /// </summary>
         public Vector3[] Vertices
         {
-            get 
+            get
             {
                 var vertices = new List<Vector3>();
                 vertices.AddRange(this._profile.Perimeter.Vertices);
-                if(this._profile.Voids != null)
+                if (this._profile.Voids != null)
                 {
-                    foreach(var v in this._profile.Voids)
+                    foreach (var v in this._profile.Voids)
                     {
                         vertices.AddRange(v.Vertices);
                     }
@@ -49,9 +46,9 @@ namespace Elements.Geometry
             {
                 var edges = new List<ICurve>();
                 edges.AddRange(this._profile.Perimeter.Segments());
-                if(this._profile.Voids != null)
+                if (this._profile.Voids != null)
                 {
-                    foreach(var v in this._profile.Voids)
+                    foreach (var v in this._profile.Voids)
                     {
                         edges.AddRange(v.Segments());
                     }
@@ -73,7 +70,7 @@ namespace Elements.Geometry
         /// Construct a PlanarFace.
         /// </summary>
         /// <param name="vertices"></param>
-        public PlanarFace(IList<Vector3> vertices)
+        public PlanarFace(Vector3[] vertices)
         {
             this._profile = new Profile(new Polygon(vertices));
         }
@@ -91,7 +88,7 @@ namespace Elements.Geometry
         {
             return this._profile.Perimeter.Plane();
         }
-        
+
         /// <summary>
         /// Compute the Mesh for this Face.
         /// </summary>
@@ -100,7 +97,7 @@ namespace Elements.Geometry
             var tess = Mesh.TessFromPolygon(this._profile.Perimeter, this._profile.Voids);
             tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
-            for(var i=0; i<tess.ElementCount; i++)
+            for (var i = 0; i < tess.ElementCount; i++)
             {
                 var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
                 var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();

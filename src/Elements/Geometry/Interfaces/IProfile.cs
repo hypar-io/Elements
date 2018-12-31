@@ -21,7 +21,7 @@ namespace Elements.Geometry.Interfaces
         /// <summary>
         /// A collection of Polgons representing voids in the Profile.
         /// </summary>
-        IList<Polygon> Voids {get;}
+        Polygon[] Voids {get;}
 
         /// <summary>
         /// The area of the Profile.
