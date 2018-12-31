@@ -20,17 +20,19 @@ namespace Hypar.Tests
             var curvedBeam = new Beam(arc, section, BuiltInMaterials.Steel, null);
 
             var circularSection = new Profile(Polygon.Circle(0.5), Polygon.Circle(0.25));
-            var pline = new Polyline(new []{new Vector3(1,0), new Vector3(1,2), new Vector3(0,3,1)});
+            var pline = new Polyline(new []{new Vector3(-1,0), new Vector3(-1,2), new Vector3(0,3,1)});
             var plineBeam = new Beam(pline, circularSection, BuiltInMaterials.Steel, null);
 
             var ngon = Polygon.Ngon(5, 2);
-            var ngonBeam = new Beam(ngon, section, BuiltInMaterials.Steel, null);
+            var ngonT = new Transform();
+            ngonT.Move(new Vector3(-4.0,0.0,0.0));
+            var ngonBeam = new Beam(ngonT.OfPolygon(ngon), section, BuiltInMaterials.Steel, null);
 
             var model = new Model();
             model.AddElement(beam);
             model.AddElement(curvedBeam);
             model.AddElement(plineBeam);
-            // model.AddElement(ngonBeam);
+            model.AddElement(ngonBeam);
             model.SaveGlb("beam.glb");
         }
 
