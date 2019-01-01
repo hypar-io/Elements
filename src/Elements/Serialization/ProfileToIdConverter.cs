@@ -1,6 +1,7 @@
 #pragma warning disable CS1591
 
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,17 @@ namespace Elements.Serialization
 {
     public class ProfileToIdConverter : JsonConverter
     {
-        private Dictionary<long, Profile> _profiles;
+        private Dictionary<long, IProfile> _profiles;
 
-        public ProfileToIdConverter(Dictionary<long, Profile> profiles)
+        public ProfileToIdConverter(Dictionary<long, IProfile> profiles)
         {
             this._profiles = profiles;
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(Profile).IsAssignableFrom(objectType);
+            var convert = typeof(IProfile).IsAssignableFrom(objectType);
+            return convert;
         }
 
         public override bool CanRead
@@ -47,7 +49,7 @@ namespace Elements.Serialization
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var profile = (Profile)value;
+            var profile = (IProfile)value;
             writer.WriteValue(profile.Id);
         }
     }

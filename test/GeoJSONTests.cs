@@ -4,7 +4,7 @@ using System;
 using Xunit;
 using Line = Elements.GeoJSON.Line;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
     
     public class GeoJSONTests

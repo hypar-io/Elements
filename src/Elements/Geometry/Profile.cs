@@ -188,7 +188,7 @@ namespace Elements.Geometry
             var z = x.Cross(b);
             return new Transform(v[0], x, z);
         }
-
+        
         private bool IsPlanar()
         {
             var t = ComputeTransform();

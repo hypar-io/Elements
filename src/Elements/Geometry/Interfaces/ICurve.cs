@@ -8,6 +8,11 @@ namespace Elements.Geometry.Interfaces
     public interface ICurve
     {
         /// <summary>
+        /// A type descriptor for use in deserialization.
+        /// </summary>
+        string Type { get; }
+
+        /// <summary>
         /// Calculate the length of the curve.
         /// </summary>
         double Length();
@@ -15,17 +20,17 @@ namespace Elements.Geometry.Interfaces
         /// <summary>
         /// The start of the curve.
         /// </summary>
-        Vector3 Start{get;}
+        Vector3 Start { get; }
 
         /// <summary>
         /// The end of the curve.
         /// </summary>
-        Vector3 End{get;}
+        Vector3 End { get; }
 
         /// <summary>
         /// A collection of curve vertices.
         /// </summary>
-        Vector3[] Vertices{get;}
+        Vector3[] Vertices { get; }
 
         /// <summary>
         /// Get a point along the curve at parameter u.
@@ -47,6 +52,7 @@ namespace Elements.Geometry.Interfaces
         /// </summary>
         /// <param name="startSetback">The offset from the start of the ICurve.</param>
         /// <param name="endSetback">The offset from the end of the ICurve.</param>
+        /// <param name="up">The up vector.</param>
         /// <returns>A collection of Transforms.</returns>
         Transform[] Frames(double startSetback, double endSetback);
 

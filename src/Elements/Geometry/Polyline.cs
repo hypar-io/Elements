@@ -13,6 +13,16 @@ namespace Elements.Geometry
     public class Polyline: ICurve
     {
         /// <summary>
+        /// The type of the curve.
+        /// Used during deserialization to disambiguate derived types.
+        /// </summary>
+        [JsonProperty("type", Order = -1)]
+        public string Type
+        {
+            get { return this.GetType().FullName.ToLower(); }
+        }
+
+        /// <summary>
         /// The internal collection of vertices.
         /// </summary>
         protected Vector3[] _vertices;
@@ -169,30 +179,24 @@ namespace Elements.Geometry
             
             var segmentIndex = 0;
             var o = PointAtInternal(u, out segmentIndex);
-            var z = up != null ? up : Vector3.ZAxis;
+            up = up != null ? up : Vector3.ZAxis;
             Vector3 x = null;
 
             // Check if the provided parameter is equal
             // to one of the vertices.
             var a = this.Vertices.FirstOrDefault(vtx=>vtx.Equals(o));
-            if(o != null)
+            if(a != null)
             {
-                var idx = Array.IndexOf(this.Vertices, o);
-                Vector3 b;
-                Vector3 c;
-                if(idx == 0)
+                var idx = Array.IndexOf(this.Vertices, a);
+
+                if(idx == 0 || idx == this.Vertices.Length -1)
                 {
-                    b = this.Vertices[this.Vertices.Length-1];
+                    return CreateOthogonalTransform(idx, a);
                 }
                 else
                 {
-                    b = this.Vertices[idx-1];
+                    return CreateMiterTransform(idx, a);
                 }
-                c = this.Vertices[idx + 1];
-                var v1 = (c-a).Normalized();
-                var v2 = (b-a).Normalized();
-                x = v1.Average(v2);
-                return new Transform(o, x, z);
             }
             else
             {
@@ -206,13 +210,13 @@ namespace Elements.Geometry
                     if (totalLength <= d && totalLength + currLength >= d)
                     {
                         o = s.PointAt((d - totalLength) / currLength);
-                        x = s.Direction.Cross(z);
+                        x = s.Direction.Cross(up);
                         break;
                     }
                     totalLength += currLength;
                 }
             }
-            return new Transform(o, x, z);
+            return new Transform(o, x, up);
         }
 
         /// <summary>
@@ -223,7 +227,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public virtual Transform[] Frames(double startSetback, double endSetback)
         {
-            return FramesInternal(startSetback, endSetback);
+            return FramesInternal(startSetback, endSetback, false);
         }
 
         internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed=false)
@@ -236,40 +240,51 @@ namespace Elements.Geometry
                 var a = this._vertices[i];
                 if(closed)
                 {
-                    // Create transforms at 'miter' planes.
-                    var b = i == 0 ? this._vertices[this._vertices.Length - 1] : this._vertices[i-1];
-                    var c = i == this._vertices.Length - 1 ? this._vertices[0] : this._vertices[i+1];
-                    var x = (b-a).Normalized().Average((c-a).Normalized()).Negated();
-                    var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
-                    result[i] = new Transform(this._vertices[i], x, up.Cross(x));
+                    result[i] = CreateMiterTransform(i, a);
                 }
                 else
                 {
-                    Vector3 b,x,c;
-
-                    if(i == this.Vertices.Length - 1)
-                    {
-                        b = this._vertices[i-1];
-                        result[i] = new Transform(a, b, a, null);
-                    }
-                    else if(i == 0)
-                    {
-                        b = this._vertices[i+1];
-                        result[i] = new Transform(a, a, b, null);
-                    }
-                    else 
-                    {
-                        b = this._vertices[i-1];
-                        c = this._vertices[i+1];
-                        var v1 = (b-a).Normalized();
-                        var v2 = (c-a).Normalized();
-                        x = v1.Average(v2).Negated();
-                        var up = v2.Cross(v1);
-                        result[i] = new Transform(this._vertices[i], x, up.Cross(x));
-                    }
+                    result[i] = CreateOthogonalTransform(i, a);
                 }
             }
             return result;
+        }
+
+        private Transform CreateMiterTransform(int i, Vector3 a)
+        {
+            // Create transforms at 'miter' planes.
+            var b = i == 0 ? this._vertices[this._vertices.Length - 1] : this._vertices[i-1];
+            var c = i == this._vertices.Length - 1 ? this._vertices[0] : this._vertices[i+1];
+            var x = (b-a).Normalized().Average((c-a).Normalized()).Negated();
+            var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
+
+            return new Transform(this._vertices[i], x, up.Cross(x));
+        }
+
+        private Transform CreateOthogonalTransform(int i, Vector3 a)
+        {
+            Vector3 b,x,c;
+            
+            if(i == 0)
+            {
+                b = this._vertices[i+1];
+                return new Transform(a, a, b, null);
+            }
+            else if(i == this.Vertices.Length - 1)
+            {
+                b = this._vertices[i-1];
+                return new Transform(a, b, a, null);
+            }
+            else 
+            {
+                b = this._vertices[i-1];
+                c = this._vertices[i+1];
+                var v1 = (b-a).Normalized();
+                var v2 = (c-a).Normalized();
+                x = v1.Average(v2).Negated();
+                var up = v2.Cross(v1);
+                return new Transform(this._vertices[i], x, up.Cross(x));
+            }
         }
     }
 }

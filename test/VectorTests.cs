@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
     public class VectorTests
     {

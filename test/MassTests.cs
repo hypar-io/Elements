@@ -4,13 +4,14 @@ using System;
 using Xunit;
 using System.Linq;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
-    public class MassTests
+    public class MassTests : ModelTest
     {
         [Fact]
-        public void Example()
+        public void Mass()
         {
+            this.Name = "Mass";
             var a = new Vector3();
             var b = new Vector3(30, 10);
             var c = new Vector3(20, 50);
@@ -18,30 +19,12 @@ namespace Hypar.Tests
             var poly = new Polygon(new[] { a, b, c, d });
             var mass = new Mass(poly, 0.0, 5.0);
             var model = new Model();
-            model.AddElement(mass);
-            model.SaveGlb("mass.glb");
-        }
-
-        [Fact]
-        public void Construct()
-        {
-            var model = new Model();
-            var a = new Vector3();
-            var b = new Vector3(30, 10);
-            var c = new Vector3(20, 50);
-            var d = new Vector3(-10, 5);
-
-            var polygon = new Polygon(new[] { a, b, c, d });
-
-            var mass = new Mass(polygon, 0, 40);
-            model.AddElement(mass);
-            model.SaveGlb("massTest1.glb");
+            this.Model.AddElement(mass);
         }
 
         [Fact]
         public void TopBottomSame_ThrowsException()
         {
-            var model = new Model();
             var a = new Vector3();
             var b = new Vector3(30, 10);
             var c = new Vector3(20, 50);
@@ -53,7 +36,6 @@ namespace Hypar.Tests
         [Fact]
         public void TopBelowBottom_ThrowsException()
         {
-            var model = new Model();
             var a = new Vector3();
             var b = new Vector3(30, 10);
             var c = new Vector3(20, 50);
@@ -66,7 +48,7 @@ namespace Hypar.Tests
         [Fact]
         public void Transformed_Masses()
         {
-            var model = new Model();
+            this.Name = "TransformedMasses";
             var a = new Vector3();
             var b = new Vector3(30, 10);
             var c = new Vector3(20, 50);
@@ -80,15 +62,13 @@ namespace Hypar.Tests
             var mass1 = new Mass(profile1, 0, 10.0, material1);
             var mass2 = new Mass(profile2, 10.0, 10.0, material2);
             var mass3 = new Mass(profile3, 20.0, 10.0, material3);
-            model.AddElements(new[] { mass1, mass2, mass3 });
+            this.Model.AddElements(new[] { mass1, mass2, mass3 });
 
             var floorType = new FloorType("test", 0.2);
             var f1 = new Floor(profile1, floorType, 0.0);
             var f2 = new Floor(profile2, floorType, 10.0);
             var f3 = new Floor(profile3, floorType, 20.0);
-            model.AddElements(new[] { f1, f2, f3 });
-
-            model.SaveGlb("transformed_masses.glb");
+            this.Model.AddElements(new[] { f1, f2, f3 });
         }
 
         [Fact]

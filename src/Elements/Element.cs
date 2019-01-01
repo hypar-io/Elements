@@ -17,14 +17,14 @@ namespace Elements
         /// <summary>
         /// The unique identifier of the Element.
         /// </summary>
-        [JsonProperty("id", Order = -2)]
+        [JsonProperty("id", Order = -101)]
         public long Id { get; internal set; }
 
         /// <summary>
         /// The type of the element.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order = -1)]
+        [JsonProperty("type", Order = -100)]
         public string Type
         {
             get { return this.GetType().FullName.ToLower(); }

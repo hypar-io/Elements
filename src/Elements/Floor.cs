@@ -3,6 +3,7 @@ using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Elements.Serialization;
 
 namespace Elements
 {

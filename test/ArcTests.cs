@@ -7,7 +7,7 @@ namespace Hypar.Tests
     public class ArcTests
     {
         [Fact]
-        public void Construct()
+        public void Arc()
         {
             var arc = new Arc(Vector3.Origin, 2.0, 0.0, 90.0);
             Assert.True(new Vector3(2,0,0).IsAlmostEqualTo(arc.Start));

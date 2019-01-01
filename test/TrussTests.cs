@@ -4,7 +4,7 @@ using Elements.Geometry;
 using System;
 using System.Linq;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
     public class TrussTests
     {

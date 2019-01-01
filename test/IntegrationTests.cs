@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
     public class IntegrationTests
     {

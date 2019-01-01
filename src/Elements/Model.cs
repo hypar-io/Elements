@@ -27,7 +27,7 @@ namespace Elements
         private Dictionary<long, Element> _elements = new Dictionary<long, Element>();
         private Dictionary<long, ElementType> _elementTypes = new Dictionary<long, ElementType>();
 
-        private Dictionary<long, Profile> _profiles = new Dictionary<long, Profile>();
+        private Dictionary<long, IProfile> _profiles = new Dictionary<long, IProfile>();
 
         /// <summary>
         /// The version of the assembly.
@@ -72,7 +72,7 @@ namespace Elements
         /// All Profiles in the model.
         /// </summary>
         [JsonProperty("profiles")]
-        public Dictionary<long, Profile> Profiles
+        public Dictionary<long, IProfile> Profiles
         {
             get { return this._profiles; }
         }
@@ -87,7 +87,7 @@ namespace Elements
         }
 
         internal Model(Dictionary<long, Element> elements, Dictionary<long, Material> materials, Dictionary<long, ElementType> elementTypes,
-                        Dictionary<long, Profile> profiles)
+                        Dictionary<long, IProfile> profiles)
         {
             this._elements = elements;
             this._materials = materials;
@@ -254,7 +254,7 @@ namespace Elements
         /// </summary>
         /// <param name="name">The name of the Profile.</param>
         /// <returns>A Profile or null if no Profile with the specified name can be found.</returns>
-        public Profile GetProfileByName(string name)
+        public IProfile GetProfileByName(string name)
         {
             return this._profiles.Values.FirstOrDefault(p => p.Name != null && p.Name == name);
         }
@@ -430,24 +430,24 @@ namespace Elements
 
                 Elements.Geometry.Mesh mesh = null;
 
-                // if (e is IExtrudeAlongCurve)
-                // {
-                //     var eac = (IExtrudeAlongCurve)e;
+                if (e is IExtrudeAlongCurve)
+                {
+                    var eac = (IExtrudeAlongCurve)e;
 
-                //     var frames = eac.Curve.Frames(0, 0);
-                //     foreach (var f in frames)
-                //     {
-                //         var x = new Elements.Geometry.Line(f.Origin, f.Origin + f.XAxis * 2);
-                //         AddCurve(e.Id + 10000, x, gltf, materials["x_axis"], e.Transform);
-                //         var y = new Elements.Geometry.Line(f.Origin, f.Origin + f.YAxis * 2);
-                //         AddCurve(e.Id + 10001, y, gltf, materials["y_axis"], e.Transform);
-                //         var z = new Elements.Geometry.Line(f.Origin, f.Origin + f.ZAxis * 2);
-                //         AddCurve(e.Id + 10002, z, gltf, materials["z_axis"], e.Transform);
-                //     }
-                //     // Add the center curve
-                //     AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Black.Name], e.Transform);
+                    // var frames = eac.Curve.Frames(0, 0);
+                    // foreach (var f in frames)
+                    // {
+                    //     var x = new Elements.Geometry.Line(f.Origin, f.Origin + f.XAxis * 2);
+                    //     AddCurve(e.Id + 10000, x, gltf, materials["x_axis"], e.Transform);
+                    //     var y = new Elements.Geometry.Line(f.Origin, f.Origin + f.YAxis * 2);
+                    //     AddCurve(e.Id + 10001, y, gltf, materials["y_axis"], e.Transform);
+                    //     var z = new Elements.Geometry.Line(f.Origin, f.Origin + f.ZAxis * 2);
+                    //     AddCurve(e.Id + 10002, z, gltf, materials["z_axis"], e.Transform);
+                    // }
+                    // Add the center curve
+                    AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Black.Name], e.Transform);
 
-                // }
+                }
 
                 if (e is IBRep)
                 {

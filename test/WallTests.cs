@@ -4,14 +4,14 @@ using Elements;
 using Elements.Geometry;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
-    public class WallTests
+    public class WallTests : ModelTest
     {
         [Fact]
-        public void Example()
+        public void Wall()
         {
-            var model = new Model();
+            this.Name = "Wall";
             var testWallType = new WallType("test", 0.1);
 
             var triangle = Polygon.Ngon(7, 15.0);
@@ -22,10 +22,8 @@ namespace Hypar.Tests
             foreach(var l in triangle.Segments())
             {
                 var w = new Wall(l, testWallType, 5.0, openings);
-                model.AddElement(w);
+                this.Model.AddElement(w);
             }
-            
-            model.SaveGlb("wall.glb");
         }
 
         [Fact]
@@ -66,22 +64,6 @@ namespace Hypar.Tests
             var testWallType = new WallType("test", 0.1);
             var wall = new Wall(line, testWallType, 4.0);
             Assert.Null(wall.Profile.Voids);
-        }
-
-        [Fact]
-        public void TwoOpenings_ProfileWithTwoOpenings()
-        {
-            var a = Vector3.Origin;
-            var b = new Vector3(0.0, 5.0);
-            var line = new Line(a,b);
-            var o1 = new Opening(1.0, 0.0, 2.0, 1.0);
-            var o2 = new Opening(3.0, 1.0, 1.0, 1.0);
-            var testWallType = new WallType("test", 0.1);
-            var wall = new Wall(line, testWallType, 4.0, new []{o1,o2});
-            var model = new Model();
-            model.AddElement(wall);
-            model.SaveGlb("wall_twoHoles.glb");
-            Assert.Equal(2, wall.Profile.Voids.Length);
         }
     }
 }

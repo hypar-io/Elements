@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Geometry.Tests
 {
     public class GridTests
     {

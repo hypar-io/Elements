@@ -10,6 +10,16 @@ namespace Elements.Geometry
     public class Line : ICurve
     {
         /// <summary>
+        /// The type of the curve.
+        /// Used during deserialization to disambiguate derived types.
+        /// </summary>
+        [JsonProperty("type", Order = -1)]
+        public string Type
+        {
+            get { return this.GetType().FullName.ToLower(); }
+        }
+        
+        /// <summary>
         /// The start of the line.
         /// </summary>
         [JsonProperty("start")]

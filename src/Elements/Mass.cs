@@ -63,7 +63,7 @@ namespace Elements
         /// <param name="height">The height of the Mass from the bottom elevation.</param>
         /// <param name="material">The Mass' material. The default is the built in Mass material.</param>
         [JsonConstructor]
-        public Mass(Profile profile, double elevation = 0.0, double height = 1.0, Material material = null)
+        public Mass(IProfile profile, double elevation = 0.0, double height = 1.0, Material material = null)
         {
             if (height <= 0)
             {

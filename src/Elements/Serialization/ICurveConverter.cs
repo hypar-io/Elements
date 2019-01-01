@@ -5,11 +5,31 @@ using Elements.Geometry.Interfaces;
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
 
 namespace Elements.Serialization
 {
     public class ICurveConverter : JsonConverter
     {
+        private List<Type> _curveTypes;
+
+        public ICurveConverter()
+        {
+            try
+            {
+                _curveTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t=>typeof(ICurve).IsAssignableFrom(t)).ToList();
+            }
+            catch(System.Reflection.ReflectionTypeLoadException ex)
+            {
+                foreach(var x in ex.LoaderExceptions)
+                {
+                    Console.WriteLine(x.Message);
+                }
+            }
+        }
+
         public override bool CanConvert(Type objectType)
         {
             return objectType is ICurve;
@@ -22,37 +42,16 @@ namespace Elements.Serialization
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            // Try deserializing to the concrete types
-            var o = JObject.Load(reader);
-            object result;
-            if(TryConvert<Arc>(o, serializer, out result))
-            {
-                return result;
-            }
-            if(TryConvert<Line>(o, serializer, out result))
-            {
-                return result;
-            }
-            if(TryConvert<Polyline>(o, serializer, out result))
-            {
-                return result;
-            }
-            
-            throw new Exception($"The provided ICurve could not be deserialized to a known type.");
-        }
+            var obj = JObject.Load(reader);
+            var typeName = (string)obj.GetValue("type");
 
-        private bool TryConvert<T>(JObject o, JsonSerializer serializer, out object result)
-        {
-            try
-            {   
-                result = o.ToObject<T>(serializer);
-                return true;
-            }
-            catch
+            // Find a type with the fullname 
+            var foundType = _curveTypes.FirstOrDefault(t=>t.FullName.ToLower() == typeName);
+            if(foundType == null)
             {
-                result = null;
-                return false;
+                throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
             }
+            return obj.ToObject(foundType, serializer);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

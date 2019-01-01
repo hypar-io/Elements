@@ -2,7 +2,7 @@ using Elements.Geometry;
 using System;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Geometry.Tests
 {
     public class LineTests
     {

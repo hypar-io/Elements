@@ -103,15 +103,13 @@ namespace Elements.Geometry
             var ssb = startSetback / l;
             var esb = endSetback / l;
 
-            var transforms = new List<Transform>();
-
-            transforms.AddRange(curve.Frames(ssb, esb));
+            var transforms = curve.Frames(ssb, esb);
 
             if (curve is Polygon)
             {
-                for (var i = 0; i < transforms.Count; i++)
+                for (var i = 0; i < transforms.Length; i++)
                 {
-                    var next = i == transforms.Count - 1 ? transforms[0] : transforms[i + 1];
+                    var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
                     faces.AddRange(ExtrudePolygonBetweenPlanes(clipped.Perimeter, transforms[i], next));
 
                     if (clipped.Voids != null)
@@ -125,7 +123,7 @@ namespace Elements.Geometry
             }
             else
             {
-                for (var i = 0; i < transforms.Count - 1; i++)
+                for (var i = 0; i < transforms.Length - 1; i++)
                 {
                     faces.AddRange(ExtrudePolygonBetweenPlanes(clipped.Perimeter, transforms[i], transforms[i + 1]));
 
@@ -141,7 +139,7 @@ namespace Elements.Geometry
                 if (capped)
                 {
                     faces.Add(new PlanarFace(transforms[0].OfProfile(clipped)));
-                    faces.Add(new PlanarFace(transforms[transforms.Count - 1].OfProfile(clipped.Reversed())));
+                    faces.Add(new PlanarFace(transforms[transforms.Length - 1].OfProfile(clipped.Reversed())));
                 }
             }
 

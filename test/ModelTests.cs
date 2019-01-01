@@ -6,7 +6,7 @@ using Xunit;
 using Elements;
 using Elements.Geometry;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
     public class ModelTests
     {
@@ -70,7 +70,7 @@ namespace Hypar.Tests
 
             model.AddElements(new Element[]{panel, floor, mass, beam, column, space, wall});
             var json = model.ToJson();
-            // Console.WriteLine(json);
+            File.WriteAllText("model.json", json);
 
             var json2 = JsonConvert.SerializeObject(model, Formatting.Indented);
             Console.WriteLine($"Json serialization comparison (char length): serializer={json.Length}, unmodified={json2.Length}, {((double)json.Length/(double)json2.Length)*100.0}%");

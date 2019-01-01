@@ -1,39 +1,52 @@
 using Elements;
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
-    public class StructuralFramingTests
+    public class StructuralFramingTests : ModelTest
     {
-        [Fact]
-        public void Example()
+        public enum BeamType
         {
-            var section = new WideFlangeProfile("test", 1.0, 2.0, 0.1, 0.1);
+            Line, Polyline, Polygon, Arc
+        }
 
-            var line = new Line(new Vector3(1,1,1), new Vector3(2,2,2));
-            var beam = new Beam(line, section, BuiltInMaterials.Steel, null);
-            
-            var arc = new Arc(new Vector3(2,0,0), 5.0, 0.0, 45.0);
-            var curvedBeam = new Beam(arc, section, BuiltInMaterials.Steel, null);
+        private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
 
-            var circularSection = new Profile(Polygon.Circle(0.5), Polygon.Circle(0.25));
-            var pline = new Polyline(new []{new Vector3(-1,0), new Vector3(-1,2), new Vector3(0,3,1)});
-            var plineBeam = new Beam(pline, circularSection, BuiltInMaterials.Steel, null);
+        [Theory]
+        [InlineData("LinearBeam", BeamType.Line, 0.25, 0.25)]
+        [InlineData("PolylineBeam", BeamType.Polyline, 0.25, 0.25)]
+        [InlineData("PolygonBeam", BeamType.Polygon, 0.25, 0.25)]
+        [InlineData("ArcBeam", BeamType.Arc, 0.25, 0.25)]
+        public void Beam(string testName, BeamType beamType, double startSetback, double endSetback)
+        {
+            this.Name = testName;
 
-            var ngon = Polygon.Ngon(5, 2);
-            var ngonT = new Transform();
-            ngonT.Move(new Vector3(-4.0,0.0,0.0));
-            var ngonBeam = new Beam(ngonT.OfPolygon(ngon), section, BuiltInMaterials.Steel, null);
+            ICurve cl = null;
+            switch(beamType)
+            {
+                case BeamType.Line:
+                    cl = ModelTest.TestLine;
+                    break;
+                case BeamType.Arc:
+                    cl = ModelTest.TestArc;
+                    break;
+                case BeamType.Polygon:
+                    cl = ModelTest.TestPolygon;
+                    break;
+                case BeamType.Polyline:
+                    cl = ModelTest.TestPolyline;
+                    break;
+            }
 
-            var model = new Model();
-            model.AddElement(beam);
-            model.AddElement(curvedBeam);
-            model.AddElement(plineBeam);
-            model.AddElement(ngonBeam);
-            model.SaveGlb("beam.glb");
+            var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel, null, startSetback, endSetback);
+            Assert.Equal(BuiltInMaterials.Steel, beam.Material);
+            Assert.Equal(cl, beam.Curve);
+
+            this.Model.AddElement(beam);
         }
 
         [Fact]
@@ -82,30 +95,26 @@ namespace Hypar.Tests
             model.SaveGlb("hss_pipe.glb");
         }
 
+
         [Fact]
-        public void Construct_Beam()
+        public void Column()
         {
-            var l = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var b = new Beam(l, new WideFlangeProfile("test"));
-            Assert.Equal(BuiltInMaterials.Steel, b.Material);
-            Assert.Equal(l, b.Curve);
+            this.Name = "Column";
+            var column = new Column(Vector3.Origin, 3.0, this._testProfile);
+            Assert.Equal(BuiltInMaterials.Steel, column.Material);
+            Assert.Equal(3.0, column.Curve.Length());
+            this.Model.AddElement(column);
         }
 
         [Fact]
-        public void Construct_Column()
+        public void Brace()
         {
-            var c = new Column(Vector3.Origin, 10.0, new WideFlangeProfile("test"));
-            Assert.Equal(BuiltInMaterials.Steel, c.Material);
-            Assert.Equal(10.0, c.Curve.Length());
-        }
-
-        [Fact]
-        public void Construct_Brace()
-        {
-            var l = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var b = new Brace(l, new WideFlangeProfile("test"));
-            Assert.Equal(BuiltInMaterials.Steel, b.Material);
-            Assert.Equal(l, b.Curve);
+            this.Name = "Brace";
+            var line = new Line(Vector3.Origin, new Vector3(3,3,3));
+            var brace = new Brace(line, this._testProfile);
+            Assert.Equal(BuiltInMaterials.Steel, brace.Material);
+            Assert.Equal(line, brace.Curve);
+            this.Model.AddElement(brace);
         }
     }
 }

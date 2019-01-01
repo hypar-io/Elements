@@ -4,22 +4,21 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
-    public class SpaceTests
+    public class SpaceTests : ModelTest
     {
         [Fact]
-        public void Example()
+        public void Space()
         {
+            this.Name = "Space";
             var a = new Vector3();
             var b = new Vector3(30, 10);
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polygon(new[]{a,b,c,d});
             var space = new Space(profile, 0, 10);
-            var model = new Model();
-            model.AddElement(space);
-            model.SaveGlb("space.glb");
+            this.Model.AddElement(space);
         }
 
         [Fact]

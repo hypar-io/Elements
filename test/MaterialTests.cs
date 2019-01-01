@@ -3,7 +3,7 @@ using Elements.Geometry;
 using System;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
     public class MaterialTests
     {

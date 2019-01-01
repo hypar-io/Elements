@@ -1,7 +1,7 @@
 using Elements.Geometry;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Geometry.Tests
 {
     public class PolylineTests
     {

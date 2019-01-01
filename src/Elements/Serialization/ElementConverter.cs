@@ -17,6 +17,9 @@ namespace Elements.Serialization
     {
         private List<Type> _elementTypes;
 
+        /// <summary>
+        /// Construct an ElementConverter.
+        /// </summary>
         public ElementConverter()
         {
             try

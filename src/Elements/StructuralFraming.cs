@@ -14,6 +14,8 @@ namespace Elements
     /// </summary>
     public abstract class StructuralFraming : Element, IExtrudeAlongCurve
     {
+        private Vector3 _up;
+
         /// <summary>
         /// The cross-section profile of the framing element.
         /// </summary>
@@ -28,12 +30,6 @@ namespace Elements
         {
             get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
         }
-
-        /// <summary>
-        /// The up axis of the framing element.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 UpAxis { get; }
 
         /// <summary>
         /// The center line of the framing element.
@@ -70,13 +66,13 @@ namespace Elements
         /// <param name="startSetback">The setback of the framing's extrusion at its start.</param>
         /// <param name="endSetback">The setback of the framing's extrusion at its end.</param>
         [JsonConstructor]
-        public StructuralFraming(ICurve curve, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0)
+        public StructuralFraming(ICurve curve, IProfile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0)
         {
             this.Profile = profile;
             this.Curve = curve;
             this.Material = material == null ? BuiltInMaterials.Steel : material;
             var t = this.Curve.TransformAt(0.0, up);
-            this.UpAxis = up == null ? t.YAxis : up;
+            this._up = t.YAxis;
 
             var l = this.Curve.Length();
             if(startSetback > l || endSetback > l)
@@ -100,7 +96,7 @@ namespace Elements
         /// </summary>
         public IFace[] Faces()
         {
-            return Extrusions.ExtrudeAlongCurve(this.Profile, this.Curve);
+            return Extrusions.ExtrudeAlongCurve(this.Profile, this.Curve, true, this.StartSetback, this.EndSetback);
         }
     }
 }

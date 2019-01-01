@@ -10,6 +10,16 @@ namespace Elements.Geometry
     public class Arc : ICurve
     {
         /// <summary>
+        /// The type of the curve.
+        /// Used during deserialization to disambiguate derived types.
+        /// </summary>
+        [JsonProperty("type", Order = -1)]
+        public string Type
+        {
+            get { return this.GetType().FullName.ToLower(); }
+        }
+
+        /// <summary>
         /// The center of the Arc.
         /// </summary>
         /// <value></value>
@@ -21,14 +31,14 @@ namespace Elements.Geometry
         /// </summary>
         /// <value></value>
         [JsonProperty("start_angle")]
-        public double StartAngle { get; }
+        public double StartAngle { get; internal set; }
 
         /// <summary>
         /// The angle from 0.0, in degrees, at which the Arc will end.
         /// </summary>
         /// <value></value>
         [JsonProperty("end_angle")]
-        public double EndAngle { get; }
+        public double EndAngle { get; internal set; }
 
         /// <summary>
         /// Calculate the length of the Arc.
@@ -88,6 +98,7 @@ namespace Elements.Geometry
         /// <param name="radius">The radius of the Arc.</param>
         /// <param name="startAngle">The start angle of the Arc in degrees.</param>
         /// <param name="endAngle">The end angle of the Arc in degrees.</param>
+        [JsonConstructor]
         public Arc(Vector3 center, double radius, double startAngle, double endAngle)
         {
             if (endAngle > 360.0 || startAngle > 360.00)
