@@ -147,7 +147,11 @@ namespace Elements
             if (element is IProfileProvider)
             {
                 var ipp = (IProfileProvider)element;
-                AddProfile((Profile)ipp.Profile);
+                if(ipp.Profile != null)
+                {
+                    AddProfile((Profile)ipp.Profile);
+                }
+                
             }
 
             if (element is IAggregateElement)
@@ -398,6 +402,11 @@ namespace Elements
             foreach (var kvp in this._materials)
             {
                 var m = kvp.Value;
+                if(materials.ContainsKey(m.Name))
+                {
+                    continue;
+                }
+                
                 var mId = gltf.AddMaterial(m.Name, m.Color.Red, m.Color.Green, m.Color.Blue, m.Color.Alpha, m.SpecularFactor, m.GlossinessFactor);
                 materials.Add(m.Name, mId);
             }
@@ -532,8 +541,16 @@ namespace Elements
 
             // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
             var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
+            // foreach(var rc in relContains)
+            // {
+            //     foreach(var e in rc.RelatedElements)
+            //     {
+            //         Console.WriteLine($"Relationship: {rc.RelatingStructure.LongName} -> {e.GetType()}");
+            //     }
+            // }
+
             var slabs = ifcSlabs.Select(s => s.ToFloor(relContains));
-            var spaces = ifcSpaces.Select(sp => sp.ToSpace());
+            var spaces = ifcSpaces.Select(sp => sp.ToSpace(relContains));
             var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);

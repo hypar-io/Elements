@@ -37,7 +37,7 @@ namespace Elements.Tests
             var vt = t.OfPoint(v);
             Assert.Equal(0.5, vt.X);
             Assert.Equal(0.0, vt.Y);
-            Assert.Equal(-0.5, vt.Z);
+            Assert.Equal(0.5, vt.Z);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Elements.Tests
             var vt = t.OfPoint(v);
             Assert.Equal(5.5, vt.X);
             Assert.Equal(0.0, vt.Y);
-            Assert.Equal(-0.5, vt.Z);
+            Assert.Equal(0.5, vt.Z);
         }
     }
     

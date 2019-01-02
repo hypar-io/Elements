@@ -10,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : Element, IElementTypeProvider<FloorType>, IExtrude
+    public class Floor : Element, IElementTypeProvider<FloorType>, IExtrude, IProfileProvider
     {
         /// <summary>
         /// The elevation from which the Floor is extruded.

@@ -10,8 +10,10 @@ namespace Elements
     /// <summary>
     /// A space represents the extruded boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, IExtrude
+    public class Space : Element, IExtrude, IProfileProvider
     {
+        private PlanarFace[] _faces;
+
         /// <summary>
         /// The elevation of the Space perimeter.
         /// </summary>
@@ -53,6 +55,15 @@ namespace Elements
         public IProfile ProfileTransformed
         {
             get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
+        }
+
+        /// <summary>
+        /// Internal constructor for building a BRep of the Space.
+        /// </summary>
+        internal Space(Material material = null, Transform transform = null)
+        {
+            this.Material = material != null ? material : BuiltInMaterials.Default;
+            this.Transform = transform != null ? transform : new Transform();
         }
 
         /// <summary>
@@ -102,11 +113,20 @@ namespace Elements
             this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
         }
 
+        internal void SetFaces(PlanarFace[] faces)
+        {
+            this._faces = faces;
+        }
+
         /// <summary>
         /// A collection of Faces which comprise this Space.
         /// </summary>
         public IFace[] Faces()
         {
+            if(this._faces != null)
+            {
+                return this._faces;
+            }
             return Extrusions.Extrude(this.Profile, this.Height, this.Elevation);
         }
     }

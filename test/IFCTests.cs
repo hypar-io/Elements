@@ -6,7 +6,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Hypar.Tests
+namespace Elements.Tests
 {
     public class IfcTests
     {
@@ -17,14 +17,14 @@ namespace Hypar.Tests
             this.output = output;
         }
 
-        // [Fact]
-        // public void SlabsFromIFC()
-        // {
-        //     var model = Model.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC-20-Smiley-West-10-Bldg.ifc");
-        //     if(model != null)
-        //     {
-        //         model.SaveGlb("fromIfc.glb");
-        //     }
-        // }
+        [Fact]
+        public void SlabsFromIFC()
+        {
+            var model = Model.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC-20-Smiley-West-10-Bldg.ifc");
+            if(model != null)
+            {
+                model.SaveGlb("fromIfc.glb");
+            }
+        }
     }
 }

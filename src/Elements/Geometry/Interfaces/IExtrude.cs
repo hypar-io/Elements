@@ -2,7 +2,7 @@
 
 namespace Elements.Geometry.Interfaces
 {
-    public interface IExtrude: IProfileProvider, IBRep
+    public interface IExtrude: IBRep
     {
         double Thickness{get;}
     }

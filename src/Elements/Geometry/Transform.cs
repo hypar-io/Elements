@@ -114,7 +114,7 @@ namespace Elements.Geometry
         {
             var x = xAxis.Normalized();
             var z = zAxis.Normalized();
-            var y = x.Cross(z).Normalized();
+            var y = z.Cross(x).Normalized();
             this._matrix = new Matrix(x, y, z, origin);
         }
 

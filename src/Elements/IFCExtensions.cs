@@ -20,18 +20,20 @@ namespace Elements
             // TODO: When inverse are set on instances, this lookup will be unnecessary.
             var storeyRel = relContains.FirstOrDefault(rc => rc.RelatingStructure.GetType() == typeof(IfcBuildingStorey) && rc.RelatedElements.Contains(slab));
             var transform = new Transform();
-            if (storeyRel != null)
-            {
-                var storey = (IfcBuildingStorey)storeyRel.RelatingStructure;
-                transform.Move(new Vector3(0, 0, storey.Elevation));
-            }
+
+            // For IFCs that we've tested, relative placements are used.
+            // For this reason, we don't need to transform using the building story.
+            // if (storeyRel != null)
+            // {
+            //     var storey = (IfcBuildingStorey)storeyRel.RelatingStructure;
+            //     transform.Move(new Vector3(0, 0, storey.Elevation));
+            // }
 
             transform.Concatenate(slab.ObjectPlacement.ToTransform());
 
             // Check if the slab is contained in a building storey
             foreach (var cis in slab.ContainedInStructure)
             {
-                Console.WriteLine(cis.Name);
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
             }
 
@@ -53,7 +55,7 @@ namespace Elements
             var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
             transform.Concatenate(solid.Position.ToTransform());
             var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
-            var outline = pline.ToPolygon();
+            var outline = pline.ToPolygon(true);
             var floor = new Floor(new Profile(outline), floorType, transform.Origin.Z, BuiltInMaterials.Concrete, transform);
             return floor;
         }
@@ -91,15 +93,46 @@ namespace Elements
         /// Convert an IfcPolyline to a Polygon.
         /// </summary>
         /// <param name="polyline">An IfcPolyline.</param>
-        public static Polygon ToPolygon(this IfcPolyline polyline)
+        public static Polygon ToPolygon(this IfcPolyline polyline, bool dropLastPoint = false)
         {
-            var verts = new Vector3[polyline.Points.Count];
-            for (var i = 0; i < polyline.Points.Count - 1; i++)
+            var count = dropLastPoint ? polyline.Points.Count - 1 : polyline.Points.Count;
+            var verts = new Vector3[count];
+            for (var i = 0; i < count; i++)
             {
                 var v = polyline.Points[i].ToVector3();
                 verts[i] = v;
             }
             return new Polygon(verts);
+        }
+
+        /// <summary>
+        /// Check if an IfcPolyline is closed.
+        /// </summary>
+        /// <param name="pline"></param>
+        /// <returns></returns>
+        public static bool IsClosed(this IfcPolyline pline)
+        {
+            var start = pline.Points[0];
+            var end = pline.Points[pline.Points.Count-1];
+            return start.Equals(end);
+        }
+
+        /// <summary>
+        /// Check if two IfcCartesianPoints have the same coordinates.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool Equals(this IfcCartesianPoint point, IfcCartesianPoint other)
+        {
+            for(var i=0; i<point.Coordinates.Count; i++)
+            {
+                if(point.Coordinates[i] != other.Coordinates[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -112,7 +145,8 @@ namespace Elements
             var x = cs.RefDirection.ToVector3();
             var z = cs.Axis.ToVector3();
             var o = cs.Location.ToVector3();
-            return new Transform(o, x, z);
+            var t = new Transform(o, x, z);
+            return t;
         }
 
         /// <summary>
@@ -168,7 +202,14 @@ namespace Elements
         /// <returns></returns>
         public static Transform ToTransform(this IfcLocalPlacement placement)
         {
-            return placement.RelativePlacement.ToTransform();
+            var t = placement.RelativePlacement.ToTransform();
+            if(placement.PlacementRelTo != null)
+            {
+                var tr = placement.PlacementRelTo.ToTransform();
+                tr.Concatenate(t);
+                return tr;
+            }
+            return t;
         }
 
         /// <summary>
@@ -180,7 +221,8 @@ namespace Elements
             if (placement.GetType() == typeof(IfcLocalPlacement))
             {
                 var lp = (IfcLocalPlacement)placement;
-                return lp.ToTransform();
+                var t = lp.ToTransform();
+                return t;
             }
             else if (placement.GetType() == typeof(IfcGridPlacement))
             {
@@ -194,9 +236,15 @@ namespace Elements
         /// </summary>
         /// <param name="space">An IfcSpace.</param>
         /// <returns></returns>
-        public static Space ToSpace(this IfcSpace space)
+        public static Space ToSpace(this IfcSpace space, IEnumerable<IfcRelContainedInSpatialStructure> relContains)
         {
             var transform = new Transform();
+            // var storeyRel = relContains.FirstOrDefault(rc => rc.RelatingStructure.GetType() == typeof(IfcBuildingStorey) && rc.RelatedElements.Contains(space));
+            // if (storeyRel != null)
+            // {
+            //     var storey = (IfcBuildingStorey)storeyRel.RelatingStructure;
+            //     transform.Move(new Vector3(0, 0, storey.Elevation));
+            // }
 
             var repItems = space.Representation.Representations.SelectMany(r => r.Items);
             if (!repItems.Any())
@@ -204,38 +252,39 @@ namespace Elements
                 throw new Exception("The provided IfcSlab does not have any representations.");
             }
 
-            // Console.WriteLine($"Found representation type: {rep.GetType().ToString()}");
-            // foreach(var i in repItems)
-            // {
-            //     Console.WriteLine(i.GetType());
-            // }
+            var localPlacement = space.ObjectPlacement.ToTransform();
+            transform.Concatenate(localPlacement);
 
             var foundSolid = repItems.First();
-            transform.Concatenate(space.ObjectPlacement.ToTransform());
-
+            var material = new Material("space", new Color(1.0f, 0.0f, 1.0f, 0.5f), 0.0f, 0.0f);
             if (foundSolid.GetType() == typeof(IFC.IfcExtrudedAreaSolid))
             {
                 var solid = (IFC.IfcExtrudedAreaSolid)foundSolid;
                 var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
                 transform.Concatenate(solid.Position.ToTransform());
                 var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
-                var outline = pline.ToPolygon();
-                var result = new Space(new Profile(outline), 0.0, (IfcLengthMeasure)solid.Depth, BuiltInMaterials.Glass, transform);
+                var outline = pline.ToPolygon(true);
+                var result = new Space(new Profile(outline), 0.0, (IfcLengthMeasure)solid.Depth, material, transform);
                 return result;
             }
             else if (foundSolid.GetType() == typeof(IFC.IfcFacetedBrep))
             {
                 var solid = (IFC.IfcFacetedBrep)foundSolid;
                 var shell = solid.Outer;
-                foreach (var f in shell.CfsFaces)
+                var faces = new PlanarFace[shell.CfsFaces.Count];
+                for(var i=0; i< shell.CfsFaces.Count; i++)
                 {
+                    var f = shell.CfsFaces[i];
                     foreach (var b in f.Bounds)
                     {
                         var loop = (IFC.IfcPolyLoop)b.Bound;
                         var poly = loop.Polygon.ToPolygon();
-                        // Console.WriteLine(poly);
+                        faces[i] = new PlanarFace(poly);
                     }
                 }
+                var newSpace = new Space(material, transform);
+                newSpace.SetFaces(faces);
+                return newSpace;
             }
 
             return null;
@@ -248,11 +297,21 @@ namespace Elements
         public static Polygon ToPolygon(this List<IfcCartesianPoint> loop)
         {
             var verts = new Vector3[loop.Count];
-            for (var i = 0; i < loop.Count - 1; i++)
+            for (var i = 0; i < loop.Count; i++)
             {
                 verts[i] = loop[i].ToVector3();
             }
             return new Polygon(verts);
+        }
+
+        /// <summary>
+        /// Convert an IfcPolyloop to a Polygon.
+        /// </summary>
+        /// <param name="loop"></param>
+        /// <returns></returns>
+        public static Polygon ToPolygon(this IfcPolyLoop loop)
+        {
+            return loop.Polygon.ToPolygon();
         }
     }
 }

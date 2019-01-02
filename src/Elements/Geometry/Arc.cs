@@ -152,7 +152,7 @@ namespace Elements.Geometry
             {
                 up = Vector3.ZAxis;
             }
-            return new Transform(o, x, up.Cross(x));
+            return new Transform(o, x, x.Cross(up));
         }
 
         /// <summary>

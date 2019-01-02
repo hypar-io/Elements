@@ -9,7 +9,7 @@ namespace Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall : Element, IElementTypeProvider<WallType>, IExtrude
+    public class Wall : Element, IElementTypeProvider<WallType>, IExtrude, IProfileProvider
     {
         /// <summary>
         /// The Profile of the Wall.
