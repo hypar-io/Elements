@@ -65,8 +65,9 @@ namespace Elements
         /// <param name="up">The up axis of the Beam.</param>
         /// <param name="startSetback">The setback of the framing's extrusion at its start.</param>
         /// <param name="endSetback">The setback of the framing's extrusion at its end.</param>
+        /// <param name="transform"></param>
         [JsonConstructor]
-        public StructuralFraming(ICurve curve, IProfile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0)
+        public StructuralFraming(ICurve curve, IProfile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
         {
             this.Profile = profile;
             this.Curve = curve;
@@ -81,6 +82,7 @@ namespace Elements
             }
             this.StartSetback = startSetback;
             this.EndSetback = endSetback;
+            this.Transform = transform;
         }
 
         /// <summary>

@@ -11,6 +11,13 @@ namespace Elements
     /// </summary>
     public class Wall : Element, IElementTypeProvider<WallType>, IExtrude, IProfileProvider
     {
+        private enum WallDefinition
+        {
+            ByProfile, ByCenterLine
+        }
+
+        private WallDefinition _wallDefinition;
+
         /// <summary>
         /// The Profile of the Wall.
         /// </summary>
@@ -62,6 +69,22 @@ namespace Elements
         public Material Material{get;}
 
         /// <summary>
+        /// Construct a wall by extruding a profile.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="height"></param>
+        /// <param name="material"></param>
+        /// <param name="transform"></param>
+        public Wall(Profile profile, double height, Material material = null, Transform transform = null)
+        {
+            this.Profile = profile;
+            this.Height = height;
+            this.Material = material != null ? material : BuiltInMaterials.Concrete;
+            this._wallDefinition = WallDefinition.ByProfile;
+            this.Transform = transform;
+        }
+
+        /// <summary>
         /// Construct a wall along a line.
         /// </summary>
         /// <param name="centerLine">The center line of the Wall.</param>
@@ -72,6 +95,7 @@ namespace Elements
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of Wall's start and end points are not the same.</exception>
+        [JsonConstructor]
         public Wall(Line centerLine, WallType elementType, double height, Opening[] openings = null, Material material = null)
         {
             if (height <= 0.0)
@@ -107,6 +131,7 @@ namespace Elements
             // Construct a transform whose X axis is the centerline of the wall.
             var z = Vector3.ZAxis.Cross(centerLine.Direction);
             this.Transform = new Transform(centerLine.Start, centerLine.Direction, z);
+            this._wallDefinition = WallDefinition.ByCenterLine;
         }
         
         /// <summary>
@@ -114,8 +139,14 @@ namespace Elements
         /// </summary>
         public IFace[] Faces()
         {
-            return Extrusions.Extrude(this.Profile, this.Thickness);
+            switch(this._wallDefinition)
+            {
+                case WallDefinition.ByCenterLine:
+                    return Extrusions.Extrude(this.Profile, this.Thickness);
+                case WallDefinition.ByProfile:
+                    return Extrusions.Extrude(this.Profile, this.Height);
+            }
+            return null;
         }
-
     }
 }

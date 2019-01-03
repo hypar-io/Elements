@@ -20,7 +20,9 @@ namespace Elements.Tests
         [Fact]
         public void SlabsFromIFC()
         {
-            var model = Model.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC-20-Smiley-West-10-Bldg.ifc");
+            var model = IFCExtensions.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC-20-Smiley-West-10-Bldg.ifc");
+            // var model = IFCExtensions.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc");
+            // var model = IFCExtensions.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC20-Institute-Var-2.ifc");
             if(model != null)
             {
                 model.SaveGlb("fromIfc.glb");

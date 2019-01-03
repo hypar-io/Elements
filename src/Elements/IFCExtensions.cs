@@ -1,5 +1,8 @@
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using IFC;
+using IFC.Storage;
+using STEP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +15,53 @@ namespace Elements
     public static class IFCExtensions
     {
         /// <summary>
+        /// Construct a Model from an IFC STEP file.
+        /// </summary>
+        /// <param name="ifcPath">The path to the IFC file on disk.</param>
+        public static Model FromIFC(string ifcPath)
+        {
+            IList<STEPError> errors;
+            var ifcModel = new IFC.Model(ifcPath, new LocalStorageProvider(), out errors);
+
+            // var materials = ifcModel.AllInstancesOfType<IfcMaterial>();
+
+            var floorType = new FloorType("IFC Floor", 0.1);
+            var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
+            var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
+            var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
+            var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
+
+            // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
+            var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
+            // foreach(var rc in relContains)
+            // {
+            //     foreach(var e in rc.RelatedElements)
+            //     {
+            //         Console.WriteLine($"Relationship: {rc.RelatingStructure.LongName} -> {e.GetType()}");
+            //     }
+            // }
+
+            var slabs = ifcSlabs.Select(s => s.ToFloor(relContains));
+            var spaces = ifcSpaces.Select(sp => sp.ToSpace(relContains));
+            var walls = ifcWalls.Select(w=>w.ToWall(relContains));
+            var beams = ifcBeams.Select(b=>b.ToBeam());
+            var model = new Model();
+            model.AddElements(slabs);
+            model.AddElements(spaces);
+            model.AddElements(walls);
+            model.AddElements(beams);
+
+            return model;
+        }
+
+        /// <summary>
         /// Convert an IfcSlab to a Floor.
         /// </summary>
         /// <param name="slab">An IfcSlab.</param>
         public static Floor ToFloor(this IfcSlab slab, IEnumerable<IfcRelContainedInSpatialStructure> relContains)
         {
             // TODO: When inverse are set on instances, this lookup will be unnecessary.
-            var storeyRel = relContains.FirstOrDefault(rc => rc.RelatingStructure.GetType() == typeof(IfcBuildingStorey) && rc.RelatedElements.Contains(slab));
+            // var storeyRel = relContains.FirstOrDefault(rc => rc.RelatingStructure.GetType() == typeof(IfcBuildingStorey) && rc.RelatedElements.Contains(slab));
             var transform = new Transform();
 
             // For IFCs that we've tested, relative placements are used.
@@ -34,7 +77,7 @@ namespace Elements
             // Check if the slab is contained in a building storey
             foreach (var cis in slab.ContainedInStructure)
             {
-                cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
+                transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
             }
 
             var repItems = slab.Representation.Representations.SelectMany(r => r.Items);
@@ -45,6 +88,7 @@ namespace Elements
 
             // Console.WriteLine($"Found representation type: {rep.GetType().ToString()}");
             var foundSolid = repItems.FirstOrDefault(i => i.GetType() == typeof(IFC.IfcExtrudedAreaSolid));
+            var solids = slab.RepresentationsOfType<IfcExtrudedAreaSolid>();
             if (foundSolid == null)
             {
                 throw new Exception("No IfcExtrudedAreaSolid could be found in the provided IfcSlab.");
@@ -54,10 +98,289 @@ namespace Elements
             var floorType = new FloorType($"{Guid.NewGuid().ToString()}_floor_type", (IfcLengthMeasure)solid.Depth);
             var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
             transform.Concatenate(solid.Position.ToTransform());
+            // if(!transform.ZAxis.IsAlmostEqualTo(Vector3.ZAxis))
+            // {
+            //     Console.WriteLine(solid.Position.ToTransform());
+            //     Console.WriteLine(transform);
+            //     // transform = solid.Position.ToTransform();
+            // }
             var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
+
             var outline = pline.ToPolygon(true);
-            var floor = new Floor(new Profile(outline), floorType, transform.Origin.Z, BuiltInMaterials.Concrete, transform);
+            var floor = new Floor(new Profile(outline), floorType, 0, BuiltInMaterials.Concrete, transform);
             return floor;
+        }
+
+        /// <summary>
+        /// Convert and IfcSpace to a Space.
+        /// </summary>
+        /// <param name="space">An IfcSpace.</param>
+        /// <returns></returns>
+        public static Space ToSpace(this IfcSpace space, IEnumerable<IfcRelContainedInSpatialStructure> relContains)
+        {
+            var transform = new Transform();
+            // var storeyRel = relContains.FirstOrDefault(rc => rc.RelatingStructure.GetType() == typeof(IfcBuildingStorey) && rc.RelatedElements.Contains(space));
+            // if (storeyRel != null)
+            // {
+            //     var storey = (IfcBuildingStorey)storeyRel.RelatingStructure;
+            //     transform.Move(new Vector3(0, 0, storey.Elevation));
+            // }
+
+            var repItems = space.Representation.Representations.SelectMany(r => r.Items);
+            if (!repItems.Any())
+            {
+                throw new Exception("The provided IfcSlab does not have any representations.");
+            }
+
+            var localPlacement = space.ObjectPlacement.ToTransform();
+            transform.Concatenate(localPlacement);
+
+            var foundSolid = repItems.First();
+            var material = new Material("space", new Color(1.0f, 0.0f, 1.0f, 0.5f), 0.0f, 0.0f);
+            if (foundSolid.GetType() == typeof(IFC.IfcExtrudedAreaSolid))
+            {
+                var solid = (IFC.IfcExtrudedAreaSolid)foundSolid;
+                var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
+                transform.Concatenate(solid.Position.ToTransform());
+                var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
+                var outline = pline.ToPolygon(true);
+                var result = new Space(new Profile(outline), 0.0, (IfcLengthMeasure)solid.Depth, material, transform);
+                return result;
+            }
+            else if (foundSolid.GetType() == typeof(IFC.IfcFacetedBrep))
+            {
+                var solid = (IFC.IfcFacetedBrep)foundSolid;
+                var shell = solid.Outer;
+                var faces = new PlanarFace[shell.CfsFaces.Count];
+                for(var i=0; i< shell.CfsFaces.Count; i++)
+                {
+                    var f = shell.CfsFaces[i];
+                    foreach (var b in f.Bounds)
+                    {
+                        var loop = (IFC.IfcPolyLoop)b.Bound;
+                        var poly = loop.Polygon.ToPolygon();
+                        faces[i] = new PlanarFace(poly);
+                    }
+                }
+                var newSpace = new Space(material, transform);
+                newSpace.SetFaces(faces);
+                return newSpace;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Convert an IfcWallStandardCase to a Wall.
+        /// </summary>
+        /// <param name="wall"></param>
+        /// <param name="relContains"></param>
+        public static Wall ToWall(this IfcWallStandardCase wall, IEnumerable<IfcRelContainedInSpatialStructure> relContains)
+        {
+            var transform = new Transform();
+            transform.Concatenate(wall.ObjectPlacement.ToTransform());
+            var solids = wall.RepresentationsOfType<IfcExtrudedAreaSolid>();
+            foreach (var cis in wall.ContainedInStructure)
+            {
+                cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
+            }
+
+            if(solids != null)
+            {
+                foreach(var s in solids)
+                {
+                    var c = s.SweptArea.ToICurve();
+                    if(c is Polygon)
+                    {
+                        transform.Concatenate(s.Position.ToTransform());
+                        return new Wall(new Profile((Polygon)c), (IfcLengthMeasure)s.Depth, BuiltInMaterials.Concrete, transform);
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert an IfcBeam to a Beam.
+        /// </summary>
+        /// <param name="beam"></param>
+        public static Beam ToBeam(this IfcBeam beam)
+        {
+            var transform = new Transform();
+            transform.Concatenate(beam.ObjectPlacement.ToTransform());
+            var solids = beam.RepresentationsOfType<IfcExtrudedAreaSolid>();
+            foreach (var cis in beam.ContainedInStructure)
+            {
+                cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
+            }
+
+            if(solids != null)
+            {
+                foreach(var s in solids)
+                {
+                    var c = s.SweptArea.ToICurve();
+                    if(c is Polygon)
+                    {
+                        transform.Concatenate(s.Position.ToTransform());
+                        var cl = new Line(Vector3.Origin, s.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)s.Depth);
+                        return new Beam(cl, new Profile((Polygon)c), BuiltInMaterials.Steel, null, 0.0, 0.0, transform);
+                    }
+                }
+            }
+            return null;
+        }
+
+        private static IFace[] Representations(this IfcProduct product)
+        {   
+            var reps = product.Representation.Representations.SelectMany(r=>r.Items);
+            foreach(var r in reps)
+            {
+                if(r is IfcSurfaceCurveSweptAreaSolid)
+                {
+                    throw new Exception("IfcSurfaceCurveSweptAreaSolid is not supported yet.");
+                }
+                if(r is IfcRevolvedAreaSolid)
+                {
+                    throw new Exception("IfcRevolvedAreaSolid is not supported yet.");
+                }
+                if(r is IfcSweptDiskSolid)
+                {
+                    throw new Exception("IfcSweptDiskSolid is not supported yet.");
+                }
+                else if(r is IfcExtrudedAreaSolid)
+                {
+                    var eas = (IfcExtrudedAreaSolid)r;
+                    var profileDef = (IFC.IfcArbitraryClosedProfileDef)eas.SweptArea;
+                    var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
+                    var outline = pline.ToPolygon(true);
+                    return Extrusions.Extrude(new Profile(outline), (IfcLengthMeasure)eas.Depth);
+                }
+                else if(r is IfcFacetedBrep)
+                {
+                    var fbr = (IfcFacetedBrep)r;
+                    var shell = fbr.Outer;
+                    var faces = new PlanarFace[shell.CfsFaces.Count];
+                    for(var i=0; i< shell.CfsFaces.Count; i++)
+                    {
+                        var f = shell.CfsFaces[i];
+                        foreach (var b in f.Bounds)
+                        {
+                            var loop = (IFC.IfcPolyLoop)b.Bound;
+                            var poly = loop.Polygon.ToPolygon();
+                            faces[i] = new PlanarFace(poly);
+                        }
+                    }
+                    return faces;
+                }
+                else if(r is IfcFacetedBrepWithVoids)
+                {
+                    throw new Exception("IfcFacetedBrepWithVoids is not supported yet.");
+                }
+            }
+            return null;
+        }
+
+        private static IEnumerable<T> RepresentationsOfType<T>(this IfcProduct product) where T: IfcGeometricRepresentationItem
+        {
+            var reps = product.Representation.Representations.SelectMany(r=>r.Items);
+            if(reps.Any())
+            {
+                return reps.OfType<T>();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert an IfcProfileDef to an iCurve.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public static ICurve ToICurve(this IfcProfileDef profile)
+        {
+            if(profile is IfcParameterizedProfileDef)
+            {
+                throw new Exception("IfcParameterizedProfileDef is not supported yet.");
+            }
+            else if(profile is IfcArbitraryOpenProfileDef)
+            {
+                var aopd = (IfcArbitraryOpenProfileDef)profile;
+                return aopd.ToICurve();
+            }
+            else if(profile is IfcArbitraryClosedProfileDef)
+            {
+                var acpd = (IfcArbitraryClosedProfileDef)profile;
+                return acpd.ToICurve();
+            }
+            else if(profile is IfcCompositeProfileDef)
+            {
+                throw new Exception("IfcCompositeProfileDef is not supported yet.");
+            }
+            else if(profile is IfcDerivedProfileDef)
+            {
+                throw new Exception("IfcDerivedProfileDef is not supported yet.");
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert an IfcArbitraryOpenProfileDef to an ICurve.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public static ICurve ToICurve(this IfcArbitraryOpenProfileDef profile)
+        {
+            return profile.Curve.ToICurve();
+        }
+
+        /// <summary>
+        /// Convert an IfcArbitraryClosedProfileDef to an ICurve.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public static ICurve ToICurve(this IfcArbitraryClosedProfileDef profile)
+        {
+            return profile.OuterCurve.ToICurve();
+        }
+
+        /// <summary>
+        /// Convert an IfcCurve to in ICurve.
+        /// </summary>
+        /// <param name="curve"></param>
+        public static ICurve ToICurve(this IfcCurve curve)
+        {
+            if(curve is IfcBoundedCurve)
+            {
+                if(curve is IfcCompositeCurve)
+                {
+                    throw new Exception("IfcCompositeCurve is not supported yet.");
+                }
+                else if(curve is IfcPolyline)
+                {
+                    var pl = (IfcPolyline)curve;
+                    return pl.ToPolygon(true);
+                }
+                else if(curve is IfcTrimmedCurve)
+                {
+                    throw new Exception("IfcTrimmedCurve is not supported yet.");
+                }
+                else if (curve is IfcBSplineCurve)
+                {
+                    throw new Exception("IfcBSplineCurve is not supported yet.");
+                }
+            }
+            else if(curve is IfcConic)
+            {
+                throw new Exception("IfcConic is not supported yet.");
+            }
+            else if(curve is IfcOffsetCurve2D)
+            {
+                throw new Exception("IfcOffsetCurve2D is not supported yet.");
+            }
+            else if(curve is IfcOffsetCurve3D)
+            {
+                throw new Exception("IfcOffsetCurve3D is not supported yet.");
+            }
+            return null;
         }
 
         /// <summary>
@@ -93,6 +416,7 @@ namespace Elements
         /// Convert an IfcPolyline to a Polygon.
         /// </summary>
         /// <param name="polyline">An IfcPolyline.</param>
+        /// <param name="dropLastPoint">A flag indicating whether the last point should be included.</param>
         public static Polygon ToPolygon(this IfcPolyline polyline, bool dropLastPoint = false)
         {
             var count = dropLastPoint ? polyline.Points.Count - 1 : polyline.Points.Count;
@@ -228,65 +552,6 @@ namespace Elements
             {
                 throw new Exception("IfcGridPlacement conversion to Transform not supported.");
             }
-            return null;
-        }
-
-        /// <summary>
-        /// Convert and IfcSpace to a Space.
-        /// </summary>
-        /// <param name="space">An IfcSpace.</param>
-        /// <returns></returns>
-        public static Space ToSpace(this IfcSpace space, IEnumerable<IfcRelContainedInSpatialStructure> relContains)
-        {
-            var transform = new Transform();
-            // var storeyRel = relContains.FirstOrDefault(rc => rc.RelatingStructure.GetType() == typeof(IfcBuildingStorey) && rc.RelatedElements.Contains(space));
-            // if (storeyRel != null)
-            // {
-            //     var storey = (IfcBuildingStorey)storeyRel.RelatingStructure;
-            //     transform.Move(new Vector3(0, 0, storey.Elevation));
-            // }
-
-            var repItems = space.Representation.Representations.SelectMany(r => r.Items);
-            if (!repItems.Any())
-            {
-                throw new Exception("The provided IfcSlab does not have any representations.");
-            }
-
-            var localPlacement = space.ObjectPlacement.ToTransform();
-            transform.Concatenate(localPlacement);
-
-            var foundSolid = repItems.First();
-            var material = new Material("space", new Color(1.0f, 0.0f, 1.0f, 0.5f), 0.0f, 0.0f);
-            if (foundSolid.GetType() == typeof(IFC.IfcExtrudedAreaSolid))
-            {
-                var solid = (IFC.IfcExtrudedAreaSolid)foundSolid;
-                var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
-                transform.Concatenate(solid.Position.ToTransform());
-                var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
-                var outline = pline.ToPolygon(true);
-                var result = new Space(new Profile(outline), 0.0, (IfcLengthMeasure)solid.Depth, material, transform);
-                return result;
-            }
-            else if (foundSolid.GetType() == typeof(IFC.IfcFacetedBrep))
-            {
-                var solid = (IFC.IfcFacetedBrep)foundSolid;
-                var shell = solid.Outer;
-                var faces = new PlanarFace[shell.CfsFaces.Count];
-                for(var i=0; i< shell.CfsFaces.Count; i++)
-                {
-                    var f = shell.CfsFaces[i];
-                    foreach (var b in f.Bounds)
-                    {
-                        var loop = (IFC.IfcPolyLoop)b.Bound;
-                        var poly = loop.Polygon.ToPolygon();
-                        faces[i] = new PlanarFace(poly);
-                    }
-                }
-                var newSpace = new Space(material, transform);
-                newSpace.SetFaces(faces);
-                return newSpace;
-            }
-
             return null;
         }
 

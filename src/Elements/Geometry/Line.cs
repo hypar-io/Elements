@@ -78,6 +78,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a line of length from a start along direction.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="direction"></param>
+        /// <param name="length"></param>
+        public Line(Vector3 start, Vector3 direction, double length)
+        {
+            this.Start = start;
+            this.End = start + direction.Normalized()*length;
+        }
+
+        /// <summary>
         /// Get a transform whose XY plane is perpendicular to the curve, and whose
         /// positive Z axis points along the curve.
         /// </summary>

@@ -11,9 +11,6 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Reflection;
-using IFC;
-using STEP;
-using IFC.Storage;
 
 namespace Elements
 {
@@ -135,13 +132,19 @@ namespace Elements
             if (element is IElementTypeProvider<WallType>)
             {
                 var wtp = (IElementTypeProvider<WallType>)element;
-                AddElementType(wtp.ElementType);
+                if(wtp.ElementType != null)
+                {
+                    AddElementType(wtp.ElementType);
+                }
             }
 
             if (element is IElementTypeProvider<FloorType>)
             {
                 var ftp = (IElementTypeProvider<FloorType>)element;
-                AddElementType(ftp.ElementType);
+                if(ftp.ElementType != null)
+                {
+                    AddElementType(ftp.ElementType);
+                }
             }
 
             if (element is IProfileProvider)
@@ -151,7 +154,6 @@ namespace Elements
                 {
                     AddProfile((Profile)ipp.Profile);
                 }
-                
             }
 
             if (element is IAggregateElement)
@@ -433,6 +435,8 @@ namespace Elements
 
         private void GetRenderDataForElement(IElement e, Gltf gltf, Dictionary<string, int> materials)
         {
+            AddTransformVisualization(IdProvider.Instance.GetNextId(), e.Transform, gltf, materials);
+
             if (e is IGeometry3D)
             {
                 var geo = e as IGeometry3D;
@@ -455,7 +459,6 @@ namespace Elements
                     // }
                     // Add the center curve
                     AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Black.Name], e.Transform);
-
                 }
 
                 if (e is IBRep)
@@ -470,15 +473,10 @@ namespace Elements
                     }
                 }
 
-                Transform transform = null;
-                if (e.Transform != null)
-                {
-                    transform = e.Transform;
-                }
                 gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
                                     mesh.Indices.ToArray(), mesh.VertexColors.ToArray(),
                                     mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax,
-                                    mesh.IMin, mesh.IMax, materials[geo.Material.Name], null, transform);
+                                    mesh.IMin, mesh.IMax, materials[geo.Material.Name], null, e.Transform);
 
             }
 
@@ -497,7 +495,22 @@ namespace Elements
 
         }
 
-        private void AddCurve(long id, ICurve curve, Gltf gltf, int material, Transform t)
+        private void AddTransformVisualization(long id, Transform f, Gltf gltf, Dictionary<string, int> materials)
+        {
+            if (f == null)
+            {
+                return;
+            }
+            
+            var x = new Elements.Geometry.Line(f.Origin, f.Origin + f.XAxis * 2);
+            AddCurve(id + 10000, x, gltf, materials["x_axis"]);
+            var y = new Elements.Geometry.Line(f.Origin, f.Origin + f.YAxis * 2);
+            AddCurve(id + 10001, y, gltf, materials["y_axis"]);
+            var z = new Elements.Geometry.Line(f.Origin, f.Origin + f.ZAxis * 2);
+            AddCurve(id + 10002, z, gltf, materials["z_axis"]);
+        }
+
+        private void AddCurve(long id, ICurve curve, Gltf gltf, int material, Transform t = null)
         {
             var vBuff = curve.Vertices.ToArray();
             var vCount = curve.Vertices.Count();
@@ -524,37 +537,6 @@ namespace Elements
             gltf.AddLineLoop($"{id}_curve", _buffer, vBuff, indices, bbox.Min.ToArray(),
                             bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, t);
 
-        }
-
-        /// <summary>
-        /// Construct a Model from an IFC STEP file.
-        /// </summary>
-        /// <param name="ifcPath">The path to the IFC file on disk.</param>
-        public static Model FromIFC(string ifcPath)
-        {
-            IList<STEPError> errors;
-            var ifcModel = new IFC.Model(ifcPath, new LocalStorageProvider(), out errors);
-
-            var floorType = new FloorType("IFC Floor", 0.1);
-            var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
-            var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
-
-            // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
-            var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
-            // foreach(var rc in relContains)
-            // {
-            //     foreach(var e in rc.RelatedElements)
-            //     {
-            //         Console.WriteLine($"Relationship: {rc.RelatingStructure.LongName} -> {e.GetType()}");
-            //     }
-            // }
-
-            var slabs = ifcSlabs.Select(s => s.ToFloor(relContains));
-            var spaces = ifcSpaces.Select(sp => sp.ToSpace(relContains));
-            var model = new Model();
-            model.AddElements(slabs);
-            model.AddElements(spaces);
-            return model;
         }
     }
 }

@@ -29,8 +29,11 @@ namespace Elements
         /// <param name="height">The Column's height.</param>
         /// <param name="profile">The Column's profile.</param>
         /// <param name="material">The Column's material.</param>
+        /// <param name="transform"></param>
+        /// <param name="startSetback"></param>
+        /// <param name="endSetback"></param>
         [JsonConstructor]
-        public Column(Vector3 location, double height, Profile profile, Material material = null) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material)
+        public Column(Vector3 location, double height, Profile profile, Material material = null, Transform transform = null, double startSetback = 0.0, double endSetback = 0.0) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material, null, startSetback, endSetback, transform)
         {
             this.Location = location;
             this.Height = height;
