@@ -7,6 +7,6 @@ namespace Elements.Geometry.Interfaces
 {
     public interface IGeometry3D
     {
-        IBRep[] Geometry{get;}
+        IBRep[] Geometry { get; }
     }
 }

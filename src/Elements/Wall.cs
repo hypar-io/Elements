@@ -119,7 +119,7 @@ namespace Elements
             }
 
             // Construct a transform whose X axis is the centerline of the wall.
-            var z = Vector3.ZAxis.Cross(centerLine.Direction);
+            var z = centerLine.Direction.Cross(Vector3.ZAxis);
             this.Transform = new Transform(centerLine.Start, centerLine.Direction, z);
             this.Geometry = new []{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
