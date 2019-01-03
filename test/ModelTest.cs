@@ -45,10 +45,18 @@ namespace Elements.Tests
                     Directory.CreateDirectory("models");
                 }
                 // Write the model as a glb
+                var modelPath = $"models/{this._name}.glb";
+                Console.WriteLine($"Saving {this._name} to glb: {modelPath}.");
                 this._model.SaveGlb($"models/{this._name}.glb");
 
                 // Write the model as json
-                File.WriteAllText($"models/{this._name}.json", this._model.ToJson());
+                var jsonPath = $"models/{this._name}.json";
+                Console.WriteLine($"Serializing {this._name} to JSON: {jsonPath}");
+                File.WriteAllText(jsonPath, this._model.ToJson());
+
+                // Try deserializing JSON
+                Console.WriteLine($"Deserializing {this._name} from JSON.");
+                var newModel = Model.FromJson(File.ReadAllText(jsonPath));
             }
         }
     }
