@@ -17,7 +17,7 @@ namespace Elements.Geometry
         {
             get { return this.GetType().FullName.ToLower(); }
         }
-        
+
         /// <summary>
         /// The extrusion's faces.
         /// </summary>
@@ -37,14 +37,22 @@ namespace Elements.Geometry
         public double Depth { get; }
 
         /// <summary>
+        /// The extrusion's Profile.
+        /// </summary>
+        [JsonProperty("profile")]
+        public IProfile Profile { get; }
+
+        /// <summary>
         /// Construct an extrusion along a curve.
         /// </summary>
         /// <param name="profile">The profile to extrude.</param>
         /// <param name="depth">The depth of the extrusion.</param>
         /// <param name="material">The material to be applied to all extruded faces.</param>
         /// <param name="capped">A flag indicating whether the extrusion is to have end faces.</param>
+        [JsonConstructor]
         public Extrude(IProfile profile, double depth, Material material, bool capped = true)
         {
+            this.Profile = profile;
             this.Material = material;
             this.Depth = depth;
             this.Faces = Extrusions.Extrude(profile, depth, 0.0, capped);

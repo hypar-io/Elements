@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
-    public class IfcTests
+    public class IfcTests : ModelTest
     {
         private readonly ITestOutputHelper output;
 
@@ -18,15 +18,12 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void SlabsFromIFC()
+        public void IFC()
         {
-            var model = IFCExtensions.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC-20-Smiley-West-10-Bldg.ifc");
+            this.Name = "IFC";
+            this.Model = IFCExtensions.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC-20-Smiley-West-10-Bldg.ifc");
             // var model = IFCExtensions.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc");
             // var model = IFCExtensions.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC20-Institute-Var-2.ifc");
-            if(model != null)
-            {
-                model.SaveGlb("fromIfc.glb");
-            }
         }
     }
 }

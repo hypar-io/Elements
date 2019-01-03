@@ -80,7 +80,7 @@ namespace Elements
         public Model()
         {
             this.Origin = new Position(0, 0);
-            AddMaterial(BuiltInMaterials.Black);
+            AddMaterial(BuiltInMaterials.Edges);
         }
 
         internal Model(Dictionary<long, Element> elements, Dictionary<long, Material> materials, Dictionary<long, ElementType> elementTypes,
@@ -90,7 +90,7 @@ namespace Elements
             this._materials = materials;
             this._elementTypes = elementTypes;
             this._profiles = profiles;
-            AddMaterial(BuiltInMaterials.Black);
+            AddMaterial(BuiltInMaterials.Edges);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace Elements
                         //     AddCurve(e.Id + 10002, z, gltf, materials["z_axis"], e.Transform);
                         // }
                         // Add the center curve
-                        AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Black.Name], e.Transform);
+                        AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
                     }
 
                     mesh = new Elements.Geometry.Mesh();
@@ -472,6 +472,10 @@ namespace Elements
                         // Draw a winding indicator
                         // AddArrow(e.Id + 10003, f.Vertices[0], (f.Vertices[1] - f.Vertices[0]).Normalized(), gltf, materials["z_axis"], e.Transform);
                         f.Tessellate(mesh);
+                        foreach(var edge in f.Edges)
+                        {
+                            AddCurve(e.Id, edge, gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
+                        }
                     }
 
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),

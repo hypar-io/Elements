@@ -42,7 +42,7 @@ namespace Elements
         /// <summary>
         /// The element's transform.
         /// </summary>
-        [JsonIgnore]
+        [JsonProperty("transform")]
         public Transform Transform { get; protected set; }
 
         /// <summary>

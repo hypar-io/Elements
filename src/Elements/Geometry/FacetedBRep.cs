@@ -21,7 +21,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The FacetedBRep's faces.
         /// </summary>
-        [JsonIgnore]
+        [JsonProperty("faces")]
         public IFace[] Faces { get; }
 
         /// <summary>

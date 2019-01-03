@@ -47,5 +47,10 @@ namespace Elements
         /// Black
         /// </summary>
         public static Material Black = new Material("black", new Color(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, 0.0f);
+
+        /// <summary>
+        /// Edges
+        /// </summary>
+        public static Material Edges = new Material("edges", new Color(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0.0f);
     }
 }

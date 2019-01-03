@@ -1,5 +1,6 @@
 using Elements.Geometry.Interfaces;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Elements.Geometry
@@ -9,26 +10,19 @@ namespace Elements.Geometry
     /// </summary>
     public class PlanarFace : IFace
     {
-        private IProfile _profile;
-
-        /// <summary>
-        /// A Transform with its origin at the Face's first vertex,
-        /// and its normal defined by the first and second edges of the Face.
-        /// </summary>
-        public Transform Transform { get; }
-
         /// <summary>
         /// The vertices of Face.
         /// </summary>
+        [JsonIgnore]
         public Vector3[] Vertices
         {
             get
             {
                 var vertices = new List<Vector3>();
-                vertices.AddRange(this._profile.Perimeter.Vertices);
-                if (this._profile.Voids != null)
+                vertices.AddRange(this.Profile.Perimeter.Vertices);
+                if (this.Profile.Voids != null)
                 {
-                    foreach (var v in this._profile.Voids)
+                    foreach (var v in this.Profile.Voids)
                     {
                         vertices.AddRange(v.Vertices);
                     }
@@ -40,15 +34,16 @@ namespace Elements.Geometry
         /// <summary>
         /// The edges of the Face.
         /// </summary>
+        [JsonIgnore]
         public ICurve[] Edges
         {
             get
             {
                 var edges = new List<ICurve>();
-                edges.AddRange(this._profile.Perimeter.Segments());
-                if (this._profile.Voids != null)
+                edges.AddRange(this.Profile.Perimeter.Segments());
+                if (this.Profile.Voids != null)
                 {
-                    foreach (var v in this._profile.Voids)
+                    foreach (var v in this.Profile.Voids)
                     {
                         edges.AddRange(v.Segments());
                     }
@@ -58,12 +53,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// The face's Profile.
+        /// </summary>
+        [JsonProperty("profile")]
+        public IProfile Profile { get; }
+
+        /// <summary>
         /// Construct a PlanarFace.
         /// </summary>
         /// <param name="profile"></param>
+        [JsonConstructor]
         public PlanarFace(IProfile profile)
         {
-            this._profile = profile;
+            this.Profile = profile;
         }
 
         /// <summary>
@@ -72,7 +74,7 @@ namespace Elements.Geometry
         /// <param name="vertices"></param>
         public PlanarFace(Vector3[] vertices)
         {
-            this._profile = new Profile(new Polygon(vertices));
+            this.Profile = new Profile(new Polygon(vertices));
         }
 
         /// <summary>
@@ -81,12 +83,12 @@ namespace Elements.Geometry
         /// <param name="polygon"></param>
         public PlanarFace(Polygon polygon)
         {
-            this._profile = new Profile(polygon);
+            this.Profile = new Profile(polygon);
         }
 
         internal Plane Plane()
         {
-            return this._profile.Perimeter.Plane();
+            return this.Profile.Perimeter.Plane();
         }
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace Elements.Geometry
         /// </summary>
         public virtual void Tessellate(Mesh mesh)
         {
-            var tess = Mesh.TessFromPolygon(this._profile.Perimeter, this._profile.Voids);
+            var tess = Mesh.TessFromPolygon(this.Profile.Perimeter, this.Profile.Voids);
             tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
             for (var i = 0; i < tess.ElementCount; i++)

@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Elements.Geometry
 {
     /// <summary>
@@ -9,6 +11,7 @@ namespace Elements.Geometry
         /// Construct a QuadFace.
         /// </summary>
         /// <param name="vertices"></param>
+        [JsonConstructor]
         public QuadFace(Vector3[] vertices) : base(vertices) { }
 
         /// <summary>

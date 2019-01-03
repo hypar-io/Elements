@@ -17,7 +17,7 @@ namespace Elements.Geometry
         {
             get { return this.GetType().FullName.ToLower(); }
         }
-        
+
         /// <summary>
         /// The extrusion's faces.
         /// </summary>
@@ -49,6 +49,12 @@ namespace Elements.Geometry
         public ICurve Curve { get; }
 
         /// <summary>
+        /// The extrusion's Profile.
+        /// </summary>
+        [JsonProperty("profile")]
+        public IProfile Profile { get; }
+
+        /// <summary>
         /// Construct an extrusion along a curve.
         /// </summary>
         /// <param name="profile">The profile to extrude.</param>
@@ -57,8 +63,10 @@ namespace Elements.Geometry
         /// <param name="capped">A flag indicating whether the extrusion is to have end faces.</param>
         /// <param name="startSetback">A distance along the directrix from the start, where the extrusion should begin.</param>
         /// <param name="endSetback">A distnace along the directrix from the end, where the extrusion should end.</param>
+        [JsonConstructor]
         public ExtrudeAlongCurve(IProfile profile, ICurve curve, Material material, bool capped = true, double startSetback = 0, double endSetback = 0)
         {
+            this.Profile = profile;
             this.Material = material;
             this.Curve = curve;
             this.StartSetback = startSetback;
