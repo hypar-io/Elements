@@ -9,7 +9,7 @@ namespace Elements
     /// <summary>
     /// A Mass represents an extruded building Mass.
     /// </summary>
-    public class Mass : Element, IExtrude, IProfileProvider
+    public class Mass : Element, IGeometry3D, IProfileProvider
     {
         private List<Polyline> _sides = new List<Polyline>();
 
@@ -29,12 +29,6 @@ namespace Elements
         }
 
         /// <summary>
-        /// The elevation of the bottom perimeter.
-        /// </summary>
-        [JsonProperty("elevation")]
-        public double Elevation { get; }
-
-        /// <summary>
         /// The height of the Mass.
         /// </summary>
         [JsonProperty("height")]
@@ -50,56 +44,48 @@ namespace Elements
         }
 
         /// <summary>
-        /// The Mass' Material.
+        /// The Mass' geometry.
         /// </summary>
-        [JsonProperty("material")]
-        public Material Material { get; }
+        [JsonProperty("geometry")]
+        public IBRep[] Geometry { get; }
 
         /// <summary>
         /// Construct a Mass.
         /// </summary>
         /// <param name="profile">The Profile of the Mass.</param>
-        /// <param name="elevation">The elevation of the perimeter.</param>
         /// <param name="height">The height of the Mass from the bottom elevation.</param>
         /// <param name="material">The Mass' material. The default is the built in Mass material.</param>
+        /// <param name="transform">The Mass's transform.</param>
         [JsonConstructor]
-        public Mass(IProfile profile, double elevation = 0.0, double height = 1.0, Material material = null)
+        public Mass(IProfile profile, double height = 1.0, Material material = null, Transform transform = null)
         {
             if (height <= 0)
             {
                 throw new ArgumentOutOfRangeException("The Mass could not be constructed. The height must be greater than zero.");
             }
             this.Profile = profile;
-            this.Elevation = elevation;
             this.Height = height;
-            this.Material = material != null ? material : BuiltInMaterials.Mass;
+            this.Transform = transform;
+            this.Geometry = new[]{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Mass : material)};
         }
 
         /// <summary>
         /// Construct a Mass.
         /// </summary>
-        /// <param name="profile"></param>
-        /// <param name="elevation"></param>
-        /// <param name="height"></param>
-        /// <param name="material"></param>
-        public Mass(Polygon profile, double elevation = 0.0, double height = 1.0, Material material = null)
+        /// <param name="profile">The Profile of the Mass.</param>
+        /// <param name="height">The height of the Mass from the bottom elevation.</param>
+        /// <param name="material">The Mass' material. The default is the built in Mass material.</param>
+        /// <param name="transform">The Mass's transform.</param>
+        public Mass(Polygon profile, double height = 1.0, Material material = null, Transform transform = null)
         {
             if (height <= 0)
             {
                 throw new ArgumentOutOfRangeException("The Mass could not be constructed. The height must be greater than zero.");
             }
             this.Profile = new Profile(profile);
-            this.Elevation = elevation;
             this.Height = height;
-            this.Material = material != null ? material : BuiltInMaterials.Mass;
-        }
-
-        /// <summary>
-        /// The Faces of the Mass.
-        /// </summary>
-        public IFace[] Faces()
-        {
-            return Extrusions.Extrude(this.Profile, this.Height, this.Elevation);
+            this.Transform = transform;
+            this.Geometry = new[]{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Mass : material)};
         }
 
         /// <summary>

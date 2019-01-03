@@ -56,12 +56,12 @@ namespace Elements.Tests
             var profile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
             var floorType = new FloorType("test", 0.2);
             var floor = new Floor(profile, floorType, 5.0);
-            var mass = new Mass(Polygon.Rectangle(), 5.0, 1.0);
+            var mass = new Mass(Polygon.Rectangle(), 1.0, BuiltInMaterials.Mass, new Transform(new Vector3(0,0,5.0)));
             var line = new Line(Vector3.Origin, new Vector3(5,5,5));
             var beam = new Beam(line, new WideFlangeProfile("test_beam"), BuiltInMaterials.Steel);
             var column = new Column(new Vector3(5,5,5), 5.0, new WideFlangeProfile("test_column"), BuiltInMaterials.Steel);
             var spaceProfile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
-            var space = new Space(spaceProfile, 5.0, 5.0);
+            var space = new Space(spaceProfile, 5.0, BuiltInMaterials.Default, new Transform(new Vector3(0,0,5)));
             var model = new Model();
 
             var wallLine = new Line(Vector3.Origin, new Vector3(10,0,0));
@@ -84,15 +84,14 @@ namespace Elements.Tests
             var newSpace = elements.Values.OfType<Space>().FirstOrDefault();
             var newWall = elements.Values.OfType<Wall>().FirstOrDefault();
 
-            Assert.Equal(panel.Faces()[0].Vertices.Length, newPanel.Faces()[0].Vertices.Length);
+            Assert.Equal(panel.Geometry[0].Faces[0].Vertices.Length, newPanel.Geometry[0].Faces[0].Vertices.Length);
             Assert.Equal(panel.Id, newPanel.Id);
             Assert.Equal(floor.Id, newFloor.Id);
-            Assert.Equal(floor.Material, newFloor.Material);
+            Assert.Equal(floor.Geometry[0].Material, newFloor.Geometry[0].Material);
             Assert.Equal(floor.Profile.Perimeter.Vertices.Length, newFloor.Profile.Perimeter.Vertices.Length);
             Assert.Equal(floor.ElementType.Thickness, newFloor.ElementType.Thickness);
             Assert.Equal(floor.Elevation, newFloor.Elevation);
             Assert.Equal(mass.Profile.Perimeter.Vertices.Length, newMass.Profile.Perimeter.Vertices.Length);
-            Assert.Equal(mass.Elevation, newMass.Elevation);
             Assert.Equal(mass.Height, newMass.Height);
             Assert.Equal(space.Elevation, newSpace.Elevation);
             Assert.Equal(space.Height, newSpace.Height);

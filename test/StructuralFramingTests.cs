@@ -43,25 +43,26 @@ namespace Elements.Tests
             }
 
             var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel, null, startSetback, endSetback);
-            Assert.Equal(BuiltInMaterials.Steel, beam.Material);
+            Assert.Equal(BuiltInMaterials.Steel, beam.Geometry[0].Material);
             Assert.Equal(cl, beam.Curve);
 
             this.Model.AddElement(beam);
         }
 
         [Fact]
-        public void Example2()
+        public void WideFlange()
         {
+            this.Name = "WideFlange";
+
             var x = 0.0;
             var z = 0.0;
-            var model = new Model();
             var profiles = WideFlangeProfileServer.Instance.AllProfiles().ToList();
             foreach(var profile in profiles)
             {
                 var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
                 var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
-                model.AddElement(beam);
+                this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
                 {
@@ -69,22 +70,21 @@ namespace Elements.Tests
                     x = 0.0;
                 }
             }
-            model.SaveGlb("wide_flange.glb");
         }
 
         [Fact]
-        public void Example3()
+        public void HSS()
         {
+            this.Name = "HSS";
             var x = 0.0;
             var z = 0.0;
-            var model = new Model();
             var profiles = HSSPipeProfileServer.Instance.AllProfiles().ToList();
             foreach(var profile in profiles)
             {
                 var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
                 var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
-                model.AddElement(beam);
+                this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
                 {
@@ -92,7 +92,6 @@ namespace Elements.Tests
                     x = 0.0;
                 }
             }
-            model.SaveGlb("hss_pipe.glb");
         }
 
 
@@ -101,7 +100,7 @@ namespace Elements.Tests
         {
             this.Name = "Column";
             var column = new Column(Vector3.Origin, 3.0, this._testProfile);
-            Assert.Equal(BuiltInMaterials.Steel, column.Material);
+            Assert.Equal(BuiltInMaterials.Steel, column.Geometry[0].Material);
             Assert.Equal(3.0, column.Curve.Length());
             this.Model.AddElement(column);
         }
@@ -112,7 +111,7 @@ namespace Elements.Tests
             this.Name = "Brace";
             var line = new Line(Vector3.Origin, new Vector3(3,3,3));
             var brace = new Brace(line, this._testProfile);
-            Assert.Equal(BuiltInMaterials.Steel, brace.Material);
+            Assert.Equal(BuiltInMaterials.Steel, brace.Geometry[0].Material);
             Assert.Equal(line, brace.Curve);
             this.Model.AddElement(brace);
         }

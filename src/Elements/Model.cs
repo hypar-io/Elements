@@ -126,7 +126,10 @@ namespace Elements
             if (element is IGeometry3D)
             {
                 var geo = (IGeometry3D)element;
-                AddMaterial(geo.Material);
+                foreach(var brep in geo.Geometry)
+                {
+                    AddMaterial(brep.Material);
+                }
             }
 
             if (element is IElementTypeProvider<WallType>)
@@ -443,41 +446,39 @@ namespace Elements
 
                 Elements.Geometry.Mesh mesh = null;
 
-                if (e is IExtrudeAlongCurve)
+                foreach(var brep in geo.Geometry)
                 {
-                    var eac = (IExtrudeAlongCurve)e;
+                    if (brep is IExtrudeAlongCurve)
+                    {
+                        var eac = (IExtrudeAlongCurve)brep;
 
-                    // var frames = eac.Curve.Frames(0, 0);
-                    // foreach (var f in frames)
-                    // {
-                    //     var x = new Elements.Geometry.Line(f.Origin, f.Origin + f.XAxis * 2);
-                    //     AddCurve(e.Id + 10000, x, gltf, materials["x_axis"], e.Transform);
-                    //     var y = new Elements.Geometry.Line(f.Origin, f.Origin + f.YAxis * 2);
-                    //     AddCurve(e.Id + 10001, y, gltf, materials["y_axis"], e.Transform);
-                    //     var z = new Elements.Geometry.Line(f.Origin, f.Origin + f.ZAxis * 2);
-                    //     AddCurve(e.Id + 10002, z, gltf, materials["z_axis"], e.Transform);
-                    // }
-                    // Add the center curve
-                    AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Black.Name], e.Transform);
-                }
+                        // var frames = eac.Curve.Frames(0, 0);
+                        // foreach (var f in frames)
+                        // {
+                        //     var x = new Elements.Geometry.Line(f.Origin, f.Origin + f.XAxis * 2);
+                        //     AddCurve(e.Id + 10000, x, gltf, materials["x_axis"], e.Transform);
+                        //     var y = new Elements.Geometry.Line(f.Origin, f.Origin + f.YAxis * 2);
+                        //     AddCurve(e.Id + 10001, y, gltf, materials["y_axis"], e.Transform);
+                        //     var z = new Elements.Geometry.Line(f.Origin, f.Origin + f.ZAxis * 2);
+                        //     AddCurve(e.Id + 10002, z, gltf, materials["z_axis"], e.Transform);
+                        // }
+                        // Add the center curve
+                        AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Black.Name], e.Transform);
+                    }
 
-                if (e is IBRep)
-                {
                     mesh = new Elements.Geometry.Mesh();
-                    var brep = (IBRep)e;
-                    foreach (var f in brep.Faces())
+                    foreach (var f in brep.Faces)
                     {
                         // Draw a winding indicator
                         // AddArrow(e.Id + 10003, f.Vertices[0], (f.Vertices[1] - f.Vertices[0]).Normalized(), gltf, materials["z_axis"], e.Transform);
                         f.Tessellate(mesh);
                     }
+
+                    gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
+                                        mesh.Indices.ToArray(), mesh.VertexColors.ToArray(),
+                                        mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax,
+                                        mesh.IMin, mesh.IMax, materials[brep.Material.Name], null, e.Transform);
                 }
-
-                gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                    mesh.Indices.ToArray(), mesh.VertexColors.ToArray(),
-                                    mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax,
-                                    mesh.IMin, mesh.IMax, materials[geo.Material.Name], null, e.Transform);
-
             }
 
             if (e is IAggregateElement)

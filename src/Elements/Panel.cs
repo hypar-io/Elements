@@ -13,19 +13,19 @@ namespace Elements
     /// <summary>
     /// A zero-thickness planar Panel defined by 3 or 4 points.
     /// </summary>
-    public class Panel : Element, IBRep
+    public class Panel : Element, IGeometry3D
     {
         /// <summary>
         /// The vertices forming the perimeter of the panel.
         /// </summary>
         [JsonProperty("perimeter")]
-        public Vector3[] Perimeter {get;}
+        public Vector3[] Perimeter { get; }
 
         /// <summary>
-        /// The Panel's Material.
+        /// The Panel's geometry.
         /// </summary>
-        [JsonProperty("material")]
-        public Material Material{get;}
+        [JsonProperty("geometry")]
+        public IBRep[] Geometry { get; }
 
         /// <summary>
         /// Construct a Panel.
@@ -42,16 +42,7 @@ namespace Elements
                 throw new ArgumentException("Panels can only be constructed currently using perimeters with 3 or 4 vertices.", "perimeter");
             }
             this.Perimeter = perimeter;
-            this.Material = material == null ? BuiltInMaterials.Default : material;
-        }
-
-        /// <summary>
-        /// A collection of Faces which describe the Panel.
-        /// </summary>
-        public IFace[] Faces()
-        {
-            var planarFace = new PlanarFace(new Profile(new Polygon(this.Perimeter)));
-            return new[]{planarFace};
+            this.Geometry = new []{new FacetedBRep(new[]{new PlanarFace(new Profile(new Polygon(this.Perimeter)))}, material == null ? BuiltInMaterials.Default : material)};
         }
 
         /// <summary>

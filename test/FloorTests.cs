@@ -5,19 +5,19 @@ using Xunit;
 
 namespace Elements.Tests
 {
-    public class FloorTests
+    public class FloorTests : ModelTest
     {
         [Fact]
-        public void Example()
+        public void Floor()
         {
+            this.Name = "Floor";
             var p = Polygon.Rectangle(Vector3.Origin, 5, 5);
             var p1 = Polygon.Rectangle(new Vector3(3,2,0), 3, 1);
             var profile = new Profile(p, p1);
             var floorType = new FloorType("test", 0.2);
             var floor = new Floor(profile, floorType, 0.0);
             var model = new Model();
-            model.AddElement(floor);
-            model.SaveGlb("floor.glb");
+            this.Model.AddElement(floor);
         }
 
         [Fact]

@@ -6,11 +6,21 @@ namespace Elements.Geometry.Interfaces
     /// A boundary representation containing a collection of
     /// bounded faces.
     /// </summary>
-    public interface IBRep: IGeometry3D
+    public interface IBRep
     {
         /// <summary>
-        /// A collection of Faces.
+        /// A type descriptor for use in deserialization.
         /// </summary>
-        IFace[] Faces();
+        string Type { get; }
+        
+        /// <summary>
+        /// The Faces of the BRep.
+        /// </summary>
+        IFace[] Faces{get;}
+
+        /// <summary>
+        /// The BRep's Material.
+        /// </summary>
+        Material Material{get;}
     }
 }

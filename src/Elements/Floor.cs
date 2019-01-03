@@ -10,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : Element, IElementTypeProvider<FloorType>, IExtrude, IProfileProvider
+    public class Floor : Element, IElementTypeProvider<FloorType>, IGeometry3D, IProfileProvider
     {
         /// <summary>
         /// The elevation from which the Floor is extruded.
@@ -23,12 +23,6 @@ namespace Elements
         /// </summary>
         [JsonProperty("element_type")]
         public FloorType ElementType { get; }
-
-        /// <summary>
-        /// The Material of the Floor.
-        /// </summary>
-        [JsonProperty("material")]
-        public Material Material { get; }
 
         /// <summary>
         /// The Profile of the Floor.
@@ -55,12 +49,19 @@ namespace Elements
         }
 
         /// <summary>
+        /// The Floor's geometry.
+        /// </summary>
+        [JsonProperty("geometry")]
+        public IBRep[] Geometry { get; }
+
+        /// <summary>
         /// Construct a Floor.
         /// </summary>
-        /// <param name="profile">The <see cref="Elements.Geometry.Profile"/>of the Floor.</param>
+        /// <param name="profile">The IProfile of the Floor.</param>
+        /// <param name="elementType">The ElementType of the Floor.</param>
         /// <param name="elevation">The elevation of the Floor.</param>
-        /// <param name="elementType">The <see cref="Elements.ElementType"/> of the Floor.</param>
-        /// <param name="material">The Floor's Material.<see cref="Elements.Material"/>.</param>
+        /// <param name="material">The Floor's Material.</param>
+        /// <param name="transform">The Floor's transform.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the slab's thickness is less than or equal to 0.0.</exception>
         [JsonConstructor]
         public Floor(IProfile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
@@ -69,7 +70,7 @@ namespace Elements
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Material = material == null ? BuiltInMaterials.Concrete : material;
+            this.Geometry = new[]{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace Elements
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Material = material == null ? BuiltInMaterials.Concrete : material;
+            this.Geometry = new[]{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>
@@ -97,41 +98,6 @@ namespace Elements
         public double Area()
         {
             return this.Profile.Area();
-        }
-
-        /// <summary>
-        /// A collection of Faces which comprise the Floor.
-        /// </summary>
-        public IFace[] Faces()
-        {
-            return Extrusions.Extrude(this.Profile, this.Thickness);
-        }
-    }
-
-    /// <summary>
-    /// Extension methods for Floors.
-    /// </summary>
-    public static class FloorExtensions
-    {
-        /// <summary>
-        /// Create Floors at the specified elevations within a mass.
-        /// </summary>
-        /// <param name="mass"></param>
-        /// <param name="elevations">A collection of elevations at which Floors will be created within the mass.</param>
-        /// <param name="floorType">The FloorType of the Floors.</param>
-        /// <param name="material">The Floor material.</param>
-        public static IList<Floor> Floors(this Mass mass, IList<double> elevations, FloorType floorType, Material material)
-        {
-            var Floors = new List<Floor>();
-            foreach (var e in elevations)
-            {
-                if (e >= mass.Elevation && e <= mass.Elevation + mass.Height)
-                {
-                    var f = new Floor(mass.Profile, floorType, e, material);
-                    Floors.Add(f);
-                }
-            }
-            return Floors;
         }
     }
 }

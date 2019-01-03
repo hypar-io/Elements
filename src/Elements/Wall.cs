@@ -9,20 +9,13 @@ namespace Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall : Element, IElementTypeProvider<WallType>, IExtrude, IProfileProvider
+    public class Wall : Element, IElementTypeProvider<WallType>, IGeometry3D, IProfileProvider
     {
-        private enum WallDefinition
-        {
-            ByProfile, ByCenterLine
-        }
-
-        private WallDefinition _wallDefinition;
-
         /// <summary>
         /// The Profile of the Wall.
         /// </summary>
         [JsonProperty("profile")]
-        public IProfile Profile{get;}
+        public IProfile Profile { get; }
 
         /// <summary>
         /// The transformed Profile of the Wall.
@@ -30,14 +23,14 @@ namespace Elements
         [JsonIgnore]
         public IProfile ProfileTransformed
         {
-            get{return this.Transform != null? this.Transform.OfProfile(this.Profile) : this.Profile;}
+            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
         }
 
         /// <summary>
         /// The center line of the wall.
         /// </summary>
         [JsonProperty("center_line")]
-        public Line CenterLine{get;}
+        public Line CenterLine { get; }
 
         /// <summary>
         /// The height of the wall.
@@ -49,7 +42,7 @@ namespace Elements
         /// The WallType of the Wall.
         /// </summary>
         [JsonProperty("element_type")]
-        public WallType ElementType{get;}
+        public WallType ElementType { get; }
 
         /// <summary>
         /// The thickness of the Wall's extrusion.
@@ -58,15 +51,14 @@ namespace Elements
         [JsonIgnore]
         public double Thickness
         {
-            get{return this.ElementType.Thickness;}
+            get { return this.ElementType.Thickness; }
         }
 
         /// <summary>
-        /// The Wall's material.
+        /// The Wall's geometry.
         /// </summary>
-        /// <value></value>
-        [JsonProperty("material")]
-        public Material Material{get;}
+        [JsonProperty("geometry")]
+        public IBRep[] Geometry { get; }
 
         /// <summary>
         /// Construct a wall by extruding a profile.
@@ -79,9 +71,8 @@ namespace Elements
         {
             this.Profile = profile;
             this.Height = height;
-            this.Material = material != null ? material : BuiltInMaterials.Concrete;
-            this._wallDefinition = WallDefinition.ByProfile;
             this.Transform = transform;
+            this.Geometry = new []{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>
@@ -109,14 +100,13 @@ namespace Elements
             }
 
             this.CenterLine = centerLine;
-            this.Material = material == null ? BuiltInMaterials.Concrete : material;
             this.Height = height;
             this.ElementType = elementType;
-            
-            if(openings != null && openings.Length > 0)
+
+            if (openings != null && openings.Length > 0)
             {
                 var voids = new Polygon[openings.Length];
-                for(var i = 0; i< voids.Length; i++)
+                for (var i = 0; i < voids.Length; i++)
                 {
                     var o = openings[i];
                     voids[i] = Polygon.Rectangle(new Vector3(o.DistanceAlongWall, o.BaseHeight), new Vector3(o.DistanceAlongWall + o.Width, o.BaseHeight + o.Height));
@@ -127,26 +117,11 @@ namespace Elements
             {
                 this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
             }
-            
+
             // Construct a transform whose X axis is the centerline of the wall.
             var z = Vector3.ZAxis.Cross(centerLine.Direction);
             this.Transform = new Transform(centerLine.Start, centerLine.Direction, z);
-            this._wallDefinition = WallDefinition.ByCenterLine;
-        }
-        
-        /// <summary>
-        /// A collection of Faces which comprise the Wall.
-        /// </summary>
-        public IFace[] Faces()
-        {
-            switch(this._wallDefinition)
-            {
-                case WallDefinition.ByCenterLine:
-                    return Extrusions.Extrude(this.Profile, this.Thickness);
-                case WallDefinition.ByProfile:
-                    return Extrusions.Extrude(this.Profile, this.Height);
-            }
-            return null;
+            this.Geometry = new []{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
     }
 }

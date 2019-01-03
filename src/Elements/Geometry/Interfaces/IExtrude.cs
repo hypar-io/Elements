@@ -4,6 +4,6 @@ namespace Elements.Geometry.Interfaces
 {
     public interface IExtrude: IBRep
     {
-        double Thickness{get;}
+        double Depth{get;}
     }
 }

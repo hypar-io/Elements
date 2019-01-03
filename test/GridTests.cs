@@ -4,14 +4,16 @@ using System;
 using System.IO;
 using System.Linq;
 using Xunit;
+using Elements.Tests;
 
 namespace Elements.Geometry.Tests
 {
-    public class GridTests
+    public class GridTests : ModelTest
     {
         [Fact]
-        public void Example()
+        public void Grid()
         {
+            this.Name = "Grid";
             var a = new Vector3();
             var b = new Vector3(10,0,0);
             var c = new Vector3(0,0,10);
@@ -22,9 +24,8 @@ namespace Elements.Geometry.Tests
             foreach(var cell in grid.Cells())
             {
                 var panel = new Panel(cell.Shrink(0.2));
-                model.AddElement(panel);
+                this.Model.AddElement(panel);
             }
-            model.SaveGlb("grid.glb");
         }
 
         [Fact]

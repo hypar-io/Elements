@@ -17,7 +17,7 @@ namespace Elements.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var poly = new Polygon(new[] { a, b, c, d });
-            var mass = new Mass(poly, 0.0, 5.0);
+            var mass = new Mass(poly, 5.0);
             var model = new Model();
             this.Model.AddElement(mass);
         }
@@ -30,7 +30,7 @@ namespace Elements.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polygon(new[] { a, b, c, d });
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Mass(profile, 0, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Mass(profile, 0));
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Elements.Tests
             var d = new Vector3(-10, 5);
             var profile = new Polygon(new[] { a, b, c, d });
             var material = new Material("mass", new Color(1.0f, 1.0f, 0.0f, 0.5f), 0.0f, 0.0f);
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Mass(profile, 0, -10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Mass(profile, -10));
         }
 
         [Fact]
@@ -59,9 +59,9 @@ namespace Elements.Tests
             var material1 = new Material("mass1", new Color(1.0f, 0.0f, 0.0f, 0.5f), 0.0f, 0.0f);
             var material2 = new Material("mass2", new Color(0.0f, 1.0f, 0.0f, 0.5f), 0.0f, 0.0f);
             var material3 = new Material("mass3", new Color(0.0f, 1.0f, 1.0f, 0.5f), 0.0f, 0.0f);
-            var mass1 = new Mass(profile1, 0, 10.0, material1);
-            var mass2 = new Mass(profile2, 10.0, 10.0, material2);
-            var mass3 = new Mass(profile3, 20.0, 10.0, material3);
+            var mass1 = new Mass(profile1, 10.0, material1);
+            var mass2 = new Mass(profile2, 10.0, material2, new Transform(new Vector3(0,0,10.0)));
+            var mass3 = new Mass(profile3, 10.0, material3, new Transform(new Vector3(0,0,20.0)));
             this.Model.AddElements(new[] { mass1, mass2, mass3 });
 
             var floorType = new FloorType("test", 0.2);
@@ -75,7 +75,7 @@ namespace Elements.Tests
         public void Volume()
         {
             var profile = Polygon.Rectangle(Vector3.Origin, 5, 5);
-            var mass = new Mass(profile, 0.0, 5.0);
+            var mass = new Mass(profile, 5.0);
             Assert.Equal(125, mass.Volume());
         }
 
@@ -83,7 +83,7 @@ namespace Elements.Tests
         public void Transform()
         {
             var profile = Polygon.Rectangle();
-            var mass = new Mass(profile, 0.0, 5.0);
+            var mass = new Mass(profile, 5.0, BuiltInMaterials.Mass, new Transform());
             var t = new Vector3(5, 0, 0);
             mass.Transform.Move(t);
             for (var i = 0; i < profile.Vertices.Length; i++)

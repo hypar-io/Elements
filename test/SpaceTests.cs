@@ -17,7 +17,7 @@ namespace Elements.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polygon(new[]{a,b,c,d});
-            var space = new Space(profile, 0, 10);
+            var space = new Space(profile, 10);
             this.Model.AddElement(space);
         }
 
@@ -30,7 +30,7 @@ namespace Elements.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Polygon(new[]{a,b,c,d});
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Space(profile, 0, -10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Space(profile, -10));
         }
 
         [Fact]

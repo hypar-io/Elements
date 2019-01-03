@@ -144,7 +144,7 @@ namespace Elements
                 transform.Concatenate(solid.Position.ToTransform());
                 var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
                 var outline = pline.ToPolygon(true);
-                var result = new Space(new Profile(outline), 0.0, (IfcLengthMeasure)solid.Depth, material, transform);
+                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, material, transform);
                 return result;
             }
             else if (foundSolid.GetType() == typeof(IFC.IfcFacetedBrep))
@@ -162,9 +162,8 @@ namespace Elements
                         faces[i] = new PlanarFace(poly);
                     }
                 }
-                var newSpace = new Space(material, transform);
-                newSpace.SetFaces(faces);
-                return newSpace;
+                var result = new Space(new FacetedBRep(faces, material), transform);
+                return result;
             }
 
             return null;

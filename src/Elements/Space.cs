@@ -10,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A space represents the extruded boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, IExtrude, IProfileProvider
+    public class Space : Element, IGeometry3D, IProfileProvider
     {
         private PlanarFace[] _faces;
 
@@ -31,22 +31,6 @@ namespace Elements
         /// </summary>
         [JsonProperty("profile")]
         public IProfile Profile{get;}
-        
-        /// <summary>
-        /// The Space's Material.
-        /// </summary>
-        [JsonProperty("material")]
-        public Material Material{get;}
-
-        /// <summary>
-        /// The Thickness of the Space's extrusion.
-        /// </summary>
-        /// <value></value>
-        [JsonIgnore]
-        public double Thickness
-        {
-            get{return this.Height;}
-        }
 
         /// <summary>
         /// The transformed Profile of the Space.
@@ -58,24 +42,30 @@ namespace Elements
         }
 
         /// <summary>
+        /// The Space's geometry.
+        /// </summary>
+        [JsonProperty("geometry")]
+        public IBRep[] Geometry {get;}
+
+        /// <summary>
         /// Internal constructor for building a BRep of the Space.
         /// </summary>
-        internal Space(Material material = null, Transform transform = null)
+        internal Space(IBRep geometry, Transform transform = null)
         {
-            this.Material = material != null ? material : BuiltInMaterials.Default;
             this.Transform = transform != null ? transform : new Transform();
+            this.Geometry = new []{geometry};
         }
 
         /// <summary>
         /// Construct a space.
         /// </summary>
-        /// <param name="profile">The Profile of the space.</param>
-        /// <param name="elevation">The elevation of the perimeter.</param>
-        /// <param name="height">The height of the space above the lower elevation.</param>
-        /// <param name="material">The space's material.</param>
+        /// <param name="profile">The Profile of the Space.</param>
+        /// <param name="height">The height of the Space above the lower elevation.</param>
+        /// <param name="material">The Space's material.</param>
+        /// <param name="transform">The Space's transform.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
         [JsonConstructor]
-        public Space(Profile profile, double elevation = 0.0, double height = 1.0, Material material = null, Transform transform = null)
+        public Space(Profile profile, double height = 1.0, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
             {
@@ -83,22 +73,19 @@ namespace Elements
             }
 
             this.Profile = profile;
-            this.Elevation = elevation;
             this.Height = height;
-
-            this.Material = material != null ? material : BuiltInMaterials.Default;
             this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+            this.Geometry = new[]{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Default : material)};
         }
 
         /// <summary>
         /// Construct a Space.
         /// </summary>
-        /// <param name="profile"></param>
-        /// <param name="elevation"></param>
-        /// <param name="height"></param>
-        /// <param name="material"></param>
-        /// <param name="transform"></param>
-        public Space(Polygon profile, double elevation = 0.0, double height = 1.0, Material material = null, Transform transform = null)
+        /// <param name="profile">The Profile of the Space.</param>
+        /// <param name="height">The height of the Space above the lower elevation.</param>
+        /// <param name="material">The Space's material.</param>
+        /// <param name="transform">The Space's transform.</param>
+        public Space(Polygon profile, double height = 1.0, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
             {
@@ -106,28 +93,21 @@ namespace Elements
             }
 
             this.Profile = new Profile(profile);
-            this.Elevation = elevation;
             this.Height = height;
 
-            this.Material = material != null ? material : BuiltInMaterials.Default;
             this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+            this.Geometry = new[]{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Default : material)};
         }
 
-        internal void SetFaces(PlanarFace[] faces)
+        internal Space(IBRep[] geometry, Transform transform = null)
         {
-            this._faces = faces;
-        }
-
-        /// <summary>
-        /// A collection of Faces which comprise this Space.
-        /// </summary>
-        public IFace[] Faces()
-        {
-            if(this._faces != null)
+            if(geometry == null || geometry.Length == 0)
             {
-                return this._faces;
+                throw new ArgumentOutOfRangeException("You must supply at least one IBRep to construct a Space.");
             }
-            return Extrusions.Extrude(this.Profile, this.Height, this.Elevation);
+
+            this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+            this.Geometry = geometry;
         }
     }
 }

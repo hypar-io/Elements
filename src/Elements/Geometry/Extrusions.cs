@@ -7,15 +7,18 @@ namespace Elements.Geometry
 {
     internal static class Extrusions
     {
-        internal static IFace[] Extrude(IProfile profile, double height, double offset = 0)
+        internal static IFace[] Extrude(IProfile profile, double height, double offset = 0, bool capped = true)
         {
             var faces = new List<IFace>();
             var clipped = Clip(profile.Perimeter, profile.Voids);
 
             // start cap
-            var tStart = new Transform(new Vector3(0, 0, offset));
-            var start = tStart.OfProfile(clipped.Reversed());
-            faces.Add(new PlanarFace(start));
+            if(capped)
+            {
+                var tStart = new Transform(new Vector3(0, 0, offset));
+                var start = tStart.OfProfile(clipped.Reversed());
+                faces.Add(new PlanarFace(start));
+            }
 
             // outer loop
             foreach (var s in clipped.Perimeter.Segments())
@@ -36,9 +39,13 @@ namespace Elements.Geometry
             }
 
             // end cap
-            var tEnd = new Transform(new Vector3(0, 0, offset + height));
-            var end = tEnd.OfProfile(clipped);
-            faces.Add(new PlanarFace(end));
+            if(capped)
+            {
+                var tEnd = new Transform(new Vector3(0, 0, offset + height));
+                var end = tEnd.OfProfile(clipped);
+                faces.Add(new PlanarFace(end));
+            }
+            
             return faces.ToArray();
         }
 
