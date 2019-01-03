@@ -9,7 +9,7 @@ namespace Elements
     /// <summary>
     /// A Mass represents an extruded building Mass.
     /// </summary>
-    public class Mass : Element, IGeometry3D, IProfileProvider
+    public class Mass : Element, IGeometry3D
     {
         private List<Polyline> _sides = new List<Polyline>();
 

@@ -10,10 +10,8 @@ namespace Elements
     /// <summary>
     /// A space represents the extruded boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, IGeometry3D, IProfileProvider
+    public class Space : Element, IGeometry3D
     {
-        private PlanarFace[] _faces;
-
         /// <summary>
         /// The elevation of the Space perimeter.
         /// </summary>
@@ -30,7 +28,7 @@ namespace Elements
         /// The Profile of the Space.
         /// </summary>
         [JsonProperty("profile")]
-        public IProfile Profile{get;}
+        public IProfile Profile { get; }
 
         /// <summary>
         /// The transformed Profile of the Space.
@@ -38,14 +36,14 @@ namespace Elements
         [JsonIgnore]
         public IProfile ProfileTransformed
         {
-            get{return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;}
+            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
         }
 
         /// <summary>
         /// The Space's geometry.
         /// </summary>
         [JsonProperty("geometry")]
-        public IBRep[] Geometry {get;}
+        public IBRep[] Geometry { get; }
 
         /// <summary>
         /// Internal constructor for building a BRep of the Space.
@@ -53,7 +51,7 @@ namespace Elements
         internal Space(IBRep geometry, Transform transform = null)
         {
             this.Transform = transform != null ? transform : new Transform();
-            this.Geometry = new []{geometry};
+            this.Geometry = new[] { geometry };
         }
 
         /// <summary>
@@ -74,8 +72,8 @@ namespace Elements
 
             this.Profile = profile;
             this.Height = height;
-            this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
-            this.Geometry = new[]{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Default : material)};
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+            this.Geometry = new[] { new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Default : material) };
         }
 
         /// <summary>
@@ -95,18 +93,18 @@ namespace Elements
             this.Profile = new Profile(profile);
             this.Height = height;
 
-            this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
-            this.Geometry = new[]{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Default : material)};
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+            this.Geometry = new[] { new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Default : material) };
         }
 
         internal Space(IBRep[] geometry, Transform transform = null)
         {
-            if(geometry == null || geometry.Length == 0)
+            if (geometry == null || geometry.Length == 0)
             {
                 throw new ArgumentOutOfRangeException("You must supply at least one IBRep to construct a Space.");
             }
 
-            this.Transform = transform != null? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, this.Elevation), new Vector3(1, 0, 0), new Vector3(0, 0, 1));
             this.Geometry = geometry;
         }
     }

@@ -1,6 +1,7 @@
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -186,6 +187,16 @@ namespace Elements.Geometry
             }
             var p = new Polygon(transformed);
             return p;
+        }
+
+        /// <summary>
+        /// Transform the specified Polygons.
+        /// </summary>
+        /// <param name="polygons">The Polygons to Transform.</param>
+        /// <returns>An array of Polygons transformed by this Transform.</returns>
+        public Polygon[] OfPolygons(Polygon[] polygons)
+        {
+            return polygons.Select(p=>OfPolygon(p)).ToArray();
         }
 
         /// <summary>

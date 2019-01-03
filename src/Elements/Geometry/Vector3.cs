@@ -9,6 +9,9 @@ namespace Elements.Geometry
     /// </summary>
     public class Vector3 : IComparable<Vector3>
     {
+        /// <summary>
+        /// A tolerance for comparison operations.
+        /// </summary>
         public static double Tolerance = 0.000000001;
 
         /// <summary>

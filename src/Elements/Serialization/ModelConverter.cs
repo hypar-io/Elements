@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
 
 namespace Elements.Serialization
 {
@@ -28,7 +29,6 @@ namespace Elements.Serialization
         /// <param name="objectType"></param>
         /// <param name="existingValue"></param>
         /// <param name="serializer"></param>
-        /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
@@ -36,7 +36,7 @@ namespace Elements.Serialization
             var elementTypes = JsonConvert.DeserializeObject<Dictionary<long, ElementType>>(obj.GetValue("element_types").ToString(),
                                 new[] { new ElementTypeConverter() });
             var profiles = JsonConvert.DeserializeObject<Dictionary<long, IProfile>>(obj.GetValue("profiles").ToString(),
-                                new[]{new IProfileConverter()});
+                                new[] { new IProfileConverter() });
             var elements = JsonConvert.DeserializeObject<Dictionary<long, Element>>(obj.GetValue("elements").ToString(),
                             new JsonSerializerSettings()
                             {
@@ -45,7 +45,9 @@ namespace Elements.Serialization
                                                     new ElementConverter(),
                                                     new MaterialToIdConverter(materials),
                                                     new ElementTypeToIdConverter(elementTypes),
-                                                    new ProfileToIdConverter(profiles)
+                                                    new ProfileToIdConverter(profiles),
+                                                    new IBRepConverter(),
+                                                    new IFaceConverter()
                                                 },
                                 NullValueHandling = NullValueHandling.Ignore
                             });

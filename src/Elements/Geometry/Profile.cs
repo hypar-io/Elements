@@ -46,12 +46,13 @@ namespace Elements.Geometry
     }
 
     /// <summary>
-    /// A Profile describes 
+    /// A Profile describes a Polygonal perimeter
+    /// with zero or many Polygonal voids.
     /// </summary>
     public class Profile : IIdentifiable, IProfile
     {
-        protected Polygon _perimeter;
-        protected Polygon[] _voids;
+        private Polygon _perimeter;
+        private Polygon[] _voids;
 
         /// <summary>
         /// The identifier of the Profile.

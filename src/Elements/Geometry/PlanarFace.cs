@@ -11,6 +11,16 @@ namespace Elements.Geometry
     public class PlanarFace : IFace
     {
         /// <summary>
+        /// The type of the element.
+        /// Used during deserialization to disambiguate derived types.
+        /// </summary>
+        [JsonProperty("type", Order = -100)]
+        public string Type
+        {
+            get { return this.GetType().FullName.ToLower(); }
+        }
+
+        /// <summary>
         /// The vertices of Face.
         /// </summary>
         [JsonIgnore]
@@ -19,12 +29,13 @@ namespace Elements.Geometry
             get
             {
                 var vertices = new List<Vector3>();
-                vertices.AddRange(this.Profile.Perimeter.Vertices);
-                if (this.Profile.Voids != null)
+                vertices.AddRange(this.Bounds[0].Vertices);
+                if (this.Bounds.Length > 1)
                 {
-                    foreach (var v in this.Profile.Voids)
+                    for (var i = 1; i < this.Bounds.Length; i++)
                     {
-                        vertices.AddRange(v.Vertices);
+                        var b = this.Bounds[i];
+                        vertices.AddRange(b.Vertices);
                     }
                 }
                 return vertices.ToArray();
@@ -40,32 +51,28 @@ namespace Elements.Geometry
             get
             {
                 var edges = new List<ICurve>();
-                edges.AddRange(this.Profile.Perimeter.Segments());
-                if (this.Profile.Voids != null)
+                foreach(var b in this.Bounds)
                 {
-                    foreach (var v in this.Profile.Voids)
-                    {
-                        edges.AddRange(v.Segments());
-                    }
+                    edges.AddRange(b.Segments());
                 }
                 return edges.ToArray();
             }
         }
 
         /// <summary>
-        /// The face's Profile.
+        /// The face's bounds.
         /// </summary>
-        [JsonProperty("profile")]
-        public IProfile Profile { get; }
+        [JsonProperty("bounds")]
+        public Polygon[] Bounds { get; }
 
         /// <summary>
         /// Construct a PlanarFace.
         /// </summary>
-        /// <param name="profile"></param>
+        /// <param name="bounds">An array of Polygons which define the bounds of the face.</param>
         [JsonConstructor]
-        public PlanarFace(IProfile profile)
+        public PlanarFace(Polygon[] bounds)
         {
-            this.Profile = profile;
+            this.Bounds = bounds;
         }
 
         /// <summary>
@@ -74,7 +81,7 @@ namespace Elements.Geometry
         /// <param name="vertices"></param>
         public PlanarFace(Vector3[] vertices)
         {
-            this.Profile = new Profile(new Polygon(vertices));
+            this.Bounds = new[] { new Polygon(vertices) };
         }
 
         /// <summary>
@@ -83,12 +90,12 @@ namespace Elements.Geometry
         /// <param name="polygon"></param>
         public PlanarFace(Polygon polygon)
         {
-            this.Profile = new Profile(polygon);
+            this.Bounds = new[] { polygon };
         }
 
         internal Plane Plane()
         {
-            return this.Profile.Perimeter.Plane();
+            return this.Bounds[0].Plane();
         }
 
         /// <summary>
@@ -96,7 +103,7 @@ namespace Elements.Geometry
         /// </summary>
         public virtual void Tessellate(Mesh mesh)
         {
-            var tess = Mesh.TessFromPolygon(this.Profile.Perimeter, this.Profile.Voids);
+            var tess = Mesh.TessFromPolygons(this.Bounds);
             tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
             for (var i = 0; i < tess.ElementCount; i++)

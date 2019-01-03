@@ -652,5 +652,10 @@ namespace Elements.Geometry
             }
             return new Polygon(converted);
         }
+
+        public static Polygon[] Reversed(this Polygon[] polygons)
+        {
+            return polygons.Select(p=>p.Reversed()).ToArray();
+        }
     }
 }

@@ -42,7 +42,7 @@ namespace Elements
                 throw new ArgumentException("Panels can only be constructed currently using perimeters with 3 or 4 vertices.", "perimeter");
             }
             this.Perimeter = perimeter;
-            this.Geometry = new []{new FacetedBRep(new[]{new PlanarFace(new Profile(new Polygon(this.Perimeter)))}, material == null ? BuiltInMaterials.Default : material)};
+            this.Geometry = new []{new FacetedBRep(new[]{new PlanarFace(this.Perimeter)}, material == null ? BuiltInMaterials.Default : material)};
         }
 
         /// <summary>

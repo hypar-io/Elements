@@ -12,7 +12,7 @@ namespace Elements
     /// <summary>
     /// A linear structural element with a cross section.
     /// </summary>
-    public abstract class StructuralFraming : Element, IGeometry3D, IProfileProvider
+    public abstract class StructuralFraming : Element, IGeometry3D
     {
         private Vector3 _up;
 

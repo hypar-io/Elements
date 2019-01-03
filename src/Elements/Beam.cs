@@ -19,6 +19,7 @@ namespace Elements
         /// <param name="up">The Beam's up axis.</param>
         /// <param name="startSetback">The setback of the Beam's geometry at the start.</param>
         /// <param name="endSetback">The setback of the Beam's geometry at the end.</param>
+        /// <param name="transform">The Beam's Transform.</param>
         [JsonConstructor]
         public Beam(ICurve curve, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null) : base(curve, profile, material, up, startSetback, endSetback, transform) { }
     }

@@ -52,7 +52,6 @@ namespace Elements.Geometry.Interfaces
         /// </summary>
         /// <param name="startSetback">The offset from the start of the ICurve.</param>
         /// <param name="endSetback">The offset from the end of the ICurve.</param>
-        /// <param name="up">The up vector.</param>
         /// <returns>A collection of Transforms.</returns>
         Transform[] Frames(double startSetback, double endSetback);
 

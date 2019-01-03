@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -11,6 +12,16 @@ namespace Elements.Geometry
     {
         private Arc _start;
         private Arc _end;
+
+        /// <summary>
+        /// The type of the element.
+        /// Used during deserialization to disambiguate derived types.
+        /// </summary>
+        [JsonProperty("type", Order = -100)]
+        public string Type
+        {
+            get { return this.GetType().FullName.ToLower(); }
+        }
 
         /// <summary>
         /// Construct a ConicFace.

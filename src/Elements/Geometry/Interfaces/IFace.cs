@@ -8,6 +8,11 @@ namespace Elements.Geometry.Interfaces
     public interface IFace
     {
         /// <summary>
+        /// A type descriptor for use in deserialization.
+        /// </summary>
+        string Type { get; }
+        
+        /// <summary>
         /// A collection of vertices.
         /// </summary>
         Vector3[] Vertices{get;}

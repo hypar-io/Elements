@@ -129,6 +129,15 @@ namespace Elements
                 foreach(var brep in geo.Geometry)
                 {
                     AddMaterial(brep.Material);
+
+                    if(brep is IProfileProvider)
+                    {
+                        var ipp = (IProfileProvider)brep;
+                        if(ipp.Profile != null)
+                        {
+                            AddProfile((Profile)ipp.Profile);
+                        }
+                    }
                 }
             }
 
@@ -147,15 +156,6 @@ namespace Elements
                 if(ftp.ElementType != null)
                 {
                     AddElementType(ftp.ElementType);
-                }
-            }
-
-            if (element is IProfileProvider)
-            {
-                var ipp = (IProfileProvider)element;
-                if(ipp.Profile != null)
-                {
-                    AddProfile((Profile)ipp.Profile);
                 }
             }
 
@@ -472,10 +472,10 @@ namespace Elements
                         // Draw a winding indicator
                         // AddArrow(e.Id + 10003, f.Vertices[0], (f.Vertices[1] - f.Vertices[0]).Normalized(), gltf, materials["z_axis"], e.Transform);
                         f.Tessellate(mesh);
-                        foreach(var edge in f.Edges)
-                        {
-                            AddCurve(e.Id, edge, gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
-                        }
+                        // foreach(var edge in f.Edges)
+                        // {
+                        //     AddCurve(e.Id, edge, gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
+                        // }
                     }
 
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),

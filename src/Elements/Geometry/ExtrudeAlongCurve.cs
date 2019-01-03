@@ -1,4 +1,5 @@
 using Elements.Geometry.Interfaces;
+using Elements.Serialization;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry
@@ -46,6 +47,7 @@ namespace Elements.Geometry
         /// The directrix of the ExtrudeAlongCurve.
         /// </summary>
         [JsonProperty("curve")]
+        [JsonConverter(typeof(ICurveConverter))]
         public ICurve Curve { get; }
 
         /// <summary>

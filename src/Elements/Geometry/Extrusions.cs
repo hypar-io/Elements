@@ -16,25 +16,15 @@ namespace Elements.Geometry
             if(capped)
             {
                 var tStart = new Transform(new Vector3(0, 0, offset));
-                var start = tStart.OfProfile(clipped.Reversed());
+                var start = tStart.OfPolygons(clipped.Reversed());
                 faces.Add(new PlanarFace(start));
             }
 
-            // outer loop
-            foreach (var s in clipped.Perimeter.Segments())
+            foreach(var p in clipped)
             {
-                faces.Add(Extrude(s, height, offset));
-            }
-
-            // inner loops
-            if (clipped.Voids != null)
-            {
-                foreach (var v in profile.Voids)
+                foreach(var s in p.Segments())
                 {
-                    foreach (var s in v.Segments())
-                    {
-                        faces.Add(Extrude(s, height, offset));
-                    }
+                    faces.Add(Extrude(s, height, offset));
                 }
             }
 
@@ -42,14 +32,14 @@ namespace Elements.Geometry
             if(capped)
             {
                 var tEnd = new Transform(new Vector3(0, 0, offset + height));
-                var end = tEnd.OfProfile(clipped);
+                var end = tEnd.OfPolygons(clipped);
                 faces.Add(new PlanarFace(end));
             }
             
             return faces.ToArray();
         }
 
-        private static Profile Clip(Polygon perimeter, IList<Polygon> voids)
+        private static Polygon[] Clip(Polygon perimeter, IList<Polygon> voids)
         {
             var clipper = new ClipperLib.Clipper();
             clipper.AddPath(perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
@@ -64,15 +54,8 @@ namespace Elements.Geometry
             // profile will result in an empty solution.
             if (solution.Count > 0)
             {
-                var polys = solution.Select(s => s.ToPolygon()).ToList();
-                if (polys.Count > 1)
-                {
-                    return new Profile(polys.First(), polys.Skip(1).ToArray());
-                }
-                else
-                {
-                    return new Profile(polys.First());
-                }
+                var polys = solution.Select(s => s.ToPolygon()).ToArray();
+                return polys;
             }
             return null;
         }
@@ -90,7 +73,7 @@ namespace Elements.Geometry
             var v2n = new Vector3(v2.X, v2.Y, offset);
             var v3n = new Vector3(v2.X, v2.Y, offset + height);
             var v4n = new Vector3(v1.X, v1.Y, offset + height);
-            return new PlanarFace(new Profile(new Polygon(new[] { v1n, v2n, v3n, v4n })));
+            return new PlanarFace(new Polygon(new[] { v1n, v2n, v3n, v4n }));
         }
 
         internal static IFace Extrude(Line l, double height, double offset = 0)
@@ -117,14 +100,10 @@ namespace Elements.Geometry
                 for (var i = 0; i < transforms.Length; i++)
                 {
                     var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
-                    faces.AddRange(ExtrudePolygonBetweenPlanes(clipped.Perimeter, transforms[i], next));
 
-                    if (clipped.Voids != null)
+                    foreach(var p in clipped)
                     {
-                        foreach (var p in clipped.Voids)
-                        {
-                            faces.AddRange(ExtrudePolygonBetweenPlanes(p, transforms[i], next));
-                        }
+                        faces.AddRange(ExtrudePolygonBetweenPlanes(p, transforms[i], next));
                     }
                 }
             }
@@ -132,21 +111,16 @@ namespace Elements.Geometry
             {
                 for (var i = 0; i < transforms.Length - 1; i++)
                 {
-                    faces.AddRange(ExtrudePolygonBetweenPlanes(clipped.Perimeter, transforms[i], transforms[i + 1]));
-
-                    if (clipped.Voids != null)
+                    foreach(var p in clipped)
                     {
-                        foreach (var p in clipped.Voids)
-                        {
-                            faces.AddRange(ExtrudePolygonBetweenPlanes(p, transforms[i], transforms[i + 1]));
-                        }
+                        faces.AddRange(ExtrudePolygonBetweenPlanes(p, transforms[i], transforms[i + 1]));
                     }
                 }
 
                 if (capped)
                 {
-                    faces.Add(new PlanarFace(transforms[0].OfProfile(clipped)));
-                    faces.Add(new PlanarFace(transforms[transforms.Length - 1].OfProfile(clipped.Reversed())));
+                    faces.Add(new PlanarFace(transforms[0].OfPolygons(clipped)));
+                    faces.Add(new PlanarFace(transforms[transforms.Length - 1].OfPolygons(clipped.Reversed())));
                 }
             }
 

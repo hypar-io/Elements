@@ -76,6 +76,7 @@ namespace Elements
         /// <param name="material">The truss' material.</param>
         /// <param name="startSetback">A setback to apply to the start of all members of the Truss.</param>
         /// <param name="endSetback">A setback to apply to the end of all members of the Truss.</param>
+        [JsonConstructor]
         public Truss(Vector3 start, Vector3 end, double depth, int divisions, Profile topChordProfile, Profile bottomChordProfile, Profile webProfile, Material material, double startSetback = 0.0, double endSetback = 0.0)
         {
             if(depth <= 0)

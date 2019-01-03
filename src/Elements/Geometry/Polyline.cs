@@ -16,7 +16,7 @@ namespace Elements.Geometry
         /// The type of the curve.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order = -1)]
+        [JsonProperty("type", Order = -100)]
         public string Type
         {
             get { return this.GetType().FullName.ToLower(); }

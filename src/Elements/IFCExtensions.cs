@@ -32,18 +32,11 @@ namespace Elements
             var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
 
             // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
-            var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
-            // foreach(var rc in relContains)
-            // {
-            //     foreach(var e in rc.RelatedElements)
-            //     {
-            //         Console.WriteLine($"Relationship: {rc.RelatingStructure.LongName} -> {e.GetType()}");
-            //     }
-            // }
+            // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
 
-            var slabs = ifcSlabs.Select(s => s.ToFloor(relContains));
-            var spaces = ifcSpaces.Select(sp => sp.ToSpace(relContains));
-            var walls = ifcWalls.Select(w=>w.ToWall(relContains));
+            var slabs = ifcSlabs.Select(s => s.ToFloor());
+            var spaces = ifcSpaces.Select(sp => sp.ToSpace());
+            var walls = ifcWalls.Select(w=>w.ToWall());
             var beams = ifcBeams.Select(b=>b.ToBeam());
             var model = new Model();
             model.AddElements(slabs);
@@ -58,19 +51,10 @@ namespace Elements
         /// Convert an IfcSlab to a Floor.
         /// </summary>
         /// <param name="slab">An IfcSlab.</param>
-        public static Floor ToFloor(this IfcSlab slab, IEnumerable<IfcRelContainedInSpatialStructure> relContains)
+        public static Floor ToFloor(this IfcSlab slab)
         {
             // TODO: When inverse are set on instances, this lookup will be unnecessary.
-            // var storeyRel = relContains.FirstOrDefault(rc => rc.RelatingStructure.GetType() == typeof(IfcBuildingStorey) && rc.RelatedElements.Contains(slab));
             var transform = new Transform();
-
-            // For IFCs that we've tested, relative placements are used.
-            // For this reason, we don't need to transform using the building story.
-            // if (storeyRel != null)
-            // {
-            //     var storey = (IfcBuildingStorey)storeyRel.RelatingStructure;
-            //     transform.Move(new Vector3(0, 0, storey.Elevation));
-            // }
 
             transform.Concatenate(slab.ObjectPlacement.ToTransform());
 
@@ -116,15 +100,9 @@ namespace Elements
         /// </summary>
         /// <param name="space">An IfcSpace.</param>
         /// <returns></returns>
-        public static Space ToSpace(this IfcSpace space, IEnumerable<IfcRelContainedInSpatialStructure> relContains)
+        public static Space ToSpace(this IfcSpace space)
         {
             var transform = new Transform();
-            // var storeyRel = relContains.FirstOrDefault(rc => rc.RelatingStructure.GetType() == typeof(IfcBuildingStorey) && rc.RelatedElements.Contains(space));
-            // if (storeyRel != null)
-            // {
-            //     var storey = (IfcBuildingStorey)storeyRel.RelatingStructure;
-            //     transform.Move(new Vector3(0, 0, storey.Elevation));
-            // }
 
             var repItems = space.Representation.Representations.SelectMany(r => r.Items);
             if (!repItems.Any())
@@ -173,8 +151,7 @@ namespace Elements
         /// Convert an IfcWallStandardCase to a Wall.
         /// </summary>
         /// <param name="wall"></param>
-        /// <param name="relContains"></param>
-        public static Wall ToWall(this IfcWallStandardCase wall, IEnumerable<IfcRelContainedInSpatialStructure> relContains)
+        public static Wall ToWall(this IfcWallStandardCase wall)
         {
             var transform = new Transform();
             transform.Concatenate(wall.ObjectPlacement.ToTransform());

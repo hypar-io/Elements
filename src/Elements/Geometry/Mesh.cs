@@ -306,19 +306,14 @@ namespace Elements.Geometry
             m_current_vertex_index += 4;
         }
 
-        internal static Tess TessFromPolygon(Polygon polygon, IList<Polygon> voids = null)
+        internal static Tess TessFromPolygons(Polygon[] polygons)
         {
             var tess = new Tess();
             tess.NoEmptyPolygons = true;
 
-            AddContour(tess, polygon);
-
-            if(voids != null)
+            foreach(var p in polygons)
             {
-                foreach(var p in voids)
-                {
-                    AddContour(tess, p);
-                }
+                AddContour(tess, p);
             }
 
             return tess;
