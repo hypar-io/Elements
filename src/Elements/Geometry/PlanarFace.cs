@@ -29,14 +29,9 @@ namespace Elements.Geometry
             get
             {
                 var vertices = new List<Vector3>();
-                vertices.AddRange(this.Bounds[0].Vertices);
-                if (this.Bounds.Length > 1)
+                foreach(var p in this.Bounds)
                 {
-                    for (var i = 1; i < this.Bounds.Length; i++)
-                    {
-                        var b = this.Bounds[i];
-                        vertices.AddRange(b.Vertices);
-                    }
+                    vertices.AddRange(p.Vertices);
                 }
                 return vertices.ToArray();
             }
@@ -105,15 +100,20 @@ namespace Elements.Geometry
         {
             var tess = Mesh.TessFromPolygons(this.Bounds);
             tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-
+            
             for (var i = 0; i < tess.ElementCount; i++)
             {
                 var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
                 var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
                 var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
 
-                mesh.AddTriangle(a, b, c);
+                mesh.AddTriangle(a, b, c);  //, tess.Normal.ToVector3().Normalized());
             }
+        }
+
+        public ICurve Intersect(Plane p)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

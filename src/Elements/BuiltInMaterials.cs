@@ -51,6 +51,6 @@ namespace Elements
         /// <summary>
         /// Edges
         /// </summary>
-        public static Material Edges = new Material("edges", new Color(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0.0f);
+        public static Material Edges = new Material("edges", new Color(0.1f, 0.1f, 0.1f, 1.0f), 0.0f, 0.0f);
     }
 }

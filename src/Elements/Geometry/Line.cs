@@ -185,5 +185,22 @@ namespace Elements.Geometry
             var l = this.Length();
             return new Transform[] { TransformAt(0.0 + startSetback / l), TransformAt(1.0 - endSetback / l) };
         }
+
+        /// <summary>
+        /// Intersect this Line with the specified Plane 
+        /// </summary>
+        /// <param name="p">The Plane.</param>
+        /// <returns>The point of intersection or null if no intersection occurs.</returns>
+        public Vector3 Intersect(Plane p) {
+            if (p.Normal.Dot(this.Direction) == 0) {
+                return null;
+            }
+            var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(this.Direction);
+            if(t > this.Length())
+            {
+                return null;
+            }
+            return this.Start + this.Direction * t;
+        }
     }
 }

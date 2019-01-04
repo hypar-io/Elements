@@ -12,6 +12,8 @@ namespace Elements
     /// </summary>
     public class Space : Element, IGeometry3D
     {
+        private double _height;
+
         /// <summary>
         /// The elevation of the Space perimeter.
         /// </summary>
@@ -22,8 +24,23 @@ namespace Elements
         /// The height of the Space above its perimeter elevation.
         /// </summary>
         [JsonProperty("height")]
-        public double Height { get; }
-
+        public double Height
+        {
+            get
+            {
+                if(this._height == 0.0)
+                {
+                    var bounds = new BBox3(this.Geometry);
+                    return bounds.Max.Z - bounds.Min.Z;
+                }
+                return this._height;
+            }
+            protected set
+            {
+                this._height = value;
+            }
+        }
+        
         /// <summary>
         /// The Profile of the Space.
         /// </summary>
@@ -63,7 +80,7 @@ namespace Elements
         /// <param name="transform">The Space's transform.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
         [JsonConstructor]
-        public Space(Profile profile, double height = 1.0, Material material = null, Transform transform = null)
+        public Space(Profile profile, double height, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
             {
@@ -83,7 +100,7 @@ namespace Elements
         /// <param name="height">The height of the Space above the lower elevation.</param>
         /// <param name="material">The Space's material.</param>
         /// <param name="transform">The Space's transform.</param>
-        public Space(Polygon profile, double height = 1.0, Material material = null, Transform transform = null)
+        public Space(Polygon profile, double height, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
             {

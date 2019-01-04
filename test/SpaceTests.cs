@@ -37,7 +37,7 @@ namespace Elements.Tests
         public void Transform()
         {
             var p = Polygon.Rectangle();
-            var space = new Space(p);
+            var space = new Space(p, 1.0);
             var t = new Vector3(5,5,5);
             space.Transform.Move(t);
             var p1 = space.Profile.Perimeter;

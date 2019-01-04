@@ -438,7 +438,7 @@ namespace Elements
 
         private void GetRenderDataForElement(IElement e, Gltf gltf, Dictionary<string, int> materials)
         {
-            AddTransformVisualization(IdProvider.Instance.GetNextId(), e.Transform, gltf, materials);
+            // AddTransformVisualization(IdProvider.Instance.GetNextId(), e.Transform, gltf, materials);
 
             if (e is IGeometry3D)
             {
@@ -472,10 +472,14 @@ namespace Elements
                         // Draw a winding indicator
                         // AddArrow(e.Id + 10003, f.Vertices[0], (f.Vertices[1] - f.Vertices[0]).Normalized(), gltf, materials["z_axis"], e.Transform);
                         f.Tessellate(mesh);
-                        // foreach(var edge in f.Edges)
-                        // {
-                        //     AddCurve(e.Id, edge, gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
-                        // }
+                        if(f is PlanarFace)
+                        {
+                            var pf = (PlanarFace)f;
+                            foreach(var p in pf.Bounds)
+                            {
+                                AddCurve(e.Id, p, gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
+                            }
+                        }
                     }
 
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),

@@ -109,5 +109,27 @@ namespace Elements.Geometry
             this.Min = min;
             this.Max = max;
         }
+        
+        /// <summary>
+        /// Construct a bounding box from an array of IBRep.
+        /// </summary>
+        /// <param name="geometry"></param>
+        public BBox3(IBRep[] geometry)
+        {
+            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
+            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
+
+            foreach(var g in geometry)
+            {
+                foreach(var f in g.Faces)
+                {
+                    foreach(var v in f.Vertices)
+                    {
+                        if (v < this.Min) this.Min = v;
+                        if (v > this.Max) this.Max = v;
+                    }
+                }
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace Elements
             var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
             var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
             var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
-            var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
+            // var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
 
             // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
             // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
@@ -37,12 +37,12 @@ namespace Elements
             var slabs = ifcSlabs.Select(s => s.ToFloor());
             var spaces = ifcSpaces.Select(sp => sp.ToSpace());
             var walls = ifcWalls.Select(w=>w.ToWall());
-            var beams = ifcBeams.Select(b=>b.ToBeam());
+            // var beams = ifcBeams.Select(b=>b.ToBeam());
             var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);
             model.AddElements(walls);
-            model.AddElements(beams);
+            // model.AddElements(beams);
 
             return model;
         }
@@ -161,6 +161,8 @@ namespace Elements
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
             }
 
+            var material = new Material("wall", new Color(0.5f, 0.5f, 0.5f, 0.5f), 0.1f, 0.1f);
+
             if(solids != null)
             {
                 foreach(var s in solids)
@@ -169,7 +171,7 @@ namespace Elements
                     if(c is Polygon)
                     {
                         transform.Concatenate(s.Position.ToTransform());
-                        return new Wall(new Profile((Polygon)c), (IfcLengthMeasure)s.Depth, BuiltInMaterials.Concrete, transform);
+                        return new Wall(new Profile((Polygon)c), (IfcLengthMeasure)s.Depth, material, transform);
                     }
                 }
             }

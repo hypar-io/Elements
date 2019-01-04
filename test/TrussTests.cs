@@ -14,7 +14,7 @@ namespace Elements.Tests
             this.Name = "Truss";
             var model = new Model();
             var profile = WideFlangeProfileServer.Instance.GetProfileByName("W33x387");
-            var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,10,0), 1.0, 10, profile, profile, profile, BuiltInMaterials.Steel, 0.1, 0.1); 
+            var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,30,0), 3.0, 10, profile, profile, profile, BuiltInMaterials.Steel, 0.1, 0.1); 
             this.Model.AddElement(truss);
         }
 

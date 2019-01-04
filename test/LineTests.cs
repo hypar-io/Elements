@@ -30,5 +30,32 @@ namespace Elements.Geometry.Tests
             var a = new Vector3();
             Assert.Throws<ArgumentException>(()=>new Line(a,a));
         }
+
+        [Fact]
+        public void Intersects()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5.0,0,0));
+            var plane = new Plane(new Vector3(2.5,0,0), Vector3.XAxis);
+            var x = line.Intersect(plane);
+            Assert.Equal(x, plane.Origin);
+        }
+
+        [Fact]
+        public void Parallel_DoesNotIntersect()
+        {
+            var line = new Line(Vector3.Origin, Vector3.ZAxis);
+            var plane = new Plane(new Vector3(5.1,0,0), Vector3.XAxis);
+            var x = line.Intersect(plane);
+            Assert.Null(x);
+        }
+
+        [Fact]
+        public void TooFar_DoesNotIntersect()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5.0,0,0));
+            var plane = new Plane(new Vector3(5.1,0,0), Vector3.XAxis);
+            var x = line.Intersect(plane);
+            Assert.Null(x);
+        }
     }
 }

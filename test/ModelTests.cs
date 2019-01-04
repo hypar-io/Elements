@@ -8,7 +8,7 @@ using Elements.Geometry;
 
 namespace Elements.Tests
 {
-    public class ModelTests
+    public class ModelTests : ModelTest
     {
         [Fact]
         public void Construct()
@@ -43,8 +43,9 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void JsonSerialization()
+        public void ModelTest()
         {
+            this.Name="Model";
             var a = new Vector3(0,0,0);
             var b = new Vector3(1,0,0);
             var c = new Vector3(1,0,1);
@@ -62,17 +63,16 @@ namespace Elements.Tests
             var column = new Column(new Vector3(5,5,5), 5.0, new WideFlangeProfile("test_column"), BuiltInMaterials.Steel);
             var spaceProfile = new Profile(Polygon.Rectangle(), Polygon.Rectangle(new Vector3(2,2), 1.0, 1.0));
             var space = new Space(spaceProfile, 5.0, BuiltInMaterials.Default, new Transform(new Vector3(0,0,5)));
-            var model = new Model();
 
             var wallLine = new Line(Vector3.Origin, new Vector3(10,0,0));
             var wallType = new WallType("test", 0.1, "A test wall type.");
             var wall = new Wall(wallLine, wallType, 4.0);
 
-            model.AddElements(new Element[]{panel, floor, mass, beam, column, space, wall});
-            var json = model.ToJson();
+            this.Model.AddElements(new Element[]{panel, floor, mass, beam, column, space, wall});
+            var json = this.Model.ToJson();
             File.WriteAllText("model.json", json);
 
-            var json2 = JsonConvert.SerializeObject(model, Formatting.Indented);
+            var json2 = JsonConvert.SerializeObject(this.Model, Formatting.Indented);
             Console.WriteLine($"Json serialization comparison (char length): serializer={json.Length}, unmodified={json2.Length}, {((double)json.Length/(double)json2.Length)*100.0}%");
 
             var newModel = Model.FromJson(json);
@@ -98,7 +98,7 @@ namespace Elements.Tests
             Assert.Equal(space.Profile.Perimeter, newSpace.Profile.Perimeter);
             Assert.Equal(wall.Height, newWall.Height);
             Assert.Equal(wall.CenterLine, newWall.CenterLine);
-            Assert.Equal(wall.ElementType, model.ElementTypes[newWall.ElementType.Id]);
+            Assert.Equal(wall.ElementType, this.Model.ElementTypes[newWall.ElementType.Id]);
         }
 
         private Model QuadPanelModel()

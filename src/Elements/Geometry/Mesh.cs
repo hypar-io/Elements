@@ -167,32 +167,24 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="c"></param>
-        /// <param name="ac"></param>
-        /// <param name="bc"></param>
-        /// <param name="cc"></param>
-        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Color ac = null, Color bc = null, Color cc = null)
+        /// <param name="n"></param>
+        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Vector3 n = null)
         {
-            var v1 = b - a;
-            var v2 = c - a;
-            var n1 = v1.Cross(v2).Normalized();
-            if(Double.IsNaN(n1.X) || Double.IsNaN(n1.Y) || Double.IsNaN(n1.Z))
+            if(n == null)
             {
-                Debug.WriteLine("Degenerate triangle found.");
-                return;
+                var v1 = b - a;
+                var v2 = c - a;
+                n = v1.Cross(v2).Normalized();
+                if(Double.IsNaN(n.X) || Double.IsNaN(n.Y) || Double.IsNaN(n.Z))
+                {
+                    Debug.WriteLine("Degenerate triangle found.");
+                    return;
+                }
             }
 
-            if(ac != null && bc != null && cc != null)
-            {
-                AddVertex(a, n1, ac);
-                AddVertex(b, n1, bc);
-                AddVertex(c, n1, cc);
-            }
-            else
-            {
-                AddVertex(a, n1);
-                AddVertex(b, n1);
-                AddVertex(c, n1);
-            }
+            AddVertex(a, n);
+            AddVertex(b, n);
+            AddVertex(c, n);
 
             var start = m_current_vertex_index;
             this.m_indices.AddRange(new []{start,(ushort)(start+1),(ushort)(start+2)});
@@ -209,20 +201,12 @@ namespace Elements.Geometry
         /// Add a triangle to the mesh.
         /// </summary>
         /// <param name="v"></param>
-        /// <param name="c"></param>
-        internal void AddTriangle(IList<Vector3> v, Color[] c = null)
+        internal void AddTriangle(IList<Vector3> v)
         {
-            if(c != null)
-            {
-                AddTriangle(v[0], v[1], v[2], c[0], c[1], c[2]);
-            }
-            else
-            {
-                AddTriangle(v[0], v[1], v[2]);
-            }
+            AddTriangle(v[0], v[1], v[2]);
         }
 
-        internal void AddVertex(Vector3 v, Vector3 n, Color c = null)
+        internal void AddVertex(Vector3 v, Vector3 n)
         {
             var vArr = v.ToArray();
             var nArr = n.ToArray();
@@ -243,21 +227,6 @@ namespace Elements.Geometry
             m_n_min[0] = Math.Min(m_n_min[0], nArr[0]);
             m_n_min[1] = Math.Min(m_n_min[1], nArr[1]);
             m_n_min[2] = Math.Min(m_n_min[2], nArr[2]);
-
-            if(c != null)
-            {
-                var cArr = c.ToArray();
-                this.m_vertex_colors.AddRange(c.ToArray());
-
-                m_c_max[0] = Math.Max(m_c_max[0], cArr[0]);
-                m_c_max[1] = Math.Max(m_c_max[1], cArr[1]);
-                m_c_max[2] = Math.Max(m_c_max[2], cArr[2]);
-                m_c_max[3] = Math.Max(m_c_max[3], cArr[3]);
-                m_c_min[0] = Math.Min(m_c_min[0], cArr[0]);
-                m_c_min[1] = Math.Min(m_c_min[1], cArr[1]);
-                m_c_min[2] = Math.Min(m_c_min[2], cArr[2]);
-                m_c_min[3] = Math.Min(m_c_min[3], cArr[3]);
-            }
         }
 
         /// <summary>
@@ -265,7 +234,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="colors"></param>
-        internal void AddQuad(IList<Vector3> vertices, Color[] colors = null)
+        internal void AddQuad(IList<Vector3> vertices)
         {
             var v1 = vertices[1] - vertices[0];
             var v2 = vertices[2] - vertices[0];
@@ -278,20 +247,10 @@ namespace Elements.Geometry
                 return;
             }
 
-            if(colors != null)
-            {
-                AddVertex(vertices[0], n1, colors[0]);
-                AddVertex(vertices[1], n1, colors[1]);
-                AddVertex(vertices[2], n1, colors[2]);
-                AddVertex(vertices[3], n1, colors[3]);
-            }
-            else
-            {
-                AddVertex(vertices[0], n1);
-                AddVertex(vertices[1], n1);
-                AddVertex(vertices[2], n1);
-                AddVertex(vertices[3], n1);
-            }
+            AddVertex(vertices[0], n1);
+            AddVertex(vertices[1], n1);
+            AddVertex(vertices[2], n1);
+            AddVertex(vertices[3], n1);
 
             var start = m_current_vertex_index;
             this.m_indices.AddRange(new[]{start,(ushort)(start+1),(ushort)(start+2),(ushort)(start),(ushort)(start+2),(ushort)(start+3)});
