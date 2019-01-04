@@ -61,7 +61,7 @@ namespace Elements
         public IBRep[] Geometry { get; }
 
         /// <summary>
-        /// Construct a wall by extruding a profile.
+        /// Construct a Wall by extruding a profile.
         /// </summary>
         /// <param name="profile"></param>
         /// <param name="height"></param>
@@ -69,6 +69,11 @@ namespace Elements
         /// <param name="transform"></param>
         public Wall(Profile profile, double height, Material material = null, Transform transform = null)
         {
+            if (height <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException("The wall could not be constructed. The height of the wall must be greater than 0.0.");
+            }
+            
             this.Profile = profile;
             this.Height = height;
             this.Transform = transform;
