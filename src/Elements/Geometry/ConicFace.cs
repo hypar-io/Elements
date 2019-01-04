@@ -65,5 +65,10 @@ namespace Elements.Geometry
         {
             throw new NotImplementedException();
         }
+
+        public ICurve Intersect(Plane p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

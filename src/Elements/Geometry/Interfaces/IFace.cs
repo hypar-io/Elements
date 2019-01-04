@@ -27,5 +27,11 @@ namespace Elements.Geometry.Interfaces
         /// Get the tesselated represenation of the face.
         /// </summary>
         void Tessellate(Mesh mesh);
+
+        /// <summary>
+        /// Intersect this face with the specified Plane.
+        /// </summary>
+        /// <param name="p">A Plane.</param>
+        ICurve Intersect(Plane p);
     }
 }
