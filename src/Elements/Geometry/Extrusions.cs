@@ -103,7 +103,7 @@ namespace Elements.Geometry
 
                     foreach(var p in clipped)
                     {
-                        faces.AddRange(ExtrudePolygonBetweenPlanes(p, transforms[i], next));
+                        faces.AddRange(ExtrudePolygonBetweenPlanes(p, transforms[i].XY, next.XY));
                     }
                 }
             }
@@ -113,7 +113,7 @@ namespace Elements.Geometry
                 {
                     foreach(var p in clipped)
                     {
-                        faces.AddRange(ExtrudePolygonBetweenPlanes(p, transforms[i], transforms[i + 1]));
+                        faces.AddRange(ExtrudePolygonBetweenPlanes(p, transforms[i].XY, transforms[i + 1].XY));
                     }
                 }
 
@@ -127,43 +127,36 @@ namespace Elements.Geometry
             return faces.ToArray();
         }
 
-        private static IFace[] ExtrudePolygonBetweenPlanes(Polygon p, Transform tStart, Transform tEnd, bool reverse = false)
+        private static IFace[] ExtrudePolygonBetweenPlanes(Polygon p, Plane start, Plane end)
         {
             var faces = new List<IFace>();
 
             // Transform the polygon to the mid plane between two transforms.
-            var mid = new Line(tStart.Origin, tEnd.Origin).TransformAt(0.5).OfPolygon(p);
-            var v = (tEnd.Origin - tStart.Origin).Normalized();
-            var start = mid.ProjectAlong(v, tStart.XY);
-            var end = mid.ProjectAlong(v, tEnd.XY);
+            var mid = new Line(start.Origin, end.Origin).TransformAt(0.5).OfPolygon(p);
+            var v = (end.Origin - start.Origin).Normalized();
+            var startP = mid.ProjectAlong(v, start);
+            var endP = mid.ProjectAlong(v, end);
 
-            for (var i = 0; i < start.Vertices.Length; i++)
+            for (var i = 0; i < startP.Vertices.Length; i++)
             {
                 Vector3 a, b, c, d;
 
-                if (i == start.Vertices.Length - 1)
+                if (i == startP.Vertices.Length - 1)
                 {
-                    a = start.Vertices[i];
-                    b = start.Vertices[0];
-                    c = end.Vertices[0];
-                    d = end.Vertices[i];
+                    a = startP.Vertices[i];
+                    b = startP.Vertices[0];
+                    c = endP.Vertices[0];
+                    d = endP.Vertices[i];
                 }
                 else
                 {
-                    a = start.Vertices[i];
-                    b = start.Vertices[i + 1];
-                    c = end.Vertices[i + 1];
-                    d = end.Vertices[i];
+                    a = startP.Vertices[i];
+                    b = startP.Vertices[i + 1];
+                    c = endP.Vertices[i + 1];
+                    d = endP.Vertices[i];
                 }
 
-                // if(reverse)
-                // {
                 faces.Add(new QuadFace(new[] { a, d, c, b }));
-                // }
-                // else
-                // {
-                //     faces.Add(new QuadFace(new []{a,b,c,d}));
-                // }
             }
 
             return faces.ToArray();
