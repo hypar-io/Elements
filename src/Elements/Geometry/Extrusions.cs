@@ -5,9 +5,20 @@ using Elements.Geometry.Interfaces;
 
 namespace Elements.Geometry
 {
-    internal static class Extrusions
+    /// <summary>
+    /// Methods for creating extrusions.
+    /// </summary>
+    public static class Extrusions
     {
-        internal static IFace[] Extrude(IProfile profile, double height, double offset = 0, bool capped = true)
+        /// <summary>
+        /// Extrude a Profile.
+        /// </summary>
+        /// <param name="profile">The Profile to extrude.</param>
+        /// <param name="height">The height of the extrusion.</param>
+        /// <param name="offset">The offset from 0.0 at which to begin the extrusion.</param>
+        /// <param name="capped">Does the extrusion have faces at each end?</param>
+        /// <returns></returns>
+        public static IFace[] Extrude(IProfile profile, double height, double offset = 0, bool capped = true)
         {
             var faces = new List<IFace>();
             var clipped = Clip(profile.Perimeter, profile.Voids);
@@ -39,51 +50,16 @@ namespace Elements.Geometry
             return faces.ToArray();
         }
 
-        private static Polygon[] Clip(Polygon perimeter, IList<Polygon> voids)
-        {
-            var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            if (voids != null)
-            {
-                clipper.AddPaths(voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
-            }
-            var solution = new List<List<ClipperLib.IntPoint>>();
-            var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-
-            // Completely disjoint polygons like a circular pipe
-            // profile will result in an empty solution.
-            if (solution.Count > 0)
-            {
-                var polys = solution.Select(s => s.ToPolygon()).ToArray();
-                return polys;
-            }
-            return null;
-        }
-
-        internal static IFace Extrude(Arc a, double height, double offset = 0)
-        {
-            var endCenter = a.Start + new Vector3(0, 0, height + offset);
-            var endArc = new Arc(endCenter, a.Radius, a.StartAngle, a.EndAngle);
-            return new ConicFace(a, endArc);
-        }
-
-        internal static IFace Extrude(Vector3 v1, Vector3 v2, double height, double offset = 0)
-        {
-            var v1n = new Vector3(v1.X, v1.Y, offset);
-            var v2n = new Vector3(v2.X, v2.Y, offset);
-            var v3n = new Vector3(v2.X, v2.Y, offset + height);
-            var v4n = new Vector3(v1.X, v1.Y, offset + height);
-            return new PlanarFace(new Polygon(new[] { v1n, v2n, v3n, v4n }));
-        }
-
-        internal static IFace Extrude(Line l, double height, double offset = 0)
-        {
-            var v1 = l.Start;
-            var v2 = l.End;
-            return Extrude(v1, v2, height, offset);
-        }
-
-        internal static IFace[] ExtrudeAlongCurve(IProfile profile, ICurve curve, bool capped = true, double startSetback = 0, double endSetback = 0)
+                /// <summary>
+        /// Extrude a Profile along a curve.
+        /// </summary>
+        /// <param name="profile">The Profile to extrude.</param>
+        /// <param name="curve">The curve along which to extrude.</param>
+        /// <param name="capped">Does the extrusion have faces at each end?</param>
+        /// <param name="startSetback">The distance from the start of the curve that the extrusion should start.</param>
+        /// <param name="endSetback">The distance from the end of the curve that the extrusion should start.</param>
+        /// <returns></returns>
+        public static IFace[] ExtrudeAlongCurve(IProfile profile, ICurve curve, bool capped = true, double startSetback = 0, double endSetback = 0)
         {
             var clipped = Clip(profile.Perimeter, profile.Voids);
 
@@ -125,6 +101,50 @@ namespace Elements.Geometry
             }
 
             return faces.ToArray();
+        }
+
+        private static Polygon[] Clip(Polygon perimeter, IList<Polygon> voids)
+        {
+            var clipper = new ClipperLib.Clipper();
+            clipper.AddPath(perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            if (voids != null)
+            {
+                clipper.AddPaths(voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            }
+            var solution = new List<List<ClipperLib.IntPoint>>();
+            var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
+
+            // Completely disjoint polygons like a circular pipe
+            // profile will result in an empty solution.
+            if (solution.Count > 0)
+            {
+                var polys = solution.Select(s => s.ToPolygon()).ToArray();
+                return polys;
+            }
+            return null;
+        }
+
+        private static IFace Extrude(Arc a, double height, double offset = 0)
+        {
+            var endCenter = a.Start + new Vector3(0, 0, height + offset);
+            var endArc = new Arc(endCenter, a.Radius, a.StartAngle, a.EndAngle);
+            return new ConicFace(a, endArc);
+        }
+
+        private static IFace Extrude(Vector3 v1, Vector3 v2, double height, double offset = 0)
+        {
+            var v1n = new Vector3(v1.X, v1.Y, offset);
+            var v2n = new Vector3(v2.X, v2.Y, offset);
+            var v3n = new Vector3(v2.X, v2.Y, offset + height);
+            var v4n = new Vector3(v1.X, v1.Y, offset + height);
+            return new PlanarFace(new Polygon(new[] { v1n, v2n, v3n, v4n }));
+        }
+
+        private static IFace Extrude(Line l, double height, double offset = 0)
+        {
+            var v1 = l.Start;
+            var v2 = l.End;
+            return Extrude(v1, v2, height, offset);
         }
 
         private static IFace[] ExtrudePolygonBetweenPlanes(Polygon p, Plane start, Plane end)

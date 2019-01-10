@@ -83,30 +83,29 @@ namespace Elements
         /// <summary>
         /// Construct a wall along a line.
         /// </summary>
-        /// <param name="centerLine">The center line of the Wall.</param>
-        /// <param name="elementType">The WallType of the Wall.</param>
+        /// <param name="center_line">The center line of the Wall.</param>
+        /// <param name="element_type">The WallType of the Wall.</param>
         /// <param name="height">The height of the Wall.</param>
         /// <param name="openings">A collection of Openings in the Wall.</param>
         /// <param name="material">The Wall's material.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of Wall's start and end points are not the same.</exception>
-        [JsonConstructor]
-        public Wall(Line centerLine, WallType elementType, double height, Opening[] openings = null, Material material = null)
+        public Wall(Line center_line, WallType element_type, double height, Opening[] openings = null, Material material = null)
         {
             if (height <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("The wall could not be constructed. The height of the wall must be greater than 0.0.");
             }
 
-            if (centerLine.Start.Z != centerLine.End.Z)
+            if (center_line.Start.Z != center_line.End.Z)
             {
                 throw new ArgumentException("The wall could not be constructed. The Z component of the start and end points of the wall's center line must be the same.");
             }
 
-            this.CenterLine = centerLine;
+            this.CenterLine = center_line;
             this.Height = height;
-            this.ElementType = elementType;
+            this.ElementType = element_type;
 
             if (openings != null && openings.Length > 0)
             {
@@ -116,17 +115,51 @@ namespace Elements
                     var o = openings[i];
                     voids[i] = Polygon.Rectangle(new Vector3(o.DistanceAlongWall, o.BaseHeight), new Vector3(o.DistanceAlongWall + o.Width, o.BaseHeight + o.Height));
                 }
-                this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)), voids);
+                this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(center_line.Length(), height)), voids);
             }
             else
             {
-                this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
+                this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(center_line.Length(), height)));
             }
 
             // Construct a transform whose X axis is the centerline of the wall.
-            var z = centerLine.Direction.Cross(Vector3.ZAxis);
-            this.Transform = new Transform(centerLine.Start, centerLine.Direction, z);
+            var z = center_line.Direction.Cross(Vector3.ZAxis);
+            this.Transform = new Transform(center_line.Start, center_line.Direction, z);
             this.Geometry = new []{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+        }
+
+        /// <summary>
+        /// Construct a wall from a collection of geometry.
+        /// </summary>
+        /// <param name="geometry">The geometry of the Wall.</param>
+        /// <param name="center_line">The center line of the Wall.</param>
+        /// <param name="element_type">The WallType of the Wall.</param>
+        /// <param name="height">The height of the Wall.</param>
+        /// <param name="transform">The Wall's Transform.</param>
+        [JsonConstructor]
+        public Wall(IBRep[] geometry, WallType element_type, double height = 0.0, Line center_line = null, Transform transform = null)
+        {
+            if (geometry == null || geometry.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException("You must supply at least one IBRep to construct a Wall.");
+            }
+            
+            // TODO: Remove this when the Profile is no longer available
+            // as a property on the Element. 
+            foreach(var g in geometry)
+            {
+                var extrude = g as Extrude;
+                if(extrude != null)
+                {
+                    this.Profile = extrude.Profile;
+                }
+            }
+
+            this.Height = height;
+            this.ElementType = element_type;
+            this.Transform = transform;
+            this.Geometry = geometry;
+            this.CenterLine = center_line;
         }
     }
 }

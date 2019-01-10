@@ -122,7 +122,7 @@ namespace Elements
                 transform.Concatenate(solid.Position.ToTransform());
                 var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
                 var outline = pline.ToPolygon(true);
-                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, material, transform);
+                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0.0, material, transform);
                 return result;
             }
             else if (foundSolid.GetType() == typeof(IFC.IfcFacetedBrep))

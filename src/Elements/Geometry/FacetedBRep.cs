@@ -35,10 +35,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="faces">A collection of Faces.</param>
         /// <param name="material">A Material to apply to all faces.</param>
-        public FacetedBRep(IFace[] faces, Material material)
+        public FacetedBRep(IFace[] faces, Material material = null)
         {
             this.Faces = faces;
-            this.Material = material;
+            this.Material = material != null ? material : BuiltInMaterials.Default;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {   
@@ -23,6 +24,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The X axis of the Matrix.
         /// </summary>
+        [JsonProperty("x_axis")]
         public Vector3 XAxis
         {
             get{return new Vector3(m11, m12, m13);}
@@ -31,6 +33,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The Y axis of the Matrix.
         /// </summary>
+        [JsonProperty("y_axis")]
         public Vector3 YAxis
         {
             get{return new Vector3(m21, m22, m23);}
@@ -39,6 +42,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The Z axis of the Matrix.
         /// </summary>
+        [JsonProperty("z_axis")]
         public Vector3 ZAxis
         {
             get{return new Vector3(m31, m32, m33);}
@@ -47,6 +51,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The translation component of the Matrix.
         /// </summary>
+        [JsonProperty("translation")]
         public Vector3 Translation
         {
             get{return new Vector3(tx, ty, tz);}
@@ -63,16 +68,17 @@ namespace Elements.Geometry
         /// <summary>
         /// Construct a matrix from axes.
         /// </summary>
-        /// <param name="x">The X axis.</param>
-        /// <param name="y">The Y axis.</param>
-        /// <param name="z">The Z axis.</param>
-        /// <param name="t">The translation.</param>
-        public Matrix(Vector3 x, Vector3 y, Vector3 z, Vector3 t)
+        /// <param name="xAxis">The X axis.</param>
+        /// <param name="yAxis">The Y axis.</param>
+        /// <param name="zAxis">The Z axis.</param>
+        /// <param name="translation">The translation.</param>
+        [JsonConstructor]
+        public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)
         {
-            m11 = x.X;  m12 = x.Y;  m13 = x.Z;
-            m21 = y.X;  m22 = y.Y;  m23 = y.Z;
-            m31 = z.X;  m32 = z.Y;  m33 = z.Z;
-            tx = t.X;   ty = t.Y;   tz = t.Z;
+            m11 = xAxis.X;  m12 = xAxis.Y;  m13 = xAxis.Z;
+            m21 = yAxis.X;  m22 = yAxis.Y;  m23 = yAxis.Z;
+            m31 = zAxis.X;  m32 = zAxis.Y;  m33 = zAxis.Z;
+            tx = translation.X;   ty = translation.Y;   tz = translation.Z;
         }
 
         /// <summary>

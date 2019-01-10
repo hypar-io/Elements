@@ -13,9 +13,18 @@ namespace Elements.Geometry
         private Matrix _matrix;
 
         /// <summary>
+        /// The Transform's Matrix.
+        /// </summary>
+        [JsonProperty("matrix")]
+        public Matrix Matrix
+        {
+            get => _matrix;
+        }
+
+        /// <summary>
         /// The origin.
         /// </summary>
-        [JsonProperty("origin")]
+        [JsonIgnore]
         public Vector3 Origin
         {
             get { return this._matrix.Translation; }
@@ -24,7 +33,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The X axis.
         /// </summary>
-        [JsonProperty("x_axis")]
+        [JsonIgnore]
         public Vector3 XAxis
         {
             get { return this._matrix.XAxis; }
@@ -33,7 +42,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The Y axis.
         /// </summary>
-        [JsonProperty("y_axis")]
+        [JsonIgnore]
         public Vector3 YAxis
         {
             get { return this._matrix.YAxis; }
@@ -42,7 +51,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The Z axis.
         /// </summary>
-        [JsonProperty("z_axis")]
+        [JsonIgnore]
         public Vector3 ZAxis
         {
             get { return this._matrix.ZAxis; }
@@ -120,17 +129,27 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Compute the Transform with origin at o,
-        /// whose Z axis points from a to b, and whose
+        /// Construct a Transform by a Matrix.
+        /// </summary>
+        /// <param name="matrix">The Transform's Matrix.</param>
+        [JsonConstructor]
+        public Transform(Matrix matrix)
+        {
+            this._matrix = matrix;
+        }
+
+        /// <summary>
+        /// Construct a Transform with origin at origin,
+        /// whose Z axis points from start to end, and whose
         /// up direction is up.
         /// </summary>
-        /// <param name="o"></param>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="up"></param>
-        internal Transform(Vector3 o, Vector3 a, Vector3 b, Vector3 up = null)
+        /// <param name="origin">The origin of the Transform.</param>
+        /// <param name="start">The start of the up vector.</param>
+        /// <param name="end">The end of the up vector.</param>
+        /// <param name="up">A vector which can be used to orient the Transform.</param>
+        internal Transform(Vector3 origin, Vector3 start, Vector3 end, Vector3 up = null)
         {
-            var z = (b - a).Normalized();
+            var z = (end - start).Normalized();
 
             if (up == null)
             {
@@ -150,7 +169,7 @@ namespace Elements.Geometry
 
             var x = z.Cross(up).Normalized();
             var y = x.Cross(z);
-            this._matrix = new Matrix(x, y, z, o);
+            this._matrix = new Matrix(x, y, z, origin);
         }
 
         /// <summary>
