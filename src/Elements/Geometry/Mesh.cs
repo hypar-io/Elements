@@ -233,7 +233,6 @@ namespace Elements.Geometry
         /// Add two triangles to the mesh by splitting a rectangular region in two.
         /// </summary>
         /// <param name="vertices"></param>
-        /// <param name="colors"></param>
         internal void AddQuad(IList<Vector3> vertices)
         {
             var v1 = vertices[1] - vertices[0];

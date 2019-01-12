@@ -111,6 +111,10 @@ namespace Elements.Geometry
             }
         }
 
+        /// <summary>
+        /// Intersect this face with the specified Plane.
+        /// </summary>
+        /// <param name="p">The Plane to intersect.</param>
         public ICurve Intersect(Plane p)
         {
             throw new System.NotImplementedException();
