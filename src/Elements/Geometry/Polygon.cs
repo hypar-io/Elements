@@ -16,7 +16,6 @@ namespace Elements.Geometry
     public partial class Polygon : Polyline
     {
         private const double scale = 1024.0;
-        private const double areaTolerance = 0.00001;
 
         /// <summary>
         /// The area enclosed by the polygon.
@@ -164,12 +163,7 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            var testPolygon = solution.First().ToPolygon();
-            if (Math.Abs(polygon.Area - testPolygon.Area) > areaTolerance)
-            {
-                return false;
-            }
-            return true;
+            return solution.First().ToPolygon().Area == polygon.ToClipperPath().ToPolygon().Area;
         }
 
         /// <summary>
@@ -353,7 +347,7 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path));
+                polygons.Add(PolygonExtensions.ToPolygon(path.Distinct().ToList()));
             }
             return polygons;
         }
