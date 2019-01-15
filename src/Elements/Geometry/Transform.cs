@@ -91,6 +91,15 @@ namespace Elements.Geometry
         {
             this._matrix = new Matrix();
         }
+        
+        /// <summary>
+        /// Construct a Transform by copying another Transform.
+        /// </summary>
+        /// <param name="t">The Transform to copy.</param>
+        public Transform(Transform t)
+        {
+            this._matrix = new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin));
+        }
 
         /// <summary>
         /// Construct a Transform with a translation.

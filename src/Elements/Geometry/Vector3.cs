@@ -128,6 +128,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a Vector3 by copying the components of another Vector3.
+        /// </summary>
+        /// <param name="v">The Vector3 to copy.</param>
+        public Vector3(Vector3 v)
+        {
+            this.X = v.X;
+            this.Y = v.Y;
+            this.Z = v.Z;
+        }
+
+        /// <summary>
         /// Construct a vector from x, y, and z components.
         /// </summary>
         /// <param name="x"></param>

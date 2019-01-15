@@ -2,7 +2,7 @@
 
 namespace Elements.Geometry.Interfaces
 {
-public interface IExtrudeAlongCurve : IBRep, IProfileProvider
+    public interface IExtrudeAlongCurve : IBRep, IProfileProvider
     {
         double StartSetback{get;}
         double EndSetback{get;}

@@ -50,15 +50,14 @@ namespace Elements.Geometry
             return faces.ToArray();
         }
 
-                /// <summary>
+        /// <summary>
         /// Extrude a Profile along a curve.
         /// </summary>
         /// <param name="profile">The Profile to extrude.</param>
         /// <param name="curve">The curve along which to extrude.</param>
-        /// <param name="capped">Does the extrusion have faces at each end?</param>
+        /// <param name="capped">Should the extrusion have faces at each end?</param>
         /// <param name="startSetback">The distance from the start of the curve that the extrusion should start.</param>
         /// <param name="endSetback">The distance from the end of the curve that the extrusion should start.</param>
-        /// <returns></returns>
         public static IFace[] ExtrudeAlongCurve(IProfile profile, ICurve curve, bool capped = true, double startSetback = 0, double endSetback = 0)
         {
             var clipped = Clip(profile.Perimeter, profile.Voids);
@@ -100,6 +99,46 @@ namespace Elements.Geometry
                 }
             }
 
+            return faces.ToArray();
+        }
+
+        /// <summary>
+        /// Extrude a profile along direction by distance.
+        /// </summary>
+        /// <param name="profile">The Profile to extrude.</param>
+        /// <param name="start">The Transform which defines the plane into which the start profile will be transformed.</param>
+        /// <param name="direction">The direction along which to extrude.</param>
+        /// <param name="distance">The distance to extrude.</param>
+        /// <param name="capped">Should the extrusion have faces at each end?</param>
+        /// <returns></returns>
+        public static IFace[] ExtrudeInDirection(IProfile profile, Transform start, Vector3 direction, double distance, bool capped = true)
+        {
+            var clipped = Clip(profile.Perimeter, profile.Voids);
+            var end = new Transform(start);
+            var trans = direction.Normalized() * distance;
+            end.Move(trans);
+
+            var faces = new List<IFace>();
+            var startPolys = start.OfPolygons(clipped.Reversed());
+            
+            foreach(var p in startPolys)
+            {
+                for(var i=0; i<p.Vertices.Length; i++)
+                {
+                    var a = p.Vertices[i];
+                    var b = i == p.Vertices.Length - 1 ? p.Vertices[0] : p.Vertices[i+1];
+                    var c = b + trans;
+                    var d = a + trans;
+                    faces.Add(new QuadFace(new[]{d,c,b,a}));
+                }
+            }
+
+            if (capped)
+            {
+                faces.Add(new PlanarFace(startPolys));
+                faces.Add(new PlanarFace(end.OfPolygons(clipped)));
+            }
+            
             return faces.ToArray();
         }
 

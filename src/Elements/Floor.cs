@@ -89,7 +89,26 @@ namespace Elements
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Geometry = new[]{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
-
+        
+        /// <summary>
+        /// Construct a Floor.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="start"></param>
+        /// <param name="direction"></param>
+        /// <param name="elementType"></param>
+        /// <param name="elevation"></param>
+        /// <param name="material"></param>
+        /// <param name="transform"></param>
+        public Floor(IProfile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
+        {
+            this.Profile = profile;
+            this.Elevation = elevation;
+            this.ElementType = elementType;
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
+            this.Geometry = new []{new ExtrudeInDirection(profile, start, direction, this.Thickness, material, true)};
+        }
+        
         /// <summary>
         /// The area of the Floor.
         /// Overlapping openings and openings which are outside of the Floor's perimeter,

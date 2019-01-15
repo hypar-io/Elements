@@ -45,11 +45,12 @@ namespace Elements
             var floorType = new FloorType($"{Guid.NewGuid().ToString()}_floor_type", (IfcLengthMeasure)solid.Depth);
             var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
             var solidTransform = solid.Position.ToTransform();
-            solidTransform.Concatenate(transform);
+            // solidTransform.Concatenate(transform);
 
             var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
             var outline = pline.ToPolygon(true);
-            var floor = new Floor(new Profile(outline), floorType, 0, BuiltInMaterials.Concrete, solidTransform);
+            // var floor = new Floor(new Profile(outline), floorType, 0, BuiltInMaterials.Concrete, solidTransform);
+            var floor = new Floor(new Profile(outline), solidTransform, solid.ExtrudedDirection.ToVector3(), floorType, 0, BuiltInMaterials.Default, transform);
             return floor;
         }
 
