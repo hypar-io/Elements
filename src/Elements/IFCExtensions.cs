@@ -37,7 +37,8 @@ namespace Elements
             var solids = slab.RepresentationsOfType<IfcExtrudedAreaSolid>();
             if (foundSolid == null)
             {
-                throw new Exception("No IfcExtrudedAreaSolid could be found in the provided IfcSlab.");
+                return null;
+                // throw new Exception("No IfcExtrudedAreaSolid could be found in the provided IfcSlab.");
             }
 
             var solid = (IFC.IfcExtrudedAreaSolid)foundSolid;
