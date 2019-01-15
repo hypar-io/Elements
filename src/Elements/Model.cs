@@ -388,6 +388,7 @@ namespace Elements
             var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
             var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
             var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
+            var ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
 
             // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
             // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
@@ -396,12 +397,15 @@ namespace Elements
             var spaces = ifcSpaces.Select(sp => sp.ToSpace());
             var walls = ifcWalls.Select(w=>w.ToWall());
             var beams = ifcBeams.Select(b=>b.ToBeam());
+            var columns = ifcColumns.Select(c=>c.ToColumn());
+
             var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);
             model.AddElements(walls);
             model.AddElements(beams);
-
+            model.AddElements(columns);
+            
             return model;
         }
 

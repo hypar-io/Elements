@@ -33,7 +33,6 @@ namespace Elements
                 throw new Exception("The provided IfcSlab does not have any representations.");
             }
 
-            // Console.WriteLine($"Found representation type: {rep.GetType().ToString()}");
             var foundSolid = repItems.FirstOrDefault(i => i.GetType() == typeof(IFC.IfcExtrudedAreaSolid));
             var solids = slab.RepresentationsOfType<IfcExtrudedAreaSolid>();
             if (foundSolid == null)
@@ -45,11 +44,9 @@ namespace Elements
             var floorType = new FloorType($"{Guid.NewGuid().ToString()}_floor_type", (IfcLengthMeasure)solid.Depth);
             var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
             var solidTransform = solid.Position.ToTransform();
-            // solidTransform.Concatenate(transform);
 
             var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
             var outline = pline.ToPolygon(true);
-            // var floor = new Floor(new Profile(outline), floorType, 0, BuiltInMaterials.Concrete, solidTransform);
             var floor = new Floor(new Profile(outline), solidTransform, solid.ExtrudedDirection.ToVector3(), floorType, 0, BuiltInMaterials.Default, transform);
             return floor;
         }
@@ -170,6 +167,35 @@ namespace Elements
             return null;
         }
 
+        /// <summary>
+        /// Convert an IfcColumn to a Column.
+        /// </summary>
+        /// <param name="column"></param>
+        public static Column ToColumn(this IfcColumn column)
+        {
+            Console.WriteLine($"Converting column {column.Name}...");
+
+            var elementTransform = column.ObjectPlacement.ToTransform();
+            
+            var solids = column.RepresentationsOfType<IfcExtrudedAreaSolid>();
+            foreach (var cis in column.ContainedInStructure)
+            {
+                cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(elementTransform);
+            }
+
+            if(solids != null)
+            {
+                foreach(var s in solids)
+                {
+                    var solidTransform = s.Position.ToTransform();
+
+                    var c = s.SweptArea.ToICurve();
+                    return new Column(solidTransform.Origin, (IfcLengthMeasure)s.Depth, new Profile((Polygon)c), BuiltInMaterials.Steel, elementTransform, 0.0, 0.0);
+                }
+            }
+            return null;
+        }
+
         private static IFace[] Representations(this IfcProduct product)
         {   
             var reps = product.Representation.Representations.SelectMany(r=>r.Items);
@@ -237,7 +263,13 @@ namespace Elements
         /// <returns></returns>
         public static ICurve ToICurve(this IfcProfileDef profile)
         {
-            if(profile is IfcParameterizedProfileDef)
+            if(profile is IfcCircleProfileDef)
+            {
+                var cpd = (IfcCircleProfileDef)profile;
+                // return new Circle(cpd.Position.Location.ToVector3(), (IfcLengthMeasure)cpd.Radius);
+                return Polygon.Circle((IfcLengthMeasure)cpd.Radius);
+            }
+            else if(profile is IfcParameterizedProfileDef)
             {
                 throw new Exception("IfcParameterizedProfileDef is not supported yet.");
             }

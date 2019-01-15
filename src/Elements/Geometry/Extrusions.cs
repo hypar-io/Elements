@@ -107,7 +107,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="profile">The Profile to extrude.</param>
         /// <param name="start">The Transform which defines the plane into which the start profile will be transformed.</param>
-        /// <param name="direction">The direction along which to extrude.</param>
+        /// <param name="direction">The direction along which to extrude. This vector will be transformed into 'start'.</param>
         /// <param name="distance">The distance to extrude.</param>
         /// <param name="capped">Should the extrusion have faces at each end?</param>
         /// <returns></returns>
@@ -115,7 +115,7 @@ namespace Elements.Geometry
         {
             var clipped = Clip(profile.Perimeter, profile.Voids);
             var end = new Transform(start);
-            var trans = direction.Normalized() * distance;
+            var trans = start.OfPoint(direction.Normalized()) * distance;
             end.Move(trans);
 
             var faces = new List<IFace>();
