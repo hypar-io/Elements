@@ -1,8 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using IFC;
-using IFC.Storage;
-using STEP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,47 +13,12 @@ namespace Elements
     public static class IFCExtensions
     {
         /// <summary>
-        /// Construct a Model from an IFC STEP file.
-        /// </summary>
-        /// <param name="ifcPath">The path to the IFC file on disk.</param>
-        public static Model FromIFC(string ifcPath)
-        {
-            IList<STEPError> errors;
-            var ifcModel = new IFC.Model(ifcPath, new LocalStorageProvider(), out errors);
-
-            // var materials = ifcModel.AllInstancesOfType<IfcMaterial>();
-
-            var floorType = new FloorType("IFC Floor", 0.1);
-            var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
-            var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
-            var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
-            // var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
-
-            // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
-            // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
-
-            var slabs = ifcSlabs.Select(s => s.ToFloor());
-            var spaces = ifcSpaces.Select(sp => sp.ToSpace());
-            var walls = ifcWalls.Select(w=>w.ToWall());
-            // var beams = ifcBeams.Select(b=>b.ToBeam());
-            var model = new Model();
-            model.AddElements(slabs);
-            model.AddElements(spaces);
-            model.AddElements(walls);
-            // model.AddElements(beams);
-
-            return model;
-        }
-
-        /// <summary>
         /// Convert an IfcSlab to a Floor.
         /// </summary>
         /// <param name="slab">An IfcSlab.</param>
         public static Floor ToFloor(this IfcSlab slab)
         {
-            // TODO: When inverse are set on instances, this lookup will be unnecessary.
             var transform = new Transform();
-
             transform.Concatenate(slab.ObjectPlacement.ToTransform());
 
             // Check if the slab is contained in a building storey
@@ -81,17 +44,12 @@ namespace Elements
             var solid = (IFC.IfcExtrudedAreaSolid)foundSolid;
             var floorType = new FloorType($"{Guid.NewGuid().ToString()}_floor_type", (IfcLengthMeasure)solid.Depth);
             var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
-            transform.Concatenate(solid.Position.ToTransform());
-            // if(!transform.ZAxis.IsAlmostEqualTo(Vector3.ZAxis))
-            // {
-            //     Console.WriteLine(solid.Position.ToTransform());
-            //     Console.WriteLine(transform);
-            //     // transform = solid.Position.ToTransform();
-            // }
-            var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
+            var solidTransform = solid.Position.ToTransform();
+            solidTransform.Concatenate(transform);
 
+            var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
             var outline = pline.ToPolygon(true);
-            var floor = new Floor(new Profile(outline), floorType, 0, BuiltInMaterials.Concrete, transform);
+            var floor = new Floor(new Profile(outline), floorType, 0, BuiltInMaterials.Concrete, solidTransform);
             return floor;
         }
 
@@ -184,24 +142,27 @@ namespace Elements
         /// <param name="beam"></param>
         public static Beam ToBeam(this IfcBeam beam)
         {
-            var transform = new Transform();
-            transform.Concatenate(beam.ObjectPlacement.ToTransform());
+            Console.WriteLine($"Converting beam {beam.Name}...");
+
+            var elementTransform = beam.ObjectPlacement.ToTransform();
+            
             var solids = beam.RepresentationsOfType<IfcExtrudedAreaSolid>();
-            foreach (var cis in beam.ContainedInStructure)
-            {
-                cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
-            }
+            // foreach (var cis in beam.ContainedInStructure)
+            // {
+            //     cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
+            // }
 
             if(solids != null)
             {
                 foreach(var s in solids)
                 {
+                    var solidTransform = s.Position.ToTransform();
+
                     var c = s.SweptArea.ToICurve();
                     if(c is Polygon)
                     {
-                        transform.Concatenate(s.Position.ToTransform());
                         var cl = new Line(Vector3.Origin, s.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)s.Depth);
-                        return new Beam(cl, new Profile((Polygon)c), BuiltInMaterials.Steel, null, 0.0, 0.0, transform);
+                        return new Beam(solidTransform.OfLine(cl), new Profile((Polygon)c), BuiltInMaterials.Steel, null, 0.0, 0.0, elementTransform);
                     }
                 }
             }
@@ -444,10 +405,12 @@ namespace Elements
         /// <returns></returns>
         public static Transform ToTransform(this IfcAxis2Placement3D cs)
         {
-            var x = cs.RefDirection.ToVector3();
+            var d = cs.RefDirection.ToVector3();
             var z = cs.Axis.ToVector3();
+            var y = z.Cross(d);
+            var x = y.Cross(z);
             var o = cs.Location.ToVector3();
-            var t = new Transform(o, x, z);
+            var t = new Transform(new Matrix(x, y, z, o));
             return t;
         }
 
@@ -457,10 +420,10 @@ namespace Elements
         /// <param name="cs">An IfcAxis2Placement2D.</param>
         public static Transform ToTransform(this IfcAxis2Placement2D cs)
         {
-            var x = cs.RefDirection.ToVector3();
+            var d = cs.RefDirection.ToVector3();
             var z = Vector3.ZAxis;
             var o = cs.Location.ToVector3();
-            return new Transform(o, x, z);
+            return new Transform(o, d, z);
         }
 
         /// <summary>
@@ -489,7 +452,8 @@ namespace Elements
             else if (placement.Choice.GetType() == typeof(IfcAxis2Placement3D))
             {
                 var cs = (IfcAxis2Placement3D)placement.Choice;
-                return cs.ToTransform();
+                var t = cs.ToTransform();
+                return t;
             }
             else
             {
@@ -508,8 +472,7 @@ namespace Elements
             if(placement.PlacementRelTo != null)
             {
                 var tr = placement.PlacementRelTo.ToTransform();
-                tr.Concatenate(t);
-                return tr;
+                t.Concatenate(tr);
             }
             return t;
         }

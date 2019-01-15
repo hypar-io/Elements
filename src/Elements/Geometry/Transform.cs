@@ -144,8 +144,8 @@ namespace Elements.Geometry
         /// up direction is up.
         /// </summary>
         /// <param name="origin">The origin of the Transform.</param>
-        /// <param name="start">The start of the up vector.</param>
-        /// <param name="end">The end of the up vector.</param>
+        /// <param name="start">The start of the z vector.</param>
+        /// <param name="end">The end of the z vector.</param>
         /// <param name="up">A vector which can be used to orient the Transform.</param>
         internal Transform(Vector3 origin, Vector3 start, Vector3 end, Vector3 up = null)
         {

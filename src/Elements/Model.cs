@@ -11,6 +11,9 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Reflection;
+using STEP;
+using IFC.Storage;
+using IFC;
 
 namespace Elements
 {
@@ -367,6 +370,39 @@ namespace Elements
                 Converters = new[] { new ModelConverter() },
                 NullValueHandling = NullValueHandling.Ignore
             });
+        }
+
+        /// <summary>
+        /// Construct a Model from an IFC STEP file.
+        /// </summary>
+        /// <param name="ifcPath">The path to the IFC file on disk.</param>
+        public static Model FromIFC(string ifcPath)
+        {
+            IList<STEPError> errors;
+            var ifcModel = new IFC.Model(ifcPath, new LocalStorageProvider(), out errors);
+
+            // var materials = ifcModel.AllInstancesOfType<IfcMaterial>();
+
+            var floorType = new FloorType("IFC Floor", 0.1);
+            var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
+            var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
+            var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
+            var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
+
+            // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
+            // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
+
+            var slabs = ifcSlabs.Select(s => s.ToFloor());
+            var spaces = ifcSpaces.Select(sp => sp.ToSpace());
+            var walls = ifcWalls.Select(w=>w.ToWall());
+            var beams = ifcBeams.Select(b=>b.ToBeam());
+            var model = new Model();
+            model.AddElements(slabs);
+            model.AddElements(spaces);
+            model.AddElements(walls);
+            model.AddElements(beams);
+
+            return model;
         }
 
         private Gltf InitializeGlTF()
