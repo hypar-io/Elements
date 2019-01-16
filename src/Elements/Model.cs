@@ -18,13 +18,14 @@ using IFC;
 namespace Elements
 {
     /// <summary>
-    /// A model is a map of elements, keyed by their unique identifier. 
+    /// A container for Elements, Element Types, Materials, and Profiles.
     /// </summary>
     public class Model
     {
         private List<byte> _buffer = new List<byte>();
         private Dictionary<long, Material> _materials = new Dictionary<long, Material>();
         private Dictionary<long, Element> _elements = new Dictionary<long, Element>();
+
         private Dictionary<long, ElementType> _elementTypes = new Dictionary<long, ElementType>();
 
         private Dictionary<long, IProfile> _profiles = new Dictionary<long, IProfile>();
@@ -226,6 +227,20 @@ namespace Elements
         }
 
         /// <summary>
+        /// Get the first Element with the specified name.
+        /// </summary>
+        /// <param name="name"></param>
+        public Element GetElementByName(string name)
+        {
+            var found = this.Elements.FirstOrDefault(e=>e.Value.Name == name);
+            if(found.Equals(new KeyValuePair<long,Element>()))
+            {
+                return null;
+            }
+            return found.Value;
+        }
+
+        /// <summary>
         /// Add a material to the model.
         /// </summary>
         /// <param name="material">The material to add to the model.</param>
@@ -389,23 +404,36 @@ namespace Elements
             var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
             var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
             var ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
-
+            var ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
             // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
             // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
 
             var slabs = ifcSlabs.Select(s => s.ToFloor());
             var spaces = ifcSpaces.Select(sp => sp.ToSpace());
+            var openings = new List<Opening>();
+            foreach(var v in ifcVoids)
+            {
+                var element = v.RelatingBuildingElement;
+                // var elementTransform = element.ObjectPlacement.ToTransform();
+                var o = ((IfcOpeningElement)v.RelatedOpeningElement).ToOpening();
+                openings.Add(o);
+            }
+            //var openings = ifcVoids.Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>().Select(o=>o.ToOpening());
             var walls = ifcWalls.Select(w=>w.ToWall());
             var beams = ifcBeams.Select(b=>b.ToBeam());
             var columns = ifcColumns.Select(c=>c.ToColumn());
-
+            
             var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);
-            model.AddElements(walls);
+            // model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
-            
+            if(openings.Any())
+            {
+                model.AddElements(openings);
+            }
+
             return model;
         }
 

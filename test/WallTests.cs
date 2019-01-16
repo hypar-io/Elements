@@ -16,12 +16,12 @@ namespace Elements.Tests
 
             var triangle = Polygon.Ngon(7, 15.0);
             var openings = new Opening[]{
-                new Opening(1.0, 1.0, 2.0, 1.0),
-                new Opening(4.0, 0.0, 2.0, 1.0)
+                new Opening(Polygon.Rectangle(Vector3.Origin, 1.0, 1.0), 0.1,  new Transform(new Vector3(2.0, 1.0))),
+                new Opening(Polygon.Rectangle(Vector3.Origin, 1.0, 2.0), 0.1, new Transform(new Vector3(4.0, 0.0)))
             };
             foreach(var l in triangle.Segments())
             {
-                var w = new Wall(l, testWallType, 5.0, openings);
+                var w = new Wall(l, testWallType, 5.0, BuiltInMaterials.Default, openings);
                 this.Model.AddElement(w);
             }
         }

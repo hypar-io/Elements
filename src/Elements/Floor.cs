@@ -4,13 +4,14 @@ using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using Elements.Serialization;
+using Hypar.Elements.Interfaces;
 
 namespace Elements
 {
     /// <summary>
     /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : Element, IElementTypeProvider<FloorType>, IGeometry3D
+    public class Floor : Element, IElementTypeProvider<FloorType>, IGeometry3D, IOpeningsProvider
     {
         /// <summary>
         /// The elevation from which the Floor is extruded.
@@ -55,6 +56,11 @@ namespace Elements
         public IBRep[] Geometry { get; }
 
         /// <summary>
+        /// An array of Openings in the Floor.
+        /// </summary>
+        public Opening[] Openings { get; }
+
+        /// <summary>
         /// Construct a Floor.
         /// </summary>
         /// <param name="profile">The IProfile of the Floor.</param>
@@ -62,7 +68,6 @@ namespace Elements
         /// <param name="elevation">The elevation of the Floor.</param>
         /// <param name="material">The Floor's Material.</param>
         /// <param name="transform">The Floor's transform.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the slab's thickness is less than or equal to 0.0.</exception>
         [JsonConstructor]
         public Floor(IProfile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
         {

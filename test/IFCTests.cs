@@ -21,9 +21,9 @@ namespace Elements.Tests
         public void IFC()
         {
             this.Name = "IFC";
-            this.Model = Model.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC-20-Smiley-West-10-Bldg.ifc");
+            // this.Model = Model.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC-20-Smiley-West-10-Bldg.ifc");
             // this.Model = Model.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc");
-            // this.Model = Model.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC20-Institute-Var-2.ifc");
+            this.Model = Model.FromIFC("/Users/ikeough/Documents/IFC-gen/lang/csharp/tests/models/AC20-Institute-Var-2.ifc");
         }
     }
 }

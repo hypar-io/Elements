@@ -46,6 +46,12 @@ namespace Elements
         public Transform Transform { get; protected set; }
 
         /// <summary>
+        /// A human-readable name for the Element.
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
         /// Construct a default Element.
         /// </summary>
         public Element()

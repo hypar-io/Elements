@@ -1,64 +1,42 @@
 using System;
+using Elements.Geometry;
+using Elements.Geometry.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements
 {
     /// <summary>
-    /// An Opening in a Wall.
+    /// An Opening in a Wall or Floor.
     /// </summary>
-    public class Opening
+    public class Opening : Element, IGeometry3D
     {
         /// <summary>
-        /// The distance along the wall to the lower left corner of the Opening.
+        /// The distance along the X axis of the Transform of the host Element to the center of the opening.
         /// </summary>
-        public double DistanceAlongWall{get;}
+        [JsonProperty("perimeter")]
+        public Polygon Perimeter { get; }
 
         /// <summary>
-        /// The base height of the Opening.
+        /// The depth of the extrusion which creates the Opening.
         /// </summary>
-        public double BaseHeight{get;}
+        public double Depth { get; }
 
         /// <summary>
-        /// The height of the Opening.
+        /// The Opening's geometry.
         /// </summary>
-        public double Height{get;}
-
-        /// <summary>
-        /// The width of the Opening.
-        /// </summary>
-        public double Width{get;}
+        public IBRep[] Geometry { get; }
 
         /// <summary>
         /// Construct an Opening.
         /// </summary>
-        /// <param name="distanceAlongWall">The distance along the Wall.</param>
-        /// <param name="baseHeight">The base height of the Opening.</param>
-        /// <param name="height">The height of the opening.</param>
-        /// <param name="width">The width of the opening.</param>
-        public Opening(double distanceAlongWall, double baseHeight, double height, double width)
+        /// <param name="perimeter">The perimeter of the Opening.</param>
+        /// <param name="depth">The depth of the extrusion which creates the Opening.</param>
+        /// <param name="transform">The Transform of the Opening.</param>
+        public Opening(Polygon perimeter, double depth, Transform transform = null)
         {
-            if(distanceAlongWall < 0.0)
-            {
-                throw new ArgumentOutOfRangeException("The distance along the curve must be greater than 0.0.");
-            }
-
-            if(baseHeight < 0.0)
-            {
-                throw new ArgumentOutOfRangeException("The base height must be greater than 0.0.");
-            }
-
-            if(height <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException("An opening's height must be greater than 0.0.");
-            }
-
-            if(width <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException("An opening's width must be greater than 0.0.");
-            }
-            this.DistanceAlongWall = distanceAlongWall;
-            this.BaseHeight = baseHeight;
-            this.Height = height;
-            this.Width = width;
+            this.Perimeter = perimeter;
+            this.Transform = transform;
+            this.Geometry = new[] { new Extrude(new Profile(perimeter), depth, BuiltInMaterials.Void)};
         }
     }
 }

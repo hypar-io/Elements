@@ -8,8 +8,13 @@ namespace Elements.Interfaces
     public interface IIdentifiable
     {
         /// <summary>
-        /// The unique identifier of the element.
+        /// The unique identifier of the Element.
         /// </summary>
-        long Id{get;}
+        long Id { get; }
+
+        /// <summary>
+        /// A human-readable name for the Element.
+        /// </summary>
+        string Name { get; }
     }
 }

@@ -1,6 +1,7 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
+using Hypar.Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 
@@ -9,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall : Element, IElementTypeProvider<WallType>, IGeometry3D, IProfileProvider
+    public class Wall : Element, IElementTypeProvider<WallType>, IGeometry3D, IProfileProvider, IOpeningsProvider
     {
         /// <summary>
         /// The Profile of the Wall.
@@ -61,6 +62,11 @@ namespace Elements
         public IBRep[] Geometry { get; }
 
         /// <summary>
+        /// An array of Openings in the Wall.
+        /// </summary>
+        public Opening[] Openings{ get; }
+
+        /// <summary>
         /// Construct a Wall by extruding a profile.
         /// </summary>
         /// <param name="profile"></param>
@@ -88,10 +94,9 @@ namespace Elements
         /// <param name="height">The height of the Wall.</param>
         /// <param name="openings">A collection of Openings in the Wall.</param>
         /// <param name="material">The Wall's material.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the thickness of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the Wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of Wall's start and end points are not the same.</exception>
-        public Wall(Line center_line, WallType element_type, double height, Opening[] openings = null, Material material = null)
+        public Wall(Line center_line, WallType element_type, double height, Material material = null, Opening[] openings = null)
         {
             if (height <= 0.0)
             {
@@ -106,6 +111,7 @@ namespace Elements
             this.CenterLine = center_line;
             this.Height = height;
             this.ElementType = element_type;
+            this.Openings = openings;
 
             if (openings != null && openings.Length > 0)
             {
@@ -113,7 +119,7 @@ namespace Elements
                 for (var i = 0; i < voids.Length; i++)
                 {
                     var o = openings[i];
-                    voids[i] = Polygon.Rectangle(new Vector3(o.DistanceAlongWall, o.BaseHeight), new Vector3(o.DistanceAlongWall + o.Width, o.BaseHeight + o.Height));
+                    voids[i] = o.Perimeter;
                 }
                 this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(center_line.Length(), height)), voids);
             }

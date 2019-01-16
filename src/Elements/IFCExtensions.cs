@@ -33,22 +33,19 @@ namespace Elements
                 throw new Exception("The provided IfcSlab does not have any representations.");
             }
 
-            var foundSolid = repItems.FirstOrDefault(i => i.GetType() == typeof(IFC.IfcExtrudedAreaSolid));
-            var solids = slab.RepresentationsOfType<IfcExtrudedAreaSolid>();
-            if (foundSolid == null)
+            var solid = slab.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
+            if (solid == null)
             {
                 return null;
                 // throw new Exception("No IfcExtrudedAreaSolid could be found in the provided IfcSlab.");
             }
 
-            var solid = (IFC.IfcExtrudedAreaSolid)foundSolid;
             var floorType = new FloorType($"{Guid.NewGuid().ToString()}_floor_type", (IfcLengthMeasure)solid.Depth);
-            var profileDef = (IFC.IfcArbitraryClosedProfileDef)solid.SweptArea;
+            var outline = (Polygon)solid.SweptArea.ToICurve();
             var solidTransform = solid.Position.ToTransform();
-
-            var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
-            var outline = pline.ToPolygon(true);
             var floor = new Floor(new Profile(outline), solidTransform, solid.ExtrudedDirection.ToVector3(), floorType, 0, BuiltInMaterials.Default, transform);
+            floor.Name = slab.Name;
+            
             return floor;
         }
 
@@ -80,6 +77,7 @@ namespace Elements
                 var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
                 var outline = pline.ToPolygon(true);
                 var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0.0, material, transform);
+                result.Name = space.Name;
                 return result;
             }
             else if (foundSolid.GetType() == typeof(IFC.IfcFacetedBrep))
@@ -98,6 +96,7 @@ namespace Elements
                     }
                 }
                 var result = new Space(new FacetedBRep(faces, material), transform);
+                result.Name = space.Name;
                 return result;
             }
 
@@ -112,7 +111,8 @@ namespace Elements
         {
             var transform = new Transform();
             transform.Concatenate(wall.ObjectPlacement.ToTransform());
-            var solids = wall.RepresentationsOfType<IfcExtrudedAreaSolid>();
+            var solid = wall.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
+
             foreach (var cis in wall.ContainedInStructure)
             {
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
@@ -120,16 +120,15 @@ namespace Elements
 
             var material = new Material("wall", new Color(0.5f, 0.5f, 0.5f, 0.5f), 0.1f, 0.1f);
 
-            if(solids != null)
+            if(solid != null)
             {
-                foreach(var s in solids)
+                var c = solid.SweptArea.ToICurve();
+                if(c is Polygon)
                 {
-                    var c = s.SweptArea.ToICurve();
-                    if(c is Polygon)
-                    {
-                        transform.Concatenate(s.Position.ToTransform());
-                        return new Wall(new Profile((Polygon)c), (IfcLengthMeasure)s.Depth, material, transform);
-                    }
+                    transform.Concatenate(solid.Position.ToTransform());
+                    var result = new Wall(new Profile((Polygon)c), (IfcLengthMeasure)solid.Depth, material, transform);
+                    result.Name = wall.Name;
+                    return result;
                 }
             }
             return null;
@@ -145,24 +144,24 @@ namespace Elements
 
             var elementTransform = beam.ObjectPlacement.ToTransform();
             
-            var solids = beam.RepresentationsOfType<IfcExtrudedAreaSolid>();
+            var solid = beam.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
+
             // foreach (var cis in beam.ContainedInStructure)
             // {
             //     cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
             // }
 
-            if(solids != null)
+            if(solid != null)
             {
-                foreach(var s in solids)
-                {
-                    var solidTransform = s.Position.ToTransform();
+                var solidTransform = solid.Position.ToTransform();
 
-                    var c = s.SweptArea.ToICurve();
-                    if(c is Polygon)
-                    {
-                        var cl = new Line(Vector3.Origin, s.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)s.Depth);
-                        return new Beam(solidTransform.OfLine(cl), new Profile((Polygon)c), BuiltInMaterials.Steel, null, 0.0, 0.0, elementTransform);
-                    }
+                var c = solid.SweptArea.ToICurve();
+                if(c is Polygon)
+                {
+                    var cl = new Line(Vector3.Origin, solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
+                    var result = new Beam(solidTransform.OfLine(cl), new Profile((Polygon)c), BuiltInMaterials.Steel, null, 0.0, 0.0, elementTransform);
+                    result.Name = beam.Name;
+                    return result; 
                 }
             }
             return null;
@@ -178,21 +177,39 @@ namespace Elements
 
             var elementTransform = column.ObjectPlacement.ToTransform();
             
-            var solids = column.RepresentationsOfType<IfcExtrudedAreaSolid>();
+            var solid = column.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
             foreach (var cis in column.ContainedInStructure)
             {
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(elementTransform);
             }
 
-            if(solids != null)
+            if(solid != null)
             {
-                foreach(var s in solids)
-                {
-                    var solidTransform = s.Position.ToTransform();
+                var solidTransform = solid.Position.ToTransform();
+                var c = solid.SweptArea.ToICurve();
+                var result = new Column(solidTransform.Origin, (IfcLengthMeasure)solid.Depth, new Profile((Polygon)c), BuiltInMaterials.Steel, elementTransform, 0.0, 0.0);
+                result.Name = column.Name;
+                return result;
+            }
+            return null;
+        }
 
-                    var c = s.SweptArea.ToICurve();
-                    return new Column(solidTransform.Origin, (IfcLengthMeasure)s.Depth, new Profile((Polygon)c), BuiltInMaterials.Steel, elementTransform, 0.0, 0.0);
-                }
+        /// <summary>
+        /// Convert an IfcOpening to an Opening.
+        /// </summary>
+        /// <param name="opening"></param>
+        public static Opening ToOpening(this IfcOpeningElement opening)
+        {
+            var openingTransform = opening.ObjectPlacement.ToTransform();
+            var s = opening.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
+            if(s != null)
+            {
+                var solidTransform = s.Position.ToTransform();
+                solidTransform.Concatenate(openingTransform);
+                var profile = (Polygon)s.SweptArea.ToICurve();
+                var newOpening = new Opening(profile, (IfcLengthMeasure)s.Depth, solidTransform);
+                newOpening.Name = opening.Name;
+                return newOpening;
             }
             return null;
         }
@@ -267,12 +284,12 @@ namespace Elements
             if(profile is IfcCircleProfileDef)
             {
                 var cpd = (IfcCircleProfileDef)profile;
-                // return new Circle(cpd.Position.Location.ToVector3(), (IfcLengthMeasure)cpd.Radius);
                 return Polygon.Circle((IfcLengthMeasure)cpd.Radius);
             }
             else if(profile is IfcParameterizedProfileDef)
             {
-                throw new Exception("IfcParameterizedProfileDef is not supported yet.");
+                var ipd = (IfcParameterizedProfileDef)profile;
+                return ipd.ToICurve();
             }
             else if(profile is IfcArbitraryOpenProfileDef)
             {
@@ -293,6 +310,29 @@ namespace Elements
                 throw new Exception("IfcDerivedProfileDef is not supported yet.");
             }
             return null;
+        }
+
+        /// <summary>
+        /// Convert an IfcParameterizedProfileDef to an ICurve
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public static ICurve ToICurve(this IfcParameterizedProfileDef profile)
+        {
+            if(profile is IfcRectangleProfileDef)
+            {
+                var rect = (IfcRectangleProfileDef)profile;
+                return Polygon.Rectangle(rect.Position.Location.ToVector3(), (IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim);
+            }
+            else if(profile is IfcCircleProfileDef)
+            {
+                var circle = (IfcCircleProfileDef)profile;
+                return Polygon.Circle((IfcLengthMeasure)circle.Radius);
+            }
+            else
+            {
+                throw new Exception($"The IfcParameterizedProfileDef type, {profile.GetType().Name}, is not supported.");
+            }
         }
 
         /// <summary>

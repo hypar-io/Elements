@@ -52,5 +52,10 @@ namespace Elements
         /// Edges
         /// </summary>
         public static Material Edges = new Material("edges", new Color(0.1f, 0.1f, 0.1f, 1.0f), 0.0f, 0.0f);
+
+        /// <summary>
+        /// Void
+        /// </summary>
+        public static Material Void = new Material("void", new Color(Colors.Lime.Red, Colors.Lime.Green, Colors.Lime.Blue, 0.1f), 0.1f, 0.1f);
     }
 }
