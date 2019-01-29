@@ -20,7 +20,7 @@ namespace Elements
         public HSSPipeProfile(string name, double OD, double ID, double t) : base(name)
         {
             this.Perimeter = Polygon.Circle(OD);
-            this.Voids = new Polygon[]{Polygon.Circle(ID)};
+            this.Voids = new Polygon[]{Polygon.Circle(ID).Reversed()};
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ZeroThickness_ThrowsException()
+        public void ZeroThickness()
         {
             var model = new Model();
             var poly = Polygon.Rectangle(width:20, height:20);

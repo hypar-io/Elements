@@ -12,7 +12,6 @@ namespace Elements.Geometry
     /// <summary>
     /// A closed planar polygon.
     /// </summary>
-    // [JsonConverter(typeof(PolygonConverter))]
     public partial class Polygon : Polyline
     {
         private const double scale = 1024.0;
@@ -20,7 +19,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The area enclosed by the polygon.
         /// </summary>
-        /// <value></value>
         [JsonIgnore]
         public double Area
         {

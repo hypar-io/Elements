@@ -1,5 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Elements.Geometry.Solids;
 using IFC;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,7 @@ namespace Elements
 
             var localPlacement = space.ObjectPlacement.ToTransform();
             transform.Concatenate(localPlacement);
-
+            
             var foundSolid = repItems.First();
             var material = new Material("space", new Color(1.0f, 0.0f, 1.0f, 0.5f), 0.0f, 0.0f);
             if (foundSolid.GetType() == typeof(IFC.IfcExtrudedAreaSolid))
@@ -84,7 +85,7 @@ namespace Elements
             {
                 var solid = (IFC.IfcFacetedBrep)foundSolid;
                 var shell = solid.Outer;
-                var faces = new PlanarFace[shell.CfsFaces.Count];
+                var newSolid = new Solid();
                 for(var i=0; i< shell.CfsFaces.Count; i++)
                 {
                     var f = shell.CfsFaces[i];
@@ -92,10 +93,11 @@ namespace Elements
                     {
                         var loop = (IFC.IfcPolyLoop)b.Bound;
                         var poly = loop.Polygon.ToPolygon();
-                        faces[i] = new PlanarFace(poly);
+                        newSolid.AddFace(poly);
                     }
                 }
-                var result = new Space(new FacetedBRep(faces, material), transform);
+                var result = new Space(newSolid, transform);
+
                 result.Name = space.Name;
                 return result;
             }
@@ -140,8 +142,6 @@ namespace Elements
         /// <param name="beam"></param>
         public static Beam ToBeam(this IfcBeam beam)
         {
-            Console.WriteLine($"Converting beam {beam.Name}...");
-
             var elementTransform = beam.ObjectPlacement.ToTransform();
             
             var solid = beam.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
@@ -173,8 +173,6 @@ namespace Elements
         /// <param name="column"></param>
         public static Column ToColumn(this IfcColumn column)
         {
-            Console.WriteLine($"Converting column {column.Name}...");
-
             var elementTransform = column.ObjectPlacement.ToTransform();
             
             var solid = column.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
@@ -214,7 +212,7 @@ namespace Elements
             return null;
         }
 
-        private static IFace[] Representations(this IfcProduct product)
+        private static Solid Representations(this IfcProduct product)
         {   
             var reps = product.Representation.Representations.SelectMany(r=>r.Items);
             foreach(var r in reps)
@@ -237,24 +235,37 @@ namespace Elements
                     var profileDef = (IFC.IfcArbitraryClosedProfileDef)eas.SweptArea;
                     var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
                     var outline = pline.ToPolygon(true);
-                    return Extrusions.Extrude(new Profile(outline), (IfcLengthMeasure)eas.Depth);
+                    var solid = new SweptSolid(outline, null, (IfcLengthMeasure)eas.Depth);
                 }
                 else if(r is IfcFacetedBrep)
                 {
+                    var solid = new Solid();
                     var fbr = (IfcFacetedBrep)r;
                     var shell = fbr.Outer;
-                    var faces = new PlanarFace[shell.CfsFaces.Count];
+                    var faces = new Face[shell.CfsFaces.Count];
                     for(var i=0; i< shell.CfsFaces.Count; i++)
                     {
                         var f = shell.CfsFaces[i];
+                        var boundCount = 0;
+                        Loop outer = null;
+                        Loop[] inner = new Loop[f.Bounds.Count - 1];
                         foreach (var b in f.Bounds)
                         {
                             var loop = (IFC.IfcPolyLoop)b.Bound;
-                            var poly = loop.Polygon.ToPolygon();
-                            faces[i] = new PlanarFace(poly);
+                            var newLoop = loop.Polygon.ToLoop(solid);
+                            if(boundCount == 0)
+                            {
+                                outer = newLoop;
+                            }
+                            else
+                            {
+                                inner[boundCount-1] = newLoop;
+                            }
+                            boundCount++;
                         }
+                        solid.AddFace(outer, inner);
                     }
-                    return faces;
+                    return solid;
                 }
                 else if(r is IfcFacetedBrepWithVoids)
                 {
@@ -573,7 +584,8 @@ namespace Elements
         /// <summary>
         /// Convert a collection of IfcCartesianPoint to a Polygon.
         /// </summary>
-        /// <param name="loop">A collection of IfcCartesianPoint</param>
+        /// <param name="loop">A collection of IfcCartesianPoint.</param>
+        /// <returns>A Polygon.</returns>
         public static Polygon ToPolygon(this List<IfcCartesianPoint> loop)
         {
             var verts = new Vector3[loop.Count];
@@ -585,10 +597,28 @@ namespace Elements
         }
 
         /// <summary>
+        /// Convert a collection of IfcCartesianPoint to a Loop.
+        /// </summary>
+        /// <param name="loop">A collection of IfcCartesianPoint.</param>
+        /// <param name="solid"></param>
+        /// <returns>A Loop.</returns>
+        public static Loop ToLoop(this List<IfcCartesianPoint> loop, Solid solid)
+        {
+            var hes = new HalfEdge[loop.Count];
+            for (var i = 0; i < loop.Count; i++)
+            {
+                var v = solid.AddVertex(loop[i].ToVector3());
+                hes[i] = new HalfEdge(v);
+            }
+            var newLoop = new Loop(hes);
+            return newLoop;
+        }
+
+        /// <summary>
         /// Convert an IfcPolyloop to a Polygon.
         /// </summary>
         /// <param name="loop"></param>
-        /// <returns></returns>
+        /// <returns>A Polygon.</returns>
         public static Polygon ToPolygon(this IfcPolyLoop loop)
         {
             return loop.Polygon.ToPolygon();

@@ -4,13 +4,14 @@ using Newtonsoft.Json;
 using System;
 using Elements.Geometry;
 using System.Collections.Generic;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
     /// <summary>
-    /// A space represents the extruded boundary of an occupiable region.
+    /// A space represents the boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, IGeometry3D
+    public class Space : Element, IGeometry3D, IProfileProvider
     {   
         /// <summary>
         /// The Profile of the Space.
@@ -31,14 +32,14 @@ namespace Elements
         /// The Space's geometry.
         /// </summary>
         [JsonProperty("geometry")]
-        public IBRep[] Geometry { get; internal set;}
+        public Solid[] Geometry { get; internal set;}
 
         /// <summary>
         /// Construct a space from an IBRep.
         /// </summary>
         /// <param name="geometry">The BRep which will be used to define the space.</param>
         /// <param name="transform">The Transform of the Space.</param>
-        public Space(IBRep geometry, Transform transform = null)
+        public Space(Solid geometry, Transform transform = null)
         {
             this.Transform = transform;
             this.Geometry = new[] { geometry };
@@ -53,7 +54,6 @@ namespace Elements
         /// <param name="material">The Space's material.</param>
         /// <param name="transform">The Space's transform.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
-        // [JsonConstructor]
         public Space(Profile profile, double height, double elevation = 0.0, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
@@ -61,10 +61,8 @@ namespace Elements
                 throw new ArgumentOutOfRangeException(Messages.HEIGHT_EXCEPTION, "height");
             }
 
-            this.Profile = profile;
-            // this.Height = height;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[] { new Extrude(this.Profile, height, material == null ? BuiltInMaterials.Default : material) };
+            this.Geometry = new[] { new SweptSolid(profile.Perimeter, profile.Voids, height, material == null ? BuiltInMaterials.Default : material)};
         }
 
         /// <summary>
@@ -83,19 +81,18 @@ namespace Elements
             }
 
             this.Profile = new Profile(profile);
-            // this.Height = height;
-
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[] { new Extrude(this.Profile, height, material == null ? BuiltInMaterials.Default : material) };
+            this.Geometry = new[] { new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, height, material == null ? BuiltInMaterials.Mass : material)};
         }
 
         /// <summary>
         /// Construct a space from an array of IBRep.
         /// </summary>
         /// <param name="geometry">The BReps which will be used to define the space.</param>
-        /// <param name="transform"></param>
+        /// <param name="transform">The Space's Transform.</param>
+        /// <param name="material">The Space's Material.</param>
         [JsonConstructor]
-        public Space(IBRep[] geometry, Transform transform = null)
+        public Space(Solid[] geometry, Transform transform = null, Material material = null)
         {
             if (geometry == null || geometry.Length == 0)
             {
@@ -104,14 +101,14 @@ namespace Elements
 
             // TODO: Remove this when the Profile is no longer available
             // as a property on the Element. 
-            foreach(var g in geometry)
-            {
-                var extrude = g as Extrude;
-                if(extrude != null)
-                {
-                    this.Profile = extrude.Profile;
-                }
-            }
+            // foreach(var g in geometry)
+            // {
+            //     var extrude = g as Extrude;
+            //     if(extrude != null)
+            //     {
+            //         this.Profile = extrude.Profile;
+            //     }
+            // }
 
             this.Transform = transform;
             this.Geometry = geometry;

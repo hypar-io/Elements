@@ -70,7 +70,7 @@ namespace Elements.Geometry
         /// <returns>A Polygon with the specified number of sides.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the radius is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the number of sides is less than 3.</exception>
-        public static Polygon Ngon(int sides, double radius)
+        public static Polygon Ngon(int sides, double radius = 0.5)
         {
             if (radius <= 0.0)
             {

@@ -48,7 +48,6 @@ namespace Elements.Serialization
         /// <summary>
         /// Can this converter read json?
         /// </summary>
-        /// <value></value>
         public override bool CanRead
         {
             get{return true;}
@@ -57,7 +56,6 @@ namespace Elements.Serialization
         /// <summary>
         /// Can this converter write json?
         /// </summary>
-        /// <value></value>
         public override bool CanWrite
         {
             get{return false;}

@@ -33,7 +33,7 @@ namespace Elements
         /// <summary>
         /// A map of Properties for the Element.
         /// </summary>
-        [JsonProperty("properties"), JsonConverter(typeof(PropertyDictionaryConverter))]
+        [JsonProperty("properties", NullValueHandling=NullValueHandling.Ignore), JsonConverter(typeof(PropertyDictionaryConverter))]
         public Dictionary<string, IProperty> Properties
         {
             get { return _properties; }

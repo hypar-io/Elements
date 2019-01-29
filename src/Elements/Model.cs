@@ -14,6 +14,7 @@ using System.Reflection;
 using STEP;
 using IFC.Storage;
 using IFC;
+using Hypar.Elements.Interfaces;
 
 namespace Elements
 {
@@ -87,16 +88,6 @@ namespace Elements
             AddMaterial(BuiltInMaterials.Edges);
         }
 
-        internal Model(Dictionary<long, Element> elements, Dictionary<long, Material> materials, Dictionary<long, ElementType> elementTypes,
-                        Dictionary<long, IProfile> profiles)
-        {
-            this._elements = elements;
-            this._materials = materials;
-            this._elementTypes = elementTypes;
-            this._profiles = profiles;
-            AddMaterial(BuiltInMaterials.Edges);
-        }
-
         /// <summary>
         /// Add an element to the model.
         /// </summary>
@@ -121,62 +112,6 @@ namespace Elements
         }
 
         /// <summary>
-        /// Recursively gather element data to be referenced at the root.
-        /// This includes things like profiles, materials, and element types.
-        /// </summary>
-        /// <param name="element">The Element from which to gather data.</param>
-        private void GetRootLevelElementData(IElement element)
-        {
-            if (element is IGeometry3D)
-            {
-                var geo = (IGeometry3D)element;
-                foreach(var brep in geo.Geometry)
-                {
-                    AddMaterial(brep.Material);
-
-                    if(brep is IProfileProvider)
-                    {
-                        var ipp = (IProfileProvider)brep;
-                        if(ipp.Profile != null)
-                        {
-                            AddProfile((Profile)ipp.Profile);
-                        }
-                    }
-                }
-            }
-
-            if (element is IElementTypeProvider<WallType>)
-            {
-                var wtp = (IElementTypeProvider<WallType>)element;
-                if(wtp.ElementType != null)
-                {
-                    AddElementType(wtp.ElementType);
-                }
-            }
-
-            if (element is IElementTypeProvider<FloorType>)
-            {
-                var ftp = (IElementTypeProvider<FloorType>)element;
-                if(ftp.ElementType != null)
-                {
-                    AddElementType(ftp.ElementType);
-                }
-            }
-
-            if (element is IAggregateElement)
-            {
-                var ae = (IAggregateElement)element;
-                if (ae.Elements.Count > 0)
-                {
-                    foreach (var esub in ae.Elements)
-                    {
-                        GetRootLevelElementData(esub);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Add a collection of elements to the model.
         /// </summary>
         /// <param name="elements">The elements to add to the model.</param>
@@ -185,30 +120,6 @@ namespace Elements
             foreach (var e in elements)
             {
                 AddElement(e);
-            }
-        }
-
-        private void AddElementType(ElementType elementType)
-        {
-            if (!this._elementTypes.ContainsKey(elementType.Id))
-            {
-                this._elementTypes.Add(elementType.Id, elementType);
-            }
-            else
-            {
-                this._elementTypes[elementType.Id] = elementType;
-            }
-        }
-
-        private void AddProfile(Profile profile)
-        {
-            if (!this._profiles.ContainsKey(profile.Id))
-            {
-                this._profiles.Add(profile.Id, profile);
-            }
-            else
-            {
-                this._profiles[profile.Id] = profile;
             }
         }
 
@@ -230,30 +141,15 @@ namespace Elements
         /// Get the first Element with the specified name.
         /// </summary>
         /// <param name="name"></param>
+        /// <returns>An Element or null if no Element can be found with the provided name.</returns>
         public Element GetElementByName(string name)
         {
-            var found = this.Elements.FirstOrDefault(e=>e.Value.Name == name);
-            if(found.Equals(new KeyValuePair<long,Element>()))
+            var found = this.Elements.FirstOrDefault(e => e.Value.Name == name);
+            if (found.Equals(new KeyValuePair<long, Element>()))
             {
                 return null;
             }
             return found.Value;
-        }
-
-        /// <summary>
-        /// Add a material to the model.
-        /// </summary>
-        /// <param name="material">The material to add to the model.</param>
-        private void AddMaterial(Material material)
-        {
-            if (!this._materials.ContainsKey(material.Id))
-            {
-                this._materials.Add(material.Id, material);
-            }
-            else
-            {
-                this._materials[material.Id] = material;
-            }
         }
 
         /// <summary>
@@ -342,7 +238,7 @@ namespace Elements
         /// <summary>
         /// Convert the Model to a base64 encoded string.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A Base64 string representing the Model.</returns>
         public string ToBase64String()
         {
             var tmp = Path.GetTempFileName();
@@ -355,7 +251,7 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A JSON string representing the Model.</returns>
         public string ToJson(bool indented = false)
         {
             var result = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
@@ -376,8 +272,8 @@ namespace Elements
         /// <summary>
         /// Deserialize a model from JSON.
         /// </summary>
-        /// <param name="json"></param>
-        /// <returns></returns>
+        /// <param name="json">The JSON to deserialize to a Model.</param>
+        /// <returns>A Model.</returns>
         public static Model FromJson(string json)
         {
             return JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings
@@ -411,30 +307,127 @@ namespace Elements
             var slabs = ifcSlabs.Select(s => s.ToFloor());
             var spaces = ifcSpaces.Select(sp => sp.ToSpace());
             var openings = new List<Opening>();
-            foreach(var v in ifcVoids)
+            foreach (var v in ifcVoids)
             {
                 var element = v.RelatingBuildingElement;
                 // var elementTransform = element.ObjectPlacement.ToTransform();
                 var o = ((IfcOpeningElement)v.RelatedOpeningElement).ToOpening();
                 openings.Add(o);
             }
-            //var openings = ifcVoids.Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>().Select(o=>o.ToOpening());
-            var walls = ifcWalls.Select(w=>w.ToWall());
-            var beams = ifcBeams.Select(b=>b.ToBeam());
-            var columns = ifcColumns.Select(c=>c.ToColumn());
-            
+            var walls = ifcWalls.Select(w => w.ToWall());
+            var beams = ifcBeams.Select(b => b.ToBeam());
+            var columns = ifcColumns.Select(c => c.ToColumn());
+
             var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);
-            // model.AddElements(walls);
+            model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
-            if(openings.Any())
+            if (openings.Any())
             {
                 model.AddElements(openings);
             }
 
             return model;
+        }
+
+        internal Model(Dictionary<long, Element> elements, Dictionary<long, Material> materials, Dictionary<long, ElementType> elementTypes,
+                        Dictionary<long, IProfile> profiles)
+        {
+            this._elements = elements;
+            this._materials = materials;
+            this._elementTypes = elementTypes;
+            this._profiles = profiles;
+            AddMaterial(BuiltInMaterials.Edges);
+            AddMaterial(BuiltInMaterials.Void);
+        }
+
+        private void AddMaterial(Material material)
+        {
+            if (!this._materials.ContainsKey(material.Id))
+            {
+                this._materials.Add(material.Id, material);
+            }
+            else
+            {
+                this._materials[material.Id] = material;
+            }
+        }
+
+        private void GetRootLevelElementData(IElement element)
+        {
+            if (element is IGeometry3D)
+            {
+                var geo = (IGeometry3D)element;
+                foreach (var solid in geo.Geometry)
+                {
+                    AddMaterial(solid.Material);
+                }
+            }
+
+            if (element is IProfileProvider)
+            {
+                var ipp = (IProfileProvider)element;
+                if (ipp.Profile != null)
+                {
+                    AddProfile((Profile)ipp.Profile);
+                }
+            }
+
+            if (element is IElementTypeProvider<WallType>)
+            {
+                var wtp = (IElementTypeProvider<WallType>)element;
+                if (wtp.ElementType != null)
+                {
+                    AddElementType(wtp.ElementType);
+                }
+            }
+
+            if (element is IElementTypeProvider<FloorType>)
+            {
+                var ftp = (IElementTypeProvider<FloorType>)element;
+                if (ftp.ElementType != null)
+                {
+                    AddElementType(ftp.ElementType);
+                }
+            }
+
+            if (element is IAggregateElement)
+            {
+                var ae = (IAggregateElement)element;
+                if (ae.Elements.Count > 0)
+                {
+                    foreach (var esub in ae.Elements)
+                    {
+                        GetRootLevelElementData(esub);
+                    }
+                }
+            }
+        }
+
+        private void AddElementType(ElementType elementType)
+        {
+            if (!this._elementTypes.ContainsKey(elementType.Id))
+            {
+                this._elementTypes.Add(elementType.Id, elementType);
+            }
+            else
+            {
+                this._elementTypes[elementType.Id] = elementType;
+            }
+        }
+
+        private void AddProfile(Profile profile)
+        {
+            if (!this._profiles.ContainsKey(profile.Id))
+            {
+                this._profiles.Add(profile.Id, profile);
+            }
+            else
+            {
+                this._profiles[profile.Id] = profile;
+            }
         }
 
         private Gltf InitializeGlTF()
@@ -447,11 +440,6 @@ namespace Elements
             gltf.Asset = asset;
 
             var root = new Node();
-
-            // root.Matrix = new float[]{1.0f,0.0f,0.0f,0.0f,
-            //                 0.0f,0.0f,-1.0f,0.0f,
-            //                 0.0f,1.0f,0.0f,0.0f,
-            //                 0.0f,0.0f,0.0f,1.0f};
 
             root.Translation = new[] { 0.0f, 0.0f, 0.0f };
             root.Scale = new[] { 1.0f, 1.0f, 1.0f };
@@ -471,25 +459,14 @@ namespace Elements
 
             gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
 
-            var materials = new Dictionary<string, int>();
-            foreach (var kvp in this._materials)
-            {
-                var m = kvp.Value;
-                if(materials.ContainsKey(m.Name))
-                {
-                    continue;
-                }
-                
-                var mId = gltf.AddMaterial(m.Name, m.Color.Red, m.Color.Green, m.Color.Blue, m.Color.Alpha, m.SpecularFactor, m.GlossinessFactor);
-                materials.Add(m.Name, mId);
-            }
+            var materialsToAdd = this._materials.Values.ToList();
+            materialsToAdd.Add(BuiltInMaterials.XAxis);
+            materialsToAdd.Add(BuiltInMaterials.YAxis);
+            materialsToAdd.Add(BuiltInMaterials.ZAxis);
+            materialsToAdd.Add(BuiltInMaterials.Edges);
+            materialsToAdd.Add(BuiltInMaterials.EdgesHighlighted);
 
-            var tmId = gltf.AddMaterial("x_axis", 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-            materials.Add("x_axis", tmId);
-            tmId = gltf.AddMaterial("y_axis", 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-            materials.Add("y_axis", tmId);
-            tmId = gltf.AddMaterial("z_axis", 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-            materials.Add("z_axis", tmId);
+            var materials = gltf.AddMaterials(materialsToAdd);
 
             foreach (var kvp in this._elements)
             {
@@ -506,55 +483,30 @@ namespace Elements
 
         private void GetRenderDataForElement(IElement e, Gltf gltf, Dictionary<string, int> materials)
         {
-            // AddTransformVisualization(IdProvider.Instance.GetNextId(), e.Transform, gltf, materials);
-
             if (e is IGeometry3D)
             {
                 var geo = e as IGeometry3D;
 
                 Elements.Geometry.Mesh mesh = null;
 
-                foreach(var brep in geo.Geometry)
-                {
-                    if (brep is IExtrudeAlongCurve)
-                    {
-                        var eac = (IExtrudeAlongCurve)brep;
+                var lines = new List<Vector3>();
 
-                        // var frames = eac.Curve.Frames(0, 0);
-                        // foreach (var f in frames)
-                        // {
-                        //     var x = new Elements.Geometry.Line(f.Origin, f.Origin + f.XAxis * 2);
-                        //     AddCurve(e.Id + 10000, x, gltf, materials["x_axis"], e.Transform);
-                        //     var y = new Elements.Geometry.Line(f.Origin, f.Origin + f.YAxis * 2);
-                        //     AddCurve(e.Id + 10001, y, gltf, materials["y_axis"], e.Transform);
-                        //     var z = new Elements.Geometry.Line(f.Origin, f.Origin + f.ZAxis * 2);
-                        //     AddCurve(e.Id + 10002, z, gltf, materials["z_axis"], e.Transform);
-                        // }
-                        // Add the center curve
-                        AddCurve(e.Id, eac.Curve, gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
+                foreach (var solid in geo.Geometry)
+                {
+                    foreach (var edge in solid.Edges.Values)
+                    {
+                        lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
                     }
 
                     mesh = new Elements.Geometry.Mesh();
-                    foreach (var f in brep.Faces)
-                    {
-                        // Draw a winding indicator
-                        // AddArrow(e.Id + 10003, f.Vertices[0], (f.Vertices[1] - f.Vertices[0]).Normalized(), gltf, materials["z_axis"], e.Transform);
-                        f.Tessellate(mesh);
-                        if(f is PlanarFace)
-                        {
-                            var pf = (PlanarFace)f;
-                            foreach(var p in pf.Bounds)
-                            {
-                                AddCurve(e.Id, p, gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
-                            }
-                        }
-                    }
-
+                    solid.Tessellate(ref mesh);
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
                                         mesh.Indices.ToArray(), mesh.VertexColors.ToArray(),
                                         mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax,
-                                        mesh.IMin, mesh.IMax, materials[brep.Material.Name], null, e.Transform);
+                                        mesh.IMin, mesh.IMax, materials[solid.Material.Name], null, e.Transform);
                 }
+
+                AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
             }
 
             if (e is IAggregateElement)
@@ -569,33 +521,22 @@ namespace Elements
                     }
                 }
             }
-
         }
 
-        private void AddTransformVisualization(long id, Transform f, Gltf gltf, Dictionary<string, int> materials)
+        private void AddLines(long id, Vector3[] vertices, Gltf gltf, int material, Transform t = null)
         {
-            if (f == null)
+            var vBuff = vertices.ToArray();
+            var vCount = vertices.Length;
+            var indices = new List<ushort>();
+            for (ushort i = 0; i < vertices.Length; i += 2)
             {
-                return;
+                indices.Add(i);
+                indices.Add((ushort)(i + 1));
             }
-            
-            var x = new Elements.Geometry.Line(f.Origin, f.Origin + f.XAxis * 2);
-            AddCurve(id + 10000, x, gltf, materials["x_axis"]);
-            var y = new Elements.Geometry.Line(f.Origin, f.Origin + f.YAxis * 2);
-            AddCurve(id + 10001, y, gltf, materials["y_axis"]);
-            var z = new Elements.Geometry.Line(f.Origin, f.Origin + f.ZAxis * 2);
-            AddCurve(id + 10002, z, gltf, materials["z_axis"]);
-        }
-
-        private void AddCurve(long id, ICurve curve, Gltf gltf, int material, Transform t = null)
-        {
-            var vBuff = curve.Vertices.ToArray();
-            var vCount = curve.Vertices.Count();
-            var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
-            var bbox = new BBox3(curve.Vertices);
-            gltf.AddLineLoop($"{id}_curve", _buffer, vBuff, indices, bbox.Min.ToArray(),
-                            bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, t);
-
+            // var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
+            var bbox = new BBox3(vertices);
+            gltf.AddLineLoop($"{id}_curve", _buffer, vBuff, indices.ToArray(), bbox.Min.ToArray(),
+                            bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, MeshPrimitive.ModeEnum.LINES, t);
         }
 
         private void AddArrow(long id, Vector3 origin, Vector3 direction, Gltf gltf, int material, Transform t)
@@ -612,7 +553,7 @@ namespace Elements
             var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
             var bbox = new BBox3(pts);
             gltf.AddLineLoop($"{id}_curve", _buffer, vBuff, indices, bbox.Min.ToArray(),
-                            bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, t);
+                            bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, MeshPrimitive.ModeEnum.LINE_STRIP, t);
 
         }
     }

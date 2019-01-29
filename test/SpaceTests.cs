@@ -1,7 +1,6 @@
-using Elements;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -26,14 +25,23 @@ namespace Elements.Tests
         public void SpaceBRep()
         {
             this.Name = "SpaceBRep";
-            var faces = Extrusions.Extrude(new Profile(Polygon.Rectangle()), 1.0);
-            var brep = new FacetedBRep(faces);
-            var space = new Space(brep, new Transform(new Vector3(0,0,5)));
+            var solid = new SweptSolid(Polygon.Rectangle(), null, 1.0);
+            var space = new Space(solid, new Transform(new Vector3(0,0,5)));
             this.Model.AddElement(space);
             var json = this.Model.ToJson();
             var newModel = Model.FromJson(json);
             var newSpace = newModel.ElementsOfType<Space>().ToArray()[0];
             Assert.Equal(space.Transform.Origin.Z, newSpace.Transform.Origin.Z);
+            Assert.Equal(space.Geometry[0].Faces.Count, newSpace.Geometry[0].Faces.Count);
+            Assert.Equal(space.Geometry[0].Edges.Count, newSpace.Geometry[0].Edges.Count);
+            Assert.Equal(space.Geometry[0].Vertices.Count, newSpace.Geometry[0].Vertices.Count);
+            foreach(var f in newSpace.Geometry[0].Faces.Values)
+            {
+                foreach(var he in f.Outer.Edges)
+                {
+                    Assert.NotNull(he.Loop);
+                }
+            }
         }
 
         [Fact]

@@ -1,0 +1,57 @@
+using System.Collections.Generic;
+using System.Text;
+using Newtonsoft.Json;
+
+namespace Elements.Geometry.Solids
+{
+    /// <summary>
+    /// A Solid Face.
+    /// </summary>
+    public class Face
+    {
+        /// <summary>
+        /// The Id of the Face.
+        /// </summary>
+        public long Id{get;}
+        
+        /// <summary>
+        /// A CCW wound list of Edges.
+        /// </summary>
+        public Loop Outer { get; internal set;}
+
+        /// <summary>
+        /// A collection of CW wound Edges.
+        /// </summary>
+        public Loop[] Inner { get; internal set;}
+
+        /// <summary>
+        /// Construct a Face.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="outer">The outer loop of the Face.</param>
+        /// <param name="inner">The inner loops of the Face.</param>
+        internal Face(long id, Loop outer, Loop[] inner)
+        {
+            this.Id = id;
+            this.Outer = outer;
+            outer.Face = this;
+            this.Inner = inner;
+            if(this.Inner != null)
+            {
+                foreach(var loop in inner)
+                {
+                    loop.Face = this;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The string representation of the Face.
+        /// </summary>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            return $"{this.Id}";
+        }
+    }
+}

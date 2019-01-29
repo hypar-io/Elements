@@ -431,7 +431,24 @@ namespace Elements.Geometry
         public static bool AreCoplanar(this IList<Vector3> points)
         {
             //TODO: https://github.com/hypar-io/sdk/issues/54
-            throw new NotImplementedException();
+            // Ensure that all triple products are equal to 0.
+            // a.Dot(b.Cross(c));
+            var a = points[0];
+            var b = points[1];
+            var c = points[2];
+            var ab = b-a;
+            var ac = c-a;
+            for(var i=3; i<points.Count; i++)
+            {
+                var d = points[i];
+                var cd = d-a;
+                var tp = ab.Dot(ac.Cross(cd));
+                if(tp != 0.0)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>

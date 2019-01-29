@@ -22,21 +22,18 @@ namespace Elements.Geometry
         /// <summary>
         /// The center of the Arc.
         /// </summary>
-        /// <value></value>
         [JsonProperty("center")]
         public Vector3 Center { get; }
 
         /// <summary>
         /// The angle from 0.0, in degrees, at which the Arc will start.
         /// </summary>
-        /// <value></value>
         [JsonProperty("start_angle")]
         public double StartAngle { get; internal set; }
 
         /// <summary>
         /// The angle from 0.0, in degrees, at which the Arc will end.
         /// </summary>
-        /// <value></value>
         [JsonProperty("end_angle")]
         public double EndAngle { get; internal set; }
 

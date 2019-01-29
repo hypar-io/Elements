@@ -1,5 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Elements.Geometry.Solids;
 using System;
 using System.Linq;
 
@@ -108,38 +109,6 @@ namespace Elements
             this._top = top;
             this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(bottom.Length() / uDistance));
             this._vDiv = CalculateEqualDivisions((int)Math.Ceiling(top.Length() / vDistance));
-            this._pts = CalculateGridPoints();
-        }
-
-        /// <summary>
-        /// Construct a grid.
-        /// </summary>
-        /// <param name="face">A face whose edges will be used to define the grid.</param>
-        /// <param name="uDivisions">The number of grid divisions in the u direction.</param>
-        /// <param name="vDivisions">The number of grid divisions in the v direction.</param>
-        public Grid(IFace face, int uDivisions = 1, int vDivisions = 1)
-        {
-            var f = face.Edges.ToList();
-            this._bottom = f[0];
-            this._top = f[2].Reversed();
-            this._uDiv = CalculateEqualDivisions(uDivisions);
-            this._vDiv = CalculateEqualDivisions(vDivisions);
-            this._pts = CalculateGridPoints();
-        }
-
-        /// <summary>
-        /// Construct a Grid.
-        /// </summary>
-        /// <param name="face">A face whose edges will be used to define the grid.</param>
-        /// <param name="uDistance">The distance along the u parameter at which points will be created.</param>
-        /// <param name="vDistance">The distance along the v parameter at which points will be created.</param>
-        public Grid(IFace face, double uDistance, double vDistance)
-        {
-            var f = face.Edges.ToList();
-            this._bottom = f[0];
-            this._top = f[2].Reversed();
-            this._uDiv = CalculateEqualDivisions((int)Math.Ceiling(this._bottom.Length() / uDistance));
-            this._vDiv = CalculateEqualDivisions((int)Math.Ceiling(f[1].Length() / vDistance));
             this._pts = CalculateGridPoints();
         }
     }

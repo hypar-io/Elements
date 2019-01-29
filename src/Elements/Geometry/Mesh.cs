@@ -1,10 +1,7 @@
-using Elements.Geometry.Interfaces;
 using LibTessDotNet.Double;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 
 namespace Elements.Geometry
@@ -289,7 +286,7 @@ namespace Elements.Geometry
 
             tess.AddContour(contour);
         }
-
+        
         /// <summary>
         /// Get a string representation of the mesh.
         /// </summary>

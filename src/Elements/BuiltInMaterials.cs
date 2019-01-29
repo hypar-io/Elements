@@ -54,8 +54,28 @@ namespace Elements
         public static Material Edges = new Material("edges", new Color(0.1f, 0.1f, 0.1f, 1.0f), 0.0f, 0.0f);
 
         /// <summary>
+        /// Edges Highlighted
+        /// </summary>
+        public static Material EdgesHighlighted = new Material("edge_highlighted", new Color(1.0f, 1.0f, 0.0f, 1.0f), 0.0f, 0.0f);
+
+        /// <summary>
         /// Void
         /// </summary>
         public static Material Void = new Material("void", new Color(Colors.Lime.Red, Colors.Lime.Green, Colors.Lime.Blue, 0.1f), 0.1f, 0.1f);
+
+        /// <summary>
+        /// X Axis
+        /// </summary>
+        public static Material XAxis = new Material("x_axis", new Color(1.0f, 0.0f, 0.0f, 1.0f), 0.1f, 0.1f);
+
+        /// <summary>
+        /// Y Axis
+        /// </summary>
+        public static Material YAxis = new Material("x_axis", new Color(0.0f, 1.0f, 0.0f, 1.0f), 0.1f, 0.1f);
+
+        /// <summary>
+        /// Z Axis
+        /// </summary>
+        public static Material ZAxis = new Material("x_axis", new Color(0.0f, 0.0f, 1.0f, 1.0f), 0.1f, 0.1f);
     }
 }

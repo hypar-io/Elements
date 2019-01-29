@@ -10,17 +10,12 @@ namespace Elements.Geometry.Interfaces
     public interface IProfile : IIdentifiable
     {
         /// <summary>
-        /// The name of the Profile.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// The outer perimeter of the Profile.
         /// </summary>
         Polygon Perimeter { get; }
 
         /// <summary>
-        /// A collection of Polgons representing voids in the Profile.
+        /// A collection of Polygons representing voids in the Profile.
         /// </summary>
         Polygon[] Voids { get; }
 

@@ -1,5 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Hypar.Elements.Interfaces;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall : Element, IElementTypeProvider<WallType>, IGeometry3D, IProfileProvider, IOpeningsProvider
+    public class Wall : Element, IElementTypeProvider<WallType>, IGeometry3D, IProfileProvider
     {
         /// <summary>
         /// The Profile of the Wall.
@@ -48,7 +49,6 @@ namespace Elements
         /// <summary>
         /// The thickness of the Wall's extrusion.
         /// </summary>
-        /// <value></value>
         [JsonIgnore]
         public double Thickness
         {
@@ -59,11 +59,12 @@ namespace Elements
         /// The Wall's geometry.
         /// </summary>
         [JsonProperty("geometry")]
-        public IBRep[] Geometry { get; }
+        public Solid[] Geometry { get; }
 
         /// <summary>
         /// An array of Openings in the Wall.
         /// </summary>
+        [JsonProperty("openings")]
         public Opening[] Openings{ get; }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace Elements
             this.Profile = profile;
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new []{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new []{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace Elements
             // Construct a transform whose X axis is the centerline of the wall.
             var z = center_line.Direction.Cross(Vector3.ZAxis);
             this.Transform = new Transform(center_line.Start, center_line.Direction, z);
-            this.Geometry = new []{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new []{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>
@@ -143,7 +144,7 @@ namespace Elements
         /// <param name="height">The height of the Wall.</param>
         /// <param name="transform">The Wall's Transform.</param>
         [JsonConstructor]
-        public Wall(IBRep[] geometry, WallType element_type, double height = 0.0, Line center_line = null, Transform transform = null)
+        public Wall(Solid[] geometry, WallType element_type, double height = 0.0, Line center_line = null, Transform transform = null)
         {
             if (geometry == null || geometry.Length == 0)
             {
@@ -152,14 +153,14 @@ namespace Elements
             
             // TODO: Remove this when the Profile is no longer available
             // as a property on the Element. 
-            foreach(var g in geometry)
-            {
-                var extrude = g as Extrude;
-                if(extrude != null)
-                {
-                    this.Profile = extrude.Profile;
-                }
-            }
+            // foreach(var g in geometry)
+            // {
+            //     var extrude = g as Extrude;
+            //     if(extrude != null)
+            //     {
+            //         this.Profile = extrude.Profile;
+            //     }
+            // }
 
             this.Height = height;
             this.ElementType = element_type;

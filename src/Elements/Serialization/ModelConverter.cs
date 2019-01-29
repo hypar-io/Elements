@@ -46,8 +46,7 @@ namespace Elements.Serialization
                                                     new MaterialToIdConverter(materials),
                                                     new ElementTypeToIdConverter(elementTypes),
                                                     new ProfileToIdConverter(profiles),
-                                                    new IBRepConverter(),
-                                                    new IFaceConverter()
+                                                    new SolidConverter(materials)
                                                 },
                                 NullValueHandling = NullValueHandling.Ignore
                             });
@@ -96,7 +95,8 @@ namespace Elements.Serialization
                     {
                         new MaterialToIdConverter(model.Materials),
                         new ElementTypeToIdConverter(model.ElementTypes),
-                        new ProfileToIdConverter(model.Profiles)
+                        new ProfileToIdConverter(model.Profiles),
+                        new SolidConverter(model.Materials)
                     },
                 NullValueHandling = NullValueHandling.Ignore
             }));

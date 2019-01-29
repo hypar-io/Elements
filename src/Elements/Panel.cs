@@ -1,17 +1,14 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Serialization;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
     /// <summary>
-    /// A zero-thickness planar Panel defined by 3 or 4 points.
+    /// A zero-thickness planar Panel.
     /// </summary>
     public class Panel : Element, IGeometry3D
     {
@@ -25,24 +22,25 @@ namespace Elements
         /// The Panel's geometry.
         /// </summary>
         [JsonProperty("geometry")]
-        public IBRep[] Geometry { get; }
+        public Solid[] Geometry { get; }
 
         /// <summary>
         /// Construct a Panel.
         /// </summary>
         /// <param name="perimeter">The perimeter of the Panel.</param>
         /// <param name="material">The Panel's material</param>
-        /// <exception cref="System.ArgumentException">Thrown when the number of perimeter points is less than 3 or greater than 4.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the provided perimeter points are not coplanar.</exception>
         [JsonConstructor]
         public Panel(Vector3[] perimeter, Material material = null)
         {
             var vCount = perimeter.Count();
-            if (vCount > 4 || vCount < 3)
+            if (!perimeter.AreCoplanar())
             {
-                throw new ArgumentException("Panels can only be constructed currently using perimeters with 3 or 4 vertices.", "perimeter");
+                throw new ArgumentException("The Panel could not be constructed. Points defining the perimeter must be coplanar.", "perimeter");
             }
+            
             this.Perimeter = perimeter;
-            this.Geometry = new []{new FacetedBRep(new[]{new PlanarFace(this.Perimeter)}, material == null ? BuiltInMaterials.Default : material)};
+            this.Geometry = new[] { Solid.CreateLamina(this.Perimeter, material == null ? BuiltInMaterials.Default : material) };
         }
 
         /// <summary>

@@ -115,6 +115,9 @@ namespace Elements.Geometry
             throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// A reversed copy of this Circle.
+        /// </summary>
         public ICurve Reversed()
         {
             throw new System.NotImplementedException();

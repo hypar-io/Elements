@@ -53,7 +53,7 @@ namespace Elements.Geometry.Interfaces
         /// <param name="startSetback">The offset from the start of the ICurve.</param>
         /// <param name="endSetback">The offset from the end of the ICurve.</param>
         /// <returns>A collection of Transforms.</returns>
-        Transform[] Frames(double startSetback, double endSetback);
+        Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0);
 
         /// <summary>
         /// Get an ICurve which is the reverse of this curve.

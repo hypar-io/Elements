@@ -18,7 +18,6 @@ namespace Elements
         /// <summary>
         /// The height of the Column.
         /// </summary>
-        /// <value></value>
         [JsonProperty("height")]
         public double Height{get;}
 

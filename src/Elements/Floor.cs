@@ -2,16 +2,15 @@ using Elements.Geometry;
 using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using Elements.Serialization;
 using Hypar.Elements.Interfaces;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
     /// <summary>
     /// A Floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : Element, IElementTypeProvider<FloorType>, IGeometry3D, IOpeningsProvider
+    public class Floor : Element, IElementTypeProvider<FloorType>, IGeometry3D, IProfileProvider
     {
         /// <summary>
         /// The elevation from which the Floor is extruded.
@@ -53,21 +52,17 @@ namespace Elements
         /// The Floor's geometry.
         /// </summary>
         [JsonProperty("geometry")]
-        public IBRep[] Geometry { get; }
-
-        /// <summary>
-        /// An array of Openings in the Floor.
-        /// </summary>
-        public Opening[] Openings { get; }
+        public Solid[] Geometry { get; }
 
         /// <summary>
         /// Construct a Floor.
         /// </summary>
-        /// <param name="profile">The IProfile of the Floor.</param>
+        /// <param name="profile">The Profile of the Floor.</param>
         /// <param name="elementType">The ElementType of the Floor.</param>
         /// <param name="elevation">The elevation of the Floor.</param>
         /// <param name="material">The Floor's Material.</param>
-        /// <param name="transform">The Floor's transform.</param>
+        /// <param name="transform">The Floor's Transform.</param>
+        /// <returns>A Floor.</returns>
         [JsonConstructor]
         public Floor(IProfile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
         {
@@ -75,7 +70,7 @@ namespace Elements
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[]{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>
@@ -86,13 +81,14 @@ namespace Elements
         /// <param name="elevation"></param>
         /// <param name="material"></param>
         /// <param name="transform"></param>
+        /// <returns>A Floor.</returns>
         public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
         {
             this.Profile = new Profile(profile);
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[]{new Extrude(this.Profile, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
         
         /// <summary>
@@ -111,7 +107,7 @@ namespace Elements
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new []{new ExtrudeInDirection(profile, start, direction, this.Thickness, material, true)};
+            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, direction, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
         
         /// <summary>
@@ -119,6 +115,7 @@ namespace Elements
         /// Overlapping openings and openings which are outside of the Floor's perimeter,
         /// will result in incorrect area results.
         /// </summary>
+        /// <returns>The area of the Floor.</returns>
         public double Area()
         {
             return this.Profile.Area();

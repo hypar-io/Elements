@@ -71,5 +71,25 @@ namespace Elements.Tests
             v = Vector3.Origin;
             Assert.Equal(0.0, v.DistanceTo(p));
         }
+
+        [Fact]
+        public void AreCoplanar()
+        {   
+            var a = Vector3.Origin;
+            var b = new Vector3(1,0);
+            var c = new Vector3(1,1,1);
+
+            // Any three points are coplanar.
+            Assert.True(new[]{a,b,c}.AreCoplanar());
+
+            var d = new Vector3(5,5);
+            Assert.False(new[]{a,b,c,d}.AreCoplanar());
+
+            var e = new Vector3(1,0,0);
+            var f = new Vector3(1,1,0);
+            var g = new Vector3(1,1,1);
+            var h = new Vector3(1,0,1);
+            Assert.True(new[]{e,f,g,h}.AreCoplanar());
+        }
     }
 }

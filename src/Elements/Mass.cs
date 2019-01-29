@@ -1,5 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,8 @@ namespace Elements
     /// <summary>
     /// A Mass represents an extruded building Mass.
     /// </summary>
-    public class Mass : Element, IGeometry3D
+    public class Mass : Element, IGeometry3D, IProfileProvider
     {
-        private List<Polyline> _sides = new List<Polyline>();
-
         /// <summary>
         /// The Profile of the Mass.
         /// </summary>
@@ -47,7 +46,7 @@ namespace Elements
         /// The Mass' geometry.
         /// </summary>
         [JsonProperty("geometry")]
-        public IBRep[] Geometry { get; }
+        public Solid[] Geometry { get; }
 
         /// <summary>
         /// Construct a Mass.
@@ -66,7 +65,7 @@ namespace Elements
             this.Profile = profile;
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new[]{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Mass : material)};
+            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace Elements
             this.Profile = new Profile(profile);
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new[]{new Extrude(this.Profile, this.Height, material == null ? BuiltInMaterials.Mass : material)};
+            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
         }
 
         /// <summary>

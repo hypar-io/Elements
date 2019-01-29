@@ -96,15 +96,10 @@ namespace Elements.Geometry
             {
                 throw new Exception("To construct a Profile, all points must line in the same Plane.");
             }
-        }
-
-        /// <summary>
-        /// Default constructor for Profile.
-        /// </summary>
-        protected Profile(string name)
-        {
-            this.Id = IdProvider.Instance.GetNextId();
-            this.Name = name;
+            if(this.Voids != null)
+            {
+                this.Clip();
+            }
         }
 
         /// <summary>
@@ -139,6 +134,10 @@ namespace Elements.Geometry
             {
                 throw new Exception("To construct a Profile, all points must line in the same Plane.");
             }
+            if(singleVoid != null)
+            {
+                this.Clip();
+            }
         }
 
         /// <summary>
@@ -164,6 +163,39 @@ namespace Elements.Geometry
         public double Area()
         {
             return ClippedArea();
+        }
+
+        /// <summary>
+        ///  Conduct a clip operation on this profile.
+        /// </summary>
+        private void Clip()
+        {
+            var clipper = new ClipperLib.Clipper();
+            clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            if (this.Voids != null)
+            {
+                clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            }
+            var solution = new List<List<ClipperLib.IntPoint>>();
+            var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
+
+            // Completely disjoint polygons like a circular pipe
+            // profile will result in an empty solution.
+            if (solution.Count > 0)
+            {
+                var polys = solution.Select(s => s.ToPolygon()).ToArray();
+                this.Perimeter = polys[0];
+                this.Voids = polys.Skip(1).ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Default constructor for Profile.
+        /// </summary>
+        protected Profile(string name)
+        {
+            this.Id = IdProvider.Instance.GetNextId();
+            this.Name = name;
         }
 
         private double ClippedArea()

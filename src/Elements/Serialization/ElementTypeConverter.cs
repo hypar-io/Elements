@@ -23,7 +23,6 @@ namespace Elements.Serialization
         /// <summary>
         /// Can this converter write json?
         /// </summary>
-        /// <value></value>
         public override bool CanWrite
         {
             get{return false;}

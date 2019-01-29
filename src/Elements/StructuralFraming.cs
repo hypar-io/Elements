@@ -6,13 +6,14 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
 using Elements.Serialization;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
     /// <summary>
     /// A linear structural element with a cross section.
     /// </summary>
-    public abstract class StructuralFraming : Element, IGeometry3D
+    public abstract class StructuralFraming : Element, IGeometry3D, IProfileProvider
     {
         private Vector3 _up;
 
@@ -54,7 +55,7 @@ namespace Elements
         /// The geometry of the StructuralFraming.
         /// </summary>
         [JsonProperty("geometry")]
-        public IBRep[] Geometry { get; }
+        public Solid[] Geometry { get; }
 
         /// <summary>
         /// Construct a beam.
@@ -82,7 +83,7 @@ namespace Elements
             this.StartSetback = startSetback;
             this.EndSetback = endSetback;
             this.Transform = transform;
-            this.Geometry = new[]{new ExtrudeAlongCurve(this.Profile, this.Curve, material == null ? BuiltInMaterials.Steel : material, true, this.StartSetback, this.EndSetback)};
+            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Curve, material == null ? BuiltInMaterials.Steel : material, this.StartSetback, this.EndSetback)};
         }
 
         /// <summary>

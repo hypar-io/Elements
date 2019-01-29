@@ -15,7 +15,6 @@ namespace Elements
         /// <summary>
         /// The unique identifier of the Material.
         /// </summary>
-        /// <value></value>
         [JsonProperty("id")]
         public long Id{get; internal set;}
 

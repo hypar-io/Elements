@@ -18,7 +18,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The normal of the plane.
         /// </summary>
-        /// <value></value>
         [JsonProperty("normal")]
         public Vector3 Normal{get;}
 
