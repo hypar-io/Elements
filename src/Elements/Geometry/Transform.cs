@@ -6,14 +6,14 @@ using System.Linq;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A Transform defined by an origin and x, y, and z axes.
+    /// A coordinate system defined by an origin, x, y, and z axes.
     /// </summary>
     public class Transform
     {
         private Matrix _matrix;
 
         /// <summary>
-        /// The Transform's Matrix.
+        /// The transform's matrix.
         /// </summary>
         [JsonProperty("matrix")]
         public Matrix Matrix
@@ -58,7 +58,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The XY plane of the Transform.
+        /// The XY plane of the transform.
         /// </summary>
         [JsonIgnore]
         public Plane XY
@@ -67,7 +67,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The YZ plane of the Transform.
+        /// The YZ plane of the transform.
         /// </summary>
         [JsonIgnore]
         public Plane YZ
@@ -76,7 +76,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The XZ plane of the Transform.
+        /// The XZ plane of the transform.
         /// </summary>
         [JsonIgnore]
         public Plane XZ
@@ -85,7 +85,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct the identity Transform.
+        /// Construct the identity transform.
         /// </summary>
         public Transform()
         {
@@ -93,18 +93,18 @@ namespace Elements.Geometry
         }
         
         /// <summary>
-        /// Construct a Transform by copying another Transform.
+        /// Construct a Transform by copying another transform.
         /// </summary>
-        /// <param name="t">The Transform to copy.</param>
+        /// <param name="t">The transform to copy.</param>
         public Transform(Transform t)
         {
             this._matrix = new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin));
         }
 
         /// <summary>
-        /// Construct a Transform with a translation.
+        /// Construct a transform with a translation.
         /// </summary>
-        /// <param name="origin">The origin of the Transform.</param>
+        /// <param name="origin">The origin of the transform.</param>
         public Transform(Vector3 origin)
         {
             this._matrix = new Matrix();
@@ -112,7 +112,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Transform with a translation.
+        /// Construct a transform with a translation.
         /// </summary>
         /// <param name="x">The X component of translation.</param>
         /// <param name="y">The Y component of translation.</param>
@@ -124,11 +124,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Transform by origin and axes.
+        /// Construct a transform by origin and axes.
         /// </summary>
-        /// <param name="origin">The origin of the Transform.</param>
-        /// <param name="xAxis">The X axis of the Transform.</param>
-        /// <param name="zAxis">The Z axis of the Transform.</param>
+        /// <param name="origin">The origin of the transform.</param>
+        /// <param name="xAxis">The X axis of the transform.</param>
+        /// <param name="zAxis">The Z axis of the transform.</param>
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis)
         {
             var x = xAxis.Normalized();
@@ -138,7 +138,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Transform by a Matrix.
+        /// Construct a transform by a matrix.
         /// </summary>
         /// <param name="matrix">The Transform's Matrix.</param>
         [JsonConstructor]
@@ -148,14 +148,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Transform with origin at origin,
+        /// Construct a transform with origin at origin,
         /// whose Z axis points from start to end, and whose
         /// up direction is up.
         /// </summary>
-        /// <param name="origin">The origin of the Transform.</param>
+        /// <param name="origin">The origin of the transform.</param>
         /// <param name="start">The start of the z vector.</param>
         /// <param name="end">The end of the z vector.</param>
-        /// <param name="up">A vector which can be used to orient the Transform.</param>
+        /// <param name="up">A vector which can be used to orient the transform.</param>
         internal Transform(Vector3 origin, Vector3 start, Vector3 end, Vector3 up = null)
         {
             var z = (end - start).Normalized();
@@ -182,19 +182,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a string representation of the Transform.
+        /// Get a string representation of the transform.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string representation of the transform.</returns>
         public override string ToString()
         {
             return this._matrix.ToString();
         }
 
         /// <summary>
-        /// Transform a Vector into the coordinate space defined by this Transform.
+        /// Transform a vector into the coordinate space defined by this transform.
         /// </summary>
         /// <param name="vector">The vector to transform.</param>
-        /// <returns>A new Vector transformed by this Transform.</returns>
+        /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfPoint(Vector3 vector)
         {
             var v = vector * this._matrix;
@@ -202,10 +202,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform the specified Polygon.
+        /// Transform the specified polygon.
         /// </summary>
-        /// <param name="polygon">The polygon to Transform.</param>
-        /// <returns>A new Polygon transformed by this Transform.</returns>
+        /// <param name="polygon">The polygon to transform.</param>
+        /// <returns>A new polygon transformed by this transform.</returns>
         public Polygon OfPolygon(Polygon polygon)
         {
             var transformed = new Vector3[polygon.Vertices.Length];
@@ -218,10 +218,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform the specified Polygons.
+        /// Transform the specified polygons.
         /// </summary>
-        /// <param name="polygons">The Polygons to Transform.</param>
-        /// <returns>An array of Polygons transformed by this Transform.</returns>
+        /// <param name="polygons">The polygons to transform.</param>
+        /// <returns>An array of polygons transformed by this transform.</returns>
         public Polygon[] OfPolygons(Polygon[] polygons)
         {
             return polygons.Select(p=>OfPolygon(p)).ToArray();
@@ -230,18 +230,18 @@ namespace Elements.Geometry
         /// <summary>
         /// Transform the specified Line.
         /// </summary>
-        /// <param name="line">The Line to transform.</param>
-        /// <returns>A new Line transformed by this Transform.</returns>
+        /// <param name="line">The line to transform.</param>
+        /// <returns>A new line transformed by this transforms.</returns>
         public Line OfLine(Line line)
         {
             return new Line(OfPoint(line.Start), OfPoint(line.End));
         }
 
         /// <summary>
-        /// Transform the specified Profile.
+        /// Transform the specified profile.
         /// </summary>
-        /// <param name="profile">The Profile to transform.</param>
-        /// <returns>A new Profile transformed by this Transform.</returns>
+        /// <param name="profile">The profile to transform.</param>
+        /// <returns>A new profile transformed by this transform.</returns>
         public Profile OfProfile(Profile profile)
         {
             Polygon[] voids = null;
@@ -267,7 +267,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Apply a translation to the Transform.
+        /// Apply a translation to the transform.
         /// </summary>
         /// <param name="translation">The translation to apply.</param>
         public void Move(Vector3 translation)
@@ -278,7 +278,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Apply a rotation to the Transform.
+        /// Apply a rotation to the transform.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
         /// <param name="angle">The angle of rotation in degrees.</param>
@@ -290,7 +290,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Apply a scale to the Transform.
+        /// Apply a scale to the transform.
         /// </summary>
         /// <param name="amount">The amount to scale.</param>
         public void Scale(Vector3 amount)

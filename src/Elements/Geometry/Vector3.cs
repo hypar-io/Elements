@@ -139,11 +139,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector from x, y, and z components.
+        /// Construct a vector from x, y, and z coordinates.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="x">The x coordinate of the vector.</param>
+        /// <param name="y">The y coordinate of the vector.</param>
+        /// <param name="z">The z coordinate of the vector.</param>
         [JsonConstructor]
         public Vector3(double x, double y, double z)
         {
@@ -153,10 +153,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector from x, and y components.
+        /// Construct a vector from x, and y coordinates.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">The x coordinate of the vector.</param>
+        /// <param name="y">Thy y coordinate of the vector.</param>
         public Vector3(double x, double y)
         {
             this.X = x;
@@ -184,8 +184,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute the cross product of this vector and v.
         /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
+        /// <param name="v">The vector with which to compute the cross product.</param>
         public Vector3 Cross(Vector3 v)
         {
             var x = Y * v.Z - Z * v.Y;
@@ -198,7 +197,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute the dot product of this vector and v.
         /// </summary>
-        /// <param name="v"></param>
+        /// <param name="v">The vector with which to compute the dot product.</param>
         /// <returns>The dot product.</returns>
         public double Dot(Vector3 v)
         {
@@ -208,8 +207,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The angle in radians from this vector to another vector.
         /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
+        /// <param name="v">The vector with which to measure the angle.</param>
         public double AngleTo(Vector3 v)
         {
             return Math.Acos((Dot(v) / (Length() * v.Length())));
@@ -218,8 +216,8 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute the average of this Vector3 and v.
         /// </summary>
-        /// <param name="v"></param>
-        /// <returns>A Vector3 which is the average of this and v.</returns>
+        /// <param name="v">The vector with which to compute the average.</param>
+        /// <returns>A vector which is the average of this and v.</returns>
         public Vector3 Average(Vector3 v)
         {
             return new Vector3((this.X + v.X) / 2, (this.Y + v.Y) / 2, (this.Z + v.Z) / 2);
@@ -228,8 +226,8 @@ namespace Elements.Geometry
         /// <summary>
         /// Project vector a onto this vector.
         /// </summary>
-        /// <param name="a"></param>
-        /// <returns>A new Vector3 which is the projection of a onto this Vector3.</returns>
+        /// <param name="a">The vector to project onto this vector.</param>
+        /// <returns>A new vector which is the projection of a onto this vector.</returns>
         public Vector3 ProjectOnto(Vector3 a)
         {
             var b = this;
@@ -239,9 +237,9 @@ namespace Elements.Geometry
         /// <summary>
         /// Multiply a vector and a scalar.
         /// </summary>
-        /// <param name="v"></param>
-        /// <param name="a"></param>
-        /// <returns>A Vector3 whose magnitude is multiplied by a.</returns>
+        /// <param name="v">The vector to multiply.</param>
+        /// <param name="a">The scalar value to multiply.</param>
+        /// <returns>A vector whose magnitude is multiplied by a.</returns>
         public static Vector3 operator *(Vector3 v, double a)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
@@ -250,9 +248,9 @@ namespace Elements.Geometry
         /// <summary>
         /// Multiply a scalar and a vector.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="v"></param>
-        /// <returns></returns>
+        /// <param name="a">The scalar value to multiply.</param>
+        /// <param name="v">The vector to multiply.</param>
+        /// <returns>A vector whose magnitude is mutiplied by a.</returns>
         public static Vector3 operator *(double a, Vector3 v)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
@@ -261,9 +259,9 @@ namespace Elements.Geometry
         /// <summary>
         /// Subtract two vectors.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>A vector which is the difference between a and b.</returns>
         public static Vector3 operator -(Vector3 a, Vector3 b)
         {
             return new Vector3((a.X - b.X), (a.Y - b.Y), (a.Z - b.Z));
@@ -272,9 +270,9 @@ namespace Elements.Geometry
         /// <summary>
         /// Add two vectors.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>A vector which is the sum of a and b.</returns>
         public static Vector3 operator +(Vector3 a, Vector3 b)
         {
             return new Vector3((a.X + b.X), (a.Y + b.Y), (a.Z + b.Z));
@@ -283,9 +281,9 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute whether all components of vector a are greater than those of vector b.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>True if all of a's components are greater than those of b, otherwise false.</returns>
         public static bool operator >(Vector3 a, Vector3 b)
         {
             return a.X > b.X && a.Y > b.Y && a.Z > b.Z;
@@ -294,9 +292,9 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute whether all components of vector a are less than those of vector b.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>True if all of a's components are less than those of b, otherwise false.</returns>
         public static bool operator <(Vector3 a, Vector3 b)
         {
             return a.X < b.X && a.Y < b.Y && a.Z < b.Z;
@@ -305,8 +303,8 @@ namespace Elements.Geometry
         /// <summary>
         /// Determine whether this vector is parallel to v.
         /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
+        /// <param name="v">The vector to compare to this vector.</param>
+        /// <returns>True if the vectors are parallel, otherwise false.</returns>
         public bool IsParallelTo(Vector3 v)
         {
             var result = Math.Abs(Dot(v));
@@ -316,7 +314,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Construct a new vector which is the inverse of this vector.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new vector which is the inverse of this vector.</returns>
         public Vector3 Negated()
         {
             return new Vector3(-X, -Y, -Z);
@@ -325,7 +323,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Convert a vector's components to an array.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An array of comprised of the x, y, and z components of this vector.</returns>
         public double[] ToArray()
         {
             return new[] { X, Y, Z };
@@ -334,7 +332,7 @@ namespace Elements.Geometry
         /// <summary>
         /// A string representation of the vector.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The string representation of this vector.</returns>
         public override string ToString()
         {
             return $"X:{this.X.ToString("F4")},Y:{this.Y.ToString("F4")},Z:{this.Z.ToString("F4")}";
@@ -343,8 +341,8 @@ namespace Elements.Geometry
         /// <summary>
         /// Determine whether this vector's components are equal to those of v, within tolerance.
         /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
+        /// <param name="v">The vector to compare.</param>
+        /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
         public bool IsAlmostEqualTo(Vector3 v)
         {
             if (Math.Abs(this.X - v.X) < Tolerance &&
@@ -359,19 +357,19 @@ namespace Elements.Geometry
         /// <summary>
         /// The distance from this point to b.
         /// </summary>
-        /// <param name="v"></param>
-        /// <returns></returns>
+        /// <param name="v">The target vector.</param>
+        /// <returns>The distance between this vector and the provided vector.</returns>
         public double DistanceTo(Vector3 v)
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
         }
 
         /// <summary>
-        /// The distance from this Point to p.
-        /// The distance will be negative when this Point lies
+        /// The distance from this vector to p.
+        /// The distance will be negative when this vector lies
         /// "behind" the plane.
         /// </summary>
-        /// <param name="p"></param>
+        /// <param name="p">The plane.</param>
         public double DistanceTo(Plane p)
         {
             var d = p.Origin.Dot(p.Normal);

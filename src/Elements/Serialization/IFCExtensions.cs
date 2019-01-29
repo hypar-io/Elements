@@ -235,7 +235,7 @@ namespace Elements.Serialization
                     var profileDef = (IFC.IfcArbitraryClosedProfileDef)eas.SweptArea;
                     var pline = (IFC.IfcPolyline)profileDef.OuterCurve;
                     var outline = pline.ToPolygon(true);
-                    var solid = new SweptSolid(outline, null, (IfcLengthMeasure)eas.Depth);
+                    var solid = Solid.SweepFace(outline, null, (IfcLengthMeasure)eas.Depth);
                 }
                 else if(r is IfcFacetedBrep)
                 {

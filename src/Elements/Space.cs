@@ -63,7 +63,7 @@ namespace Elements
             }
 
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[] { new SweptSolid(profile.Perimeter, profile.Voids, height, material == null ? BuiltInMaterials.Default : material) };
+            this.Geometry = new[] { Solid.SweepFace(profile.Perimeter, profile.Voids, height, material == null ? BuiltInMaterials.Default : material) };
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Elements
 
             this.Profile = new Profile(profile);
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[] { new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, height, material == null ? BuiltInMaterials.Mass : material) };
+            this.Geometry = new[] { Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, height, material == null ? BuiltInMaterials.Mass : material) };
         }
 
         /// <summary>

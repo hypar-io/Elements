@@ -70,7 +70,7 @@ namespace Elements
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Elements
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
         
         /// <summary>
@@ -107,7 +107,7 @@ namespace Elements
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, direction, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, direction, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
         
         /// <summary>

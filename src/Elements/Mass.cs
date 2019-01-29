@@ -65,7 +65,7 @@ namespace Elements
             this.Profile = profile;
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Elements
             this.Profile = new Profile(profile);
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
         }
 
         /// <summary>

@@ -84,7 +84,7 @@ namespace Elements
             this.Profile = profile;
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new []{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new []{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Elements
             // Construct a transform whose X axis is the centerline of the wall.
             var z = center_line.Direction.Cross(Vector3.ZAxis);
             this.Transform = new Transform(center_line.Start, center_line.Direction, z);
-            this.Geometry = new []{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new []{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
 
         /// <summary>

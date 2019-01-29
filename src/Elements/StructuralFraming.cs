@@ -83,7 +83,7 @@ namespace Elements
             this.StartSetback = startSetback;
             this.EndSetback = endSetback;
             this.Transform = transform;
-            this.Geometry = new[]{new SweptSolid(this.Profile.Perimeter, this.Profile.Voids, this.Curve, material == null ? BuiltInMaterials.Steel : material, this.StartSetback, this.EndSetback)};
+            this.Geometry = new[]{Solid.SweepFaceAlongCurve(this.Profile.Perimeter, this.Profile.Voids, this.Curve, material == null ? BuiltInMaterials.Steel : material, this.StartSetback, this.EndSetback)};
         }
 
         /// <summary>

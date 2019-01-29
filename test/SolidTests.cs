@@ -26,7 +26,7 @@ namespace Elements.Tests
             var outer = Polygon.Ngon(n, 2);
             var inner = Polygon.Ngon(n, 1.75).Reversed();
 
-            var solid = new SweptSolid(outer, new[]{inner}, 5);
+            var solid = Solid.SweepFace(outer, new[]{inner}, 5);
             foreach(var e in solid.Edges.Values)
             {
                 Assert.NotNull(e.Left);
@@ -46,7 +46,7 @@ namespace Elements.Tests
             var outer = Polygon.Ngon(n, 2);
             var inner = Polygon.Ngon(n, 1.75).Reversed();
 
-            var solid = new SweptSolid(outer, new[]{inner}, new Vector3(0.5,0.5,0.5), 5);
+            var solid = Solid.SweepFace(outer, new[]{inner}, new Vector3(0.5,0.5,0.5), 5);
             foreach(var e in solid.Edges.Values)
             {
                 Assert.NotNull(e.Left);
@@ -66,7 +66,7 @@ namespace Elements.Tests
             var outer = Polygon.Ngon(n, 2);
             var inner = Polygon.Ngon(n, 1.75).Reversed();
 
-            var solid = new SweptSolid(outer, new[]{inner}, new Vector3(0.5,0.5,0.5), 5);
+            var solid = Solid.SweepFace(outer, new[]{inner}, new Vector3(0.5,0.5,0.5), 5);
             foreach(var e in solid.Edges.Values)
             {
                 Assert.NotNull(e.Left);
@@ -84,7 +84,7 @@ namespace Elements.Tests
         {
             var profile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
             var path = new Polyline(new []{new Vector3(0,0), new Vector3(0,2), new Vector3(0,3,1), new Vector3(0,5,1)});
-            var solid = new SweptSolid(profile.Perimeter, null, path);
+            var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach(var e in solid.Edges.Values)
             {
                 Assert.NotNull(e.Left);
@@ -99,7 +99,7 @@ namespace Elements.Tests
         {
             var profile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
             var path = Polygon.Ngon(12, 5);
-            var solid = new SweptSolid(profile.Perimeter, null, path);
+            var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach(var e in solid.Edges.Values)
             {
                 Assert.NotNull(e.Left);
@@ -114,7 +114,7 @@ namespace Elements.Tests
         {
             var n = 4;
             var outer = Polygon.Ngon(n, 2);
-            var solid = new SweptSolid(outer, null, 2.0, BuiltInMaterials.Default);
+            var solid = Solid.SweepFace(outer, null, 2.0, BuiltInMaterials.Default);
             var materials = new Dictionary<long,Material>();
             var defMaterial = BuiltInMaterials.Default;
             materials.Add(defMaterial.Id, defMaterial);
