@@ -10,7 +10,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A coplanar continuous set of lines.
     /// </summary>
-    public class Polyline: ICurve
+    public class Polyline : ICurve
     {
         /// <summary>
         /// The type of the curve.
@@ -33,7 +33,7 @@ namespace Elements.Geometry
         [JsonProperty("vertices")]
         public Vector3[] Vertices
         {
-            get{return this._vertices;}
+            get { return this._vertices; }
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Elements.Geometry
         /// </summary>
         public double Length()
         {
-            return this.Segments().Sum(s=>s.Length());
+            return this.Segments().Sum(s => s.Length());
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Vector3 Start
         {
-            get{return this._vertices[0];}
+            get { return this._vertices[0]; }
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Vector3 End
         {
-            get{return this._vertices[this._vertices.Length - 1];}
+            get { return this._vertices[this._vertices.Length - 1]; }
         }
 
         /// <summary>
@@ -68,17 +68,17 @@ namespace Elements.Geometry
         /// <param name="vertices">A CCW wound set of vertices.</param>
         public Polyline(Vector3[] vertices)
         {
-            for(var i=0; i<vertices.Length; i++)
+            for (var i = 0; i < vertices.Length; i++)
             {
-                for(var j=0; j<vertices.Length; j++)
+                for (var j = 0; j < vertices.Length; j++)
                 {
-                    if(i == j)
+                    if (i == j)
                     {
                         continue;
                     }
-                    if(vertices[i].IsAlmostEqualTo(vertices[j]))
+                    if (vertices[i].IsAlmostEqualTo(vertices[j]))
                     {
-                        throw new ArgumentException($"The polygon could not be constructed. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
+                        throw new ArgumentException($"The polygon could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
                     }
                 }
             }
@@ -109,11 +109,11 @@ namespace Elements.Geometry
         /// <returns>A collection of Lines.</returns>
         public virtual Line[] Segments()
         {
-            var result = new Line[_vertices.Length-1];
-            for (var i = 0; i < _vertices.Length-1; i++)
+            var result = new Line[_vertices.Length - 1];
+            for (var i = 0; i < _vertices.Length - 1; i++)
             {
                 var a = _vertices[i];
-                var b = _vertices[i+1];
+                var b = _vertices[i + 1];
                 result[i] = new Line(a, b);
             }
             return result;
@@ -140,7 +140,7 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         private Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if(u < 0.0 || u > 1.0)
+            if (u < 0.0 || u > 1.0)
             {
                 throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
             }
@@ -172,11 +172,11 @@ namespace Elements.Geometry
         /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
         public Transform TransformAt(double u, Vector3 up = null)
         {
-            if(u < 0.0 || u > 1.0)
+            if (u < 0.0 || u > 1.0)
             {
                 throw new ArgumentOutOfRangeException($"The provided value for u ({u}) must be between 0.0 and 1.0.");
             }
-            
+
             var segmentIndex = 0;
             var o = PointAtInternal(u, out segmentIndex);
             up = up != null ? up : Vector3.ZAxis;
@@ -184,12 +184,12 @@ namespace Elements.Geometry
 
             // Check if the provided parameter is equal
             // to one of the vertices.
-            var a = this.Vertices.FirstOrDefault(vtx=>vtx.Equals(o));
-            if(a != null)
+            var a = this.Vertices.FirstOrDefault(vtx => vtx.Equals(o));
+            if (a != null)
             {
                 var idx = Array.IndexOf(this.Vertices, a);
 
-                if(idx == 0 || idx == this.Vertices.Length -1)
+                if (idx == 0 || idx == this.Vertices.Length - 1)
                 {
                     return CreateOthogonalTransform(idx, a);
                 }
@@ -230,15 +230,15 @@ namespace Elements.Geometry
             return FramesInternal(startSetback, endSetback, false);
         }
 
-        internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed=false)
+        internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)
         {
             // Create an array of transforms with the same
             // number of items as the vertices.
             var result = new Transform[this._vertices.Length];
-            for(var i=0; i<result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
             {
                 var a = this._vertices[i];
-                if(closed)
+                if (closed)
                 {
                     result[i] = CreateMiterTransform(i, a);
                 }
@@ -253,9 +253,9 @@ namespace Elements.Geometry
         private Transform CreateMiterTransform(int i, Vector3 a)
         {
             // Create transforms at 'miter' planes.
-            var b = i == 0 ? this._vertices[this._vertices.Length - 1] : this._vertices[i-1];
-            var c = i == this._vertices.Length - 1 ? this._vertices[0] : this._vertices[i+1];
-            var x = (b-a).Normalized().Average((c-a).Normalized()).Negated();
+            var b = i == 0 ? this._vertices[this._vertices.Length - 1] : this._vertices[i - 1];
+            var c = i == this._vertices.Length - 1 ? this._vertices[0] : this._vertices[i + 1];
+            var x = (b - a).Normalized().Average((c - a).Normalized()).Negated();
             var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
 
             return new Transform(this._vertices[i], x, up.Cross(x));
@@ -263,24 +263,24 @@ namespace Elements.Geometry
 
         private Transform CreateOthogonalTransform(int i, Vector3 a)
         {
-            Vector3 b,x,c;
-            
-            if(i == 0)
+            Vector3 b, x, c;
+
+            if (i == 0)
             {
-                b = this._vertices[i+1];
+                b = this._vertices[i + 1];
                 return new Transform(a, a, b, null);
             }
-            else if(i == this.Vertices.Length - 1)
+            else if (i == this.Vertices.Length - 1)
             {
-                b = this._vertices[i-1];
+                b = this._vertices[i - 1];
                 return new Transform(a, b, a, null);
             }
-            else 
+            else
             {
-                b = this._vertices[i-1];
-                c = this._vertices[i+1];
-                var v1 = (b-a).Normalized();
-                var v2 = (c-a).Normalized();
+                b = this._vertices[i - 1];
+                c = this._vertices[i + 1];
+                var v1 = (b - a).Normalized();
+                var v2 = (c - a).Normalized();
                 x = v1.Average(v2).Negated();
                 var up = v2.Cross(v1);
                 return new Transform(this._vertices[i], x, up.Cross(x));

@@ -14,16 +14,16 @@ namespace Elements
     public class Wall : Element, IElementTypeProvider<WallType>, IGeometry3D, IProfileProvider
     {
         /// <summary>
-        /// The Profile of the Wall.
+        /// The profile of the wall.
         /// </summary>
         [JsonProperty("profile")]
-        public IProfile Profile { get; }
+        public Profile Profile { get; }
 
         /// <summary>
-        /// The transformed Profile of the Wall.
+        /// The transformed profile of the wall.
         /// </summary>
         [JsonIgnore]
-        public IProfile ProfileTransformed
+        public Profile ProfileTransformed
         {
             get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
         }
@@ -47,7 +47,7 @@ namespace Elements
         public WallType ElementType { get; }
 
         /// <summary>
-        /// The thickness of the Wall's extrusion.
+        /// The thickness of the wall's extrusion.
         /// </summary>
         [JsonIgnore]
         public double Thickness
@@ -56,19 +56,19 @@ namespace Elements
         }
 
         /// <summary>
-        /// The Wall's geometry.
+        /// The wall's geometry.
         /// </summary>
         [JsonProperty("geometry")]
         public Solid[] Geometry { get; }
 
         /// <summary>
-        /// An array of Openings in the Wall.
+        /// An array of Openings in the wall.
         /// </summary>
         [JsonProperty("openings")]
         public Opening[] Openings{ get; }
 
         /// <summary>
-        /// Construct a Wall by extruding a profile.
+        /// Construct a wall by extruding a profile.
         /// </summary>
         /// <param name="profile"></param>
         /// <param name="height"></param>
@@ -78,7 +78,7 @@ namespace Elements
         {
             if (height <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("The wall could not be constructed. The height of the wall must be greater than 0.0.");
+                throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
             }
             
             this.Profile = profile;
@@ -90,23 +90,23 @@ namespace Elements
         /// <summary>
         /// Construct a wall along a line.
         /// </summary>
-        /// <param name="center_line">The center line of the Wall.</param>
-        /// <param name="element_type">The WallType of the Wall.</param>
-        /// <param name="height">The height of the Wall.</param>
-        /// <param name="openings">A collection of Openings in the Wall.</param>
-        /// <param name="material">The Wall's material.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the Wall is less than or equal to zero.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of Wall's start and end points are not the same.</exception>
+        /// <param name="center_line">The center line of the wall.</param>
+        /// <param name="element_type">The wall type of the wall.</param>
+        /// <param name="height">The height of the wall.</param>
+        /// <param name="openings">A collection of Openings in the wall.</param>
+        /// <param name="material">The wall's material.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the wall is less than or equal to zero.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of wall's start and end points are not the same.</exception>
         public Wall(Line center_line, WallType element_type, double height, Material material = null, Opening[] openings = null)
         {
             if (height <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("The wall could not be constructed. The height of the wall must be greater than 0.0.");
+                throw new ArgumentOutOfRangeException($"The wall could not be created. The height of the wall provided, {height}, must be greater than 0.0.");
             }
 
             if (center_line.Start.Z != center_line.End.Z)
             {
-                throw new ArgumentException("The wall could not be constructed. The Z component of the start and end points of the wall's center line must be the same.");
+                throw new ArgumentException("The wall could not be created. The Z component of the start and end points of the wall's center line must be the same.");
             }
 
             this.CenterLine = center_line;
@@ -138,11 +138,11 @@ namespace Elements
         /// <summary>
         /// Construct a wall from a collection of geometry.
         /// </summary>
-        /// <param name="geometry">The geometry of the Wall.</param>
-        /// <param name="center_line">The center line of the Wall.</param>
-        /// <param name="element_type">The WallType of the Wall.</param>
-        /// <param name="height">The height of the Wall.</param>
-        /// <param name="transform">The Wall's Transform.</param>
+        /// <param name="geometry">The geometry of the wall.</param>
+        /// <param name="center_line">The center line of the wall.</param>
+        /// <param name="element_type">The wall type of the wall.</param>
+        /// <param name="height">The height of the wall.</param>
+        /// <param name="transform">The wall's Transform.</param>
         [JsonConstructor]
         public Wall(Solid[] geometry, WallType element_type, double height = 0.0, Line center_line = null, Transform transform = null)
         {

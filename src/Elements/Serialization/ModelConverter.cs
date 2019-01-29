@@ -35,7 +35,7 @@ namespace Elements.Serialization
             var materials = JsonConvert.DeserializeObject<Dictionary<long, Material>>(obj.GetValue("materials").ToString());
             var elementTypes = JsonConvert.DeserializeObject<Dictionary<long, ElementType>>(obj.GetValue("element_types").ToString(),
                                 new[] { new ElementTypeConverter() });
-            var profiles = JsonConvert.DeserializeObject<Dictionary<long, IProfile>>(obj.GetValue("profiles").ToString(),
+            var profiles = JsonConvert.DeserializeObject<Dictionary<long, Profile>>(obj.GetValue("profiles").ToString(),
                                 new[] { new IProfileConverter() });
             var elements = JsonConvert.DeserializeObject<Dictionary<long, Element>>(obj.GetValue("elements").ToString(),
                             new JsonSerializerSettings()

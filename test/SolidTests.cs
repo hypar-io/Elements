@@ -1,6 +1,7 @@
 using Xunit;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Geometry.Profiles;
 using System;
 using Newtonsoft.Json;
 using Xunit.Abstractions;

@@ -65,11 +65,11 @@ namespace Elements.Geometry
         {
             if(points.Count < 3)
             {
-                throw new ArgumentException("The plane could not be constructed. You must supply a minimum of 3 points.");
+                throw new ArgumentException("The plane could not be created. You must supply a minimum of 3 points.");
             }
             if(points[0] == points[1] || points[0] == points[2] || points[1] == points[2])
             {
-                throw new ArgumentException("The plane could not be constructed. The points must not be coincident.");
+                throw new ArgumentException("The plane could not be created. The points must not be coincident.");
             }
             this.Origin = origin;
             this.Normal = (points[0]-points[1]).Normalized().Cross((points[2] - points[0]).Normalized());

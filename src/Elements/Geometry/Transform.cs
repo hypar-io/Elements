@@ -242,7 +242,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="profile">The Profile to transform.</param>
         /// <returns>A new Profile transformed by this Transform.</returns>
-        public Profile OfProfile(IProfile profile)
+        public Profile OfProfile(Profile profile)
         {
             Polygon[] voids = null;
             if (profile.Voids != null)

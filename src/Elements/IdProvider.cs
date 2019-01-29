@@ -1,7 +1,7 @@
 namespace Elements
 {
     /// <summary>
-    /// A singleton which provides integer Ids.
+    /// A singleton which provides integer ids.
     /// </summary>
     public class IdProvider
     {
@@ -34,6 +34,5 @@ namespace Elements
             _currentId++;
             return result;
         }
-
     }
 }

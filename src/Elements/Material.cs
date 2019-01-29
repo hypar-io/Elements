@@ -13,13 +13,13 @@ namespace Elements
     public class Material: IIdentifiable
     {   
         /// <summary>
-        /// The unique identifier of the Material.
+        /// The unique identifier of the material.
         /// </summary>
         [JsonProperty("id")]
         public long Id{get; internal set;}
 
         /// <summary>
-        /// The RGBA Color of the Material.
+        /// The RGBA Color of the material.
         /// </summary>
         [JsonProperty("color")]
         public Color Color{get;}
@@ -56,12 +56,12 @@ namespace Elements
         {
             if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {
-                throw new ArgumentOutOfRangeException("Specular, and glossiness values must be less greater than 0.0.");
+                throw new ArgumentOutOfRangeException("The material could not be created. Specular and glossiness values must be less greater than 0.0.");
             }
 
             if(specularFactor > 1.0 || glossinessFactor > 1.0)
             {
-                throw new ArgumentOutOfRangeException("Color, specular, and glossiness values must be less than 1.0.");
+                throw new ArgumentOutOfRangeException("The material could not be created. Color, specular, and glossiness values must be less than 1.0.");
             }
             
             this.Id = IdProvider.Instance.GetNextId();

@@ -71,7 +71,7 @@ namespace Elements.Geometry
         {
             if (start.IsAlmostEqualTo(end))
             {
-                throw new ArgumentException($"The line could not be constructed. The start and end points of the line cannot be the same: start {start}, end {end}");
+                throw new ArgumentException($"The line could not be created. The start and end points of the line cannot be the same: start {start}, end {end}");
             }
             this.Start = start;
             this.End = end;

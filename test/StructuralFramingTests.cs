@@ -1,6 +1,7 @@
 using Elements;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Elements.Geometry.Profiles;
 using System;
 using System.Linq;
 using Xunit;

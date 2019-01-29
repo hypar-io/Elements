@@ -49,7 +49,7 @@ namespace Elements.Geometry
     /// A Profile describes a Polygonal perimeter
     /// with zero or many Polygonal voids.
     /// </summary>
-    public class Profile : IIdentifiable, IProfile
+    public class Profile : IIdentifiable
     {
         private Polygon _perimeter;
         private Polygon[] _voids;
@@ -143,7 +143,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a new Profile which is the reverse of this Profile.
         /// </summary>
-        public IProfile Reversed()
+        public Profile Reversed()
         {
             Polygon[] voids = null;
             if (this.Voids != null)
@@ -163,6 +163,15 @@ namespace Elements.Geometry
         public double Area()
         {
             return ClippedArea();
+        }
+
+        /// <summary>
+        /// Default constructor for Profile.
+        /// </summary>
+        protected Profile(string name)
+        {
+            this.Id = IdProvider.Instance.GetNextId();
+            this.Name = name;
         }
 
         /// <summary>
@@ -187,15 +196,6 @@ namespace Elements.Geometry
                 this.Perimeter = polys[0];
                 this.Voids = polys.Skip(1).ToArray();
             }
-        }
-
-        /// <summary>
-        /// Default constructor for Profile.
-        /// </summary>
-        protected Profile(string name)
-        {
-            this.Id = IdProvider.Instance.GetNextId();
-            this.Name = name;
         }
 
         private double ClippedArea()

@@ -10,6 +10,6 @@ namespace Elements.Geometry.Interfaces
         /// <summary>
         /// A Profile.
         /// </summary>
-        IProfile Profile {get;}
+        Profile Profile {get;}
     }
 }

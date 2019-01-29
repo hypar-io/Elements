@@ -4,7 +4,7 @@ using System;
 namespace Elements
 {
     /// <summary>
-    /// A container for properties common to Floors.
+    /// A container for properties common to floors.
     /// </summary>
     public class FloorType : ElementType
     {
@@ -15,7 +15,7 @@ namespace Elements
         public double Thickness{get;}
 
         /// <summary>
-        /// The type of the FloorType.
+        /// The type of the floor type.
         /// </summary>
         public override string Type
         {
@@ -23,11 +23,11 @@ namespace Elements
         }
 
         /// <summary>
-        /// Construct a FloorType.
+        /// Construct a floor type.
         /// </summary>
-        /// <param name="name">The name of the FloorType.</param>
+        /// <param name="name">The name of the floor type.</param>
         /// <param name="thickness">The thickness of the associated floor.</param>
-        /// <param name="description">A description of the FloorType.</param>
+        /// <param name="description">A description of the floor type.</param>
         public FloorType(string name, double thickness, string description = null) : base(name, description)
         {
             if (thickness <= 0.0)

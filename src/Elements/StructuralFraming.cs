@@ -11,7 +11,7 @@ using Elements.Geometry.Solids;
 namespace Elements
 {
     /// <summary>
-    /// A linear structural element with a cross section.
+    /// A structural element with a Profile swept along a curve or extruded.
     /// </summary>
     public abstract class StructuralFraming : Element, IGeometry3D, IProfileProvider
     {
@@ -21,13 +21,13 @@ namespace Elements
         /// The cross-section profile of the framing element.
         /// </summary>
         [JsonProperty("profile")]
-        public IProfile Profile { get; }
+        public Profile Profile { get; }
 
         /// <summary>
-        /// The cross-section profile of the framing element transformed by the Element's Transform.
+        /// The cross-section profile of the framing element transformed by the element's transform.
         /// </summary>
         [JsonIgnore]
-        public IProfile ProfileTransformed
+        public Profile ProfileTransformed
         {
             get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
         }
@@ -46,7 +46,7 @@ namespace Elements
         public double StartSetback { get; }
 
         /// <summary>
-        /// The setback of the Beam's extrusion at the end.
+        /// The setback of the beam's extrusion at the end.
         /// </summary>
         [JsonProperty("end_setback")]
         public double EndSetback { get; }
@@ -60,15 +60,15 @@ namespace Elements
         /// <summary>
         /// Construct a beam.
         /// </summary>
-        /// <param name="curve">The center line of the Beam.</param>
-        /// <param name="profile">The structural Profile of the Beam.</param>
-        /// <param name="material">The Beam's material.</param>
-        /// <param name="up">The up axis of the Beam.</param>
-        /// <param name="startSetback">The setback of the framing's extrusion at its start.</param>
-        /// <param name="endSetback">The setback of the framing's extrusion at its end.</param>
-        /// <param name="transform"></param>
+        /// <param name="curve">The center line of the beam.</param>
+        /// <param name="profile">The structural Profile of the beam.</param>
+        /// <param name="material">The beam's material.</param>
+        /// <param name="up">The up axis of the beam.</param>
+        /// <param name="startSetback">The setback of the beam's extrusion at its start.</param>
+        /// <param name="endSetback">The setback of the beam's extrusion at its end.</param>
+        /// <param name="transform">The element's Transform.</param>
         [JsonConstructor]
-        public StructuralFraming(ICurve curve, IProfile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
+        public StructuralFraming(ICurve curve, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
         {
             this.Profile = profile;
             this.Curve = curve;

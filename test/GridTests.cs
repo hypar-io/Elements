@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Elements.Geometry.Profiles;
 using Elements;
 using System;
 using System.IO;

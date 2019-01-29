@@ -10,16 +10,16 @@ namespace Elements.Serialization
 {
     public class ProfileToIdConverter : JsonConverter
     {
-        private Dictionary<long, IProfile> _profiles;
+        private Dictionary<long, Profile> _profiles;
 
-        public ProfileToIdConverter(Dictionary<long, IProfile> profiles)
+        public ProfileToIdConverter(Dictionary<long, Profile> profiles)
         {
             this._profiles = profiles;
         }
 
         public override bool CanConvert(Type objectType)
         {
-            var convert = typeof(IProfile).IsAssignableFrom(objectType);
+            var convert = typeof(Profile).IsAssignableFrom(objectType);
             return convert;
         }
 
@@ -49,7 +49,7 @@ namespace Elements.Serialization
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var profile = (IProfile)value;
+            var profile = (Profile)value;
             writer.WriteValue(profile.Id);
         }
     }

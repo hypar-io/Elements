@@ -12,7 +12,7 @@ namespace Elements.Serialization
     {
         public override bool CanConvert(Type objectType)
         {
-            var convert = typeof(IProfile).IsAssignableFrom(objectType);
+            var convert = typeof(Profile).IsAssignableFrom(objectType);
             return convert;
         }
 

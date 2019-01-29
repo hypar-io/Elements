@@ -28,13 +28,13 @@ namespace Elements
         /// The Profile of the Floor.
         /// </summary>
         [JsonProperty("profile")]
-        public IProfile Profile { get; }
+        public Profile Profile { get; }
 
         /// <summary>
         /// The transformed Profile of the Floor.
         /// </summary>
         [JsonIgnore]
-        public IProfile ProfileTransformed
+        public Profile ProfileTransformed
         {
             get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
         }
@@ -64,7 +64,7 @@ namespace Elements
         /// <param name="transform">The Floor's Transform.</param>
         /// <returns>A Floor.</returns>
         [JsonConstructor]
-        public Floor(IProfile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
+        public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
         {
             this.Profile = profile;
             this.Elevation = elevation;
@@ -101,7 +101,7 @@ namespace Elements
         /// <param name="elevation"></param>
         /// <param name="material"></param>
         /// <param name="transform"></param>
-        public Floor(IProfile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
+        public Floor(Profile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
         {
             this.Profile = profile;
             this.Elevation = elevation;
