@@ -74,7 +74,7 @@ namespace Elements.Tests
         [Fact]
         public void Volume()
         {
-            var profile = Polygon.Rectangle(Vector3.Origin, 5, 5);
+            var profile = Polygon.Rectangle(5, 5);
             var mass = new Mass(profile, 5.0);
             Assert.Equal(125, mass.Volume());
         }
@@ -82,7 +82,7 @@ namespace Elements.Tests
         [Fact]
         public void Transform()
         {
-            var profile = Polygon.Rectangle();
+            var profile = Polygon.Rectangle(1.0, 1.0);
             var mass = new Mass(profile, 5.0, BuiltInMaterials.Mass, new Transform());
             var t = new Vector3(5, 0, 0);
             mass.Transform.Move(t);

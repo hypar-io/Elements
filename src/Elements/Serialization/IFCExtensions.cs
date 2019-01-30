@@ -205,7 +205,8 @@ namespace Elements.Serialization
                 var solidTransform = s.Position.ToTransform();
                 solidTransform.Concatenate(openingTransform);
                 var profile = (Polygon)s.SweptArea.ToICurve();
-                var newOpening = new Opening(profile, (IfcLengthMeasure)s.Depth, solidTransform);
+                // var newOpening = new Opening(profile, (IfcLengthMeasure)s.Depth, solidTransform);
+                var newOpening = new Opening(profile);
                 newOpening.Name = opening.Name;
                 return newOpening;
             }
@@ -333,7 +334,7 @@ namespace Elements.Serialization
             if(profile is IfcRectangleProfileDef)
             {
                 var rect = (IfcRectangleProfileDef)profile;
-                return Polygon.Rectangle(rect.Position.Location.ToVector3(), (IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim);
+                return Polygon.Rectangle((IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim, rect.Position.Location.ToVector3());
             }
             else if(profile is IfcCircleProfileDef)
             {

@@ -466,10 +466,10 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void Area()
         {
-            var a = Polygon.Rectangle();
+            var a = Polygon.Rectangle(1.0, 1.0);
             Assert.Equal(1.0, a.Area);
 
-            var b = Polygon.Rectangle(Vector3.Origin, 2.0,2.0);
+            var b = Polygon.Rectangle(2.0,2.0);
             Assert.Equal(4.0, b.Area);
 
             var p1 = Vector3.Origin;

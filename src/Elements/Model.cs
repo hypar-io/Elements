@@ -324,10 +324,10 @@ namespace Elements
             model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
-            if (openings.Any())
-            {
-                model.AddElements(openings);
-            }
+            // if (openings.Any())
+            // {
+            //     model.AddElements(openings);
+            // }
 
             return model;
         }

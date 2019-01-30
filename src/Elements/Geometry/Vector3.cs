@@ -467,7 +467,7 @@ namespace Elements.Geometry
                 var d = points[i];
                 var cd = d-a;
                 var tp = ab.Dot(ac.Cross(cd));
-                if(tp != 0.0)
+                if(Math.Abs(tp) > Vector3.Tolerance)
                 {
                     return false;
                 }

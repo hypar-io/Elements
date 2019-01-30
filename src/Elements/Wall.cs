@@ -114,6 +114,11 @@ namespace Elements
             this.ElementType = element_type;
             this.Openings = openings;
 
+            // Construct a transform whose X axis is the centerline of the wall.
+            // The wall is described as if it's lying flat in the XY plane of that Transform.
+            var z = center_line.Direction.Cross(Vector3.ZAxis);
+            this.Transform = new Transform(center_line.Start, center_line.Direction, z);
+
             if (openings != null && openings.Length > 0)
             {
                 var voids = new Polygon[openings.Length];
@@ -129,10 +134,7 @@ namespace Elements
                 this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(center_line.Length(), height)));
             }
 
-            // Construct a transform whose X axis is the centerline of the wall.
-            var z = center_line.Direction.Cross(Vector3.ZAxis);
-            this.Transform = new Transform(center_line.Start, center_line.Direction, z);
-            this.Geometry = new []{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            this.Geometry = new []{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Thickness, material == null ? BuiltInMaterials.Concrete : material, true)};
         }
 
         /// <summary>

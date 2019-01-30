@@ -2,7 +2,6 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 using Elements.Geometry.Solids;
 
 namespace Elements
@@ -25,21 +24,39 @@ namespace Elements
         public Solid[] Geometry { get; }
 
         /// <summary>
-        /// Construct a panel.
+        /// Create a panel.
         /// </summary>
         /// <param name="perimeter">The perimeter of the panel.</param>
         /// <param name="material">The panel's material</param>
+        /// <param name="transform">The panel's transform.</param>
         /// <exception cref="System.ArgumentException">Thrown when the provided perimeter points are not coplanar.</exception>
         [JsonConstructor]
-        public Panel(Vector3[] perimeter, Material material = null)
+        public Panel(Vector3[] perimeter, Material material = null, Transform transform = null)
         {
-            var vCount = perimeter.Count();
             if (!perimeter.AreCoplanar())
             {
                 throw new ArgumentException("The Panel could not be created. Points defining the perimeter must be coplanar.", "perimeter");
             }
             
+            this.Transform = transform;
             this.Perimeter = perimeter;
+            this.Geometry = new[] { Solid.CreateLamina(this.Perimeter, material == null ? BuiltInMaterials.Default : material) };
+        }
+
+        /// <summary>
+        /// Create a panel.
+        /// </summary>
+        /// <param name="perimeter">A planar polygon defining the perimeter.</param>
+        /// <param name="material">The panel's material.</param>
+        /// <param name="transform">The panel's transform.</param>
+        public Panel(Polygon perimeter, Material material = null, Transform transform = null)
+        {
+            this.Transform = transform;
+            this.Perimeter = perimeter.Vertices;
+            if (!this.Perimeter.AreCoplanar())
+            {
+                throw new ArgumentException("The Panel could not be created. Points defining the perimeter must be coplanar.", "perimeter");
+            }
             this.Geometry = new[] { Solid.CreateLamina(this.Perimeter, material == null ? BuiltInMaterials.Default : material) };
         }
 

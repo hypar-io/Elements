@@ -25,7 +25,7 @@ namespace Elements.Tests
         public void SpaceBRep()
         {
             this.Name = "SpaceBRep";
-            var solid = Solid.SweepFace(Polygon.Rectangle(), null, 1.0);
+            var solid = Solid.SweepFace(Polygon.Rectangle(1.0, 1.0), null, 1.0);
             var space = new Space(solid, new Transform(new Vector3(0,0,5)));
             this.Model.AddElement(space);
             var json = this.Model.ToJson();
@@ -59,7 +59,7 @@ namespace Elements.Tests
         [Fact]
         public void Transform()
         {
-            var p = Polygon.Rectangle();
+            var p = Polygon.Rectangle(1.0, 1.0);
             var space = new Space(p, 1.0);
             var t = new Vector3(5,5,5);
             space.Transform.Move(t);

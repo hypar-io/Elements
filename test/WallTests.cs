@@ -11,23 +11,31 @@ namespace Elements.Tests
         [Fact]
         public void Wall()
         {
-            this.Name = "Wall";
+            this.Name = "WallLinear";
             var testWallType = new WallType("test", 0.1);
 
-            var triangle = Polygon.Ngon(7, 15.0);
+            var ngon = Polygon.Ngon(7, 15.0);
             var openings = new Opening[]{
-                new Opening(Polygon.Rectangle(Vector3.Origin, 1.0, 1.0), 0.1,  new Transform(new Vector3(2.0, 1.0))),
-                new Opening(Polygon.Rectangle(Vector3.Origin, 1.0, 2.0), 0.1, new Transform(new Vector3(4.0, 0.0)))
+                new Opening(1.0, 2.0, 1.0, 1.0),
+                new Opening(3.0, 1.0, 1.0, 2.0),
+                new Opening(7.0, 1.25, 3.0, 2.5)
             };
-            foreach(var l in triangle.Segments())
+            foreach(var l in ngon.Segments())
             {
-                var w = new Wall(l, testWallType, 5.0, BuiltInMaterials.Default, openings);
+                var w = new Wall(l, testWallType, 3.0, BuiltInMaterials.Default, openings);
                 this.Model.AddElement(w);
+
+                // Draw some frames in the openings.
+                foreach(var o in w.Openings)
+                {
+                    var p = new Panel(o.Perimeter, BuiltInMaterials.Glass, w.Transform);
+                    this.Model.AddElement(p);
+                }
             }
         }
 
         [Fact]
-        public void ZeroHeight_ThrowsException()
+        public void ZeroHeight()
         {
             var a = Vector3.Origin;
             var b = new Vector3(0.0, 5.0);
@@ -37,7 +45,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ZeroThickness_ThrowsException()
+        public void ZeroThickness()
         {
             var a = Vector3.Origin;
             var b = new Vector3(0.0, 5.0);
@@ -46,7 +54,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void NonPlanarCenterLine_ThrowsException()
+        public void NonPlanarCenterLine()
         {
             var a = Vector3.Origin;
             var b = new Vector3(0.0, 5.0, 5.0);
@@ -56,7 +64,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void NullOpenings_ProfileWithNoVoids()
+        public void ProfileWithNoVoids()
         {
             var a = Vector3.Origin;
             var b = new Vector3(0.0, 5.0);

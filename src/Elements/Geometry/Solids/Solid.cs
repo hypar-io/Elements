@@ -84,10 +84,11 @@ namespace Elements.Geometry.Solids
         /// <param name="innerLoops">The holes of the face to sweep.</param>
         /// <param name="distance">The distance to sweep.</param>
         /// <param name="material">The solid's material.</param>
+        /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, double distance, Material material = null) 
+        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, double distance, Material material = null, bool bothSides = false) 
         {
-            return Solid.SweepFace(outerLoop, innerLoops, Vector3.ZAxis, distance, material);
+            return Solid.SweepFace(outerLoop, innerLoops, Vector3.ZAxis, distance, material, bothSides);
         }
 
         /// <summary>
@@ -165,19 +166,35 @@ namespace Elements.Geometry.Solids
         /// <param name="innerLoops">The holes of the face to sweep.</param>
         /// <param name="direction">The direction in which to sweep.</param>
         /// <param name="distance">The distance to sweep.</param>
+        /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
         /// <param name="material">The solid's material.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, Vector3 direction, double distance, Material material = null)
+        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, Vector3 direction, double distance, Material material = null, bool bothSides = false)
         {
             var solid = new Solid(material);
-            Face fStart;
-            if(innerLoops != null)
+            Face fStart = null;
+            if(bothSides)
             {
-                fStart = solid.AddFace(outerLoop.Reversed(), innerLoops.Reversed());
+                var t = new Transform(direction.Negated()* (distance/2));
+                if(innerLoops != null)
+                {
+                    fStart = solid.AddFace(t.OfPolygon(outerLoop.Reversed()), t.OfPolygons(innerLoops.Reversed()));
+                }
+                else
+                {
+                    fStart = solid.AddFace(t.OfPolygon(outerLoop.Reversed()));
+                }
             }
             else
             {
-                fStart = solid.AddFace(outerLoop.Reversed());
+                if(innerLoops != null)
+                {
+                    fStart = solid.AddFace(outerLoop.Reversed(), innerLoops.Reversed());
+                }
+                else
+                {
+                    fStart = solid.AddFace(outerLoop.Reversed());
+                }
             }
 
             var fEndOuter = solid.SweepLoop(fStart.Outer, direction, distance);

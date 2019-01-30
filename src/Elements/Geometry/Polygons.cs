@@ -9,18 +9,17 @@ namespace Elements.Geometry
     public partial class Polygon
     {
         /// <summary>
-        /// Construct a rectangular profile
+        /// Create a rectangle.
         /// </summary>
-        /// <param name="origin">The center of the rectangle.</param>
         /// <param name="width">The width of the rectangle.</param>
         /// <param name="height">The height of the rectangle.</param>
-        /// <param name="verticalOffset">The amount the rectangle should be offset from center in the vertical direction.</param>
-        /// <param name="horizontalOffset">The amount the rectangle should be offset from center in the horizontal direction.</param>
+        /// <param name="origin">An optional origin to displace the rectangle.</param>
+        /// <param name="verticalOffset">An optional amount the rectangle should be offset from center in the vertical direction.</param>
+        /// <param name="horizontalOffset">An optional amount the rectangle should be offset from center in the horizontal direction.</param>
         /// <returns>A rectangular Polygon centered around origin.</returns>
-        public static Polygon Rectangle(Vector3 origin = null, double width = 1.0, double height = 1.0, double verticalOffset = 0.0, double horizontalOffset = 0.0)
+        public static Polygon Rectangle(double width, double height, Vector3 origin = null, double verticalOffset = 0.0, double horizontalOffset = 0.0)
         {
             origin = origin != null ? origin : Vector3.Origin;
-
             var a = new Vector3(origin.X - width / 2 + horizontalOffset, origin.Y - height / 2 + verticalOffset);
             var b = new Vector3(origin.X + width / 2 + horizontalOffset, origin.Y - height / 2 + verticalOffset);
             var c = new Vector3(origin.X + width / 2 + horizontalOffset, origin.Y + height / 2 + verticalOffset);
@@ -30,7 +29,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Polygon.
+        /// Create a rectangle.
         /// </summary>
         /// <param name="min">The minimum coordinate.</param>
         /// <param name="max">The maximum coordinate.</param>
@@ -46,7 +45,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a circle.
+        /// Create a circle.
         /// </summary>
         /// <param name="radius">The radius of the circle.</param>
         /// <param name="divisions">The number of divisions of the circle.</param>
@@ -63,7 +62,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct an ngon.
+        /// Create an ngon.
         /// </summary>
         /// <param name="sides">The number of side of the Polygon.</param>
         /// <param name="radius">The radius of the circle in which the Ngon is inscribed.</param>
