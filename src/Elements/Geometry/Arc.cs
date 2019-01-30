@@ -79,7 +79,6 @@ namespace Elements.Geometry
         /// <param name="radius">The radius of the arc.</param>
         /// <param name="startAngle">The start angle of the arc in degrees.</param>
         /// <param name="endAngle">The end angle of the arc in degrees.</param>
-        [JsonConstructor]
         public Arc(Vector3 center, double radius, double startAngle, double endAngle)
         {
             if (endAngle > 360.0 || startAngle > 360.00)
@@ -164,19 +163,21 @@ namespace Elements.Geometry
         {
             var o = PointAt(u);
             var x = (o - this.Plane.Origin).Normalized();
-            return new Transform(o, x, this.Plane.Normal);
+            var y = this.Plane.Normal;
+            return new Transform(o, x, x.Cross(y));
         }
 
         /// <summary>
-        /// Get a collection of Transforms which represent frames along the arc.
+        /// Get a collection of transforms which represent frames along the arc.
         /// </summary>
         /// <param name="startSetback">The offset from the start of the arc.</param>
         /// <param name="endSetback">The offset from the end of the arc.</param>
-        /// <returns>A collection of Transforms.</returns>
+        /// <returns>A collection of transforms.</returns>
         public Transform[] Frames(double startSetback, double endSetback)
         {
             var div = 10;
-            var step = 1.0 / div;
+            var l = this.Length();
+            var step = (1.0 - startSetback - endSetback)  / div;
             var result = new Transform[div + 1];
             for (var i = 0; i <= div; i++)
             {
@@ -191,7 +192,7 @@ namespace Elements.Geometry
                 }
                 else
                 {
-                    t = TransformAt(i * step);
+                    t = TransformAt(startSetback + i * step);
                 }
                 result[i] = t;
             }

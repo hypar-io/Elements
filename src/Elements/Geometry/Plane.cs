@@ -26,6 +26,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="origin">The origin of the plane.</param>
         /// <param name="normal">The normal of the plane.</param>
+        [JsonConstructor]
         public Plane(Vector3 origin, Vector3 normal)
         {
             this.Origin = origin;

@@ -13,6 +13,7 @@ namespace Hypar.Tests
         {
             this._output = output;
         }
+
         [Fact]
         public void Arc()
         {
@@ -58,10 +59,10 @@ namespace Hypar.Tests
             var z = Vector3.XAxis;
             var arc = new Arc(new Plane(Vector3.Origin, z), 5.0, 0.0, 180.0);
             var t = arc.TransformAt(0.5);
-            this._output.WriteLine(t.ToString());
+            // this._output.WriteLine(t.ToString());
             Assert.Equal(new Vector3(0, 0, 1), t.XAxis);
-            Assert.Equal(new Vector3(0, -1, 0), t.YAxis);
-            Assert.Equal(z, t.ZAxis);
+            Assert.Equal(new Vector3(1, 0, 0), t.YAxis);
+            Assert.Equal(new Vector3(0, 1, 0), t.ZAxis);
         }
     }
 }
