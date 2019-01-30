@@ -27,7 +27,7 @@ namespace Elements.Tests
         }
 
         internal static Line TestLine = new Line(Vector3.Origin, new Vector3(5,5,5));
-        internal static Arc TestArc = new Arc(Vector3.Origin, 5.0, 0.0, 45.0);
+        internal static Arc TestArc = new Arc(new Plane(Vector3.Origin, new Vector3(5,5,5)), 5.0, 0.0, 45.0);
         internal static Polyline TestPolyline = new Polyline(new []{new Vector3(0,0), new Vector3(0,2), new Vector3(0,3,1)});
         internal static Polygon TestPolygon = Polygon.Ngon(5, 2);
 

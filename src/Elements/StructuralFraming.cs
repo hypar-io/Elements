@@ -15,8 +15,6 @@ namespace Elements
     /// </summary>
     public abstract class StructuralFraming : Element, IGeometry3D, IProfileProvider
     {
-        private Vector3 _up;
-
         /// <summary>
         /// The cross-section profile of the framing element.
         /// </summary>
@@ -63,18 +61,14 @@ namespace Elements
         /// <param name="curve">The center line of the beam.</param>
         /// <param name="profile">The structural Profile of the beam.</param>
         /// <param name="material">The beam's material.</param>
-        /// <param name="up">The up axis of the beam.</param>
         /// <param name="startSetback">The setback of the beam's extrusion at its start.</param>
         /// <param name="endSetback">The setback of the beam's extrusion at its end.</param>
         /// <param name="transform">The element's Transform.</param>
         [JsonConstructor]
-        public StructuralFraming(ICurve curve, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
+        public StructuralFraming(ICurve curve, Profile profile, Material material = null, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
         {
             this.Profile = profile;
             this.Curve = curve;
-            var t = this.Curve.TransformAt(0.0, up);
-            this._up = t.YAxis;
-
             var l = this.Curve.Length();
             if (startSetback > l || endSetback > l)
             {

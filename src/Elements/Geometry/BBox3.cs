@@ -19,10 +19,10 @@ namespace Elements.Geometry
         public Vector3 Min { get; private set; }
 
         /// <summary>
-        /// Construct a bounding box from a collection of points.
+        /// Construct a bounding box from an array of points.
         /// </summary>
         /// <param name="points">The points which are contained within the bounding box.</param>
-        public BBox3(IList<Vector3> points)
+        public BBox3(Vector3[] points)
         {
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
             this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
@@ -44,7 +44,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct the BBox3 for a Profile.
+        /// Create the BBox3 for a Profile.
         /// </summary>
         /// <param name="profile">The Profile.</param>
         public BBox3(Profile profile)
@@ -66,22 +66,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct the bounding box for a curve.
-        /// </summary>
-        /// <param name="curve"></param>
-        public BBox3(ICurve curve)
-        {
-            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
-            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
-            foreach (var p in curve.Vertices)
-            {
-                if (p < this.Min) this.Min = p;
-                if (p > this.Max) this.Max = p;
-            }
-        }
-
-        /// <summary>
-        /// Construct a bounding box for a collection of polygons.
+        /// Create a bounding box for a collection of polygons.
         /// </summary>
         /// <param name="polygons"></param>
         public BBox3(IList<Polygon> polygons)
@@ -100,7 +85,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a bounding box specifying minimum and maximum extents.
+        /// Create a bounding box specifying minimum and maximum extents.
         /// </summary>
         /// <param name="min">The minimum extent of the bounding box.</param>
         /// <param name="max">The maximum extent of the bounding box.</param>

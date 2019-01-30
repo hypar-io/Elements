@@ -546,7 +546,7 @@ namespace Elements
             var up = direction.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
             var tr = new Transform(Vector3.Origin, direction.Cross(up), direction);
             tr.Rotate(up, -45.0);
-            var arrow1 = tr.OfPoint(Vector3.XAxis * 0.1);
+            var arrow1 = tr.OfVector(Vector3.XAxis * 0.1);
             var pts = new[] { origin, end, end + arrow1 };
             var vBuff = pts.ToArray();
             var vCount = 3;

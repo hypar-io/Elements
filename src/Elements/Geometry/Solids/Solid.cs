@@ -396,7 +396,14 @@ namespace Elements.Geometry.Solids
                     }
                 }
 
-                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+                try
+                {
+                    tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+                }
+                catch
+                {
+                    continue;
+                }
 
                 for (var i = 0; i < tess.ElementCount; i++)
                 {

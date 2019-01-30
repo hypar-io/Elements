@@ -100,13 +100,13 @@ namespace Elements
                 {
                     var bt = new Line(pts[i], pts[i + 1]);
                     var bb = new Line(pts[i] - new Vector3(0, 0, depth), pts[i + 1] - new Vector3(0, 0, depth));
-                    this._topChord.Add(new Beam(bt, topChordProfile, material, null, startSetback, endSetback));
-                    this._bottomChord.Add(new Beam(bb, bottomChordProfile, material, null, startSetback, endSetback));
+                    this._topChord.Add(new Beam(bt, topChordProfile, material, startSetback, endSetback));
+                    this._bottomChord.Add(new Beam(bb, bottomChordProfile, material, startSetback, endSetback));
                     var diag = i > Math.Ceiling((double)divisions / 2) ? new Line(pts[i], pts[i + 1] - new Vector3(0, 0, depth)) : new Line(pts[i + 1], pts[i] - new Vector3(0, 0, depth));
-                    this._web.Add(new Beam(diag, webProfile, material, null, startSetback, endSetback));
+                    this._web.Add(new Beam(diag, webProfile, material, startSetback, endSetback));
                 }
                 var wb = new Line(pts[i], pts[i] - new Vector3(0, 0, depth));
-                this._web.Add(new Beam(wb, webProfile, material, null, startSetback, endSetback));
+                this._web.Add(new Beam(wb, webProfile, material, startSetback, endSetback));
             }
 
             this.Elements = new List<Element>();

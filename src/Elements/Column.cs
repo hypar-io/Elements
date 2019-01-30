@@ -32,7 +32,7 @@ namespace Elements
         /// <param name="startSetback">The setback of the column's extrusion from the base of the column.</param>
         /// <param name="endSetback">The setback of the column's extrusion from the top of the column.</param>
         [JsonConstructor]
-        public Column(Vector3 location, double height, Profile profile, Material material = null, Transform transform = null, double startSetback = 0.0, double endSetback = 0.0) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material, null, startSetback, endSetback, transform)
+        public Column(Vector3 location, double height, Profile profile, Material material = null, Transform transform = null, double startSetback = 0.0, double endSetback = 0.0) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material, startSetback, endSetback, transform)
         {
             this.Location = location;
             this.Height = height;

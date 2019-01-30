@@ -32,15 +32,6 @@ namespace Elements.Geometry
         public Vector3 End { get; }
 
         /// <summary>
-        /// The line's vertices.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3[] Vertices
-        {
-            get { return new[] { this.Start, this.End }; }
-        }
-
-        /// <summary>
         /// Calculate the length of the line.
         /// </summary>
         public double Length()
@@ -94,11 +85,10 @@ namespace Elements.Geometry
         /// positive Z axis points along the curve.
         /// </summary>
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
-        /// <param name="up">The vector which will become the Y vector of the transform.</param>
         /// <returns>A transform.</returns>
-        public Transform TransformAt(double u, Vector3 up = null)
+        public Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), this.Start, this.End, up);
+            return new Transform(PointAt(u), this.Start, this.End, null);
         }
 
         /// <summary>
@@ -151,10 +141,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this Line equal the provided Line?
+        /// Does this line equal the provided line?
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">The target line.</param>
+        /// <returns>True if the start and end points of the lines are equal, otherwise false.</returns>
         public override bool Equals(object obj)
         {
             var line = obj as Line;
@@ -166,7 +156,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get the hash code for the Line.
+        /// Get the hash code for the line.
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
@@ -175,11 +165,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a collection of Transforms which represent frames along this ICurve.
+        /// Get a collection of transforms which represent frames along this line.
         /// </summary>
-        /// <param name="startSetback">The offset from the start of the ICurve.</param>
-        /// <param name="endSetback">The offset from the end of the ICurve.</param>
-        /// <returns>A collection of Transforms.</returns>
+        /// <param name="startSetback">The offset from the start of the line.</param>
+        /// <param name="endSetback">The offset from the end of the line.</param>
+        /// <returns>A collection of transforms.</returns>
         public Transform[] Frames(double startSetback, double endSetback)
         {
             var l = this.Length();
@@ -187,11 +177,12 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Intersect this Line with the specified Plane 
+        /// Intersect this line with the specified plane 
         /// </summary>
-        /// <param name="p">The Plane.</param>
+        /// <param name="p">The plane.</param>
         /// <returns>The point of intersection or null if no intersection occurs.</returns>
         public Vector3 Intersect(Plane p) {
+            // Test for perpendicular.
             if (p.Normal.Dot(this.Direction) == 0) {
                 return null;
             }
@@ -201,6 +192,22 @@ namespace Elements.Geometry
                 return null;
             }
             return this.Start + this.Direction * t;
+        }
+
+        /// <summary>
+        /// Get the bounding box for this line.
+        /// </summary>
+        /// <returns>A bounding box for this line.</returns>
+        public BBox3 Bounds()
+        {
+            if(this.Start < this.End)
+            {
+                return new BBox3(this.Start, this.End);
+            }
+            else
+            {
+                return new BBox3(this.End, this.Start);
+            }
         }
     }
 }

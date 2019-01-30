@@ -367,7 +367,7 @@ namespace Elements.Serialization
                     indices.Add((ushort)i);
                     indices.Add((ushort)(i+1));
                 }
-                var bbox = new BBox3(vertices);
+                var bbox = new BBox3(vertices.ToArray());
                 gltf.AddLineLoop($"edge_{edgeCount}", buffer, vBuff, indices.ToArray(), bbox.Min.ToArray(), bbox.Max.ToArray(), 0, (ushort)(vCount - 1), materials[BuiltInMaterials.Edges.Name], MeshPrimitive.ModeEnum.LINES, null);
             }
 
@@ -382,7 +382,7 @@ namespace Elements.Serialization
                     indices.Add((ushort)i);
                     indices.Add((ushort)(i+1));
                 }
-                var bbox = new BBox3(vertices);
+                var bbox = new BBox3(vertices.ToArray());
                 gltf.AddLineLoop($"edge_{edgeCount}", buffer, vBuff, indices.ToArray(), bbox.Min.ToArray(), bbox.Max.ToArray(), 0, (ushort)(vCount - 1), materials[BuiltInMaterials.EdgesHighlighted.Name], MeshPrimitive.ModeEnum.LINES, null);
             }
 

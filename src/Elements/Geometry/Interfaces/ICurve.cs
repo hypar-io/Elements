@@ -28,11 +28,6 @@ namespace Elements.Geometry.Interfaces
         Vector3 End { get; }
 
         /// <summary>
-        /// A collection of curve vertices.
-        /// </summary>
-        Vector3[] Vertices { get; }
-
-        /// <summary>
         /// Get a point along the curve at parameter u.
         /// </summary>
         /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
@@ -43,9 +38,8 @@ namespace Elements.Geometry.Interfaces
         /// Get the frame from the curve at parameter u.
         /// </summary>
         /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <param name="up">An optional up vector.</param>
         /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
-        Transform TransformAt(double u, Vector3 up = null);
+        Transform TransformAt(double u);
 
         /// <summary>
         /// Get a collection of Transforms which represent frames along this ICurve.
@@ -59,5 +53,10 @@ namespace Elements.Geometry.Interfaces
         /// Get an ICurve which is the reverse of this curve.
         /// </summary>
         ICurve Reversed();
+
+        /// <summary>
+        /// Get the bounding box of this curve.
+        /// </summary>
+        BBox3 Bounds();
     }
 }

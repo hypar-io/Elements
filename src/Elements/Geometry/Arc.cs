@@ -9,6 +9,8 @@ namespace Elements.Geometry
     /// </summary>
     public class Arc : ICurve
     {
+        private Transform _transform;
+
         /// <summary>
         /// The type of the curve.
         /// Used during deserialization to disambiguate derived types.
@@ -18,27 +20,28 @@ namespace Elements.Geometry
         {
             get { return this.GetType().FullName.ToLower(); }
         }
-
+        
         /// <summary>
-        /// The center of the Arc.
+        /// The plane of the arc.
         /// </summary>
-        [JsonProperty("center")]
-        public Vector3 Center { get; }
+        /// <value></value>
+        [JsonProperty("plane")]
+        public Plane Plane{get;}
 
         /// <summary>
-        /// The angle from 0.0, in degrees, at which the Arc will start.
+        /// The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.
         /// </summary>
         [JsonProperty("start_angle")]
         public double StartAngle { get; internal set; }
 
         /// <summary>
-        /// The angle from 0.0, in degrees, at which the Arc will end.
+        /// The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.
         /// </summary>
         [JsonProperty("end_angle")]
         public double EndAngle { get; internal set; }
 
         /// <summary>
-        /// Calculate the length of the Arc.
+        /// Calculate the length of the arc.
         /// </summary>
         public double Length()
         {
@@ -46,7 +49,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The start point of the Arc.
+        /// The start point of the arc.
         /// </summary>
         [JsonIgnore]
         public Vector3 Start
@@ -55,31 +58,12 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The end point of the Arc.
+        /// The end point of the arc.
         /// </summary>
         [JsonIgnore]
         public Vector3 End
         {
             get { return PointAt(1.0); }
-        }
-
-        /// <summary>
-        /// The vertices of the Arc.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3[] Vertices
-        {
-            get
-            {
-                var verts = new Vector3[11];
-                var count = 0;
-                for (var u = 0.0; u < 1.0; u += 1.0 / 10.0)
-                {
-                    verts[count] = PointAt(u);
-                    count++;
-                }
-                return verts;
-            }
         }
 
         /// <summary>
@@ -89,74 +73,105 @@ namespace Elements.Geometry
         public double Radius { get; }
 
         /// <summary>
-        /// An Arc.
+        /// Create a plane.
         /// </summary>
-        /// <param name="center">The center of the Arc.</param>
-        /// <param name="radius">The radius of the Arc.</param>
-        /// <param name="startAngle">The start angle of the Arc in degrees.</param>
-        /// <param name="endAngle">The end angle of the Arc in degrees.</param>
+        /// <param name="center">The center of the arc.</param>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startAngle">The start angle of the arc in degrees.</param>
+        /// <param name="endAngle">The end angle of the arc in degrees.</param>
         [JsonConstructor]
         public Arc(Vector3 center, double radius, double startAngle, double endAngle)
         {
             if (endAngle > 360.0 || startAngle > 360.00)
             {
-                throw new ArgumentOutOfRangeException("The start and end angles must be greater than -360.0");
+                throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
             }
 
             if (endAngle == startAngle)
             {
-                throw new ArgumentException($"The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
+                throw new ArgumentException($"The arc could not be created. The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
             }
 
             if (radius <= 0.0)
             {
-                throw new ArgumentOutOfRangeException($"The provided radius ({radius}) must be greater than 0.0.");
+                throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
             }
 
             this.EndAngle = endAngle;
             this.StartAngle = startAngle;
-            this.Center = center;
             this.Radius = radius;
+            this._transform = new Transform(center);
+            this.Plane = this._transform.XY;
         }
 
         /// <summary>
-        /// Return the point at parameter u on the Arc.
+        /// Create a plane.
+        /// </summary>
+        /// <param name="plane">The plane of the arc.</param>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startAngle">The start angle of the arc in degrees.</param>
+        /// <param name="endAngle">The end angle of the arc in degrees.</param>
+        [JsonConstructor]
+        public Arc(Plane plane, double radius, double startAngle, double endAngle)
+        {
+            if (endAngle > 360.0 || startAngle > 360.00)
+            {
+                throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
+            }
+
+            if (endAngle == startAngle)
+            {
+                throw new ArgumentException($"The arc could not be created. The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
+            }
+
+            if (radius <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
+            }
+
+            this.EndAngle = endAngle;
+            this.StartAngle = startAngle;
+            this.Radius = radius;
+            this._transform = new Transform(plane.Origin, plane.Normal.Normalized());
+            this.Plane = plane;
+        }
+
+        /// <summary>
+        /// Return the point at parameter u on the arc.
         /// </summary>
         /// <param name="u">A parameter between 0.0 and 1.0.</param>
-        /// <returns>A Vector3 representing the point along the Arc.</returns>
+        /// <returns>A Vector3 representing the point along the arc.</returns>
         public Vector3 PointAt(double u)
         {
             if (u > 1.0 || u < 0.0)
             {
-                throw new ArgumentOutOfRangeException($"The value provided for parameter u ({u}) must be between 0.0 and 1.0.");
+                throw new ArgumentOutOfRangeException($"The value provided for parameter u, {u}, must be between 0.0 and 1.0.");
             }
 
-            var angle = (this.EndAngle - this.StartAngle) * u;
-            return new Vector3(this.Center.X + this.Radius * Math.Cos(angle * Math.PI / 180), this.Center.Y + this.Radius * Math.Sin(angle * Math.PI / 180));
+            var angle = this.StartAngle + (this.EndAngle - this.StartAngle) * u;
+            var theta = DegToRad(angle);
+            var x = this.Plane.Origin.X + this.Radius * Math.Cos(theta);
+            var y = this.Plane.Origin.Y + this.Radius * Math.Sin(theta);
+            return this._transform.OfVector(new Vector3(x, y));
         }
 
         /// <summary>
-        /// Return transform on the Arc at parameter u.
+        /// Return transform on the arc at parameter u.
         /// </summary>
-        /// <param name="u">A parameter between 0.0 and 1.0 on the Arc.</param>
-        /// <param name="up">An optional up parameter.</param>
-        /// <returns>A Transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
-        public Transform TransformAt(double u, Vector3 up = null)
+        /// <param name="u">A parameter between 0.0 and 1.0 on the arc.</param>
+        /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
+        public Transform TransformAt(double u)
         {
             var o = PointAt(u);
-            var x = (this.Center - o).Negated().Normalized();
-            if (up == null)
-            {
-                up = Vector3.ZAxis;
-            }
-            return new Transform(o, x, x.Cross(up));
+            var x = (o - this.Plane.Origin).Normalized();
+            return new Transform(o, x, this.Plane.Normal);
         }
 
         /// <summary>
-        /// Get a collection of Transforms which represent frames along this ICurve.
+        /// Get a collection of Transforms which represent frames along the arc.
         /// </summary>
-        /// <param name="startSetback">The offset from the start of the ICurve.</param>
-        /// <param name="endSetback">The offset from the end of the ICurve.</param>
+        /// <param name="startSetback">The offset from the start of the arc.</param>
+        /// <param name="endSetback">The offset from the end of the arc.</param>
         /// <returns>A collection of Transforms.</returns>
         public Transform[] Frames(double startSetback, double endSetback)
         {
@@ -184,11 +199,28 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get an Arc which is the reverse of this Arc.
+        /// Get an arc which is the reverse of this Arc.
         /// </summary>
         public ICurve Reversed()
         {
-            return new Arc(this.Center, this.Radius, this.EndAngle, this.StartAngle);
+            return new Arc(this.Plane, this.Radius, this.EndAngle, this.StartAngle);
+        }
+
+        private double DegToRad(double degrees)
+        {
+            return degrees * Math.PI / 180.0;
+        }
+
+        /// <summary>
+        /// Get a bounding box for this arc.
+        /// </summary>
+        /// <returns>A bounding box for this arc.</returns>
+        public BBox3 Bounds()
+        {
+            var delta = new Vector3(this.Radius, this.Radius, this.Radius);
+            var min = new Vector3(this.Plane.Origin - delta);
+            var max = new Vector3(this.Plane.Origin + delta);
+            return new BBox3(min, max);
         }
     }
 }

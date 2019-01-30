@@ -159,7 +159,7 @@ namespace Elements.Serialization
                 if(c is Polygon)
                 {
                     var cl = new Line(Vector3.Origin, solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
-                    var result = new Beam(solidTransform.OfLine(cl), new Profile((Polygon)c), BuiltInMaterials.Steel, null, 0.0, 0.0, elementTransform);
+                    var result = new Beam(solidTransform.OfLine(cl), new Profile((Polygon)c), BuiltInMaterials.Steel, 0.0, 0.0, elementTransform);
                     result.Name = beam.Name;
                     return result; 
                 }

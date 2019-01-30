@@ -33,8 +33,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Plane by three points.
-        /// The Plane is constructed as a->b * b->c.
+        /// Construct a plane by three points.
+        /// The plane is constructed as a->b * b->c.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -54,11 +54,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Plane.
+        /// Construct a plane.
         /// Only the first three points of the points array will be used.
         /// </summary>
-        /// <param name="origin">The origin of the Plane.</param>
-        /// <param name="points">An array of vectors to be used to determine the normal of the Plane.</param>
+        /// <param name="origin">The origin of the plane.</param>
+        /// <param name="points">An array of vectors to be used to determine the normal of the plane.</param>
         /// <exception cref="System.ArgumentException">Thrown when less than three points are provided.</exception>
         /// <exception cref="System.ArgumentException">Thrown when coincident points are provided.</exception>
         public Plane(Vector3 origin, IList<Vector3> points)

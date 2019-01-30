@@ -95,6 +95,21 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SweptSolidArc()
+        {
+            var profile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
+            var path = new Arc(Vector3.Origin, 5, 0, 90);
+            var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
+            foreach(var e in solid.Edges.Values)
+            {
+                Assert.NotNull(e.Left);
+                Assert.NotNull(e.Right);
+                Assert.NotSame(e.Left, e.Right);
+            }
+            solid.ToGlb("models/SweptSolidArc.glb");
+        }
+
+        [Fact]
         public void SweptSolidPolygon()
         {
             var profile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");

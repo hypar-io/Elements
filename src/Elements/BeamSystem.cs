@@ -57,7 +57,7 @@ namespace Elements
                 var a = edge1.PointAt(t);
                 var b = edge2.PointAt(t);
                 var line = new Line(a, b);
-                var beam = new Beam(line, profile, material, null);
+                var beam = new Beam(line, profile, material);
                 this.Elements.Add(beam);
             }
         }

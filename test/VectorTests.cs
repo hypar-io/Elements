@@ -1,7 +1,5 @@
 using Elements.Geometry;
-using Elements;
 using System;
-using System.Linq;
 using Xunit;
 
 namespace Elements.Tests

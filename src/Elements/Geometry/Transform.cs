@@ -1,7 +1,6 @@
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -85,7 +84,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct the identity transform.
+        /// Create the identity transform.
         /// </summary>
         public Transform()
         {
@@ -93,7 +92,7 @@ namespace Elements.Geometry
         }
         
         /// <summary>
-        /// Construct a Transform by copying another transform.
+        /// Create a transform by copying another transform.
         /// </summary>
         /// <param name="t">The transform to copy.</param>
         public Transform(Transform t)
@@ -102,7 +101,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a transform with a translation.
+        /// Create a transform with a translation.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
         public Transform(Vector3 origin)
@@ -112,7 +111,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a transform with a translation.
+        /// Create a transform with a translation.
         /// </summary>
         /// <param name="x">The X component of translation.</param>
         /// <param name="y">The Y component of translation.</param>
@@ -124,7 +123,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a transform by origin and axes.
+        /// Create a transform centered at origin and an up vector.
+        /// </summary>
+        /// <param name="origin">The origin of the transform.</param>
+        /// <param name="up">The vector which will define the Z axis of the transform.</param>
+        public Transform(Vector3 origin, Vector3 up)
+        {
+            var test = Vector3.XAxis;
+            if(up.IsParallelTo(Vector3.XAxis))
+            {
+                test = Vector3.YAxis;
+            }
+            var y = up.Cross(test);
+            var x = y.Cross(up); 
+            this._matrix = new Matrix(x, y, up, origin);
+        }
+
+        /// <summary>
+        /// Create a transform by origin and axes.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
         /// <param name="xAxis">The X axis of the transform.</param>
@@ -138,9 +154,9 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a transform by a matrix.
+        /// Create a transform by a matrix.
         /// </summary>
-        /// <param name="matrix">The Transform's Matrix.</param>
+        /// <param name="matrix">The transform's Matrix.</param>
         [JsonConstructor]
         public Transform(Matrix matrix)
         {
@@ -148,7 +164,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a transform with origin at origin,
+        /// Create a transform with origin at origin,
         /// whose Z axis points from start to end, and whose
         /// up direction is up.
         /// </summary>
@@ -195,9 +211,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vector">The vector to transform.</param>
         /// <returns>A new vector transformed by this transform.</returns>
-        public Vector3 OfPoint(Vector3 vector)
+        public Vector3 OfVector(Vector3 vector)
         {
-            var v = vector * this._matrix;
             return vector * this._matrix;
         }
 
@@ -211,7 +226,7 @@ namespace Elements.Geometry
             var transformed = new Vector3[polygon.Vertices.Length];
             for (var i = 0; i < transformed.Length; i++)
             {
-                transformed[i] = OfPoint(polygon.Vertices[i]);
+                transformed[i] = OfVector(polygon.Vertices[i]);
             }
             var p = new Polygon(transformed);
             return p;
@@ -224,7 +239,12 @@ namespace Elements.Geometry
         /// <returns>An array of polygons transformed by this transform.</returns>
         public Polygon[] OfPolygons(Polygon[] polygons)
         {
-            return polygons.Select(p=>OfPolygon(p)).ToArray();
+            var result = new Polygon[polygons.Length];
+            for(var i=0; i<polygons.Length; i++)
+            {
+                result[i] = OfPolygon(polygons[i]);
+            }
+            return result;
         }
 
         /// <summary>
@@ -234,7 +254,7 @@ namespace Elements.Geometry
         /// <returns>A new line transformed by this transforms.</returns>
         public Line OfLine(Line line)
         {
-            return new Line(OfPoint(line.Start), OfPoint(line.End));
+            return new Line(OfVector(line.Start), OfVector(line.End));
         }
 
         /// <summary>

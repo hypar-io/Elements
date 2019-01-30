@@ -16,11 +16,10 @@ namespace Elements
         /// <param name="curve">The beam's center line.</param>
         /// <param name="profile">The beam's profile.</param>
         /// <param name="material">The beam's material.</param>
-        /// <param name="up">The beam's up axis.</param>
         /// <param name="startSetback">The setback of the beam's geometry at the start.</param>
         /// <param name="endSetback">The setback of the beam's geometry at the end.</param>
         /// <param name="transform">The beam's transform.</param>
         [JsonConstructor]
-        public Beam(ICurve curve, Profile profile, Material material = null, Vector3 up = null, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null) : base(curve, profile, material, up, startSetback, endSetback, transform) { }
+        public Beam(ICurve curve, Profile profile, Material material = null, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null) : base(curve, profile, material, startSetback, endSetback, transform) { }
     }
 }

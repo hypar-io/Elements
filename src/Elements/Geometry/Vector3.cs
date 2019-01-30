@@ -7,12 +7,17 @@ namespace Elements.Geometry
     /// <summary>
     /// A 3D vector.
     /// </summary>
-    public class Vector3 : IComparable<Vector3>
+    public class Vector3 : IComparable<Vector3>, IEquatable<Vector3>
     {
         /// <summary>
         /// A tolerance for comparison operations.
         /// </summary>
         public static double Tolerance = 0.000000001;
+
+        private static Vector3 _xAxis = new Vector3(1,0,0);
+        private static Vector3 _yAxis = new Vector3(0,1,0);
+        private static Vector3 _zAxis = new Vector3(0,0,1);
+        private static Vector3 _origin = new Vector3();
 
         /// <summary>
         /// The X component of the vector.
@@ -41,13 +46,12 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static Vector3 Origin
         {
-            get { return new Vector3(); }
+            get { return _origin; }
         }
 
         /// <summary>
-        /// Is this vector equal to the provide vector?
+        /// Is this vector equal to the provided vector?
         /// </summary>
-        /// <param name="obj"></param>
         public override bool Equals(object obj)
         {
             var v = obj as Vector3;
@@ -56,7 +60,7 @@ namespace Elements.Geometry
                 return false;
             }
 
-            return this.X == v.X && this.Y == v.Y && this.Z == v.Z;
+            return this.IsAlmostEqualTo(v);
         }
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace Elements.Geometry
         /// </summary>
         public static Vector3 XAxis
         {
-            get { return new Vector3(1.0, 0.0, 0.0); }
+            get { return _xAxis; }
         }
 
         /// <summary>
@@ -81,7 +85,7 @@ namespace Elements.Geometry
         /// </summary>
         public static Vector3 YAxis
         {
-            get { return new Vector3(0.0, 1.0, 0.0); }
+            get { return _yAxis; }
         }
 
         /// <summary>
@@ -90,7 +94,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static Vector3 ZAxis
         {
-            get { return new Vector3(0.0, 0.0, 1.0); }
+            get { return _zAxis; }
         }
 
         /// <summary>
@@ -401,7 +405,13 @@ namespace Elements.Geometry
             return this + x * v;
         }
 
-        int IComparable<Vector3>.CompareTo(Vector3 v)
+
+        /// <summary>
+        /// Implement IComparable interface.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public int CompareTo(Vector3 v)
         {
             if (this > v)
             {
@@ -413,6 +423,22 @@ namespace Elements.Geometry
             }
 
             return 1;
+        }
+
+        /// <summary>
+        /// Implement the IEquatable interface.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>True if all the components of this and the provided vector are equal.</returns>
+        public bool Equals(Vector3 other)
+        {
+            var v = other as Vector3;
+            if (v == null)
+            {
+                return false;
+            }
+
+            return this.IsAlmostEqualTo(v);
         }
     }
 
@@ -447,16 +473,6 @@ namespace Elements.Geometry
                 }
             }
             return true;
-        }
-
-        /// <summary>
-        /// Get the bounding box for a set of points.
-        /// </summary>
-        /// <param name="points"></param>
-        /// <returns></returns>
-        public static BBox3 BBox(this IList<Vector3> points)
-        {
-            return new BBox3(points);
         }
 
         /// <summary>

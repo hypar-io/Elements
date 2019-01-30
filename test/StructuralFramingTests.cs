@@ -43,7 +43,7 @@ namespace Elements.Tests
                     break;
             }
 
-            var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel, null, startSetback, endSetback);
+            var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel, startSetback, endSetback);
             Assert.Equal(BuiltInMaterials.Steel, beam.Geometry[0].Material);
             Assert.Equal(cl, beam.Curve);
 

@@ -168,9 +168,8 @@ namespace Elements.Geometry
         /// Get the Transform at the specified parameter along the Polygon.
         /// </summary>
         /// <param name="u">The parameter on the Polygon between 0.0 and 1.0.</param>
-        /// <param name="up">An optional up vector for the Transform.</param>
         /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
-        public Transform TransformAt(double u, Vector3 up = null)
+        public Transform TransformAt(double u)
         {
             if (u < 0.0 || u > 1.0)
             {
@@ -179,7 +178,7 @@ namespace Elements.Geometry
 
             var segmentIndex = 0;
             var o = PointAtInternal(u, out segmentIndex);
-            up = up != null ? up : Vector3.ZAxis;
+            var up = Vector3.ZAxis;
             Vector3 x = null;
 
             // Check if the provided parameter is equal
@@ -228,6 +227,14 @@ namespace Elements.Geometry
         public virtual Transform[] Frames(double startSetback, double endSetback)
         {
             return FramesInternal(startSetback, endSetback, false);
+        }
+
+        /// <summary>
+        /// Get the bounding box for this curve.
+        /// </summary>
+        public BBox3 Bounds()
+        {
+            return new BBox3(this.Vertices);
         }
 
         internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)
