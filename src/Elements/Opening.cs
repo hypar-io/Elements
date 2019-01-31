@@ -46,8 +46,8 @@ namespace Elements
         /// Create an opening.
         /// </summary>
         /// <param name="perimeter">A polygon representing the perimeter of the opening.</param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">The distance along the X axis of the transform of the host element to transform the perimeter.</param>
+        /// <param name="y">The distance along the Y axis of the transform of the host element to transform the perimeter.</param>
         [JsonConstructor]
         public Opening(Polygon perimeter, double x = 0.0, double y = 0.0)
         {
