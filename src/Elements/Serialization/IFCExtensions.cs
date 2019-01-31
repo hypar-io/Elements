@@ -120,7 +120,7 @@ namespace Elements.Serialization
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
             }
 
-            var material = new Material("wall", new Color(0.5f, 0.5f, 0.5f, 0.5f), 0.1f, 0.1f);
+            var material = new Material("wall", Colors.Green);
 
             if(solid != null)
             {

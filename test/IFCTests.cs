@@ -24,7 +24,7 @@ namespace Elements.Tests
         // [InlineData("rst_sample", "../../../models/rst_advanced_sample_project.ifc")]
         [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/AC-20-Smiley-West-10-Bldg.ifc")]
         [InlineData("AC20-Institute-Var-2", "../../../models/AC20-Institute-Var-2.ifc")]
-        [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
+        // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void IFC(string name, string ifcPath)
         {
             this.Name = name;

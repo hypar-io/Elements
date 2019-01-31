@@ -80,7 +80,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Create a Floor.
+        /// Create a floor.
         /// </summary>
         /// <param name="profile">The profile of the floor.</param>
         /// <param name="elementType">The floor type of the floor.</param>
@@ -116,8 +116,8 @@ namespace Elements
         /// Create a floor.
         /// </summary>
         /// <param name="profile">The profile of the floor.</param>
-        /// <param name="start"></param>
-        /// <param name="direction"></param>
+        /// <param name="start">A tranforms used to pre-transform the profile and direction vector before sweeping the geometry.</param>
+        /// <param name="direction">The direction of the floor's sweep.</param>
         /// <param name="elementType">The floor type of the floor.</param>
         /// <param name="elevation">The elevation of the floor.</param>
         /// <param name="material">The floor's material.</param>
@@ -128,7 +128,9 @@ namespace Elements
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, direction, this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
+            var outer = start.OfPolygon(this.Profile.Perimeter);
+            var inner = this.Profile.Voids != null ? start.OfPolygons(this.Profile.Voids) : null;
+            this.Geometry = new[]{Solid.SweepFace(outer, inner, start.OfVector(direction), this.Thickness, material == null ? BuiltInMaterials.Concrete : material)};
         }
         
         /// <summary>

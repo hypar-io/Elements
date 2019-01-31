@@ -2,7 +2,6 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
-using Hypar.Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 
