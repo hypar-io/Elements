@@ -18,7 +18,7 @@ namespace Elements.Tests
             this.output = output;
         }
 
-        [Theory]
+        [Theory(Skip="IFC")]
         // [InlineData("rac_sample", "../../../models/rac_advanced_sample_project.ifc")]
         // [InlineData("rme_sample", "../../../models/rme_advanced_sample_project.ifc")]
         // [InlineData("rst_sample", "../../../models/rst_advanced_sample_project.ifc")]
