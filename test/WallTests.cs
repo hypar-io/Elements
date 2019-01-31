@@ -18,16 +18,21 @@ namespace Elements.Tests
             var openings = new Opening[]{
                 new Opening(1.0, 2.0, 1.0, 1.0),
                 new Opening(3.0, 1.0, 1.0, 2.0),
-                new Opening(7.0, 1.25, 3.0, 2.5)
+                // new Opening(7.0, 1.25, 3.0, 2.5),
+                new Opening(Polygon.Ngon(5, 2.0), 8,2)
             };
+
+            var frameProfile = new Profile(Polygon.Rectangle(0.075, 0.01));
             foreach(var l in ngon.Segments())
             {
                 var w = new Wall(l, testWallType, 3.0, BuiltInMaterials.Default, openings);
                 this.Model.AddElement(w);
 
-                // Draw some frames in the openings.
+                // Draw some frames and panels in the openings.
                 foreach(var o in w.Openings)
                 {
+                    var f = new Frame(o.Perimeter, frameProfile, 0.0375, null, w.Transform);
+                    this.Model.AddElement(f);
                     var p = new Panel(o.Perimeter, BuiltInMaterials.Glass, w.Transform);
                     this.Model.AddElement(p);
                 }

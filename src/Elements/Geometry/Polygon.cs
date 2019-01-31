@@ -457,11 +457,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Offset this Polygon by the specified amount.
+        /// Offset this polygon by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
         /// <returns>A new Polygon offset by offset.</returns>
-        public IList<Polygon> Offset(double offset)
+        public Polygon[] Offset(double offset)
         {
             var path = this.ToClipperPath();
 
@@ -470,10 +470,10 @@ namespace Elements.Geometry
             co.AddPath(path, JoinType.jtMiter, EndType.etClosedPolygon);
             co.Execute(ref solution, offset * scale);  // important, scale also used here
 
-            var result = new List<Polygon>();
-            foreach (var loop in solution)
+            var result = new Polygon[solution.Count];
+            for(var i=0; i<result.Length; i++)
             {
-                result.Add(loop.ToPolygon());
+                result[i] = solution[i].ToPolygon();
             }
             return result;
         }
