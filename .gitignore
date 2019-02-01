@@ -333,3 +333,4 @@ ASALocalRun/
 appsettings.json
 appsettings.dev.json
 docs
+*.icloud

@@ -1,0 +1,548 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.0/",
+    "signature": "d4ff49b9d540cf3e8ed45bf21da1b5cc6ff8f8c3"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.0": {},
+    ".NETStandard,Version=v2.0/": {
+      "HyparRevit/1.0.0": {
+        "dependencies": {
+          "HyparSDK": "0.1.1",
+          "NETStandard.Library": "2.0.3",
+          "Newtonsoft.Json": "11.0.2",
+          "DesignAutomationBridge": "1.0.0.0"
+        },
+        "runtime": {
+          "HyparRevit.dll": {}
+        }
+      },
+      "glTF2Loader/1.1.1-alpha": {
+        "dependencies": {
+          "NETStandard.Library": "2.0.3",
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard1.3/glTFLoader.dll": {
+            "assemblyVersion": "1.1.1.0",
+            "fileVersion": "1.1.1.0"
+          }
+        }
+      },
+      "HyparSDK/0.1.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2",
+          "Unofficial.LibTessDotNet": "2.0.0",
+          "glTF2Loader": "1.1.1-alpha"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hypar.SDK.dll": {
+            "assemblyVersion": "0.1.1.0",
+            "fileVersion": "0.1.1.0"
+          }
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.0": {},
+      "NETStandard.Library/2.0.3": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.2.21924"
+          }
+        }
+      },
+      "Unofficial.LibTessDotNet/2.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/LibTessDotNet.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "DesignAutomationBridge/1.0.0.0": {
+        "runtime": {
+          "DesignAutomationBridge.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "RevitAPIFoundation/19.0.0.0": {
+        "runtime": {
+          "RevitAPIFoundation.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "PersistenceDBAPI/19.0.0.0": {
+        "runtime": {
+          "PersistenceDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "UtilityAPI/19.0.0.0": {
+        "runtime": {
+          "UtilityAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "APIDBAPI/19.0.0.0": {
+        "runtime": {
+          "APIDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "GraphicsAPI/19.0.0.0": {
+        "runtime": {
+          "GraphicsAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "ElementGroupDBAPI/19.0.0.0": {
+        "runtime": {
+          "ElementGroupDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "EssentialsDBAPI/19.0.0.0": {
+        "runtime": {
+          "EssentialsDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "GeomUtilAPI/19.0.0.0": {
+        "runtime": {
+          "GeomUtilAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "FamilyDBAPI/19.0.0.0": {
+        "runtime": {
+          "FamilyDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "DetailDBAPI/19.0.0.0": {
+        "runtime": {
+          "DetailDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "CurtainGridFamilyDBAPI/19.0.0.0": {
+        "runtime": {
+          "CurtainGridFamilyDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "ArrayElemsDBAPI/19.0.0.0": {
+        "runtime": {
+          "ArrayElemsDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "EnergyAnalysisDBAPI/19.0.0.0": {
+        "runtime": {
+          "EnergyAnalysisDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "BuildingSystemsDBAPI/19.0.0.0": {
+        "runtime": {
+          "BuildingSystemsDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "HostObjDBAPI/19.0.0.0": {
+        "runtime": {
+          "HostObjDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "RoomAreaPlanDBAPI/19.0.0.0": {
+        "runtime": {
+          "RoomAreaPlanDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "SiteDBAPI/19.0.0.0": {
+        "runtime": {
+          "SiteDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "SculptingDBAPI/19.0.0.0": {
+        "runtime": {
+          "SculptingDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "StructuralDBAPI/19.0.0.0": {
+        "runtime": {
+          "StructuralDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "InterfaceAPI/19.0.0.0": {
+        "runtime": {
+          "InterfaceAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "InterfaceUtilAPI/19.0.0.0": {
+        "runtime": {
+          "InterfaceUtilAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "RebarDBAPI/19.0.0.0": {
+        "runtime": {
+          "RebarDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "StructuralAnalysisDBAPI/19.0.0.0": {
+        "runtime": {
+          "StructuralAnalysisDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "MassingDBAPI/19.0.0.0": {
+        "runtime": {
+          "MassingDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "AssemblyDBAPI/19.0.0.0": {
+        "runtime": {
+          "AssemblyDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "DPartDBAPI/19.0.0.0": {
+        "runtime": {
+          "DPartDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "NumberingDBAPI/19.0.0.0": {
+        "runtime": {
+          "NumberingDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "PointCloudAccessAPI/19.0.0.0": {
+        "runtime": {
+          "PointCloudAccessAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "StairRampDBAPI/19.0.0.0": {
+        "runtime": {
+          "StairRampDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "AnalysisAppsDBAPI/19.0.0.0": {
+        "runtime": {
+          "AnalysisAppsDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "MaterialDBAPI/19.0.0.0": {
+        "runtime": {
+          "MaterialDBAPI.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      },
+      "DBManagedServices/19.0.0.0": {
+        "runtime": {
+          "DBManagedServices.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.0.405"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HyparRevit/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "glTF2Loader/1.1.1-alpha": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1rp7mOK+ZhnhtyYHVpAjyo+yfPSDKcJx6B5/Hh8NoloOwItI3u+RAb/Egqh/UIdLDt+omkwkzAMf34/fAKwWjA==",
+      "path": "gltf2loader/1.1.1-alpha",
+      "hashPath": "gltf2loader.1.1.1-alpha.nupkg.sha512"
+    },
+    "HyparSDK/0.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HsaRGlTrYQkxYPF1/+4ywdHuSiUmxqKTczZoykDOR/wWbWn+e1RHDNLDbThrTVKV/Yuz7uDXx+AqCKxPX9Xorw==",
+      "path": "hyparsdk/0.1.1",
+      "hashPath": "hyparsdk.0.1.1.nupkg.sha512"
+    },
+    "Microsoft.NETCore.Platforms/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "path": "microsoft.netcore.platforms/1.1.0",
+      "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
+    },
+    "NETStandard.Library/2.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+      "path": "netstandard.library/2.0.3",
+      "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
+    },
+    "Newtonsoft.Json/11.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
+      "path": "newtonsoft.json/11.0.2",
+      "hashPath": "newtonsoft.json.11.0.2.nupkg.sha512"
+    },
+    "Unofficial.LibTessDotNet/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8JZwPm90vy6INQW2nsqNWLJuyst86UeQj98TlN4rfiBxOrLrJyYQ9SbXQWZmPOdiQq7nxXdd2ddVDDViWtWPfw==",
+      "path": "unofficial.libtessdotnet/2.0.0",
+      "hashPath": "unofficial.libtessdotnet.2.0.0.nupkg.sha512"
+    },
+    "DesignAutomationBridge/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "RevitAPIFoundation/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PersistenceDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UtilityAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "APIDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GraphicsAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ElementGroupDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "EssentialsDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GeomUtilAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FamilyDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DetailDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CurtainGridFamilyDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ArrayElemsDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "EnergyAnalysisDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "BuildingSystemsDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HostObjDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "RoomAreaPlanDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SiteDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SculptingDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "StructuralDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "InterfaceAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "InterfaceUtilAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "RebarDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "StructuralAnalysisDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MassingDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AssemblyDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DPartDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NumberingDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PointCloudAccessAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "StairRampDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AnalysisAppsDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MaterialDBAPI/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DBManagedServices/19.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

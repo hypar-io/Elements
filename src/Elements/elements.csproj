@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Hypar.Elements</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Title>Hypar Elements</Title>
+    <Authors>Hypar</Authors>
+    <PackageId>Hypar.Elements</PackageId>
+    <PackageDescription>A building elements library for AEC.</PackageDescription>
+    <Summary>The Elements library provides object types for creating the built environment.</Summary>
+    <Copyright>Hypar LLC, 2018</Copyright>
+    <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Version>0.2.0</Version>
+    <PackageTags>AEC, Architecture, Structure, Engineering</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="glTF2Loader" Version="1.1.1-alpha" />
+    <PackageReference Include="Hypar.IFC" Version="0.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>
