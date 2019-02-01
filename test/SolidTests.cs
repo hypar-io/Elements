@@ -7,16 +7,22 @@ using Newtonsoft.Json;
 using Xunit.Abstractions;
 using Elements.Serialization;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Elements.Tests
 {
     public class SolidTests
     {
         private readonly ITestOutputHelper output;
-
+        
         public SolidTests(ITestOutputHelper output)
         {
             this.output = output;
+
+            if(!Directory.Exists("models"))
+            {
+                Directory.CreateDirectory("models");
+            }
         }
 
         [Fact]
