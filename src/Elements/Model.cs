@@ -501,8 +501,7 @@ namespace Elements
                     mesh = new Elements.Geometry.Mesh();
                     solid.Tessellate(ref mesh);
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                        mesh.Indices.ToArray(), mesh.VertexColors.ToArray(),
-                                        mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax,
+                                        mesh.Indices.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
                                         mesh.IMin, mesh.IMax, materials[solid.Material.Name], null, e.Transform);
                 }
 

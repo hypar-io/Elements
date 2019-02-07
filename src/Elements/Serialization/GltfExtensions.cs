@@ -139,7 +139,7 @@ namespace Elements.Serialization
         }
 
         internal static int AddTriangleMesh(this Gltf gltf, string name, List<byte> buffer, double[] vertices, double[] normals, ushort[] indices, 
-        float[] colors, double[] vMin, double[] vMax, double[] nMin, double[] nMax, double[] cMin, double[] cMax, ushort iMin, ushort iMax, int materialId, int? parent_index, Transform transform = null)
+        double[] vMin, double[] vMax, double[] nMin, double[] nMax, ushort iMin, ushort iMax, int materialId, int? parent_index, Transform transform = null)
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
@@ -334,8 +334,7 @@ namespace Elements.Serialization
             solid.Tessellate(ref mesh);
 
             gltf.AddTriangleMesh("mesh", buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                        mesh.Indices.ToArray(), mesh.VertexColors.ToArray(),
-                                        mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax, mesh.CMin, mesh.CMax,
+                                        mesh.Indices.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
                                         mesh.IMin, mesh.IMax, materials[BuiltInMaterials.Default.Name], null, null);
 
             var edgeCount = 0;
