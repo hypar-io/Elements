@@ -451,7 +451,6 @@ namespace Elements.Geometry
         /// Are the provided points on the same plane?
         /// </summary>
         /// <param name="points"></param>
-        /// <returns></returns>
         public static bool AreCoplanar(this IList<Vector3> points)
         {
             //TODO: https://github.com/hypar-io/sdk/issues/54
