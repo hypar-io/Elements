@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hypar.Elements;
-using Hypar.Geometry;
-using Vector3 = Hypar.Geometry.Vector3;
+using Elements;
+using Elements.Geometry;
+using Elements.Geometry.Interfaces;
+using Vector3 = Elements.Geometry.Vector3;
 using System.Linq;
 using UnityEngine.UI;
 
@@ -91,11 +92,11 @@ public class CreateHyparElements : MonoBehaviour {
 
 			foreach(var l in inset.First().Segments())
 			{
-				var divs = Mathf.Ceil((float)(l.Length/columnSpacing));
+				var divs = Mathf.Ceil((float)(l.Length()/columnSpacing));
 				for(var t=0.0; t<=1.0; t+=1.0/divs)
 				{
 					var pt = l.PointAt(t);
-					var column = new Column(new Vector3(pt.X,pt.Y,i), floorToFloor, Polygon.Rectangle(Vector3.Origin, 0.25,0.25), BuiltInMaterials.Concrete);
+					var column = new Column(new Vector3(pt.X,pt.Y,i), floorToFloor, new Profile(Polygon.Rectangle(0.25,0.25)), BuiltInMaterials.Concrete);
 					model.AddElement(column);
 				}
 				yield return null;
@@ -120,16 +121,13 @@ public static class HyparExtensions
 		return new UnityEngine.Vector3((float)v.X, (float)v.Y, (float)v.Z);
 	}
 
-	public static UnityEngine.Vector3[] ToUnityVertices(this IEnumerable<double> arr, Hypar.Geometry.Transform t)
+	public static UnityEngine.Vector3[] ToUnityVertices(this double[] arr, Elements.Geometry.Transform t)
 	{	
-		var list = arr.ToList();
-		var count = arr.Count();
-		var verts = new UnityEngine.Vector3[count/3];
+		var verts = new UnityEngine.Vector3[arr.Length/3];
 		var index = 0;
-		for(var i=0; i<count; i+=3)
+		for(var i=0; i<arr.Length/3; i+=3)
 		{	
-			var vt = t.OfPoint(new Vector3(list[i], list[i+1], list[i+2]));
-			// var v = new UnityEngine.Vector3((float)list[i], (float)list[i+1], (float)list[i+2]);
+			var vt = t != null ? t.OfVector(new Vector3(arr[i], arr[i+1], arr[i+2])) : new Vector3(arr[i], arr[i+1], arr[i+2]);
 			var v = vt.ToUnityVector3();
 			verts[index] = v;
 			index ++;
@@ -144,17 +142,17 @@ public static class HyparExtensions
 		var goRenderer = go.AddComponent<MeshRenderer>();
 		goRenderer.material = material;
 		var goMesh = new UnityEngine.Mesh();
-		goMeshFilter.mesh = goMesh;
+		goMeshFilter.sharedMesh = goMesh;
 		go.transform.SetParent(transform, false);
 		return goMesh;
 	}
 
-	public static UnityEngine.Color ToUnityColor(this Hypar.Geometry.Color color)
+	public static UnityEngine.Color ToUnityColor(this Elements.Geometry.Color color)
 	{
 		return new UnityEngine.Color(color.Red, color.Green, color.Blue, color.Alpha);
 	}
 
-	public static UnityEngine.Material ToUnityMaterial(this Hypar.Elements.Material material)
+	public static UnityEngine.Material ToUnityMaterial(this Elements.Material material)
 	{
 		var uMaterial = new UnityEngine.Material(Shader.Find("Standard"));
 		uMaterial.name = material.Name;
@@ -178,7 +176,7 @@ public static class HyparExtensions
 
 	public static GameObject ToGameObject(this Element element, GameObject parent, UnityEngine.Material material)
 	{
-		var go = new GameObject(element.Id);
+		var go = new GameObject($"hypar_{element.Id}");
 		var goMeshFilter = go.AddComponent<MeshFilter>();
 		var goRenderer = go.AddComponent<MeshRenderer>();
 		goRenderer.material = material;
@@ -189,11 +187,12 @@ public static class HyparExtensions
 	
 		var verts = new List<UnityEngine.Vector3>();
 		var tris = new List<int>();
-		if(element is ITessellateMesh)
+		if(element is IGeometry3D)
 		{
-			var tess = (ITessellateMesh)element;
-			var mesh = tess.Mesh();
-			verts.AddRange(mesh.Vertices.ToUnityVertices(element.Transform));
+			var geo = (IGeometry3D)element;
+			var mesh = new Elements.Geometry.Mesh();
+			geo.Geometry[0].Tessellate(ref mesh);
+			verts.AddRange(mesh.Vertices.ToArray().ToUnityVertices(element.Transform));
 			tris.AddRange(mesh.Indices.Select(idx=>(int)idx));
 		}
 
@@ -214,11 +213,13 @@ public static class HyparExtensions
 		// var o = element.Transform.Origin.ToUnityVector3();
 		var verts = new List<UnityEngine.Vector3>();
 		var tris = new List<int>();
-		if(element is ITessellateMesh)
+
+		if(element is IGeometry3D)
 		{
-			var tess = (ITessellateMesh)element;
-			var mesh = tess.Mesh();
-			verts.AddRange(mesh.Vertices.ToUnityVertices(element.Transform));
+			var tess = (IGeometry3D)element;
+			var mesh = new Elements.Geometry.Mesh();
+			tess.Geometry[0].Tessellate(ref mesh);
+			verts.AddRange(mesh.Vertices.ToArray().ToUnityVertices(element.Transform));
 			tris.AddRange(mesh.Indices.Select(idx=>(int)idx));
 		}
 
@@ -231,7 +232,7 @@ public static class HyparExtensions
 
 	public static IEnumerator ToGameObjects(this Model model, GameObject parent)
 	{
-		var materials = new Dictionary<string, UnityEngine.Material>();
+		var materials = new Dictionary<long, UnityEngine.Material>();
 
 		foreach(var m in model.Materials)
 		{
@@ -252,7 +253,8 @@ public static class HyparExtensions
 				if(newElements.Count > i)
 				{
 					// Update the game object.
-					go.Update(newElements[i], materials[newElements[i].Material.Id]);
+					var geo = (IGeometry3D)newElements[i];
+					go.Update(newElements[i], materials[geo.Geometry[0].Material.Id]);
 				}
 				else
 				{
@@ -272,14 +274,16 @@ public static class HyparExtensions
 				{
 					// Debug.Log("Updating game object...");
 					var go = parent.transform.GetChild(i).gameObject;
-					go.Update(newElements[i], materials[newElements[i].Material.Id]);
+					var geo = (IGeometry3D)newElements[i];
+					go.Update(newElements[i], materials[geo.Geometry[0].Material.Id]);
 				}
 				else
 				{
 					// Debug.Log("Creating new game object...");
 					// Create a new game object.
 					var e = newElements[i];
-					var material = materials[e.Material.Id];
+					var geo = (IGeometry3D)newElements[i];
+					var material = materials[geo.Geometry[0].Material.Id];
 					e.ToGameObject(parent.gameObject, material);
 				}
 			}

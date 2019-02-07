@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hypar.Elements;
+using Elements;
 using System.Linq;
-using Hypar.Geometry;
+using Elements.Geometry;
 
 public class Facade : MonoBehaviour {
 
@@ -43,11 +43,15 @@ public class Facade : MonoBehaviour {
 		var f2 = floors[floors.Count - 1];
 		var height = f2.Elevation-f1.Elevation;
 		var f2f = floors[1].Elevation - f1.Elevation;
-		var mass = new Mass(new Profile(f1.Profile.Perimeter.Offset(0.001)[0]), f1.Elevation, height + f2f/3);
+		var et = new Elements.Geometry.Transform(new Elements.Geometry.Vector3(0,0,f1.Elevation));
+		var perim = f1.Profile.Perimeter.Offset(0.001)[0];
+		var mass = new Mass(new Profile(perim), height + f2f/3);
 		gridCount = 0;
-		foreach(var f in mass.Faces())
+		foreach(var f in perim.Segments())
 		{
-			var g = new Hypar.Elements.Grid(f, 4.0, f2f/3);
+			var top = new Line(new Elements.Geometry.Vector3(f.Start.X,f.Start.Y,f.Start.Z + height),
+													new Elements.Geometry.Vector3(f.End.X,f.End.Y,f.End.Z + height));
+			var g = new Elements.Grid(f, top, 4, f2f/3);
 			var cells = g.Cells();
 			gridCount += cells.Length;
 			for(var i=0;i<cells.GetLength(0); i++)
@@ -68,7 +72,7 @@ public class Facade : MonoBehaviour {
 						count = -1;
 					}
 					
-					var p1 = new Panel(c.Reverse().ToList().Shrink(0.025), m);
+					var p1 = new Panel(c.Reverse().ToArray().Shrink(0.025), m);
 					facade.AddElement(p1);
 				}
 			}

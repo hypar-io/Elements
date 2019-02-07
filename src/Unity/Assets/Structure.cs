@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hypar.Elements;
-using Hypar.Geometry;
+using Elements;
+using Elements.Geometry;
 using System.Linq;
-using Vector3 = Hypar.Geometry.Vector3;
+using Vector3 = Elements.Geometry.Vector3;
 
 public class Structure : MonoBehaviour {
 
@@ -55,11 +55,11 @@ public class Structure : MonoBehaviour {
 			var inset = f.Profile.Perimeter.Offset(-columnSetback);
 			foreach(var l in inset.First().Segments())
 			{
-				var divs = Mathf.Ceil((float)(l.Length/columnSpacing));
+				var divs = Mathf.Ceil((float)(l.Length()/columnSpacing));
 				for(var t=0.0; t<=1.0; t+=1.0/divs)
 				{
 					var pt = l.PointAt(t);
-					var column = new Column(new Vector3(pt.X,pt.Y,f.Elevation), f1.Elevation, Polygon.Rectangle(Vector3.Origin, 0.25,0.25), BuiltInMaterials.Concrete);
+					var column = new Column(new Vector3(pt.X,pt.Y,f.Elevation), f1.Elevation, new Profile(Polygon.Rectangle(0.25,0.25)), BuiltInMaterials.Concrete);
 					structure.AddElement(column);
 				}
 				yield return null;

@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hypar.Elements;
-using Hypar.Geometry;
+using Elements;
+using Elements.Geometry;
 using System.Linq;
-using Vector3 = Hypar.Geometry.Vector3;
+using Vector3 = Elements.Geometry.Vector3;
 
 public class Cores : MonoBehaviour {
 
@@ -36,19 +36,19 @@ public class Cores : MonoBehaviour {
 		var f1 = floors[floors.Count - 1];
 		var height = f1.Elevation - f.Elevation + 2;
 
-		var corePerim1 = f.ProfileTransformed.Voids[0];
-		var corePerim2 = f.ProfileTransformed.Voids[1];
-		var wallType = new WallType("200mm", 0.2);
-		foreach(var l in corePerim1.Segments())
-		{
-			var w = new Wall(l, wallType, height);
-			cores.AddElement(w);
-		}
-		foreach(var l in corePerim2.Segments())
-		{
-			var w = new Wall(l, wallType, height);
-			cores.AddElement(w);
-		}
+		// var corePerim1 = f.Openings[0].Perimeter;
+		// var corePerim2 = f.Openings[1].Perimeter;
+		// var wallType = new WallType("200mm", 0.2);
+		// foreach(var l in corePerim1.Segments())
+		// {
+		// 	var w = new Wall(l, wallType, height);
+		// 	cores.AddElement(w);
+		// }
+		// foreach(var l in corePerim2.Segments())
+		// {
+		// 	var w = new Wall(l, wallType, height);
+		// 	cores.AddElement(w);
+		// }
 		
 		if(next != null)
 		{

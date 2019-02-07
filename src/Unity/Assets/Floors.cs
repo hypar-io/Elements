@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hypar.Elements;
-using Hypar.Geometry;
+using Elements;
+using Elements.Geometry;
 using System.Linq;
-using Vector3 = Hypar.Geometry.Vector3;
+using Vector3 = Elements.Geometry.Vector3;
 
 public class Floors : MonoBehaviour {
 
@@ -137,8 +137,8 @@ public class Floors : MonoBehaviour {
 		var floorModel = new Model();
 
 		var poly = new Polygon(new[]{Vector3.Origin, new Vector3(l1,0,0), new Vector3(l1, width, 0), new Vector3(width, width, 0), new Vector3(width, l2, 0), new Vector3(0,l2,0)});
-		var coreHole1 = Polygon.Rectangle(new Vector3(l1,width/2), 3, 4);
-		var coreHole2 = Polygon.Rectangle(new Vector3(width/2, l2), 4, 3);
+		var coreHole1 = Polygon.Rectangle(3, 4, new Vector3(l1,width/2));
+		var coreHole2 = Polygon.Rectangle(4, 3, new Vector3(width/2, l2));
 		var profile = new Profile(poly,new[]{coreHole1, coreHole2});
 		
 		var floorType  = new FloorType("100mm", 0.1);
