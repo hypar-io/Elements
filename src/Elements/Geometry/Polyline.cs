@@ -2,7 +2,6 @@ using Elements.Geometry.Interfaces;
 using Elements.Serialization;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Elements.Geometry
@@ -39,9 +38,14 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate the length of the polygon.
         /// </summary>
-        public double Length()
+        public virtual double Length()
         {
-            return this.Segments().Sum(s => s.Length());
+            var length = 0.0;
+            for(var i=0; i<this._vertices.Length-1; i++)
+            {
+                length += this._vertices[i].DistanceTo(this._vertices[i+1]);
+            }
+            return length;
         }
 
         /// <summary>
@@ -91,7 +95,10 @@ namespace Elements.Geometry
         /// <returns>Returns a new polyline with opposite winding.</returns>
         public ICurve Reversed()
         {
-            return new Polyline(this._vertices.Reverse().ToArray());
+            Vector3[] revVerts = new Vector3[this._vertices.Length];
+            Array.Copy(this._vertices, revVerts, this._vertices.Length);
+            Array.Reverse(revVerts);
+            return new Polyline(revVerts);
         }
 
         /// <summary>
@@ -100,7 +107,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Join(",", this._vertices.ToList());
+            return string.Join<Vector3>(",", this._vertices);
         }
 
         /// <summary>
@@ -183,7 +190,15 @@ namespace Elements.Geometry
 
             // Check if the provided parameter is equal
             // to one of the vertices.
-            var a = this.Vertices.FirstOrDefault(vtx => vtx.Equals(o));
+            Vector3 a = null;
+            foreach(var v in this.Vertices)
+            {
+                if (v.Equals(o))
+                {
+                    a = v;
+                }
+            }
+
             if (a != null)
             {
                 var idx = Array.IndexOf(this.Vertices, a);
