@@ -468,11 +468,15 @@ namespace Elements
 
             var materials = gltf.AddMaterials(materialsToAdd);
 
+            var lines = new List<Vector3>();
+
             foreach (var kvp in this._elements)
             {
                 var e = kvp.Value;
-                GetRenderDataForElement(e, gltf, materials);
+                GetRenderDataForElement(e, gltf, materials, lines);
             }
+
+            AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], null);
 
             var buff = new glTFLoader.Schema.Buffer();
             buff.ByteLength = _buffer.Count();
@@ -481,7 +485,7 @@ namespace Elements
             return gltf;
         }
 
-        private void GetRenderDataForElement(IElement e, Gltf gltf, Dictionary<string, int> materials)
+        private void GetRenderDataForElement(IElement e, Gltf gltf, Dictionary<string, int> materials, List<Vector3> lines)
         {
             if (e is IGeometry3D)
             {
@@ -489,13 +493,18 @@ namespace Elements
 
                 Elements.Geometry.Mesh mesh = null;
 
-                var lines = new List<Vector3>();
-
                 foreach (var solid in geo.Geometry)
                 {
                     foreach (var edge in solid.Edges.Values)
                     {
-                        lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
+                        if(e.Transform != null)
+                        {
+                            lines.AddRange(new[] { e.Transform.OfVector(edge.Left.Vertex.Point), e.Transform.OfVector(edge.Right.Vertex.Point) });
+                        }
+                        else
+                        {
+                            lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
+                        }
                     }
 
                     mesh = new Elements.Geometry.Mesh();
@@ -504,8 +513,6 @@ namespace Elements
                                         mesh.Indices.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
                                         mesh.IMin, mesh.IMax, materials[solid.Material.Name], null, e.Transform);
                 }
-
-                AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], e.Transform);
             }
 
             if (e is IAggregateElement)
@@ -516,7 +523,7 @@ namespace Elements
                 {
                     foreach (var esub in ae.Elements)
                     {
-                        GetRenderDataForElement(esub, gltf, materials);
+                        GetRenderDataForElement(esub, gltf, materials, lines);
                     }
                 }
             }
