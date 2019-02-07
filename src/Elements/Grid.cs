@@ -1,8 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Geometry.Solids;
 using System;
-using System.Linq;
 
 namespace Elements
 {

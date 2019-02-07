@@ -1,10 +1,7 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Interfaces;
 using Elements.Serialization;
 using Elements.Geometry.Solids;
 
