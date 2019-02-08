@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Elements.Geometry;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Elements.Tests
@@ -10,14 +13,21 @@ namespace Elements.Tests
         public void Topography()
         {
             this.Name = "Topography";
-            var w = 100;
-            var elevations = new double[(int)Math.Pow(w+1,2)];
-            var r = new Random();
-            var attractor = new Vector3(10,10);
-            for(var i=0; i < elevations.Length; i++)
-            {
-                elevations[i] = r.NextDouble() * r.NextDouble();
-            }
+
+            // Create random elevations
+            // var w = 100;
+            // var elevations = new double[(int)Math.Pow(w+1,2)];
+            // var r = new Random();
+            // for(var i=0; i < elevations.Length; i++)
+            // {
+            //     elevations[i] = r.NextDouble() * r.NextDouble();
+            // }
+
+            // Read topo elevations
+            var w = 512/8 - 1;
+            var data = JsonConvert.DeserializeObject<Dictionary<string,double[]>>(File.ReadAllText("./elevations.json"));
+            var elevations = data["points"];
+            var d = (40075016.685578 / Math.Pow(2, 15))/w;
 
             Func<Vector3,Color> colorizer = n => {
                 var slope = n.AngleTo(Vector3.ZAxis);
@@ -40,7 +50,7 @@ namespace Elements.Tests
                 return Colors.Red;
             };
 
-            var topo = new Topography(Vector3.Origin, 0.5, 0.5, elevations, w, colorizer);
+            var topo = new Topography(Vector3.Origin, d, d, elevations, w, colorizer);
             this.Model.AddElement(topo);
         }
     }
