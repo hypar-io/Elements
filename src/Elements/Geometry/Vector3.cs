@@ -262,6 +262,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Divide a vector by a scalar.
+        /// </summary>
+        /// <param name="a">The scalar divisor.</param>
+        /// <param name="v">The vector to divide.</param>
+        /// <returns>A vector whose magnitude is mutiplied by a.</returns>
+        public static Vector3 operator /(Vector3 v, double a)
+        {
+            return new Vector3(v.X / a, v.Y / a, v.Z / a);
+        }
+
+        /// <summary>
         /// Subtract two vectors.
         /// </summary>
         /// <param name="a">The first vector.</param>
