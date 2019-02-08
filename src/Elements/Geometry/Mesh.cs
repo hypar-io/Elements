@@ -171,18 +171,9 @@ namespace Elements.Geometry
             AddVertex(a, an, color);
             AddVertex(b, bn, color);
             AddVertex(c, cn, color);
-
-            var start = (ushort)m_indices.Count;
-            this.m_indices.AddRange(new []{start,(ushort)(start+1),(ushort)(start+2)});
-            m_index_max = Math.Max(m_index_max, start);
-            m_index_max = Math.Max(m_index_max, (ushort)(start+1));
-            m_index_max = Math.Max(m_index_max, (ushort)(start+2));
-            m_index_min = Math.Min(m_index_min, start);
-            m_index_min = Math.Min(m_index_min, (ushort)(start+1));
-            m_index_min = Math.Min(m_index_min, (ushort)(start+2));
         }
 
-        internal void AddVertex(Vector3 v, Vector3 n, Color c = null)
+        internal int AddVertex(Vector3 v, Vector3 n, Color c = null)
         {
             var vArr = v.ToArray();
             var nArr = n.ToArray();
@@ -215,6 +206,13 @@ namespace Elements.Geometry
                 m_c_min[1] = Math.Min(m_c_min[1], cArr[1]);
                 m_c_min[2] = Math.Min(m_c_min[2], cArr[2]);
             }
+
+            var start = (ushort)m_indices.Count;
+            this.m_indices.Add(start);
+            m_index_max = Math.Max(m_index_max, start);
+            m_index_min = Math.Min(m_index_min, start);
+
+            return (this.m_vertices.Count/3)-1;
         }
 
         /// <summary>
