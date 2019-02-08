@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// An indexed mesh.
+    /// An indexed mesh used for storing data for gltf.
     /// </summary>
     public class Mesh
     {
@@ -26,12 +26,9 @@ namespace Elements.Geometry
         private float[] m_c_min = new float[]{float.MaxValue, float.MaxValue, float.MaxValue};
         private float[] m_c_max = new float[]{float.MinValue, float.MinValue, float.MinValue};
 
-        private ushort m_current_vertex_index = 0;
-
         /// <summary>
         /// The maximum vertex.
         /// </summary>
-        /// <returns></returns>
         public double[] VMax
         {
             get{return m_v_max;}
@@ -40,7 +37,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The minimum vertex.
         /// </summary>
-        /// <returns></returns>
         public double[] VMin
         {
             get{return m_v_min;}
@@ -49,7 +45,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The maximum normal.
         /// </summary>
-        /// <returns></returns>
         public double[] NMax
         {
             get{return m_n_max;}
@@ -79,11 +74,17 @@ namespace Elements.Geometry
             get{return m_index_min;}
         }
 
+        /// <summary>
+        /// The minimum color.
+        /// </summary>
         public float[] CMin
         {
             get{return m_c_min;}
         }
 
+        /// <summary>
+        /// The maximum color.
+        /// </summary>
         public float[] CMax
         {
             get{return m_c_max;}
@@ -149,29 +150,29 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="c"></param>
-        /// <param name="n"></param>
-        /// <param name="color"></param>
-        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Vector3 n = null, Func<Vector3,Color> colorizer = null)
+        /// <param name="an"></param>
+        /// <param name="bn"></param>
+        /// <param name="cn"></param>
+        /// <param name="colorizer">A function used to determine the color of the triangle. The function's sole argument is the normal of the triangle.</param>
+        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Vector3 an = null, Vector3 bn = null, Vector3 cn = null, Func<Vector3,Color> colorizer = null)
         {
-            if(n == null)
+            // Calculate the face normal
+            var v1 = b - a;
+            var v2 = c - a;
+            var n = v1.Cross(v2).Normalized();
+            if(Double.IsNaN(n.X) || Double.IsNaN(n.Y) || Double.IsNaN(n.Z))
             {
-                var v1 = b - a;
-                var v2 = c - a;
-                n = v1.Cross(v2).Normalized();
-                if(Double.IsNaN(n.X) || Double.IsNaN(n.Y) || Double.IsNaN(n.Z))
-                {
-                    Debug.WriteLine("Degenerate triangle found.");
-                    return;
-                }
+                Debug.WriteLine("Degenerate triangle found.");
+                return;
             }
 
             var color = colorizer(n);
             
-            AddVertex(a, n, color);
-            AddVertex(b, n, color);
-            AddVertex(c, n, color);
+            AddVertex(a, an, color);
+            AddVertex(b, bn, color);
+            AddVertex(c, cn, color);
 
-            var start = m_current_vertex_index;
+            var start = (ushort)m_indices.Count;
             this.m_indices.AddRange(new []{start,(ushort)(start+1),(ushort)(start+2)});
             m_index_max = Math.Max(m_index_max, start);
             m_index_max = Math.Max(m_index_max, (ushort)(start+1));
@@ -179,7 +180,6 @@ namespace Elements.Geometry
             m_index_min = Math.Min(m_index_min, start);
             m_index_min = Math.Min(m_index_min, (ushort)(start+1));
             m_index_min = Math.Min(m_index_min, (ushort)(start+2));
-            m_current_vertex_index += 3;
         }
 
         internal void AddVertex(Vector3 v, Vector3 n, Color c = null)
@@ -239,7 +239,7 @@ namespace Elements.Geometry
             AddVertex(vertices[2], n1);
             AddVertex(vertices[3], n1);
 
-            var start = m_current_vertex_index;
+            var start = (ushort)m_indices.Count;
             this.m_indices.AddRange(new[]{start,(ushort)(start+1),(ushort)(start+2),(ushort)(start),(ushort)(start+2),(ushort)(start+3)});
             m_index_max = Math.Max(m_index_max, start);
             m_index_max = Math.Max(m_index_max, (ushort)(start+1));
@@ -249,7 +249,6 @@ namespace Elements.Geometry
             m_index_min = Math.Min(m_index_min, (ushort)(start+1));
             m_index_min = Math.Min(m_index_min, (ushort)(start+2));
             m_index_min = Math.Min(m_index_min, (ushort)(start+3));
-            m_current_vertex_index += 4;
         }
 
         /// <summary>

@@ -19,12 +19,24 @@ namespace Elements
         }
     }
 
+    internal class Vertex
+    {
+        public Vector3 Point{get;}
+        public Vector3 Normal{get;set;}
+
+        public Vertex(Vector3 point)
+        {
+            this.Point = point;
+            this.Normal = Vector3.Origin;
+        }
+    }
+
     /// <summary>
     /// A topographic mesh defined by an array of elevation values.
     /// </summary>
     public class Topography : Element, ITessellate
     {
-        private Vector3[] _vertices;
+        private Vertex[] _vertices;
         private Triangle[] _triangles;
         private Func<Vector3, Color> _colorizer;
 
@@ -45,11 +57,11 @@ namespace Elements
         public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int width, Func<Vector3,Color> colorizer)
         {
             // Elevations a represented by *
-            // *--*--*--*
-            // |  |  |  |
-            // *--*--*--*
-            // |  |  |  |
-            // *--*--*--*
+            // *-*-*-*
+            // |/|/|/|
+            // *-*-*-*
+            // |/|/|/|
+            // *-*-*-*
 
             if (elevations.Length % (width + 1) != 0)
             {
@@ -58,7 +70,7 @@ namespace Elements
             this.Material = BuiltInMaterials.Topography;
             this._colorizer = colorizer;
 
-            this._vertices = new Vector3[elevations.Length];
+            this._vertices = new Vertex[elevations.Length];
             var triangles = (Math.Sqrt(elevations.Length) - 1) * width * 2;
             this._triangles = new Triangle[(int)triangles];
 
@@ -67,7 +79,7 @@ namespace Elements
             var t = 0;
             for (var i = 0; i < elevations.Length; i++)
             {
-                this._vertices[i] = origin + new Vector3(x * cellWidth, y * cellHeight, elevations[i]);
+                this._vertices[i] = new Vertex(origin + new Vector3(x * cellWidth, y * cellHeight, elevations[i]));
                 if (x == width)
                 {
                     x = 0;
@@ -94,6 +106,42 @@ namespace Elements
                     x++;
                 }
             }
+
+            x=0;
+            y=0;
+            for (var i = 0; i < elevations.Length; i++)
+            {
+                var v = this._vertices[i];
+                if (x == width)
+                {
+                    x = 0;
+                    y++;
+                }
+                else
+                {
+                    if (y > 0)
+                    {
+                        // Top triangle
+                        var a = this._vertices[i];
+                        var b = this._vertices[i - width];
+                        var c = this._vertices[i - (width + 1)];
+                        var p1 = new Plane(c.Point, b.Point, a.Point);
+                        a.Normal = ((a.Normal + p1.Normal)/2.0).Normalized();
+                        b.Normal = ((b.Normal + p1.Normal)/2.0).Normalized();
+                        c.Normal = ((c.Normal + p1.Normal)/2.0).Normalized();
+
+                        // Bottom triangle
+                        var d = this._vertices[i];
+                        var e = this._vertices[i + 1];
+                        var f = this._vertices[i - width];
+                        var p2 = new Plane(f.Point, e.Point, d.Point);
+                        d.Normal = ((d.Normal + p2.Normal)/2.0).Normalized();
+                        e.Normal = ((e.Normal + p2.Normal)/2.0).Normalized();
+                        f.Normal = ((f.Normal + p2.Normal)/2.0).Normalized();
+                    }
+                    x++;
+                }
+            }
         }
 
         /// <summary>
@@ -109,7 +157,7 @@ namespace Elements
                 var b = this._vertices[t.B];
                 var c = this._vertices[t.C];
                 
-                mesh.AddTriangle(a, b, c, null, _colorizer);
+                mesh.AddTriangle(a.Point, b.Point, c.Point, a.Normal, b.Normal, c.Normal, _colorizer);
             }
         }
     }
