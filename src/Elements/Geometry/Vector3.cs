@@ -14,9 +14,9 @@ namespace Elements.Geometry
         /// </summary>
         public static double Tolerance = 0.000000001;
 
-        private static Vector3 _xAxis = new Vector3(1,0,0);
-        private static Vector3 _yAxis = new Vector3(0,1,0);
-        private static Vector3 _zAxis = new Vector3(0,0,1);
+        private static Vector3 _xAxis = new Vector3(1, 0, 0);
+        private static Vector3 _yAxis = new Vector3(0, 1, 0);
+        private static Vector3 _zAxis = new Vector3(0, 0, 1);
         private static Vector3 _origin = new Vector3();
 
         /// <summary>
@@ -209,12 +209,13 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The angle in radians from this vector to another vector.
+        /// The angle in degrees from this vector to the provided vector.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
         public double AngleTo(Vector3 v)
         {
-            return Math.Acos((Dot(v) / (Length() * v.Length())));
+            var rad = Math.Acos((Dot(v) / (Length() * v.Length())));
+            return rad * 180 / Math.PI;
         }
 
         /// <summary>
@@ -459,14 +460,14 @@ namespace Elements.Geometry
             var a = points[0];
             var b = points[1];
             var c = points[2];
-            var ab = b-a;
-            var ac = c-a;
-            for(var i=3; i<points.Count; i++)
+            var ab = b - a;
+            var ac = c - a;
+            for (var i = 3; i < points.Count; i++)
             {
                 var d = points[i];
-                var cd = d-a;
+                var cd = d - a;
                 var tp = ab.Dot(ac.Cross(cd));
-                if(Math.Abs(tp) > Vector3.Tolerance)
+                if (Math.Abs(tp) > Vector3.Tolerance)
                 {
                     return false;
                 }

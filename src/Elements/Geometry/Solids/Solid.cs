@@ -17,7 +17,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid
+    public class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -320,7 +320,7 @@ namespace Elements.Geometry.Solids
         /// Triangulate this solid.
         /// </summary>
         /// <param name="mesh">The mesh to which the solid's tessellated data will be added.</param>
-        public virtual void Tessellate(ref Mesh mesh)
+        public void Tessellate(ref Mesh mesh)
         {
             foreach (var f in this.Faces.Values)
             {

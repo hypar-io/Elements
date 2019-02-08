@@ -366,6 +366,12 @@ namespace Elements
                 }
             }
 
+            if(element is ITessellate)
+            {
+                var tess = (ITessellate)element;
+                AddMaterial(tess.Material);
+            }
+
             if (element is IProfileProvider)
             {
                 var ipp = (IProfileProvider)element;
@@ -476,7 +482,10 @@ namespace Elements
                 GetRenderDataForElement(e, gltf, materials, lines);
             }
 
-            AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], null);
+            if(lines.Count() > 0)
+            {
+                AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], null);
+            }
 
             var buff = new glTFLoader.Schema.Buffer();
             buff.ByteLength = _buffer.Count();
@@ -510,9 +519,19 @@ namespace Elements
                     mesh = new Elements.Geometry.Mesh();
                     solid.Tessellate(ref mesh);
                     gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                        mesh.Indices.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
-                                        mesh.IMin, mesh.IMax, materials[solid.Material.Name], null, e.Transform);
+                                        mesh.Indices.ToArray(), mesh.Colors.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
+                                        mesh.IMin, mesh.IMax, materials[solid.Material.Name], mesh.CMin, mesh.CMax, null, e.Transform);
                 }
+            }
+
+            if (e is ITessellate)
+            {
+                var geo = (ITessellate)e;
+                var mesh = new Elements.Geometry.Mesh();
+                geo.Tessellate(ref mesh);
+                gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
+                                        mesh.Indices.ToArray(), mesh.Colors.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
+                                        mesh.IMin, mesh.IMax, materials[geo.Material.Name], mesh.CMin, mesh.CMax, null, e.Transform);
             }
 
             if (e is IAggregateElement)

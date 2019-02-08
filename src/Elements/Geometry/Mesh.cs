@@ -13,6 +13,7 @@ namespace Elements.Geometry
         private List<double> m_vertices = new List<double>();
         private List<double> m_normals = new List<double>();
         private List<ushort> m_indices = new List<ushort>();
+        private List<float> m_colors = new List<float>();
 
         private ushort m_index_max;
         private ushort m_index_min;
@@ -22,6 +23,8 @@ namespace Elements.Geometry
         private double[] m_n_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
         private double[] m_n_min = new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
 
+        private float[] m_c_min = new float[]{float.MaxValue, float.MaxValue, float.MaxValue};
+        private float[] m_c_max = new float[]{float.MinValue, float.MinValue, float.MinValue};
 
         private ushort m_current_vertex_index = 0;
 
@@ -76,6 +79,16 @@ namespace Elements.Geometry
             get{return m_index_min;}
         }
 
+        public float[] CMin
+        {
+            get{return m_c_min;}
+        }
+
+        public float[] CMax
+        {
+            get{return m_c_max;}
+        }
+
         /// <summary>
         /// The vertices of the mesh.
         /// </summary>
@@ -101,6 +114,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// The colors of the mesh.
+        /// </summary>
+        public List<float> Colors
+        {
+            get{return m_colors;}
+        }
+
+        /// <summary>
         /// Construct an empty mesh.
         /// </summary>
         public Mesh()
@@ -114,7 +135,8 @@ namespace Elements.Geometry
         /// <param name="vertices">An array containing doubles of the form [x1, y1, z1, x2, y2, z2...].</param>
         /// <param name="normals">An array containing doubles of the form [nx1, ny1, nz1, nx2, ny2, nz2...]</param>
         /// <param name="indices">An array containing integers of the form [0, 1, 2, 0, 2, 3...].</param>
-        public Mesh(double[] vertices, double[] normals, ushort[] indices)
+        /// <param name="colors">An array containing floats of the form [r,g,b,r,g,b...]</param>
+        public Mesh(double[] vertices, double[] normals, ushort[] indices, float[] colors)
         {
             this.m_vertices.AddRange(vertices);
             this.m_normals.AddRange(normals);
@@ -128,7 +150,8 @@ namespace Elements.Geometry
         /// <param name="b"></param>
         /// <param name="c"></param>
         /// <param name="n"></param>
-        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Vector3 n = null)
+        /// <param name="color"></param>
+        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Vector3 n = null, Func<Vector3,Color> colorizer = null)
         {
             if(n == null)
             {
@@ -142,9 +165,11 @@ namespace Elements.Geometry
                 }
             }
 
-            AddVertex(a, n);
-            AddVertex(b, n);
-            AddVertex(c, n);
+            var color = colorizer(n);
+            
+            AddVertex(a, n, color);
+            AddVertex(b, n, color);
+            AddVertex(c, n, color);
 
             var start = m_current_vertex_index;
             this.m_indices.AddRange(new []{start,(ushort)(start+1),(ushort)(start+2)});
@@ -157,23 +182,14 @@ namespace Elements.Geometry
             m_current_vertex_index += 3;
         }
 
-        /// <summary>
-        /// Add a triangle to the mesh.
-        /// </summary>
-        /// <param name="v"></param>
-        internal void AddTriangle(IList<Vector3> v)
-        {
-            AddTriangle(v[0], v[1], v[2]);
-        }
-
-        internal void AddVertex(Vector3 v, Vector3 n)
+        internal void AddVertex(Vector3 v, Vector3 n, Color c = null)
         {
             var vArr = v.ToArray();
             var nArr = n.ToArray();
-        
-            this.m_vertices.AddRange(v.ToArray());
-            this.m_normals.AddRange(n.ToArray());
             
+            this.m_vertices.AddRange(vArr);
+            this.m_normals.AddRange(nArr);
+
             m_v_max[0] = Math.Max(m_v_max[0], vArr[0]);
             m_v_max[1] = Math.Max(m_v_max[1], vArr[1]);
             m_v_max[2] = Math.Max(m_v_max[2], vArr[2]);
@@ -187,6 +203,18 @@ namespace Elements.Geometry
             m_n_min[0] = Math.Min(m_n_min[0], nArr[0]);
             m_n_min[1] = Math.Min(m_n_min[1], nArr[1]);
             m_n_min[2] = Math.Min(m_n_min[2], nArr[2]);
+
+            if(c != null)
+            {
+                var cArr = c.ToArray();
+                this.m_colors.AddRange(cArr);
+                m_c_max[0] = Math.Max(m_c_max[0], cArr[0]);
+                m_c_max[1] = Math.Max(m_c_max[1], cArr[1]);
+                m_c_max[2] = Math.Max(m_c_max[2], cArr[2]);
+                m_c_min[0] = Math.Min(m_c_min[0], cArr[0]);
+                m_c_min[1] = Math.Min(m_c_min[1], cArr[1]);
+                m_c_min[2] = Math.Min(m_c_min[2], cArr[2]);
+            }
         }
 
         /// <summary>
