@@ -256,8 +256,8 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Add an edge to the solid.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="from">The start vertex.</param>
+        /// <param name="to">The end vertex.</param>
         /// <returns>The newly added edge.</returns>
         public Edge AddEdge(Vertex from, Vertex to)
         {
@@ -301,6 +301,20 @@ namespace Elements.Geometry.Solids
             }
             return loop;
         }
+        
+        /// <summary>
+        /// Slice a solid with the provided plane.
+        /// </summary>
+        /// <param name="p">The plane to be used to slice this solid.</param>
+        public void Slice(Plane p)
+        {
+            var keys = new List<long>(this.Edges.Keys);
+            foreach(var key in keys)
+            {
+                var e = this.Edges[key];
+                SplitEdge(p, e);
+            }
+        }
 
         /// <summary>
         /// Get the string representation of the solid.
@@ -312,6 +326,10 @@ namespace Elements.Geometry.Solids
             foreach(var e in Edges)
             {
                 sb.AppendLine($"Edge: {e.ToString()}");
+            }
+            foreach(var f in Faces.Values)
+            {
+                sb.AppendLine($"Face: {f.ToString()}");
             }
             return sb.ToString();
         }
@@ -541,6 +559,34 @@ namespace Elements.Geometry.Solids
                 openEdge.AddEdgeToEnd(c.Right);
             }
             return openEdge;
+        }
+    
+        private void SplitEdge(Plane p, Edge e)
+        {
+            var start = e.Left.Vertex;
+            var end = e.Right.Vertex;
+            var xsect = new Line(start.Point, end.Point).Intersect(p);
+            if(xsect == null)
+            {
+                return;
+            }
+
+            // Add vertex at intersection.
+            // Create new edge from vertex to end.
+            var mid = AddVertex(xsect);
+            var e1 = AddEdge(mid, end);
+
+            // Adjust end of existing edge to
+            // new vertex
+            e.Right.Vertex = mid;
+            if(e.Left.Loop != null)
+            {
+                e.Left.Loop.InsertEdgeAfter(e.Left, e1.Left);
+            }
+            if(e.Right.Loop != null)
+            {
+                e.Right.Loop.InsertEdgeBefore(e.Right, e1.Right);
+            }
         }
     }
 }
