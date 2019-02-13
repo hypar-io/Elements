@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Elements.Geometry;
 using Newtonsoft.Json;
@@ -9,6 +10,22 @@ namespace Elements.Tests
 {
     public class TopographyTests: ModelTest
     {
+        [Fact]
+        public void Simple()
+        {
+            this.Name = "TopographySimple";
+            var elevations = new double[]{0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05, 0.2, 0.5, 0.6};
+            var colorizer = new Func<Triangle,Vector3,Color>((t,v)=>{
+                return Colors.Green;
+            });
+            var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 3, colorizer);
+            this.Model.AddElement(topo);
+
+            var mass = new Mass(Polygon.Rectangle(0.75,1.0, new Vector3(2,1)), 3);
+            topo.Subtract(mass);
+            this.Model.AddElement(mass);
+        }
+
         [Fact]
         public void Topography()
         {
@@ -43,23 +60,36 @@ namespace Elements.Tests
                 return Colors.Red;
             };
 
+            var sw = new Stopwatch();
+            sw.Start();
+
             var topo = new Topography(Vector3.Origin, d, d, elevations, w, colorizer);
+
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms to create topography.");
+            sw.Reset();
+
             this.Model.AddElement(topo);
 
-            var ngon = Polygon.Ngon(5, 200);
+            var ngon = Polygon.Ngon(5, 100);
+            var rand = new Random();
 
-            var t = new Transform();
-            t.Move(new Vector3(700,0,topo.MinElevation));
-            t.Rotate(Vector3.ZAxis, 33.0);
-            var mass = new Mass(new Profile(ngon), 500, BuiltInMaterials.Mass, t);
-            this.Model.AddElement(mass);
-            topo.Subtract(mass);
-
-            var t1 = new Transform();
-            t1.Move(new Vector3(900,0,topo.MinElevation));
-            var mass1 = new Mass(ngon, 500, BuiltInMaterials.Mass, t1);
-            this.Model.AddElement(mass1);
-            topo.Subtract(mass1);
+            for(var i=0.0; i<1500; i+= 200.0)
+            {
+                for(var j=0.0; j<1500; j+= 200.0)
+                {
+                    sw.Start();
+                    var t = new Transform();
+                    t.Rotate(Vector3.ZAxis, rand.NextDouble()*360.0);
+                    t.Move(new Vector3(i,j,topo.MinElevation));
+                    var mass = new Mass(new Profile(ngon), 500, BuiltInMaterials.Mass, t);
+                    // this.Model.AddElement(mass);
+                    topo.Subtract(mass);
+                    sw.Stop();
+                    Console.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms to subtract.");
+                    sw.Reset();
+                }
+            }
         }
     }
 }
