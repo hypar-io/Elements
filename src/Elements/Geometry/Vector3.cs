@@ -172,8 +172,19 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">Thy y coordinate of the vector.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if any components of the vector are NaN or Infinity.</exception>
         public Vector3(double x, double y)
         {
+            if(Double.IsNaN(x) || Double.IsNaN(y))
+            {
+                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
+            }
+
+            if(Double.IsInfinity(x) || Double.IsInfinity(y))
+            {
+                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
+            }
+
             this.X = x;
             this.Y = y;
         }
