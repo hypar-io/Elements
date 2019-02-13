@@ -326,13 +326,20 @@ namespace Elements
                 tess.AddContour(contour2);
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
-                for (var i = 0; i < tess.ElementCount; i++)
+                try
                 {
-                    var a = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3]].Position.ToVector3());
-                    var b = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3());
-                    var c = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3());
-                    var clipTriangle = new Triangle(a,b,c);
-                    this._triangles.Add(clipTriangle);
+                    for (var i = 0; i < tess.ElementCount; i++)
+                    {
+                        var a = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3]].Position.ToVector3());
+                        var b = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3());
+                        var c = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3());
+                        var clipTriangle = new Triangle(a,b,c);
+                        this._triangles.Add(clipTriangle);
+                    }
+                }
+                catch(ArgumentOutOfRangeException ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
             }
 
@@ -345,9 +352,7 @@ namespace Elements
                     area < Vector3.Tolerance ||
                     t.Normal.IsNaN())
                 {
-                    Console.WriteLine("Found one.");
                     this._triangles.RemoveAt(i);
-                    continue;
                 }
             }
         }
