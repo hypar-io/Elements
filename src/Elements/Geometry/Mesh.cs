@@ -153,8 +153,10 @@ namespace Elements.Geometry
         /// <param name="an"></param>
         /// <param name="bn"></param>
         /// <param name="cn"></param>
-        /// <param name="colorizer">A function used to determine the color of the triangle. The function's sole argument is the normal of the triangle.</param>
-        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Vector3 an = null, Vector3 bn = null, Vector3 cn = null, Func<Vector3,Color> colorizer = null)
+        /// <param name="ac"></param>
+        /// <param name="bc"></param>
+        /// <param name="cc"></param>
+        internal void AddTriangle(Vector3 a, Vector3 b, Vector3 c, Vector3 an = null, Vector3 bn = null, Vector3 cn = null, Color ac = null, Color bc = null, Color cc = null)
         {
             // Calculate the face normal
             var v1 = b - a;
@@ -166,11 +168,13 @@ namespace Elements.Geometry
                 return;
             }
 
-            var color = colorizer(n);
-            
-            AddVertex(a, an, color);
-            AddVertex(b, bn, color);
-            AddVertex(c, cn, color);
+            an = an == null ? n : an;
+            bn = bn == null ? n : bn;
+            cn = cn == null ? n : cn;
+
+            AddVertex(a, an, ac);
+            AddVertex(b, bn, bc);
+            AddVertex(c, cn, cc);
         }
 
         internal int AddVertex(Vector3 v, Vector3 n, Color c = null)
