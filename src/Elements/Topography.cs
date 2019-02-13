@@ -6,6 +6,7 @@ using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -17,8 +18,14 @@ namespace Elements
         /// <summary>
         /// The triangle's vertices.
         /// </summary>
+        [JsonProperty("vertices")]
         public Vertex[] Vertices{get;}
-   
+
+        /// <summary>
+        /// The triangle's normal.
+        /// </summary>
+        public Vector3 Normal{get;}
+
         /// <summary>
         /// Create a triangle.
         /// </summary>
@@ -34,6 +41,26 @@ namespace Elements
             a.Normal = ((a.Normal + p1.Normal) / 2.0).Normalized();
             b.Normal = ((b.Normal + p1.Normal) / 2.0).Normalized();
             c.Normal = ((c.Normal + p1.Normal) / 2.0).Normalized();
+            
+            this.Normal = p1.Normal;
+        }
+
+        [JsonConstructor]
+        internal Triangle(Vertex[] vertices)
+        {
+            this.Vertices = vertices;
+
+            var a = this.Vertices[0];
+            var b = this.Vertices[1];
+            var c = this.Vertices[2];
+
+            // Bend the normals for the associated vertices.
+            var p1 = new Plane(a.Position, b.Position, c.Position);
+            a.Normal = ((a.Normal + p1.Normal) / 2.0).Normalized();
+            b.Normal = ((b.Normal + p1.Normal) / 2.0).Normalized();
+            c.Normal = ((c.Normal + p1.Normal) / 2.0).Normalized();
+            
+            this.Normal = p1.Normal;
         }
 
         /// <summary>
@@ -79,11 +106,13 @@ namespace Elements
         /// <summary>
         /// The position of the vertex.
         /// </summary>
+        [JsonProperty("position")]
         public Vector3 Position { get; }
 
         /// <summary>
         /// The vertex's normal.
         /// </summary>
+        [JsonIgnore]
         public Vector3 Normal { get; set; }
 
         /// <summary>
@@ -113,26 +142,31 @@ namespace Elements
         /// <summary>
         /// The maximum elevation of the topography.
         /// </summary>
+        [JsonProperty("max_elevation")]
         public double MaxElevation => _maxElevation;
 
         /// <summary>
         /// The minimum elevation of the topography.
         /// </summary>
+        [JsonProperty("min_elevation")]
         public double MinElevation => _minElevation;
 
         /// <summary>
         /// The topography's vertices.
         /// </summary>
+        [JsonProperty("vertices")]
         public List<Vertex> Vertices => _vertices;
 
         /// <summary>
         /// The topography's triangles.
         /// </summary>
+        [JsonProperty("triangles")]
         public List<Triangle> Triangles => _triangles;
 
         /// <summary>
         /// The material of the topography.
         /// </summary>
+        [JsonProperty("material")]
         public Material Material { get; }
 
         /// <summary>
@@ -157,6 +191,11 @@ namespace Elements
             {
                 throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be equally divisible by the width plus one, {width}.");
             }
+            if(colorizer == null)
+            {
+                throw new ArgumentNullException("The topography could not be created. You must supply a colorizer function.");
+            }
+            
             this.Material = BuiltInMaterials.Topography;
             this._colorizer = colorizer;
 
@@ -215,6 +254,13 @@ namespace Elements
                 }
             }
         }
+        
+        [JsonConstructor]
+        internal Topography(List<Vertex> vertices, List<Triangle> triangles)
+        {
+            this._vertices = vertices;
+            this._triangles = triangles;
+        }
 
         /// <summary>
         /// Subtract the provided mass from this topography.
@@ -262,9 +308,14 @@ namespace Elements
 
                 foreach(var f in solid.Faces.Values)
                 {
-                    var fp = transform.OfPlane(f.Plane());
+                    var fp = f.Plane();
+                    if(transform != null)
+                    {
+                        fp = transform.OfPlane(fp);
+                    }
                     input = SutherlandHodgman(input, fp, transform);
                 }
+
                 var contour1 = t.ToContourVertexArray();
                 input.Reverse();
                 var contour2 = input.ToContourVertexArray();
@@ -288,12 +339,15 @@ namespace Elements
             for(var i=this._triangles.Count - 1; i>=0; i--)
             {
                 var t = this._triangles[i];
-                var a = t.Area();
-                if(a == 0.0 || double.IsNaN(a) || a < Vector3.Tolerance)
+                var area = t.Area();
+                if(area == 0.0 || 
+                    double.IsNaN(area) || 
+                    area < Vector3.Tolerance ||
+                    t.Normal.IsNaN())
                 {
-                    // Console.WriteLine(a);
-                    // Console.WriteLine("Found one.");
+                    Console.WriteLine("Found one.");
                     this._triangles.RemoveAt(i);
+                    continue;
                 }
             }
         }
@@ -409,6 +463,21 @@ namespace Elements
             return output;
         }
 
+        private bool IsInvalid(Vertex v)
+        {
+            if(v.Position.IsNaN())
+            {
+                return true;
+            }
+
+            if(v.Normal.IsNaN())
+            {
+                return true;
+            }
+
+            return false;
+        }
+        
         /// <summary>
         /// Tessellate the topography.
         /// </summary>
@@ -421,6 +490,24 @@ namespace Elements
                 var a = t.Vertices[0];
                 var b = t.Vertices[1];
                 var c = t.Vertices[2];
+
+                if(IsInvalid(a))
+                {
+                    Console.WriteLine($"NaN triangle position found at {a.Position}");
+                    continue;
+                }
+
+                if(IsInvalid(b))
+                {
+                    Console.WriteLine($"NaN triangle position found at {b.Position}");
+                    continue;
+                }
+
+                if(IsInvalid(c))
+                {
+                    Console.WriteLine($"NaN triangle position found at {c.Position}");
+                    continue;
+                }
 
                 var ac = _colorizer(t, a.Normal);
                 var bc = _colorizer(t, b.Normal);
