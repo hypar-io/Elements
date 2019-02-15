@@ -2,7 +2,6 @@ using LibTessDotNet.Double;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -22,10 +21,7 @@ namespace Elements.Geometry
         private double[] m_v_min= new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
         private double[] m_n_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
         private double[] m_n_min = new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
-        private double[] m_c_max = new double[4]{double.MinValue, double.MinValue, double.MinValue, double.MaxValue};
-        private double[] m_c_min = new double[4]{double.MinValue, double.MinValue, double.MinValue, double.MinValue};
 
-        private List<float> m_vertex_colors = new List<float>();
 
         private ushort m_current_vertex_index = 0;
 
@@ -59,34 +55,14 @@ namespace Elements.Geometry
         /// <summary>
         /// The minimum normal.
         /// </summary>
-        /// <returns></returns>
         public double[] NMin
         {
             get{return m_n_min;}
         }
 
         /// <summary>
-        /// The maximum color.
-        /// </summary>
-        /// <returns></returns>
-        public double[] CMax
-        {
-            get{return m_c_max;}
-        }
-
-        /// <summary>
-        /// The minimum color.
-        /// </summary>
-        /// <returns></returns>
-        public double[] CMin
-        {
-            get{return m_c_min;}
-        }
-
-        /// <summary>
         /// The maximum index.
         /// </summary>
-        /// <returns></returns>
         public ushort IMax
         {
             get{return m_index_max;}
@@ -95,7 +71,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The minimum index.
         /// </summary>
-        /// <returns></returns>
         public ushort IMin
         {
             get{return m_index_min;}
@@ -104,8 +79,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The vertices of the mesh.
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<double> Vertices
+        public List<double> Vertices
         {
             get{return m_vertices;}
         }
@@ -113,8 +87,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The normals of the mesh.
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<double> Normals
+        public List<double> Normals
         {
             get{return m_normals;}
         }
@@ -122,19 +95,9 @@ namespace Elements.Geometry
         /// <summary>
         /// The indices of the mesh.
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<ushort> Indices
+        public List<ushort> Indices
         {
             get{return m_indices;}
-        }
-
-        /// <summary>
-        /// The vertex colors of the mesh.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<float> VertexColors
-        {
-            get{return m_vertex_colors;}
         }
 
         /// <summary>
@@ -261,32 +224,6 @@ namespace Elements.Geometry
             m_current_vertex_index += 4;
         }
 
-        internal static Tess TessFromPolygons(Polygon[] polygons)
-        {
-            var tess = new Tess();
-            tess.NoEmptyPolygons = true;
-
-            foreach(var p in polygons)
-            {
-                AddContour(tess, p);
-            }
-
-            return tess;
-        }
-
-        internal static void AddContour(Tess tess, Polygon p)
-        {
-            var numPoints = p.Vertices.Length;
-            var contour = new ContourVertex[numPoints];
-            for(var i=0; i<numPoints; i++)
-            {
-                var v = p.Vertices[i];
-                contour[i].Position = new Vec3{X=v.X, Y=v.Y, Z=v.Z};
-            }
-
-            tess.AddContour(contour);
-        }
-        
         /// <summary>
         /// Get a string representation of the mesh.
         /// </summary>
@@ -297,39 +234,12 @@ namespace Elements.Geometry
 Vertices:{m_vertices.Count/3}, 
 Normals:{m_normals.Count/3}, 
 Indices:{m_indices.Count}, 
-VMax:{string.Join(",", m_v_max.Select(v=>v.ToString()))}, 
-VMin:{string.Join(",", m_v_min.Select(v=>v.ToString()))}, 
-NMax:{string.Join(",", m_n_max.Select(v=>v.ToString()))}, 
-NMin:{string.Join(",", m_n_min.Select(v=>v.ToString()))}, 
+VMax:{string.Join(",", m_v_max)}, 
+VMin:{string.Join(",", m_v_min)}, 
+NMax:{string.Join(",", m_n_max)}, 
+NMin:{string.Join(",", m_n_min)}, 
 IMax:{m_index_max}, 
 IMin:{m_index_min}";
-        }
-
-        /// <summary>
-        /// Create a ruled loft between sections.
-        /// </summary>
-        /// <param name="sections"></param>
-        public static Mesh Loft(IList<Polygon> sections)
-        {
-            var mesh = new Elements.Geometry.Mesh();
-
-            for(var i=0; i<sections.Count; i++)
-            {
-                var p1 = sections[i];
-                var p2 = i == sections.Count-1 ? sections[0] : sections[i+1];
-
-                for(var j=0; j<p1.Vertices.Length; j++)
-                {
-                    var j1 = j == p1.Vertices.Length - 1 ? 0 : j+1;
-                    var v1 = p1.Vertices[j];
-                    var v2 = p1.Vertices[j1];
-                    var v3 = p2.Vertices[j1];
-                    var v4 = p2.Vertices[j];
-                    mesh.AddQuad(new []{v1,v2,v3,v4});
-                }
-            }
-
-            return mesh;
         }
     }
 

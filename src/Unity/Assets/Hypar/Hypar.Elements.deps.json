@@ -1,21 +1,30 @@
 {
   "runtimeTarget": {
     "name": ".NETStandard,Version=v2.0/",
-    "signature": "5e63fd66b0310fcaa69711f3136b50098f006fed"
+    "signature": "565c470a6ca82af8372b1600720e60403b31fbe1"
   },
   "compilationOptions": {},
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Hypar.SDK/0.0.2-alpha11": {
+      "Hypar.Elements/0.2.1": {
         "dependencies": {
+          "Hypar.IFC": "0.0.4",
           "NETStandard.Library": "2.0.3",
           "Newtonsoft.Json": "11.0.2",
           "Unofficial.LibTessDotNet": "2.0.0",
           "glTF2Loader": "1.1.1-alpha"
         },
         "runtime": {
-          "Hypar.SDK.dll": {}
+          "Hypar.Elements.dll": {}
+        }
+      },
+      "Antlr4.Runtime.Standard/4.7.1": {
+        "runtime": {
+          "lib/netstandard/Antlr4.Runtime.Core.dll": {
+            "assemblyVersion": "4.7.0.0",
+            "fileVersion": "4.7.0.0"
+          }
         }
       },
       "glTF2Loader/1.1.1-alpha": {
@@ -27,6 +36,18 @@
           "lib/netstandard1.3/glTFLoader.dll": {
             "assemblyVersion": "1.1.1.0",
             "fileVersion": "1.1.1.0"
+          }
+        }
+      },
+      "Hypar.IFC/0.0.4": {
+        "dependencies": {
+          "Antlr4.Runtime.Standard": "4.7.1",
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hypar.IFC.dll": {
+            "assemblyVersion": "0.0.4.0",
+            "fileVersion": "0.0.4.0"
           }
         }
       },
@@ -55,10 +76,17 @@
     }
   },
   "libraries": {
-    "Hypar.SDK/0.0.2-alpha11": {
+    "Hypar.Elements/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Antlr4.Runtime.Standard/4.7.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xCf8wvtksc/UFbifyPSNlthnVCRqQSA4qOGgES5tb1sW/dGBb9rRU8019vfyWK5oiadqQxVabcSlfAZ0lM9C4A==",
+      "path": "antlr4.runtime.standard/4.7.1",
+      "hashPath": "antlr4.runtime.standard.4.7.1.nupkg.sha512"
     },
     "glTF2Loader/1.1.1-alpha": {
       "type": "package",
@@ -67,10 +95,17 @@
       "path": "gltf2loader/1.1.1-alpha",
       "hashPath": "gltf2loader.1.1.1-alpha.nupkg.sha512"
     },
+    "Hypar.IFC/0.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PDG8oXVg5PHPhMtSrF2j+JYnvTNoKLoqP+qLmb7GBMDyosQ0ZI3Myoi62zy2wrEdWrrchkjvYFcXlBN1ZQlhug==",
+      "path": "hypar.ifc/0.0.4",
+      "hashPath": "hypar.ifc.0.0.4.nupkg.sha512"
+    },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "sha512": "sha512-bLpT1f/SFlO1CzqXG12KnJzpZs6lv24uX2Rzi4Fmm0noJpNlnWRVryuO3yK18Ca04t/YHcO1e1Z0WDfjseqNzw==",
       "path": "microsoft.netcore.platforms/1.1.0",
       "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
     },
@@ -84,7 +119,7 @@
     "Newtonsoft.Json/11.0.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
+      "sha512": "sha512-znZGbws7E4BA9jxNZ7FuiIRI3C9hrgatVQSTKhIYZYNOud4M5VfGlTYi6RdYO5sQrebFuF/g9UEV3hOxDMXF6Q==",
       "path": "newtonsoft.json/11.0.2",
       "hashPath": "newtonsoft.json.11.0.2.nupkg.sha512"
     },

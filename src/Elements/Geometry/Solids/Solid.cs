@@ -315,7 +315,41 @@ namespace Elements.Geometry.Solids
             }
             return sb.ToString();
         }
-    
+        
+        /// <summary>
+        /// Triangulate this solid.
+        /// </summary>
+        /// <param name="mesh">The mesh to which the solid's tessellated data will be added.</param>
+        public virtual void Tessellate(ref Mesh mesh)
+        {
+            foreach (var f in this.Faces.Values)
+            {
+                var tess = new Tess();
+                tess.NoEmptyPolygons = true;
+
+                tess.AddContour(f.Outer.ToContourVertexArray(f));
+
+                if (f.Inner != null)
+                {
+                    foreach (var loop in f.Inner)
+                    {
+                        tess.AddContour(loop.ToContourVertexArray(f));
+                    }
+                }
+
+                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+
+                for (var i = 0; i < tess.ElementCount; i++)
+                {
+                    var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
+                    var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
+                    var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
+
+                    mesh.AddTriangle(a, b, c);
+                }
+            }
+        }
+        
         /// <summary>
         /// Create a face from edges.
         /// The first edge array is treated as the outer edge.
@@ -394,43 +428,6 @@ namespace Elements.Geometry.Solids
             var e = new Edge(id);
             this.Edges.Add(id, e);
             return e;
-        }
-
-        internal virtual void Tessellate(ref Mesh mesh)
-        {
-            foreach (var f in this.Faces.Values)
-            {
-                var tess = new Tess();
-                tess.NoEmptyPolygons = true;
-
-                tess.AddContour(f.Outer.ToContourVertexArray(f));
-
-                if (f.Inner != null)
-                {
-                    foreach (var loop in f.Inner)
-                    {
-                        tess.AddContour(loop.ToContourVertexArray(f));
-                    }
-                }
-
-                // try
-                // {
-                    tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-                // }
-                // catch
-                // {
-                //     continue;
-                // }
-
-                for (var i = 0; i < tess.ElementCount; i++)
-                {
-                    var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
-                    var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
-                    var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
-
-                    mesh.AddTriangle(a, b, c);
-                }
-            }
         }
     
         internal Edge[] SweepEdges(Transform[] transforms, Edge[] openEdge)

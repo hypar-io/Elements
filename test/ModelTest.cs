@@ -7,6 +7,7 @@ using Xunit;
 using Xunit.Sdk;
 using Elements.Geometry;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Elements.Tests
 {
@@ -44,10 +45,14 @@ namespace Elements.Tests
                 {
                     Directory.CreateDirectory("models");
                 }
+                var sw = new Stopwatch();
+                sw.Start();
+
                 // Write the model as a glb
                 var modelPath = $"models/{this._name}.glb";
-                Console.WriteLine($"Saving {this._name} to glb: {modelPath}.");
                 this._model.SaveGlb($"models/{this._name}.glb");
+                sw.Stop();
+                Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed.TotalMilliseconds}ms)");
 
                 // Write the model as json
                 var jsonPath = $"models/{this._name}.json";

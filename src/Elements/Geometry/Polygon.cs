@@ -605,6 +605,20 @@ namespace Elements.Geometry
         {
             return string.Join(", ", this._vertices.Select(v=>v.ToString()));
         }
+
+        /// <summary>
+        /// Calculate the length of the polygon.
+        /// </summary>
+        public override double Length()
+        {
+            var length = 0.0;
+            for(var i=0; i<this._vertices.Length; i++)
+            {
+                var next = i == this._vertices.Length - 1 ? 0 : i+1;
+                length += this._vertices[i].DistanceTo(this._vertices[next]);
+            }
+            return length;
+        }
     }
 
     /// <summary>
