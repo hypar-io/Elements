@@ -4,9 +4,13 @@
 ### Added
 - The `Topography` class has been added.
 - `Transform.OfPoint(Vector3 vector)` has been added to transform a vector as a point with translation. This was previously `Transform.OfVector(Vector3 vector)`. All sites previously using `OfVector(...)` are now using `OfPoint(...)`.
-
+- `Material.DoubleSided`
+- `Loop.InsertEdgeAfter()`
+- `Solid.Slice()`
 ### Changed
 - `Transform.OfVector(Vector3 vector)` now does proper vector transformation without translation.
+- Attempting to construct a `Vector3` with NaN or Infinite arguments will throw an `ArgumentOutOfRangeException`.
+
 
 ## [0.2.0] - 2019-01-31
 ### Added

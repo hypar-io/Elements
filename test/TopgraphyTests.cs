@@ -71,25 +71,25 @@ namespace Elements.Tests
 
             this.Model.AddElement(topo);
 
-            var ngon = Polygon.Ngon(5, 100);
-            var rand = new Random();
+            // var ngon = Polygon.Ngon(5, 100);
+            // var rand = new Random();
 
-            for(var i=0.0; i<1500; i+= 200.0)
-            {
-                for(var j=0.0; j<1500; j+= 200.0)
-                {
-                    sw.Start();
-                    var t = new Transform();
-                    t.Rotate(Vector3.ZAxis, rand.NextDouble()*360.0);
-                    t.Move(new Vector3(i,j,topo.MinElevation));
-                    var mass = new Mass(new Profile(ngon), 500, BuiltInMaterials.Mass, t);
-                    // this.Model.AddElement(mass);
-                    topo.Subtract(mass);
-                    sw.Stop();
-                    Console.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms to subtract.");
-                    sw.Reset();
-                }
-            }
+            // for(var i=0.0; i<1500; i+= 200.0)
+            // {
+            //     for(var j=0.0; j<1500; j+= 200.0)
+            //     {
+            //         sw.Start();
+            //         var t = new Transform();
+            //         t.Rotate(Vector3.ZAxis, rand.NextDouble()*360.0);
+            //         t.Move(new Vector3(i,j,topo.MinElevation));
+            //         var mass = new Mass(new Profile(ngon), 500, BuiltInMaterials.Mass, t);
+            //         // this.Model.AddElement(mass);
+            //         topo.Subtract(mass);
+            //         sw.Stop();
+            //         Console.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms to subtract.");
+            //         sw.Reset();
+            //     }
+            // }
         }
     }
 }
