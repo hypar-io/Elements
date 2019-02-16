@@ -23,7 +23,11 @@ namespace Elements.Serialization
         {
             try
             {
-                _elementTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t=>typeof(IElement).IsAssignableFrom(t)).ToList();
+                _elementTypes = new List<Type>();
+                foreach (var assembly in  AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    _elementTypes.AddRange(assembly.GetTypes().Where(t=>typeof(IElement).IsAssignableFrom(t)).ToList());
+                }
             }
             catch(System.Reflection.ReflectionTypeLoadException ex)
             {
