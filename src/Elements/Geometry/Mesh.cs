@@ -192,14 +192,15 @@ Triangles:{_triangles.Count}";
             if(this._vertices[0].Color != null)
             {
                 colorBuffer = new float[this._vertices.Count * 3];
+                c_min = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
+                c_max = new float[] { float.MinValue, float.MinValue, float.MinValue };
             }
             else
             {
                 colorBuffer = new float[0];
+                c_min = new float[0];
+                c_max= new float[0];
             }
-
-            c_min = new float[0];
-            c_max= new float[0];
 
             v_max = new double[3] { double.MinValue, double.MinValue, double.MinValue };
             v_min = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
@@ -240,11 +241,10 @@ Triangles:{_triangles.Count}";
                 index_max = Math.Max(index_max, (ushort)v.Index);
                 index_min = Math.Min(index_min, (ushort)v.Index);
 
+                vi += 3;
+
                 if (v.Color != null)
                 {
-                    c_min = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
-                    c_max = new float[] { float.MinValue, float.MinValue, float.MinValue };
-
                     c_max[0] = Math.Max(c_max[0], v.Color.Red);
                     c_max[1] = Math.Max(c_max[1], v.Color.Green);
                     c_max[2] = Math.Max(c_max[2], v.Color.Blue);
@@ -255,10 +255,9 @@ Triangles:{_triangles.Count}";
                     colorBuffer[ci] = v.Color.Red;
                     colorBuffer[ci + 1] = v.Color.Green;
                     colorBuffer[ci + 2] = v.Color.Blue;
+
                     ci += 3;
                 }
-
-                vi += 3;
             }
 
             var ti = 0;
