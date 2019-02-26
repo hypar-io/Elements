@@ -6,32 +6,32 @@ using System.Diagnostics;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// An indexed mesh used for storing data for gltf.
+    /// An indexed mesh.
     /// </summary>
     public class Mesh
     {
-        private List<double> m_vertices = new List<double>();
-        private List<double> m_normals = new List<double>();
-        private List<ushort> m_indices = new List<ushort>();
-        private List<float> m_colors = new List<float>();
+        private List<double> _vertices = new List<double>();
+        private List<double> _normals = new List<double>();
+        private List<ushort> _indices = new List<ushort>();
+        private List<float> _colors = new List<float>();
 
-        private ushort m_index_max;
-        private ushort m_index_min;
+        private ushort _index_max;
+        private ushort _index_min;
         
-        private double[] m_v_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
-        private double[] m_v_min= new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
-        private double[] m_n_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
-        private double[] m_n_min = new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
+        private double[] _v_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
+        private double[] _v_min= new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
+        private double[] _n_max = new double[3]{double.MinValue, double.MinValue, double.MinValue};
+        private double[] _n_min = new double[3]{double.MaxValue, double.MaxValue, double.MaxValue};
 
-        private float[] m_c_min = new float[]{float.MaxValue, float.MaxValue, float.MaxValue};
-        private float[] m_c_max = new float[]{float.MinValue, float.MinValue, float.MinValue};
+        private float[] _c_min = new float[]{float.MaxValue, float.MaxValue, float.MaxValue};
+        private float[] _c_max = new float[]{float.MinValue, float.MinValue, float.MinValue};
 
         /// <summary>
         /// The maximum vertex.
         /// </summary>
         public double[] VMax
         {
-            get{return m_v_max;}
+            get{return _v_max;}
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Elements.Geometry
         /// </summary>
         public double[] VMin
         {
-            get{return m_v_min;}
+            get{return _v_min;}
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Elements.Geometry
         /// </summary>
         public double[] NMax
         {
-            get{return m_n_max;}
+            get{return _n_max;}
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Elements.Geometry
         /// </summary>
         public double[] NMin
         {
-            get{return m_n_min;}
+            get{return _n_min;}
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Elements.Geometry
         /// </summary>
         public ushort IMax
         {
-            get{return m_index_max;}
+            get{return _index_max;}
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Elements.Geometry
         /// </summary>
         public ushort IMin
         {
-            get{return m_index_min;}
+            get{return _index_min;}
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Elements.Geometry
         /// </summary>
         public float[] CMin
         {
-            get{return m_c_min;}
+            get{return _c_min;}
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Elements.Geometry
         /// </summary>
         public float[] CMax
         {
-            get{return m_c_max;}
+            get{return _c_max;}
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Elements.Geometry
         /// </summary>
         public List<double> Vertices
         {
-            get{return m_vertices;}
+            get{return _vertices;}
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Elements.Geometry
         /// </summary>
         public List<double> Normals
         {
-            get{return m_normals;}
+            get{return _normals;}
         }
         
         /// <summary>
@@ -111,7 +111,7 @@ namespace Elements.Geometry
         /// </summary>
         public List<ushort> Indices
         {
-            get{return m_indices;}
+            get{return _indices;}
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Elements.Geometry
         /// </summary>
         public List<float> Colors
         {
-            get{return m_colors;}
+            get{return _colors;}
         }
 
         /// <summary>
@@ -139,9 +139,27 @@ namespace Elements.Geometry
         /// <param name="colors">An array containing floats of the form [r,g,b,r,g,b...]</param>
         public Mesh(double[] vertices, double[] normals, ushort[] indices, float[] colors)
         {
-            this.m_vertices.AddRange(vertices);
-            this.m_normals.AddRange(normals);
-            this.m_indices.AddRange(indices);
+            this._vertices.AddRange(vertices);
+            this._normals.AddRange(normals);
+            this._indices.AddRange(indices);
+        }
+
+        /// <summary>
+        /// Get a string representation of the mesh.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $@"
+Vertices:{_vertices.Count/3}, 
+Normals:{_normals.Count/3}, 
+Indices:{_indices.Count}, 
+VMax:{string.Join(",", _v_max)}, 
+VMin:{string.Join(",", _v_min)}, 
+NMax:{string.Join(",", _n_max)}, 
+NMin:{string.Join(",", _n_min)}, 
+IMax:{_index_max}, 
+IMin:{_index_min}";
         }
 
         /// <summary>
@@ -177,46 +195,53 @@ namespace Elements.Geometry
             AddVertex(c, cn, cc);
         }
 
+        /// <summary>
+        /// Add a vertex to the mesh.
+        /// </summary>
+        /// <param name="v">The position of the vertex.</param>
+        /// <param name="n">The vertex's normal.</param>
+        /// <param name="c">The vertex's color.</param>
+        /// <returns>The index of the newly created vertex.</returns>
         internal int AddVertex(Vector3 v, Vector3 n, Color c = null)
         {
             var vArr = v.ToArray();
             var nArr = n.ToArray();
             
-            this.m_vertices.AddRange(vArr);
-            this.m_normals.AddRange(nArr);
+            this._vertices.AddRange(vArr);
+            this._normals.AddRange(nArr);
 
-            m_v_max[0] = Math.Max(m_v_max[0], vArr[0]);
-            m_v_max[1] = Math.Max(m_v_max[1], vArr[1]);
-            m_v_max[2] = Math.Max(m_v_max[2], vArr[2]);
-            m_v_min[0] = Math.Min(m_v_min[0], vArr[0]);
-            m_v_min[1] = Math.Min(m_v_min[1], vArr[1]);
-            m_v_min[2] = Math.Min(m_v_min[2], vArr[2]);
+            _v_max[0] = Math.Max(_v_max[0], vArr[0]);
+            _v_max[1] = Math.Max(_v_max[1], vArr[1]);
+            _v_max[2] = Math.Max(_v_max[2], vArr[2]);
+            _v_min[0] = Math.Min(_v_min[0], vArr[0]);
+            _v_min[1] = Math.Min(_v_min[1], vArr[1]);
+            _v_min[2] = Math.Min(_v_min[2], vArr[2]);
 
-            m_n_max[0] = Math.Max(m_n_max[0], nArr[0]);
-            m_n_max[1] = Math.Max(m_n_max[1], nArr[1]);
-            m_n_max[2] = Math.Max(m_n_max[2], nArr[2]);
-            m_n_min[0] = Math.Min(m_n_min[0], nArr[0]);
-            m_n_min[1] = Math.Min(m_n_min[1], nArr[1]);
-            m_n_min[2] = Math.Min(m_n_min[2], nArr[2]);
+            _n_max[0] = Math.Max(_n_max[0], nArr[0]);
+            _n_max[1] = Math.Max(_n_max[1], nArr[1]);
+            _n_max[2] = Math.Max(_n_max[2], nArr[2]);
+            _n_min[0] = Math.Min(_n_min[0], nArr[0]);
+            _n_min[1] = Math.Min(_n_min[1], nArr[1]);
+            _n_min[2] = Math.Min(_n_min[2], nArr[2]);
 
             if(c != null)
             {
                 var cArr = c.ToArray();
-                this.m_colors.AddRange(cArr);
-                m_c_max[0] = Math.Max(m_c_max[0], cArr[0]);
-                m_c_max[1] = Math.Max(m_c_max[1], cArr[1]);
-                m_c_max[2] = Math.Max(m_c_max[2], cArr[2]);
-                m_c_min[0] = Math.Min(m_c_min[0], cArr[0]);
-                m_c_min[1] = Math.Min(m_c_min[1], cArr[1]);
-                m_c_min[2] = Math.Min(m_c_min[2], cArr[2]);
+                this._colors.AddRange(cArr);
+                _c_max[0] = Math.Max(_c_max[0], cArr[0]);
+                _c_max[1] = Math.Max(_c_max[1], cArr[1]);
+                _c_max[2] = Math.Max(_c_max[2], cArr[2]);
+                _c_min[0] = Math.Min(_c_min[0], cArr[0]);
+                _c_min[1] = Math.Min(_c_min[1], cArr[1]);
+                _c_min[2] = Math.Min(_c_min[2], cArr[2]);
             }
 
-            var start = (ushort)m_indices.Count;
-            this.m_indices.Add(start);
-            m_index_max = Math.Max(m_index_max, start);
-            m_index_min = Math.Min(m_index_min, start);
+            var start = (ushort)_indices.Count;
+            this._indices.Add(start);
+            _index_max = Math.Max(_index_max, start);
+            _index_min = Math.Min(_index_min, start);
 
-            return (this.m_vertices.Count/3)-1;
+            return (this._vertices.Count/3)-1;
         }
 
         /// <summary>
@@ -241,34 +266,16 @@ namespace Elements.Geometry
             AddVertex(vertices[2], n1);
             AddVertex(vertices[3], n1);
 
-            var start = (ushort)m_indices.Count;
-            this.m_indices.AddRange(new[]{start,(ushort)(start+1),(ushort)(start+2),(ushort)(start),(ushort)(start+2),(ushort)(start+3)});
-            m_index_max = Math.Max(m_index_max, start);
-            m_index_max = Math.Max(m_index_max, (ushort)(start+1));
-            m_index_max = Math.Max(m_index_max, (ushort)(start+2));
-            m_index_max = Math.Max(m_index_max, (ushort)(start+3));
-            m_index_min = Math.Min(m_index_min, start);
-            m_index_min = Math.Min(m_index_min, (ushort)(start+1));
-            m_index_min = Math.Min(m_index_min, (ushort)(start+2));
-            m_index_min = Math.Min(m_index_min, (ushort)(start+3));
-        }
-
-        /// <summary>
-        /// Get a string representation of the mesh.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $@"
-Vertices:{m_vertices.Count/3}, 
-Normals:{m_normals.Count/3}, 
-Indices:{m_indices.Count}, 
-VMax:{string.Join(",", m_v_max)}, 
-VMin:{string.Join(",", m_v_min)}, 
-NMax:{string.Join(",", m_n_max)}, 
-NMin:{string.Join(",", m_n_min)}, 
-IMax:{m_index_max}, 
-IMin:{m_index_min}";
+            var start = (ushort)_indices.Count;
+            this._indices.AddRange(new[]{start,(ushort)(start+1),(ushort)(start+2),(ushort)(start),(ushort)(start+2),(ushort)(start+3)});
+            _index_max = Math.Max(_index_max, start);
+            _index_max = Math.Max(_index_max, (ushort)(start+1));
+            _index_max = Math.Max(_index_max, (ushort)(start+2));
+            _index_max = Math.Max(_index_max, (ushort)(start+3));
+            _index_min = Math.Min(_index_min, start);
+            _index_min = Math.Min(_index_min, (ushort)(start+1));
+            _index_min = Math.Min(_index_min, (ushort)(start+2));
+            _index_min = Math.Min(_index_min, (ushort)(start+3));
         }
     }
 

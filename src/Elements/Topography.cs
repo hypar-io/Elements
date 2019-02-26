@@ -80,6 +80,7 @@ namespace Elements
             var s = (l1 + l2 + l3)/2;
             return Math.Sqrt(s*(s-l1)*(s-l2)*(s-l3));
         }
+        
         internal Polygon ToPolygon()
         {
             return new Polygon(new[]{this.Vertices[0].Position, this.Vertices[1].Position, this.Vertices[2].Position});
