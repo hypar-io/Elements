@@ -1,140 +1,21 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 
 namespace Elements
 {
     /// <summary>
-    /// A mesh triangle.
-    /// </summary>
-    public class Triangle
-    {
-        /// <summary>
-        /// The triangle's vertices.
-        /// </summary>
-        [JsonProperty("vertices")]
-        public Vertex[] Vertices{get;}
-
-        /// <summary>
-        /// The triangle's normal.
-        /// </summary>
-        public Vector3 Normal{get;}
-
-        /// <summary>
-        /// Create a triangle.
-        /// </summary>
-        /// <param name="a">The index of the first vertex of the triangle.</param>
-        /// <param name="b">The index of the second vertex of the triangle.</param>
-        /// <param name="c">The index of the third vertex of the triangle.</param>
-        public Triangle(Vertex a, Vertex b, Vertex c)
-        {
-            this.Vertices = new[]{a,b,c};
-
-            // Bend the normals for the associated vertices.
-            var p1 = new Plane(a.Position, b.Position, c.Position);
-            a.Normal = ((a.Normal + p1.Normal) / 2.0).Normalized();
-            b.Normal = ((b.Normal + p1.Normal) / 2.0).Normalized();
-            c.Normal = ((c.Normal + p1.Normal) / 2.0).Normalized();
-            
-            this.Normal = p1.Normal;
-        }
-
-        [JsonConstructor]
-        internal Triangle(Vertex[] vertices)
-        {
-            this.Vertices = vertices;
-
-            var a = this.Vertices[0];
-            var b = this.Vertices[1];
-            var c = this.Vertices[2];
-
-            // Bend the normals for the associated vertices.
-            var p1 = new Plane(a.Position, b.Position, c.Position);
-            a.Normal = ((a.Normal + p1.Normal) / 2.0).Normalized();
-            b.Normal = ((b.Normal + p1.Normal) / 2.0).Normalized();
-            c.Normal = ((c.Normal + p1.Normal) / 2.0).Normalized();
-            
-            this.Normal = p1.Normal;
-        }
-
-        /// <summary>
-        /// The area of the triangle.
-        /// </summary>
-        public double Area()
-        {
-            var a = this.Vertices[0].Position;
-            var b = this.Vertices[1].Position;
-            var c = this.Vertices[2].Position;
-
-            // Heron's formula
-            var l1 = a.DistanceTo(b);
-            var l2 = b.DistanceTo(c);
-            var l3 = c.DistanceTo(a);
-
-            var s = (l1 + l2 + l3)/2;
-            return Math.Sqrt(s*(s-l1)*(s-l2)*(s-l3));
-        }
-        
-        internal Polygon ToPolygon()
-        {
-            return new Polygon(new[]{this.Vertices[0].Position, this.Vertices[1].Position, this.Vertices[2].Position});
-        }
-
-        internal ContourVertex[] ToContourVertexArray()
-        {
-            var contour = new ContourVertex[this.Vertices.Length];
-            for(var i=0; i < this.Vertices.Length; i++)
-            {
-                var v = this.Vertices[i];
-                contour[i] = new ContourVertex();
-                contour[i].Position = new Vec3 { X = v.Position.X, Y = v.Position.Y, Z = v.Position.Z };
-            }
-            return contour;
-        }
-    }
-
-    /// <summary>
-    /// A mesh vertex.
-    /// </summary>
-    public class Vertex
-    {
-        /// <summary>
-        /// The position of the vertex.
-        /// </summary>
-        [JsonProperty("position")]
-        public Vector3 Position { get; }
-
-        /// <summary>
-        /// The vertex's normal.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 Normal { get; set; }
-
-        /// <summary>
-        /// Create a vertex.
-        /// </summary>
-        /// <param name="position">The position of the vertex.</param>
-        public Vertex(Vector3 position)
-        {
-            this.Position = position;
-            this.Normal = Vector3.Origin;
-        }
-    }
-
-    /// <summary>
     /// A topographic mesh defined by an array of elevation values.
     /// </summary>
     public class Topography : Element, ITessellate
     {
-        private List<Vertex> _vertices;
-        private List<Triangle> _triangles;
-        private Func<Triangle, Vector3, Color> _colorizer;
+        private Func<Triangle, Color> _colorizer;
+
+        private Mesh _mesh = new Mesh();
 
         private double _minElevation = double.PositiveInfinity;
 
@@ -153,18 +34,6 @@ namespace Elements
         public double MinElevation => _minElevation;
 
         /// <summary>
-        /// The topography's vertices.
-        /// </summary>
-        [JsonProperty("vertices")]
-        public List<Vertex> Vertices => _vertices;
-
-        /// <summary>
-        /// The topography's triangles.
-        /// </summary>
-        [JsonProperty("triangles")]
-        public List<Triangle> Triangles => _triangles;
-
-        /// <summary>
         /// The material of the topography.
         /// </summary>
         [JsonProperty("material")]
@@ -178,8 +47,8 @@ namespace Elements
         /// <param name="cellHeight">The height of each square "cell" of the topography.</param>
         /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
         /// <param name="width"></param>
-        /// <param name="colorizer">A function which uses the normal of a facet to determine a color for that facet.</param>
-        public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int width, Func<Triangle, Vector3, Color> colorizer)
+        /// <param name="colorizer">A function which produces a color for a triangle.</param>
+        public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int width, Func<Triangle, Color> colorizer)
         {
             // Elevations a represented by *
             // *-*-*-*
@@ -200,17 +69,14 @@ namespace Elements
             this.Material = BuiltInMaterials.Topography;
             this._colorizer = colorizer;
 
-            this._vertices = new List<Vertex>(elevations.Length);
             var triangles = (Math.Sqrt(elevations.Length) - 1) * width * 2;
-            this._triangles = new List<Triangle>((int)triangles);
 
             var x = 0;
             var y = 0;
             for (var i = 0; i < elevations.Length; i++)
             {
                 var el = elevations[i];
-                this._vertices.Add(new Vertex(origin + new Vector3(x * cellWidth, y * cellHeight, el)));
-
+                this._mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el));
                 _minElevation = Math.Min(_minElevation, el);
                 _maxElevation = Math.Max(_maxElevation, el);
 
@@ -229,7 +95,7 @@ namespace Elements
             y = 0;
             for (var i = 0; i < elevations.Length; i++)
             {
-                var v = this._vertices[i];
+                var v = this._mesh.Vertices[i];
                 if (x == width)
                 {
                     x = 0;
@@ -240,16 +106,16 @@ namespace Elements
                     if (y > 0)
                     {
                         // Top triangle
-                        var a = this._vertices[i];
-                        var b = this._vertices[i - width];
-                        var c = this._vertices[i - (width + 1)];
-                        this._triangles.Add(new Triangle(c, b, a));
+                        var a = this._mesh.Vertices[i];
+                        var b = this._mesh.Vertices[i - width];
+                        var c = this._mesh.Vertices[i - (width + 1)];
+                        this._mesh.AddTriangle(c,b,a);
                         
                         // Bottom triangle
-                        var d = this._vertices[i];
-                        var e = this._vertices[i + 1];
-                        var f = this._vertices[i - width];
-                        this._triangles.Add(new Triangle(f, e, d));
+                        var d = this._mesh.Vertices[i];
+                        var e = this._mesh.Vertices[i + 1];
+                        var f = this._mesh.Vertices[i - width];
+                        this._mesh.AddTriangle(f, e, d);
                     }
                     x++;
                 }
@@ -257,11 +123,7 @@ namespace Elements
         }
         
         [JsonConstructor]
-        internal Topography(List<Vertex> vertices, List<Triangle> triangles)
-        {
-            this._vertices = vertices;
-            this._triangles = triangles;
-        }
+        internal Topography(List<Elements.Geometry.Vertex> vertices, List<Triangle> triangles){}
 
         /// <summary>
         /// Subtract the provided mass from this topography.
@@ -284,18 +146,18 @@ namespace Elements
         private void Subtract(Solid solid, Transform transform = null)
         {
             var intersects = new List<Triangle>();
-            for(var i=this._triangles.Count - 1; i>=0; i--)
+            for(var i=this._mesh.Triangles.Count - 1; i>=0; i--)
             {
-                var t = this._triangles[i];
+                var t = this._mesh.Triangles[i];
                 var xsect = GetIntersectionType(t, solid, transform);
                 if(xsect == IntersectionType.Intersect)
                 {
                     intersects.Add(t);
-                    this._triangles.RemoveAt(i);
+                    this._mesh.Triangles.RemoveAt(i);
                 }
                 else if(xsect == IntersectionType.Inside)
                 {
-                    this._triangles.RemoveAt(i);
+                    this._mesh.Triangles.RemoveAt(i);
                 }
             }
 
@@ -334,8 +196,7 @@ namespace Elements
                         var a = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3]].Position.ToVector3());
                         var b = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3());
                         var c = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3());
-                        var clipTriangle = new Triangle(a,b,c);
-                        this._triangles.Add(clipTriangle);
+                        this._mesh.AddTriangle(a,b,c);
                     }
                 }
                 catch(ArgumentOutOfRangeException ex)
@@ -344,16 +205,16 @@ namespace Elements
                 }
             }
 
-            for(var i=this._triangles.Count - 1; i>=0; i--)
+            for(var i=this._mesh.Triangles.Count - 1; i>=0; i--)
             {
-                var t = this._triangles[i];
+                var t = this._mesh.Triangles[i];
                 var area = t.Area();
                 if(area == 0.0 || 
                     double.IsNaN(area) || 
                     area < Vector3.Tolerance ||
                     t.Normal.IsNaN())
                 {
-                    this._triangles.RemoveAt(i);
+                    this._mesh.Triangles.RemoveAt(i);
                 }
             }
         }
@@ -363,18 +224,17 @@ namespace Elements
             Inside, Outside, Intersect, Unknown
         }
 
-        private Vertex MergeOrReturnNew(Vector3 v)
+        private Elements.Geometry.Vertex MergeOrReturnNew(Vector3 v)
         {
-            foreach(var vx in this._vertices)
+            foreach(var vx in this._mesh.Vertices)
             {
                 if(vx.Position.IsAlmostEqualTo(v))
                 {
                     return vx;
                 }
             }
-            var newVx = new Vertex(v);
-            this._vertices.Add(newVx);
-            return newVx;
+            var newVtx = this._mesh.AddVertex(v);
+            return newVtx;
         }
 
         private IntersectionType GetIntersectionType(Triangle t, Solid s, Transform trans = null)
@@ -468,21 +328,6 @@ namespace Elements
 
             return output;
         }
-
-        private bool IsInvalid(Vertex v)
-        {
-            if(v.Position.IsNaN())
-            {
-                return true;
-            }
-
-            if(v.Normal.IsNaN())
-            {
-                return true;
-            }
-
-            return false;
-        }
         
         /// <summary>
         /// Tessellate the topography.
@@ -490,37 +335,15 @@ namespace Elements
         /// <param name="mesh">The mesh into which the topography's facets will be added.</param>
         public void Tessellate(ref Mesh mesh)
         {
-            for (var i = 0; i < this._triangles.Count; i++)
+            foreach(var t in this._mesh.Triangles)
             {
-                var t = this._triangles[i];
-                var a = t.Vertices[0];
-                var b = t.Vertices[1];
-                var c = t.Vertices[2];
-
-                if(IsInvalid(a))
-                {
-                    Console.WriteLine($"NaN triangle position found at {a.Position}");
-                    continue;
-                }
-
-                if(IsInvalid(b))
-                {
-                    Console.WriteLine($"NaN triangle position found at {b.Position}");
-                    continue;
-                }
-
-                if(IsInvalid(c))
-                {
-                    Console.WriteLine($"NaN triangle position found at {c.Position}");
-                    continue;
-                }
-
-                var ac = _colorizer(t, a.Normal);
-                var bc = _colorizer(t, b.Normal);
-                var cc = _colorizer(t, c.Normal);
-
-                mesh.AddTriangle(a.Position, b.Position, c.Position, a.Normal, b.Normal, c.Normal, ac, bc, cc);
+                var c = this._colorizer(t);
+                t.Vertices[0].Color = c;
+                t.Vertices[1].Color = c;
+                t.Vertices[2].Color = c;
             }
+
+            mesh.AddMesh(this._mesh);
         }
     }
 

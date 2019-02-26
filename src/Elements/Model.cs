@@ -518,9 +518,23 @@ namespace Elements
 
                     mesh = new Elements.Geometry.Mesh();
                     solid.Tessellate(ref mesh);
-                    gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                        mesh.Indices.ToArray(), mesh.Colors.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
-                                        mesh.IMin, mesh.IMax, materials[solid.Material.Name], mesh.CMin, mesh.CMax, null, e.Transform);
+                    
+                    double[] vertexBuffer;
+                    double[] normalBuffer;
+                    ushort[] indexBuffer;
+                    float[] colorBuffer;
+                    double[] vmin; double[] vmax;
+                    double[] nmin; double[] nmax;
+                    float[] cmin; float[] cmax;
+                    ushort imin; ushort imax;
+
+                    mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                                    out vmax, out vmin, out nmin, out nmax, out cmin, 
+                                    out cmax, out imin, out imax);
+
+                    gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, vertexBuffer, normalBuffer,
+                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
+                                        imin, imax, materials[solid.Material.Name], cmin, cmax, null, e.Transform);
                 }
             }
 
@@ -529,9 +543,23 @@ namespace Elements
                 var geo = (ITessellate)e;
                 var mesh = new Elements.Geometry.Mesh();
                 geo.Tessellate(ref mesh);
-                gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                        mesh.Indices.ToArray(), mesh.Colors.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
-                                        mesh.IMin, mesh.IMax, materials[geo.Material.Name], mesh.CMin, mesh.CMax, null, e.Transform);
+                
+                double[] vertexBuffer;
+                double[] normalBuffer;
+                ushort[] indexBuffer;
+                float[] colorBuffer;
+                double[] vmin; double[] vmax;
+                double[] nmin; double[] nmax;
+                float[] cmin; float[] cmax;
+                ushort imin; ushort imax;
+
+                mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                                out vmax, out vmin, out nmin, out nmax, out cmin, 
+                                out cmax, out imin, out imax);
+
+                gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, vertexBuffer, normalBuffer,
+                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
+                                        imin, imax, materials[geo.Material.Name], cmin, cmax, null, e.Transform);
             }
 
             if (e is IAggregateElement)

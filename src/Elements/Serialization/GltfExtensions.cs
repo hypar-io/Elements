@@ -349,9 +349,22 @@ namespace Elements.Serialization
             var mesh = new Elements.Geometry.Mesh();
             solid.Tessellate(ref mesh);
 
-            gltf.AddTriangleMesh("mesh", buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                        mesh.Indices.ToArray(), mesh.Colors.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
-                                        mesh.IMin, mesh.IMax, materials[BuiltInMaterials.Default.Name], mesh.CMin, mesh.CMax, null, null);
+            double[] vertexBuffer;
+            double[] normalBuffer;
+            ushort[] indexBuffer;
+            float[] colorBuffer;
+            double[] vmin; double[] vmax;
+            double[] nmin; double[] nmax;
+            float[] cmin; float[] cmax;
+            ushort imin; ushort imax;
+
+            mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                            out vmax, out vmin, out nmin, out nmax, out cmin, 
+                            out cmax, out imin, out imax);
+                            
+            gltf.AddTriangleMesh("mesh", buffer, vertexBuffer, normalBuffer,
+                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
+                                        imin, imax, materials[BuiltInMaterials.Default.Name], cmin, cmax, null, null);
 
             var edgeCount = 0;
             var vertices = new List<Vector3>();

@@ -15,7 +15,7 @@ namespace Elements.Tests
         {
             this.Name = "TopographySimple";
             var elevations = new double[]{0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05, 0.2, 0.5, 0.6};
-            var colorizer = new Func<Triangle,Vector3,Color>((t,v)=>{
+            var colorizer = new Func<Triangle,Color>((t)=>{
                 return Colors.Green;
             });
             var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 3, colorizer);
@@ -39,8 +39,8 @@ namespace Elements.Tests
             // Compute the mapbox tile side lenth.
             var d = (40075016.685578 / Math.Pow(2, 15))/w;
 
-            Func<Triangle, Vector3,Color> colorizer = (tri, n) => {
-                var slope = n.AngleTo(Vector3.ZAxis);
+            Func<Triangle,Color> colorizer = (tri) => {
+                var slope = tri.Normal.AngleTo(Vector3.ZAxis);
                 if(slope >=0.0 && slope < 15.0)
                 {
                     return Colors.Green;

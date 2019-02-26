@@ -363,7 +363,10 @@ namespace Elements.Geometry.Solids
                     var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
                     var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
 
-                    mesh.AddTriangle(a, b, c);
+                    var v1 = mesh.AddVertex(a);
+                    var v2 = mesh.AddVertex(b);
+                    var v3 = mesh.AddVertex(c);
+                    mesh.AddTriangle(v1, v2, v3);
                 }
             }
         }
