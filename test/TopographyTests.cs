@@ -21,9 +21,9 @@ namespace Elements.Tests
             var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 3, colorizer);
             this.Model.AddElement(topo);
 
-            var mass = new Mass(Polygon.Rectangle(0.75,1.0, new Vector3(2,1)), 3);
-            topo.Subtract(mass);
-            this.Model.AddElement(mass);
+            // var mass = new Mass(Polygon.Rectangle(0.75,1.0, new Vector3(2,1)), 3);
+            // topo.Subtract(mass);
+            // this.Model.AddElement(mass);
         }
 
         [Fact]

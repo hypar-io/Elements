@@ -122,6 +122,23 @@ namespace Elements
             }
         }
         
+        /// <summary>
+        /// Tessellate the topography.
+        /// </summary>
+        /// <param name="mesh">The mesh into which the topography's facets will be added.</param>
+        public void Tessellate(ref Mesh mesh)
+        {
+            foreach(var t in this._mesh.Triangles)
+            {
+                var c = this._colorizer(t);
+                t.Vertices[0].Color = c;
+                t.Vertices[1].Color = c;
+                t.Vertices[2].Color = c;
+            }
+
+            mesh.AddMesh(this._mesh);
+        }
+
         [JsonConstructor]
         internal Topography(List<Elements.Geometry.Vertex> vertices, List<Triangle> triangles){}
 
@@ -129,7 +146,7 @@ namespace Elements
         /// Subtract the provided mass from this topography.
         /// </summary>
         /// <param name="mass">The mass to subtract.</param>
-        public void Subtract(Mass mass)
+        internal void Subtract(Mass mass)
         {
             foreach(var g in mass.Geometry)
             {
@@ -327,24 +344,7 @@ namespace Elements
             }
 
             return output;
-        }
-        
-        /// <summary>
-        /// Tessellate the topography.
-        /// </summary>
-        /// <param name="mesh">The mesh into which the topography's facets will be added.</param>
-        public void Tessellate(ref Mesh mesh)
-        {
-            foreach(var t in this._mesh.Triangles)
-            {
-                var c = this._colorizer(t);
-                t.Vertices[0].Color = c;
-                t.Vertices[1].Color = c;
-                t.Vertices[2].Color = c;
-            }
-
-            mesh.AddMesh(this._mesh);
-        }
+        } 
     }
 
     internal static class TopographyExtensions
