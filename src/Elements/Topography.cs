@@ -22,6 +22,12 @@ namespace Elements
         private double _maxElevation = double.NegativeInfinity;
 
         /// <summary>
+        /// The topography's mesh.
+        /// </summary>
+        [JsonIgnore]
+        public Mesh Mesh => _mesh;
+
+        /// <summary>
         /// The maximum elevation of the topography.
         /// </summary>
         [JsonProperty("max_elevation")]
