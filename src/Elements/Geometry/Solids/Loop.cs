@@ -58,5 +58,29 @@ namespace Elements.Geometry.Solids
             this.Edges.Add(he);
             he.Loop = this;
         }
+
+        /// <summary>
+        /// Insert the provided half edge after the target half edge.
+        /// </summary>
+        /// <param name="target">The half after which the new edge will be inserted.</param>
+        /// <param name="newEdge">The half edge to be inserted.</param>
+        public void InsertEdgeAfter(HalfEdge target, HalfEdge newEdge)
+        {
+            var idx = this.Edges.IndexOf(target);
+            this.Edges.Insert(idx+1, newEdge);
+            newEdge.Loop = this;
+        }
+
+        /// <summary>
+        /// Insert the provided half edge before the target half edge.
+        /// </summary>
+        /// <param name="target">The half before which the new edge will be inserted.</param>
+        /// <param name="newEdge">The half edge to be inserted.</param>
+        public void InsertEdgeBefore(HalfEdge target, HalfEdge newEdge)
+        {
+            var idx = this.Edges.IndexOf(target);
+            this.Edges.Insert(idx, newEdge);
+            newEdge.Loop = this;
+        }
     }
 }

@@ -66,7 +66,7 @@ namespace Elements.Geometry
         /// <returns>An array containing the color's components.</returns>
         public float[] ToArray()
         {
-            return new[]{Red, Green, Blue, Alpha};
+            return new[]{Red, Green, Blue};
         }
 
         /// <summary>

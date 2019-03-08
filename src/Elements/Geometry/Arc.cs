@@ -151,7 +151,7 @@ namespace Elements.Geometry
             var theta = DegToRad(angle);
             var x = this.Plane.Origin.X + this.Radius * Math.Cos(theta);
             var y = this.Plane.Origin.Y + this.Radius * Math.Sin(theta);
-            return this._transform.OfVector(new Vector3(x, y));
+            return this._transform.OfPoint(new Vector3(x, y));
         }
 
         /// <summary>

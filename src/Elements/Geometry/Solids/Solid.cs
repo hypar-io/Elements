@@ -17,7 +17,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid
+    public class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -256,8 +256,8 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Add an edge to the solid.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="from">The start vertex.</param>
+        /// <param name="to">The end vertex.</param>
         /// <returns>The newly added edge.</returns>
         public Edge AddEdge(Vertex from, Vertex to)
         {
@@ -301,6 +301,20 @@ namespace Elements.Geometry.Solids
             }
             return loop;
         }
+        
+        /// <summary>
+        /// Slice a solid with the provided plane.
+        /// </summary>
+        /// <param name="p">The plane to be used to slice this solid.</param>
+        public void Slice(Plane p)
+        {
+            var keys = new List<long>(this.Edges.Keys);
+            foreach(var key in keys)
+            {
+                var e = this.Edges[key];
+                SplitEdge(p, e);
+            }
+        }
 
         /// <summary>
         /// Get the string representation of the solid.
@@ -313,6 +327,10 @@ namespace Elements.Geometry.Solids
             {
                 sb.AppendLine($"Edge: {e.ToString()}");
             }
+            foreach(var f in Faces.Values)
+            {
+                sb.AppendLine($"Face: {f.ToString()}");
+            }
             return sb.ToString();
         }
         
@@ -320,7 +338,7 @@ namespace Elements.Geometry.Solids
         /// Triangulate this solid.
         /// </summary>
         /// <param name="mesh">The mesh to which the solid's tessellated data will be added.</param>
-        public virtual void Tessellate(ref Mesh mesh)
+        public void Tessellate(ref Mesh mesh)
         {
             foreach (var f in this.Faces.Values)
             {
@@ -345,7 +363,10 @@ namespace Elements.Geometry.Solids
                     var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
                     var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
 
-                    mesh.AddTriangle(a, b, c);
+                    var v1 = mesh.AddVertex(a);
+                    var v2 = mesh.AddVertex(b);
+                    var v3 = mesh.AddVertex(c);
+                    mesh.AddTriangle(v1, v2, v3);
                 }
             }
         }
@@ -541,6 +562,34 @@ namespace Elements.Geometry.Solids
                 openEdge.AddEdgeToEnd(c.Right);
             }
             return openEdge;
+        }
+    
+        private void SplitEdge(Plane p, Edge e)
+        {
+            var start = e.Left.Vertex;
+            var end = e.Right.Vertex;
+            var xsect = new Line(start.Point, end.Point).Intersect(p);
+            if(xsect == null)
+            {
+                return;
+            }
+
+            // Add vertex at intersection.
+            // Create new edge from vertex to end.
+            var mid = AddVertex(xsect);
+            var e1 = AddEdge(mid, end);
+
+            // Adjust end of existing edge to
+            // new vertex
+            e.Right.Vertex = mid;
+            if(e.Left.Loop != null)
+            {
+                e.Left.Loop.InsertEdgeAfter(e.Left, e1.Left);
+            }
+            if(e.Right.Loop != null)
+            {
+                e.Right.Loop.InsertEdgeBefore(e.Right, e1.Right);
+            }
         }
     }
 }
