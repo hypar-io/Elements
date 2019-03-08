@@ -26,7 +26,7 @@ Hypar Elements is open source and will remain so **forever**. Your donation will
 The best examples are those provided in the [tests](https://github.com/hypar-io/elements/tree/master/csharp/test), where we demonstrate usage of almost every function in the library.
 
 ## Words of Warning
-- The Hypar SDK is currently in beta. Please do not use it for production work.
+- The Elements library is currently in beta. Please do not use it for production work.
 - Why we chose C#:
   - C# is a strongly typed language. We want the code checking tools and the compiler to help you write code that you can publish with confidence. 
   - Microsoft is investing heavily in C# performance. There are lots of articles out there about Lambda performance. [Here's](https://read.acloud.guru/comparing-aws-lambda-performance-of-node-js-python-java-c-and-go-29c1163c2581) a good one.
@@ -34,7 +34,7 @@ The best examples are those provided in the [tests](https://github.com/hypar-io/
   - C# libraries can be reused in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
 
 ## Build
-You'll only need to do this if you want to contribute to the SDK, otherwise you can use the NuGet packages that are published regularly.
+You'll only need to do this if you want to contribute to the library, otherwise you can use the [NuGet package](https://www.nuget.org/) that is published regularly.
 
 ```
 dotnet build

@@ -24,9 +24,11 @@
 - Element identifiers are now of type `long`.
 - Breps have been re-implemented in the `Solid` class. Currently only planar trimmed faces are supported.
 - Many improvements to JSON serialization have been added, including the ability to serialize breps.
+- '{element}.AddParameter' has been renamed to '{element}.AddProperty'.
+- The `Hypar.Geometry` namespace is now `Elements.Geometry`.
+- The `Hypar.Elements` namespace is now `Elements`.
 ### Removed
 - The `IProfile` interface has been removed.
 - The `Extrusion` class and `IBrep` have been replaced with the `Solid` class. The IGeometry interface now returns a `Solid[]`.
 - Many uses of `System.Linq` have been removed. 
 - Many uses of `IEnumerable<T>` have been replaced with `T[]`.
-
