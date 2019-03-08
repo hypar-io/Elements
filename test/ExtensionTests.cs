@@ -16,7 +16,6 @@ namespace Elements.Tests
             var model = new Model();
             model.AddElement(new TestElement());
             var json = model.ToJson();
-            Console.WriteLine(json);
             var newModel = Model.FromJson(json);
             Assert.Equal(1, newModel.Extensions.Count());
             Assert.Equal(1, newModel.Elements.Count);
