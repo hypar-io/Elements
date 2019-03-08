@@ -18,8 +18,8 @@ namespace Elements.Tests
             var json = model.ToJson();
             Console.WriteLine(json);
             var newModel = Model.FromJson(json);
-            Assert.Equal(newModel.Extensions.Count(), 1);
-            Assert.Equal(newModel.Elements.Count, 1);
+            Assert.Equal(1, newModel.Extensions.Count());
+            Assert.Equal(1, newModel.Elements.Count);
         }
     }
 }
