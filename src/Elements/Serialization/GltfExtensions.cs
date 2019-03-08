@@ -34,7 +34,7 @@ namespace Elements.Serialization
                 m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness();
                 m.PbrMetallicRoughness.BaseColorFactor = new[]{material.Color.Red,material.Color.Green,material.Color.Blue,material.Color.Alpha};
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
-
+                m.DoubleSided = material.DoubleSided;
                 m.Name = material.Name;
 
                 if(material.Color.Alpha < 1.0)
@@ -138,8 +138,8 @@ namespace Elements.Serialization
             return id;
         }
 
-        internal static int AddTriangleMesh(this Gltf gltf, string name, List<byte> buffer, double[] vertices, double[] normals, ushort[] indices, 
-        double[] vMin, double[] vMax, double[] nMin, double[] nMax, ushort iMin, ushort iMax, int materialId, int? parent_index, Transform transform = null)
+        internal static int AddTriangleMesh(this Gltf gltf, string name, List<byte> buffer, double[] vertices, double[] normals, ushort[] indices, float[] colors,
+        double[] vMin, double[] vMax, double[] nMin, double[] nMax, ushort iMin, ushort iMax, int materialId, float[] cMin, float[] cMax, int? parent_index, Transform transform = null)
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
@@ -147,7 +147,7 @@ namespace Elements.Serialization
             var vBuff = gltf.AddBufferView(0, buffer.Count, vertices.Length * sizeof(float), null, null);
             var nBuff = gltf.AddBufferView(0, buffer.Count + vertices.Length * sizeof(float), normals.Length * sizeof(float), null, null);
             var iBuff = gltf.AddBufferView(0, buffer.Count + vertices.Length * sizeof(float) + normals.Length * sizeof(float), indices.Length * sizeof(ushort), null, null);
-
+            
             foreach(var v in vertices)
             {
                 buffer.AddRange(BitConverter.GetBytes((float)v));
@@ -179,6 +179,22 @@ namespace Elements.Serialization
                 {"NORMAL",nAccess},
                 {"POSITION",vAccess}
             };
+
+            // TODO: Add to the buffer above instead of inside this block.
+            // There's a chance the padding operation will put padding before
+            // the color information.
+            if(colors.Length > 0)
+            {
+                var cBuff = gltf.AddBufferView(0, buffer.Count, colors.Length * sizeof(float), null, null);
+
+                foreach(var c in colors)
+                {
+                    buffer.AddRange(BitConverter.GetBytes((float)c));
+                }
+
+                var cAccess = gltf.AddAccessor(cBuff, 0, Accessor.ComponentTypeEnum.FLOAT, colors.Length/3, cMin, cMax, Accessor.TypeEnum.VEC3);
+                prim.Attributes.Add("COLOR_0", cAccess);
+            }
 
             m.Primitives = new[]{prim};
 
@@ -333,9 +349,22 @@ namespace Elements.Serialization
             var mesh = new Elements.Geometry.Mesh();
             solid.Tessellate(ref mesh);
 
-            gltf.AddTriangleMesh("mesh", buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                        mesh.Indices.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
-                                        mesh.IMin, mesh.IMax, materials[BuiltInMaterials.Default.Name], null, null);
+            double[] vertexBuffer;
+            double[] normalBuffer;
+            ushort[] indexBuffer;
+            float[] colorBuffer;
+            double[] vmin; double[] vmax;
+            double[] nmin; double[] nmax;
+            float[] cmin; float[] cmax;
+            ushort imin; ushort imax;
+
+            mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                            out vmax, out vmin, out nmin, out nmax, out cmin, 
+                            out cmax, out imin, out imax);
+                            
+            gltf.AddTriangleMesh("mesh", buffer, vertexBuffer, normalBuffer,
+                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
+                                        imin, imax, materials[BuiltInMaterials.Default.Name], cmin, cmax, null, null);
 
             var edgeCount = 0;
             var vertices = new List<Vector3>();

@@ -24,8 +24,8 @@ namespace Elements.Geometry
         /// <param name="points">The points which are contained within the bounding box.</param>
         public BBox3(Vector3[] points)
         {
-            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
-            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
+            this.Min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
+            this.Max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
             foreach (var p in points)
             {
                 this.Extend(p);

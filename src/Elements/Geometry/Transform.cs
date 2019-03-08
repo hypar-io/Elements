@@ -207,13 +207,28 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Transform a vector into the coordinate space defined by this transform ignoring the translation.
+        /// </summary>
+        /// <param name="vector">The vector to transform.</param>
+        /// <returns>A new vector transformed by this transform.</returns>
+        public Vector3 OfPoint(Vector3 vector)
+        {
+            return vector * this._matrix;
+        }
+
+        /// <summary>
         /// Transform a vector into the coordinate space defined by this transform.
         /// </summary>
         /// <param name="vector">The vector to transform.</param>
         /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfVector(Vector3 vector)
         {
-            return vector * this._matrix;
+            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, Vector3.Origin);
+            return new Vector3(
+                vector.X*m.XAxis.X + vector.Y*YAxis.X + vector.Z*ZAxis.X,
+                vector.X*m.XAxis.Y + vector.Y*YAxis.Y + vector.Z*ZAxis.Y,
+                vector.X*m.XAxis.Z + vector.Y*YAxis.Z + vector.Z*ZAxis.Z
+            );
         }
 
         /// <summary>
@@ -226,7 +241,7 @@ namespace Elements.Geometry
             var transformed = new Vector3[polygon.Vertices.Length];
             for (var i = 0; i < transformed.Length; i++)
             {
-                transformed[i] = OfVector(polygon.Vertices[i]);
+                transformed[i] = OfPoint(polygon.Vertices[i]);
             }
             var p = new Polygon(transformed);
             return p;
@@ -248,13 +263,23 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform the specified Line.
+        /// Transform the specified line.
         /// </summary>
         /// <param name="line">The line to transform.</param>
-        /// <returns>A new line transformed by this transforms.</returns>
+        /// <returns>A new line transformed by this transform.</returns>
         public Line OfLine(Line line)
         {
-            return new Line(OfVector(line.Start), OfVector(line.End));
+            return new Line(OfPoint(line.Start), OfPoint(line.End));
+        }
+
+        /// <summary>
+        /// Transform the specified plane.
+        /// </summary>
+        /// <param name="plane">The plane to transform.</param>
+        /// <returns>A new plane transformed by this transform.</returns>
+        public Plane OfPlane(Plane plane)
+        {
+            return new Plane(OfPoint(plane.Origin), OfVector(plane.Normal));
         }
 
         /// <summary>

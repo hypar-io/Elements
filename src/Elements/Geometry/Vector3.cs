@@ -14,9 +14,9 @@ namespace Elements.Geometry
         /// </summary>
         public static double Tolerance = 0.000000001;
 
-        private static Vector3 _xAxis = new Vector3(1,0,0);
-        private static Vector3 _yAxis = new Vector3(0,1,0);
-        private static Vector3 _zAxis = new Vector3(0,0,1);
+        private static Vector3 _xAxis = new Vector3(1, 0, 0);
+        private static Vector3 _yAxis = new Vector3(0, 1, 0);
+        private static Vector3 _zAxis = new Vector3(0, 0, 1);
         private static Vector3 _origin = new Vector3();
 
         /// <summary>
@@ -148,9 +148,20 @@ namespace Elements.Geometry
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">The y coordinate of the vector.</param>
         /// <param name="z">The z coordinate of the vector.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if any components of the vector are NaN or Infinity.</exception>
         [JsonConstructor]
         public Vector3(double x, double y, double z)
         {
+            if(Double.IsNaN(x) || Double.IsNaN(y) || Double.IsNaN(z))
+            {
+                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
+            }
+
+            if(Double.IsInfinity(x) || Double.IsInfinity(y) || Double.IsInfinity(z))
+            {
+                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
+            }
+
             this.X = x;
             this.Y = y;
             this.Z = z;
@@ -161,8 +172,19 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">Thy y coordinate of the vector.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if any components of the vector are NaN or Infinity.</exception>
         public Vector3(double x, double y)
         {
+            if(Double.IsNaN(x) || Double.IsNaN(y))
+            {
+                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
+            }
+
+            if(Double.IsInfinity(x) || Double.IsInfinity(y))
+            {
+                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
+            }
+
             this.X = x;
             this.Y = y;
         }
@@ -209,12 +231,13 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The angle in radians from this vector to another vector.
+        /// The angle in degrees from this vector to the provided vector.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
         public double AngleTo(Vector3 v)
         {
-            return Math.Acos((Dot(v) / (Length() * v.Length())));
+            var rad = Math.Acos((Dot(v) / (Length() * v.Length())));
+            return rad * 180 / Math.PI;
         }
 
         /// <summary>
@@ -258,6 +281,17 @@ namespace Elements.Geometry
         public static Vector3 operator *(double a, Vector3 v)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
+        }
+
+        /// <summary>
+        /// Divide a vector by a scalar.
+        /// </summary>
+        /// <param name="a">The scalar divisor.</param>
+        /// <param name="v">The vector to divide.</param>
+        /// <returns>A vector whose magnitude is mutiplied by a.</returns>
+        public static Vector3 operator /(Vector3 v, double a)
+        {
+            return new Vector3(v.X / a, v.Y / a, v.Z / a);
         }
 
         /// <summary>
@@ -440,6 +474,15 @@ namespace Elements.Geometry
 
             return this.IsAlmostEqualTo(v);
         }
+
+        /// <summary>
+        /// Are any components of this vector NaN?
+        /// </summary>
+        /// <returns>True if any components are NaN otherwise false.</returns>
+        public bool IsNaN()
+        {
+            return Double.IsNaN(this.X) || Double.IsNaN(this.Y) || Double.IsNaN(this.Z);
+        }
     }
 
     /// <summary>
@@ -459,14 +502,14 @@ namespace Elements.Geometry
             var a = points[0];
             var b = points[1];
             var c = points[2];
-            var ab = b-a;
-            var ac = c-a;
-            for(var i=3; i<points.Count; i++)
+            var ab = b - a;
+            var ac = c - a;
+            for (var i = 3; i < points.Count; i++)
             {
                 var d = points[i];
-                var cd = d-a;
+                var cd = d - a;
                 var tp = ab.Dot(ac.Cross(cd));
-                if(Math.Abs(tp) > Vector3.Tolerance)
+                if (Math.Abs(tp) > Vector3.Tolerance)
                 {
                     return false;
                 }

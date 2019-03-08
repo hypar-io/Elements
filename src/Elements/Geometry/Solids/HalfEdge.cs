@@ -13,7 +13,7 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// The Vertex at the start of the edge.
         /// </summary>
-        public Vertex Vertex{get;}
+        public Vertex Vertex{get; set;}
 
         /// <summary>
         /// The Loop to which this HalfEdge belongs.
@@ -49,6 +49,14 @@ namespace Elements.Geometry.Solids
             this.Edge = edge;
             this.Vertex = vertex;
             this.Vertex.HalfEdge = this;
+        }
+
+        /// <summary>
+        /// Get the string representation of this half edge.
+        /// </summary>
+        public override string ToString()
+        {
+            return this.Vertex.ToString();
         }
     }
 }

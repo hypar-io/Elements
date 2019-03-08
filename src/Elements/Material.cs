@@ -41,7 +41,13 @@ namespace Elements
         /// </summary>
         [JsonProperty("name")]
         public string Name {get; internal set;}
-        
+
+        /// <summary>
+        /// Is the material double sided?
+        /// </summary>
+        [JsonProperty("double_sided")]
+        public bool DoubleSided{get;}
+
         /// <summary>
         /// Construct a material.
         /// </summary>
@@ -49,10 +55,11 @@ namespace Elements
         /// <param name="color">The RGBA color of the material.</param>
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
+        /// <param name="doubleSided">Is the material double sided?</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is greater than 1.0.</exception>
         [JsonConstructor]
-        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f)
+        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, bool doubleSided = false)
         {
             if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {
@@ -69,6 +76,7 @@ namespace Elements
             this.Color = color;
             this.SpecularFactor = specularFactor;
             this.GlossinessFactor = glossinessFactor;
+            this.DoubleSided = doubleSided;
         }
 
         /// <summary>

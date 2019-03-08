@@ -35,10 +35,10 @@ namespace Elements.Geometry.Solids
 
         internal static Plane Plane(this Face f)
         {
-            var edges = f.Outer.GetLinkedEdges();
-            var a = edges[0].Left.Vertex.Point;
-            var b = edges[1].Left.Vertex.Point;
-            var c = edges[2].Left.Vertex.Point;
+            var edges = f.Outer.Edges;
+            var a = edges[0].Vertex.Point;
+            var b = edges[1].Vertex.Point;
+            var c = edges[2].Vertex.Point;
             return new Plane(a, b, c);
         }
     }
