@@ -366,6 +366,12 @@ namespace Elements
                 }
             }
 
+            if(element is ITessellate)
+            {
+                var tess = (ITessellate)element;
+                AddMaterial(tess.Material);
+            }
+
             if (element is IProfileProvider)
             {
                 var ipp = (IProfileProvider)element;
@@ -476,7 +482,10 @@ namespace Elements
                 GetRenderDataForElement(e, gltf, materials, lines);
             }
 
-            AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], null);
+            if(lines.Count() > 0)
+            {
+                AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], null);
+            }
 
             var buff = new glTFLoader.Schema.Buffer();
             buff.ByteLength = _buffer.Count();
@@ -499,7 +508,7 @@ namespace Elements
                     {
                         if(e.Transform != null)
                         {
-                            lines.AddRange(new[] { e.Transform.OfVector(edge.Left.Vertex.Point), e.Transform.OfVector(edge.Right.Vertex.Point) });
+                            lines.AddRange(new[] { e.Transform.OfPoint(edge.Left.Vertex.Point), e.Transform.OfPoint(edge.Right.Vertex.Point) });
                         }
                         else
                         {
@@ -509,10 +518,48 @@ namespace Elements
 
                     mesh = new Elements.Geometry.Mesh();
                     solid.Tessellate(ref mesh);
-                    gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, mesh.Vertices.ToArray(), mesh.Normals.ToArray(),
-                                        mesh.Indices.ToArray(), mesh.VMin, mesh.VMax, mesh.NMin, mesh.NMax,
-                                        mesh.IMin, mesh.IMax, materials[solid.Material.Name], null, e.Transform);
+                    
+                    double[] vertexBuffer;
+                    double[] normalBuffer;
+                    ushort[] indexBuffer;
+                    float[] colorBuffer;
+                    double[] vmin; double[] vmax;
+                    double[] nmin; double[] nmax;
+                    float[] cmin; float[] cmax;
+                    ushort imin; ushort imax;
+
+                    mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                                    out vmax, out vmin, out nmin, out nmax, out cmin, 
+                                    out cmax, out imin, out imax);
+
+                    gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, vertexBuffer, normalBuffer,
+                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
+                                        imin, imax, materials[solid.Material.Name], cmin, cmax, null, e.Transform);
                 }
+            }
+
+            if (e is ITessellate)
+            {
+                var geo = (ITessellate)e;
+                var mesh = new Elements.Geometry.Mesh();
+                geo.Tessellate(ref mesh);
+                
+                double[] vertexBuffer;
+                double[] normalBuffer;
+                ushort[] indexBuffer;
+                float[] colorBuffer;
+                double[] vmin; double[] vmax;
+                double[] nmin; double[] nmax;
+                float[] cmin; float[] cmax;
+                ushort imin; ushort imax;
+
+                mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                                out vmax, out vmin, out nmin, out nmax, out cmin, 
+                                out cmax, out imin, out imax);
+
+                gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, vertexBuffer, normalBuffer,
+                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
+                                        imin, imax, materials[geo.Material.Name], cmin, cmax, null, e.Transform);
             }
 
             if (e is IAggregateElement)
@@ -552,7 +599,7 @@ namespace Elements
             var up = direction.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
             var tr = new Transform(Vector3.Origin, direction.Cross(up), direction);
             tr.Rotate(up, -45.0);
-            var arrow1 = tr.OfVector(Vector3.XAxis * 0.1);
+            var arrow1 = tr.OfPoint(Vector3.XAxis * 0.1);
             var pts = new[] { origin, end, end + arrow1 };
             var vBuff = pts.ToArray();
             var vCount = 3;

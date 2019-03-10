@@ -22,10 +22,10 @@ namespace Elements.Tests
         {
             var a = Vector3.XAxis;
             var b = Vector3.YAxis;
-            Assert.Equal(Math.PI/2, a.AngleTo(b), 5);
+            Assert.Equal(Math.PI/2 * 180 / Math.PI, a.AngleTo(b), 5);
 
             var c = new Vector3(1,1,0);
-            Assert.Equal(Math.PI/4, a.AngleTo(c), 5);
+            Assert.Equal(Math.PI/4 * 180 /Math.PI, a.AngleTo(c), 5);
 
             Assert.Equal(0.0, a.AngleTo(a), 5);
         }

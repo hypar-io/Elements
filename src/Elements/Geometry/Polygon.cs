@@ -1,6 +1,7 @@
 using ClipperLib;
 using Elements.Geometry.Interfaces;
 using Elements.Serialization;
+using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
 using System.Collections;

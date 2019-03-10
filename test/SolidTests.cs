@@ -46,6 +46,29 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Slice()
+        {
+            var n = 3;
+            var outer = Polygon.Ngon(n, 2);
+            var solid = Solid.SweepFace(outer, new Polygon[]{}, 5);
+            var slicePlane = new Plane(new Vector3(0,0,2.5), new Vector3(0.5,0.5,0));
+            solid.Slice(slicePlane);
+
+            foreach(var e in solid.Edges.Values)
+            {
+                Assert.NotNull(e.Left);
+                Assert.NotNull(e.Right);
+                Assert.NotSame(e.Left, e.Right);
+            }
+
+            Console.WriteLine(solid.ToString());
+            // Assert.Equal(2 * n + 2, solid.Faces.Count);
+            // Assert.Equal(n * 6, solid.Edges.Count);
+            // Assert.Equal(n * 4, solid.Vertices.Count);
+            solid.ToGlb("models/SliceSolid.glb");
+        }
+
+        [Fact]
         public void SweptSolidAngle()
         {
             var n = 4;
