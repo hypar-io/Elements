@@ -31,6 +31,8 @@ namespace Elements
 
         private Dictionary<long, Profile> _profiles = new Dictionary<long, Profile>();
 
+        private List<string> _extensions = new List<string>();
+
         /// <summary>
         /// The version of the assembly.
         /// </summary>
@@ -80,6 +82,14 @@ namespace Elements
         }
 
         /// <summary>
+        /// A collection of extension identifiers which representing
+        /// extensions which must be available at the time of
+        /// serialization or deserialization.
+        /// </summary>
+        [JsonProperty("extensions")]
+        public IEnumerable<string> Extensions => _extensions;
+
+        /// <summary>
         /// Construct an empty model.
         /// </summary>
         public Model()
@@ -109,6 +119,8 @@ namespace Elements
             {
                 throw new ArgumentException("An Element with the same Id already exists in the Model.");
             }
+
+            AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
         }
 
         /// <summary>
@@ -333,14 +345,23 @@ namespace Elements
         }
 
         internal Model(Dictionary<long, Element> elements, Dictionary<long, Material> materials, Dictionary<long, ElementType> elementTypes,
-                        Dictionary<long, Profile> profiles)
+                        Dictionary<long, Profile> profiles, List<string> extensions)
         {
             this._elements = elements;
             this._materials = materials;
             this._elementTypes = elementTypes;
             this._profiles = profiles;
+            this._extensions = extensions;
             AddMaterial(BuiltInMaterials.Edges);
             AddMaterial(BuiltInMaterials.Void);
+        }
+
+        private void AddExtension(string extensionId)
+        {
+            if(!_extensions.Contains(extensionId))
+            {
+                _extensions.Add(extensionId);
+            }
         }
 
         private void AddMaterial(Material material)

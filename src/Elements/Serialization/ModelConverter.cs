@@ -37,12 +37,13 @@ namespace Elements.Serialization
                                 new[] { new ElementTypeConverter() });
             var profiles = JsonConvert.DeserializeObject<Dictionary<long, Profile>>(obj.GetValue("profiles").ToString(),
                                 new[] { new IProfileConverter() });
+            var extensions = JsonConvert.DeserializeObject<List<string>>(obj.GetValue("extensions").ToString());
             var elements = JsonConvert.DeserializeObject<Dictionary<long, Element>>(obj.GetValue("elements").ToString(),
                             new JsonSerializerSettings()
                             {
                                 Converters = new JsonConverter[]
                                                 {
-                                                    new ElementConverter(),
+                                                    new ElementConverter(extensions),
                                                     new MaterialToIdConverter(materials),
                                                     new ElementTypeToIdConverter(elementTypes),
                                                     new ProfileToIdConverter(profiles),
@@ -50,7 +51,7 @@ namespace Elements.Serialization
                                                 },
                                 NullValueHandling = NullValueHandling.Ignore
                             });
-            return new Model(elements, materials, elementTypes, profiles);
+            return new Model(elements, materials, elementTypes, profiles, extensions);
         }
 
         /// <summary>
@@ -64,27 +65,26 @@ namespace Elements.Serialization
             var model = (Model)value;
             writer.WriteStartObject();
 
+            var settings = new JsonSerializerSettings(){
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+
+            // Write extensions
+            writer.WritePropertyName("extensions");
+            writer.WriteRawValue(JsonConvert.SerializeObject(model.Extensions));
+
             // Write materials
             writer.WritePropertyName("materials");
-            writer.WriteRawValue(JsonConvert.SerializeObject(model.Materials, new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented
-            }));
+            writer.WriteRawValue(JsonConvert.SerializeObject(model.Materials, settings));
 
             // Write element types
             writer.WritePropertyName("element_types");
-            writer.WriteRawValue(JsonConvert.SerializeObject(model.ElementTypes, new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented
-            }));
+            writer.WriteRawValue(JsonConvert.SerializeObject(model.ElementTypes, settings));
 
             // Write profiles
             writer.WritePropertyName("profiles");
-            writer.WriteRawValue(JsonConvert.SerializeObject(model.Profiles, new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented,
-                NullValueHandling = NullValueHandling.Ignore
-            }));
+            writer.WriteRawValue(JsonConvert.SerializeObject(model.Profiles, settings));
 
             // Write elements
             writer.WritePropertyName("elements");

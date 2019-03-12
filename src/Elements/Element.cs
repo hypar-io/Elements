@@ -82,7 +82,6 @@ namespace Elements
         /// </summary>
         /// <param name="name">The name of the parameter to remove.</param>
         /// <exception cref="System.Exception">Thrown when the specified parameter cannot be found.</exception>
-
         public void RemoveProperty(string name)
         {
             if (_properties.ContainsKey(name))

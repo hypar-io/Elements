@@ -8,22 +8,24 @@ using System.Reflection;
 
 namespace Elements.Serialization
 {
-
     /// <summary>
     /// The serialization converter for elements.
     /// </summary>
     public class ElementConverter : JsonConverter
     {
-        private List<Type> _elementTypes;
+        private IEnumerable<Type> _elementTypes;
 
         /// <summary>
         /// Construct an ElementConverter.
         /// </summary>
-        public ElementConverter()
+        public ElementConverter(IEnumerable<string> extensions)
         {
             try
             {
-                _elementTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t=>typeof(IElement).IsAssignableFrom(t)).ToList();
+                // Loop over all extensions attempting to find
+                // a matching assembly.
+                var elementAsms = AppDomain.CurrentDomain.GetAssemblies().Where(a=>extensions.Contains(a.GetName().Name.ToLower()));
+                _elementTypes = elementAsms.SelectMany(a=>a.GetTypes().Where(t=>typeof(IElement).IsAssignableFrom(t)));
             }
             catch(System.Reflection.ReflectionTypeLoadException ex)
             {
@@ -77,7 +79,7 @@ namespace Elements.Serialization
             var foundType = _elementTypes.FirstOrDefault(t=>t.FullName.ToLower() == typeName);
             if(foundType == null)
             {
-                throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
+                throw new Exception($"The object with type name, {typeName}, is not available in the loaded assemblies. Is it possible that you're missing an extension assembly?");
             }
             return obj.ToObject(foundType, serializer);
         }
