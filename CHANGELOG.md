@@ -7,6 +7,7 @@
 - `Material.DoubleSided`
 - `Loop.InsertEdgeAfter()`
 - `Solid.Slice()`
+- `Model.Extensions`
 ### Changed
 - `Transform.OfVector(Vector3 vector)` now does proper vector transformation without translation.
 - Attempting to construct a `Vector3` with NaN or Infinite arguments will throw an `ArgumentOutOfRangeException`.
