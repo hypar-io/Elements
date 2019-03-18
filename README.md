@@ -10,7 +10,7 @@ A better API for buildings.
 Elements is a cross-platform library for creating building elements like Walls, Beams, and Spaces. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings. Here's an example using Elements to create a `Beam`:
 ```c#
 var line = new Line(Vector3.Origin, new Vector3(5,5,5));
-var beam = new Beam(line, Profiles.WideFlangeProfile());
+var beam = new Beam(line, new Profiles.WideFlangeProfile("testprofile"));
 var model = new Model();
 model.AddElement(beam);
 var json = model.ToJson();
