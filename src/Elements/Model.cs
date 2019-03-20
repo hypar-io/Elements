@@ -1,29 +1,22 @@
-using glTFLoader;
-using glTFLoader.Schema;
-using Elements.Serialization;
 using Elements.Geometry;
 using Elements.GeoJSON;
 using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Reflection;
-using STEP;
-using IFC.Storage;
-using IFC;
-using Hypar.Elements.Interfaces;
+using Elements.Serialization.JSON;
+using Elements.Serialization.IFC;
 
 namespace Elements
 {
     /// <summary>
-    /// A container for Elements, Element Types, Materials, and Profiles.
+    /// A container for elements, element types, materials, and profiles.
     /// </summary>
     public class Model
     {
-        private List<byte> _buffer = new List<byte>();
         private Dictionary<long, Material> _materials = new Dictionary<long, Material>();
         private Dictionary<long, Element> _elements = new Dictionary<long, Element>();
 
@@ -102,7 +95,8 @@ namespace Elements
         /// Add an element to the model.
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
-        /// <exception cref="System.ArgumentException">Thrown when an element with the same Id already exists in the model.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when an element 
+        /// with the same Id already exists in the model.</exception>
         public void AddElement(Element element)
         {
             if (element == null)
@@ -139,7 +133,8 @@ namespace Elements
         /// Get an Element by id from the Model.
         /// </summary>
         /// <param name="id">The identifier of the Element.</param>
-        /// <returns>An Element or null if no Element can be found with the provided id.</returns>
+        /// <returns>An Element or null if no Element can be found 
+        /// with the provided id.</returns>
         public Element GetElementById(int id)
         {
             if (this._elements.ContainsKey(id))
@@ -153,7 +148,8 @@ namespace Elements
         /// Get the first Element with the specified name.
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>An Element or null if no Element can be found with the provided name.</returns>
+        /// <returns>An Element or null if no Element can be found 
+        /// with the provided name.</returns>
         public Element GetElementByName(string name)
         {
             var found = this.Elements.FirstOrDefault(e => e.Value.Name == name);
@@ -168,7 +164,8 @@ namespace Elements
         /// Get a Material by name.
         /// </summary>
         /// <param name="name">The name of the Material.</param>
-        /// <returns>A Material or null if no Material with the specified id can be found.</returns>
+        /// <returns>A Material or null if no Material with the 
+        /// specified id can be found.</returns>
         public Material GetMaterialByName(string name)
         {
             return this._materials.Values.FirstOrDefault(m => m.Name == name);
@@ -178,7 +175,8 @@ namespace Elements
         /// Get an ElementType by name.
         /// </summary>
         /// <param name="name">The name of the ElementType.</param>
-        /// <returns>An ElementType or null if no ElementType with the specified name can be found.</returns>
+        /// <returns>An ElementType or null if no ElementType with 
+        /// the specified name can be found.</returns>
         public ElementType GetElementTypeByName(string name)
         {
             return this._elementTypes.Values.FirstOrDefault(et => et.Name == name);
@@ -188,7 +186,8 @@ namespace Elements
         /// Get a Profile by name.
         /// </summary>
         /// <param name="name">The name of the Profile.</param>
-        /// <returns>A Profile or null if no Profile with the specified name can be found.</returns>
+        /// <returns>A Profile or null if no Profile with the 
+        /// specified name can be found.</returns>
         public Profile GetProfileByName(string name)
         {
             return this._profiles.Values.FirstOrDefault(p => p.Name != null && p.Name == name);
@@ -205,147 +204,28 @@ namespace Elements
         }
 
         /// <summary>
-        /// Save the Model to a binary glTF file.
+        /// Create a model from JSON.
         /// </summary>
-        /// <param name="path"></param>
-        public void SaveGlb(string path)
-        {
-            var gltf = InitializeGlTF();
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-
-            gltf.SaveBinaryModel(_buffer.ToArray(), path);
-        }
-
-        /// <summary>
-        /// Save the Model to a glTF file.
-        /// </summary>
-        /// <param name="path"></param>
-        public void SaveGltf(string path)
-        {
-            var gltf = InitializeGlTF();
-
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-
-            var uri = Path.GetFileNameWithoutExtension(path) + ".bin";
-            if (File.Exists(uri))
-            {
-                File.Delete(uri);
-            }
-
-            gltf.Buffers[0].Uri = uri;
-
-            using (var fs = new FileStream(uri, FileMode.Create, FileAccess.Write))
-            {
-                fs.Write(_buffer.ToArray(), 0, _buffer.Count());
-            }
-            gltf.SaveModel(path);
-        }
-
-        /// <summary>
-        /// Convert the Model to a base64 encoded string.
-        /// </summary>
-        /// <returns>A Base64 string representing the Model.</returns>
-        public string ToBase64String()
-        {
-            var tmp = Path.GetTempFileName();
-            var gltf = InitializeGlTF();
-            gltf.SaveBinaryModel(_buffer.ToArray(), tmp);
-            var bytes = File.ReadAllBytes(tmp);
-            return Convert.ToBase64String(bytes);
-        }
-
-        /// <summary>
-        /// Serialize the model to JSON.
-        /// </summary>
-        /// <returns>A JSON string representing the Model.</returns>
-        public string ToJson(bool indented = false)
-        {
-            var result = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-            {
-                Converters = new[] { new ModelConverter() },
-                NullValueHandling = NullValueHandling.Ignore
-            });
-            if (indented)
-            {
-                return result.Replace("\n", "").Replace("\r\n", "").Replace("\t", "").Replace("  ", "");
-            }
-            else
-            {
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Deserialize a model from JSON.
-        /// </summary>
-        /// <param name="json">The JSON to deserialize to a Model.</param>
-        /// <returns>A Model.</returns>
+        /// <param name="json">The JSON.</param>
+        /// <returns>A model.</returns>
         public static Model FromJson(string json)
         {
-            return JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings
-            {
-                Converters = new[] { new ModelConverter() },
-                NullValueHandling = NullValueHandling.Ignore
-            });
+            return JsonExtensions.FromJson(json);
         }
 
         /// <summary>
-        /// Construct a Model from an IFC STEP file.
+        /// Create a model from IFC.
         /// </summary>
-        /// <param name="ifcPath">The path to the IFC file on disk.</param>
-        public static Model FromIFC(string ifcPath)
+        /// <param name="path">The path to the IFC STEP file.</param>
+        /// <returns>A model.</returns>
+        public static Model FromIFC(string path)
         {
-            IList<STEPError> errors;
-            var ifcModel = new IFC.Model(ifcPath, new LocalStorageProvider(), out errors);
-
-            // var materials = ifcModel.AllInstancesOfType<IfcMaterial>();
-
-            var floorType = new FloorType("IFC Floor", 0.1);
-            var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
-            var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
-            var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
-            var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
-            var ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
-            var ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
-            // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
-            // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
-
-            var slabs = ifcSlabs.Select(s => s.ToFloor());
-            var spaces = ifcSpaces.Select(sp => sp.ToSpace());
-            var openings = new List<Opening>();
-            foreach (var v in ifcVoids)
-            {
-                var element = v.RelatingBuildingElement;
-                // var elementTransform = element.ObjectPlacement.ToTransform();
-                var o = ((IfcOpeningElement)v.RelatedOpeningElement).ToOpening();
-                openings.Add(o);
-            }
-            var walls = ifcWalls.Select(w => w.ToWall());
-            var beams = ifcBeams.Select(b => b.ToBeam());
-            var columns = ifcColumns.Select(c => c.ToColumn());
-
-            var model = new Model();
-            model.AddElements(slabs);
-            model.AddElements(spaces);
-            model.AddElements(walls);
-            model.AddElements(beams);
-            model.AddElements(columns);
-            // if (openings.Any())
-            // {
-            //     model.AddElements(openings);
-            // }
-
-            return model;
+            return IFCExtensions.FromIFC(path);
         }
 
-        internal Model(Dictionary<long, Element> elements, Dictionary<long, Material> materials, Dictionary<long, ElementType> elementTypes,
-                        Dictionary<long, Profile> profiles, List<string> extensions)
+        internal Model(Dictionary<long, Element> elements, Dictionary<long,
+            Material> materials, Dictionary<long, ElementType> elementTypes,
+            Dictionary<long, Profile> profiles, List<string> extensions)
         {
             this._elements = elements;
             this._materials = materials;
@@ -358,7 +238,7 @@ namespace Elements
 
         private void AddExtension(string extensionId)
         {
-            if(!_extensions.Contains(extensionId))
+            if (!_extensions.Contains(extensionId))
             {
                 _extensions.Add(extensionId);
             }
@@ -387,7 +267,7 @@ namespace Elements
                 }
             }
 
-            if(element is ITessellate)
+            if (element is ITessellate)
             {
                 var tess = (ITessellate)element;
                 AddMaterial(tess.Material);
@@ -455,180 +335,6 @@ namespace Elements
             {
                 this._profiles[profile.Id] = profile;
             }
-        }
-
-        private Gltf InitializeGlTF()
-        {
-            var gltf = new Gltf();
-            var asset = new Asset();
-            asset.Version = "2.0";
-            asset.Generator = "hypar-gltf";
-
-            gltf.Asset = asset;
-
-            var root = new Node();
-
-            root.Translation = new[] { 0.0f, 0.0f, 0.0f };
-            root.Scale = new[] { 1.0f, 1.0f, 1.0f };
-
-            // Set Z up by rotating -90d around the X Axis
-            var q = new Quaternion(new Vector3(1, 0, 0), -Math.PI / 2);
-            root.Rotation = new[]{
-                (float)q.X, (float)q.Y, (float)q.Z, (float)q.W
-            };
-
-            gltf.Nodes = new[] { root };
-
-            gltf.Scene = 0;
-            var scene = new Scene();
-            scene.Nodes = new[] { 0 };
-            gltf.Scenes = new[] { scene };
-
-            gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
-
-            var materialsToAdd = this._materials.Values.ToList();
-            materialsToAdd.Add(BuiltInMaterials.XAxis);
-            materialsToAdd.Add(BuiltInMaterials.YAxis);
-            materialsToAdd.Add(BuiltInMaterials.ZAxis);
-            materialsToAdd.Add(BuiltInMaterials.Edges);
-            materialsToAdd.Add(BuiltInMaterials.EdgesHighlighted);
-
-            var materials = gltf.AddMaterials(materialsToAdd);
-
-            var lines = new List<Vector3>();
-
-            foreach (var kvp in this._elements)
-            {
-                var e = kvp.Value;
-                GetRenderDataForElement(e, gltf, materials, lines);
-            }
-
-            if(lines.Count() > 0)
-            {
-                AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], null);
-            }
-
-            var buff = new glTFLoader.Schema.Buffer();
-            buff.ByteLength = _buffer.Count();
-            gltf.Buffers = new[] { buff };
-
-            return gltf;
-        }
-
-        private void GetRenderDataForElement(IElement e, Gltf gltf, Dictionary<string, int> materials, List<Vector3> lines)
-        {
-            if (e is IGeometry3D)
-            {
-                var geo = e as IGeometry3D;
-
-                Elements.Geometry.Mesh mesh = null;
-
-                foreach (var solid in geo.Geometry)
-                {
-                    foreach (var edge in solid.Edges.Values)
-                    {
-                        if(e.Transform != null)
-                        {
-                            lines.AddRange(new[] { e.Transform.OfPoint(edge.Left.Vertex.Point), e.Transform.OfPoint(edge.Right.Vertex.Point) });
-                        }
-                        else
-                        {
-                            lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
-                        }
-                    }
-
-                    mesh = new Elements.Geometry.Mesh();
-                    solid.Tessellate(ref mesh);
-                    
-                    double[] vertexBuffer;
-                    double[] normalBuffer;
-                    ushort[] indexBuffer;
-                    float[] colorBuffer;
-                    double[] vmin; double[] vmax;
-                    double[] nmin; double[] nmax;
-                    float[] cmin; float[] cmax;
-                    ushort imin; ushort imax;
-
-                    mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
-                                    out vmax, out vmin, out nmin, out nmax, out cmin, 
-                                    out cmax, out imin, out imax);
-
-                    gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, vertexBuffer, normalBuffer,
-                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, materials[solid.Material.Name], cmin, cmax, null, e.Transform);
-                }
-            }
-
-            if (e is ITessellate)
-            {
-                var geo = (ITessellate)e;
-                var mesh = new Elements.Geometry.Mesh();
-                geo.Tessellate(ref mesh);
-                
-                double[] vertexBuffer;
-                double[] normalBuffer;
-                ushort[] indexBuffer;
-                float[] colorBuffer;
-                double[] vmin; double[] vmax;
-                double[] nmin; double[] nmax;
-                float[] cmin; float[] cmax;
-                ushort imin; ushort imax;
-
-                mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
-                                out vmax, out vmin, out nmin, out nmax, out cmin, 
-                                out cmax, out imin, out imax);
-
-                gltf.AddTriangleMesh(e.Id + "_mesh", _buffer, vertexBuffer, normalBuffer,
-                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, materials[geo.Material.Name], cmin, cmax, null, e.Transform);
-            }
-
-            if (e is IAggregateElement)
-            {
-                var ae = (IAggregateElement)e;
-
-                if (ae.Elements.Count > 0)
-                {
-                    foreach (var esub in ae.Elements)
-                    {
-                        GetRenderDataForElement(esub, gltf, materials, lines);
-                    }
-                }
-            }
-        }
-
-        private void AddLines(long id, Vector3[] vertices, Gltf gltf, int material, Transform t = null)
-        {
-            var vBuff = vertices.ToArray();
-            var vCount = vertices.Length;
-            var indices = new List<ushort>();
-            for (ushort i = 0; i < vertices.Length; i += 2)
-            {
-                indices.Add(i);
-                indices.Add((ushort)(i + 1));
-            }
-            // var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
-            var bbox = new BBox3(vertices);
-            gltf.AddLineLoop($"{id}_curve", _buffer, vBuff, indices.ToArray(), bbox.Min.ToArray(),
-                            bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, MeshPrimitive.ModeEnum.LINES, t);
-        }
-
-        private void AddArrow(long id, Vector3 origin, Vector3 direction, Gltf gltf, int material, Transform t)
-        {
-            var scale = 0.5;
-            var end = origin + direction * scale;
-            var up = direction.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
-            var tr = new Transform(Vector3.Origin, direction.Cross(up), direction);
-            tr.Rotate(up, -45.0);
-            var arrow1 = tr.OfPoint(Vector3.XAxis * 0.1);
-            var pts = new[] { origin, end, end + arrow1 };
-            var vBuff = pts.ToArray();
-            var vCount = 3;
-            var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
-            var bbox = new BBox3(pts);
-            gltf.AddLineLoop($"{id}_curve", _buffer, vBuff, indices, bbox.Min.ToArray(),
-                            bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, MeshPrimitive.ModeEnum.LINE_STRIP, t);
-
         }
     }
 }

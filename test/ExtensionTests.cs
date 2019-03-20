@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Xunit;
+using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {

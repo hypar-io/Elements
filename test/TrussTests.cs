@@ -4,6 +4,7 @@ using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using System;
 using System.Linq;
+using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {

@@ -8,6 +8,8 @@ using Xunit.Sdk;
 using Elements.Geometry;
 using System.Linq;
 using System.Diagnostics;
+using Elements.Serialization.glTF;
+using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
@@ -50,7 +52,7 @@ namespace Elements.Tests
 
                 // Write the model as a glb
                 var modelPath = $"models/{this._name}.glb";
-                this._model.SaveGlb($"models/{this._name}.glb");
+                this._model.ToGlTF($"models/{this._name}.glb");
                 sw.Stop();
                 Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed.TotalMilliseconds}ms)");
 

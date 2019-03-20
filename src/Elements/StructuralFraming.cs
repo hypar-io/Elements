@@ -2,8 +2,8 @@ using Newtonsoft.Json;
 using System;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Serialization;
 using Elements.Geometry.Solids;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
