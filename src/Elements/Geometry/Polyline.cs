@@ -82,7 +82,7 @@ namespace Elements.Geometry
                     }
                     if (vertices[i].IsAlmostEqualTo(vertices[j]))
                     {
-                        throw new ArgumentException($"The polygon could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
+                        throw new ArgumentException($"The polyline could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
                     }
                 }
             }
