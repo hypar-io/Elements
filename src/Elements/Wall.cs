@@ -93,10 +93,12 @@ namespace Elements
         /// <param name="element_type">The wall type of the wall.</param>
         /// <param name="height">The height of the wall.</param>
         /// <param name="openings">A collection of Openings in the wall.</param>
+        /// <param name="transform">The transform of the wall.
+        /// This transform will be concatenated to the transform created to describe the wall in 2D.</param>
         /// <param name="material">The wall's material.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of wall's start and end points are not the same.</exception>
-        public Wall(Line center_line, WallType element_type, double height, Material material = null, Opening[] openings = null)
+        public Wall(Line center_line, WallType element_type, double height, Material material = null, Opening[] openings = null, Transform transform = null)
         {
             if (height <= 0.0)
             {
@@ -116,7 +118,12 @@ namespace Elements
             // Construct a transform whose X axis is the centerline of the wall.
             // The wall is described as if it's lying flat in the XY plane of that Transform.
             var z = center_line.Direction.Cross(Vector3.ZAxis);
-            this.Transform = new Transform(center_line.Start, center_line.Direction, z);
+            var wallTransform = new Transform(center_line.Start, center_line.Direction, z);
+            this.Transform = wallTransform;
+            if(transform != null) 
+            {
+                wallTransform.Concatenate(transform);
+            }
 
             if (openings != null && openings.Length > 0)
             {
