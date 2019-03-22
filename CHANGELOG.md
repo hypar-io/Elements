@@ -1,6 +1,16 @@
 # Changelog
 
-## [0.2.1] - 2019-01-31
+## [0.2.2]
+### Added
+- `Matrix.Determinant()`
+- `Matrix.Inverse()`
+- `Transform.Invert()`
+### Changed
+- Wall constructor which uses a center line can now have a Transform specified.
+- `Profile.ComputeTransform()` now finds the first 3 non-colinear points for calculating its plane. Previously, this function would break when two of the first three vertices were co-linear.
+- Using Hypar.IFC2X3 for interaction with IFC.
+
+## [0.2.1]
 ### Added
 - The `Topography` class has been added.
 - `Transform.OfPoint(Vector3 vector)` has been added to transform a vector as a point with translation. This was previously `Transform.OfVector(Vector3 vector)`. All sites previously using `OfVector(...)` are now using `OfPoint(...)`.
@@ -13,7 +23,7 @@
 - Attempting to construct a `Vector3` with NaN or Infinite arguments will throw an `ArgumentOutOfRangeException`.
 
 
-## [0.2.0] - 2019-01-31
+## [0.2.0]
 ### Added
 - IFC implementation has begun with `Model.FromIFC(...)`. Support includes reading of Walls, Slabs, Spaces, Beams, and Columns. Brep booleans required for Wall and Slab openings are not yet supported and are instead converted to Polygon openings in Wall and Floor profiles.
 - The `Elements.Geometry.Profiles` namespace has been added. All profile servers can now be found here.
