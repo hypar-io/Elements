@@ -312,6 +312,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Invert this transform.
+        /// </summary>
+        public void Invert()
+        {
+            this._matrix = this._matrix.Inverse();
+        }
+
+        /// <summary>
         /// Apply a translation to the transform.
         /// </summary>
         /// <param name="translation">The translation to apply.</param>
