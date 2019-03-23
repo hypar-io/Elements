@@ -10,6 +10,7 @@ using System.Linq;
 using System.Diagnostics;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
+using Elements.Serialization.IFC;
 
 namespace Elements.Tests
 {
@@ -64,6 +65,11 @@ namespace Elements.Tests
                 // Try deserializing JSON
                 Console.WriteLine($"Deserializing {this._name} from JSON.");
                 var newModel = Model.FromJson(File.ReadAllText(jsonPath));
+
+                // Write the model as an IFC
+                var ifcPath = $"models/{this._name}.ifc";
+                Console.WriteLine($"Serializing {this._name} to IFC: {ifcPath}");
+                this._model.ToIFC(ifcPath);
             }
         }
     }
