@@ -132,6 +132,11 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Polygon Thicken(double amount)
         {
+            if(Start.Z != End.Z)
+            {
+                throw new Exception("The line could not be thickened. Only lines with their start and end at the same elevation can be thickened.");
+            }
+            
             var offsetN = this.Direction.Cross(Vector3.ZAxis);
             var a = this.Start + (offsetN * (amount / 2));
             var b = this.End + (offsetN * (amount / 2));
