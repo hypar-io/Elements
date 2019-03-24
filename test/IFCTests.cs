@@ -41,5 +41,18 @@ namespace Elements.Tests
             this.Name = name;
             this.Model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
         }
+
+        [Fact]
+        public void Wall()
+        {
+            this.Name = "IfcWall";
+            var line = new Line(Vector3.Origin, new Vector3(10,10,0));
+            var line1 = new Line(new Vector3(10,10,0), new Vector3(10,15,0));
+            var wallType = new WallType("test", 0.2);
+            var wall = new Wall(line, wallType, 3);
+            var wall1 = new Wall(line1, wallType, 2);
+            this.Model.AddElement(wall);
+            this.Model.AddElement(wall1);
+        }
     }
 }

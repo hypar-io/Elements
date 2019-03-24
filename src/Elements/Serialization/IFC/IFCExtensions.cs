@@ -2,13 +2,12 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using IFC;
-using IFC.Storage;
 using STEP;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using IfcModel = IFC.Model;
 
 namespace Elements.Serialization.IFC
 {
@@ -24,11 +23,8 @@ namespace Elements.Serialization.IFC
         /// <returns>A model.</returns>
         internal static Model FromIFC(string path)
         {
-            IList<STEPError> errors = null;
-            var ifcModel = new IfcModel(path, new LocalStorageProvider(), out errors);
-
-            // var materials = ifcModel.AllInstancesOfType<IfcMaterial>();
-
+            List<STEPError> errors;
+            var ifcModel = new Document(path, out errors);
             var floorType = new FloorType("IFC Floor", 0.1);
             var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
             var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
@@ -38,9 +34,8 @@ namespace Elements.Serialization.IFC
             var ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
             // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
             // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
+            var ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
 
-            var slabs = ifcSlabs.Select(s => s.ToFloor());
-            var spaces = ifcSpaces.Select(sp => sp.ToSpace());
             var openings = new List<Opening>();
             foreach (var v in ifcVoids)
             {
@@ -49,7 +44,12 @@ namespace Elements.Serialization.IFC
                 var o = ((IfcOpeningElement)v.RelatedOpeningElement).ToOpening();
                 openings.Add(o);
             }
-            var walls = ifcWalls.Select(w => w.ToWall());
+
+            var slabs = ifcSlabs.Select(s => s.ToFloor(ifcVoids.Where(v=>v.RelatingBuildingElement == s).Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
+            var spaces = ifcSpaces.Select(sp => sp.ToSpace());
+            var walls = ifcWalls.Select(w => w.ToWall(
+                ifcVoids.Where(v=>v.RelatingBuildingElement == w).Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>(),
+                ifcMaterials.Where(m=>m.RelatedObjects.Contains(w)).FirstOrDefault().RelatingMaterial));
             var beams = ifcBeams.Select(b => b.ToBeam());
             var columns = ifcColumns.Select(c => c.ToColumn());
 
@@ -59,19 +59,201 @@ namespace Elements.Serialization.IFC
             model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
-            // if (openings.Any())
-            // {
-            //     model.AddElements(openings);
-            // }
+            if (openings.Any())
+            {
+                model.AddElements(openings);
+            }
 
             return model;
         }
         
         /// <summary>
+        /// Write the model to IFC.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="path">The path to the generated IFC STEP file.</param>
+        public static void ToIFC(this Model model, string path)
+        {
+            var ifc = new Document("elements", "elements", Environment.UserName, 
+                                    null, null, null, "elements", null, null,
+                                    null, null, null, null, null, null
+                                    );
+
+            var proj = ifc.AllInstancesOfType<IfcProject>().FirstOrDefault();
+
+            // Add a site
+            var site = new IfcSite(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, IfcElementCompositionEnum.ELEMENT);
+            var projAggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, proj, new List<IfcObjectDefinition>{site});
+
+            // Add building and building storey
+            var building = new IfcBuilding(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, IfcElementCompositionEnum.ELEMENT);
+            var storey = new IfcBuildingStorey(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, IfcElementCompositionEnum.ELEMENT);
+            var aggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, building, new List<IfcObjectDefinition>{storey});
+            
+            // Aggregate the building into the site
+            var siteAggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, site, new List<IfcObjectDefinition>{building});
+
+            ifc.AddEntity(site);
+            ifc.AddEntity(projAggregate);
+            ifc.AddEntity(building);
+            ifc.AddEntity(storey);
+            ifc.AddEntity(aggregate);
+            ifc.AddEntity(siteAggregate);
+
+            // Materials
+            // foreach(var m in model.Materials.Values)
+            // {
+            //     var ifcMaterial = new IfcMaterial(m.Name);
+            //     ifc.AddEntity(ifcMaterial);
+            // }
+
+            var walls = new List<IfcProduct>();
+            var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
+            foreach(var e in model.Elements.Values)
+            {
+                if(e is Wall)
+                {
+                    var w = (Wall)e;
+                    var ifcWall = w.ToIfcWallStandardCase(context, ifc);
+                    walls.Add(ifcWall);
+                }
+            }
+            var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, walls, storey);
+            ifc.AddEntity(spatialRel);
+
+            if(File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            File.WriteAllText(path, ifc.ToSTEP(path));
+        }
+
+        /// <summary>
+        /// Convert a wall to an IfcWallStandardCase
+        /// </summary>
+        /// <param name="wall"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private static IfcWallStandardCase ToIfcWallStandardCase(this Wall wall, IfcRepresentationContext context, Document doc)
+        {
+            var sweptArea = wall.CenterLine.Thicken(wall.Thickness).ToIfcArbitraryClosedProfileDef(doc);
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
+
+            // We don't use the Wall's transform for positioning, because
+            // our walls have a transform that lays the wall "flat". Just
+            // use a identity transform.
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(wall.Height));
+            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+            var id = IfcGuid.ToIfcGuid(Guid.NewGuid());
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
+            var ifcWall = new IfcWallStandardCase(new IfcGloballyUniqueId(id), 
+                null, wall.Name, null, null, localPlacement, productRep, null);
+
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(repItem);
+            doc.AddEntity(rep);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(productRep);
+            doc.AddEntity(ifcWall);
+
+            return ifcWall;
+        }
+
+        /// <summary>
+        /// Convert a polygon to an IfcArbitraryClosedProfileDef.
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        private static IfcArbitraryClosedProfileDef ToIfcArbitraryClosedProfileDef(this Polygon polygon, Document doc)
+        {
+            var pline = polygon.ToIfcPolyline(doc);
+            var profile = new IfcArbitraryClosedProfileDef(IfcProfileTypeEnum.AREA, pline);
+            doc.AddEntity(pline);
+            return profile;
+        }
+
+        /// <summary>
+        /// Convert a polyline to an IfcPolyline.
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        private static IfcPolyline ToIfcPolyline(this Polygon polygon, Document doc)
+        {
+            var points = new List<IfcCartesianPoint>();
+            foreach(var v in polygon.Vertices)
+            {
+                var p = v.ToIfcCartesianPoint();
+                doc.AddEntity(p);
+                points.Add(p);
+            }
+            return new IfcPolyline(points);
+        }
+
+        /// <summary>
+        /// Convert a transform to an IfcLocalPlacement.
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        private static IfcLocalPlacement ToIfcLocalPlacement(this Transform transform, Document doc)
+        {
+            var placement = transform.ToIfcAxis2Placement3D(doc);
+            var localPlacement = new IfcLocalPlacement(new IfcAxis2Placement(placement));
+            doc.AddEntity(placement);
+            return localPlacement;
+        }
+
+        /// <summary>
+        /// Convert a transform to an IfcAxis2Placement3D.
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        private static IfcAxis2Placement3D ToIfcAxis2Placement3D(this Transform transform, Document doc)
+        {
+            var origin = transform.Origin.ToIfcCartesianPoint();
+            var z = transform.ZAxis.ToIfcDirection();
+            var x = transform.XAxis.ToIfcDirection();
+            var placement = new IfcAxis2Placement3D(origin, 
+                z, x);
+            doc.AddEntity(origin);
+            doc.AddEntity(z);
+            doc.AddEntity(x);
+            return placement;
+        }
+        
+        /// <summary>
+        /// Convert a vector3 to an IfcDirection.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        private static IfcDirection ToIfcDirection(this Vector3 direction)
+        {
+            return new IfcDirection(new List<double>{direction.X, direction.Y, direction.Z});
+        }
+
+        /// <summary>
+        /// Convert a vector3 to an IfcCartesianPoint.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        private static IfcCartesianPoint ToIfcCartesianPoint(this Vector3 point)
+        {
+            return new IfcCartesianPoint(new List<IfcLengthMeasure>{point.X, point.Y, point.Z});
+        }
+
+        /// <summary>
         /// Convert an IfcSlab to a Floor.
         /// </summary>
         /// <param name="slab">An IfcSlab.</param>
-        private static Floor ToFloor(this IfcSlab slab)
+        /// <param name="openings"></param>
+        private static Floor ToFloor(this IfcSlab slab, IEnumerable<IfcOpeningElement> openings)
         {
             var transform = new Transform();
             transform.Concatenate(slab.ObjectPlacement.ToTransform());
@@ -163,19 +345,38 @@ namespace Elements.Serialization.IFC
         /// <summary>
         /// Convert an IfcWallStandardCase to a Wall.
         /// </summary>
-        /// <param name="wall"></param>
-        private static Wall ToWall(this IfcWallStandardCase wall)
+        /// <param name="wall">An IfcWallStandardCase.</param>
+        /// <param name="openings">A collection of IfcOpeningElement belonging to this wall.</param>
+        /// <param name="material">An IfcMaterial.</param>
+        private static Wall ToWall(this IfcWallStandardCase wall, 
+            IEnumerable<IfcOpeningElement> openings, IfcMaterialSelect material)
         {
             var transform = new Transform();
             transform.Concatenate(wall.ObjectPlacement.ToTransform());
-            var solid = wall.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
 
+            // Some IFCs support two wall representations.
+            // An extruded face solid.
+            var solid = wall.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
+            
+            // A centerline wall with material layers.
+            // var axis = (Polyline)wall.RepresentationsOfType<IfcPolyline>().FirstOrDefault().ToICurve(false);
+            
             foreach (var cis in wall.ContainedInStructure)
             {
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
             }
+            
+            var usage = (IfcMaterialLayerSetUsage)material.Choice;
+            var layerSet = usage.ForLayerSet;
+            var thickness = 0.0;
+            foreach(var l in layerSet.MaterialLayers)
+            {
+                thickness += ((IfcLengthMeasure)l.LayerThickness);
+            }
 
-            var material = new Material("wall", Colors.Green);
+            var newMaterial = new Material(layerSet.LayerSetName, Colors.Green);
+
+            // var os = openings.Select(o=>o.ToOpening()).ToArray();
 
             if(solid != null)
             {
@@ -183,7 +384,12 @@ namespace Elements.Serialization.IFC
                 if(c is Polygon)
                 {
                     transform.Concatenate(solid.Position.ToTransform());
-                    var result = new Wall(new Profile((Polygon)c), (IfcLengthMeasure)solid.Depth, material, transform);
+                    var result = new Wall(new Profile((Polygon)c), (IfcLengthMeasure)solid.Depth, newMaterial, transform);
+                    
+                    // Uncomment for walls along lines.
+                    // var result = new Wall(axis.Segments()[0], new WallType("test",thickness), 
+                        // (IfcLengthMeasure)solid.Depth, newMaterial, os, transform);
+                    
                     result.Name = wall.Name;
                     return result;
                 }
@@ -262,9 +468,12 @@ namespace Elements.Serialization.IFC
                 var solidTransform = s.Position.ToTransform();
                 solidTransform.Concatenate(openingTransform);
                 var profile = (Polygon)s.SweptArea.ToICurve();
-                // var newOpening = new Opening(profile, (IfcLengthMeasure)s.Depth, solidTransform);
-                var newOpening = new Opening(profile);
-                newOpening.Name = opening.Name;
+                var newOpening = new Opening(profile, (IfcLengthMeasure)s.Depth, solidTransform);
+                // var newOpening = new Opening(profile);
+                if(opening.Name != null)
+                {
+                    newOpening.Name = opening.Name;
+                }
                 return newOpening;
             }
             return null;
@@ -411,7 +620,7 @@ namespace Elements.Serialization.IFC
         /// <returns></returns>
         private static ICurve ToICurve(this IfcArbitraryOpenProfileDef profile)
         {
-            return profile.Curve.ToICurve();
+            return profile.Curve.ToICurve(false);
         }
 
         /// <summary>
@@ -421,14 +630,15 @@ namespace Elements.Serialization.IFC
         /// <returns></returns>
         private static ICurve ToICurve(this IfcArbitraryClosedProfileDef profile)
         {
-            return profile.OuterCurve.ToICurve();
+            return profile.OuterCurve.ToICurve(true);
         }
 
         /// <summary>
         /// Convert an IfcCurve to in ICurve.
         /// </summary>
-        /// <param name="curve"></param>
-        private static ICurve ToICurve(this IfcCurve curve)
+        /// <param name="curve">An IfcCurve.</param>
+        /// <param name="closed">A flag indicating whether the curve is closed.</param>
+        private static ICurve ToICurve(this IfcCurve curve, bool closed)
         {
             if(curve is IfcBoundedCurve)
             {
@@ -439,7 +649,14 @@ namespace Elements.Serialization.IFC
                 else if(curve is IfcPolyline)
                 {
                     var pl = (IfcPolyline)curve;
-                    return pl.ToPolygon(true);
+                    if(closed)
+                    {
+                        return pl.ToPolygon(true);
+                    }
+                    else
+                    {
+                        return pl.ToPolyline();
+                    }
                 }
                 else if(curve is IfcTrimmedCurve)
                 {
@@ -512,6 +729,16 @@ namespace Elements.Serialization.IFC
         }
 
         /// <summary>
+        /// Convert an IfcPolyline to a Polyline.
+        /// </summary>
+        /// <param name="polyline">An IfcPolyline.</param>
+        private static Polyline ToPolyline(this IfcPolyline polyline)
+        {
+            var verts = polyline.Points.Select(p=>p.ToVector3()).ToArray();
+            return new Polyline(verts);
+        }
+
+        /// <summary>
         /// Check if an IfcPolyline is closed.
         /// </summary>
         /// <param name="pline"></param>
@@ -548,8 +775,8 @@ namespace Elements.Serialization.IFC
         /// <returns></returns>
         private static Transform ToTransform(this IfcAxis2Placement3D cs)
         {
-            var d = cs.RefDirection.ToVector3();
-            var z = cs.Axis.ToVector3();
+            var d = cs.RefDirection != null ? cs.RefDirection.ToVector3() : Vector3.XAxis;
+            var z = cs.Axis != null ? cs.Axis.ToVector3() : Vector3.ZAxis;
             var y = z.Cross(d);
             var x = y.Cross(z);
             var o = cs.Location.ToVector3();
@@ -608,7 +835,6 @@ namespace Elements.Serialization.IFC
         /// Convert an IfcLocalPlacement to a Transform.
         /// </summary>
         /// <param name="placement">An IfcLocalPlacement.</param>
-        /// <returns></returns>
         private static Transform ToTransform(this IfcLocalPlacement placement)
         {
             var t = placement.RelativePlacement.ToTransform();

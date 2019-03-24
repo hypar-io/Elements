@@ -5,10 +5,13 @@
 - `Matrix.Determinant()`
 - `Matrix.Inverse()`
 - `Transform.Invert()`
+- `Model.ToIFC()`
+
 ### Changed
 - Wall constructor which uses a center line can now have a Transform specified.
 - `Profile.ComputeTransform()` now finds the first 3 non-colinear points for calculating its plane. Previously, this function would break when two of the first three vertices were co-linear.
 - Using Hypar.IFC2X3 for interaction with IFC.
+- `Line.Thicken()` now throws an exception when the line does not have the same elevation for both end points.
 
 ## [0.2.1]
 ### Added
