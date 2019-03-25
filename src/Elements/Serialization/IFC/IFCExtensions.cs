@@ -133,6 +133,7 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="wall"></param>
         /// <param name="context"></param>
+        /// <param name="doc"></param>
         /// <returns></returns>
         private static IfcWallStandardCase ToIfcWallStandardCase(this Wall wall, IfcRepresentationContext context, Document doc)
         {
@@ -168,6 +169,7 @@ namespace Elements.Serialization.IFC
         /// Convert a polygon to an IfcArbitraryClosedProfileDef.
         /// </summary>
         /// <param name="polygon"></param>
+        /// <param name="doc"></param>
         /// <returns></returns>
         private static IfcArbitraryClosedProfileDef ToIfcArbitraryClosedProfileDef(this Polygon polygon, Document doc)
         {

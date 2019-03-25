@@ -16,7 +16,7 @@
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.2.2</Version>
+    <Version>0.2.2.1</Version>
     <PackageTags>AEC, Architecture, Structure, Engineering</PackageTags>
   </PropertyGroup>
 
