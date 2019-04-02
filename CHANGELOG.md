@@ -6,9 +6,11 @@
 - `StructuralFramingType` - `StructuralFramingType` combines a `Profile` and a `Material` to define a type for framing elements.
 
 ### Changed
-- `IProfileProvider` -> `IProfile`
-- `IElementTypeProvider` -> `IElementType`
+- `IProfileProvider` is now `IProfile`
+- `IElementTypeProvider` is now `IElementType`
 - All structural framing type constructors now take a `StructuralFramingType` in place of a `Profile` and a `Material`.
+- All properties serialize to JSON using camel case.
+- Many expensive properties were converted to methods.
 
 ## [0.2.2]
 ### Added
