@@ -106,7 +106,7 @@ namespace Elements.Serialization.IFC
             //     ifc.AddEntity(ifcMaterial);
             // }
 
-            var walls = new List<IfcProduct>();
+            var products = new List<IfcProduct>();
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
             foreach(var e in model.Elements.Values)
             {
@@ -114,10 +114,18 @@ namespace Elements.Serialization.IFC
                 {
                     var w = (Wall)e;
                     var ifcWall = w.ToIfcWallStandardCase(context, ifc);
-                    walls.Add(ifcWall);
+                    products.Add(ifcWall);
+                }
+
+                if(e is Beam)
+                {
+                    var b = (Beam)e;
+                    var ifcBeam = b.ToIfcBeam(context, ifc);
+                    products.Add(ifcBeam);
                 }
             }
-            var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, walls, storey);
+
+            var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, products, storey);
             ifc.AddEntity(spatialRel);
 
             if(File.Exists(path))
@@ -287,6 +295,37 @@ namespace Elements.Serialization.IFC
             doc.AddEntity(ifcWall);
 
             return ifcWall;
+        }
+
+        private static IfcBeam ToIfcBeam(this Beam beam, IfcRepresentationContext context, Document doc)
+        {
+            var sweptArea = beam.ElementType.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            var line = (Line)beam.Curve;
+            
+            // We use the Z extrude direction because the direction is 
+            // relative to the local placement, which is a transform at the
+            // beam's end with the Z axis pointing along the direction.
+            
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
+
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(beam.Curve.Length()));
+            var localPlacement = beam.Curve.TransformAt(0.0).ToIfcLocalPlacement(doc);
+            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+            var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, null, localPlacement, productRep, null);
+            
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(repItem);
+            doc.AddEntity(rep);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(productRep);
+            doc.AddEntity(ifcBeam);
+
+            return ifcBeam;
         }
 
         /// <summary>
