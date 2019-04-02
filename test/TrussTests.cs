@@ -16,7 +16,8 @@ namespace Elements.Tests
             this.Name = "Truss";
             var model = new Model();
             var profile = WideFlangeProfileServer.Instance.GetProfileByName("W33x387");
-            var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,30,0), 3.0, 10, profile, profile, profile, BuiltInMaterials.Steel, 0.1, 0.1); 
+            var framingType = new StructuralFramingType("W33x387", profile, BuiltInMaterials.Steel);
+            var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,30,0), 3.0, 10, framingType, framingType, framingType, BuiltInMaterials.Steel, 0.1, 0.1); 
             this.Model.AddElement(truss);
         }
 
@@ -25,7 +26,8 @@ namespace Elements.Tests
         {
             var model = new Model();
             var profile = WideFlangeProfileServer.Instance.GetProfileByName("W33x387");
-            var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,10,0), 1.0, 10, profile, profile, profile, BuiltInMaterials.Steel, 0.1, 0.1);
+            var framingType = new StructuralFramingType("W33x387", profile, BuiltInMaterials.Steel);
+            var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,10,0), 1.0, 10, framingType, framingType, framingType, BuiltInMaterials.Steel, 0.1, 0.1);
             model.AddElement(truss);
             var json = model.ToJson();
             var newModel = Model.FromJson(json);

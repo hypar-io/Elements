@@ -1,6 +1,7 @@
 using Elements;
 using Elements.Geometry;
 using Elements.Geometry.Profiles;
+using System;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -19,8 +20,9 @@ namespace Elements.Tests
             var d = new Vector3(20,20,10);
             var c = new Vector3(0,20,0);
             var polygon = new Polygon(new[]{a,b,c,d});
-            var beam = new Beam(new Line(a,b), profile);
-            var system = new BeamSystem(5, profile, new Line(a,b), new Line(c,d), BuiltInMaterials.Steel);
+            var framingType = new StructuralFramingType(Guid.NewGuid().ToString(), profile, BuiltInMaterials.Steel);
+            var beam = new Beam(new Line(a,b), framingType);
+            var system = new BeamSystem(5, framingType, new Line(a,b), new Line(c,d));
             Assert.True(system.Elements.Count() == 5);
             this.Model.AddElements(system.Elements);
             this.Model.AddElement(beam);

@@ -43,8 +43,9 @@ namespace Elements.Tests
                     break;
             }
 
-            var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel, startSetback, endSetback);
-            Assert.Equal(BuiltInMaterials.Steel, beam.Geometry[0].Material);
+            var framingType = new StructuralFramingType(Guid.NewGuid().ToString(), this._testProfile, BuiltInMaterials.Steel);
+            var beam = new Beam(cl, framingType, startSetback, endSetback);
+            Assert.Equal(BuiltInMaterials.Steel, beam.ElementType.Material);
             Assert.Equal(cl, beam.Curve);
 
             this.Model.AddElement(beam);
@@ -60,9 +61,11 @@ namespace Elements.Tests
             var profiles = WideFlangeProfileServer.Instance.AllProfiles().ToList();
             foreach(var profile in profiles)
             {
+                
                 var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
+                var framingType = new StructuralFramingType(profile.Name, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
-                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                var beam = new Beam(line, framingType);
                 this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
@@ -84,7 +87,8 @@ namespace Elements.Tests
             {
                 var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
-                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                var framingType = new StructuralFramingType(Guid.NewGuid().ToString(), profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                var beam = new Beam(line, framingType);
                 this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
@@ -95,13 +99,13 @@ namespace Elements.Tests
             }
         }
 
-
         [Fact]
         public void Column()
         {
             this.Name = "Column";
-            var column = new Column(Vector3.Origin, 3.0, this._testProfile);
-            Assert.Equal(BuiltInMaterials.Steel, column.Geometry[0].Material);
+            var framingType = new StructuralFramingType(Guid.NewGuid().ToString(), this._testProfile, BuiltInMaterials.Steel);
+            var column = new Column(Vector3.Origin, 3.0, framingType);
+            Assert.Equal(BuiltInMaterials.Steel, column.ElementType.Material);
             Assert.Equal(3.0, column.Curve.Length());
             this.Model.AddElement(column);
         }
@@ -110,9 +114,10 @@ namespace Elements.Tests
         public void Brace()
         {
             this.Name = "Brace";
+            var framingType = new StructuralFramingType(Guid.NewGuid().ToString(), this._testProfile, BuiltInMaterials.Steel);
             var line = new Line(Vector3.Origin, new Vector3(3,3,3));
-            var brace = new Brace(line, this._testProfile);
-            Assert.Equal(BuiltInMaterials.Steel, brace.Geometry[0].Material);
+            var brace = new Brace(line, framingType);
+            Assert.Equal(BuiltInMaterials.Steel, brace.ElementType.Material);
             Assert.Equal(line, brace.Curve);
             this.Model.AddElement(brace);
         }

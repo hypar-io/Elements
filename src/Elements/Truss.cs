@@ -18,7 +18,7 @@ namespace Elements
         /// <summary>
         /// The elements aggregated by this element.
         /// </summary>
-        [JsonProperty("elements")]
+        [JsonIgnore]
         public List<Element> Elements { get; }
 
         /// <summary>
@@ -48,20 +48,20 @@ namespace Elements
         /// <summary>
         /// The Profile used for members in the top chord of the truss.
         /// </summary>
-        [JsonProperty("top_chord_profile")]
-        public Profile TopChordProfile { get; }
+        [JsonProperty("top_chord_type")]
+        public StructuralFramingType TopChordType { get; }
 
         /// <summary>
         /// The Profile used for members in the bottom chord of the truss.
         /// </summary>
-        [JsonProperty("bottom_chord_profile")]
-        public Profile BottomChordProfile { get; }
+        [JsonProperty("bottom_chord_type")]
+        public StructuralFramingType BottomChordType { get; }
 
         /// <summary>
         /// The Profile used for members in the web of the truss.
         /// </summary>
-        [JsonProperty("web_profile")]
-        public Profile WebProfile { get; }
+        [JsonProperty("web_type")]
+        public StructuralFramingType WebType { get; }
 
         /// <summary>
         /// Construct a truss.
@@ -70,14 +70,15 @@ namespace Elements
         /// <param name="end">The end of the truss.</param>
         /// <param name="depth">The depth of the truss.</param>
         /// <param name="divisions">The number of panels in the truss.</param>
-        /// <param name="topChordProfile">The Profile to be used for the top chord.</param>
-        /// <param name="bottomChordProfile">The Profile to be used for the bottom chord.</param>
-        /// <param name="webProfile">The Profile to be used for the web.</param>
+        /// <param name="topChordType">The structural framing type to be used for the top chord.</param>
+        /// <param name="bottomChordType">The structural framing type to be used for the bottom chord.</param>
+        /// <param name="webType">The structural framing type to be used for the web.</param>
         /// <param name="material">The truss' material.</param>
         /// <param name="startSetback">A setback to apply to the start of all members of the truss.</param>
         /// <param name="endSetback">A setback to apply to the end of all members of the truss.</param>
         [JsonConstructor]
-        public Truss(Vector3 start, Vector3 end, double depth, int divisions, Profile topChordProfile, Profile bottomChordProfile, Profile webProfile, Material material, double startSetback = 0.0, double endSetback = 0.0)
+        public Truss(Vector3 start, Vector3 end, double depth, int divisions, StructuralFramingType topChordType, 
+            StructuralFramingType bottomChordType, StructuralFramingType webType, Material material, double startSetback = 0.0, double endSetback = 0.0)
         {
             if (depth <= 0)
             {
@@ -88,9 +89,9 @@ namespace Elements
             this.End = end;
             this.Depth = depth;
             this.Divisions = divisions;
-            this.TopChordProfile = topChordProfile;
-            this.BottomChordProfile = bottomChordProfile;
-            this.WebProfile = webProfile;
+            this.TopChordType = topChordType;
+            this.BottomChordType = bottomChordType;
+            this.WebType = webType;
 
             var l = new Line(start, end);
             var pts = Vector3.AtNEqualSpacesAlongLine(l, divisions, true);
@@ -100,13 +101,13 @@ namespace Elements
                 {
                     var bt = new Line(pts[i], pts[i + 1]);
                     var bb = new Line(pts[i] - new Vector3(0, 0, depth), pts[i + 1] - new Vector3(0, 0, depth));
-                    this._topChord.Add(new Beam(bt, topChordProfile, material, startSetback, endSetback));
-                    this._bottomChord.Add(new Beam(bb, bottomChordProfile, material, startSetback, endSetback));
+                    this._topChord.Add(new Beam(bt, topChordType, startSetback, endSetback));
+                    this._bottomChord.Add(new Beam(bb, bottomChordType, startSetback, endSetback));
                     var diag = i > Math.Ceiling((double)divisions / 2) ? new Line(pts[i], pts[i + 1] - new Vector3(0, 0, depth)) : new Line(pts[i + 1], pts[i] - new Vector3(0, 0, depth));
-                    this._web.Add(new Beam(diag, webProfile, material, startSetback, endSetback));
+                    this._web.Add(new Beam(diag, webType, startSetback, endSetback));
                 }
                 var wb = new Line(pts[i], pts[i] - new Vector3(0, 0, depth));
-                this._web.Add(new Beam(wb, webProfile, material, startSetback, endSetback));
+                this._web.Add(new Beam(wb, webType, startSetback, endSetback));
             }
 
             this.Elements = new List<Element>();

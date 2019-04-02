@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
+using Elements.Interfaces;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 
@@ -11,7 +12,7 @@ namespace Elements
     /// <summary>
     /// A topographic mesh defined by an array of elevation values.
     /// </summary>
-    public class Topography : Element, ITessellate
+    public class Topography : Element, ITessellate, IMaterial
     {
         private Func<Triangle, Color> _colorizer;
 

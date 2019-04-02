@@ -1,41 +1,71 @@
+using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Elements
 {
     /// <summary>
     /// A container for properties common to floors.
     /// </summary>
-    public class FloorType : ElementType
+    public class FloorType : ElementType, ILayeredMaterial
     {
         /// <summary>
         /// The thickness of the Floor.
         /// </summary>
-        [JsonProperty("thickness")]
-        public double Thickness{get;}
+        [JsonIgnore]
+        public double Thickness
+        {
+            get
+            {
+                var thickness = 0.0;
+                foreach(var l in this.MaterialLayers)
+                {
+                    thickness += l.Thickness;
+                }
+                return thickness;
+            }
+        }
 
         /// <summary>
         /// The type of the floor type.
         /// </summary>
+        [JsonProperty("type")]
         public override string Type
         {
             get{return "floor_type";}
         }
 
         /// <summary>
+        /// A collection of material layers.
+        /// </summary>
+        [JsonProperty("material_layers")]
+        public List<MaterialLayer> MaterialLayers {get;}
+
+        /// <summary>
         /// Construct a floor type.
         /// </summary>
         /// <param name="name">The name of the floor type.</param>
         /// <param name="thickness">The thickness of the associated floor.</param>
-        /// <param name="description">A description of the floor type.</param>
-        public FloorType(string name, double thickness, string description = null) : base(name, description)
+        public FloorType(string name, double thickness) : base(name)
         {
             if (thickness <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("thickness", "The floor type thickness must be greater than 0.0.");
             }
 
-            this.Thickness = thickness;
+            this.MaterialLayers = new List<MaterialLayer>(){new MaterialLayer(BuiltInMaterials.Default, thickness)};
+        }
+
+        /// <summary>
+        /// Construct a floor type.
+        /// </summary>
+        /// <param name="name">The name of the floor type.</param>
+        /// <param name="materialLayers">A collection of material layers.</param>
+        [JsonConstructor]
+        public FloorType(string name, List<MaterialLayer> materialLayers) : base(name)
+        {
+            this.MaterialLayers = materialLayers;
         }
     }
 }

@@ -51,6 +51,16 @@ namespace Elements
         /// <summary>
         /// Construct a material.
         /// </summary>
+        /// <param name="name"></param>
+        public Material(string name)
+        {
+            this.Name = name;
+            this.Color = Colors.Gray;
+        }
+
+        /// <summary>
+        /// Construct a material.
+        /// </summary>
         /// <param name="name">The identifier of the material. Identifiers should be unique within a model.</param>
         /// <param name="color">The RGBA color of the material.</param>
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>

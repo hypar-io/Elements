@@ -46,6 +46,8 @@ namespace Elements.Serialization.JSON
                     return obj.ToObject<WallType>(serializer);
                 case "floor_type":
                     return obj.ToObject<FloorType>(serializer);
+                case "structural_framing_type":
+                    return obj.ToObject<StructuralFramingType>(serializer);
                 default:
                     throw new Exception($"The ElementType with type name, {typeName}, could not be deserialzed.");
             }

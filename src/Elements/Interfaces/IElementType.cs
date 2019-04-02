@@ -6,7 +6,7 @@ namespace Elements.Interfaces
     /// Interface implemented by classes which provide and ElementType.
     /// </summary>
     /// <typeparam name="TElementType"></typeparam>
-    public interface IElementTypeProvider<TElementType>
+    public interface IElementType<TElementType>
     {
         /// <summary>
         /// The ElementType provided by this instance.

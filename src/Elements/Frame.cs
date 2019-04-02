@@ -9,7 +9,7 @@ namespace Elements
     /// <summary>
     /// An element defined by a perimeter and a cross section swept along that perimeter.
     /// </summary>
-    public class Frame : Element, IGeometry3D, IProfileProvider
+    public class Frame : Element, IGeometry3D, IProfile
     {
         /// <summary>
         /// The perimeter of the frame.
@@ -43,7 +43,7 @@ namespace Elements
             this.Perimeter = perimeter.Offset(-offset)[0];
             this.Profile = profile;
             this.Transform = transform;
-            this.Geometry = new[]{Solid.SweepFaceAlongCurve(profile.Perimeter, profile.Voids, this.Perimeter, material == null ? BuiltInMaterials.Black : material)};
+            this.Geometry = new[]{Solid.SweepFaceAlongCurve(profile.Perimeter, profile.Voids, this.Perimeter)};
         }
     }
 }

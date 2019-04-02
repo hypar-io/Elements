@@ -626,7 +626,7 @@ namespace Elements.Serialization.glTF
 
                 gltf.AddTriangleMesh(e.Id + "_mesh", buffer, vertexBuffer, normalBuffer,
                                         indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, materials[geo.Material.Name], cmin, cmax, null, e.Transform);
+                                        imin, imax, materials[((IMaterial)e).Material.Name], cmin, cmax, null, e.Transform);
             }
 
             if (e is IAggregateElement)

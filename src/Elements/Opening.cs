@@ -14,17 +14,11 @@ namespace Elements
         private Polygon _perimeter;
 
         /// <summary>
-        /// The name of the opening.
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name{get; internal set;}
-
-        /// <summary>
         /// The perimeter of the opening.
         /// </summary>
         /// <value>A polygon of Width and Height translated by X and Y.</value>
         [JsonProperty("perimeter")]
-        public Polygon Perimeter 
+        public Polygon Perimeter
         {
             get => _perimeter;
             internal set => _perimeter = value;
@@ -34,7 +28,7 @@ namespace Elements
         /// The geometry of the opening.
         /// </summary>
         /// <value>An array of solids.</value>
-        public Solid[] Geometry {get;}
+        public Solid[] Geometry { get; }
 
         /// <summary>
         /// Create an opening.
@@ -46,7 +40,7 @@ namespace Elements
         public Opening(double x, double y, double width, double height)
         {
             this._perimeter = Polygon.Rectangle(width, height, new Vector3(x, y));
-            this.Geometry = new []{Solid.SweepFace(this._perimeter, null, 5.0, BuiltInMaterials.Mass)};
+            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
         }
 
         /// <summary>
@@ -58,9 +52,9 @@ namespace Elements
         [JsonConstructor]
         public Opening(Polygon perimeter, double x = 0.0, double y = 0.0)
         {
-            var t = new Transform(x,y,0.0);
+            var t = new Transform(x, y, 0.0);
             this._perimeter = t.OfPolygon(perimeter);
-            this.Geometry = new []{Solid.SweepFace(this._perimeter, null, 5.0, BuiltInMaterials.Mass)};
+            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
         }
 
         /// <summary>
@@ -73,7 +67,7 @@ namespace Elements
         {
             this._perimeter = perimeter;
             this.Transform = transform;
-            this.Geometry = new []{Solid.SweepFace(this._perimeter, null, 5.0, BuiltInMaterials.Mass)};
+            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
         }
     }
 }

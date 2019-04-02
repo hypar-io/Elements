@@ -267,36 +267,46 @@ namespace Elements
                 }
             }
 
-            if (element is ITessellate)
+            if(element is IMaterial)
             {
-                var tess = (ITessellate)element;
-                AddMaterial(tess.Material);
+                var mat = (IMaterial)element;
+                AddMaterial(mat.Material);
             }
 
-            if (element is IProfileProvider)
+            if (element is IProfile)
             {
-                var ipp = (IProfileProvider)element;
+                var ipp = (IProfile)element;
                 if (ipp.Profile != null)
                 {
                     AddProfile((Profile)ipp.Profile);
                 }
             }
 
-            if (element is IElementTypeProvider<WallType>)
+            if (element is IElementType<WallType>)
             {
-                var wtp = (IElementTypeProvider<WallType>)element;
+                var wtp = (IElementType<WallType>)element;
                 if (wtp.ElementType != null)
                 {
                     AddElementType(wtp.ElementType);
                 }
             }
 
-            if (element is IElementTypeProvider<FloorType>)
+            if (element is IElementType<FloorType>)
             {
-                var ftp = (IElementTypeProvider<FloorType>)element;
+                var ftp = (IElementType<FloorType>)element;
                 if (ftp.ElementType != null)
                 {
                     AddElementType(ftp.ElementType);
+                }
+            }
+
+            if(element is IElementType<StructuralFramingType>)
+            {
+                var sft = (IElementType<StructuralFramingType>)element;
+                if(sft.ElementType != null)
+                {
+                    AddElementType(sft.ElementType);
+                    AddProfile(sft.ElementType.Profile);
                 }
             }
 

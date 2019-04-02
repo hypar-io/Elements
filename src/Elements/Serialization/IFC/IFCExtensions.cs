@@ -25,15 +25,12 @@ namespace Elements.Serialization.IFC
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
-            var floorType = new FloorType("IFC Floor", 0.1);
             var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
             var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
             var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
             var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
             var ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
             var ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
-            // var stories = ifcModel.AllInstancesOfType<IfcBuildingStorey>();
-            // var relContains = ifcModel.AllInstancesOfType<IfcRelContainedInSpatialStructure>();
             var ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
 
             var openings = new List<Opening>();
@@ -45,11 +42,13 @@ namespace Elements.Serialization.IFC
                 openings.Add(o);
             }
 
+            var wallType = new WallType("Default Wall", 1.0);
+
             var slabs = ifcSlabs.Select(s => s.ToFloor(ifcVoids.Where(v=>v.RelatingBuildingElement == s).Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
             var spaces = ifcSpaces.Select(sp => sp.ToSpace());
             var walls = ifcWalls.Select(w => w.ToWall(
                 ifcVoids.Where(v=>v.RelatingBuildingElement == w).Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>(),
-                ifcMaterials.Where(m=>m.RelatedObjects.Contains(w)).FirstOrDefault().RelatingMaterial));
+                wallType));
             var beams = ifcBeams.Select(b => b.ToBeam());
             var columns = ifcColumns.Select(c => c.ToColumn());
 
@@ -126,6 +125,131 @@ namespace Elements.Serialization.IFC
                 File.Delete(path);
             }
             File.WriteAllText(path, ifc.ToSTEP(path));
+        }
+
+        private static ElementType ToElementType(this IfcElementType elementType)
+        {
+            if(elementType is IfcCoveringType)
+            {
+                throw new NotImplementedException();
+            }
+            if(elementType is IfcBeamType)
+            {
+                return ((IfcBeamType)elementType).ToStructuralFramingType();
+            }
+            if(elementType is IfcMemberType)
+            {
+                throw new NotImplementedException();
+            }
+            if(elementType is IfcColumnType)
+            {
+                return ((IfcColumnType)elementType).ToStructuralFramingType();
+            }
+            if(elementType is IfcWallType)
+            {
+                throw new NotImplementedException();
+            }
+            if(elementType is IfcSlabType)
+            {
+                return ((IfcSlabType)elementType).ToFloorType();
+            }
+            if(elementType is IfcStairFlightType)
+            {
+                throw new NotImplementedException();
+            }
+            if(elementType is IfcRampFlightType)
+            {
+                throw new NotImplementedException();
+            }
+            if(elementType is IfcCurtainWallType)
+            {
+                throw new NotImplementedException();
+            }
+            if(elementType is IfcRailingType)
+            {
+                throw new NotImplementedException();
+            }
+            if(elementType is IfcBuildingElementProxyType)
+            {
+                throw new NotImplementedException();
+            }
+            return null;
+        }
+
+        private static StructuralFramingType ToStructuralFramingType(this IfcBeamType beamType)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static StructuralFramingType ToStructuralFramingType(this IfcColumnType columnType)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static FloorType ToFloorType(this IfcSlabType slabType)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Convert an IfcMaterialSelect to a material or a layered material.
+        /// </summary>
+        /// <param name="materialSelect">An IfcMaterialSelect.</param>
+        private static dynamic ToMaterialOrMaterialLayers(this IfcMaterialSelect materialSelect)
+        {
+            if(materialSelect.Choice is IfcMaterial)
+            {
+                var m = (IfcMaterial)materialSelect.Choice;
+                return m.ToMaterial();
+            }
+            else if(materialSelect.Choice is IfcMaterialList)
+            {
+                throw new NotImplementedException("IfcMaterialList is not yet supported.");
+            }
+            else if (materialSelect.Choice is IfcMaterialLayerSetUsage)
+            {
+                // Return a material layer set.
+                var m = (IfcMaterialLayerSetUsage)materialSelect.Choice;
+                return m.ToMaterialLayers();
+            }
+            else if(materialSelect.Choice is IfcMaterialLayerSet)
+            {
+                // Return a material layer set.
+                var m = (IfcMaterialLayerSet)materialSelect.Choice;
+                return m.ToMaterialLayers();
+            }
+            else if(materialSelect.Choice is IfcMaterialLayer)
+            {
+                // Return a material layer.
+                var m = ((IfcMaterialLayer)materialSelect.Choice).ToMaterialLayer();
+            }
+            return null;
+        }
+
+        private static List<MaterialLayer> ToMaterialLayers(this IfcMaterialLayerSetUsage usage)
+        {
+            return usage.ForLayerSet.ToMaterialLayers();
+        }
+
+        private static List<MaterialLayer> ToMaterialLayers(this IfcMaterialLayerSet set)
+        {
+            var layers = new List<MaterialLayer>();
+            foreach(var s in set.MaterialLayers)
+            {
+                layers.Add(s.ToMaterialLayer());
+            }
+            return layers;
+        }
+
+        private static MaterialLayer ToMaterialLayer(this IfcMaterialLayer layer)
+        {
+            return new MaterialLayer(layer.Material.ToMaterial(), (IfcLengthMeasure)layer.LayerThickness);
+        }
+
+        private static Material ToMaterial(this IfcMaterial material)
+        {
+            // IFC materials is a fucking trainwreck. Just return a default.
+            return new Material(material.Name, Colors.Gray, 0.0f, 0.0f);
         }
 
         /// <summary>
@@ -324,7 +448,7 @@ namespace Elements.Serialization.IFC
             {
                 var solid = (IfcFacetedBrep)foundSolid;
                 var shell = solid.Outer;
-                var newSolid = new Solid();
+                var newSolid = new Solid(material);
                 for(var i=0; i< shell.CfsFaces.Count; i++)
                 {
                     var f = shell.CfsFaces[i];
@@ -349,14 +473,13 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="wall">An IfcWallStandardCase.</param>
         /// <param name="openings">A collection of IfcOpeningElement belonging to this wall.</param>
-        /// <param name="material">An IfcMaterial.</param>
+        /// <param name="wallType">The wall's wall type.</param>
         private static Wall ToWall(this IfcWallStandardCase wall, 
-            IEnumerable<IfcOpeningElement> openings, IfcMaterialSelect material)
+            IEnumerable<IfcOpeningElement> openings, WallType wallType)
         {
             var transform = new Transform();
             transform.Concatenate(wall.ObjectPlacement.ToTransform());
 
-            // Some IFCs support two wall representations.
             // An extruded face solid.
             var solid = wall.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
             
@@ -367,16 +490,6 @@ namespace Elements.Serialization.IFC
             {
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
             }
-            
-            var usage = (IfcMaterialLayerSetUsage)material.Choice;
-            var layerSet = usage.ForLayerSet;
-            var thickness = 0.0;
-            foreach(var l in layerSet.MaterialLayers)
-            {
-                thickness += ((IfcLengthMeasure)l.LayerThickness);
-            }
-
-            var newMaterial = new Material(layerSet.LayerSetName, Colors.Green);
 
             // var os = openings.Select(o=>o.ToOpening()).ToArray();
 
@@ -386,12 +499,8 @@ namespace Elements.Serialization.IFC
                 if(c is Polygon)
                 {
                     transform.Concatenate(solid.Position.ToTransform());
-                    var result = new Wall(new Profile((Polygon)c), (IfcLengthMeasure)solid.Depth, newMaterial, transform);
-                    
-                    // Uncomment for walls along lines.
-                    // var result = new Wall(axis.Segments()[0], new WallType("test",thickness), 
-                        // (IfcLengthMeasure)solid.Depth, newMaterial, os, transform);
-                    
+                    var result = new Wall(new Profile((Polygon)c), wallType, (IfcLengthMeasure)solid.Depth, transform);
+
                     result.Name = wall.Name;
                     return result;
                 }
@@ -423,8 +532,8 @@ namespace Elements.Serialization.IFC
                 {
                     var cl = new Line(Vector3.Origin, 
                         solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
-                    var result = new Beam(solidTransform.OfLine(cl), 
-                        new Profile((Polygon)c), BuiltInMaterials.Steel, 0.0, 0.0, elementTransform);
+                    var framingType = new StructuralFramingType(Guid.NewGuid().ToString(), new Profile((Polygon)c), BuiltInMaterials.Steel);
+                    var result = new Beam(solidTransform.OfLine(cl), framingType, 0.0, 0.0, elementTransform);
                     result.Name = beam.Name;
                     return result; 
                 }
@@ -450,7 +559,8 @@ namespace Elements.Serialization.IFC
             {
                 var solidTransform = solid.Position.ToTransform();
                 var c = solid.SweptArea.ToICurve();
-                var result = new Column(solidTransform.Origin, (IfcLengthMeasure)solid.Depth, new Profile((Polygon)c), BuiltInMaterials.Steel, elementTransform, 0.0, 0.0);
+                var framingType = new StructuralFramingType(Guid.NewGuid().ToString(), new Profile((Polygon)c), BuiltInMaterials.Steel);
+                var result = new Column(solidTransform.Origin, (IfcLengthMeasure)solid.Depth, framingType, elementTransform, 0.0, 0.0);
                 result.Name = column.Name;
                 return result;
             }

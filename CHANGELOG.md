@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.3]
+### Added
+- `MaterialLayer`
+- `StructuralFramingType` - `StructuralFramingType` combines a `Profile` and a `Material` to define a type for framing elements.
+
+### Changed
+- `IProfileProvider` -> `IProfile`
+- `IElementTypeProvider` -> `IElementType`
+- All structural framing type constructors now take a `StructuralFramingType` in place of a `Profile` and a `Material`.
+
 ## [0.2.2]
 ### Added
 - `Matrix.Determinant()`

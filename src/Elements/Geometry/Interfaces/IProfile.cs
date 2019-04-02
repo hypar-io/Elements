@@ -5,10 +5,10 @@ namespace Elements.Geometry.Interfaces
     /// <summary>
     /// Interface implemented by types which provide a Profile.
     /// </summary>
-    public interface IProfileProvider
+    public interface IProfile
     {
         /// <summary>
-        /// A Profile.
+        /// A profile.
         /// </summary>
         Profile Profile {get;}
     }

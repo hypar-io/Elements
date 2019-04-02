@@ -1,6 +1,7 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
+using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Elements
     /// <summary>
     /// An extruded building mass.
     /// </summary>
-    public class Mass : Element, IGeometry3D, IProfileProvider
+    public class Mass : Element, IGeometry3D, IProfile, IMaterial
     {
         /// <summary>
         /// The Profile of the mass.
@@ -49,6 +50,11 @@ namespace Elements
         public Solid[] Geometry { get; }
 
         /// <summary>
+        /// The mass' material.
+        /// </summary>
+        public Material Material {get;}
+
+        /// <summary>
         /// Construct a Mass.
         /// </summary>
         /// <param name="profile">The profile of the mass.</param>
@@ -65,7 +71,8 @@ namespace Elements
             this.Profile = profile;
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
+            this.Material = material == null ? BuiltInMaterials.Mass : material;
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.Material)};
         }
 
         /// <summary>
@@ -84,7 +91,8 @@ namespace Elements
             this.Profile = new Profile(profile);
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
+            this.Material = material == null ? BuiltInMaterials.Mass : material;
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.Material)};
         }
 
         /// <summary>

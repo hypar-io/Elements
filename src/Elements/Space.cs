@@ -1,10 +1,8 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Geometry.Profiles;
 using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using Elements.Geometry.Solids;
 
 namespace Elements
@@ -12,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, IGeometry3D, IProfileProvider
+    public class Space : Element, IGeometry3D, IProfile, IMaterial
     {
         /// <summary>
         /// The profile of the space.
@@ -36,13 +34,20 @@ namespace Elements
         public Solid[] Geometry { get; internal set; }
 
         /// <summary>
+        /// The space's material.
+        /// </summary>
+        public Material Material { get; }
+
+        /// <summary>
         /// Construct a space from a solid.
         /// </summary>
         /// <param name="geometry">The BRep which will be used to define the space.</param>
-        /// <param name="transform">The Transform of the space.</param>
-        public Space(Solid geometry, Transform transform = null)
+        /// <param name="transform">The transform of the space.</param>
+        /// <param name="material">The space's material.</param>
+        public Space(Solid geometry, Transform transform = null, Material material = null)
         {
             this.Transform = transform;
+            this.Material = material == null ? BuiltInMaterials.Default : material;
             this.Geometry = new[] { geometry };
         }
 
@@ -62,8 +67,9 @@ namespace Elements
                 throw new ArgumentOutOfRangeException($"The Space could not be created. The height provided, {height}, was less than zero. The height must be greater than zero.", "height");
             }
 
+            this.Material = material == null ? BuiltInMaterials.Default : material;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[] { Solid.SweepFace(profile.Perimeter, profile.Voids, height, material == null ? BuiltInMaterials.Default : material) };
+            this.Geometry = new[] { Solid.SweepFace(profile.Perimeter, profile.Voids, height, this.Material) };
         }
 
         /// <summary>
@@ -83,7 +89,8 @@ namespace Elements
 
             this.Profile = new Profile(profile);
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[] { Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, height, material == null ? BuiltInMaterials.Mass : material) };
+            this.Material = this.Material == null ? BuiltInMaterials.Default : material;
+            this.Geometry = new[] { Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, height, this.Material) };
         }
 
         /// <summary>
@@ -110,7 +117,7 @@ namespace Elements
             //         this.Profile = extrude.Profile;
             //     }
             // }
-
+            this.Material = this.Material == null ? BuiltInMaterials.Default : material;
             this.Transform = transform;
             this.Geometry = geometry;
         }

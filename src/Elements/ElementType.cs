@@ -30,12 +30,6 @@ namespace Elements
         public string Name{get;}
 
         /// <summary>
-        /// A description of the ElementType.
-        /// </summary>
-        [JsonProperty("description")]
-        public string Description{get;}
-
-        /// <summary>
         /// Construct an ElementType.
         /// </summary>
         /// <param name="name">A name.</param>
@@ -44,7 +38,6 @@ namespace Elements
         {
             this.Id = IdProvider.Instance.GetNextId();
             this.Name = name;
-            this.Description = description;
         }
     }
 }
