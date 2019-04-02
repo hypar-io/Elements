@@ -15,19 +15,16 @@ namespace Elements
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
-        [JsonProperty("elevation")]
         public double Elevation { get; }
 
         /// <summary>
         /// The floor type of the floor.
         /// </summary>
-        [JsonProperty("element_type")]
         public FloorType ElementType { get; }
 
         /// <summary>
         /// The untransformed profile of the floor.
         /// </summary>
-        [JsonProperty("profile")]
         public Profile Profile { get; }
 
         /// <summary>
@@ -51,13 +48,11 @@ namespace Elements
         /// <summary>
         /// The floor's geometry.
         /// </summary>
-        [JsonProperty("geometry")]
         public Solid[] Geometry { get; }
 
         /// <summary>
         /// The openings in the floor.
         /// </summary>
-        [JsonProperty("openings")]
         public Opening[] Openings{get;}
 
         /// <summary>

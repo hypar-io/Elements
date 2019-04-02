@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
+using Newtonsoft.Json.Serialization;
 
 namespace Elements.Serialization.JSON
 {
@@ -35,7 +36,7 @@ namespace Elements.Serialization.JSON
             var materials = JsonConvert.DeserializeObject<Dictionary<long, Material>>(obj.GetValue("materials").ToString());
             var profiles = JsonConvert.DeserializeObject<Dictionary<long, Profile>>(obj.GetValue("profiles").ToString(),
                                 new[] { new IProfileConverter() });
-            var elementTypes = JsonConvert.DeserializeObject<Dictionary<long, ElementType>>(obj.GetValue("element_types").ToString(),
+            var elementTypes = JsonConvert.DeserializeObject<Dictionary<long, ElementType>>(obj.GetValue("elementTypes").ToString(),
                                 new JsonConverter[] { new ElementTypeConverter(), new ProfileToIdConverter(profiles) });
             var extensions = JsonConvert.DeserializeObject<List<string>>(obj.GetValue("extensions").ToString());
             var elements = JsonConvert.DeserializeObject<Dictionary<long, Element>>(obj.GetValue("elements").ToString(),
@@ -49,7 +50,8 @@ namespace Elements.Serialization.JSON
                                                     new ProfileToIdConverter(profiles),
                                                     new SolidConverter(materials)
                                                 },
-                                NullValueHandling = NullValueHandling.Ignore
+                                NullValueHandling = NullValueHandling.Ignore,
+                                ContractResolver = new CamelCasePropertyNamesContractResolver() 
                             });
             return new Model(elements, materials, elementTypes, profiles, extensions);
         }
@@ -67,7 +69,8 @@ namespace Elements.Serialization.JSON
 
             var settings = new JsonSerializerSettings(){
                 Formatting = Formatting.Indented,
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new CamelCasePropertyNamesContractResolver() 
             };
 
             // Write extensions
@@ -79,13 +82,14 @@ namespace Elements.Serialization.JSON
             writer.WriteRawValue(JsonConvert.SerializeObject(model.Materials, settings));
 
             // Write element types
-            writer.WritePropertyName("element_types");
+            writer.WritePropertyName("elementTypes");
             var etSettings = new JsonSerializerSettings(){
                 Formatting = Formatting.Indented,
                 NullValueHandling = NullValueHandling.Ignore,
                 Converters = new JsonConverter[]{
                     new ProfileToIdConverter(model.Profiles)
-                }
+                },
+                ContractResolver = new CamelCasePropertyNamesContractResolver() 
             };
             writer.WriteRawValue(JsonConvert.SerializeObject(model.ElementTypes, etSettings));
 
@@ -105,7 +109,8 @@ namespace Elements.Serialization.JSON
                         new ProfileToIdConverter(model.Profiles),
                         new SolidConverter(model.Materials)
                     },
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new CamelCasePropertyNamesContractResolver() 
             }));
 
             // Serialize materials

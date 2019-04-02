@@ -14,7 +14,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The transform's matrix.
         /// </summary>
-        [JsonProperty("matrix")]
         public Matrix Matrix
         {
             get => _matrix;

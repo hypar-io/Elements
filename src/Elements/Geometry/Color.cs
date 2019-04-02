@@ -12,25 +12,21 @@ namespace Elements.Geometry
         /// <summary>
         /// The red component of the color.
         /// </summary>
-        [JsonProperty("red")]
         public float Red{get;}
 
         /// <summary>
         /// The green component of the color.
         /// </summary>
-        [JsonProperty("green")]
         public float Green{get;}
 
         /// <summary>
         /// The blue component of the color.
         /// </summary>
-        [JsonProperty("blue")]
         public float Blue{get;}
 
         /// <summary>
         /// The alpha component of the color.
         /// </summary>
-        [JsonProperty("alpha")]
         public float Alpha{get;}
 
         /// <summary>

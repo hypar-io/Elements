@@ -17,7 +17,6 @@ namespace Elements
         /// The perimeter of the opening.
         /// </summary>
         /// <value>A polygon of Width and Height translated by X and Y.</value>
-        [JsonProperty("perimeter")]
         public Polygon Perimeter
         {
             get => _perimeter;

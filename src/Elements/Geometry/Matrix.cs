@@ -24,7 +24,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The X axis of the Matrix.
         /// </summary>
-        [JsonProperty("x_axis")]
         public Vector3 XAxis
         {
             get{return new Vector3(m11, m12, m13);}
@@ -33,7 +32,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The Y axis of the Matrix.
         /// </summary>
-        [JsonProperty("y_axis")]
         public Vector3 YAxis
         {
             get{return new Vector3(m21, m22, m23);}
@@ -42,7 +40,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The Z axis of the Matrix.
         /// </summary>
-        [JsonProperty("z_axis")]
         public Vector3 ZAxis
         {
             get{return new Vector3(m31, m32, m33);}
@@ -51,7 +48,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The translation component of the Matrix.
         /// </summary>
-        [JsonProperty("translation")]
         public Vector3 Translation
         {
             get{return new Vector3(tx, ty, tz);}

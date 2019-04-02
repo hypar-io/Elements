@@ -29,19 +29,16 @@ namespace Elements
         /// <summary>
         /// The version of the assembly.
         /// </summary>
-        [JsonProperty("version")]
         public string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         /// <summary>
         /// The origin of the model.
         /// </summary>
-        [JsonProperty("origin")]
         public Position Origin { get; set; }
 
         /// <summary>
         /// All Elements in the Model.
         /// </summary>
-        [JsonProperty("elements")]
         public Dictionary<long, Element> Elements
         {
             get { return this._elements; }
@@ -50,7 +47,6 @@ namespace Elements
         /// <summary>
         /// All Materials in the Model.
         /// </summary>
-        [JsonProperty("materials")]
         public Dictionary<long, Material> Materials
         {
             get { return this._materials; }
@@ -59,7 +55,6 @@ namespace Elements
         /// <summary>
         /// All ElementTypes in the Model.
         /// </summary>
-        [JsonProperty("element_types")]
         public Dictionary<long, ElementType> ElementTypes
         {
             get { return this._elementTypes; }
@@ -68,7 +63,6 @@ namespace Elements
         /// <summary>
         /// All Profiles in the model.
         /// </summary>
-        [JsonProperty("profiles")]
         public Dictionary<long, Profile> Profiles
         {
             get { return this._profiles; }
@@ -79,7 +73,6 @@ namespace Elements
         /// extensions which must be available at the time of
         /// serialization or deserialization.
         /// </summary>
-        [JsonProperty("extensions")]
         public IEnumerable<string> Extensions => _extensions;
 
         /// <summary>

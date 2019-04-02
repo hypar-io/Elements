@@ -12,13 +12,11 @@ namespace Elements.Geometry
         /// <summary>
         /// The origin of the plane.
         /// </summary>
-        [JsonProperty("origin")]
         public Vector3 Origin{get;}
 
         /// <summary>
         /// The normal of the plane.
         /// </summary>
-        [JsonProperty("normal")]
         public Vector3 Normal{get;}
 
         /// <summary>

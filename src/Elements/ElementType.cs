@@ -13,20 +13,17 @@ namespace Elements
         /// <summary>
         /// The unique identifier of an ElementType.
         /// </summary>
-        [JsonProperty("id")]
         public long Id{get;internal set;}
 
         /// <summary>
         /// The type of the ElementType.
         /// Used during serialization.
         /// </summary>
-        [JsonProperty("type")]
         public abstract string Type{get;}
 
         /// <summary>
         /// The name of the ElementType.
         /// </summary>
-        [JsonProperty("name")]
         public string Name{get;}
 
         /// <summary>

@@ -15,7 +15,6 @@ namespace Elements
         /// <summary>
         /// The profile of the space.
         /// </summary>
-        [JsonProperty("profile")]
         public Profile Profile { get; }
 
         /// <summary>
@@ -30,7 +29,6 @@ namespace Elements
         /// <summary>
         /// The space's geometry.
         /// </summary>
-        [JsonProperty("geometry")]
         public Solid[] Geometry { get; internal set; }
 
         /// <summary>

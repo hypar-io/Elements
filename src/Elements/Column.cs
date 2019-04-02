@@ -12,13 +12,11 @@ namespace Elements
         /// <summary>
         /// The location of the base of the column.
         /// </summary>
-        [JsonProperty("location")]
         public Vector3 Location{get;}
 
         /// <summary>
         /// The height of the column.
         /// </summary>
-        [JsonProperty("height")]
         public double Height{get;}
 
         /// <summary>

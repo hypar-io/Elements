@@ -17,7 +17,6 @@ namespace Elements.GeoJSON
         /// The type of the geometry.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("type")]
         public virtual string Type
         {
             get{return GetType().Name;}
@@ -96,7 +95,6 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("coordinates")]
         public Position Coordinates{get;}
 
         /// <summary>
@@ -123,7 +121,6 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("coordinates")]
         public Position[] Coordinates{get;}
 
         /// <summary>
@@ -150,7 +147,6 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("coordinates")]
         public Position[] Coordinates{get;}
 
         /// <summary>
@@ -177,7 +173,6 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("coordinates")]
         public Position[] Coordinates{get;}
 
         /// <summary>
@@ -208,7 +203,6 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("coordinates")]
         public Position[][] Coordinates{get;}
 
         /// <summary>
@@ -296,7 +290,6 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("coordinates")]
         public Position[][] Coordinates{get;}
         
         /// <summary>

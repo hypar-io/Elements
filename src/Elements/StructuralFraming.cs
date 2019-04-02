@@ -25,20 +25,17 @@ namespace Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        [JsonProperty("curve")]
         [JsonConverter(typeof(ICurveConverter))]
         public ICurve Curve { get; }
 
         /// <summary>
         /// The setback of the beam's extrusion at the start.
         /// </summary>
-        [JsonProperty("start_setback")]
         public double StartSetback { get; }
 
         /// <summary>
         /// The setback of the beam's extrusion at the end.
         /// </summary>
-        [JsonProperty("end_setback")]
         public double EndSetback { get; }
 
         /// <summary>
@@ -50,7 +47,6 @@ namespace Elements
         /// <summary>
         /// The element type of the structural framing.
         /// </summary>
-        [JsonProperty("element_type")]
         public StructuralFramingType ElementType {get;}
 
         /// <summary>

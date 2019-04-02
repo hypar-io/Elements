@@ -30,16 +30,14 @@ namespace Elements
         /// <summary>
         /// The type of the wall type.
         /// </summary>
-        [JsonProperty("type")]
         public override string Type
         {
-            get { return "wall_type"; }
+            get { return "wallType"; }
         }
 
         /// <summary>
         /// The material layers of the wall.
         /// </summary>
-        [JsonProperty("material_layers")]
         public List<MaterialLayer> MaterialLayers {get;}
 
         /// <summary>

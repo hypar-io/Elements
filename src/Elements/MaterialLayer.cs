@@ -11,13 +11,11 @@ namespace Elements
         /// <summary>
         /// The thickness of the layer.
         /// </summary>
-        [JsonProperty("thickness")]
         public double Thickness {get;}
 
         /// <summary>
         /// The layer's material.
         /// </summary>
-        [JsonProperty("material")]
         public Material Material{get;}
 
         /// <summary>

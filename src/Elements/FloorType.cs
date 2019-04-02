@@ -30,16 +30,14 @@ namespace Elements
         /// <summary>
         /// The type of the floor type.
         /// </summary>
-        [JsonProperty("type")]
         public override string Type
         {
-            get{return "floor_type";}
+            get{return "floorType";}
         }
 
         /// <summary>
         /// A collection of material layers.
         /// </summary>
-        [JsonProperty("material_layers")]
         public List<MaterialLayer> MaterialLayers {get;}
 
         /// <summary>

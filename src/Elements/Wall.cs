@@ -15,7 +15,6 @@ namespace Elements
         /// <summary>
         /// The profile of the wall.
         /// </summary>
-        [JsonProperty("profile")]
         public Profile Profile { get; }
 
         /// <summary>
@@ -30,19 +29,16 @@ namespace Elements
         /// <summary>
         /// The center line of the wall.
         /// </summary>
-        [JsonProperty("center_line")]
         public Line CenterLine { get; }
 
         /// <summary>
         /// The height of the wall.
         /// </summary>
-        [JsonProperty("height")]
         public double Height { get; }
 
         /// <summary>
         /// The WallType of the Wall.
         /// </summary>
-        [JsonProperty("element_type")]
         public WallType ElementType { get; }
 
         /// <summary>
@@ -57,13 +53,11 @@ namespace Elements
         /// <summary>
         /// The wall's geometry.
         /// </summary>
-        [JsonProperty("geometry")]
         public Solid[] Geometry { get; }
 
         /// <summary>
         /// An array of Openings in the wall.
         /// </summary>
-        [JsonProperty("openings")]
         public Opening[] Openings{ get; }
 
         /// <summary>

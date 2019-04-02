@@ -14,22 +14,19 @@ namespace Elements
         /// <summary>
         /// The profile used by the structural framing type.
         /// </summary>
-        [JsonProperty("profile")]
         public Profile Profile {get;}
 
         /// <summary>
         /// The material used by the structural framing type.
         /// </summary>
-        [JsonProperty("material")]
         public Material Material {get;}
 
         /// <summary>
         /// The type of the structural framing type.
         /// </summary>
-        [JsonProperty("type")]
         public override string Type
         {
-            get{return "structural_framing_type";}
+            get{return "structuralFramingType";}
         }
 
         /// <summary>

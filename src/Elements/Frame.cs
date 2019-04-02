@@ -14,20 +14,17 @@ namespace Elements
         /// <summary>
         /// The perimeter of the frame.
         /// </summary>
-        [JsonProperty("perimeter")]
         public Polygon Perimeter{get;}
 
         /// <summary>
         /// The frame's profile.
         /// </summary>
-        [JsonProperty("profile")]
         public Profile Profile{get;}
 
         /// <summary>
         /// The frame's geometry.
         /// </summary>
         /// <value></value>
-        [JsonProperty("geometry")]
         public Solid[] Geometry{get;}
 
         /// <summary>

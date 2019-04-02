@@ -31,19 +31,16 @@ namespace Elements
         /// <summary>
         /// The maximum elevation of the topography.
         /// </summary>
-        [JsonProperty("max_elevation")]
         public double MaxElevation => _maxElevation;
 
         /// <summary>
         /// The minimum elevation of the topography.
         /// </summary>
-        [JsonProperty("min_elevation")]
         public double MinElevation => _minElevation;
 
         /// <summary>
         /// The material of the topography.
         /// </summary>
-        [JsonProperty("material")]
         public Material Material { get; }
 
         /// <summary>

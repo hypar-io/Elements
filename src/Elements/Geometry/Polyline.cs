@@ -15,7 +15,7 @@ namespace Elements.Geometry
         /// The type of the curve.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order = -100)]
+        [JsonProperty(Order = -100)]
         public string Type
         {
             get { return this.GetType().FullName.ToLower(); }
@@ -29,7 +29,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The vertices of the polygon.
         /// </summary>
-        [JsonProperty("vertices")]
         public Vector3[] Vertices
         {
             get { return this._vertices; }

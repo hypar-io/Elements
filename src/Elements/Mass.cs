@@ -16,7 +16,6 @@ namespace Elements
         /// <summary>
         /// The Profile of the mass.
         /// </summary>
-        [JsonProperty("profile")]
         public Profile Profile { get; }
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace Elements
         /// <summary>
         /// The height of the mass.
         /// </summary>
-        [JsonProperty("height")]
         public double Height { get; }
 
         /// <summary>
@@ -46,7 +44,6 @@ namespace Elements
         /// <summary>
         /// The mass' geometry.
         /// </summary>
-        [JsonProperty("geometry")]
         public Solid[] Geometry { get; }
 
         /// <summary>

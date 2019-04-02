@@ -15,13 +15,11 @@ namespace Elements
         /// <summary>
         /// The vertices forming the perimeter of the panel.
         /// </summary>
-        [JsonProperty("perimeter")]
         public Vector3[] Perimeter { get; }
 
         /// <summary>
         /// The panel's geometry.
         /// </summary>
-        [JsonProperty("geometry")]
         public Solid[] Geometry { get; }
 
         /// <summary>

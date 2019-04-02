@@ -57,25 +57,21 @@ namespace Elements.Geometry
         /// <summary>
         /// The identifier of the Profile.
         /// </summary>
-        [JsonProperty("id")]
         public long Id { get; internal set; }
 
         /// <summary>
         /// The name of the Profile.
         /// </summary>
-        [JsonProperty("name")]
         public string Name { get; }
 
         /// <summary>
         /// The perimeter of the Profile.
         /// </summary>
-        [JsonProperty("perimeter")]
         public Polygon Perimeter { get => _perimeter; protected set => _perimeter = value; }
 
         /// <summary>
         /// A collection of Polygons representing voids in the Profile.
         /// </summary>
-        [JsonProperty("voids")]
         public Polygon[] Voids { get => _voids; protected set => _voids = value; }
 
         /// <summary>

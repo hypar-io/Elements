@@ -24,43 +24,36 @@ namespace Elements
         /// <summary>
         /// The start of the truss.
         /// </summary>
-        [JsonProperty("start")]
         public Vector3 Start { get; }
 
         /// <summary>
         /// The end of the truss.
         /// </summary>
-        [JsonProperty("end")]
         public Vector3 End { get; }
 
         /// <summary>
         /// The depth of the truss.
         /// </summary>
-        [JsonProperty("depth")]
         public double Depth { get; }
 
         /// <summary>
         /// The number of divisions in the truss.
         /// </summary>
-        [JsonProperty("divisions")]
         public int Divisions { get; }
 
         /// <summary>
         /// The Profile used for members in the top chord of the truss.
         /// </summary>
-        [JsonProperty("top_chord_type")]
         public StructuralFramingType TopChordType { get; }
 
         /// <summary>
         /// The Profile used for members in the bottom chord of the truss.
         /// </summary>
-        [JsonProperty("bottom_chord_type")]
         public StructuralFramingType BottomChordType { get; }
 
         /// <summary>
         /// The Profile used for members in the web of the truss.
         /// </summary>
-        [JsonProperty("web_type")]
         public StructuralFramingType WebType { get; }
 
         /// <summary>

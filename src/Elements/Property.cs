@@ -15,19 +15,17 @@ namespace Elements
         /// <summary>
         /// The value of the Property.
         /// </summary>
-        [JsonProperty("value")]
         public string Value{get;}
 
         /// <summary>
         /// The UnitType of the Property.
         /// </summary>
-        [JsonProperty("unit_type"),JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public UnitType UnitType{get;}
 
         /// <summary>
         /// The description of the Property.
         /// </summary>
-        [JsonProperty("description")]
         public string Description{get;}
 
         /// <summary>
@@ -57,19 +55,17 @@ namespace Elements
         /// <summary>
         /// The value of the Property.
         /// </summary>
-        [JsonProperty("value")]
         public double Value{get;}
 
         /// <summary>
         /// The UnitType of the Property.
         /// </summary>
-        [JsonProperty("unit_type"), JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public UnitType UnitType{get;}
 
         /// <summary>
         /// The description of the Property.
         /// </summary>
-        [JsonProperty("description")]
         public string Description{get;}
 
         /// <summary>

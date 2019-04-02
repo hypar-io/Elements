@@ -13,7 +13,7 @@ namespace Elements.Geometry
         /// The type of the curve.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order = -100)]
+        [JsonProperty(Order = -100)]
         public string Type
         {
             get { return this.GetType().FullName.ToLower(); }
@@ -22,13 +22,11 @@ namespace Elements.Geometry
         /// <summary>
         /// The start of the line.
         /// </summary>
-        [JsonProperty("start")]
         public Vector3 Start { get; }
 
         /// <summary>
         /// The end of the line.
         /// </summary>
-        [JsonProperty("end")]
         public Vector3 End { get; }
 
         /// <summary>
