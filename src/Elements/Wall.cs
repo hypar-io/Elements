@@ -18,15 +18,6 @@ namespace Elements
         public Profile Profile { get; }
 
         /// <summary>
-        /// The transformed profile of the wall.
-        /// </summary>
-        [JsonIgnore]
-        public Profile ProfileTransformed
-        {
-            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
-        }
-
-        /// <summary>
         /// The center line of the wall.
         /// </summary>
         public Line CenterLine { get; }
@@ -40,15 +31,6 @@ namespace Elements
         /// The WallType of the Wall.
         /// </summary>
         public WallType ElementType { get; }
-
-        /// <summary>
-        /// The thickness of the wall's extrusion.
-        /// </summary>
-        [JsonIgnore]
-        public double Thickness
-        {
-            get { return this.ElementType.Thickness; }
-        }
 
         /// <summary>
         /// The wall's geometry.
@@ -112,8 +94,9 @@ namespace Elements
 
             // Construct a transform whose X axis is the centerline of the wall.
             // The wall is described as if it's lying flat in the XY plane of that Transform.
-            var z = centerLine.Direction.Cross(Vector3.ZAxis);
-            var wallTransform = new Transform(centerLine.Start, centerLine.Direction, z);
+            var d = centerLine.Direction();
+            var z = d.Cross(Vector3.ZAxis);
+            var wallTransform = new Transform(centerLine.Start, d, z);
             this.Transform = wallTransform;
             if(transform != null) 
             {
@@ -136,7 +119,7 @@ namespace Elements
             }
 
             this.Geometry = new []{Solid.SweepFace(this.Profile.Perimeter, 
-                this.Profile.Voids, this.Thickness, this.ElementType.MaterialLayers[0].Material, true)};
+                this.Profile.Voids, this.Thickness(), this.ElementType.MaterialLayers[0].Material, true)};
         }
 
         /// <summary>
@@ -171,6 +154,22 @@ namespace Elements
             this.Transform = transform;
             this.Geometry = geometry;
             this.CenterLine = centerLine;
+        }
+
+        /// <summary>
+        /// Calculate the thickness of the wall's extrusion from its wall type.
+        /// </summary>
+        public double Thickness()
+        {
+            return this.ElementType.Thickness();
+        }
+
+        /// <summary>
+        /// Get the transformed profile of the wall transformed by the wall's transform.
+        /// </summary>
+        public Profile ProfileTransformed()
+        {
+            return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
         }
     }
 }

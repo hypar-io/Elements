@@ -11,23 +11,6 @@ namespace Elements
     public class FloorType : ElementType, ILayeredMaterial
     {
         /// <summary>
-        /// The thickness of the Floor.
-        /// </summary>
-        [JsonIgnore]
-        public double Thickness
-        {
-            get
-            {
-                var thickness = 0.0;
-                foreach(var l in this.MaterialLayers)
-                {
-                    thickness += l.Thickness;
-                }
-                return thickness;
-            }
-        }
-
-        /// <summary>
         /// The type of the floor type.
         /// </summary>
         public override string Type
@@ -64,6 +47,19 @@ namespace Elements
         public FloorType(string name, List<MaterialLayer> materialLayers) : base(name)
         {
             this.MaterialLayers = materialLayers;
+        }
+    
+        /// <summary>
+        /// Calculate the thickness of the floor by summing the thicknesses of its material layers.
+        /// </summary>
+        public double Thickness()
+        {
+            var thickness = 0.0;
+            foreach(var l in this.MaterialLayers)
+            {
+                thickness += l.Thickness;
+            }
+            return thickness;
         }
     }
 }

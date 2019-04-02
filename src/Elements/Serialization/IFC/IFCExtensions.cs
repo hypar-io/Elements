@@ -261,7 +261,7 @@ namespace Elements.Serialization.IFC
         /// <returns></returns>
         private static IfcWallStandardCase ToIfcWallStandardCase(this Wall wall, IfcRepresentationContext context, Document doc)
         {
-            var sweptArea = wall.CenterLine.Thicken(wall.Thickness).ToIfcArbitraryClosedProfileDef(doc);
+            var sweptArea = wall.CenterLine.Thicken(wall.Thickness()).ToIfcArbitraryClosedProfileDef(doc);
             var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
 
             // We don't use the Wall's transform for positioning, because

@@ -18,7 +18,6 @@ namespace Elements
         /// <summary>
         /// The elements aggregated by this element.
         /// </summary>
-        [JsonIgnore]
         public List<Element> Elements { get; }
 
         /// <summary>

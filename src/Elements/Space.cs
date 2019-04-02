@@ -18,15 +18,6 @@ namespace Elements
         public Profile Profile { get; }
 
         /// <summary>
-        /// The transformed profile of the space.
-        /// </summary>
-        [JsonIgnore]
-        public Profile ProfileTransformed
-        {
-            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
-        }
-
-        /// <summary>
         /// The space's geometry.
         /// </summary>
         public Solid[] Geometry { get; internal set; }
@@ -118,6 +109,14 @@ namespace Elements
             this.Material = this.Material == null ? BuiltInMaterials.Default : material;
             this.Transform = transform;
             this.Geometry = geometry;
+        }
+    
+        /// <summary>
+        /// Get the profile of the space transformed by the space's transform.
+        /// </summary>
+        public Profile ProfileTransformed()
+        {
+            return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
         }
     }
 }

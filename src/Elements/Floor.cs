@@ -28,24 +28,6 @@ namespace Elements
         public Profile Profile { get; }
 
         /// <summary>
-        /// The transformed profile of the floor.
-        /// </summary>
-        [JsonIgnore]
-        public Profile ProfileTransformed
-        {
-            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
-        }
-
-        /// <summary>
-        /// The thickness of the floor's extrusion.
-        /// </summary>
-        [JsonIgnore]
-        public double Thickness
-        {
-            get { return this.ElementType.Thickness; }
-        }
-
-        /// <summary>
         /// The floor's geometry.
         /// </summary>
         public Solid[] Geometry { get; }
@@ -70,8 +52,9 @@ namespace Elements
             this.Profile = profile;
             this.Elevation = elevation;
             this.ElementType = elementType;
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation - elementType.Thickness));
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Thickness)};
+            var thickness = elementType.Thickness();
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation - thickness));
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, thickness)};
         }
 
         /// <summary>
@@ -103,8 +86,9 @@ namespace Elements
             this.Openings = openings;
             this.Elevation = elevation;
             this.ElementType = elementType;
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation - elementType.Thickness));
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Thickness)};
+            var thickness = elementType.Thickness();
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation - thickness));
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, thickness)};
         }
 
         /// <summary>
@@ -125,7 +109,7 @@ namespace Elements
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             var outer = start.OfPolygon(this.Profile.Perimeter);
             var inner = this.Profile.Voids != null ? start.OfPolygons(this.Profile.Voids) : null;
-            this.Geometry = new[]{Solid.SweepFace(outer, inner, start.OfVector(direction), this.Thickness)};
+            this.Geometry = new[]{Solid.SweepFace(outer, inner, start.OfVector(direction), this.Thickness())};
         }
         
         /// <summary>
@@ -137,6 +121,22 @@ namespace Elements
         public double Area()
         {
             return this.Profile.Area();
+        }
+
+        /// <summary>
+        /// Get the profile of the floor transformed by the floor's transform.
+        /// </summary>
+        public Profile ProfileTransformed()
+        {
+            return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
+        }
+
+        /// <summary>
+        /// Calculate thickness of the floor's extrusion.
+        /// </summary>
+        public double Thickness()
+        {
+            return this.ElementType.Thickness();
         }
     }
 }

@@ -19,15 +19,6 @@ namespace Elements
         public Profile Profile { get; }
 
         /// <summary>
-        /// The transformed Profile of the mass.
-        /// </summary>
-        [JsonIgnore]
-        public Profile ProfileTransformed
-        {
-            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
-        }
-
-        /// <summary>
         /// The height of the mass.
         /// </summary>
         public double Height { get; }
@@ -98,6 +89,14 @@ namespace Elements
         public double Volume()
         {
             return this.Profile.Area() * this.Height;
+        }
+    
+        /// <summary>
+        /// Get the profile of the mass transformed by the mass' transform.
+        /// </summary>
+        public Profile ProfileTransformed()
+        {
+            return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
         }
     }
 }

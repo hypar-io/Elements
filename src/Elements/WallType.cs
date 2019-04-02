@@ -11,23 +11,6 @@ namespace Elements
     public class WallType : ElementType, ILayeredMaterial
     {
         /// <summary>
-        /// The thickness of the Wall.
-        /// </summary>
-        [JsonIgnore]
-        public double Thickness
-        {
-            get
-            {
-                var thickness = 0.0;
-                foreach(var l in this.MaterialLayers)
-                {
-                    thickness += l.Thickness;
-                }
-                return thickness;
-            }
-        }
-
-        /// <summary>
         /// The type of the wall type.
         /// </summary>
         public override string Type
@@ -64,6 +47,19 @@ namespace Elements
         public WallType(string name, List<MaterialLayer> materialLayers) : base(name)
         {
             this.MaterialLayers = materialLayers;
+        }
+    
+        /// <summary>
+        /// Calculate the thickness of the wall by summing the layer thicknesses.
+        /// </summary>
+        public double Thickness()
+        {
+            var thickness = 0.0;
+            foreach(var l in this.MaterialLayers)
+            {
+                thickness += l.Thickness;
+            }
+            return thickness;
         }
     }
 }

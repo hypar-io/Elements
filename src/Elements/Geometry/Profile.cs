@@ -198,7 +198,7 @@ namespace Elements.Geometry
         {
             if (this.Voids == null || this.Voids.Length == 0)
             {
-                return this.Perimeter.Area;
+                return this.Perimeter.Area();
             }
 
             var clipper = new ClipperLib.Clipper();
@@ -230,7 +230,7 @@ namespace Elements.Geometry
         {
             var t = ComputeTransform();
             var vertices = this.Perimeter.Vertices;
-            var p = t.XY;
+            var p = t.XY();
             foreach (var v in vertices)
             {
                 var d = v.DistanceTo(p);

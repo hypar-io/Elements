@@ -14,15 +14,6 @@ namespace Elements
     public abstract class StructuralFraming : Element, IGeometry3D, IElementType<StructuralFramingType>
     {
         /// <summary>
-        /// The cross-section profile of the framing element transformed by the element's transform.
-        /// </summary>
-        [JsonIgnore]
-        public Profile ProfileTransformed
-        {
-            get { return this.Transform != null ? this.Transform.OfProfile(this.ElementType.Profile) : this.ElementType.Profile; }
-        }
-
-        /// <summary>
         /// The center line of the framing element.
         /// </summary>
         [JsonConverter(typeof(ICurveConverter))]
@@ -80,6 +71,14 @@ namespace Elements
         public double Volume()
         {
             return this.ElementType.Profile.Area() * this.Curve.Length();
+        }
+    
+        /// <summary>
+        /// Get the cross-section profile of the framing element transformed by the element's transform.
+        /// </summary>
+        public Profile ProfileTransformed()
+        {
+            return this.Transform != null ? this.Transform.OfProfile(this.ElementType.Profile) : this.ElementType.Profile;
         }
     }
 }

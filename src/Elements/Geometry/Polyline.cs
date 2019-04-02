@@ -223,7 +223,7 @@ namespace Elements.Geometry
                     if (totalLength <= d && totalLength + currLength >= d)
                     {
                         o = s.PointAt((d - totalLength) / currLength);
-                        x = s.Direction.Cross(up);
+                        x = s.Direction().Cross(up);
                         break;
                     }
                     totalLength += currLength;

@@ -96,7 +96,7 @@ namespace Elements.Geometry
             this.StartAngle = startAngle;
             this.Radius = radius;
             this._transform = new Transform(center);
-            this.Plane = this._transform.XY;
+            this.Plane = this._transform.XY();
         }
 
         /// <summary>

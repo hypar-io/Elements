@@ -18,53 +18,6 @@ namespace Elements.Geometry
         private const double scale = 1024.0;
 
         /// <summary>
-        /// The area enclosed by the polygon.
-        /// </summary>
-        [JsonIgnore]
-        public double Area
-        {
-            get {
-                var area = 0.0;
-                for(var i = 0; i<= _vertices.Length-1; i++)
-                {
-                    var j = (i+1) % _vertices.Length;
-                    area += _vertices[i].X * _vertices[j].Y;
-                    area -= _vertices[i].Y * _vertices[j].X;
-                }
-                return area/2.0;
-            }
-        }
-
-        /// <summary>
-        /// The centroid of the Polygon.
-        /// </summary>
-        /// <returns>
-        /// Retruns a Vector3 representation of the Polygon centroid.
-        /// </returns>
-        [JsonIgnore]
-        public Vector3 Centroid
-        {
-            get
-            {
-                var x = 0.0;
-                var y = 0.0;
-                var factor = 0.0;
-                for (var i = 0; i < this._vertices.Length; i++)
-                {
-                    factor =
-                        (_vertices[i].X * _vertices[(i + 1) % _vertices.Length].Y) -
-                        (_vertices[(i + 1) % _vertices.Length].X * _vertices[i].Y);
-                    x += (_vertices[i].X + _vertices[(i + 1) % _vertices.Length].X) * factor;
-                    y += (_vertices[i].Y + _vertices[(i + 1) % _vertices.Length].Y) * factor;
-                }
-                var divisor = this.Area * 6;
-                x /= divisor;
-                y /= divisor;
-                return new Vector3(System.Math.Abs(x), System.Math.Abs(y));
-            }
-        }
-
-        /// <summary>
         /// Construct a Polygon from a collection of vertices.
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
@@ -162,7 +115,7 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            return solution.First().ToPolygon().Area == polygon.ToClipperPath().ToPolygon().Area;
+            return solution.First().ToPolygon().Area() == polygon.ToClipperPath().ToPolygon().Area();
         }
 
         /// <summary>
@@ -619,6 +572,43 @@ namespace Elements.Geometry
                 length += this._vertices[i].DistanceTo(this._vertices[next]);
             }
             return length;
+        }
+
+        /// <summary>
+        /// Calculate the centroid of the polygon.
+        /// </summary>
+        public Vector3 Centroid()
+        {
+            var x = 0.0;
+            var y = 0.0;
+            var factor = 0.0;
+            for (var i = 0; i < this._vertices.Length; i++)
+            {
+                factor =
+                    (_vertices[i].X * _vertices[(i + 1) % _vertices.Length].Y) -
+                    (_vertices[(i + 1) % _vertices.Length].X * _vertices[i].Y);
+                x += (_vertices[i].X + _vertices[(i + 1) % _vertices.Length].X) * factor;
+                y += (_vertices[i].Y + _vertices[(i + 1) % _vertices.Length].Y) * factor;
+            }
+            var divisor = this.Area() * 6;
+            x /= divisor;
+            y /= divisor;
+            return new Vector3(System.Math.Abs(x), System.Math.Abs(y));
+        }
+
+        /// <summary>
+        /// Calculate the polygon's area.
+        /// </summary>
+        public double Area()
+        {
+            var area = 0.0;
+            for(var i = 0; i<= _vertices.Length-1; i++)
+            {
+                var j = (i+1) % _vertices.Length;
+                area += _vertices[i].X * _vertices[j].Y;
+                area -= _vertices[i].Y * _vertices[j].X;
+            }
+            return area/2.0;
         }
     }
 

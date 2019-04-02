@@ -117,7 +117,7 @@ namespace Elements.Geometry.Solids
                 for (var i = 0; i < transforms.Length; i++)
                 {
                     var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
-                    solid.SweepPolygonBetweenPlanes(outer, transforms[i].XY, next.XY);
+                    solid.SweepPolygonBetweenPlanes(outer, transforms[i].XY(), next.XY());
                 }
             }
             else
@@ -457,7 +457,7 @@ namespace Elements.Geometry.Solids
             for (var i = 0; i < transforms.Length - 1; i++)
             {
                 var v = (transforms[i + 1].Origin - transforms[i].Origin).Normalized();
-                openEdge = SweepEdgesBetweenPlanes(openEdge, v, transforms[i + 1].XY);
+                openEdge = SweepEdgesBetweenPlanes(openEdge, v, transforms[i + 1].XY());
             }
             return openEdge;
         }

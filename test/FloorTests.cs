@@ -26,7 +26,7 @@ namespace Elements.Tests
 
             Assert.Equal(3, floor.Openings.Length);
             Assert.Equal(0.5, floor.Elevation);
-            Assert.Equal(0.1, floor.ElementType.Thickness);
+            Assert.Equal(0.1, floor.ElementType.Thickness());
             Assert.Equal(0.4, floor.Transform.Origin.Z);
             this.Model.AddElement(floor);
         }

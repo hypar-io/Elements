@@ -38,18 +38,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A normalized vector representing the direction of the line.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 Direction
-        {
-            get
-            {
-                return (this.End - this.Start).Normalized();
-            }
-        }
-
-        /// <summary>
         /// Construct a line from start and end points.
         /// </summary>
         /// <param name="start">The start of the line.</param>
@@ -111,7 +99,7 @@ namespace Elements.Geometry
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
             }
             var offset = this.Length() * u;
-            return this.Start + offset * this.Direction;
+            return this.Start + offset * this.Direction();
         }
 
         /// <summary>
@@ -135,7 +123,7 @@ namespace Elements.Geometry
                 throw new Exception("The line could not be thickened. Only lines with their start and end at the same elevation can be thickened.");
             }
             
-            var offsetN = this.Direction.Cross(Vector3.ZAxis);
+            var offsetN = this.Direction().Cross(Vector3.ZAxis);
             var a = this.Start + (offsetN * (amount / 2));
             var b = this.End + (offsetN * (amount / 2));
             var c = this.End - (offsetN * (amount / 2));
@@ -185,16 +173,18 @@ namespace Elements.Geometry
         /// <param name="p">The plane.</param>
         /// <returns>The point of intersection or null if no intersection occurs.</returns>
         public Vector3 Intersect(Plane p) {
+            var d = this.Direction();
+
             // Test for perpendicular.
-            if (p.Normal.Dot(this.Direction) == 0) {
+            if (p.Normal.Dot(d) == 0) {
                 return null;
             }
-            var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(this.Direction);
+            var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(d);
             if(t > this.Length())
             {
                 return null;
             }
-            return this.Start + this.Direction * t;
+            return this.Start + d * t;
         }
 
         /// <summary>
@@ -211,6 +201,14 @@ namespace Elements.Geometry
             {
                 return new BBox3(this.End, this.Start);
             }
+        }
+
+        /// <summary>
+        /// A normalized vector representing the direction of the line.
+        /// </summary>
+        public Vector3 Direction()
+        {
+            return (this.End - this.Start).Normalized();
         }
     }
 }
