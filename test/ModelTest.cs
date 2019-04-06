@@ -67,9 +67,9 @@ namespace Elements.Tests
                 var newModel = Model.FromJson(File.ReadAllText(jsonPath));
 
                 // Write the model as an IFC
-                // var ifcPath = $"models/{this._name}.ifc";
-                // Console.WriteLine($"Serializing {this._name} to IFC: {ifcPath}");
-                // this._model.ToIFC(ifcPath);
+                var ifcPath = $"models/{this._name}.ifc";
+                Console.WriteLine($"Serializing {this._name} to IFC: {ifcPath}");
+                this._model.ToIFC(ifcPath);
             }
         }
     }
