@@ -501,6 +501,9 @@ namespace Elements.Geometry.Tests
             var p = new Polygon(new[]{a,b,c,d});
             Assert.Equal(4, p.Segments().Count());
             Assert.Equal(new Vector3(1.0, 1.0), p.PointAt(0.5));
+
+            var r = Polygon.Rectangle(2,2);
+            Assert.Equal(new Vector3(1,1,0), r.PointAt(0.5));
         }
 
         [Fact]

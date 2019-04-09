@@ -158,7 +158,7 @@ namespace Elements.Geometry
                 var a = this._vertices[i];
                 var b = this._vertices[i + 1];
                 var currLength = a.DistanceTo(b);
-                var currVec = (b - a).Normalized();
+                var currVec = (b - a);
                 if (totalLength <= d && totalLength + currLength >= d)
                 {
                     segmentIndex = i;
