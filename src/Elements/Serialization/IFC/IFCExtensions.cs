@@ -110,18 +110,25 @@ namespace Elements.Serialization.IFC
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
             foreach(var e in model.Elements.Values)
             {
-                if(e is Wall)
+                try
                 {
-                    var w = (Wall)e;
-                    var ifcWall = w.ToIfcWallStandardCase(context, ifc);
-                    products.Add(ifcWall);
-                }
+                    if(e is Wall)
+                    {
+                        var w = (Wall)e;
+                        var ifcWall = w.ToIfcWallStandardCase(context, ifc);
+                        products.Add(ifcWall);
+                    }
 
-                if(e is Beam)
+                    if(e is Beam)
+                    {
+                        var b = (Beam)e;
+                        var ifcBeam = b.ToIfcBeam(context, ifc);
+                        products.Add(ifcBeam);
+                    }
+                }
+                catch
                 {
-                    var b = (Beam)e;
-                    var ifcBeam = b.ToIfcBeam(context, ifc);
-                    products.Add(ifcBeam);
+                    continue;
                 }
             }
 
@@ -300,7 +307,10 @@ namespace Elements.Serialization.IFC
         private static IfcBeam ToIfcBeam(this Beam beam, IfcRepresentationContext context, Document doc)
         {
             var sweptArea = beam.ElementType.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-            var line = (Line)beam.Curve;
+            var line = beam.Curve as Line;
+            if(line == null) {
+                throw new Exception("The beam could not be exported to IFC. Only linear beams are currently supported.");
+            }
             
             // We use the Z extrude direction because the direction is 
             // relative to the local placement, which is a transform at the
