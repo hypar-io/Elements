@@ -11,6 +11,7 @@
 - All structural framing type constructors now take a `StructuralFramingType` in place of a `Profile` and a `Material`.
 - All properties serialize to JSON using camel case.
 - Many expensive properties were converted to methods.
+- A constructor has been added to `WallType` that takes a collection of `MaterialLayer`.
 
 ## [0.2.2]
 ### Added
