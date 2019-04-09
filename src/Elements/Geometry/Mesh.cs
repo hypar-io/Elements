@@ -14,7 +14,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The triangle's vertices.
         /// </summary>
-        [JsonProperty("vertices")]
         public Vertex[] Vertices { get; }
 
         /// <summary>
@@ -103,7 +102,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The position of the vertex.
         /// </summary>
-        [JsonProperty("position")]
         public Vector3 Position { get; }
 
         /// <summary>
@@ -115,13 +113,11 @@ namespace Elements.Geometry
         /// <summary>
         /// The vertex's color.
         /// </summary>
-        [JsonProperty("color")]
         public Color Color { get; internal set;}
 
         /// <summary>
         /// The index of the vertex within a mesh.
         /// </summary>
-        [JsonProperty("index")]
         public int Index { get; internal set; }
 
         /// <summary>
@@ -149,13 +145,11 @@ namespace Elements.Geometry
         /// <summary>
         /// The mesh's vertices.
         /// </summary>
-        [JsonProperty("vertices")]
         public List<Vertex> Vertices => _vertices;
 
         /// <summary>
         /// The mesh's triangles.
         /// </summary>
-        [JsonProperty("triangles")]
         public List<Triangle> Triangles => _triangles;
 
         /// <summary>

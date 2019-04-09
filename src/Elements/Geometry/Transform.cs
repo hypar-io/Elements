@@ -14,7 +14,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The transform's matrix.
         /// </summary>
-        [JsonProperty("matrix")]
         public Matrix Matrix
         {
             get => _matrix;
@@ -54,33 +53,6 @@ namespace Elements.Geometry
         public Vector3 ZAxis
         {
             get { return this._matrix.ZAxis; }
-        }
-
-        /// <summary>
-        /// The XY plane of the transform.
-        /// </summary>
-        [JsonIgnore]
-        public Plane XY
-        {
-            get { return new Plane(this.Origin, this.ZAxis); }
-        }
-
-        /// <summary>
-        /// The YZ plane of the transform.
-        /// </summary>
-        [JsonIgnore]
-        public Plane YZ
-        {
-            get { return new Plane(this.Origin, this.XAxis); }
-        }
-
-        /// <summary>
-        /// The XZ plane of the transform.
-        /// </summary>
-        [JsonIgnore]
-        public Plane XZ
-        {
-            get { return new Plane(this.Origin, this.YAxis); }
         }
 
         /// <summary>
@@ -312,6 +284,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Invert this transform.
+        /// </summary>
+        public void Invert()
+        {
+            this._matrix = this._matrix.Inverse();
+        }
+
+        /// <summary>
         /// Apply a translation to the transform.
         /// </summary>
         /// <param name="translation">The translation to apply.</param>
@@ -343,6 +323,30 @@ namespace Elements.Geometry
             var m = new Matrix();
             m.SetupScale(amount);
             this._matrix = this._matrix * m;
+        }
+
+        /// <summary>
+        /// Calculate XY plane of the transform.
+        /// </summary>
+        public Plane XY()
+        {
+            return new Plane(this.Origin, this.ZAxis);
+        }
+
+        /// <summary>
+        /// Calculate the YZ plane of the transform.
+        /// </summary>
+        public Plane YZ()
+        {
+            return new Plane(this.Origin, this.XAxis);
+        }
+
+        /// <summary>
+        /// Calculate the XZ plane of the transform.
+        /// </summary>
+        public Plane XZ()
+        {
+            return new Plane(this.Origin, this.YAxis);
         }
     }
 }

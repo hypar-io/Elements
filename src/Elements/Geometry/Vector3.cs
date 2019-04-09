@@ -23,21 +23,18 @@ namespace Elements.Geometry
         /// The X component of the vector.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("x")]
         public double X { get; internal set; }
 
         /// <summary>
         /// The Y component of the vector.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("y")]
         public double Y { get; internal set; }
 
         /// <summary>
         /// The Z component of the vector.
         /// </summary>
         /// <returns></returns>
-        [JsonProperty("z")]
         public double Z { get; internal set; }
 
         /// <summary>

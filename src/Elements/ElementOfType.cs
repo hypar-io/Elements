@@ -11,7 +11,6 @@ namespace Elements
         /// <summary>
         /// The ElementType of the Element.
         /// </summary>
-        [JsonProperty("element_type")]
         public TElementType ElementType {get; protected set;}
     }
 }

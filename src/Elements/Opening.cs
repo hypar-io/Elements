@@ -9,26 +9,25 @@ namespace Elements
     /// <summary>
     /// A rectangular opening in a wall or floor.
     /// </summary>
-    public class Opening
+    public class Opening : Element, IGeometry3D
     {
         private Polygon _perimeter;
-
-        /// <summary>
-        /// The name of the opening.
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name{get; internal set;}
 
         /// <summary>
         /// The perimeter of the opening.
         /// </summary>
         /// <value>A polygon of Width and Height translated by X and Y.</value>
-        [JsonProperty("perimeter")]
-        public Polygon Perimeter 
+        public Polygon Perimeter
         {
             get => _perimeter;
             internal set => _perimeter = value;
         }
+
+        /// <summary>
+        /// The geometry of the opening.
+        /// </summary>
+        /// <value>An array of solids.</value>
+        public Solid[] Geometry { get; }
 
         /// <summary>
         /// Create an opening.
@@ -40,6 +39,7 @@ namespace Elements
         public Opening(double x, double y, double width, double height)
         {
             this._perimeter = Polygon.Rectangle(width, height, new Vector3(x, y));
+            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
         }
 
         /// <summary>
@@ -51,10 +51,22 @@ namespace Elements
         [JsonConstructor]
         public Opening(Polygon perimeter, double x = 0.0, double y = 0.0)
         {
-            // this.X = x;
-            // this.Y = y;
-            var t = new Transform(x,y,0.0);
+            var t = new Transform(x, y, 0.0);
             this._perimeter = t.OfPolygon(perimeter);
+            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
+        }
+
+        /// <summary>
+        /// Create an opening.
+        /// </summary>
+        /// <param name="perimeter">A polygon representing the perimeter of the opening.</param>
+        /// <param name="depth">The depth of the opening's extrusion.</param>
+        /// <param name="transform">An additional transform applied to the opening.</param>
+        public Opening(Polygon perimeter, double depth, Transform transform = null)
+        {
+            this._perimeter = perimeter;
+            this.Transform = transform;
+            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
         }
     }
 }

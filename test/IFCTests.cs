@@ -6,6 +6,8 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using System.Reflection;
+using System.Collections.Generic;
+using Elements.Geometry.Profiles;
 
 namespace Elements.Tests
 {
@@ -18,17 +20,101 @@ namespace Elements.Tests
             this.output = output;
         }
 
-        [Theory(Skip="IFC")]
-        // [InlineData("rac_sample", "../../../models/rac_advanced_sample_project.ifc")]
-        // [InlineData("rme_sample", "../../../models/rme_advanced_sample_project.ifc")]
-        // [InlineData("rst_sample", "../../../models/rst_advanced_sample_project.ifc")]
-        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/AC-20-Smiley-West-10-Bldg.ifc")]
-        [InlineData("AC20-Institute-Var-2", "../../../models/AC20-Institute-Var-2.ifc")]
+        [Theory(Skip="IFC4")]
+        // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
+        // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
+        // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
+        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc")]
+        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc")]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
-        public void IFC(string name, string ifcPath)
+        public void IFC4(string name, string ifcPath)
         {
             this.Name = name;
             this.Model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
+        }
+
+        [Theory]
+        [InlineData("example_1", "../../../models/IFC2X3/example_1.ifc")]
+        // TODO: Reenable when IfcCompositeCurve is supported.
+        // [InlineData("example_2", "../../../models/IFC2X3/example_2.ifc")]
+        [InlineData("example_3", "../../../models/IFC2X3/example_3.ifc")]
+        [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
+        public void IFC2X3(string name, string ifcPath)
+        {
+            this.Name = name;
+            this.Model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
+        }
+
+        [Fact]
+        public void Wall()
+        {
+            this.Name = "IfcWall";
+            var line = new Line(Vector3.Origin, new Vector3(10,10,0));
+            var line1 = new Line(new Vector3(10,10,0), new Vector3(10,15,0));
+            var wallType = new WallType("test", 0.2);
+            var wall = new Wall(line, wallType, 3);
+            var wall1 = new Wall(line1, wallType, 2);
+            this.Model.AddElement(wall);
+            this.Model.AddElement(wall1);
+        }
+
+        [Fact]
+        public void Beams()
+        {
+            this.Name = "IfcBeams";
+            var pts = Hypar(5.0, 5.0);
+            var m1 = new Material("red", Colors.Red, 0f, 0f);
+            var m2 = new Material("green", Colors.Green, 0f, 0f);
+
+            var t1 = new StructuralFramingType("W16x31", WideFlangeProfileServer.Instance.GetProfileByName("W16x31"), m1);
+            var t2 = new StructuralFramingType("W16x31", WideFlangeProfileServer.Instance.GetProfileByName("W16x31"), m2);
+            for(var j=0; j<pts.Count; j++)
+            {
+                var colA = pts[j];
+                List<Vector3> colB = null;
+                if(j+1 < pts.Count)
+                {
+                    colB = pts[j+1];
+                }
+
+                for(var i=0; i<colA.Count; i++)
+                {
+                    var a = colA[i];
+                    Vector3 b = null;
+                    if(i+1 < colA.Count)
+                    {
+                        b = colA[i+1];
+                        var line1 = new Line(a,b);
+                        var beam1 = new Beam(line1, t1);
+                        this.Model.AddElement(beam1);
+                    }
+
+                    if(colB != null)
+                    {
+                        var c = colB[i];
+                        var line2 = new Line(a,c);
+                        var beam2 = new Beam(line2, t2);
+                        this.Model.AddElement(beam2);
+                    }
+                }
+            } 
+        }
+
+        private List<List<Vector3>> Hypar(double a, double b)
+        {
+            var result = new List<List<Vector3>>();
+            for(var x = -5; x<=5; x++)
+            {
+                var column = new List<Vector3>();
+                for(var y=-5; y<=5; y++)
+                {
+                    var z = Math.Pow(y,2)/Math.Pow(b,2) - Math.Pow(x,2)/Math.Pow(a,2);
+                    column.Add(new Vector3(x, y, z));
+                }
+                result.Add(column);
+            }
+
+            return result;
         }
     }
 }

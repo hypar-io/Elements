@@ -13,7 +13,7 @@ namespace Elements.Geometry
         /// The type of the curve.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order = -100)]
+        [JsonProperty(Order = -100)]
         public string Type
         {
             get { return this.GetType().FullName.ToLower(); }
@@ -22,13 +22,11 @@ namespace Elements.Geometry
         /// <summary>
         /// The start of the line.
         /// </summary>
-        [JsonProperty("start")]
         public Vector3 Start { get; }
 
         /// <summary>
         /// The end of the line.
         /// </summary>
-        [JsonProperty("end")]
         public Vector3 End { get; }
 
         /// <summary>
@@ -37,18 +35,6 @@ namespace Elements.Geometry
         public double Length()
         {
             return this.Start.DistanceTo(this.End);
-        }
-
-        /// <summary>
-        /// A normalized vector representing the direction of the line.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 Direction
-        {
-            get
-            {
-                return (this.End - this.Start).Normalized();
-            }
         }
 
         /// <summary>
@@ -113,7 +99,7 @@ namespace Elements.Geometry
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
             }
             var offset = this.Length() * u;
-            return this.Start + offset * this.Direction;
+            return this.Start + offset * this.Direction();
         }
 
         /// <summary>
@@ -132,7 +118,12 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Polygon Thicken(double amount)
         {
-            var offsetN = this.Direction.Cross(Vector3.ZAxis);
+            if(Start.Z != End.Z)
+            {
+                throw new Exception("The line could not be thickened. Only lines with their start and end at the same elevation can be thickened.");
+            }
+            
+            var offsetN = this.Direction().Cross(Vector3.ZAxis);
             var a = this.Start + (offsetN * (amount / 2));
             var b = this.End + (offsetN * (amount / 2));
             var c = this.End - (offsetN * (amount / 2));
@@ -182,16 +173,18 @@ namespace Elements.Geometry
         /// <param name="p">The plane.</param>
         /// <returns>The point of intersection or null if no intersection occurs.</returns>
         public Vector3 Intersect(Plane p) {
+            var d = this.Direction();
+
             // Test for perpendicular.
-            if (p.Normal.Dot(this.Direction) == 0) {
+            if (p.Normal.Dot(d) == 0) {
                 return null;
             }
-            var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(this.Direction);
+            var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(d);
             if(t > this.Length())
             {
                 return null;
             }
-            return this.Start + this.Direction * t;
+            return this.Start + d * t;
         }
 
         /// <summary>
@@ -208,6 +201,14 @@ namespace Elements.Geometry
             {
                 return new BBox3(this.End, this.Start);
             }
+        }
+
+        /// <summary>
+        /// A normalized vector representing the direction of the line.
+        /// </summary>
+        public Vector3 Direction()
+        {
+            return (this.End - this.Start).Normalized();
         }
     }
 }

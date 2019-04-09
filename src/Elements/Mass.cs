@@ -1,6 +1,7 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
+using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,27 +11,16 @@ namespace Elements
     /// <summary>
     /// An extruded building mass.
     /// </summary>
-    public class Mass : Element, IGeometry3D, IProfileProvider
+    public class Mass : Element, IGeometry3D, IProfile, IMaterial
     {
         /// <summary>
         /// The Profile of the mass.
         /// </summary>
-        [JsonProperty("profile")]
         public Profile Profile { get; }
-
-        /// <summary>
-        /// The transformed Profile of the mass.
-        /// </summary>
-        [JsonIgnore]
-        public Profile ProfileTransformed
-        {
-            get { return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile; }
-        }
 
         /// <summary>
         /// The height of the mass.
         /// </summary>
-        [JsonProperty("height")]
         public double Height { get; }
 
         /// <summary>
@@ -45,8 +35,12 @@ namespace Elements
         /// <summary>
         /// The mass' geometry.
         /// </summary>
-        [JsonProperty("geometry")]
         public Solid[] Geometry { get; }
+
+        /// <summary>
+        /// The mass' material.
+        /// </summary>
+        public Material Material {get;}
 
         /// <summary>
         /// Construct a Mass.
@@ -65,7 +59,8 @@ namespace Elements
             this.Profile = profile;
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
+            this.Material = material == null ? BuiltInMaterials.Mass : material;
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.Material)};
         }
 
         /// <summary>
@@ -84,7 +79,8 @@ namespace Elements
             this.Profile = new Profile(profile);
             this.Height = height;
             this.Transform = transform;
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, material == null ? BuiltInMaterials.Mass : material)};
+            this.Material = material == null ? BuiltInMaterials.Mass : material;
+            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.Material)};
         }
 
         /// <summary>
@@ -93,6 +89,14 @@ namespace Elements
         public double Volume()
         {
             return this.Profile.Area() * this.Height;
+        }
+    
+        /// <summary>
+        /// Get the profile of the mass transformed by the mass' transform.
+        /// </summary>
+        public Profile ProfileTransformed()
+        {
+            return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
         }
     }
 }

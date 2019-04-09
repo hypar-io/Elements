@@ -15,38 +15,42 @@ namespace Elements
         /// <summary>
         /// The unique identifier of the material.
         /// </summary>
-        [JsonProperty("id")]
         public long Id{get; internal set;}
 
         /// <summary>
         /// The RGBA Color of the material.
         /// </summary>
-        [JsonProperty("color")]
         public Color Color{get;}
 
         /// <summary>
         /// The specular factor.
         /// </summary>
-        [JsonProperty("specular_factor")]
         public float SpecularFactor{get;}
 
         /// <summary>
         /// The glossiness factor.
         /// </summary>
-        [JsonProperty("glossiness_factor")]
         public float GlossinessFactor{get;}
 
         /// <summary>
         /// The name of the material.
         /// </summary>
-        [JsonProperty("name")]
         public string Name {get; internal set;}
 
         /// <summary>
         /// Is the material double sided?
         /// </summary>
-        [JsonProperty("double_sided")]
         public bool DoubleSided{get;}
+
+        /// <summary>
+        /// Construct a material.
+        /// </summary>
+        /// <param name="name"></param>
+        public Material(string name)
+        {
+            this.Name = name;
+            this.Color = Colors.Gray;
+        }
 
         /// <summary>
         /// Construct a material.

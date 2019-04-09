@@ -5,6 +5,7 @@ using System.Linq;
 using Xunit;
 using Elements;
 using Elements.Geometry;
+using Elements.Serialization.glTF;
 
 namespace Elements.Tests
 {
@@ -21,7 +22,7 @@ namespace Elements.Tests
         public void SaveToGltf()
         {
             var model = QuadPanelModel();
-            model.SaveGltf("models/SaveToGltf.gltf");
+            model.ToGlTF("models/SaveToGltf.gltf", false);
             Assert.True(File.Exists("models/SaveToGltf.gltf"));
         }
 
@@ -29,7 +30,7 @@ namespace Elements.Tests
         public void SaveToGlb()
         {
             var model = QuadPanelModel();
-            model.SaveGlb("models/SaveToGlb.glb");
+            model.ToGlTF("models/SaveToGlb.glb");
             Assert.True(File.Exists("models/SaveToGlb.glb"));
         }
 

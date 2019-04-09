@@ -32,7 +32,7 @@ namespace Elements.Geometry.Tests
                     new Vector3(0, 8)
                 }
             );
-            var centroid = polygon.Centroid;
+            var centroid = polygon.Centroid();
             Assert.Equal(3, centroid.X);
             Assert.Equal(4, centroid.Y);
         }
@@ -467,17 +467,17 @@ namespace Elements.Geometry.Tests
         public void Area()
         {
             var a = Polygon.Rectangle(1.0, 1.0);
-            Assert.Equal(1.0, a.Area);
+            Assert.Equal(1.0, a.Area());
 
             var b = Polygon.Rectangle(2.0,2.0);
-            Assert.Equal(4.0, b.Area);
+            Assert.Equal(4.0, b.Area());
 
             var p1 = Vector3.Origin;
             var p2 = Vector3.XAxis;
             var p3 = new Vector3(1.0, 1.0);
             var p4 = new Vector3(0.0, 1.0);
             var pp = new Polygon(new[]{p1,p2,p3,p4});
-            Assert.Equal(1.0, pp.Area);
+            Assert.Equal(1.0, pp.Area());
         }
 
         [Fact]

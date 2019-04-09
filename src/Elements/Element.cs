@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Interfaces;
-using Elements.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -17,14 +17,14 @@ namespace Elements
         /// <summary>
         /// The unique identifier of the Element.
         /// </summary>
-        [JsonProperty("id", Order = -101)]
+        [JsonProperty(Order = -101)]
         public long Id { get; internal set; }
 
         /// <summary>
         /// The type of the element.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order = -100)]
+        [JsonProperty(Order = -100)]
         public string Type
         {
             get { return this.GetType().FullName.ToLower(); }
@@ -33,7 +33,8 @@ namespace Elements
         /// <summary>
         /// A map of Properties for the Element.
         /// </summary>
-        [JsonProperty("properties", NullValueHandling=NullValueHandling.Ignore), JsonConverter(typeof(PropertyDictionaryConverter))]
+        [JsonProperty(NullValueHandling=NullValueHandling.Ignore), 
+            JsonConverter(typeof(PropertyDictionaryConverter))]
         public Dictionary<string, IProperty> Properties
         {
             get { return _properties; }
@@ -42,13 +43,11 @@ namespace Elements
         /// <summary>
         /// The element's transform.
         /// </summary>
-        [JsonProperty("transform")]
         public Transform Transform { get; protected set; }
 
         /// <summary>
         /// A human-readable name for the Element.
         /// </summary>
-        [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace Elements.Geometry
         /// The type of the curve.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order = -100)]
+        [JsonProperty(Order = -100)]
         public string Type
         {
             get { return this.GetType().FullName.ToLower(); }
@@ -29,7 +29,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The vertices of the polygon.
         /// </summary>
-        [JsonProperty("vertices")]
         public Vector3[] Vertices
         {
             get { return this._vertices; }
@@ -82,7 +81,7 @@ namespace Elements.Geometry
                     }
                     if (vertices[i].IsAlmostEqualTo(vertices[j]))
                     {
-                        throw new ArgumentException($"The polygon could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
+                        throw new ArgumentException($"The polyline could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
                     }
                 }
             }
@@ -224,7 +223,7 @@ namespace Elements.Geometry
                     if (totalLength <= d && totalLength + currLength >= d)
                     {
                         o = s.PointAt((d - totalLength) / currLength);
-                        x = s.Direction.Cross(up);
+                        x = s.Direction().Cross(up);
                         break;
                     }
                     totalLength += currLength;

@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
 using glTFLoader.Schema;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid : ITessellate
+    public class Solid : ITessellate, IMaterial
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -59,7 +60,7 @@ namespace Elements.Geometry.Solids
         /// </summary>
         /// <param name="perimeter">The perimeter of the lamina's faces.</param>
         /// <param name="material">The solid's material.</param>
-        public static Solid CreateLamina(Vector3[] perimeter, Material material)
+        public static Solid CreateLamina(Vector3[] perimeter, Material material = null)
         {   
             var solid = new Solid(material);
             var loop1 = new Loop();
@@ -116,7 +117,7 @@ namespace Elements.Geometry.Solids
                 for (var i = 0; i < transforms.Length; i++)
                 {
                     var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
-                    solid.SweepPolygonBetweenPlanes(outer, transforms[i].XY, next.XY);
+                    solid.SweepPolygonBetweenPlanes(outer, transforms[i].XY(), next.XY());
                 }
             }
             else
@@ -456,7 +457,7 @@ namespace Elements.Geometry.Solids
             for (var i = 0; i < transforms.Length - 1; i++)
             {
                 var v = (transforms[i + 1].Origin - transforms[i].Origin).Normalized();
-                openEdge = SweepEdgesBetweenPlanes(openEdge, v, transforms[i + 1].XY);
+                openEdge = SweepEdgesBetweenPlanes(openEdge, v, transforms[i + 1].XY());
             }
             return openEdge;
         }

@@ -15,7 +15,7 @@ namespace Elements.Geometry
         /// The type of the curve.
         /// Used during deserialization to disambiguate derived types.
         /// </summary>
-        [JsonProperty("type", Order = -100)]
+        [JsonProperty(Order = -100)]
         public string Type
         {
             get { return this.GetType().FullName.ToLower(); }
@@ -25,19 +25,16 @@ namespace Elements.Geometry
         /// The plane of the arc.
         /// </summary>
         /// <value></value>
-        [JsonProperty("plane")]
         public Plane Plane{get;}
 
         /// <summary>
         /// The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.
         /// </summary>
-        [JsonProperty("start_angle")]
         public double StartAngle { get; internal set; }
 
         /// <summary>
         /// The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.
         /// </summary>
-        [JsonProperty("end_angle")]
         public double EndAngle { get; internal set; }
 
         /// <summary>
@@ -69,7 +66,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The radius of the Arc.
         /// </summary>
-        [JsonProperty("radius")]
         public double Radius { get; }
 
         /// <summary>
@@ -100,7 +96,7 @@ namespace Elements.Geometry
             this.StartAngle = startAngle;
             this.Radius = radius;
             this._transform = new Transform(center);
-            this.Plane = this._transform.XY;
+            this.Plane = this._transform.XY();
         }
 
         /// <summary>

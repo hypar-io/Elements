@@ -57,25 +57,21 @@ namespace Elements.Geometry
         /// <summary>
         /// The identifier of the Profile.
         /// </summary>
-        [JsonProperty("id")]
         public long Id { get; internal set; }
 
         /// <summary>
         /// The name of the Profile.
         /// </summary>
-        [JsonProperty("name")]
         public string Name { get; }
 
         /// <summary>
         /// The perimeter of the Profile.
         /// </summary>
-        [JsonProperty("perimeter")]
         public Polygon Perimeter { get => _perimeter; protected set => _perimeter = value; }
 
         /// <summary>
         /// A collection of Polygons representing voids in the Profile.
         /// </summary>
-        [JsonProperty("voids")]
         public Polygon[] Voids { get => _voids; protected set => _voids = value; }
 
         /// <summary>
@@ -202,7 +198,7 @@ namespace Elements.Geometry
         {
             if (this.Voids == null || this.Voids.Length == 0)
             {
-                return this.Perimeter.Area;
+                return this.Perimeter.Area();
             }
 
             var clipper = new ClipperLib.Clipper();
@@ -217,7 +213,15 @@ namespace Elements.Geometry
         {
             var v = this.Perimeter.Vertices.ToList();
             var x = (v[0] - v[1]).Normalized();
-            var b = (v[2] - v[1]).Normalized();
+            var i = 2;
+            var b = (v[i] - v[1]).Normalized();
+
+            // Solve for parallel vectors
+            while(b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negated()))
+            {
+                i++;
+                b = (v[i] - v[1]).Normalized();
+            } 
             var z = x.Cross(b);
             return new Transform(v[0], x, z);
         }
@@ -226,7 +230,7 @@ namespace Elements.Geometry
         {
             var t = ComputeTransform();
             var vertices = this.Perimeter.Vertices;
-            var p = t.XY;
+            var p = t.XY();
             foreach (var v in vertices)
             {
                 var d = v.DistanceTo(p);

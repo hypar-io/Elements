@@ -5,11 +5,6 @@ namespace Elements.Geometry.Interfaces
     public interface ITessellate
     {
         /// <summary>
-        /// The material to be applied to the representation.
-        /// </summary>
-        Material Material{get;}
-
-        /// <summary>
         /// Add the tessellated representation of this object
         /// to the provided Mesh.
         /// </summary>

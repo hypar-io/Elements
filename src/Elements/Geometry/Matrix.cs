@@ -24,7 +24,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The X axis of the Matrix.
         /// </summary>
-        [JsonProperty("x_axis")]
         public Vector3 XAxis
         {
             get{return new Vector3(m11, m12, m13);}
@@ -33,7 +32,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The Y axis of the Matrix.
         /// </summary>
-        [JsonProperty("y_axis")]
         public Vector3 YAxis
         {
             get{return new Vector3(m21, m22, m23);}
@@ -42,7 +40,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The Z axis of the Matrix.
         /// </summary>
-        [JsonProperty("z_axis")]
         public Vector3 ZAxis
         {
             get{return new Vector3(m31, m32, m33);}
@@ -51,7 +48,6 @@ namespace Elements.Geometry
         /// <summary>
         /// The translation component of the Matrix.
         /// </summary>
-        [JsonProperty("translation")]
         public Vector3 Translation
         {
             get{return new Vector3(tx, ty, tz);}
@@ -284,6 +280,49 @@ namespace Elements.Geometry
             r.m31 = m13;  r.m32 = m23;   r.m33 = m33;
             r.tx = tx;    r.ty = ty;    r.tz = tz;
             return r;
+        }
+
+        /// <summary>
+        /// Compute the determinant of the 3x3 portion of the matrix.
+        /// </summary>
+        public double Determinant()
+        {
+            return m11 * (m22*m33 - m22*m32)
+                + m12 * (m23*m31 - m21*m33)
+                + m13 * (m21*m32 - m22*m31);
+        }
+
+        /// <summary>
+        /// Compute the inverse of the matrix.
+        /// </summary>
+        public Matrix Inverse()
+        {
+            var det = Determinant();
+            if(Math.Abs(det) < 0.000001)
+            {
+                throw new Exception("The deterimant of the matrix must be greater than 0.000001.");
+            }
+
+            var oneOverDet = 1.0/det;
+
+            var m = new Matrix();
+            m.m11 = (m22*m33 - m23*m32) * oneOverDet;
+            m.m12 = (m13*m32 - m12*m33) * oneOverDet;
+            m.m13 = (m12*m23 - m13*m22) * oneOverDet;
+
+            m.m21 = (m23*m31 - m21*m33) * oneOverDet;
+            m.m22 = (m11*m33 - m13*m31) * oneOverDet;
+            m.m23 = (m13*m21 - m11*m23) * oneOverDet;
+
+            m.m31 = (m21*m32 - m22*m31) * oneOverDet;
+            m.m32 = (m12*m31 - m11*m32) * oneOverDet;
+            m.m33 = (m11*m22 - m12*m21) * oneOverDet;
+
+            m.tx = -(tx*m.m11 + ty*m.m21 + tz*m.m31);
+            m.ty = -(tx*m.m12 + ty*m.m22 + tz*m.m32);
+            m.tz = -(tx*m.m13 + ty*m.m23 + tz*m.m33);
+
+            return m;
         }
 
         /// <summary>
