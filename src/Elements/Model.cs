@@ -310,7 +310,7 @@ namespace Elements
                 {
                     foreach (var esub in ae.Elements)
                     {
-                        GetRootLevelElementData(esub);
+                        AddElement(esub);
                     }
                 }
             }
