@@ -125,6 +125,13 @@ namespace Elements.Serialization.IFC
                         var ifcBeam = b.ToIfcBeam(context, ifc);
                         products.Add(ifcBeam);
                     }
+
+                    if(e is Floor)
+                    {
+                        var f = (Floor)e;
+                        var ifcSlab = f.ToIfcSlab(context, ifc);
+                        products.Add(ifcSlab);
+                    }
                 }
                 catch
                 {
@@ -456,7 +463,7 @@ namespace Elements.Serialization.IFC
             var outline = (Polygon)solid.SweptArea.ToICurve();
             var solidTransform = solid.Position.ToTransform();
             var floor = new Floor(new Profile(outline), solidTransform, solid.ExtrudedDirection.ToVector3(), 
-                floorType, 0, BuiltInMaterials.Default, transform);
+                floorType, 0, transform);
             floor.Name = slab.Name;
             
             return floor;
@@ -638,6 +645,40 @@ namespace Elements.Serialization.IFC
                 return newOpening;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Convert a Floor to an IfcSlab.
+        /// </summary>
+        /// <param name="floor"></param>
+        /// <param name="context"></param>
+        /// /// <param name="doc"></param>
+        private static IfcSlab ToIfcSlab(this Floor floor, IfcRepresentationContext context, Document doc)
+        {
+            var position = floor.Transform.ToIfcAxis2Placement3D(doc);
+            var sweptArea = floor.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
+            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(floor.Thickness()));
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
+
+            var placement = floor.Transform.ToIfcAxis2Placement3D(doc);
+            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+
+            var slab = new IfcSlab(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, 
+                null, localPlacement, productRep, null, IfcSlabTypeEnum.FLOOR);
+
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(repItem);
+            doc.AddEntity(rep);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(productRep);
+            doc.AddEntity(slab);
+
+            return slab;
         }
 
         private static Solid Representations(this IfcProduct product)
