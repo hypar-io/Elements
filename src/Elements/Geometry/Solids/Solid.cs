@@ -1,17 +1,12 @@
 #pragma warning disable 1591
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Elements.Geometry.Interfaces;
-using Elements.Interfaces;
-using glTFLoader.Schema;
 using LibTessDotNet.Double;
-using Newtonsoft.Json;
 
-[assembly:InternalsVisibleTo("Hypar.Elements.Tests")]
+[assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
 namespace Elements.Geometry.Solids
 {
