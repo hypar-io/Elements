@@ -160,7 +160,7 @@ namespace Elements.Tests
         {
             var n = 4;
             var outer = Polygon.Ngon(n, 2);
-            var solid = Solid.SweepFace(outer, null, 2.0, BuiltInMaterials.Default);
+            var solid = Solid.SweepFace(outer, null, 2.0);
             var materials = new Dictionary<long,Material>();
             var defMaterial = BuiltInMaterials.Default;
             materials.Add(defMaterial.Id, defMaterial);

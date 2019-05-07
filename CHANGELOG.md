@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.4]
+### Changed
+- `IGeometry3D` is now `ISolid`.
+- `ISolid` (formerly `IGeometry3D`) now contains one solid, not an array of solids.
+
+### Removed
+- `Solid.Material`. Elements are now expected to implement the `IMaterial` interface or have an `IElementType<T>` which specifies a material.
+
 ## [0.2.3]
 ### Added
 - `MaterialLayer`

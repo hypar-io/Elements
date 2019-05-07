@@ -497,7 +497,7 @@ namespace Elements.Serialization.IFC
             {
                 var solid = (IfcFacetedBrep)foundSolid;
                 var shell = solid.Outer;
-                var newSolid = new Solid(material);
+                var newSolid = new Solid();
                 for(var i=0; i< shell.CfsFaces.Count; i++)
                 {
                     var f = shell.CfsFaces[i];

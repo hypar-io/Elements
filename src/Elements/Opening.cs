@@ -9,7 +9,7 @@ namespace Elements
     /// <summary>
     /// A rectangular opening in a wall or floor.
     /// </summary>
-    public class Opening : Element, IGeometry3D
+    public class Opening : Element, ISolid
     {
         private Polygon _perimeter;
 
@@ -27,7 +27,7 @@ namespace Elements
         /// The geometry of the opening.
         /// </summary>
         /// <value>An array of solids.</value>
-        public Solid[] Geometry { get; }
+        public Solid Geometry { get; }
 
         /// <summary>
         /// Create an opening.
@@ -39,7 +39,7 @@ namespace Elements
         public Opening(double x, double y, double width, double height)
         {
             this._perimeter = Polygon.Rectangle(width, height, new Vector3(x, y));
-            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
+            this.Geometry = Solid.SweepFace(this._perimeter, null, 5.0);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Elements
         {
             var t = new Transform(x, y, 0.0);
             this._perimeter = t.OfPolygon(perimeter);
-            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
+            this.Geometry = Solid.SweepFace(this._perimeter, null, 5.0);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Elements
         {
             this._perimeter = perimeter;
             this.Transform = transform;
-            this.Geometry = new[] { Solid.SweepFace(this._perimeter, null, 5.0) };
+            this.Geometry = Solid.SweepFace(this._perimeter, null, 5.0);
         }
     }
 }

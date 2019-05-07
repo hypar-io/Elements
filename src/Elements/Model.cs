@@ -251,15 +251,6 @@ namespace Elements
 
         private void GetRootLevelElementData(IElement element)
         {
-            if (element is IGeometry3D)
-            {
-                var geo = (IGeometry3D)element;
-                foreach (var solid in geo.Geometry)
-                {
-                    AddMaterial(solid.Material);
-                }
-            }
-
             if(element is IMaterial)
             {
                 var mat = (IMaterial)element;
@@ -281,6 +272,10 @@ namespace Elements
                 if (wtp.ElementType != null)
                 {
                     AddElementType(wtp.ElementType);
+                    foreach(var layer in wtp.ElementType.MaterialLayers)
+                    {
+                        AddMaterial(layer.Material);
+                    }
                 }
             }
 
@@ -290,6 +285,10 @@ namespace Elements
                 if (ftp.ElementType != null)
                 {
                     AddElementType(ftp.ElementType);
+                    foreach(var layer in ftp.ElementType.MaterialLayers)
+                    {
+                        AddMaterial(layer.Material);
+                    }
                 }
             }
 
@@ -300,6 +299,7 @@ namespace Elements
                 {
                     AddElementType(sft.ElementType);
                     AddProfile(sft.ElementType.Profile);
+                    AddMaterial(sft.ElementType.Material);
                 }
             }
 

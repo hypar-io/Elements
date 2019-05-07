@@ -18,7 +18,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid : ITessellate, IMaterial
+    public class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -40,29 +40,22 @@ namespace Elements.Geometry.Solids
         public Dictionary<long, Vertex> Vertices { get; }
 
         /// <summary>
-        /// The material of the solid.
-        /// </summary>
-        public Material Material{get;}
-
-        /// <summary>
         /// Construct a solid.
         /// </summary>
-        public Solid(Material material = null)
+        public Solid()
         {
             this.Faces = new Dictionary<long, Face>();
             this.Edges = new Dictionary<long, Edge>();
             this.Vertices = new Dictionary<long, Vertex>();
-            this.Material = material != null ? material : BuiltInMaterials.Default;
         }
 
         /// <summary>
         /// Construct a lamina solid.
         /// </summary>
         /// <param name="perimeter">The perimeter of the lamina's faces.</param>
-        /// <param name="material">The solid's material.</param>
-        public static Solid CreateLamina(Vector3[] perimeter, Material material = null)
+        public static Solid CreateLamina(Vector3[] perimeter)
         {   
-            var solid = new Solid(material);
+            var solid = new Solid();
             var loop1 = new Loop();
             var loop2 = new Loop();
             for (var i = 0; i < perimeter.Length; i++)
@@ -84,12 +77,11 @@ namespace Elements.Geometry.Solids
         /// <param name="outerLoop">The perimeter of the face to sweep.</param>
         /// <param name="innerLoops">The holes of the face to sweep.</param>
         /// <param name="distance">The distance to sweep.</param>
-        /// <param name="material">The solid's material.</param>
         /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, double distance, Material material = null, bool bothSides = false) 
+        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, double distance, bool bothSides = false) 
         {
-            return Solid.SweepFace(outerLoop, innerLoops, Vector3.ZAxis, distance, material, bothSides);
+            return Solid.SweepFace(outerLoop, innerLoops, Vector3.ZAxis, distance, bothSides);
         }
 
         /// <summary>
@@ -98,13 +90,12 @@ namespace Elements.Geometry.Solids
         /// <param name="outer">The perimeter of the face to sweep.</param>
         /// <param name="inner">The holes of the face to sweep.</param>
         /// <param name="curve">The curve along which to sweep.</param>
-        /// <param name="material">The solid's material.</param>
         /// <param name="startSetback">The setback of the sweep from the start of the curve.</param>
         /// <param name="endSetback">The setback of the sweep from the end of the curve.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFaceAlongCurve(Polygon outer, Polygon[] inner, ICurve curve, Material material = null,  double startSetback = 0, double endSetback = 0)
+        public static Solid SweepFaceAlongCurve(Polygon outer, Polygon[] inner, ICurve curve,  double startSetback = 0, double endSetback = 0)
         {
-            var solid = new Solid(material);
+            var solid = new Solid();
 
             var l = curve.Length();
             var ssb = startSetback / l;
@@ -168,11 +159,10 @@ namespace Elements.Geometry.Solids
         /// <param name="direction">The direction in which to sweep.</param>
         /// <param name="distance">The distance to sweep.</param>
         /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
-        /// <param name="material">The solid's material.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, Vector3 direction, double distance, Material material = null, bool bothSides = false)
+        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, Vector3 direction, double distance, bool bothSides = false)
         {
-            var solid = new Solid(material);
+            var solid = new Solid();
             Face fStart = null;
             if(bothSides)
             {

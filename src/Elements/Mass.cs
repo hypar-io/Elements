@@ -11,7 +11,7 @@ namespace Elements
     /// <summary>
     /// An extruded building mass.
     /// </summary>
-    public class Mass : Element, IGeometry3D, IProfile, IMaterial
+    public class Mass : Element, ISolid, IProfile, IMaterial
     {
         /// <summary>
         /// The Profile of the mass.
@@ -35,7 +35,7 @@ namespace Elements
         /// <summary>
         /// The mass' geometry.
         /// </summary>
-        public Solid[] Geometry { get; }
+        public Solid Geometry { get; }
 
         /// <summary>
         /// The mass' material.
@@ -60,7 +60,7 @@ namespace Elements
             this.Height = height;
             this.Transform = transform;
             this.Material = material == null ? BuiltInMaterials.Mass : material;
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.Material)};
+            this.Geometry = Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Elements
             this.Height = height;
             this.Transform = transform;
             this.Material = material == null ? BuiltInMaterials.Mass : material;
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.Material)};
+            this.Geometry = Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height);
         }
 
         /// <summary>

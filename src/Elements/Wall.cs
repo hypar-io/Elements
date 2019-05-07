@@ -10,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A wall is a building element which is used to enclose space.
     /// </summary>
-    public class Wall : Element, IElementType<WallType>, IGeometry3D, IProfile
+    public class Wall : Element, IElementType<WallType>, ISolid, IProfile
     {
         /// <summary>
         /// The profile of the wall.
@@ -35,7 +35,7 @@ namespace Elements
         /// <summary>
         /// The wall's geometry.
         /// </summary>
-        public Solid[] Geometry { get; }
+        public Solid Geometry { get; }
 
         /// <summary>
         /// An array of Openings in the wall.
@@ -60,7 +60,7 @@ namespace Elements
             this.Height = height;
             this.Transform = transform;
             this.ElementType = wallType;
-            this.Geometry = new []{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.ElementType.MaterialLayers[0].Material)};
+            this.Geometry = Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height);
         }
 
         /// <summary>
@@ -72,10 +72,9 @@ namespace Elements
         /// <param name="openings">A collection of Openings in the wall.</param>
         /// <param name="transform">The transform of the wall.
         /// This transform will be concatenated to the transform created to describe the wall in 2D.</param>
-        /// <param name="material">The wall's material.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of wall's start and end points are not the same.</exception>
-        public Wall(Line centerLine, WallType wallType, double height, Material material = null, Opening[] openings = null, Transform transform = null)
+        public Wall(Line centerLine, WallType wallType, double height, Opening[] openings = null, Transform transform = null)
         {
             if (height <= 0.0)
             {
@@ -118,8 +117,8 @@ namespace Elements
                 this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
             }
 
-            this.Geometry = new []{Solid.SweepFace(this.Profile.Perimeter, 
-                this.Profile.Voids, this.Thickness(), this.ElementType.MaterialLayers[0].Material, true)};
+            this.Geometry = Solid.SweepFace(this.Profile.Perimeter, 
+                this.Profile.Voids, this.Thickness(), true);
         }
 
         /// <summary>
@@ -131,11 +130,11 @@ namespace Elements
         /// <param name="height">The height of the wall.</param>
         /// <param name="transform">The wall's Transform.</param>
         [JsonConstructor]
-        public Wall(Solid[] geometry, WallType wallType, double height = 0.0, Line centerLine = null, Transform transform = null)
+        public Wall(Solid geometry, WallType wallType, double height = 0.0, Line centerLine = null, Transform transform = null)
         {
-            if (geometry == null || geometry.Length == 0)
+            if (geometry == null)
             {
-                throw new ArgumentOutOfRangeException("You must supply at least one IBRep to construct a Wall.");
+                throw new ArgumentOutOfRangeException("You must supply one solid to construct a Wall.");
             }
             
             // TODO: Remove this when the Profile is no longer available

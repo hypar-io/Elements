@@ -10,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A zero-thickness planar element defined by a perimeter.
     /// </summary>
-    public class Panel : Element, IGeometry3D, IMaterial
+    public class Panel : Element, ISolid, IMaterial
     {
         /// <summary>
         /// The vertices forming the perimeter of the panel.
@@ -20,7 +20,7 @@ namespace Elements
         /// <summary>
         /// The panel's geometry.
         /// </summary>
-        public Solid[] Geometry { get; }
+        public Solid Geometry { get; }
 
         /// <summary>
         /// The panel's material.
@@ -45,7 +45,7 @@ namespace Elements
             this.Transform = transform;
             this.Perimeter = perimeter;
             this.Material = material == null ? BuiltInMaterials.Default : material;
-            this.Geometry = new[] { Solid.CreateLamina(this.Perimeter, this.Material) };
+            this.Geometry = Solid.CreateLamina(this.Perimeter);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Elements
                 throw new ArgumentException("The Panel could not be created. Points defining the perimeter must be coplanar.", "perimeter");
             }
             this.Material = material == null ? BuiltInMaterials.Default : material;
-            this.Geometry = new[] { Solid.CreateLamina(this.Perimeter, this.Material) };
+            this.Geometry = Solid.CreateLamina(this.Perimeter);
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
-    public class Floor : Element, IElementType<FloorType>, IGeometry3D, IProfile
+    public class Floor : Element, IElementType<FloorType>, ISolid, IProfile
     {
         /// <summary>
         /// The elevation from which the floor is extruded.
@@ -30,7 +30,7 @@ namespace Elements
         /// <summary>
         /// The floor's geometry.
         /// </summary>
-        public Solid[] Geometry { get; }
+        public Solid Geometry { get; }
 
         /// <summary>
         /// The openings in the floor.
@@ -54,7 +54,7 @@ namespace Elements
             this.ElementType = elementType;
             var thickness = elementType.Thickness();
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation - thickness));
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, thickness)};
+            this.Geometry = Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, thickness);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Elements
             this.ElementType = elementType;
             var thickness = elementType.Thickness();
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation - thickness));
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, thickness)};
+            this.Geometry = Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, thickness);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Elements
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             var outer = start.OfPolygon(this.Profile.Perimeter);
             var inner = this.Profile.Voids != null ? start.OfPolygons(this.Profile.Voids) : null;
-            this.Geometry = new[]{Solid.SweepFace(outer, inner, start.OfVector(direction), this.Thickness())};
+            this.Geometry = Solid.SweepFace(outer, inner, start.OfVector(direction), this.Thickness());
         }
         
         /// <summary>

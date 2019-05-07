@@ -12,7 +12,7 @@ namespace Elements.Tests
         public void Wall()
         {
             this.Name = "WallLinear";
-            var testWallType = new WallType("test", 0.1);
+            var testWallType = new WallType("test", new List<MaterialLayer>{new MaterialLayer(new Material("blue", Colors.Blue, 0.0f, 0.0f), 0.1)});
 
             var ngon = Polygon.Ngon(7, 15.0);
             var openings = new Opening[]{
@@ -25,13 +25,13 @@ namespace Elements.Tests
             var frameProfile = new Profile(Polygon.Rectangle(0.075, 0.01));
             foreach(var l in ngon.Segments())
             {
-                var w = new Wall(l, testWallType, 3.0, BuiltInMaterials.Default, openings);
+                var w = new Wall(l, testWallType, 3.0, openings);
                 this.Model.AddElement(w);
 
                 // Draw some frames and panels in the openings.
                 foreach(var o in w.Openings)
                 {
-                    var f = new Frame(o.Perimeter, frameProfile, 0.0375, null, w.Transform);
+                    var f = new Frame(o.Perimeter, frameProfile, 0.0375, BuiltInMaterials.Black, w.Transform);
                     this.Model.AddElement(f);
                     var p = new Panel(o.Perimeter, BuiltInMaterials.Glass, w.Transform);
                     this.Model.AddElement(p);

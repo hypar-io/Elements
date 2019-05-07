@@ -11,7 +11,7 @@ namespace Elements
     /// <summary>
     /// A structural element with a Profile swept along a curve or extruded.
     /// </summary>
-    public abstract class StructuralFraming : Element, IGeometry3D, IElementType<StructuralFramingType>
+    public abstract class StructuralFraming : Element, ISolid, IElementType<StructuralFramingType>
     {
         /// <summary>
         /// The center line of the framing element.
@@ -33,7 +33,7 @@ namespace Elements
         /// The geometry of the StructuralFraming.
         /// </summary>
         [JsonIgnore]
-        public Solid[] Geometry { get; }
+        public Solid Geometry { get; }
 
         /// <summary>
         /// The element type of the structural framing.
@@ -61,8 +61,8 @@ namespace Elements
             this.EndSetback = endSetback;
             this.Transform = transform;
             this.ElementType = elementType;
-            this.Geometry = new[]{Solid.SweepFaceAlongCurve(this.ElementType.Profile.Perimeter, 
-                this.ElementType.Profile.Voids, this.Curve, this.ElementType.Material, this.StartSetback, this.EndSetback)};
+            this.Geometry = Solid.SweepFaceAlongCurve(this.ElementType.Profile.Perimeter, 
+                this.ElementType.Profile.Voids, this.Curve, this.StartSetback, this.EndSetback);
         }
 
         /// <summary>

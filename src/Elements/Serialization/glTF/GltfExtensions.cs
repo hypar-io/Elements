@@ -537,7 +537,7 @@ namespace Elements.Serialization.glTF
             materialsToAdd.Add(BuiltInMaterials.ZAxis);
             materialsToAdd.Add(BuiltInMaterials.Edges);
             materialsToAdd.Add(BuiltInMaterials.EdgesHighlighted);
-
+            
             var materials = gltf.AddMaterials(materialsToAdd);
 
             var lines = new List<Vector3>();
@@ -563,46 +563,71 @@ namespace Elements.Serialization.glTF
         private static void GetRenderDataForElement(IElement e, Gltf gltf, 
             Dictionary<string, int> materials, List<Vector3> lines, List<byte> buffer)
         {
-            if (e is IGeometry3D)
+            var materialName = BuiltInMaterials.Default.Name;
+
+            if(e is IElementType<StructuralFramingType>)
             {
-                var geo = e as IGeometry3D;
+                // Get the material from the framing type's material.
+                materialName = ((IElementType<StructuralFramingType>)e).ElementType.Material.Name;
+            }
+
+            if(e is IElementType<WallType>)
+            {
+                // Get the material from the first layer of the wall.
+                materialName = ((IElementType<WallType>)e).ElementType.MaterialLayers[0].Material.Name;
+            }
+
+            if(e is IElementType<FloorType>)
+            {
+                // Get the material from the first layer of the floor.
+                materialName = ((IElementType<FloorType>)e).ElementType.MaterialLayers[0].Material.Name;
+            }
+
+            if (e is IMaterial)
+            {
+                // Get the material from the material property.
+                materialName = ((IMaterial)e).Material.Name;
+            }
+
+            if (e is ISolid)
+            {
+                var geo = e as ISolid;
+                var solid = geo.Geometry;
 
                 Elements.Geometry.Mesh mesh = null;
 
-                foreach (var solid in geo.Geometry)
+                foreach (var edge in solid.Edges.Values)
                 {
-                    foreach (var edge in solid.Edges.Values)
+                    if (e.Transform != null)
                     {
-                        if (e.Transform != null)
-                        {
-                            lines.AddRange(new[] { e.Transform.OfPoint(edge.Left.Vertex.Point), e.Transform.OfPoint(edge.Right.Vertex.Point) });
-                        }
-                        else
-                        {
-                            lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
-                        }
+                        lines.AddRange(new[] { e.Transform.OfPoint(edge.Left.Vertex.Point), e.Transform.OfPoint(edge.Right.Vertex.Point) });
                     }
-
-                    mesh = new Elements.Geometry.Mesh();
-                    solid.Tessellate(ref mesh);
-
-                    double[] vertexBuffer;
-                    double[] normalBuffer;
-                    ushort[] indexBuffer;
-                    float[] colorBuffer;
-                    double[] vmin; double[] vmax;
-                    double[] nmin; double[] nmax;
-                    float[] cmin; float[] cmax;
-                    ushort imin; ushort imax;
-
-                    mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
-                                    out vmax, out vmin, out nmin, out nmax, out cmin,
-                                    out cmax, out imin, out imax);
-
-                    gltf.AddTriangleMesh(e.Id + "_mesh", buffer, vertexBuffer, normalBuffer,
-                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, materials[solid.Material.Name], cmin, cmax, null, e.Transform);
+                    else
+                    {
+                        lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
+                    }
                 }
+
+                mesh = new Elements.Geometry.Mesh();
+                solid.Tessellate(ref mesh);
+
+                double[] vertexBuffer;
+                double[] normalBuffer;
+                ushort[] indexBuffer;
+                float[] colorBuffer;
+                double[] vmin; double[] vmax;
+                double[] nmin; double[] nmax;
+                float[] cmin; float[] cmax;
+                ushort imin; ushort imax;
+
+                mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                                out vmax, out vmin, out nmin, out nmax, out cmin,
+                                out cmax, out imin, out imax);
+
+                gltf.AddTriangleMesh(e.Id + "_mesh", buffer, vertexBuffer, normalBuffer,
+                                    indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
+                                    imin, imax, materials[materialName], cmin, cmax, null, e.Transform);
+                
             }
 
             if (e is ITessellate)
@@ -626,7 +651,7 @@ namespace Elements.Serialization.glTF
 
                 gltf.AddTriangleMesh(e.Id + "_mesh", buffer, vertexBuffer, normalBuffer,
                                         indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, materials[((IMaterial)e).Material.Name], cmin, cmax, null, e.Transform);
+                                        imin, imax, materials[materialName], cmin, cmax, null, e.Transform);
             }
 
             if (e is IAggregateElement)

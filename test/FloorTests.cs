@@ -1,6 +1,7 @@
 using Elements;
 using Elements.Geometry;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Elements.Tests
@@ -12,7 +13,7 @@ namespace Elements.Tests
         {
             this.Name = "Floor";
             var p = Polygon.Rectangle(10, 10);
-            var floorType = new FloorType("test", 0.1);
+            var floorType = new FloorType("test", new List<MaterialLayer>{new MaterialLayer(new Material("green", Colors.Green, 0.0f,0.0f),0.1)});
             var openings = new Opening[]{
                 new Opening(1, 1, 1, 1),
                 new Opening(-2, 3, 3, 1),
