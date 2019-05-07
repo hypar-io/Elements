@@ -43,11 +43,10 @@ namespace Elements
         /// <param name="profile">The profile of the floor.</param>
         /// <param name="elementType">The floor type of the floor.</param>
         /// <param name="elevation">The elevation of the top of the floor.</param>
-        /// <param name="material">The floor's material.</param>
         /// <param name="transform">The floor's transform.</param>
         /// <returns>A floor.</returns>
         [JsonConstructor]
-        public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
+        public Floor(Profile profile, FloorType elementType, double elevation = 0.0, Transform transform = null)
         {
             this.Profile = profile;
             this.Elevation = elevation;
@@ -63,10 +62,9 @@ namespace Elements
         /// <param name="profile">The profile of the floor.</param>
         /// <param name="elementType">The floor type of the floor.</param>
         /// <param name="elevation">The elevation of the top of the floor.</param>
-        /// <param name="material">The floor's material.</param>
         /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
         /// <param name="openings">An array of openings in the floor.</param>
-        public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null, Opening[] openings = null)
+        public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Transform transform = null, Opening[] openings = null)
         {
             if (openings != null && openings.Length > 0)
             {
@@ -99,9 +97,8 @@ namespace Elements
         /// <param name="direction">The direction of the floor's sweep.</param>
         /// <param name="elementType">The floor type of the floor.</param>
         /// <param name="elevation">The elevation of the floor.</param>
-        /// <param name="material">The floor's material.</param>
         /// <param name="transform">The floor's transform. If set, this will override the elevation.</param>
-        public Floor(Profile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Material material = null, Transform transform = null)
+        public Floor(Profile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Transform transform = null)
         {
             this.Profile = profile;
             this.Elevation = elevation;
