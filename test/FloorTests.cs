@@ -19,17 +19,21 @@ namespace Elements.Tests
                 new Opening(-2, 3, 3, 1),
                 new Opening(2, -2, 1, 4),
             };
-            var floor = new Floor(p, floorType, 0.5, BuiltInMaterials.Concrete, null, openings);
+            var floor1 = new Floor(p, floorType, 0.5, null, openings);
+            var floor2 = new Floor(p, floorType, 3.5, null, openings);
+
             var model = new Model();
             
             var s = new Space(Polygon.Rectangle(1,1), 1, 0.5, BuiltInMaterials.Mass);
             this.Model.AddElement(s);
 
-            Assert.Equal(3, floor.Openings.Length);
-            Assert.Equal(0.5, floor.Elevation);
-            Assert.Equal(0.1, floor.ElementType.Thickness());
-            Assert.Equal(0.4, floor.Transform.Origin.Z);
-            this.Model.AddElement(floor);
+            Assert.Equal(3, floor1.Openings.Length);
+            Assert.Equal(0.5, floor1.Elevation);
+            Assert.Equal(0.1, floor1.ElementType.Thickness());
+            Assert.Equal(0.4, floor1.Transform.Origin.Z);
+
+            this.Model.AddElement(floor1);
+            this.Model.AddElement(floor2);
         }
 
         [Fact]
@@ -48,7 +52,7 @@ namespace Elements.Tests
             var p2 = Polygon.Rectangle(1, 1, new Vector3(3,3,0));
             var profile = new Profile(Polygon.Rectangle(10, 10), new[]{p1,p2});
             var floorType = new FloorType("test", 0.2);
-            var floor = new Floor(profile, floorType, 0.0, BuiltInMaterials.Concrete);
+            var floor = new Floor(profile, floorType, 0.0);
             Assert.Equal(100.0-2.0, floor.Area());
         }
     }
