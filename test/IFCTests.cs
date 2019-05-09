@@ -34,15 +34,15 @@ namespace Elements.Tests
         }
 
         [Theory]
-        [InlineData("example_1", "../../../models/IFC2X3/example_1.ifc")]
+        // [InlineData("example_1", "../../../models/IFC2X3/example_1.ifc")]
         // TODO: Reenable when IfcCompositeCurve is supported.
         // [InlineData("example_2", "../../../models/IFC2X3/example_2.ifc")]
-        [InlineData("example_3", "../../../models/IFC2X3/example_3.ifc")]
-        [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
-        public void IFC2X3(string name, string ifcPath)
+        [InlineData("example_3", "../../../models/IFC2X3/example_3.ifc")]// new []{"0bKcgqsaHFN9FTVipKV_Ue","3Lkqsa9JzD0BBXIMnx2zgD"})]
+        // [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
+        public void IFC2X3(string name, string ifcPath, string[] idsToConvert = null)
         {
             this.Name = name;
-            this.Model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
+            this.Model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), idsToConvert);
         }
 
         [Fact]
@@ -52,10 +52,21 @@ namespace Elements.Tests
             var line = new Line(Vector3.Origin, new Vector3(10,10,0));
             var line1 = new Line(new Vector3(10,10,0), new Vector3(10,15,0));
             var wallType = new WallType("test", 0.2);
-            var wall = new Wall(line, wallType, 3);
-            var wall1 = new Wall(line1, wallType, 2);
+            var wall = new StandardWall(line, wallType, 3);
+            var wall1 = new StandardWall(line1, wallType, 2);
             this.Model.AddElement(wall);
             this.Model.AddElement(wall1);
+        }
+
+        [Fact]
+        public void PlanWall()
+        {
+            this.Name = "IfcWallPlan";
+            var pgon = Polygon.Ngon(5, 20.0);
+            var inner = pgon.Offset(-1.0)[0].Reversed();
+            var wallType = new WallType("Thick Wall", BuiltInMaterials.Concrete);
+            var wall = new Wall(pgon, wallType, 3.0);
+            this.Model.AddElement(wall);
         }
 
         [Fact]

@@ -21,6 +21,7 @@ namespace Elements
         private static Material _xAxis = new Material("x_axis", new Color(1.0f, 0.0f, 0.0f, 1.0f), 0.1f, 0.1f);
         private static Material _yAxis = new Material("x_axis", new Color(0.0f, 1.0f, 0.0f, 1.0f), 0.1f, 0.1f);
         private static Material _zAxis = new Material("x_axis", new Color(0.0f, 0.0f, 1.0f, 1.0f), 0.1f, 0.1f);
+        private static Material _trans = new Material("trans", new Color(0.0f,0.0f,0.0f,0.0f),0.0f,0.0f);
 
         /// <summary>
         /// Glass.
@@ -91,5 +92,10 @@ namespace Elements
         /// Z Axis
         /// </summary>
         public static Material ZAxis => _zAxis;
+
+        /// <summary>
+        /// Fully transparent material.
+        /// </summary>
+        public static Material Trans => _trans;
     }
 }

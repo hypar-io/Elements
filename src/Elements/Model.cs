@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Reflection;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
+using Hypar.Elements.Interfaces;
 
 namespace Elements
 {
@@ -210,10 +211,12 @@ namespace Elements
         /// Create a model from IFC.
         /// </summary>
         /// <param name="path">The path to the IFC STEP file.</param>
+        /// <param name="idsToConvert">An optional array of string identifiers 
+        /// of IFC entities to convert.</param>
         /// <returns>A model.</returns>
-        public static Model FromIFC(string path)
+        public static Model FromIFC(string path, string[] idsToConvert = null)
         {
-            return IFCExtensions.FromIFC(path);
+            return IFCExtensions.FromIFC(path, idsToConvert);
         }
 
         internal Model(Dictionary<long, Element> elements, Dictionary<long,
@@ -266,6 +269,18 @@ namespace Elements
                 }
             }
 
+            if (element is IHasOpenings)
+            {
+                var ho = (IHasOpenings)element;
+                if(ho.Openings != null)
+                {
+                    foreach(var o in ho.Openings)
+                    {
+                        AddProfile(o.Profile);
+                    }
+                }
+            }
+
             if (element is IElementType<WallType>)
             {
                 var wtp = (IElementType<WallType>)element;
@@ -303,9 +318,9 @@ namespace Elements
                 }
             }
 
-            if (element is IAggregateElement)
+            if (element is IAggregateElements)
             {
-                var ae = (IAggregateElement)element;
+                var ae = (IAggregateElements)element;
                 if (ae.Elements.Count > 0)
                 {
                     foreach (var esub in ae.Elements)

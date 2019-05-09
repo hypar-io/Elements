@@ -10,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, ISolid, IProfile, IMaterial
+    public class Space : Element, ISolid, IExtrude, IMaterial
     {
         /// <summary>
         /// The profile of the space.
@@ -20,6 +20,7 @@ namespace Elements
         /// <summary>
         /// The space's geometry.
         /// </summary>
+        [JsonIgnore]
         public Solid Geometry { get; internal set; }
 
         /// <summary>
@@ -33,12 +34,27 @@ namespace Elements
         public double Height{get;}
 
         /// <summary>
+        /// The extrude direction of the space.
+        /// </summary>
+        public Vector3 ExtrudeDirection => Vector3.ZAxis;
+
+        /// <summary>
+        /// The extrude height of the space.
+        /// </summary>
+        public double ExtrudeDepth => this.Height;
+
+        /// <summary>
+        /// Should the space extrude to both sides of the profile?
+        /// </summary>
+        public bool BothSides => false;
+
+        /// <summary>
         /// Construct a space from a solid.
         /// </summary>
         /// <param name="geometry">The solid which will be used to define the space.</param>
         /// <param name="transform">The transform of the space.</param>
         /// <param name="material">The space's material.</param>
-        public Space(Solid geometry, Transform transform = null, Material material = null)
+        internal Space(Solid geometry, Transform transform = null, Material material = null)
         {
             if (geometry == null)
             {
@@ -68,7 +84,6 @@ namespace Elements
 
             this.Material = material == null ? BuiltInMaterials.Default : material;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = Solid.SweepFace(profile.Perimeter, profile.Voids, height);
             this.Height = height;
         }
 
@@ -90,7 +105,6 @@ namespace Elements
             this.Profile = new Profile(profile);
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Material = this.Material == null ? BuiltInMaterials.Mass : material;
-            this.Geometry = Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, height);
             this.Height = height;
         }
 

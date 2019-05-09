@@ -89,5 +89,32 @@ namespace Elements.Geometry
             }
             return new Polygon(verts);
         }
+
+        /// <summary>
+        /// Create an L.
+        /// </summary>
+        /// <param name="width">The width of the L.</param>
+        /// <param name="length">The length of the L.</param>
+        /// <param name="thickness">The thickness of the L.</param>
+        /// <returns></returns>
+        public static Polygon L(double width, double length, double thickness)
+        {   
+            if(thickness > length)
+            {
+                throw new ArgumentOutOfRangeException("The thickness cannot be greater than the length.");
+            }
+            if(thickness > width)
+            {
+                throw new ArgumentOutOfRangeException("The thickness cannot be greater that the width.");
+            }
+            
+            var a = new Vector3(0,0,0);
+            var b = new Vector3(width,0,0);
+            var c = new Vector3(width, thickness, 0);
+            var d = new Vector3(thickness,thickness,0);
+            var e = new Vector3(thickness, length, 0);
+            var f = new Vector3(0,length,0);
+            return new Polygon(new[]{a,b,c,d,e,f});
+        }
     }
 }

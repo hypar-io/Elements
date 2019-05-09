@@ -51,7 +51,7 @@ namespace Elements.Tests
             var b = new Vector3(1,0,0);
             var c = new Vector3(1,0,1);
             var d = new Vector3(0,0,1);
-            var panel = new Panel(new[]{a,b,c,d}, BuiltInMaterials.Glass);
+            var panel = new Panel(new Polygon(new[]{a,b,c,d}), BuiltInMaterials.Glass);
             model.AddElement(panel);
             return model;
         }

@@ -48,6 +48,16 @@ namespace Elements
         {
             this.MaterialLayers = materialLayers;
         }
+
+        /// <summary>
+        /// Construct a wall type with homogeneous material.
+        /// </summary>
+        /// <param name="name">The name of the wall type.</param>
+        /// <param name="material">The wall type's material.</param>
+        public WallType(string name, Material material) : base(name)
+        {
+            this.MaterialLayers = new List<MaterialLayer>{new MaterialLayer(material, double.NaN)};
+        }
     
         /// <summary>
         /// Calculate the thickness of the wall by summing the layer thicknesses.

@@ -1,10 +1,18 @@
 # Changelog
 
+## [0.2.4.1]
+### Added
+- Added `StandardWall`, for walls defined along a curve. `Wall` continues to be for walls defined by a planar profile extruded to a height.
+
+### Changed
+- `Floor` constructors no longer have `material` parameter. Materials are now specified through the `FloorType`.
+- `IAggregateElement` is now `IAggregateElements`.
+- `Panel` now takes `Polygon` instead of `Vector3[]`.
+
 ## [0.2.4]
 ### Changed
 - `IGeometry3D` is now `ISolid`.
 - `ISolid` (formerly `IGeometry3D`) now contains one solid, not an array of solids.
-- `Floor` constructors no longer have `material` parameter. Materials are now specified through the `FloorType`.
 
 ### Removed
 - `Solid.Material`. Elements are now expected to implement the `IMaterial` interface or have an `IElementType<T>` which specifies a material.

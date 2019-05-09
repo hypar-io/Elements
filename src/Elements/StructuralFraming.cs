@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Geometry.Solids;
 using Elements.Serialization.JSON;
 using Elements.Interfaces;
 
@@ -11,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A structural element with a Profile swept along a curve or extruded.
     /// </summary>
-    public abstract class StructuralFraming : Element, ISolid, IElementType<StructuralFramingType>
+    public abstract class StructuralFraming : Element, IElementType<StructuralFramingType>, ISweepAlongCurve
     {
         /// <summary>
         /// The center line of the framing element.
@@ -20,25 +19,31 @@ namespace Elements
         public ICurve Curve { get; }
 
         /// <summary>
-        /// The setback of the beam's extrusion at the start.
+        /// The setback of the framing's extrusion at the start.
         /// </summary>
         public double StartSetback { get; }
 
         /// <summary>
-        /// The setback of the beam's extrusion at the end.
+        /// The setback of the framing's extrusion at the end.
         /// </summary>
         public double EndSetback { get; }
-
-        /// <summary>
-        /// The geometry of the StructuralFraming.
-        /// </summary>
-        [JsonIgnore]
-        public Solid Geometry { get; }
 
         /// <summary>
         /// The element type of the structural framing.
         /// </summary>
         public StructuralFramingType ElementType {get;}
+
+        /// <summary>
+        /// The extrusion's profile.
+        /// </summary>
+        [JsonIgnore]
+        public Profile Profile {
+            get
+            {
+                return this.ElementType.Profile;
+            }
+        }
+
 
         /// <summary>
         /// Construct a beam.
@@ -61,8 +66,6 @@ namespace Elements
             this.EndSetback = endSetback;
             this.Transform = transform;
             this.ElementType = elementType;
-            this.Geometry = Solid.SweepFaceAlongCurve(this.ElementType.Profile.Perimeter, 
-                this.ElementType.Profile.Voids, this.Curve, this.StartSetback, this.EndSetback);
         }
 
         /// <summary>

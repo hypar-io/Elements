@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Elements.Interfaces
 {
-    public interface IAggregateElement
+    public interface IAggregateElements
     {
         List<Element> Elements{get;}
     }

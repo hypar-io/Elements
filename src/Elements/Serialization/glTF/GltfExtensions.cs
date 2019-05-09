@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
+using Hypar.Elements.Interfaces;
 
 [assembly:InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -23,9 +24,9 @@ namespace Elements.Serialization.glTF
         /// <summary>
         /// Save a model to gltf.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="path"></param>
-        /// <param name="useBinarySerialization"></param>
+        /// <param name="model">The model to serialize.</param>
+        /// <param name="path">The output path.</param>
+        /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true)
         {
             if(useBinarySerialization)
@@ -563,6 +564,21 @@ namespace Elements.Serialization.glTF
         private static void GetRenderDataForElement(IElement e, Gltf gltf, 
             Dictionary<string, int> materials, List<Vector3> lines, List<byte> buffer)
         {
+            if (e is IAggregateElements)
+            {
+                var ae = (IAggregateElements)e;
+
+                if (ae.Elements.Count > 0)
+                {
+                    foreach (var esub in ae.Elements)
+                    {
+                        GetRenderDataForElement(esub, gltf, materials, lines, buffer);
+                    }
+                }
+
+                return;
+            }
+
             var materialName = BuiltInMaterials.Default.Name;
 
             if(e is IElementType<StructuralFramingType>)
@@ -589,45 +605,63 @@ namespace Elements.Serialization.glTF
                 materialName = ((IMaterial)e).Material.Name;
             }
 
+            Solid solid = null;
+
             if (e is ISolid)
             {
+                // Element already has a solid representation.
                 var geo = e as ISolid;
-                var solid = geo.Geometry;
+                solid = geo.Geometry;
+            }
 
-                Elements.Geometry.Mesh mesh = null;
-
-                foreach (var edge in solid.Edges.Values)
+            if(solid == null)
+            {
+                // Element does not yet have a solid representation. Create one.
+                if (e is IExtrude)
                 {
-                    if (e.Transform != null)
+                    var ex = (IExtrude)e;
+
+                    if(e is IHasOpenings)
                     {
-                        lines.AddRange(new[] { e.Transform.OfPoint(edge.Left.Vertex.Point), e.Transform.OfPoint(edge.Right.Vertex.Point) });
+                        var o = (IHasOpenings)e;
+                        // The voids in the profiles are concatenated with the
+                        // voids provided by the openings.
+                        Polygon[] voids = null;
+                        if(o.Openings != null && o.Openings.Length > 0)
+                        {
+                            if(ex.Profile.Voids == null)
+                            {
+                                voids = o.Openings.Select(op=>op.Profile.Perimeter).ToArray();
+                            }
+                            else
+                            {
+                                voids = ex.Profile.Voids.Concat(o.Openings.Select(op=>op.Profile.Perimeter)).ToArray();
+                            }
+                        }
+
+                        solid = Solid.SweepFace(ex.Profile.Perimeter, voids, ex.ExtrudeDirection, ex.ExtrudeDepth, ex.BothSides);
                     }
                     else
                     {
-                        lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
+                        solid = Solid.SweepFace(ex.Profile.Perimeter, null, ex.ExtrudeDirection, ex.ExtrudeDepth, ex.BothSides);
                     }
                 }
+                else if(e is ISweepAlongCurve)
+                {
+                    var sw = (ISweepAlongCurve)e;
+                    solid = Solid.SweepFaceAlongCurve(sw.Profile.Perimeter, sw.Profile.Voids, sw.Curve, sw.StartSetback, sw.EndSetback);
+                }
+                else if(e is ILamina)
+                {
+                    var l = (ILamina)e;
+                    solid = Solid.CreateLamina(l.Perimeter.Vertices);
+                }
+            }
 
-                mesh = new Elements.Geometry.Mesh();
-                solid.Tessellate(ref mesh);
-
-                double[] vertexBuffer;
-                double[] normalBuffer;
-                ushort[] indexBuffer;
-                float[] colorBuffer;
-                double[] vmin; double[] vmax;
-                double[] nmin; double[] nmax;
-                float[] cmin; float[] cmax;
-                ushort imin; ushort imax;
-
-                mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
-                                out vmax, out vmin, out nmin, out nmax, out cmin,
-                                out cmax, out imin, out imax);
-
-                gltf.AddTriangleMesh(e.Id + "_mesh", buffer, vertexBuffer, normalBuffer,
-                                    indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                    imin, imax, materials[materialName], cmin, cmax, null, e.Transform);
-                
+            if(solid != null)
+            {
+                ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
+                            ref materials, ref lines, ref buffer);
             }
 
             if (e is ITessellate)
@@ -653,19 +687,44 @@ namespace Elements.Serialization.glTF
                                         indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
                                         imin, imax, materials[materialName], cmin, cmax, null, e.Transform);
             }
+        }
 
-            if (e is IAggregateElement)
+        private static void ProcessSolid(Solid solid, Transform t, string id, string materialName, ref Gltf gltf, 
+            ref Dictionary<string, int> materials, ref List<Vector3> lines, ref List<byte> buffer)
+        {
+            Elements.Geometry.Mesh mesh = null;
+            
+            foreach (var edge in solid.Edges.Values)
             {
-                var ae = (IAggregateElement)e;
-
-                if (ae.Elements.Count > 0)
+                if (t != null)
                 {
-                    foreach (var esub in ae.Elements)
-                    {
-                        GetRenderDataForElement(esub, gltf, materials, lines, buffer);
-                    }
+                    lines.AddRange(new[] { t.OfPoint(edge.Left.Vertex.Point), t.OfPoint(edge.Right.Vertex.Point) });
+                }
+                else
+                {
+                    lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
                 }
             }
+
+            mesh = new Elements.Geometry.Mesh();
+            solid.Tessellate(ref mesh);
+
+            double[] vertexBuffer;
+            double[] normalBuffer;
+            ushort[] indexBuffer;
+            float[] colorBuffer;
+            double[] vmin; double[] vmax;
+            double[] nmin; double[] nmax;
+            float[] cmin; float[] cmax;
+            ushort imin; ushort imax;
+
+            mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                            out vmax, out vmin, out nmin, out nmax, out cmin,
+                            out cmax, out imin, out imax);
+
+            gltf.AddTriangleMesh(id + "_mesh", buffer, vertexBuffer, normalBuffer,
+                                indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
+                                imin, imax, materials[materialName], cmin, cmax, null, t);
         }
 
         private static void AddLines(long id, Vector3[] vertices, Gltf gltf, 

@@ -24,7 +24,7 @@ namespace Elements.Geometry.Tests
             var model = new Model();
             foreach(var cell in grid.Cells())
             {
-                var panel = new Panel(cell.Shrink(0.2));
+                var panel = new Panel(new Polygon(cell.Shrink(0.2)));
                 this.Model.AddElement(panel);
             }
         }
