@@ -108,6 +108,12 @@ namespace Elements
                 throw new ArgumentException("An Element with the same Id already exists in the Model.");
             }
 
+            if(element is IAggregateElements)
+            {
+                var agg = (IAggregateElements)element;
+                AddElements(agg.Elements);
+            }
+
             AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
         }
 
