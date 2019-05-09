@@ -1,8 +1,13 @@
 # Changelog
 
+## [0.2.4.2]
+### Added
+- Added `ToIfcWall()` extension method to save a `Wall` to an `IfcWall`.
+
 ## [0.2.4.1]
 ### Added
 - Added `StandardWall`, for walls defined along a curve. `Wall` continues to be for walls defined by a planar profile extruded to a height.
+- Added `Polygon.L`.
 
 ### Changed
 - `Floor` constructors no longer have `material` parameter. Materials are now specified through the `FloorType`.

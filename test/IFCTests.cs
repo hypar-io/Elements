@@ -62,11 +62,12 @@ namespace Elements.Tests
         public void PlanWall()
         {
             this.Name = "IfcWallPlan";
-            var pgon = Polygon.Ngon(5, 20.0);
-            var inner = pgon.Offset(-1.0)[0].Reversed();
+            var planShape = Polygon.L(2,2,0.15);
             var wallType = new WallType("Thick Wall", BuiltInMaterials.Concrete);
-            var wall = new Wall(pgon, wallType, 3.0);
-            this.Model.AddElement(wall);
+            var wall1 = new Wall(planShape, wallType, 3.0);
+            var wall2 = new Wall(planShape, wallType, 3.0, new Transform(0,0,3));
+            this.Model.AddElement(wall1);
+            this.Model.AddElement(wall2);
         }
 
         [Fact]

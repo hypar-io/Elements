@@ -146,6 +146,13 @@ namespace Elements.Serialization.IFC
                         products.Add(ifcWall);
                     }
 
+                    if(e is Wall)
+                    {
+                        var w = (Wall)e;
+                        var ifcWall = w.ToIfcWall(context, ifc);
+                        products.Add(ifcWall);
+                    }
+
                     if(e is Beam)
                     {
                         var b = (Beam)e;
@@ -340,6 +347,44 @@ namespace Elements.Serialization.IFC
             return ifcWall;
         }
 
+        private static IfcWall ToIfcWall(this Wall wall, IfcRepresentationContext context, Document doc)
+        {
+            var sweptArea = wall.Transform.OfProfile(wall.Profile).Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
+
+            // We don't use the Wall's transform for positioning, because
+            // our walls have a transform that lays the wall "flat". Just
+            // use a identity transform or a transform that includes
+            // the elevation.
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(wall.Height));
+            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+            var id = IfcGuid.ToIfcGuid(Guid.NewGuid());
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
+            var ifcWall = new IfcWall(new IfcGloballyUniqueId(id), 
+                null, wall.Name, null, null, localPlacement, productRep, null);
+
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(repItem);
+            doc.AddEntity(rep);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(productRep);
+            doc.AddEntity(ifcWall);
+
+            return ifcWall;
+        }
+
+        /// <summary>
+        /// Convert a beam to an IfcBeam
+        /// </summary>
+        /// <param name="beam"></param>
+        /// <param name="context"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         private static IfcBeam ToIfcBeam(this Beam beam, IfcRepresentationContext context, Document doc)
         {
             var sweptArea = beam.ElementType.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
