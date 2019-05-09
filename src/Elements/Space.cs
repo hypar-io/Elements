@@ -82,6 +82,7 @@ namespace Elements
                 throw new ArgumentOutOfRangeException($"The Space could not be created. The height provided, {height}, was less than zero. The height must be greater than zero.", "height");
             }
 
+            this.Profile = profile;
             this.Material = material == null ? BuiltInMaterials.Default : material;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Height = height;
