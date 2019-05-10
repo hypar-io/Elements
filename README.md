@@ -1,5 +1,3 @@
-<img src="./hypar_logo.svg" width="200px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
-
 # Elements
 A BIM library for everybody.
 
