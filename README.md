@@ -1,7 +1,7 @@
 <img src="./hypar_logo.svg" width="200px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
 
-# elements
-A better API for buildings.
+# Elements
+A BIM library for everybody.
 
 [![Build Status](https://travis-ci.org/hypar-io/elements.svg?branch=master)](https://travis-ci.org/hypar-io/elements)
 ![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
