@@ -5,14 +5,17 @@ A BIM library for everybody.
 ![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
-Elements is a cross-platform library for creating building elements like Walls, Beams, and Spaces. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings. Here's an example using Elements to create a `Beam`:
+# What
+Elements is a cross-platform library for creating building elements. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings. Here's an example using Elements to create a `Beam`:
 ```c#
 var line = new Line(Vector3.Origin, new Vector3(5,5,5));
 var beam = new Beam(line, new Profiles.WideFlangeProfile("testprofile"));
 var model = new Model();
 model.AddElement(beam);
-var json = model.ToJson();
+var json = model.ToIfc(ifcPath);
 ```
+In addition to having a friendly API, the Elements library offers the ability to serialize your data to [glTF](https://www.khronos.org/gltf/), JSON, and [IFC](https://www.buildingsmart.org/about/what-is-openbim/ifc-introduction/).
+
 ## Why
 When we started [Hypar](https://www.hypar.io), we needed a small library of building elements that could run in micro-services executing on Linux, and was therefore free of dependencies on host applications like Rhino or Revit. We wanted it to have an API that took the best parts from the various object models and programming APIs available in the AEC space. We wanted it to serialize to formats like JSON and IFC that were useful to architects, engineers, and contractors. And even though the library needed to stand alone, we wanted it to be usable in add-ins to other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity. We looked around and nothing fit the bill, so we started building this. 
 
