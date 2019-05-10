@@ -22,16 +22,34 @@ When we started [Hypar](https://www.hypar.io), we needed a small library of buil
 Hypar Elements is open source and will remain so **forever**. Your donation will directly support the development of the Hypar Elements. Hypar Elements has been demonstrated to work in Revit add-ins, Unity projects, and as Lambdas running on AWS. Send us a donation and open a feature request telling us what you'd like it to do.  
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
+## Relation To IFC
+The following table shows the types available in the Elements library and their corresponding types in IFC.
+
+|Elements Type|IFC Type|
+|--|--|
+|Beam|IfcBeam|
+||IfcChimney|
+|Column|IfcColumn|
+||IfcCovering|
+||IfcCurtainWall|
+||IfcDoor|
+||IfcMember|
+|Panel|IfcPlate|
+||IfcRailing|
+||IfcRamp|
+||IfcRoof|
+||IfcShadingDevice|
+|Floor|IfcSlab|
+||IfcStair|
+|Wall|IfcWall|
+|StandardWall|IfcWallStandardCase|
+||IfcWindow|
+
 ## Examples
 The best examples are those provided in the [tests](https://github.com/hypar-io/elements/tree/master/csharp/test), where we demonstrate usage of almost every function in the library.
 
 ## Words of Warning
-- The Elements library is currently in beta. Please do not use it for production work.
-- Why we chose C#:
-  - C# is a strongly typed language. We want the code checking tools and the compiler to help you write code that you can publish with confidence. 
-  - Microsoft is investing heavily in C# performance. There are lots of articles out there about Lambda performance. [Here's](https://read.acloud.guru/comparing-aws-lambda-performance-of-node-js-python-java-c-and-go-29c1163c2581) a good one.
-  - Dotnet function packages are small. Smaller functions results in faster cold start times in serverless environments.
-  - C# libraries can be reused in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
+- The Elements library is currently undergoing rapid development and breaking API changes. Until we achieve a 1.0 release, we are playing a little fast and loose with semantic versioning. Updates will be written to the `CHANGELOG`.
 
 ## Build
 You'll only need to do this if you want to contribute to the library, otherwise you can use the [NuGet package](https://www.nuget.org/) that is published regularly.
