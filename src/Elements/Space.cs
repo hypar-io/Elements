@@ -105,7 +105,7 @@ namespace Elements
 
             this.Profile = new Profile(profile);
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Material = this.Material == null ? BuiltInMaterials.Mass : material;
+            this.Material = material == null ? BuiltInMaterials.Mass : material;
             this.Height = height;
         }
 
