@@ -1,8 +1,19 @@
 # Changelog
 
+## [0.2.4.4]
+### Changed
+- `Solid.Slice()` has been made internal. It's not yet ready for consumers. See [#103](https://github.com/hypar-io/elements/issues/103)
+
+## [0.2.4.3]
+### Fixed
+- Spaces are now correctly colored. See [#134](https://github.com/hypar-io/elements/issues/134).
+
 ## [0.2.4.2]
 ### Added
 - Added `ToIfcWall()` extension method to save a `Wall` to an `IfcWall`.
+### Fixed
+- `Space.Profile` is set in the constructor when a `Space` is constructed with a profile. [#132](https://github.com/hypar-io/elements/pull/132)
+- Sub-elements of `IAggregateElements` are now added to the `Model`. [#137](https://github.com/hypar-io/elements/pull/137)
 
 ## [0.2.4.1]
 ### Added

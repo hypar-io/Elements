@@ -303,7 +303,7 @@ namespace Elements.Geometry.Solids
         /// Slice a solid with the provided plane.
         /// </summary>
         /// <param name="p">The plane to be used to slice this solid.</param>
-        public void Slice(Plane p)
+        internal void Slice(Plane p)
         {
             var keys = new List<long>(this.Edges.Keys);
             foreach(var key in keys)
