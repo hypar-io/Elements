@@ -10,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A boundary of an occupiable region.
     /// </summary>
-    public class Space : Element, IGeometry3D, IProfile, IMaterial
+    public class Space : Element, ISolid, IExtrude, IMaterial
     {
         /// <summary>
         /// The profile of the space.
@@ -20,7 +20,8 @@ namespace Elements
         /// <summary>
         /// The space's geometry.
         /// </summary>
-        public Solid[] Geometry { get; internal set; }
+        [JsonIgnore]
+        public Solid Geometry { get; internal set; }
 
         /// <summary>
         /// The space's material.
@@ -28,16 +29,40 @@ namespace Elements
         public Material Material { get; }
 
         /// <summary>
+        /// The space's height.
+        /// </summary>
+        public double Height{get;}
+
+        /// <summary>
+        /// The extrude direction of the space.
+        /// </summary>
+        public Vector3 ExtrudeDirection => Vector3.ZAxis;
+
+        /// <summary>
+        /// The extrude height of the space.
+        /// </summary>
+        public double ExtrudeDepth => this.Height;
+
+        /// <summary>
+        /// Should the space extrude to both sides of the profile?
+        /// </summary>
+        public bool BothSides => false;
+
+        /// <summary>
         /// Construct a space from a solid.
         /// </summary>
-        /// <param name="geometry">The BRep which will be used to define the space.</param>
+        /// <param name="geometry">The solid which will be used to define the space.</param>
         /// <param name="transform">The transform of the space.</param>
         /// <param name="material">The space's material.</param>
-        public Space(Solid geometry, Transform transform = null, Material material = null)
+        internal Space(Solid geometry, Transform transform = null, Material material = null)
         {
+            if (geometry == null)
+            {
+                throw new ArgumentOutOfRangeException("You must supply one IBRep to construct a Space.");
+            }
             this.Transform = transform;
             this.Material = material == null ? BuiltInMaterials.Default : material;
-            this.Geometry = new[] { geometry };
+            this.Geometry = geometry;
         }
 
         /// <summary>
@@ -49,6 +74,7 @@ namespace Elements
         /// <param name="material">The space's material.</param>
         /// <param name="transform">The space's transform.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
+        [JsonConstructor]
         public Space(Profile profile, double height, double elevation = 0.0, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
@@ -56,9 +82,10 @@ namespace Elements
                 throw new ArgumentOutOfRangeException($"The Space could not be created. The height provided, {height}, was less than zero. The height must be greater than zero.", "height");
             }
 
+            this.Profile = profile;
             this.Material = material == null ? BuiltInMaterials.Default : material;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Geometry = new[] { Solid.SweepFace(profile.Perimeter, profile.Voids, height, this.Material) };
+            this.Height = height;
         }
 
         /// <summary>
@@ -78,39 +105,10 @@ namespace Elements
 
             this.Profile = new Profile(profile);
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Material = this.Material == null ? BuiltInMaterials.Default : material;
-            this.Geometry = new[] { Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, height, this.Material) };
+            this.Material = material == null ? BuiltInMaterials.Mass : material;
+            this.Height = height;
         }
 
-        /// <summary>
-        /// Construct a space from an array of solids.
-        /// </summary>
-        /// <param name="geometry">An array of solids which will be used to define the space.</param>
-        /// <param name="transform">The space's Transform.</param>
-        /// <param name="material">The space's Material.</param>
-        [JsonConstructor]
-        public Space(Solid[] geometry, Transform transform = null, Material material = null)
-        {
-            if (geometry == null || geometry.Length == 0)
-            {
-                throw new ArgumentOutOfRangeException("You must supply at least one IBRep to construct a Space.");
-            }
-
-            // TODO: Remove this when the Profile is no longer available
-            // as a property on the Element. 
-            // foreach(var g in geometry)
-            // {
-            //     var extrude = g as Extrude;
-            //     if(extrude != null)
-            //     {
-            //         this.Profile = extrude.Profile;
-            //     }
-            // }
-            this.Material = this.Material == null ? BuiltInMaterials.Default : material;
-            this.Transform = transform;
-            this.Geometry = geometry;
-        }
-    
         /// <summary>
         /// Get the profile of the space transformed by the space's transform.
         /// </summary>

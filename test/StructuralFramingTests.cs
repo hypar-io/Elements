@@ -61,7 +61,6 @@ namespace Elements.Tests
             var profiles = WideFlangeProfileServer.Instance.AllProfiles().ToList();
             foreach(var profile in profiles)
             {
-                
                 var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
                 var framingType = new StructuralFramingType(profile.Name, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));

@@ -20,18 +20,45 @@ namespace Elements.Serialization.IFC
         /// Load a model from IFC.
         /// </summary>
         /// <param name="path">The path to an IFC STEP file.</param>
+        /// <param name="idsToConvert">An array of element ids to convert.</param>
         /// <returns>A model.</returns>
-        internal static Model FromIFC(string path)
+        internal static Model FromIFC(string path, IList<string> idsToConvert = null)
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
-            var ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
-            var ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
-            var ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
-            var ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
-            var ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
-            var ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
-            var ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
+            foreach(var error in errors)
+            {
+                Console.WriteLine("***IFC ERROR***" + error.Message);
+            }
+
+            IEnumerable<IfcSlab> ifcSlabs = null;
+            IEnumerable<IfcSpace> ifcSpaces = null;
+            IEnumerable<IfcWallStandardCase> ifcWalls = null;
+            IEnumerable<IfcBeam> ifcBeams = null;
+            IEnumerable<IfcColumn> ifcColumns = null;
+            IEnumerable<IfcRelVoidsElement> ifcVoids = null;
+            IEnumerable<IfcRelAssociatesMaterial> ifcMaterials = null;
+
+            if(idsToConvert != null && idsToConvert.Count > 0)
+            {
+                ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>().Where(i=>idsToConvert.Contains(i.GlobalId));
+                ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>().Where(i=>idsToConvert.Contains(i.GlobalId));
+                ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>().Where(i=>idsToConvert.Contains(i.GlobalId));
+                ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>().Where(i=>idsToConvert.Contains(i.GlobalId));
+                ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>().Where(i=>idsToConvert.Contains(i.GlobalId));
+                ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>().Where(i=>idsToConvert.Contains(i.GlobalId));
+                ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>().Where(i=>idsToConvert.Contains(i.GlobalId));
+            }
+            else
+            {
+                ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
+                ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
+                ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
+                ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
+                ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
+                ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
+                ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
+            }
 
             var openings = new List<Opening>();
             foreach (var v in ifcVoids)
@@ -58,10 +85,10 @@ namespace Elements.Serialization.IFC
             model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
-            if (openings.Any())
-            {
-                model.AddElements(openings);
-            }
+            // if (openings.Any())
+            // {
+            //     model.AddElements(openings);
+            // }
 
             return model;
         }
@@ -112,10 +139,17 @@ namespace Elements.Serialization.IFC
             {
                 try
                 {
+                    if(e is StandardWall)
+                    {
+                        var w = (StandardWall)e;
+                        var ifcWall = w.ToIfcWallStandardCase(context, ifc);
+                        products.Add(ifcWall);
+                    }
+
                     if(e is Wall)
                     {
                         var w = (Wall)e;
-                        var ifcWall = w.ToIfcWallStandardCase(context, ifc);
+                        var ifcWall = w.ToIfcWall(context, ifc);
                         products.Add(ifcWall);
                     }
 
@@ -125,9 +159,17 @@ namespace Elements.Serialization.IFC
                         var ifcBeam = b.ToIfcBeam(context, ifc);
                         products.Add(ifcBeam);
                     }
+
+                    if(e is Floor)
+                    {
+                        var f = (Floor)e;
+                        var ifcSlab = f.ToIfcSlab(context, ifc);
+                        products.Add(ifcSlab);
+                    }
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Console.WriteLine("There was an error writing to IFC: " + ex.Message);
                     continue;
                 }
             }
@@ -274,21 +316,22 @@ namespace Elements.Serialization.IFC
         /// <param name="context"></param>
         /// <param name="doc"></param>
         /// <returns></returns>
-        private static IfcWallStandardCase ToIfcWallStandardCase(this Wall wall, IfcRepresentationContext context, Document doc)
+        private static IfcWallStandardCase ToIfcWallStandardCase(this StandardWall wall, IfcRepresentationContext context, Document doc)
         {
             var sweptArea = wall.CenterLine.Thicken(wall.Thickness()).ToIfcArbitraryClosedProfileDef(doc);
             var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
 
             // We don't use the Wall's transform for positioning, because
             // our walls have a transform that lays the wall "flat". Just
-            // use a identity transform.
+            // use a identity transform or a transform that includes
+            // the elevation.
             var position = new Transform().ToIfcAxis2Placement3D(doc);
             var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
                 extrudeDirection, new IfcPositiveLengthMeasure(wall.Height));
             var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
             var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
             var id = IfcGuid.ToIfcGuid(Guid.NewGuid());
-            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
+            var localPlacement = new Transform(0,0,wall.CenterLine.Start.Z).ToIfcLocalPlacement(doc);
             var ifcWall = new IfcWallStandardCase(new IfcGloballyUniqueId(id), 
                 null, wall.Name, null, null, localPlacement, productRep, null);
 
@@ -304,6 +347,44 @@ namespace Elements.Serialization.IFC
             return ifcWall;
         }
 
+        private static IfcWall ToIfcWall(this Wall wall, IfcRepresentationContext context, Document doc)
+        {
+            var sweptArea = wall.Transform.OfProfile(wall.Profile).Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
+
+            // We don't use the Wall's transform for positioning, because
+            // our walls have a transform that lays the wall "flat". Just
+            // use a identity transform or a transform that includes
+            // the elevation.
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(wall.Height));
+            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+            var id = IfcGuid.ToIfcGuid(Guid.NewGuid());
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
+            var ifcWall = new IfcWall(new IfcGloballyUniqueId(id), 
+                null, wall.Name, null, null, localPlacement, productRep, null);
+
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(repItem);
+            doc.AddEntity(rep);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(productRep);
+            doc.AddEntity(ifcWall);
+
+            return ifcWall;
+        }
+
+        /// <summary>
+        /// Convert a beam to an IfcBeam
+        /// </summary>
+        /// <param name="beam"></param>
+        /// <param name="context"></param>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         private static IfcBeam ToIfcBeam(this Beam beam, IfcRepresentationContext context, Document doc)
         {
             var sweptArea = beam.ElementType.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
@@ -322,6 +403,7 @@ namespace Elements.Serialization.IFC
             var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
                 extrudeDirection, new IfcPositiveLengthMeasure(beam.Curve.Length()));
             var localPlacement = beam.Curve.TransformAt(0.0).ToIfcLocalPlacement(doc);
+            // var placement = beam.Transform.ToIfcAxis2Placement3D(doc);
             var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
             var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
             var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, null, localPlacement, productRep, null);
@@ -452,11 +534,11 @@ namespace Elements.Serialization.IFC
                 // throw new Exception("No IfcExtrudedAreaSolid could be found in the provided IfcSlab.");
             }
 
-            var floorType = new FloorType($"{Guid.NewGuid().ToString()}_floor_type", (IfcLengthMeasure)solid.Depth);
+            var floorType = new FloorType($"{Guid.NewGuid().ToString()}_floor_type", new List<MaterialLayer>{new MaterialLayer(new Material("slab",Colors.Green), (IfcLengthMeasure)solid.Depth)});
             var outline = (Polygon)solid.SweptArea.ToICurve();
             var solidTransform = solid.Position.ToTransform();
             var floor = new Floor(new Profile(outline), solidTransform, solid.ExtrudedDirection.ToVector3(), 
-                floorType, 0, BuiltInMaterials.Default, transform);
+                floorType, 0, transform);
             floor.Name = slab.Name;
             
             return floor;
@@ -497,7 +579,7 @@ namespace Elements.Serialization.IFC
             {
                 var solid = (IfcFacetedBrep)foundSolid;
                 var shell = solid.Outer;
-                var newSolid = new Solid(material);
+                var newSolid = new Solid();
                 for(var i=0; i< shell.CfsFaces.Count; i++)
                 {
                     var f = shell.CfsFaces[i];
@@ -531,6 +613,24 @@ namespace Elements.Serialization.IFC
 
             // An extruded face solid.
             var solid = wall.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
+            if(solid == null)
+            {
+                // It's possible that the rep is a boolean.
+                var boolean = wall.RepresentationsOfType<IfcBooleanClippingResult>().FirstOrDefault();
+                if(boolean != null)
+                {
+                    solid = boolean.FirstOperand.Choice as IfcExtrudedAreaSolid;
+                    if(solid == null)
+                    {
+                        solid = boolean.SecondOperand.Choice as IfcExtrudedAreaSolid; 
+                    }
+                }
+
+                // if(solid == null)
+                // {
+                //     throw new Exception("No usable solid was found when converting an IfcWallStandardCase to a Wall.");
+                // }
+            }
             
             // A centerline wall with material layers.
             // var axis = (Polyline)wall.RepresentationsOfType<IfcPolyline>().FirstOrDefault().ToICurve(false);
@@ -548,7 +648,7 @@ namespace Elements.Serialization.IFC
                 if(c is Polygon)
                 {
                     transform.Concatenate(solid.Position.ToTransform());
-                    var result = new Wall(new Profile((Polygon)c), wallType, (IfcLengthMeasure)solid.Depth, transform);
+                    var result = new Wall((Polygon)c, wallType, (IfcLengthMeasure)solid.Depth, transform);
 
                     result.Name = wall.Name;
                     return result;
@@ -630,7 +730,6 @@ namespace Elements.Serialization.IFC
                 solidTransform.Concatenate(openingTransform);
                 var profile = (Polygon)s.SweptArea.ToICurve();
                 var newOpening = new Opening(profile, (IfcLengthMeasure)s.Depth, solidTransform);
-                // var newOpening = new Opening(profile);
                 if(opening.Name != null)
                 {
                     newOpening.Name = opening.Name;
@@ -638,6 +737,40 @@ namespace Elements.Serialization.IFC
                 return newOpening;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Convert a Floor to an IfcSlab.
+        /// </summary>
+        /// <param name="floor"></param>
+        /// <param name="context"></param>
+        /// /// <param name="doc"></param>
+        private static IfcSlab ToIfcSlab(this Floor floor, IfcRepresentationContext context, Document doc)
+        {
+            var position = floor.Transform.ToIfcAxis2Placement3D(doc);
+            var sweptArea = floor.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
+            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(floor.Thickness()));
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
+
+            var placement = floor.Transform.ToIfcAxis2Placement3D(doc);
+            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+
+            var slab = new IfcSlab(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, 
+                null, localPlacement, productRep, null, IfcSlabTypeEnum.FLOOR);
+
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(repItem);
+            doc.AddEntity(rep);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(productRep);
+            doc.AddEntity(slab);
+
+            return slab;
         }
 
         private static Solid Representations(this IfcProduct product)

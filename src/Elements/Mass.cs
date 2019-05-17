@@ -11,7 +11,7 @@ namespace Elements
     /// <summary>
     /// An extruded building mass.
     /// </summary>
-    public class Mass : Element, IGeometry3D, IProfile, IMaterial
+    public class Mass : Element, ISolid, IExtrude, IMaterial
     {
         /// <summary>
         /// The Profile of the mass.
@@ -35,12 +35,27 @@ namespace Elements
         /// <summary>
         /// The mass' geometry.
         /// </summary>
-        public Solid[] Geometry { get; }
+        public Solid Geometry { get; }
 
         /// <summary>
         /// The mass' material.
         /// </summary>
         public Material Material {get;}
+
+        /// <summary>
+        /// The direction of the mass's extrusion.
+        /// </summary>
+        public Vector3 ExtrudeDirection => Vector3.ZAxis;
+
+        /// <summary>
+        /// The depth of the mass' extrusion.
+        /// </summary>
+        public double ExtrudeDepth => this.Height;
+        
+        /// <summary>
+        /// Should the mass extrude to both sides of the profile?
+        /// </summary>
+        public bool BothSides => false;
 
         /// <summary>
         /// Construct a Mass.
@@ -60,7 +75,6 @@ namespace Elements
             this.Height = height;
             this.Transform = transform;
             this.Material = material == null ? BuiltInMaterials.Mass : material;
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.Material)};
         }
 
         /// <summary>
@@ -80,7 +94,6 @@ namespace Elements
             this.Height = height;
             this.Transform = transform;
             this.Material = material == null ? BuiltInMaterials.Mass : material;
-            this.Geometry = new[]{Solid.SweepFace(this.Profile.Perimeter, this.Profile.Voids, this.Height, this.Material)};
         }
 
         /// <summary>

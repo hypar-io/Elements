@@ -1,24 +1,20 @@
 #pragma warning disable 1591
 
-using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Elements.Geometry.Interfaces;
-using Elements.Interfaces;
-using glTFLoader.Schema;
 using LibTessDotNet.Double;
-using Newtonsoft.Json;
 
-[assembly:InternalsVisibleTo("Hypar.Elements.Tests")]
+[assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
 namespace Elements.Geometry.Solids
 {
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid : ITessellate, IMaterial
+    public class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -40,29 +36,22 @@ namespace Elements.Geometry.Solids
         public Dictionary<long, Vertex> Vertices { get; }
 
         /// <summary>
-        /// The material of the solid.
-        /// </summary>
-        public Material Material{get;}
-
-        /// <summary>
         /// Construct a solid.
         /// </summary>
-        public Solid(Material material = null)
+        public Solid()
         {
             this.Faces = new Dictionary<long, Face>();
             this.Edges = new Dictionary<long, Edge>();
             this.Vertices = new Dictionary<long, Vertex>();
-            this.Material = material != null ? material : BuiltInMaterials.Default;
         }
 
         /// <summary>
         /// Construct a lamina solid.
         /// </summary>
         /// <param name="perimeter">The perimeter of the lamina's faces.</param>
-        /// <param name="material">The solid's material.</param>
-        public static Solid CreateLamina(Vector3[] perimeter, Material material = null)
+        public static Solid CreateLamina(Vector3[] perimeter)
         {   
-            var solid = new Solid(material);
+            var solid = new Solid();
             var loop1 = new Loop();
             var loop2 = new Loop();
             for (var i = 0; i < perimeter.Length; i++)
@@ -81,30 +70,28 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Construct a solid by sweeping a face.
         /// </summary>
-        /// <param name="outerLoop">The perimeter of the face to sweep.</param>
-        /// <param name="innerLoops">The holes of the face to sweep.</param>
+        /// <param name="perimeter">The perimeter of the face to sweep.</param>
+        /// <param name="holes">The holes of the face to sweep.</param>
         /// <param name="distance">The distance to sweep.</param>
-        /// <param name="material">The solid's material.</param>
         /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, double distance, Material material = null, bool bothSides = false) 
+        public static Solid SweepFace(Polygon perimeter, Polygon[] holes, double distance, bool bothSides = false) 
         {
-            return Solid.SweepFace(outerLoop, innerLoops, Vector3.ZAxis, distance, material, bothSides);
+            return Solid.SweepFace(perimeter, holes, Vector3.ZAxis, distance, bothSides);
         }
 
         /// <summary>
         /// Construct a solid by sweeping a face along a curve.
         /// </summary>
-        /// <param name="outer">The perimeter of the face to sweep.</param>
-        /// <param name="inner">The holes of the face to sweep.</param>
+        /// <param name="perimeter">The perimeter of the face to sweep.</param>
+        /// <param name="holes">The holes of the face to sweep.</param>
         /// <param name="curve">The curve along which to sweep.</param>
-        /// <param name="material">The solid's material.</param>
         /// <param name="startSetback">The setback of the sweep from the start of the curve.</param>
         /// <param name="endSetback">The setback of the sweep from the end of the curve.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFaceAlongCurve(Polygon outer, Polygon[] inner, ICurve curve, Material material = null,  double startSetback = 0, double endSetback = 0)
+        public static Solid SweepFaceAlongCurve(Polygon perimeter, Polygon[] holes, ICurve curve,  double startSetback = 0, double endSetback = 0)
         {
-            var solid = new Solid(material);
+            var solid = new Solid();
 
             var l = curve.Length();
             var ssb = startSetback / l;
@@ -117,7 +104,7 @@ namespace Elements.Geometry.Solids
                 for (var i = 0; i < transforms.Length; i++)
                 {
                     var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
-                    solid.SweepPolygonBetweenPlanes(outer, transforms[i].XY(), next.XY());
+                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i].XY(), next.XY());
                 }
             }
             else
@@ -126,14 +113,14 @@ namespace Elements.Geometry.Solids
                 Face cap = null;
                 Edge[][] openEdges;
 
-                if(inner != null)
+                if(holes != null)
                 {
-                    cap = solid.AddFace(transforms[0].OfPolygon(outer), transforms[0].OfPolygons(inner));
-                    openEdges = new Edge[1 + inner.Length][];
+                    cap = solid.AddFace(transforms[0].OfPolygon(perimeter), transforms[0].OfPolygons(holes));
+                    openEdges = new Edge[1 + holes.Length][];
                 }
                 else
                 {
-                    cap = solid.AddFace(transforms[0].OfPolygon(outer));
+                    cap = solid.AddFace(transforms[0].OfPolygon(perimeter));
                     openEdges = new Edge[1][];
                 }
 
@@ -142,7 +129,7 @@ namespace Elements.Geometry.Solids
                 openEdge = solid.SweepEdges(transforms, openEdge);
                 openEdges[0] = openEdge;
 
-                if(inner != null)
+                if(holes != null)
                 {
                     for(var i=0; i<cap.Inner.Length; i++)
                     {
@@ -163,47 +150,56 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Construct a solid by sweeping a face in a direction.
         /// </summary>
-        /// <param name="outerLoop">The perimeter of the face to sweep.</param>
-        /// <param name="innerLoops">The holes of the face to sweep.</param>
+        /// <param name="perimeter">The perimeter of the face to sweep.</param>
+        /// <param name="holes">The holes of the face to sweep.</param>
         /// <param name="direction">The direction in which to sweep.</param>
         /// <param name="distance">The distance to sweep.</param>
         /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
-        /// <param name="material">The solid's material.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon outerLoop, Polygon[] innerLoops, Vector3 direction, double distance, Material material = null, bool bothSides = false)
+        public static Solid SweepFace(Polygon perimeter, Polygon[] holes, Vector3 direction, double distance, bool bothSides = false)
         {
-            var solid = new Solid(material);
+            // We do a difference of the polygons
+            // to get the clipped shape. This will fail in interesting
+            // ways if the clip creates two islands.
+            if(holes != null)
+            {
+                var newPerimeter = perimeter.Difference(holes);
+                perimeter = newPerimeter[0];
+                holes = newPerimeter.Skip(1).Take(newPerimeter.Count - 1).ToArray();
+            }
+            
+            var solid = new Solid();
             Face fStart = null;
             if(bothSides)
             {
                 var t = new Transform(direction.Negated()* (distance/2));
-                if(innerLoops != null)
+                if(holes != null)
                 {
-                    fStart = solid.AddFace(t.OfPolygon(outerLoop.Reversed()), t.OfPolygons(innerLoops.Reversed()));
+                    fStart = solid.AddFace(t.OfPolygon(perimeter.Reversed()), t.OfPolygons(holes.Reversed()));
                 }
                 else
                 {
-                    fStart = solid.AddFace(t.OfPolygon(outerLoop.Reversed()));
+                    fStart = solid.AddFace(t.OfPolygon(perimeter.Reversed()));
                 }
             }
             else
             {
-                if(innerLoops != null)
+                if(holes != null)
                 {
-                    fStart = solid.AddFace(outerLoop.Reversed(), innerLoops.Reversed());
+                    fStart = solid.AddFace(perimeter.Reversed(), holes.Reversed());
                 }
                 else
                 {
-                    fStart = solid.AddFace(outerLoop.Reversed());
+                    fStart = solid.AddFace(perimeter.Reversed());
                 }
             }
 
             var fEndOuter = solid.SweepLoop(fStart.Outer, direction, distance);
 
-            if(innerLoops != null)
+            if(holes != null)
             {
-                var fEndInner = new Loop[innerLoops.Length];
-                for(var i=0; i<innerLoops.Length; i++)
+                var fEndInner = new Loop[holes.Length];
+                for(var i=0; i<holes.Length; i++)
                 {
                     fEndInner[i] = solid.SweepLoop(fStart.Inner[i], direction, distance);
                 }
@@ -307,7 +303,7 @@ namespace Elements.Geometry.Solids
         /// Slice a solid with the provided plane.
         /// </summary>
         /// <param name="p">The plane to be used to slice this solid.</param>
-        public void Slice(Plane p)
+        internal void Slice(Plane p)
         {
             var keys = new List<long>(this.Edges.Keys);
             foreach(var key in keys)

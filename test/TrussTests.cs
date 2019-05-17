@@ -19,6 +19,7 @@ namespace Elements.Tests
             var framingType = new StructuralFramingType("W33x387", profile, BuiltInMaterials.Steel);
             var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,30,0), 3.0, 10, framingType, framingType, framingType, BuiltInMaterials.Steel, 0.1, 0.1); 
             this.Model.AddElement(truss);
+            Assert.Equal(this.Model.Elements.Count, truss.Elements.Count + 1);
         }
 
         [Fact]

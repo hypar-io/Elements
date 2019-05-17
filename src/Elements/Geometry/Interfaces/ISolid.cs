@@ -4,8 +4,8 @@ using Elements.Geometry.Solids;
 
 namespace Elements.Geometry.Interfaces
 {
-    public interface IGeometry3D
+    public interface ISolid
     {
-        Solid[] Geometry { get; }
+        Solid Geometry { get; }
     }
 }

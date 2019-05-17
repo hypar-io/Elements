@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Reflection;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
+using Hypar.Elements.Interfaces;
 
 namespace Elements
 {
@@ -105,6 +106,12 @@ namespace Elements
             else
             {
                 throw new ArgumentException("An Element with the same Id already exists in the Model.");
+            }
+
+            if(element is IAggregateElements)
+            {
+                var agg = (IAggregateElements)element;
+                AddElements(agg.Elements);
             }
 
             AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
@@ -210,10 +217,12 @@ namespace Elements
         /// Create a model from IFC.
         /// </summary>
         /// <param name="path">The path to the IFC STEP file.</param>
+        /// <param name="idsToConvert">An optional array of string identifiers 
+        /// of IFC entities to convert.</param>
         /// <returns>A model.</returns>
-        public static Model FromIFC(string path)
+        public static Model FromIFC(string path, string[] idsToConvert = null)
         {
-            return IFCExtensions.FromIFC(path);
+            return IFCExtensions.FromIFC(path, idsToConvert);
         }
 
         internal Model(Dictionary<long, Element> elements, Dictionary<long,
@@ -251,15 +260,6 @@ namespace Elements
 
         private void GetRootLevelElementData(IElement element)
         {
-            if (element is IGeometry3D)
-            {
-                var geo = (IGeometry3D)element;
-                foreach (var solid in geo.Geometry)
-                {
-                    AddMaterial(solid.Material);
-                }
-            }
-
             if(element is IMaterial)
             {
                 var mat = (IMaterial)element;
@@ -275,12 +275,28 @@ namespace Elements
                 }
             }
 
+            if (element is IHasOpenings)
+            {
+                var ho = (IHasOpenings)element;
+                if(ho.Openings != null)
+                {
+                    foreach(var o in ho.Openings)
+                    {
+                        AddProfile(o.Profile);
+                    }
+                }
+            }
+
             if (element is IElementType<WallType>)
             {
                 var wtp = (IElementType<WallType>)element;
                 if (wtp.ElementType != null)
                 {
                     AddElementType(wtp.ElementType);
+                    foreach(var layer in wtp.ElementType.MaterialLayers)
+                    {
+                        AddMaterial(layer.Material);
+                    }
                 }
             }
 
@@ -290,6 +306,10 @@ namespace Elements
                 if (ftp.ElementType != null)
                 {
                     AddElementType(ftp.ElementType);
+                    foreach(var layer in ftp.ElementType.MaterialLayers)
+                    {
+                        AddMaterial(layer.Material);
+                    }
                 }
             }
 
@@ -300,12 +320,13 @@ namespace Elements
                 {
                     AddElementType(sft.ElementType);
                     AddProfile(sft.ElementType.Profile);
+                    AddMaterial(sft.ElementType.Material);
                 }
             }
 
-            if (element is IAggregateElement)
+            if (element is IAggregateElements)
             {
-                var ae = (IAggregateElement)element;
+                var ae = (IAggregateElements)element;
                 if (ae.Elements.Count > 0)
                 {
                     foreach (var esub in ae.Elements)

@@ -9,7 +9,7 @@ namespace Elements
     /// <summary>
     /// An aggregation of structural framing elements.
     /// </summary>
-    public class Truss : Element, IAggregateElement
+    public class Truss : Element, IAggregateElements
     {
         private List<Beam> _web = new List<Beam>();
         private List<Beam> _topChord = new List<Beam>();

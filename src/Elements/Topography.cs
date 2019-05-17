@@ -152,10 +152,7 @@ namespace Elements
         /// <param name="mass">The mass to subtract.</param>
         internal void Subtract(Mass mass)
         {
-            foreach(var g in mass.Geometry)
-            {
-                Subtract(g, mass.Transform);
-            }
+            Subtract(mass.Geometry, mass.Transform);
         }
 
         /// <summary>

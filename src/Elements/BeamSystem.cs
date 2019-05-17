@@ -8,7 +8,7 @@ namespace Elements
     /// <summary>
     /// BeamSystem represents a collection of beams within a perimeter.
     /// </summary>
-    public class BeamSystem : IAggregateElement
+    public class BeamSystem : IAggregateElements
     {
         /// <summary>
         /// The Beams that make up the BeamSystem.

@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.2.4.4]
+### Changed
+- `Solid.Slice()` has been made internal. It's not yet ready for consumers. See [#103](https://github.com/hypar-io/elements/issues/103)
+
+## [0.2.4.3]
+### Fixed
+- Spaces are now correctly colored. See [#134](https://github.com/hypar-io/elements/issues/134).
+
+## [0.2.4.2]
+### Added
+- Added `ToIfcWall()` extension method to save a `Wall` to an `IfcWall`.
+### Fixed
+- `Space.Profile` is set in the constructor when a `Space` is constructed with a profile. [#132](https://github.com/hypar-io/elements/pull/132)
+- Sub-elements of `IAggregateElements` are now added to the `Model`. [#137](https://github.com/hypar-io/elements/pull/137)
+
+## [0.2.4.1]
+### Added
+- Added `StandardWall`, for walls defined along a curve. `Wall` continues to be for walls defined by a planar profile extruded to a height.
+- Added `Polygon.L`.
+
+### Changed
+- `Floor` constructors no longer have `material` parameter. Materials are now specified through the `FloorType`.
+- `IAggregateElement` is now `IAggregateElements`.
+- `Panel` now takes `Polygon` instead of `Vector3[]`.
+
+## [0.2.4]
+### Changed
+- `IGeometry3D` is now `ISolid`.
+- `ISolid` (formerly `IGeometry3D`) now contains one solid, not an array of solids.
+
+### Removed
+- `Solid.Material`. Elements are now expected to implement the `IMaterial` interface or have an `IElementType<T>` which specifies a material.
+
 ## [0.2.3]
 ### Added
 - `MaterialLayer`

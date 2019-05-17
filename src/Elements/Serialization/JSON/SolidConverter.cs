@@ -20,12 +20,10 @@ namespace Elements.Serialization.JSON
     /// </summary>
     public class SolidConverter : JsonConverter
     {
-        private Dictionary<long, Material> _materials;
         private List<Type> _solidTypes;
         
         public SolidConverter(Dictionary<long, Material> materials)
         {
-            this._materials = materials;
             try
             {
                 _solidTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t=>typeof(Solid).IsAssignableFrom(t)).ToList();
@@ -53,8 +51,8 @@ namespace Elements.Serialization.JSON
             {
                 throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
             }
-            var materialId = (long)obj.GetValue("material_id");
-            var solid = (Solid)Activator.CreateInstance(foundType, new object[]{_materials[materialId]});
+
+            var solid = (Solid)Activator.CreateInstance(foundType, new object[]{});
             
             foreach(JObject vobj in (JArray)obj.GetValue("vertices"))
             {
@@ -189,8 +187,6 @@ namespace Elements.Serialization.JSON
                 writer.WriteEndObject();
             }
             writer.WriteEndArray();
-            writer.WritePropertyName("material_id");
-            writer.WriteValue(solid.Material.Id);
             writer.WriteEndObject();
         }
 
