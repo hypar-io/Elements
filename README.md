@@ -17,7 +17,14 @@ var json = model.ToIfc(ifcPath);
 In addition to having a friendly API, the Elements library offers the ability to serialize your data to [glTF](https://www.khronos.org/gltf/), JSON, and [IFC](https://www.buildingsmart.org/about/what-is-openbim/ifc-introduction/).
 
 ## Why
-When we started [Hypar](https://www.hypar.io), we needed a small library of building elements that could run in micro-services executing on Linux, and was therefore free of dependencies on host applications like Rhino or Revit. We wanted it to have an API that took the best parts from the various object models and programming APIs available in the AEC space. We wanted it to serialize to formats like JSON and IFC that were useful to architects, engineers, and contractors. And even though the library needed to stand alone, we wanted it to be usable in add-ins to other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity. We looked around and nothing fit the bill, so we started building this. 
+One of the core philosophies at [Hypar](https://www.hypar.io) is that we shouldn't rebuild the wheel. We looked around for existing libraries that fulfilled the following requirements:
+- The library can run in micro-services on Linux.
+- The library is free of dependencies on host applications like Rhino or Revit.
+- The library has an API that takes the best parts from the various object models and programming APIs available in the AEC space.
+- The library can serialize data to formats like JSON, IFC,and glTF, that are useful to architects, engineers, contractors, and people building real-time visualization applications for AEC.
+- The library is written in a language that supports developer productivity through things like type safety, and which supports code re-use in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
+
+Nothing fit the bill. So we started building this. 
 
 ## Donate
 Hypar Elements is open source and will remain so **forever**. Your donation will directly support the development of the Hypar Elements. Hypar Elements has been demonstrated to work in Revit add-ins, Unity projects, and as Lambdas running on AWS. Send us a donation and open a feature request telling us what you'd like it to do.  
