@@ -17,7 +17,7 @@ var json = model.ToIfc(ifcPath);
 In addition to having a friendly API, the Elements library offers the ability to serialize your data to [glTF](https://www.khronos.org/gltf/), JSON, and [IFC](https://www.buildingsmart.org/about/what-is-openbim/ifc-introduction/).
 
 ## Why
-One of the core philosophies at [Hypar](https://www.hypar.io) is that we shouldn't rebuild the wheel. We looked around for existing libraries that fulfilled the following requirements:
+One of the core philosophies at [Hypar](https://www.hypar.io) is that we shouldn't rebuild the wheel. When we started that project, we needed a library that would generate building elements and run at the core each function on the platform. We looked around for existing libraries that fulfilled the following requirements:
 - The library can run in micro-services on Linux.
 - The library is free of dependencies on host applications like Rhino or Revit.
 - The library has an API that takes the best parts from the various object models and programming APIs available in the AEC space.
