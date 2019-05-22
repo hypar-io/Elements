@@ -29,7 +29,7 @@ namespace Elements.Tests
 
             foreach(var el in elevations)
             {
-                var slab = new Floor(site, floorType, el, null, new[]{opening});
+                var slab = new Floor(site, floorType, el, null, new List<Opening>(){opening});
                 this.Model.AddElement(slab);
                 var edgeBeams = slab.CreateEdgeBeams(beamType);
                 this.Model.AddElements(edgeBeams);

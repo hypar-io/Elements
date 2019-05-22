@@ -4,6 +4,7 @@ using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using Hypar.Elements.Interfaces;
 using Elements.Geometry.Solids;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -35,7 +36,7 @@ namespace Elements
         /// <summary>
         /// The openings in the floor.
         /// </summary>
-        public Opening[] Openings { get; }
+        public List<Opening> Openings { get; }
 
         /// <summary>
         /// The extrude direction of the floor.
@@ -60,10 +61,10 @@ namespace Elements
         /// <param name="elevation">The elevation of the top of the floor.</param>
         /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
         /// <param name="openings">An array of openings in the floor.</param>
-        public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Transform transform = null, Opening[] openings = null)
+        public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
         {
             this.Profile = new Profile(profile);
-            this.Openings = openings;
+            this.Openings = openings != null ? openings : new List<Opening>();
             this.Elevation = elevation;
             this.ElementType = elementType;
             var thickness = elementType.Thickness();
@@ -91,10 +92,10 @@ namespace Elements
         }
 
         [JsonConstructor]
-        internal Floor(Profile profile, FloorType elementType, double elevation = 0.0, Transform transform = null, Opening[] openings = null)
+        internal Floor(Profile profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
         {
             this.Profile = profile;
-            this.Openings = openings;
+            this.Openings = openings != null ? openings : new List<Opening>();
             this.Elevation = elevation;
             this.ElementType = elementType;
             var thickness = elementType.Thickness();
