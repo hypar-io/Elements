@@ -45,10 +45,14 @@ namespace Elements.Tests
             var w = new StandardWall(l, testWallType, 3.0, null);
             this.Model.AddElement(w);
 
-            foreach (StandardWall wall in this.Model.ElementsOfType<StandardWall>())
+            List<StandardWall> updatedWalls = new List<StandardWall>(this.Model.ElementsOfType<StandardWall>());
+
+            foreach (StandardWall wall in updatedWalls)
             {
                 wall.Openings.AddRange(openings);
             }
+
+            this.Model.UpdateElements(updatedWalls);
 
             Assert.Equal(3, w.Openings.Count);
         }

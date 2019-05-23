@@ -51,10 +51,14 @@ namespace Elements.Tests
 
             this.Model.AddElement(floor1);
 
-            foreach (Floor floor in this.Model.ElementsOfType<Floor>())
+            List<Floor> updatedFloors = new List<Floor>(this.Model.ElementsOfType<Floor>());
+
+            foreach (Floor floor in updatedFloors)
             {
                 floor.Openings.AddRange(openings);
             }
+
+            this.Model.UpdateElements(updatedFloors);
 
             Assert.Equal(2, floor1.Openings.Count);
         }

@@ -108,10 +108,46 @@ namespace Elements
                 throw new ArgumentException("An Element with the same Id already exists in the Model.");
             }
 
-            if(element is IAggregateElements)
+            if (element is IAggregateElements)
             {
                 var agg = (IAggregateElements)element;
                 AddElements(agg.Elements);
+            }
+
+            AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
+        }
+
+                /// <summary>
+        /// Update an element existing in the model.
+        /// </summary>
+        /// <param name="element">The element to update in the model.</param>
+        /// <exception cref="System.ArgumentException">Thrown when no element 
+        /// with the same Id exists in the model.</exception>
+        public void UpdateElement(Element element)
+        {
+            if (element == null)
+            {
+                return;
+            }
+
+            if (this._elements.ContainsKey(element.Id))
+            {
+                // remove the previous element
+                this._elements.Remove(element.Id);
+                // Update the element itselft
+                this._elements.Add(element.Id, element);
+                // Update the root elements
+                GetRootLevelElementData(element);
+            }
+            else
+            {
+                throw new ArgumentException("No Element with this Id exists in the Model.");
+            }
+
+            if (element is IAggregateElements)
+            {
+                var agg = (IAggregateElements)element;
+                UpdateElements(agg.Elements);
             }
 
             AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
@@ -126,6 +162,18 @@ namespace Elements
             foreach (var e in elements)
             {
                 AddElement(e);
+            }
+        }
+
+                /// <summary>
+        /// Update a collection of elements in the model.
+        /// </summary>
+        /// <param name="elements">The elements to be updated in the model.</param>
+        public void UpdateElements(IEnumerable<Element> elements)
+        {
+            foreach (var e in elements)
+            {
+                UpdateElement(e);
             }
         }
 
@@ -260,7 +308,7 @@ namespace Elements
 
         private void GetRootLevelElementData(IElement element)
         {
-            if(element is IMaterial)
+            if (element is IMaterial)
             {
                 var mat = (IMaterial)element;
                 AddMaterial(mat.Material);
@@ -278,9 +326,9 @@ namespace Elements
             if (element is IHasOpenings)
             {
                 var ho = (IHasOpenings)element;
-                if(ho.Openings != null)
+                if (ho.Openings != null)
                 {
-                    foreach(var o in ho.Openings)
+                    foreach (var o in ho.Openings)
                     {
                         AddProfile(o.Profile);
                     }
@@ -293,7 +341,7 @@ namespace Elements
                 if (wtp.ElementType != null)
                 {
                     AddElementType(wtp.ElementType);
-                    foreach(var layer in wtp.ElementType.MaterialLayers)
+                    foreach (var layer in wtp.ElementType.MaterialLayers)
                     {
                         AddMaterial(layer.Material);
                     }
@@ -306,17 +354,17 @@ namespace Elements
                 if (ftp.ElementType != null)
                 {
                     AddElementType(ftp.ElementType);
-                    foreach(var layer in ftp.ElementType.MaterialLayers)
+                    foreach (var layer in ftp.ElementType.MaterialLayers)
                     {
                         AddMaterial(layer.Material);
                     }
                 }
             }
 
-            if(element is IElementType<StructuralFramingType>)
+            if (element is IElementType<StructuralFramingType>)
             {
                 var sft = (IElementType<StructuralFramingType>)element;
-                if(sft.ElementType != null)
+                if (sft.ElementType != null)
                 {
                     AddElementType(sft.ElementType);
                     AddProfile(sft.ElementType.Profile);
