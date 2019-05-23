@@ -94,7 +94,7 @@ namespace Elements.Tests
             var line = new Line(a, b);
             var testWallType = new WallType("test", 0.1);
             var wall = new StandardWall(line, testWallType, 4.0);
-            Assert.Null(wall.Openings);
+            Assert.Equal(0, wall.Openings.Count);
         }
     }
 }
