@@ -405,6 +405,20 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void Union2() {
+            var circle = Polygon.Circle(3,4);
+            var seed = new Profile( circle );
+            for(int i=0; i<2; i++) {
+                for(int j=0; j<3; j++) {
+                    Transform t = new Transform(5*i, 5*j, 0);
+                    var newCircle = new Profile( new Polygon(circle.Vertices.Select(v => t.OfPoint(v)).ToArray()) );
+                    seed = seed.Union(newCircle);
+                    if(seed == null) throw new Exception("Making union failed");
+                }
+            }
+        }
+
+        [Fact]
         public void Union()
         {
             var p1 = new Polygon
