@@ -181,6 +181,21 @@ namespace Elements.Geometry
             }
         }
 
+        public Profile Union(Profile other) {
+            var clipper = new ClipperLib.Clipper();
+            clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+
+            clipper.AddPath(other.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            clipper.AddPaths(other.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+
+            var solution = new List<List<ClipperLib.IntPoint>>();
+            clipper.Execute(ClipperLib.ClipType.ctUnion, solution, ClipperLib.PolyFillType.pftPositive);
+            var polys = solution.Select(s => s.ToPolygon()).ToArray();
+            var solutionProfile = new Profile(polys[0], polys.Skip(1).ToArray());
+            return solutionProfile;
+        }
+
         private double ClippedArea()
         {
             if (this.Voids == null || this.Voids.Length == 0)
