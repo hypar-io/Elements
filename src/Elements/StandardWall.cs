@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Hypar.Elements.Interfaces;
@@ -18,7 +19,7 @@ namespace Elements
         /// <summary>
         /// An array of openings in the wall.
         /// </summary>
-        public Opening[] Openings{ get; protected set;}
+        public List<Opening> Openings{ get; protected set;}
 
         /// <summary>
         /// Extrude to both sides?
@@ -36,7 +37,7 @@ namespace Elements
         /// This transform will be concatenated to the transform created to describe the wall in 2D.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the wall is less than or equal to zero.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of wall's start and end points are not the same.</exception>
-        public StandardWall(Line centerLine, WallType elementType, double height, Opening[] openings = null, Transform transform = null)
+        public StandardWall(Line centerLine, WallType elementType, double height, List<Opening> openings = null, Transform transform = null)
         {
             if (height <= 0.0)
             {
@@ -51,7 +52,7 @@ namespace Elements
             this.CenterLine = centerLine;
             this.Height = height;
             this.ElementType = elementType;
-            this.Openings = openings;
+            this.Openings = openings != null ? openings : new List<Opening>();
             
             // Construct a transform whose X axis is the centerline of the wall.
             // The wall is described as if it's lying flat in the XY plane of that Transform.

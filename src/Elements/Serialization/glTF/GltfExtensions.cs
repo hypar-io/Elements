@@ -627,7 +627,7 @@ namespace Elements.Serialization.glTF
                         // The voids in the profiles are concatenated with the
                         // voids provided by the openings.
                         Polygon[] voids = null;
-                        if(o.Openings != null && o.Openings.Length > 0)
+                        if(o.Openings != null && o.Openings.Count > 0)
                         {
                             if(ex.Profile.Voids == null)
                             {

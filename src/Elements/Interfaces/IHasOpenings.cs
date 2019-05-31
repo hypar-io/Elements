@@ -1,4 +1,5 @@
 using Elements;
+using System.Collections.Generic;
 
 namespace Hypar.Elements.Interfaces
 {
@@ -10,6 +11,6 @@ namespace Hypar.Elements.Interfaces
         /// <summary>
         /// A collection of openings which are transformed in the coordinate system of their host element.
         /// </summary>
-        Opening[] Openings{get;}
+        List<Opening> Openings{get;}
     }
 }
