@@ -19,6 +19,7 @@ namespace Elements.Tests
                 new Opening(3, 3, 1, 3),
             };
             var floor1 = new Floor(p, floorType, 0.5, null, openings);
+            var floor2 = new Floor(p, floorType, 2.0, null, openings);
 
             var model = new Model();
 
@@ -28,6 +29,7 @@ namespace Elements.Tests
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
 
             this.Model.AddElement(floor1);
+            this.Model.AddElement(floor2);
         }
 
         [Fact]
