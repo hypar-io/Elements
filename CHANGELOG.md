@@ -1,4 +1,10 @@
 # Changelog
+## [0.2.5]
+### Changed
+- `IHasOpenings.Openings[]` is now `IHasOpenings.List<Opening>[]`.
+
+### Fixed
+- `Opening` elements are now serialized to IFC as `IfcOpeningElement`.
 
 ## [0.2.4.4]
 ### Changed
