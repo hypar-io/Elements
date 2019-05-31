@@ -770,6 +770,14 @@ namespace Elements.Serialization.IFC
             doc.AddEntity(productRep);
             doc.AddEntity(slab);
 
+            foreach(var o in floor.Openings)
+            {
+                var opening = o.ToIfcOpeningElement(context, doc);
+                var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, slab, opening);
+                slab.HasOpenings.Add(voidRel);
+                doc.AddEntity(voidRel);
+            }
+
             return slab;
         }
 
@@ -844,6 +852,37 @@ namespace Elements.Serialization.IFC
                 return reps.OfType<T>();
             }
             return null;
+        }
+
+        private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc)
+        {
+            var sweptArea = opening.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+
+            // We use the Z extrude direction because the direction is 
+            // relative to the local placement, which is a transform at the
+            // beam's end with the Z axis pointing along the direction.
+            
+            var extrudeDirection = opening.ExtrudeDirection.ToIfcDirection();
+
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(opening.ExtrudeDepth));
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
+            // var placement = beam.Transform.ToIfcAxis2Placement3D(doc);
+            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+            var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, null, localPlacement, productRep, null);
+            
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(repItem);
+            doc.AddEntity(rep);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(productRep);
+            doc.AddEntity(ifcOpening);
+
+            return ifcOpening;
         }
 
         /// <summary>
