@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClipperLib;
 
 namespace Elements.Geometry
 {
@@ -149,7 +150,26 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Default constructor for profile.
+        /// Perform a union operation, returning a new profile that is the union of the current profile with the other profile
+        /// <param name="other">The other Profile with which to union.</param>
+        /// </summary>
+        public Profile Union(Profile other) {
+            var clipper = new ClipperLib.Clipper();
+            clipper.AddPath(this.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPath(other.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
+
+            clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), PolyType.ptClip, true);
+            clipper.AddPaths(other.Voids.Select(p => p.ToClipperPath()).ToList(), PolyType.ptClip, true);
+
+            var solution = new List<List<ClipperLib.IntPoint>>();
+            clipper.Execute(ClipperLib.ClipType.ctUnion, solution, PolyFillType.pftEvenOdd, PolyFillType.pftEvenOdd);
+            var polys = solution.Select(s => s.ToPolygon()).ToArray();
+            var solutionProfile = new Profile(polys[0], polys.Skip(1).ToArray());
+            return solutionProfile;
+        }
+
+        /// <summary>
+        /// Default constructor for Profile.
         /// </summary>
         protected Profile(string name)
         {
@@ -181,20 +201,6 @@ namespace Elements.Geometry
             }
         }
 
-        public Profile Union(Profile other) {
-            var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
-
-            clipper.AddPath(other.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            clipper.AddPaths(other.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
-
-            var solution = new List<List<ClipperLib.IntPoint>>();
-            clipper.Execute(ClipperLib.ClipType.ctUnion, solution, ClipperLib.PolyFillType.pftPositive);
-            var polys = solution.Select(s => s.ToPolygon()).ToArray();
-            var solutionProfile = new Profile(polys[0], polys.Skip(1).ToArray());
-            return solutionProfile;
-        }
 
         private double ClippedArea()
         {
