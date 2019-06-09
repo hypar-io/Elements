@@ -66,7 +66,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return new[] { this.ToArray() }.GetHashCode();
+            return this.ToString().GetHashCode();
         }
 
         /// <summary>
