@@ -1,0 +1,255 @@
+### YamlMime:TableOfContent
+- uid: Elements
+  name: Elements
+  items:
+  - uid: Elements.Beam
+    name: Beam
+  - uid: Elements.BeamSystem
+    name: BeamSystem
+  - uid: Elements.Brace
+    name: Brace
+  - uid: Elements.BuiltInMaterials
+    name: BuiltInMaterials
+  - uid: Elements.Column
+    name: Column
+  - uid: Elements.Element
+    name: Element
+  - uid: Elements.ElementOfType`1
+    name: ElementOfType<TElementType>
+    name.vb: ElementOfType(Of TElementType)
+  - uid: Elements.ElementType
+    name: ElementType
+  - uid: Elements.Floor
+    name: Floor
+  - uid: Elements.FloorType
+    name: FloorType
+  - uid: Elements.Frame
+    name: Frame
+  - uid: Elements.Grid
+    name: Grid
+  - uid: Elements.IdProvider
+    name: IdProvider
+  - uid: Elements.Mass
+    name: Mass
+  - uid: Elements.Material
+    name: Material
+  - uid: Elements.MaterialLayer
+    name: MaterialLayer
+  - uid: Elements.Model
+    name: Model
+  - uid: Elements.NumericProperty
+    name: NumericProperty
+  - uid: Elements.Opening
+    name: Opening
+  - uid: Elements.Panel
+    name: Panel
+  - uid: Elements.Space
+    name: Space
+  - uid: Elements.StandardWall
+    name: StandardWall
+  - uid: Elements.StringProperty
+    name: StringProperty
+  - uid: Elements.StructuralFraming
+    name: StructuralFraming
+  - uid: Elements.StructuralFramingType
+    name: StructuralFramingType
+  - uid: Elements.Topography
+    name: Topography
+  - uid: Elements.Truss
+    name: Truss
+  - uid: Elements.UnitType
+    name: UnitType
+  - uid: Elements.Wall
+    name: Wall
+  - uid: Elements.WallType
+    name: WallType
+- uid: Elements.GeoJSON
+  name: Elements.GeoJSON
+  items:
+  - uid: Elements.GeoJSON.Feature
+    name: Feature
+  - uid: Elements.GeoJSON.FeatureCollection
+    name: FeatureCollection
+  - uid: Elements.GeoJSON.Geometry
+    name: Geometry
+  - uid: Elements.GeoJSON.GeometryCollection
+    name: GeometryCollection
+  - uid: Elements.GeoJSON.Line
+    name: Line
+  - uid: Elements.GeoJSON.LineString
+    name: LineString
+  - uid: Elements.GeoJSON.MercatorProjection
+    name: MercatorProjection
+  - uid: Elements.GeoJSON.MultiLineString
+    name: MultiLineString
+  - uid: Elements.GeoJSON.MultiPoint
+    name: MultiPoint
+  - uid: Elements.GeoJSON.MultiPolygon
+    name: MultiPolygon
+  - uid: Elements.GeoJSON.Point
+    name: Point
+  - uid: Elements.GeoJSON.Polygon
+    name: Polygon
+  - uid: Elements.GeoJSON.Position
+    name: Position
+- uid: Elements.Geometry
+  name: Elements.Geometry
+  items:
+  - uid: Elements.Geometry.Arc
+    name: Arc
+  - uid: Elements.Geometry.BBox3
+    name: BBox3
+  - uid: Elements.Geometry.Color
+    name: Color
+  - uid: Elements.Geometry.Colors
+    name: Colors
+  - uid: Elements.Geometry.HorizontalAlignment
+    name: HorizontalAlignment
+  - uid: Elements.Geometry.Line
+    name: Line
+  - uid: Elements.Geometry.Matrix
+    name: Matrix
+  - uid: Elements.Geometry.Mesh
+    name: Mesh
+  - uid: Elements.Geometry.Plane
+    name: Plane
+  - uid: Elements.Geometry.Polygon
+    name: Polygon
+  - uid: Elements.Geometry.Polyline
+    name: Polyline
+  - uid: Elements.Geometry.Profile
+    name: Profile
+  - uid: Elements.Geometry.Quaternion
+    name: Quaternion
+  - uid: Elements.Geometry.Transform
+    name: Transform
+  - uid: Elements.Geometry.Triangle
+    name: Triangle
+  - uid: Elements.Geometry.Vector3
+    name: Vector3
+  - uid: Elements.Geometry.Vector3Extensions
+    name: Vector3Extensions
+  - uid: Elements.Geometry.Vertex
+    name: Vertex
+  - uid: Elements.Geometry.VerticalAlignment
+    name: VerticalAlignment
+- uid: Elements.Geometry.Interfaces
+  name: Elements.Geometry.Interfaces
+  items:
+  - uid: Elements.Geometry.Interfaces.ICurve
+    name: ICurve
+  - uid: Elements.Geometry.Interfaces.IExtrude
+    name: IExtrude
+  - uid: Elements.Geometry.Interfaces.ILamina
+    name: ILamina
+  - uid: Elements.Geometry.Interfaces.IProfile
+    name: IProfile
+  - uid: Elements.Geometry.Interfaces.ISolid
+    name: ISolid
+  - uid: Elements.Geometry.Interfaces.ISweepAlongCurve
+    name: ISweepAlongCurve
+  - uid: Elements.Geometry.Interfaces.ITessellate
+    name: ITessellate
+  - uid: Elements.Geometry.Interfaces.ITransformable
+    name: ITransformable
+- uid: Elements.Geometry.Profiles
+  name: Elements.Geometry.Profiles
+  items:
+  - uid: Elements.Geometry.Profiles.HSSPipeProfile
+    name: HSSPipeProfile
+  - uid: Elements.Geometry.Profiles.HSSPipeProfileServer
+    name: HSSPipeProfileServer
+  - uid: Elements.Geometry.Profiles.ProfileServer
+    name: ProfileServer
+  - uid: Elements.Geometry.Profiles.WideFlangeProfile
+    name: WideFlangeProfile
+  - uid: Elements.Geometry.Profiles.WideFlangeProfileServer
+    name: WideFlangeProfileServer
+- uid: Elements.Geometry.Solids
+  name: Elements.Geometry.Solids
+  items:
+  - uid: Elements.Geometry.Solids.Edge
+    name: Edge
+  - uid: Elements.Geometry.Solids.Face
+    name: Face
+  - uid: Elements.Geometry.Solids.HalfEdge
+    name: HalfEdge
+  - uid: Elements.Geometry.Solids.Loop
+    name: Loop
+  - uid: Elements.Geometry.Solids.Solid
+    name: Solid
+  - uid: Elements.Geometry.Solids.Vertex
+    name: Vertex
+- uid: Elements.Interfaces
+  name: Elements.Interfaces
+  items:
+  - uid: Elements.Interfaces.IAggregateElements
+    name: IAggregateElements
+  - uid: Elements.Interfaces.IElement
+    name: IElement
+  - uid: Elements.Interfaces.IElementType`1
+    name: IElementType<TElementType>
+    name.vb: IElementType(Of TElementType)
+  - uid: Elements.Interfaces.IIdentifiable
+    name: IIdentifiable
+  - uid: Elements.Interfaces.ILayeredMaterial
+    name: ILayeredMaterial
+  - uid: Elements.Interfaces.IMaterial
+    name: IMaterial
+  - uid: Elements.Interfaces.IProperty
+    name: IProperty
+  - uid: Elements.Interfaces.IPropertySet
+    name: IPropertySet
+  - uid: Elements.Interfaces.IPropertySingleValue`1
+    name: IPropertySingleValue<TValue>
+    name.vb: IPropertySingleValue(Of TValue)
+- uid: Elements.Serialization.glTF
+  name: Elements.Serialization.glTF
+  items:
+  - uid: Elements.Serialization.glTF.GltfExtensions
+    name: GltfExtensions
+- uid: Elements.Serialization.IFC
+  name: Elements.Serialization.IFC
+  items:
+  - uid: Elements.Serialization.IFC.IFCExtensions
+    name: IFCExtensions
+- uid: Elements.Serialization.JSON
+  name: Elements.Serialization.JSON
+  items:
+  - uid: Elements.Serialization.JSON.ColorConverter
+    name: ColorConverter
+  - uid: Elements.Serialization.JSON.ElementConverter
+    name: ElementConverter
+  - uid: Elements.Serialization.JSON.ElementTypeConverter
+    name: ElementTypeConverter
+  - uid: Elements.Serialization.JSON.ElementTypeToIdConverter
+    name: ElementTypeToIdConverter
+  - uid: Elements.Serialization.JSON.ICurveConverter
+    name: ICurveConverter
+  - uid: Elements.Serialization.JSON.IListVector3Converter
+    name: IListVector3Converter
+  - uid: Elements.Serialization.JSON.IProfileConverter
+    name: IProfileConverter
+  - uid: Elements.Serialization.JSON.JsonExtensions
+    name: JsonExtensions
+  - uid: Elements.Serialization.JSON.MaterialToIdConverter
+    name: MaterialToIdConverter
+  - uid: Elements.Serialization.JSON.ModelConverter
+    name: ModelConverter
+  - uid: Elements.Serialization.JSON.PolygonConverter
+    name: PolygonConverter
+  - uid: Elements.Serialization.JSON.ProfileToIdConverter
+    name: ProfileToIdConverter
+  - uid: Elements.Serialization.JSON.PropertyConverter
+    name: PropertyConverter
+  - uid: Elements.Serialization.JSON.PropertyDictionaryConverter
+    name: PropertyDictionaryConverter
+  - uid: Elements.Serialization.JSON.SolidConverter
+    name: SolidConverter
+  - uid: Elements.Serialization.JSON.Vector3Converter
+    name: Vector3Converter
+- uid: Hypar.Elements.Interfaces
+  name: Hypar.Elements.Interfaces
+  items:
+  - uid: Hypar.Elements.Interfaces.IHasOpenings
+    name: IHasOpenings

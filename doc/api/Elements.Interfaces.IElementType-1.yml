@@ -1,0 +1,103 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Interfaces.IElementType`1
+  commentId: T:Elements.Interfaces.IElementType`1
+  id: IElementType`1
+  parent: Elements.Interfaces
+  children:
+  - Elements.Interfaces.IElementType`1.ElementType
+  langs:
+  - csharp
+  - vb
+  name: IElementType<TElementType>
+  nameWithType: IElementType<TElementType>
+  fullName: Elements.Interfaces.IElementType<TElementType>
+  type: Interface
+  source:
+    remote:
+      path: src/Elements/Interfaces/IElementType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: IElementType
+    path: ../src/Elements/Interfaces/IElementType.cs
+    startLine: 8
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Interfaces
+  summary: "\nInterface implemented by classes which provide and ElementType.\n"
+  example: []
+  syntax:
+    content: public interface IElementType<TElementType>
+    typeParameters:
+    - id: TElementType
+      description: ''
+    content.vb: Public Interface IElementType(Of TElementType)
+  nameWithType.vb: IElementType(Of TElementType)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+  fullName.vb: Elements.Interfaces.IElementType(Of TElementType)
+  name.vb: IElementType(Of TElementType)
+- uid: Elements.Interfaces.IElementType`1.ElementType
+  commentId: P:Elements.Interfaces.IElementType`1.ElementType
+  id: ElementType
+  parent: Elements.Interfaces.IElementType`1
+  langs:
+  - csharp
+  - vb
+  name: ElementType
+  nameWithType: IElementType<TElementType>.ElementType
+  fullName: Elements.Interfaces.IElementType<TElementType>.ElementType
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Interfaces/IElementType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ElementType
+    path: ../src/Elements/Interfaces/IElementType.cs
+    startLine: 13
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Interfaces
+  summary: "\nThe ElementType provided by this instance.\n"
+  example: []
+  syntax:
+    content: TElementType ElementType { get; }
+    parameters: []
+    return:
+      type: '{TElementType}'
+    content.vb: ReadOnly Property ElementType As TElementType
+  overload: Elements.Interfaces.IElementType`1.ElementType*
+  nameWithType.vb: IElementType(Of TElementType).ElementType
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Elements.Interfaces.IElementType(Of TElementType).ElementType
+references:
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.Interfaces.IElementType`1.ElementType*
+  commentId: Overload:Elements.Interfaces.IElementType`1.ElementType
+  name: ElementType
+  nameWithType: IElementType<TElementType>.ElementType
+  fullName: Elements.Interfaces.IElementType<TElementType>.ElementType
+  nameWithType.vb: IElementType(Of TElementType).ElementType
+  fullName.vb: Elements.Interfaces.IElementType(Of TElementType).ElementType
+- uid: '{TElementType}'
+  commentId: '!:TElementType'
+  definition: TElementType
+  name: TElementType
+  nameWithType: TElementType
+  fullName: TElementType
+- uid: TElementType
+  name: TElementType
+  nameWithType: TElementType
+  fullName: TElementType

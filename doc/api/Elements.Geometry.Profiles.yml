@@ -1,0 +1,54 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.Profiles
+  commentId: N:Elements.Geometry.Profiles
+  id: Elements.Geometry.Profiles
+  children:
+  - Elements.Geometry.Profiles.HSSPipeProfile
+  - Elements.Geometry.Profiles.HSSPipeProfileServer
+  - Elements.Geometry.Profiles.ProfileServer
+  - Elements.Geometry.Profiles.WideFlangeProfile
+  - Elements.Geometry.Profiles.WideFlangeProfileServer
+  langs:
+  - csharp
+  - vb
+  name: Elements.Geometry.Profiles
+  nameWithType: Elements.Geometry.Profiles
+  fullName: Elements.Geometry.Profiles
+  type: Namespace
+  assemblies:
+  - Hypar.Elements
+references:
+- uid: Elements.Geometry.Profiles.HSSPipeProfile
+  commentId: T:Elements.Geometry.Profiles.HSSPipeProfile
+  name: HSSPipeProfile
+  nameWithType: HSSPipeProfile
+  fullName: Elements.Geometry.Profiles.HSSPipeProfile
+- uid: Elements.Geometry.Profiles.HSSPipeProfileServer
+  commentId: T:Elements.Geometry.Profiles.HSSPipeProfileServer
+  parent: Elements.Geometry.Profiles
+  name: HSSPipeProfileServer
+  nameWithType: HSSPipeProfileServer
+  fullName: Elements.Geometry.Profiles.HSSPipeProfileServer
+- uid: Elements.Geometry.Profiles.ProfileServer
+  commentId: T:Elements.Geometry.Profiles.ProfileServer
+  parent: Elements.Geometry.Profiles
+  name: ProfileServer
+  nameWithType: ProfileServer
+  fullName: Elements.Geometry.Profiles.ProfileServer
+- uid: Elements.Geometry.Profiles.WideFlangeProfile
+  commentId: T:Elements.Geometry.Profiles.WideFlangeProfile
+  name: WideFlangeProfile
+  nameWithType: WideFlangeProfile
+  fullName: Elements.Geometry.Profiles.WideFlangeProfile
+- uid: Elements.Geometry.Profiles.WideFlangeProfileServer
+  commentId: T:Elements.Geometry.Profiles.WideFlangeProfileServer
+  parent: Elements.Geometry.Profiles
+  name: WideFlangeProfileServer
+  nameWithType: WideFlangeProfileServer
+  fullName: Elements.Geometry.Profiles.WideFlangeProfileServer
+- uid: Elements.Geometry.Profiles
+  commentId: N:Elements.Geometry.Profiles
+  name: Elements.Geometry.Profiles
+  nameWithType: Elements.Geometry.Profiles
+  fullName: Elements.Geometry.Profiles

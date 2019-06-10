@@ -1,0 +1,701 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.NumericProperty
+  commentId: T:Elements.NumericProperty
+  id: NumericProperty
+  parent: Elements
+  children:
+  - Elements.NumericProperty.#ctor(System.Double,Elements.UnitType,System.String)
+  - Elements.NumericProperty.Description
+  - Elements.NumericProperty.UnitType
+  - Elements.NumericProperty.Value
+  langs:
+  - csharp
+  - vb
+  name: NumericProperty
+  nameWithType: NumericProperty
+  fullName: Elements.NumericProperty
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Property.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: NumericProperty
+    path: ../src/Elements/Property.cs
+    startLine: 52
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA property with a numeric value.\n"
+  example: []
+  syntax:
+    content: 'public class NumericProperty : IPropertySingleValue<double>, IProperty'
+    content.vb: >-
+      Public Class NumericProperty
+          Implements IPropertySingleValue(Of Double), IProperty
+  inheritance:
+  - System.Object
+  implements:
+  - Elements.Interfaces.IPropertySingleValue{System.Double}
+  - Elements.Interfaces.IProperty
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.NumericProperty.Value
+  commentId: P:Elements.NumericProperty.Value
+  id: Value
+  parent: Elements.NumericProperty
+  langs:
+  - csharp
+  - vb
+  name: Value
+  nameWithType: NumericProperty.Value
+  fullName: Elements.NumericProperty.Value
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Property.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Value
+    path: ../src/Elements/Property.cs
+    startLine: 57
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe value of the Property.\n"
+  example: []
+  syntax:
+    content: public double Value { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property Value As Double
+  overload: Elements.NumericProperty.Value*
+  implements:
+  - Elements.Interfaces.IPropertySingleValue{System.Double}.Value
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.NumericProperty.UnitType
+  commentId: P:Elements.NumericProperty.UnitType
+  id: UnitType
+  parent: Elements.NumericProperty
+  langs:
+  - csharp
+  - vb
+  name: UnitType
+  nameWithType: NumericProperty.UnitType
+  fullName: Elements.NumericProperty.UnitType
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Property.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: UnitType
+    path: ../src/Elements/Property.cs
+    startLine: 62
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe UnitType of the Property.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConverter(typeof(StringEnumConverter))]
+
+      public UnitType UnitType { get; }
+    parameters: []
+    return:
+      type: Elements.UnitType
+    content.vb: >-
+      <JsonConverter(GetType(StringEnumConverter))>
+
+      Public ReadOnly Property UnitType As UnitType
+  overload: Elements.NumericProperty.UnitType*
+  implements:
+  - Elements.Interfaces.IPropertySingleValue{System.Double}.UnitType
+  attributes:
+  - type: Newtonsoft.Json.JsonConverterAttribute
+    ctor: Newtonsoft.Json.JsonConverterAttribute.#ctor(System.Type)
+    arguments:
+    - type: System.Type
+      value: Newtonsoft.Json.Converters.StringEnumConverter
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.NumericProperty.Description
+  commentId: P:Elements.NumericProperty.Description
+  id: Description
+  parent: Elements.NumericProperty
+  langs:
+  - csharp
+  - vb
+  name: Description
+  nameWithType: NumericProperty.Description
+  fullName: Elements.NumericProperty.Description
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Property.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Description
+    path: ../src/Elements/Property.cs
+    startLine: 68
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe description of the Property.\n"
+  example: []
+  syntax:
+    content: public string Description { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Description As String
+  overload: Elements.NumericProperty.Description*
+  implements:
+  - Elements.Interfaces.IProperty.Description
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.NumericProperty.#ctor(System.Double,Elements.UnitType,System.String)
+  commentId: M:Elements.NumericProperty.#ctor(System.Double,Elements.UnitType,System.String)
+  id: '#ctor(System.Double,Elements.UnitType,System.String)'
+  parent: Elements.NumericProperty
+  langs:
+  - csharp
+  - vb
+  name: NumericProperty(Double, UnitType, String)
+  nameWithType: NumericProperty.NumericProperty(Double, UnitType, String)
+  fullName: Elements.NumericProperty.NumericProperty(System.Double, Elements.UnitType, System.String)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Property.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Property.cs
+    startLine: 76
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct a Property.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConstructor]
+
+      public NumericProperty(double value, UnitType unitType, string description = null)
+    parameters:
+    - id: value
+      type: System.Double
+      description: The value of the Property.
+    - id: unitType
+      type: Elements.UnitType
+      description: The unit type of the Property.
+    - id: description
+      type: System.String
+      description: The description of the Property.
+    content.vb: >-
+      <JsonConstructor>
+
+      Public Sub New(value As Double, unitType As UnitType, description As String = Nothing)
+  overload: Elements.NumericProperty.#ctor*
+  attributes:
+  - type: Newtonsoft.Json.JsonConstructorAttribute
+    ctor: Newtonsoft.Json.JsonConstructorAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.Interfaces.IPropertySingleValue{System.Double}
+  commentId: T:Elements.Interfaces.IPropertySingleValue{System.Double}
+  parent: Elements.Interfaces
+  definition: Elements.Interfaces.IPropertySingleValue`1
+  name: IPropertySingleValue<Double>
+  nameWithType: IPropertySingleValue<Double>
+  fullName: Elements.Interfaces.IPropertySingleValue<System.Double>
+  nameWithType.vb: IPropertySingleValue(Of Double)
+  fullName.vb: Elements.Interfaces.IPropertySingleValue(Of System.Double)
+  name.vb: IPropertySingleValue(Of Double)
+  spec.csharp:
+  - uid: Elements.Interfaces.IPropertySingleValue`1
+    name: IPropertySingleValue
+    nameWithType: IPropertySingleValue
+    fullName: Elements.Interfaces.IPropertySingleValue
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Elements.Interfaces.IPropertySingleValue`1
+    name: IPropertySingleValue
+    nameWithType: IPropertySingleValue
+    fullName: Elements.Interfaces.IPropertySingleValue
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Interfaces.IProperty
+  commentId: T:Elements.Interfaces.IProperty
+  parent: Elements.Interfaces
+  name: IProperty
+  nameWithType: IProperty
+  fullName: Elements.Interfaces.IProperty
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Interfaces.IPropertySingleValue`1
+  commentId: T:Elements.Interfaces.IPropertySingleValue`1
+  name: IPropertySingleValue<TValue>
+  nameWithType: IPropertySingleValue<TValue>
+  fullName: Elements.Interfaces.IPropertySingleValue<TValue>
+  nameWithType.vb: IPropertySingleValue(Of TValue)
+  fullName.vb: Elements.Interfaces.IPropertySingleValue(Of TValue)
+  name.vb: IPropertySingleValue(Of TValue)
+  spec.csharp:
+  - uid: Elements.Interfaces.IPropertySingleValue`1
+    name: IPropertySingleValue
+    nameWithType: IPropertySingleValue
+    fullName: Elements.Interfaces.IPropertySingleValue
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Elements.Interfaces.IPropertySingleValue`1
+    name: IPropertySingleValue
+    nameWithType: IPropertySingleValue
+    fullName: Elements.Interfaces.IPropertySingleValue
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.NumericProperty.Value*
+  commentId: Overload:Elements.NumericProperty.Value
+  name: Value
+  nameWithType: NumericProperty.Value
+  fullName: Elements.NumericProperty.Value
+- uid: Elements.Interfaces.IPropertySingleValue{System.Double}.Value
+  commentId: P:Elements.Interfaces.IPropertySingleValue{System.Double}.Value
+  parent: Elements.Interfaces.IPropertySingleValue{System.Double}
+  definition: Elements.Interfaces.IPropertySingleValue`1.Value
+  name: Value
+  nameWithType: IPropertySingleValue<Double>.Value
+  fullName: Elements.Interfaces.IPropertySingleValue<System.Double>.Value
+  nameWithType.vb: IPropertySingleValue(Of Double).Value
+  fullName.vb: Elements.Interfaces.IPropertySingleValue(Of System.Double).Value
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.Interfaces.IPropertySingleValue`1.Value
+  commentId: P:Elements.Interfaces.IPropertySingleValue`1.Value
+  name: Value
+  nameWithType: IPropertySingleValue<TValue>.Value
+  fullName: Elements.Interfaces.IPropertySingleValue<TValue>.Value
+  nameWithType.vb: IPropertySingleValue(Of TValue).Value
+  fullName.vb: Elements.Interfaces.IPropertySingleValue(Of TValue).Value
+- uid: Elements.NumericProperty.UnitType*
+  commentId: Overload:Elements.NumericProperty.UnitType
+  name: UnitType
+  nameWithType: NumericProperty.UnitType
+  fullName: Elements.NumericProperty.UnitType
+- uid: Elements.Interfaces.IPropertySingleValue{System.Double}.UnitType
+  commentId: P:Elements.Interfaces.IPropertySingleValue{System.Double}.UnitType
+  parent: Elements.Interfaces.IPropertySingleValue{System.Double}
+  definition: Elements.Interfaces.IPropertySingleValue`1.UnitType
+  name: UnitType
+  nameWithType: IPropertySingleValue<Double>.UnitType
+  fullName: Elements.Interfaces.IPropertySingleValue<System.Double>.UnitType
+  nameWithType.vb: IPropertySingleValue(Of Double).UnitType
+  fullName.vb: Elements.Interfaces.IPropertySingleValue(Of System.Double).UnitType
+- uid: Elements.UnitType
+  commentId: T:Elements.UnitType
+  parent: Elements
+  name: UnitType
+  nameWithType: UnitType
+  fullName: Elements.UnitType
+- uid: Elements.Interfaces.IPropertySingleValue`1.UnitType
+  commentId: P:Elements.Interfaces.IPropertySingleValue`1.UnitType
+  name: UnitType
+  nameWithType: IPropertySingleValue<TValue>.UnitType
+  fullName: Elements.Interfaces.IPropertySingleValue<TValue>.UnitType
+  nameWithType.vb: IPropertySingleValue(Of TValue).UnitType
+  fullName.vb: Elements.Interfaces.IPropertySingleValue(Of TValue).UnitType
+- uid: Elements.NumericProperty.Description*
+  commentId: Overload:Elements.NumericProperty.Description
+  name: Description
+  nameWithType: NumericProperty.Description
+  fullName: Elements.NumericProperty.Description
+- uid: Elements.Interfaces.IProperty.Description
+  commentId: P:Elements.Interfaces.IProperty.Description
+  parent: Elements.Interfaces.IProperty
+  name: Description
+  nameWithType: IProperty.Description
+  fullName: Elements.Interfaces.IProperty.Description
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Elements.NumericProperty.#ctor*
+  commentId: Overload:Elements.NumericProperty.#ctor
+  name: NumericProperty
+  nameWithType: NumericProperty.NumericProperty
+  fullName: Elements.NumericProperty.NumericProperty

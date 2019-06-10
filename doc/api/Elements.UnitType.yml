@@ -1,0 +1,410 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.UnitType
+  commentId: T:Elements.UnitType
+  id: UnitType
+  parent: Elements
+  children:
+  - Elements.UnitType.Area
+  - Elements.UnitType.Distance
+  - Elements.UnitType.Force
+  - Elements.UnitType.Mass
+  - Elements.UnitType.None
+  - Elements.UnitType.Text
+  - Elements.UnitType.Volume
+  langs:
+  - csharp
+  - vb
+  name: UnitType
+  nameWithType: UnitType
+  fullName: Elements.UnitType
+  type: Enum
+  source:
+    remote:
+      path: src/Elements/UnitType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: UnitType
+    path: ../src/Elements/UnitType.cs
+    startLine: 9
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAn enumeration of unit types for a numeric parameter.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConverter(typeof(StringEnumConverter))]
+
+      public enum UnitType
+    content.vb: >-
+      <JsonConverter(GetType(StringEnumConverter))>
+
+      Public Enum UnitType
+  attributes:
+  - type: Newtonsoft.Json.JsonConverterAttribute
+    ctor: Newtonsoft.Json.JsonConverterAttribute.#ctor(System.Type)
+    arguments:
+    - type: System.Type
+      value: Newtonsoft.Json.Converters.StringEnumConverter
+  modifiers.csharp:
+  - public
+  - enum
+  modifiers.vb:
+  - Public
+  - Enum
+- uid: Elements.UnitType.None
+  commentId: F:Elements.UnitType.None
+  id: None
+  parent: Elements.UnitType
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: UnitType.None
+  fullName: Elements.UnitType.None
+  type: Field
+  source:
+    remote:
+      path: src/Elements/UnitType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: None
+    path: ../src/Elements/UnitType.cs
+    startLine: 15
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nNo unit assigned.\n"
+  example: []
+  syntax:
+    content: >-
+      [EnumMember(Value = "none")]
+
+      None = 0
+    return:
+      type: Elements.UnitType
+    content.vb: >-
+      <EnumMember(Value:="none")>
+
+      None = 0
+  attributes:
+  - type: System.Runtime.Serialization.EnumMemberAttribute
+    ctor: System.Runtime.Serialization.EnumMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Value
+      type: System.String
+      value: none
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.UnitType.Distance
+  commentId: F:Elements.UnitType.Distance
+  id: Distance
+  parent: Elements.UnitType
+  langs:
+  - csharp
+  - vb
+  name: Distance
+  nameWithType: UnitType.Distance
+  fullName: Elements.UnitType.Distance
+  type: Field
+  source:
+    remote:
+      path: src/Elements/UnitType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Distance
+    path: ../src/Elements/UnitType.cs
+    startLine: 20
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA length in meters.\n"
+  example: []
+  syntax:
+    content: >-
+      [EnumMember(Value = "distance")]
+
+      Distance = 1
+    return:
+      type: Elements.UnitType
+    content.vb: >-
+      <EnumMember(Value:="distance")>
+
+      Distance = 1
+  attributes:
+  - type: System.Runtime.Serialization.EnumMemberAttribute
+    ctor: System.Runtime.Serialization.EnumMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Value
+      type: System.String
+      value: distance
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.UnitType.Area
+  commentId: F:Elements.UnitType.Area
+  id: Area
+  parent: Elements.UnitType
+  langs:
+  - csharp
+  - vb
+  name: Area
+  nameWithType: UnitType.Area
+  fullName: Elements.UnitType.Area
+  type: Field
+  source:
+    remote:
+      path: src/Elements/UnitType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Area
+    path: ../src/Elements/UnitType.cs
+    startLine: 25
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAn area in square meters.\n"
+  example: []
+  syntax:
+    content: >-
+      [EnumMember(Value = "area")]
+
+      Area = 2
+    return:
+      type: Elements.UnitType
+    content.vb: >-
+      <EnumMember(Value:="area")>
+
+      Area = 2
+  attributes:
+  - type: System.Runtime.Serialization.EnumMemberAttribute
+    ctor: System.Runtime.Serialization.EnumMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Value
+      type: System.String
+      value: area
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.UnitType.Volume
+  commentId: F:Elements.UnitType.Volume
+  id: Volume
+  parent: Elements.UnitType
+  langs:
+  - csharp
+  - vb
+  name: Volume
+  nameWithType: UnitType.Volume
+  fullName: Elements.UnitType.Volume
+  type: Field
+  source:
+    remote:
+      path: src/Elements/UnitType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Volume
+    path: ../src/Elements/UnitType.cs
+    startLine: 30
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA volume in cubic meters.\n"
+  example: []
+  syntax:
+    content: >-
+      [EnumMember(Value = "volume")]
+
+      Volume = 3
+    return:
+      type: Elements.UnitType
+    content.vb: >-
+      <EnumMember(Value:="volume")>
+
+      Volume = 3
+  attributes:
+  - type: System.Runtime.Serialization.EnumMemberAttribute
+    ctor: System.Runtime.Serialization.EnumMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Value
+      type: System.String
+      value: volume
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.UnitType.Mass
+  commentId: F:Elements.UnitType.Mass
+  id: Mass
+  parent: Elements.UnitType
+  langs:
+  - csharp
+  - vb
+  name: Mass
+  nameWithType: UnitType.Mass
+  fullName: Elements.UnitType.Mass
+  type: Field
+  source:
+    remote:
+      path: src/Elements/UnitType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Mass
+    path: ../src/Elements/UnitType.cs
+    startLine: 35
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA mass in kilograms.\n"
+  example: []
+  syntax:
+    content: >-
+      [EnumMember(Value = "mass")]
+
+      Mass = 4
+    return:
+      type: Elements.UnitType
+    content.vb: >-
+      <EnumMember(Value:="mass")>
+
+      Mass = 4
+  attributes:
+  - type: System.Runtime.Serialization.EnumMemberAttribute
+    ctor: System.Runtime.Serialization.EnumMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Value
+      type: System.String
+      value: mass
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.UnitType.Force
+  commentId: F:Elements.UnitType.Force
+  id: Force
+  parent: Elements.UnitType
+  langs:
+  - csharp
+  - vb
+  name: Force
+  nameWithType: UnitType.Force
+  fullName: Elements.UnitType.Force
+  type: Field
+  source:
+    remote:
+      path: src/Elements/UnitType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Force
+    path: ../src/Elements/UnitType.cs
+    startLine: 40
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA force in Newtons.\n"
+  example: []
+  syntax:
+    content: >-
+      [EnumMember(Value = "force")]
+
+      Force = 5
+    return:
+      type: Elements.UnitType
+    content.vb: >-
+      <EnumMember(Value:="force")>
+
+      Force = 5
+  attributes:
+  - type: System.Runtime.Serialization.EnumMemberAttribute
+    ctor: System.Runtime.Serialization.EnumMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Value
+      type: System.String
+      value: force
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.UnitType.Text
+  commentId: F:Elements.UnitType.Text
+  id: Text
+  parent: Elements.UnitType
+  langs:
+  - csharp
+  - vb
+  name: Text
+  nameWithType: UnitType.Text
+  fullName: Elements.UnitType.Text
+  type: Field
+  source:
+    remote:
+      path: src/Elements/UnitType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Text
+    path: ../src/Elements/UnitType.cs
+    startLine: 45
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA string value.\n"
+  example: []
+  syntax:
+    content: >-
+      [EnumMember(Value = "text")]
+
+      Text = 6
+    return:
+      type: Elements.UnitType
+    content.vb: >-
+      <EnumMember(Value:="text")>
+
+      Text = 6
+  attributes:
+  - type: System.Runtime.Serialization.EnumMemberAttribute
+    ctor: System.Runtime.Serialization.EnumMemberAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Value
+      type: System.String
+      value: text
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: Elements.UnitType
+  commentId: T:Elements.UnitType
+  parent: Elements
+  name: UnitType
+  nameWithType: UnitType
+  fullName: Elements.UnitType

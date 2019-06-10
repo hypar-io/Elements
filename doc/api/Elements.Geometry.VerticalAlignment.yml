@@ -1,0 +1,153 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.VerticalAlignment
+  commentId: T:Elements.Geometry.VerticalAlignment
+  id: VerticalAlignment
+  parent: Elements.Geometry
+  children:
+  - Elements.Geometry.VerticalAlignment.Bottom
+  - Elements.Geometry.VerticalAlignment.Center
+  - Elements.Geometry.VerticalAlignment.Top
+  langs:
+  - csharp
+  - vb
+  name: VerticalAlignment
+  nameWithType: VerticalAlignment
+  fullName: Elements.Geometry.VerticalAlignment
+  type: Enum
+  source:
+    remote:
+      path: src/Elements/Geometry/Profile.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: VerticalAlignment
+    path: ../src/Elements/Geometry/Profile.cs
+    startLine: 12
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe vertical alignment of the profile.\n"
+  example: []
+  syntax:
+    content: public enum VerticalAlignment
+    content.vb: Public Enum VerticalAlignment
+  modifiers.csharp:
+  - public
+  - enum
+  modifiers.vb:
+  - Public
+  - Enum
+- uid: Elements.Geometry.VerticalAlignment.Top
+  commentId: F:Elements.Geometry.VerticalAlignment.Top
+  id: Top
+  parent: Elements.Geometry.VerticalAlignment
+  langs:
+  - csharp
+  - vb
+  name: Top
+  nameWithType: VerticalAlignment.Top
+  fullName: Elements.Geometry.VerticalAlignment.Top
+  type: Field
+  source:
+    remote:
+      path: src/Elements/Geometry/Profile.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Top
+    path: ../src/Elements/Geometry/Profile.cs
+    startLine: 17
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nAlign the profile along its top.\n"
+  example: []
+  syntax:
+    content: Top = 0
+    return:
+      type: Elements.Geometry.VerticalAlignment
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.Geometry.VerticalAlignment.Center
+  commentId: F:Elements.Geometry.VerticalAlignment.Center
+  id: Center
+  parent: Elements.Geometry.VerticalAlignment
+  langs:
+  - csharp
+  - vb
+  name: Center
+  nameWithType: VerticalAlignment.Center
+  fullName: Elements.Geometry.VerticalAlignment.Center
+  type: Field
+  source:
+    remote:
+      path: src/Elements/Geometry/Profile.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Center
+    path: ../src/Elements/Geometry/Profile.cs
+    startLine: 21
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nAlign the profile along its center.\n"
+  example: []
+  syntax:
+    content: Center = 1
+    return:
+      type: Elements.Geometry.VerticalAlignment
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.Geometry.VerticalAlignment.Bottom
+  commentId: F:Elements.Geometry.VerticalAlignment.Bottom
+  id: Bottom
+  parent: Elements.Geometry.VerticalAlignment
+  langs:
+  - csharp
+  - vb
+  name: Bottom
+  nameWithType: VerticalAlignment.Bottom
+  fullName: Elements.Geometry.VerticalAlignment.Bottom
+  type: Field
+  source:
+    remote:
+      path: src/Elements/Geometry/Profile.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Bottom
+    path: ../src/Elements/Geometry/Profile.cs
+    startLine: 25
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nAlign the profile along its bottom.\n"
+  example: []
+  syntax:
+    content: Bottom = 2
+    return:
+      type: Elements.Geometry.VerticalAlignment
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+references:
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: Elements.Geometry.VerticalAlignment
+  commentId: T:Elements.Geometry.VerticalAlignment
+  parent: Elements.Geometry
+  name: VerticalAlignment
+  nameWithType: VerticalAlignment
+  fullName: Elements.Geometry.VerticalAlignment

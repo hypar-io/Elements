@@ -1,0 +1,561 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.Triangle
+  commentId: T:Elements.Geometry.Triangle
+  id: Triangle
+  parent: Elements.Geometry
+  children:
+  - Elements.Geometry.Triangle.#ctor(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
+  - Elements.Geometry.Triangle.Area
+  - Elements.Geometry.Triangle.Normal
+  - Elements.Geometry.Triangle.Vertices
+  langs:
+  - csharp
+  - vb
+  name: Triangle
+  nameWithType: Triangle
+  fullName: Elements.Geometry.Triangle
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Geometry/Mesh.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Triangle
+    path: ../src/Elements/Geometry/Mesh.cs
+    startLine: 11
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nA mesh triangle.\n"
+  example: []
+  syntax:
+    content: public class Triangle
+    content.vb: Public Class Triangle
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Geometry.Triangle.Vertices
+  commentId: P:Elements.Geometry.Triangle.Vertices
+  id: Vertices
+  parent: Elements.Geometry.Triangle
+  langs:
+  - csharp
+  - vb
+  name: Vertices
+  nameWithType: Triangle.Vertices
+  fullName: Elements.Geometry.Triangle.Vertices
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Mesh.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Vertices
+    path: ../src/Elements/Geometry/Mesh.cs
+    startLine: 16
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe triangle&apos;s vertices.\n"
+  example: []
+  syntax:
+    content: public Vertex[] Vertices { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vertex[]
+    content.vb: Public ReadOnly Property Vertices As Vertex()
+  overload: Elements.Geometry.Triangle.Vertices*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Triangle.Normal
+  commentId: P:Elements.Geometry.Triangle.Normal
+  id: Normal
+  parent: Elements.Geometry.Triangle
+  langs:
+  - csharp
+  - vb
+  name: Normal
+  nameWithType: Triangle.Normal
+  fullName: Elements.Geometry.Triangle.Normal
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Mesh.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Normal
+    path: ../src/Elements/Geometry/Mesh.cs
+    startLine: 21
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe triangle&apos;s normal.\n"
+  example: []
+  syntax:
+    content: public Vector3 Normal { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property Normal As Vector3
+  overload: Elements.Geometry.Triangle.Normal*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Triangle.#ctor(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
+  commentId: M:Elements.Geometry.Triangle.#ctor(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
+  id: '#ctor(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)'
+  parent: Elements.Geometry.Triangle
+  langs:
+  - csharp
+  - vb
+  name: Triangle(Vertex, Vertex, Vertex)
+  nameWithType: Triangle.Triangle(Vertex, Vertex, Vertex)
+  fullName: Elements.Geometry.Triangle.Triangle(Elements.Geometry.Vertex, Elements.Geometry.Vertex, Elements.Geometry.Vertex)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/Mesh.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/Mesh.cs
+    startLine: 29
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCreate a triangle.\n"
+  example: []
+  syntax:
+    content: public Triangle(Vertex a, Vertex b, Vertex c)
+    parameters:
+    - id: a
+      type: Elements.Geometry.Vertex
+      description: The index of the first vertex of the triangle.
+    - id: b
+      type: Elements.Geometry.Vertex
+      description: The index of the second vertex of the triangle.
+    - id: c
+      type: Elements.Geometry.Vertex
+      description: The index of the third vertex of the triangle.
+    content.vb: Public Sub New(a As Vertex, b As Vertex, c As Vertex)
+  overload: Elements.Geometry.Triangle.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Triangle.Area
+  commentId: M:Elements.Geometry.Triangle.Area
+  id: Area
+  parent: Elements.Geometry.Triangle
+  langs:
+  - csharp
+  - vb
+  name: Area()
+  nameWithType: Triangle.Area()
+  fullName: Elements.Geometry.Triangle.Area()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Mesh.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Area
+    path: ../src/Elements/Geometry/Mesh.cs
+    startLine: 63
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe area of the triangle.\n"
+  example: []
+  syntax:
+    content: public double Area()
+    return:
+      type: System.Double
+    content.vb: Public Function Area As Double
+  overload: Elements.Geometry.Triangle.Area*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Geometry.Triangle.Vertices*
+  commentId: Overload:Elements.Geometry.Triangle.Vertices
+  name: Vertices
+  nameWithType: Triangle.Vertices
+  fullName: Elements.Geometry.Triangle.Vertices
+- uid: Elements.Geometry.Vertex[]
+  isExternal: true
+  name: Vertex[]
+  nameWithType: Vertex[]
+  fullName: Elements.Geometry.Vertex[]
+  nameWithType.vb: Vertex()
+  fullName.vb: Elements.Geometry.Vertex()
+  name.vb: Vertex()
+  spec.csharp:
+  - uid: Elements.Geometry.Vertex
+    name: Vertex
+    nameWithType: Vertex
+    fullName: Elements.Geometry.Vertex
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: Elements.Geometry.Vertex
+    name: Vertex
+    nameWithType: Vertex
+    fullName: Elements.Geometry.Vertex
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Elements.Geometry.Triangle.Normal*
+  commentId: Overload:Elements.Geometry.Triangle.Normal
+  name: Normal
+  nameWithType: Triangle.Normal
+  fullName: Elements.Geometry.Triangle.Normal
+- uid: Elements.Geometry.Vector3
+  commentId: T:Elements.Geometry.Vector3
+  parent: Elements.Geometry
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Elements.Geometry.Vector3
+- uid: Elements.Geometry.Triangle.#ctor*
+  commentId: Overload:Elements.Geometry.Triangle.#ctor
+  name: Triangle
+  nameWithType: Triangle.Triangle
+  fullName: Elements.Geometry.Triangle.Triangle
+- uid: Elements.Geometry.Vertex
+  commentId: T:Elements.Geometry.Vertex
+  parent: Elements.Geometry
+  name: Vertex
+  nameWithType: Vertex
+  fullName: Elements.Geometry.Vertex
+- uid: Elements.Geometry.Triangle.Area*
+  commentId: Overload:Elements.Geometry.Triangle.Area
+  name: Area
+  nameWithType: Triangle.Area
+  fullName: Elements.Geometry.Triangle.Area
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double

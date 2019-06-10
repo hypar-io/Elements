@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Hypar.Elements.Interfaces
+  commentId: N:Hypar.Elements.Interfaces
+  id: Hypar.Elements.Interfaces
+  children:
+  - Hypar.Elements.Interfaces.IHasOpenings
+  langs:
+  - csharp
+  - vb
+  name: Hypar.Elements.Interfaces
+  nameWithType: Hypar.Elements.Interfaces
+  fullName: Hypar.Elements.Interfaces
+  type: Namespace
+  assemblies:
+  - Hypar.Elements
+references:
+- uid: Hypar.Elements.Interfaces.IHasOpenings
+  commentId: T:Hypar.Elements.Interfaces.IHasOpenings
+  parent: Hypar.Elements.Interfaces
+  name: IHasOpenings
+  nameWithType: IHasOpenings
+  fullName: Hypar.Elements.Interfaces.IHasOpenings
+- uid: Hypar.Elements.Interfaces
+  commentId: N:Hypar.Elements.Interfaces
+  name: Hypar.Elements.Interfaces
+  nameWithType: Hypar.Elements.Interfaces
+  fullName: Hypar.Elements.Interfaces

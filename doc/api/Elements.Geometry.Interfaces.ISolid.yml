@@ -1,0 +1,90 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.Interfaces.ISolid
+  commentId: T:Elements.Geometry.Interfaces.ISolid
+  id: ISolid
+  parent: Elements.Geometry.Interfaces
+  children:
+  - Elements.Geometry.Interfaces.ISolid.Geometry
+  langs:
+  - csharp
+  - vb
+  name: ISolid
+  nameWithType: ISolid
+  fullName: Elements.Geometry.Interfaces.ISolid
+  type: Interface
+  source:
+    remote:
+      path: src/Elements/Geometry/Interfaces/ISolid.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ISolid
+    path: ../src/Elements/Geometry/Interfaces/ISolid.cs
+    startLine: 6
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Interfaces
+  syntax:
+    content: public interface ISolid
+    content.vb: Public Interface ISolid
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Elements.Geometry.Interfaces.ISolid.Geometry
+  commentId: P:Elements.Geometry.Interfaces.ISolid.Geometry
+  id: Geometry
+  parent: Elements.Geometry.Interfaces.ISolid
+  langs:
+  - csharp
+  - vb
+  name: Geometry
+  nameWithType: ISolid.Geometry
+  fullName: Elements.Geometry.Interfaces.ISolid.Geometry
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Interfaces/ISolid.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Geometry
+    path: ../src/Elements/Geometry/Interfaces/ISolid.cs
+    startLine: 8
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Interfaces
+  syntax:
+    content: Solid Geometry { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Solids.Solid
+    content.vb: ReadOnly Property Geometry As Solid
+  overload: Elements.Geometry.Interfaces.ISolid.Geometry*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Elements.Geometry.Interfaces
+  commentId: N:Elements.Geometry.Interfaces
+  name: Elements.Geometry.Interfaces
+  nameWithType: Elements.Geometry.Interfaces
+  fullName: Elements.Geometry.Interfaces
+- uid: Elements.Geometry.Interfaces.ISolid.Geometry*
+  commentId: Overload:Elements.Geometry.Interfaces.ISolid.Geometry
+  name: Geometry
+  nameWithType: ISolid.Geometry
+  fullName: Elements.Geometry.Interfaces.ISolid.Geometry
+- uid: Elements.Geometry.Solids.Solid
+  commentId: T:Elements.Geometry.Solids.Solid
+  parent: Elements.Geometry.Solids
+  name: Solid
+  nameWithType: Solid
+  fullName: Elements.Geometry.Solids.Solid
+- uid: Elements.Geometry.Solids
+  commentId: N:Elements.Geometry.Solids
+  name: Elements.Geometry.Solids
+  nameWithType: Elements.Geometry.Solids
+  fullName: Elements.Geometry.Solids

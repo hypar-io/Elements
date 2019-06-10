@@ -1,0 +1,715 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.BBox3
+  commentId: T:Elements.Geometry.BBox3
+  id: BBox3
+  parent: Elements.Geometry
+  children:
+  - Elements.Geometry.BBox3.#ctor(Elements.Geometry.Profile)
+  - Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  - Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3[])
+  - Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  - Elements.Geometry.BBox3.Max
+  - Elements.Geometry.BBox3.Min
+  langs:
+  - csharp
+  - vb
+  name: BBox3
+  nameWithType: BBox3
+  fullName: Elements.Geometry.BBox3
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Geometry/BBox3.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: BBox3
+    path: ../src/Elements/Geometry/BBox3.cs
+    startLine: 8
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nAn axis-alignment bounding box.\n"
+  example: []
+  syntax:
+    content: public class BBox3
+    content.vb: Public Class BBox3
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Geometry.BBox3.Max
+  commentId: P:Elements.Geometry.BBox3.Max
+  id: Max
+  parent: Elements.Geometry.BBox3
+  langs:
+  - csharp
+  - vb
+  name: Max
+  nameWithType: BBox3.Max
+  fullName: Elements.Geometry.BBox3.Max
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/BBox3.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Max
+    path: ../src/Elements/Geometry/BBox3.cs
+    startLine: 13
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe maximum extent of the bounding box.\n"
+  example: []
+  syntax:
+    content: public Vector3 Max { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property Max As Vector3
+  overload: Elements.Geometry.BBox3.Max*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.BBox3.Min
+  commentId: P:Elements.Geometry.BBox3.Min
+  id: Min
+  parent: Elements.Geometry.BBox3
+  langs:
+  - csharp
+  - vb
+  name: Min
+  nameWithType: BBox3.Min
+  fullName: Elements.Geometry.BBox3.Min
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/BBox3.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Min
+    path: ../src/Elements/Geometry/BBox3.cs
+    startLine: 18
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe minimum extent of the bounding box.\n"
+  example: []
+  syntax:
+    content: public Vector3 Min { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property Min As Vector3
+  overload: Elements.Geometry.BBox3.Min*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3[])
+  commentId: M:Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3[])
+  id: '#ctor(Elements.Geometry.Vector3[])'
+  parent: Elements.Geometry.BBox3
+  langs:
+  - csharp
+  - vb
+  name: BBox3(Vector3[])
+  nameWithType: BBox3.BBox3(Vector3[])
+  fullName: Elements.Geometry.BBox3.BBox3(Elements.Geometry.Vector3[])
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/BBox3.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/BBox3.cs
+    startLine: 24
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nConstruct a bounding box from an array of points.\n"
+  example: []
+  syntax:
+    content: public BBox3(Vector3[] points)
+    parameters:
+    - id: points
+      type: Elements.Geometry.Vector3[]
+      description: The points which are contained within the bounding box.
+    content.vb: Public Sub New(points As Vector3())
+  overload: Elements.Geometry.BBox3.#ctor*
+  nameWithType.vb: BBox3.BBox3(Vector3())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.Geometry.BBox3.BBox3(Elements.Geometry.Vector3())
+  name.vb: BBox3(Vector3())
+- uid: Elements.Geometry.BBox3.#ctor(Elements.Geometry.Profile)
+  commentId: M:Elements.Geometry.BBox3.#ctor(Elements.Geometry.Profile)
+  id: '#ctor(Elements.Geometry.Profile)'
+  parent: Elements.Geometry.BBox3
+  langs:
+  - csharp
+  - vb
+  name: BBox3(Profile)
+  nameWithType: BBox3.BBox3(Profile)
+  fullName: Elements.Geometry.BBox3.BBox3(Elements.Geometry.Profile)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/BBox3.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/BBox3.cs
+    startLine: 49
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCreate the BBox3 for a Profile.\n"
+  example: []
+  syntax:
+    content: public BBox3(Profile profile)
+    parameters:
+    - id: profile
+      type: Elements.Geometry.Profile
+      description: The Profile.
+    content.vb: Public Sub New(profile As Profile)
+  overload: Elements.Geometry.BBox3.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  commentId: M:Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  id: '#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})'
+  parent: Elements.Geometry.BBox3
+  langs:
+  - csharp
+  - vb
+  name: BBox3(IList<Polygon>)
+  nameWithType: BBox3.BBox3(IList<Polygon>)
+  fullName: Elements.Geometry.BBox3.BBox3(System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/BBox3.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/BBox3.cs
+    startLine: 71
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCreate a bounding box for a collection of polygons.\n"
+  example: []
+  syntax:
+    content: public BBox3(IList<Polygon> polygons)
+    parameters:
+    - id: polygons
+      type: System.Collections.Generic.IList{Elements.Geometry.Polygon}
+      description: ''
+    content.vb: Public Sub New(polygons As IList(Of Polygon))
+  overload: Elements.Geometry.BBox3.#ctor*
+  nameWithType.vb: BBox3.BBox3(IList(Of Polygon))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.Geometry.BBox3.BBox3(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
+  name.vb: BBox3(IList(Of Polygon))
+- uid: Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  commentId: M:Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  id: '#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)'
+  parent: Elements.Geometry.BBox3
+  langs:
+  - csharp
+  - vb
+  name: BBox3(Vector3, Vector3)
+  nameWithType: BBox3.BBox3(Vector3, Vector3)
+  fullName: Elements.Geometry.BBox3.BBox3(Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/BBox3.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/BBox3.cs
+    startLine: 91
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCreate a bounding box specifying minimum and maximum extents.\n"
+  example: []
+  syntax:
+    content: public BBox3(Vector3 min, Vector3 max)
+    parameters:
+    - id: min
+      type: Elements.Geometry.Vector3
+      description: The minimum extent of the bounding box.
+    - id: max
+      type: Elements.Geometry.Vector3
+      description: The maximum extent of the bounding box.
+    content.vb: Public Sub New(min As Vector3, max As Vector3)
+  overload: Elements.Geometry.BBox3.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Geometry.BBox3.Max*
+  commentId: Overload:Elements.Geometry.BBox3.Max
+  name: Max
+  nameWithType: BBox3.Max
+  fullName: Elements.Geometry.BBox3.Max
+- uid: Elements.Geometry.Vector3
+  commentId: T:Elements.Geometry.Vector3
+  parent: Elements.Geometry
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Elements.Geometry.Vector3
+- uid: Elements.Geometry.BBox3.Min*
+  commentId: Overload:Elements.Geometry.BBox3.Min
+  name: Min
+  nameWithType: BBox3.Min
+  fullName: Elements.Geometry.BBox3.Min
+- uid: Elements.Geometry.BBox3.#ctor*
+  commentId: Overload:Elements.Geometry.BBox3.#ctor
+  name: BBox3
+  nameWithType: BBox3.BBox3
+  fullName: Elements.Geometry.BBox3.BBox3
+- uid: Elements.Geometry.Vector3[]
+  isExternal: true
+  name: Vector3[]
+  nameWithType: Vector3[]
+  fullName: Elements.Geometry.Vector3[]
+  nameWithType.vb: Vector3()
+  fullName.vb: Elements.Geometry.Vector3()
+  name.vb: Vector3()
+  spec.csharp:
+  - uid: Elements.Geometry.Vector3
+    name: Vector3
+    nameWithType: Vector3
+    fullName: Elements.Geometry.Vector3
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: Elements.Geometry.Vector3
+    name: Vector3
+    nameWithType: Vector3
+    fullName: Elements.Geometry.Vector3
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Elements.Geometry.Profile
+  commentId: T:Elements.Geometry.Profile
+  parent: Elements.Geometry
+  name: Profile
+  nameWithType: Profile
+  fullName: Elements.Geometry.Profile
+- uid: System.Collections.Generic.IList{Elements.Geometry.Polygon}
+  commentId: T:System.Collections.Generic.IList{Elements.Geometry.Polygon}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  name: IList<Polygon>
+  nameWithType: IList<Polygon>
+  fullName: System.Collections.Generic.IList<Elements.Geometry.Polygon>
+  nameWithType.vb: IList(Of Polygon)
+  fullName.vb: System.Collections.Generic.IList(Of Elements.Geometry.Polygon)
+  name.vb: IList(Of Polygon)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Elements.Geometry.Polygon
+    name: Polygon
+    nameWithType: Polygon
+    fullName: Elements.Geometry.Polygon
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Elements.Geometry.Polygon
+    name: Polygon
+    nameWithType: Polygon
+    fullName: Elements.Geometry.Polygon
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic

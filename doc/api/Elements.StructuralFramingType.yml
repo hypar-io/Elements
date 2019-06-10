@@ -1,0 +1,626 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.StructuralFramingType
+  commentId: T:Elements.StructuralFramingType
+  id: StructuralFramingType
+  parent: Elements
+  children:
+  - Elements.StructuralFramingType.#ctor(System.String,Elements.Geometry.Profile,Elements.Material)
+  - Elements.StructuralFramingType.Material
+  - Elements.StructuralFramingType.Profile
+  - Elements.StructuralFramingType.Type
+  langs:
+  - csharp
+  - vb
+  name: StructuralFramingType
+  nameWithType: StructuralFramingType
+  fullName: Elements.StructuralFramingType
+  type: Class
+  source:
+    remote:
+      path: src/Elements/StructuralFramingType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: StructuralFramingType
+    path: ../src/Elements/StructuralFramingType.cs
+    startLine: 11
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA container for properties common to a type of structural framing.\n"
+  example: []
+  syntax:
+    content: 'public class StructuralFramingType : ElementType, IIdentifiable, IProfile, IMaterial'
+    content.vb: >-
+      Public Class StructuralFramingType
+          Inherits ElementType
+          Implements IIdentifiable, IProfile, IMaterial
+  inheritance:
+  - System.Object
+  - Elements.ElementType
+  implements:
+  - Elements.Interfaces.IIdentifiable
+  - Elements.Geometry.Interfaces.IProfile
+  - Elements.Interfaces.IMaterial
+  inheritedMembers:
+  - Elements.ElementType.Id
+  - Elements.ElementType.Name
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.StructuralFramingType.Profile
+  commentId: P:Elements.StructuralFramingType.Profile
+  id: Profile
+  parent: Elements.StructuralFramingType
+  langs:
+  - csharp
+  - vb
+  name: Profile
+  nameWithType: StructuralFramingType.Profile
+  fullName: Elements.StructuralFramingType.Profile
+  type: Property
+  source:
+    remote:
+      path: src/Elements/StructuralFramingType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Profile
+    path: ../src/Elements/StructuralFramingType.cs
+    startLine: 16
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe profile used by the structural framing type.\n"
+  example: []
+  syntax:
+    content: public Profile Profile { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Profile
+    content.vb: Public ReadOnly Property Profile As Profile
+  overload: Elements.StructuralFramingType.Profile*
+  implements:
+  - Elements.Geometry.Interfaces.IProfile.Profile
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.StructuralFramingType.Material
+  commentId: P:Elements.StructuralFramingType.Material
+  id: Material
+  parent: Elements.StructuralFramingType
+  langs:
+  - csharp
+  - vb
+  name: Material
+  nameWithType: StructuralFramingType.Material
+  fullName: Elements.StructuralFramingType.Material
+  type: Property
+  source:
+    remote:
+      path: src/Elements/StructuralFramingType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Material
+    path: ../src/Elements/StructuralFramingType.cs
+    startLine: 21
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe material used by the structural framing type.\n"
+  example: []
+  syntax:
+    content: public Material Material { get; }
+    parameters: []
+    return:
+      type: Elements.Material
+    content.vb: Public ReadOnly Property Material As Material
+  overload: Elements.StructuralFramingType.Material*
+  implements:
+  - Elements.Interfaces.IMaterial.Material
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.StructuralFramingType.Type
+  commentId: P:Elements.StructuralFramingType.Type
+  id: Type
+  parent: Elements.StructuralFramingType
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: StructuralFramingType.Type
+  fullName: Elements.StructuralFramingType.Type
+  type: Property
+  source:
+    remote:
+      path: src/Elements/StructuralFramingType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Type
+    path: ../src/Elements/StructuralFramingType.cs
+    startLine: 26
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe type of the structural framing type.\n"
+  example: []
+  syntax:
+    content: public override string Type { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Overrides ReadOnly Property Type As String
+  overridden: Elements.ElementType.Type
+  overload: Elements.StructuralFramingType.Type*
+  modifiers.csharp:
+  - public
+  - override
+  - get
+  modifiers.vb:
+  - Public
+  - Overrides
+  - ReadOnly
+- uid: Elements.StructuralFramingType.#ctor(System.String,Elements.Geometry.Profile,Elements.Material)
+  commentId: M:Elements.StructuralFramingType.#ctor(System.String,Elements.Geometry.Profile,Elements.Material)
+  id: '#ctor(System.String,Elements.Geometry.Profile,Elements.Material)'
+  parent: Elements.StructuralFramingType
+  langs:
+  - csharp
+  - vb
+  name: StructuralFramingType(String, Profile, Material)
+  nameWithType: StructuralFramingType.StructuralFramingType(String, Profile, Material)
+  fullName: Elements.StructuralFramingType.StructuralFramingType(System.String, Elements.Geometry.Profile, Elements.Material)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/StructuralFramingType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/StructuralFramingType.cs
+    startLine: 37
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct a structural framing type.\n"
+  example: []
+  syntax:
+    content: public StructuralFramingType(string name, Profile profile, Material material)
+    parameters:
+    - id: name
+      type: System.String
+      description: The name of the structural framing type.
+    - id: profile
+      type: Elements.Geometry.Profile
+      description: The profile used by the structural framing type.
+    - id: material
+      type: Elements.Material
+      description: The material used by the structural framing type.
+    content.vb: Public Sub New(name As String, profile As Profile, material As Material)
+  overload: Elements.StructuralFramingType.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.ElementType
+  commentId: T:Elements.ElementType
+  parent: Elements
+  name: ElementType
+  nameWithType: ElementType
+  fullName: Elements.ElementType
+- uid: Elements.Interfaces.IIdentifiable
+  commentId: T:Elements.Interfaces.IIdentifiable
+  parent: Elements.Interfaces
+  name: IIdentifiable
+  nameWithType: IIdentifiable
+  fullName: Elements.Interfaces.IIdentifiable
+- uid: Elements.Geometry.Interfaces.IProfile
+  commentId: T:Elements.Geometry.Interfaces.IProfile
+  parent: Elements.Geometry.Interfaces
+  name: IProfile
+  nameWithType: IProfile
+  fullName: Elements.Geometry.Interfaces.IProfile
+- uid: Elements.Interfaces.IMaterial
+  commentId: T:Elements.Interfaces.IMaterial
+  parent: Elements.Interfaces
+  name: IMaterial
+  nameWithType: IMaterial
+  fullName: Elements.Interfaces.IMaterial
+- uid: Elements.ElementType.Id
+  commentId: P:Elements.ElementType.Id
+  parent: Elements.ElementType
+  name: Id
+  nameWithType: ElementType.Id
+  fullName: Elements.ElementType.Id
+- uid: Elements.ElementType.Name
+  commentId: P:Elements.ElementType.Name
+  parent: Elements.ElementType
+  name: Name
+  nameWithType: ElementType.Name
+  fullName: Elements.ElementType.Name
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.Geometry.Interfaces
+  commentId: N:Elements.Geometry.Interfaces
+  name: Elements.Geometry.Interfaces
+  nameWithType: Elements.Geometry.Interfaces
+  fullName: Elements.Geometry.Interfaces
+- uid: Elements.StructuralFramingType.Profile*
+  commentId: Overload:Elements.StructuralFramingType.Profile
+  name: Profile
+  nameWithType: StructuralFramingType.Profile
+  fullName: Elements.StructuralFramingType.Profile
+- uid: Elements.Geometry.Interfaces.IProfile.Profile
+  commentId: P:Elements.Geometry.Interfaces.IProfile.Profile
+  parent: Elements.Geometry.Interfaces.IProfile
+  name: Profile
+  nameWithType: IProfile.Profile
+  fullName: Elements.Geometry.Interfaces.IProfile.Profile
+- uid: Elements.Geometry.Profile
+  commentId: T:Elements.Geometry.Profile
+  parent: Elements.Geometry
+  name: Profile
+  nameWithType: Profile
+  fullName: Elements.Geometry.Profile
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: Elements.StructuralFramingType.Material*
+  commentId: Overload:Elements.StructuralFramingType.Material
+  name: Material
+  nameWithType: StructuralFramingType.Material
+  fullName: Elements.StructuralFramingType.Material
+- uid: Elements.Interfaces.IMaterial.Material
+  commentId: P:Elements.Interfaces.IMaterial.Material
+  parent: Elements.Interfaces.IMaterial
+  name: Material
+  nameWithType: IMaterial.Material
+  fullName: Elements.Interfaces.IMaterial.Material
+- uid: Elements.Material
+  commentId: T:Elements.Material
+  parent: Elements
+  name: Material
+  nameWithType: Material
+  fullName: Elements.Material
+- uid: Elements.ElementType.Type
+  commentId: P:Elements.ElementType.Type
+  parent: Elements.ElementType
+  name: Type
+  nameWithType: ElementType.Type
+  fullName: Elements.ElementType.Type
+- uid: Elements.StructuralFramingType.Type*
+  commentId: Overload:Elements.StructuralFramingType.Type
+  name: Type
+  nameWithType: StructuralFramingType.Type
+  fullName: Elements.StructuralFramingType.Type
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Elements.StructuralFramingType.#ctor*
+  commentId: Overload:Elements.StructuralFramingType.#ctor
+  name: StructuralFramingType
+  nameWithType: StructuralFramingType.StructuralFramingType
+  fullName: Elements.StructuralFramingType.StructuralFramingType

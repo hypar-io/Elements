@@ -1,0 +1,559 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.Solids.Face
+  commentId: T:Elements.Geometry.Solids.Face
+  id: Face
+  parent: Elements.Geometry.Solids
+  children:
+  - Elements.Geometry.Solids.Face.Id
+  - Elements.Geometry.Solids.Face.Inner
+  - Elements.Geometry.Solids.Face.Outer
+  - Elements.Geometry.Solids.Face.ToString
+  langs:
+  - csharp
+  - vb
+  name: Face
+  nameWithType: Face
+  fullName: Elements.Geometry.Solids.Face
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Geometry/Solids/Face.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Face
+    path: ../src/Elements/Geometry/Solids/Face.cs
+    startLine: 9
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Solids
+  summary: "\nA Solid Face.\n"
+  example: []
+  syntax:
+    content: public class Face
+    content.vb: Public Class Face
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Geometry.Solids.Face.Id
+  commentId: P:Elements.Geometry.Solids.Face.Id
+  id: Id
+  parent: Elements.Geometry.Solids.Face
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: Face.Id
+  fullName: Elements.Geometry.Solids.Face.Id
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Solids/Face.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Id
+    path: ../src/Elements/Geometry/Solids/Face.cs
+    startLine: 14
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Solids
+  summary: "\nThe Id of the Face.\n"
+  example: []
+  syntax:
+    content: public long Id { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Property Id As Long
+  overload: Elements.Geometry.Solids.Face.Id*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Solids.Face.Outer
+  commentId: P:Elements.Geometry.Solids.Face.Outer
+  id: Outer
+  parent: Elements.Geometry.Solids.Face
+  langs:
+  - csharp
+  - vb
+  name: Outer
+  nameWithType: Face.Outer
+  fullName: Elements.Geometry.Solids.Face.Outer
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Solids/Face.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Outer
+    path: ../src/Elements/Geometry/Solids/Face.cs
+    startLine: 19
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Solids
+  summary: "\nA CCW wound list of Edges.\n"
+  example: []
+  syntax:
+    content: public Loop Outer { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Solids.Loop
+    content.vb: 'Public ReadOnly Property Outer As '
+  overload: Elements.Geometry.Solids.Face.Outer*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Solids.Face.Inner
+  commentId: P:Elements.Geometry.Solids.Face.Inner
+  id: Inner
+  parent: Elements.Geometry.Solids.Face
+  langs:
+  - csharp
+  - vb
+  name: Inner
+  nameWithType: Face.Inner
+  fullName: Elements.Geometry.Solids.Face.Inner
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Solids/Face.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Inner
+    path: ../src/Elements/Geometry/Solids/Face.cs
+    startLine: 24
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Solids
+  summary: "\nA collection of CW wound Edges.\n"
+  example: []
+  syntax:
+    content: public Loop[] Inner { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Solids.Loop[]
+    content.vb: 'Public ReadOnly Property Inner As '
+  overload: Elements.Geometry.Solids.Face.Inner*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Solids.Face.ToString
+  commentId: M:Elements.Geometry.Solids.Face.ToString
+  id: ToString
+  parent: Elements.Geometry.Solids.Face
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: Face.ToString()
+  fullName: Elements.Geometry.Solids.Face.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Solids/Face.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ToString
+    path: ../src/Elements/Geometry/Solids/Face.cs
+    startLine: 60
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Solids
+  summary: "\nThe string representation of the Face.\n"
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Elements.Geometry.Solids.Face.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Elements.Geometry.Solids
+  commentId: N:Elements.Geometry.Solids
+  name: Elements.Geometry.Solids
+  nameWithType: Elements.Geometry.Solids
+  fullName: Elements.Geometry.Solids
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Geometry.Solids.Face.Id*
+  commentId: Overload:Elements.Geometry.Solids.Face.Id
+  name: Id
+  nameWithType: Face.Id
+  fullName: Elements.Geometry.Solids.Face.Id
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  name: Int64
+  nameWithType: Int64
+  fullName: System.Int64
+- uid: Elements.Geometry.Solids.Face.Outer*
+  commentId: Overload:Elements.Geometry.Solids.Face.Outer
+  name: Outer
+  nameWithType: Face.Outer
+  fullName: Elements.Geometry.Solids.Face.Outer
+- uid: Elements.Geometry.Solids.Loop
+  commentId: T:Elements.Geometry.Solids.Loop
+  parent: Elements.Geometry.Solids
+  name: Loop
+  nameWithType: Loop
+  fullName: Elements.Geometry.Solids.Loop
+- uid: Elements.Geometry.Solids.Face.Inner*
+  commentId: Overload:Elements.Geometry.Solids.Face.Inner
+  name: Inner
+  nameWithType: Face.Inner
+  fullName: Elements.Geometry.Solids.Face.Inner
+- uid: Elements.Geometry.Solids.Loop[]
+  isExternal: true
+  name: Loop[]
+  nameWithType: Loop[]
+  fullName: Elements.Geometry.Solids.Loop[]
+  nameWithType.vb: Loop()
+  fullName.vb: Elements.Geometry.Solids.Loop()
+  name.vb: Loop()
+  spec.csharp:
+  - uid: Elements.Geometry.Solids.Loop
+    name: Loop
+    nameWithType: Loop
+    fullName: Elements.Geometry.Solids.Loop
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: Elements.Geometry.Solids.Loop
+    name: Loop
+    nameWithType: Loop
+    fullName: Elements.Geometry.Solids.Loop
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Solids.Face.ToString*
+  commentId: Overload:Elements.Geometry.Solids.Face.ToString
+  name: ToString
+  nameWithType: Face.ToString
+  fullName: Elements.Geometry.Solids.Face.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String

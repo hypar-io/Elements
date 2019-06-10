@@ -1,0 +1,1086 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.StructuralFraming
+  commentId: T:Elements.StructuralFraming
+  id: StructuralFraming
+  parent: Elements
+  children:
+  - Elements.StructuralFraming.#ctor(Elements.Geometry.Interfaces.ICurve,Elements.StructuralFramingType,System.Double,System.Double,Elements.Geometry.Transform)
+  - Elements.StructuralFraming.Curve
+  - Elements.StructuralFraming.ElementType
+  - Elements.StructuralFraming.EndSetback
+  - Elements.StructuralFraming.Profile
+  - Elements.StructuralFraming.ProfileTransformed
+  - Elements.StructuralFraming.StartSetback
+  - Elements.StructuralFraming.Volume
+  langs:
+  - csharp
+  - vb
+  name: StructuralFraming
+  nameWithType: StructuralFraming
+  fullName: Elements.StructuralFraming
+  type: Class
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: StructuralFraming
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 12
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA structural element with a Profile swept along a curve or extruded.\n"
+  example: []
+  syntax:
+    content: 'public abstract class StructuralFraming : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType<StructuralFramingType>, ISweepAlongCurve, IProfile'
+    content.vb: >-
+      Public MustInherit Class StructuralFraming
+          Inherits Element
+          Implements IElement, IIdentifiable, ITransformable, IPropertySet, IElementType(Of StructuralFramingType), ISweepAlongCurve, IProfile
+  inheritance:
+  - System.Object
+  - Elements.Element
+  derivedClasses:
+  - Elements.Beam
+  - Elements.Brace
+  - Elements.Column
+  implements:
+  - Elements.Interfaces.IElement
+  - Elements.Interfaces.IIdentifiable
+  - Elements.Geometry.Interfaces.ITransformable
+  - Elements.Interfaces.IPropertySet
+  - Elements.Interfaces.IElementType{Elements.StructuralFramingType}
+  - Elements.Geometry.Interfaces.ISweepAlongCurve
+  - Elements.Geometry.Interfaces.IProfile
+  inheritedMembers:
+  - Elements.Element.Id
+  - Elements.Element.Type
+  - Elements.Element.Properties
+  - Elements.Element.Transform
+  - Elements.Element.Name
+  - Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  - Elements.Element.RemoveProperty(System.String)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - abstract
+  - class
+  modifiers.vb:
+  - Public
+  - MustInherit
+  - Class
+- uid: Elements.StructuralFraming.Curve
+  commentId: P:Elements.StructuralFraming.Curve
+  id: Curve
+  parent: Elements.StructuralFraming
+  langs:
+  - csharp
+  - vb
+  name: Curve
+  nameWithType: StructuralFraming.Curve
+  fullName: Elements.StructuralFraming.Curve
+  type: Property
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Curve
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 17
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe center line of the framing element.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConverter(typeof(ICurveConverter))]
+
+      public ICurve Curve { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Interfaces.ICurve
+    content.vb: >-
+      <JsonConverter(GetType(ICurveConverter))>
+
+      Public ReadOnly Property Curve As ICurve
+  overload: Elements.StructuralFraming.Curve*
+  implements:
+  - Elements.Geometry.Interfaces.ISweepAlongCurve.Curve
+  attributes:
+  - type: Newtonsoft.Json.JsonConverterAttribute
+    ctor: Newtonsoft.Json.JsonConverterAttribute.#ctor(System.Type)
+    arguments:
+    - type: System.Type
+      value: Elements.Serialization.JSON.ICurveConverter
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.StructuralFraming.StartSetback
+  commentId: P:Elements.StructuralFraming.StartSetback
+  id: StartSetback
+  parent: Elements.StructuralFraming
+  langs:
+  - csharp
+  - vb
+  name: StartSetback
+  nameWithType: StructuralFraming.StartSetback
+  fullName: Elements.StructuralFraming.StartSetback
+  type: Property
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: StartSetback
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 23
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe setback of the framing&apos;s extrusion at the start.\n"
+  example: []
+  syntax:
+    content: public double StartSetback { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property StartSetback As Double
+  overload: Elements.StructuralFraming.StartSetback*
+  implements:
+  - Elements.Geometry.Interfaces.ISweepAlongCurve.StartSetback
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.StructuralFraming.EndSetback
+  commentId: P:Elements.StructuralFraming.EndSetback
+  id: EndSetback
+  parent: Elements.StructuralFraming
+  langs:
+  - csharp
+  - vb
+  name: EndSetback
+  nameWithType: StructuralFraming.EndSetback
+  fullName: Elements.StructuralFraming.EndSetback
+  type: Property
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: EndSetback
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 28
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe setback of the framing&apos;s extrusion at the end.\n"
+  example: []
+  syntax:
+    content: public double EndSetback { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property EndSetback As Double
+  overload: Elements.StructuralFraming.EndSetback*
+  implements:
+  - Elements.Geometry.Interfaces.ISweepAlongCurve.EndSetback
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.StructuralFraming.ElementType
+  commentId: P:Elements.StructuralFraming.ElementType
+  id: ElementType
+  parent: Elements.StructuralFraming
+  langs:
+  - csharp
+  - vb
+  name: ElementType
+  nameWithType: StructuralFraming.ElementType
+  fullName: Elements.StructuralFraming.ElementType
+  type: Property
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ElementType
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 33
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe element type of the structural framing.\n"
+  example: []
+  syntax:
+    content: public StructuralFramingType ElementType { get; }
+    parameters: []
+    return:
+      type: Elements.StructuralFramingType
+    content.vb: Public ReadOnly Property ElementType As StructuralFramingType
+  overload: Elements.StructuralFraming.ElementType*
+  implements:
+  - Elements.Interfaces.IElementType{Elements.StructuralFramingType}.ElementType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.StructuralFraming.Profile
+  commentId: P:Elements.StructuralFraming.Profile
+  id: Profile
+  parent: Elements.StructuralFraming
+  langs:
+  - csharp
+  - vb
+  name: Profile
+  nameWithType: StructuralFraming.Profile
+  fullName: Elements.StructuralFraming.Profile
+  type: Property
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Profile
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 38
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe extrusion&apos;s profile.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public Profile Profile { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Profile
+    content.vb: >-
+      <JsonIgnore>
+
+      Public ReadOnly Property Profile As Profile
+  overload: Elements.StructuralFraming.Profile*
+  implements:
+  - Elements.Geometry.Interfaces.IProfile.Profile
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.StructuralFraming.#ctor(Elements.Geometry.Interfaces.ICurve,Elements.StructuralFramingType,System.Double,System.Double,Elements.Geometry.Transform)
+  commentId: M:Elements.StructuralFraming.#ctor(Elements.Geometry.Interfaces.ICurve,Elements.StructuralFramingType,System.Double,System.Double,Elements.Geometry.Transform)
+  id: '#ctor(Elements.Geometry.Interfaces.ICurve,Elements.StructuralFramingType,System.Double,System.Double,Elements.Geometry.Transform)'
+  parent: Elements.StructuralFraming
+  langs:
+  - csharp
+  - vb
+  name: StructuralFraming(ICurve, StructuralFramingType, Double, Double, Transform)
+  nameWithType: StructuralFraming.StructuralFraming(ICurve, StructuralFramingType, Double, Double, Transform)
+  fullName: Elements.StructuralFraming.StructuralFraming(Elements.Geometry.Interfaces.ICurve, Elements.StructuralFramingType, System.Double, System.Double, Elements.Geometry.Transform)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 55
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct a beam.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConstructor]
+
+      public StructuralFraming(ICurve curve, StructuralFramingType elementType, double startSetback = 0, double endSetback = 0, Transform transform = null)
+    parameters:
+    - id: curve
+      type: Elements.Geometry.Interfaces.ICurve
+      description: The center line of the beam.
+    - id: elementType
+      type: Elements.StructuralFramingType
+      description: The structural framing type.
+    - id: startSetback
+      type: System.Double
+      description: The setback of the beam&apos;s extrusion at its start.
+    - id: endSetback
+      type: System.Double
+      description: The setback of the beam&apos;s extrusion at its end.
+    - id: transform
+      type: Elements.Geometry.Transform
+      description: The element&apos;s Transform.
+    content.vb: >-
+      <JsonConstructor>
+
+      Public Sub New(curve As ICurve, elementType As StructuralFramingType, startSetback As Double = 0, endSetback As Double = 0, transform As Transform = Nothing)
+  overload: Elements.StructuralFraming.#ctor*
+  attributes:
+  - type: Newtonsoft.Json.JsonConstructorAttribute
+    ctor: Newtonsoft.Json.JsonConstructorAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.StructuralFraming.Volume
+  commentId: M:Elements.StructuralFraming.Volume
+  id: Volume
+  parent: Elements.StructuralFraming
+  langs:
+  - csharp
+  - vb
+  name: Volume()
+  nameWithType: StructuralFraming.Volume()
+  fullName: Elements.StructuralFraming.Volume()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Volume
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 73
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nCalculate the volume of the element.\n"
+  example: []
+  syntax:
+    content: public double Volume()
+    return:
+      type: System.Double
+    content.vb: Public Function Volume As Double
+  overload: Elements.StructuralFraming.Volume*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.StructuralFraming.ProfileTransformed
+  commentId: M:Elements.StructuralFraming.ProfileTransformed
+  id: ProfileTransformed
+  parent: Elements.StructuralFraming
+  langs:
+  - csharp
+  - vb
+  name: ProfileTransformed()
+  nameWithType: StructuralFraming.ProfileTransformed()
+  fullName: Elements.StructuralFraming.ProfileTransformed()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/StructuralFraming.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ProfileTransformed
+    path: ../src/Elements/StructuralFraming.cs
+    startLine: 81
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nGet the cross-section profile of the framing element transformed by the element&apos;s transform.\n"
+  example: []
+  syntax:
+    content: public Profile ProfileTransformed()
+    return:
+      type: Elements.Geometry.Profile
+    content.vb: Public Function ProfileTransformed As Profile
+  overload: Elements.StructuralFraming.ProfileTransformed*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.Element
+  commentId: T:Elements.Element
+  parent: Elements
+  name: Element
+  nameWithType: Element
+  fullName: Elements.Element
+- uid: Elements.Interfaces.IElement
+  commentId: T:Elements.Interfaces.IElement
+  parent: Elements.Interfaces
+  name: IElement
+  nameWithType: IElement
+  fullName: Elements.Interfaces.IElement
+- uid: Elements.Interfaces.IIdentifiable
+  commentId: T:Elements.Interfaces.IIdentifiable
+  parent: Elements.Interfaces
+  name: IIdentifiable
+  nameWithType: IIdentifiable
+  fullName: Elements.Interfaces.IIdentifiable
+- uid: Elements.Geometry.Interfaces.ITransformable
+  commentId: T:Elements.Geometry.Interfaces.ITransformable
+  parent: Elements.Geometry.Interfaces
+  name: ITransformable
+  nameWithType: ITransformable
+  fullName: Elements.Geometry.Interfaces.ITransformable
+- uid: Elements.Interfaces.IPropertySet
+  commentId: T:Elements.Interfaces.IPropertySet
+  parent: Elements.Interfaces
+  name: IPropertySet
+  nameWithType: IPropertySet
+  fullName: Elements.Interfaces.IPropertySet
+- uid: Elements.Interfaces.IElementType{Elements.StructuralFramingType}
+  commentId: T:Elements.Interfaces.IElementType{Elements.StructuralFramingType}
+  parent: Elements.Interfaces
+  definition: Elements.Interfaces.IElementType`1
+  name: IElementType<StructuralFramingType>
+  nameWithType: IElementType<StructuralFramingType>
+  fullName: Elements.Interfaces.IElementType<Elements.StructuralFramingType>
+  nameWithType.vb: IElementType(Of StructuralFramingType)
+  fullName.vb: Elements.Interfaces.IElementType(Of Elements.StructuralFramingType)
+  name.vb: IElementType(Of StructuralFramingType)
+  spec.csharp:
+  - uid: Elements.Interfaces.IElementType`1
+    name: IElementType
+    nameWithType: IElementType
+    fullName: Elements.Interfaces.IElementType
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Elements.StructuralFramingType
+    name: StructuralFramingType
+    nameWithType: StructuralFramingType
+    fullName: Elements.StructuralFramingType
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Elements.Interfaces.IElementType`1
+    name: IElementType
+    nameWithType: IElementType
+    fullName: Elements.Interfaces.IElementType
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Elements.StructuralFramingType
+    name: StructuralFramingType
+    nameWithType: StructuralFramingType
+    fullName: Elements.StructuralFramingType
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Interfaces.ISweepAlongCurve
+  commentId: T:Elements.Geometry.Interfaces.ISweepAlongCurve
+  parent: Elements.Geometry.Interfaces
+  name: ISweepAlongCurve
+  nameWithType: ISweepAlongCurve
+  fullName: Elements.Geometry.Interfaces.ISweepAlongCurve
+- uid: Elements.Geometry.Interfaces.IProfile
+  commentId: T:Elements.Geometry.Interfaces.IProfile
+  parent: Elements.Geometry.Interfaces
+  name: IProfile
+  nameWithType: IProfile
+  fullName: Elements.Geometry.Interfaces.IProfile
+- uid: Elements.Element.Id
+  commentId: P:Elements.Element.Id
+  parent: Elements.Element
+  name: Id
+  nameWithType: Element.Id
+  fullName: Elements.Element.Id
+- uid: Elements.Element.Type
+  commentId: P:Elements.Element.Type
+  parent: Elements.Element
+  name: Type
+  nameWithType: Element.Type
+  fullName: Elements.Element.Type
+- uid: Elements.Element.Properties
+  commentId: P:Elements.Element.Properties
+  parent: Elements.Element
+  name: Properties
+  nameWithType: Element.Properties
+  fullName: Elements.Element.Properties
+- uid: Elements.Element.Transform
+  commentId: P:Elements.Element.Transform
+  parent: Elements.Element
+  name: Transform
+  nameWithType: Element.Transform
+  fullName: Elements.Element.Transform
+- uid: Elements.Element.Name
+  commentId: P:Elements.Element.Name
+  parent: Elements.Element
+  name: Name
+  nameWithType: Element.Name
+  fullName: Elements.Element.Name
+- uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  commentId: M:Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  parent: Elements.Element
+  isExternal: true
+  name: AddProperty(String, IProperty)
+  nameWithType: Element.AddProperty(String, IProperty)
+  fullName: Elements.Element.AddProperty(System.String, Elements.Interfaces.IProperty)
+  spec.csharp:
+  - uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+    name: AddProperty
+    nameWithType: Element.AddProperty
+    fullName: Elements.Element.AddProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Interfaces.IProperty
+    name: IProperty
+    nameWithType: IProperty
+    fullName: Elements.Interfaces.IProperty
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+    name: AddProperty
+    nameWithType: Element.AddProperty
+    fullName: Elements.Element.AddProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Interfaces.IProperty
+    name: IProperty
+    nameWithType: IProperty
+    fullName: Elements.Interfaces.IProperty
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Element.RemoveProperty(System.String)
+  commentId: M:Elements.Element.RemoveProperty(System.String)
+  parent: Elements.Element
+  isExternal: true
+  name: RemoveProperty(String)
+  nameWithType: Element.RemoveProperty(String)
+  fullName: Elements.Element.RemoveProperty(System.String)
+  spec.csharp:
+  - uid: Elements.Element.RemoveProperty(System.String)
+    name: RemoveProperty
+    nameWithType: Element.RemoveProperty
+    fullName: Elements.Element.RemoveProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Element.RemoveProperty(System.String)
+    name: RemoveProperty
+    nameWithType: Element.RemoveProperty
+    fullName: Elements.Element.RemoveProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.Geometry.Interfaces
+  commentId: N:Elements.Geometry.Interfaces
+  name: Elements.Geometry.Interfaces
+  nameWithType: Elements.Geometry.Interfaces
+  fullName: Elements.Geometry.Interfaces
+- uid: Elements.Interfaces.IElementType`1
+  commentId: T:Elements.Interfaces.IElementType`1
+  name: IElementType<TElementType>
+  nameWithType: IElementType<TElementType>
+  fullName: Elements.Interfaces.IElementType<TElementType>
+  nameWithType.vb: IElementType(Of TElementType)
+  fullName.vb: Elements.Interfaces.IElementType(Of TElementType)
+  name.vb: IElementType(Of TElementType)
+  spec.csharp:
+  - uid: Elements.Interfaces.IElementType`1
+    name: IElementType
+    nameWithType: IElementType
+    fullName: Elements.Interfaces.IElementType
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TElementType
+    nameWithType: TElementType
+    fullName: TElementType
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Elements.Interfaces.IElementType`1
+    name: IElementType
+    nameWithType: IElementType
+    fullName: Elements.Interfaces.IElementType
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TElementType
+    nameWithType: TElementType
+    fullName: TElementType
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.StructuralFraming.Curve*
+  commentId: Overload:Elements.StructuralFraming.Curve
+  name: Curve
+  nameWithType: StructuralFraming.Curve
+  fullName: Elements.StructuralFraming.Curve
+- uid: Elements.Geometry.Interfaces.ISweepAlongCurve.Curve
+  commentId: P:Elements.Geometry.Interfaces.ISweepAlongCurve.Curve
+  parent: Elements.Geometry.Interfaces.ISweepAlongCurve
+  name: Curve
+  nameWithType: ISweepAlongCurve.Curve
+  fullName: Elements.Geometry.Interfaces.ISweepAlongCurve.Curve
+- uid: Elements.Geometry.Interfaces.ICurve
+  commentId: T:Elements.Geometry.Interfaces.ICurve
+  parent: Elements.Geometry.Interfaces
+  name: ICurve
+  nameWithType: ICurve
+  fullName: Elements.Geometry.Interfaces.ICurve
+- uid: Elements.StructuralFraming.StartSetback*
+  commentId: Overload:Elements.StructuralFraming.StartSetback
+  name: StartSetback
+  nameWithType: StructuralFraming.StartSetback
+  fullName: Elements.StructuralFraming.StartSetback
+- uid: Elements.Geometry.Interfaces.ISweepAlongCurve.StartSetback
+  commentId: P:Elements.Geometry.Interfaces.ISweepAlongCurve.StartSetback
+  parent: Elements.Geometry.Interfaces.ISweepAlongCurve
+  name: StartSetback
+  nameWithType: ISweepAlongCurve.StartSetback
+  fullName: Elements.Geometry.Interfaces.ISweepAlongCurve.StartSetback
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.StructuralFraming.EndSetback*
+  commentId: Overload:Elements.StructuralFraming.EndSetback
+  name: EndSetback
+  nameWithType: StructuralFraming.EndSetback
+  fullName: Elements.StructuralFraming.EndSetback
+- uid: Elements.Geometry.Interfaces.ISweepAlongCurve.EndSetback
+  commentId: P:Elements.Geometry.Interfaces.ISweepAlongCurve.EndSetback
+  parent: Elements.Geometry.Interfaces.ISweepAlongCurve
+  name: EndSetback
+  nameWithType: ISweepAlongCurve.EndSetback
+  fullName: Elements.Geometry.Interfaces.ISweepAlongCurve.EndSetback
+- uid: Elements.StructuralFraming.ElementType*
+  commentId: Overload:Elements.StructuralFraming.ElementType
+  name: ElementType
+  nameWithType: StructuralFraming.ElementType
+  fullName: Elements.StructuralFraming.ElementType
+- uid: Elements.Interfaces.IElementType{Elements.StructuralFramingType}.ElementType
+  commentId: P:Elements.Interfaces.IElementType{Elements.StructuralFramingType}.ElementType
+  parent: Elements.Interfaces.IElementType{Elements.StructuralFramingType}
+  definition: Elements.Interfaces.IElementType`1.ElementType
+  name: ElementType
+  nameWithType: IElementType<StructuralFramingType>.ElementType
+  fullName: Elements.Interfaces.IElementType<Elements.StructuralFramingType>.ElementType
+  nameWithType.vb: IElementType(Of StructuralFramingType).ElementType
+  fullName.vb: Elements.Interfaces.IElementType(Of Elements.StructuralFramingType).ElementType
+- uid: Elements.StructuralFramingType
+  commentId: T:Elements.StructuralFramingType
+  parent: Elements
+  name: StructuralFramingType
+  nameWithType: StructuralFramingType
+  fullName: Elements.StructuralFramingType
+- uid: Elements.Interfaces.IElementType`1.ElementType
+  commentId: P:Elements.Interfaces.IElementType`1.ElementType
+  name: ElementType
+  nameWithType: IElementType<TElementType>.ElementType
+  fullName: Elements.Interfaces.IElementType<TElementType>.ElementType
+  nameWithType.vb: IElementType(Of TElementType).ElementType
+  fullName.vb: Elements.Interfaces.IElementType(Of TElementType).ElementType
+- uid: Elements.StructuralFraming.Profile*
+  commentId: Overload:Elements.StructuralFraming.Profile
+  name: Profile
+  nameWithType: StructuralFraming.Profile
+  fullName: Elements.StructuralFraming.Profile
+- uid: Elements.Geometry.Interfaces.IProfile.Profile
+  commentId: P:Elements.Geometry.Interfaces.IProfile.Profile
+  parent: Elements.Geometry.Interfaces.IProfile
+  name: Profile
+  nameWithType: IProfile.Profile
+  fullName: Elements.Geometry.Interfaces.IProfile.Profile
+- uid: Elements.Geometry.Profile
+  commentId: T:Elements.Geometry.Profile
+  parent: Elements.Geometry
+  name: Profile
+  nameWithType: Profile
+  fullName: Elements.Geometry.Profile
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: Elements.StructuralFraming.#ctor*
+  commentId: Overload:Elements.StructuralFraming.#ctor
+  name: StructuralFraming
+  nameWithType: StructuralFraming.StructuralFraming
+  fullName: Elements.StructuralFraming.StructuralFraming
+- uid: Elements.Geometry.Transform
+  commentId: T:Elements.Geometry.Transform
+  parent: Elements.Geometry
+  name: Transform
+  nameWithType: Transform
+  fullName: Elements.Geometry.Transform
+- uid: Elements.StructuralFraming.Volume*
+  commentId: Overload:Elements.StructuralFraming.Volume
+  name: Volume
+  nameWithType: StructuralFraming.Volume
+  fullName: Elements.StructuralFraming.Volume
+- uid: Elements.StructuralFraming.ProfileTransformed*
+  commentId: Overload:Elements.StructuralFraming.ProfileTransformed
+  name: ProfileTransformed
+  nameWithType: StructuralFraming.ProfileTransformed
+  fullName: Elements.StructuralFraming.ProfileTransformed

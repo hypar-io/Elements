@@ -1,0 +1,170 @@
+### YamlMime:ManagedReference
+items:
+- uid: Hypar.Elements.Interfaces.IHasOpenings
+  commentId: T:Hypar.Elements.Interfaces.IHasOpenings
+  id: IHasOpenings
+  parent: Hypar.Elements.Interfaces
+  children:
+  - Hypar.Elements.Interfaces.IHasOpenings.Openings
+  langs:
+  - csharp
+  - vb
+  name: IHasOpenings
+  nameWithType: IHasOpenings
+  fullName: Hypar.Elements.Interfaces.IHasOpenings
+  type: Interface
+  source:
+    remote:
+      path: src/Elements/Interfaces/IHasOpenings.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: IHasOpenings
+    path: ../src/Elements/Interfaces/IHasOpenings.cs
+    startLine: 8
+  assemblies:
+  - Hypar.Elements
+  namespace: Hypar.Elements.Interfaces
+  summary: "\nHas a collection of opening.\n"
+  example: []
+  syntax:
+    content: public interface IHasOpenings
+    content.vb: Public Interface IHasOpenings
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Hypar.Elements.Interfaces.IHasOpenings.Openings
+  commentId: P:Hypar.Elements.Interfaces.IHasOpenings.Openings
+  id: Openings
+  parent: Hypar.Elements.Interfaces.IHasOpenings
+  langs:
+  - csharp
+  - vb
+  name: Openings
+  nameWithType: IHasOpenings.Openings
+  fullName: Hypar.Elements.Interfaces.IHasOpenings.Openings
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Interfaces/IHasOpenings.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Openings
+    path: ../src/Elements/Interfaces/IHasOpenings.cs
+    startLine: 13
+  assemblies:
+  - Hypar.Elements
+  namespace: Hypar.Elements.Interfaces
+  summary: "\nA collection of openings which are transformed in the coordinate system of their host element.\n"
+  example: []
+  syntax:
+    content: List<Opening> Openings { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Elements.Opening}
+    content.vb: ReadOnly Property Openings As List(Of Opening)
+  overload: Hypar.Elements.Interfaces.IHasOpenings.Openings*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Hypar.Elements.Interfaces
+  commentId: N:Hypar.Elements.Interfaces
+  name: Hypar.Elements.Interfaces
+  nameWithType: Hypar.Elements.Interfaces
+  fullName: Hypar.Elements.Interfaces
+- uid: Hypar.Elements.Interfaces.IHasOpenings.Openings*
+  commentId: Overload:Hypar.Elements.Interfaces.IHasOpenings.Openings
+  name: Openings
+  nameWithType: IHasOpenings.Openings
+  fullName: Hypar.Elements.Interfaces.IHasOpenings.Openings
+- uid: System.Collections.Generic.List{Elements.Opening}
+  commentId: T:System.Collections.Generic.List{Elements.Opening}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Opening>
+  nameWithType: List<Opening>
+  fullName: System.Collections.Generic.List<Elements.Opening>
+  nameWithType.vb: List(Of Opening)
+  fullName.vb: System.Collections.Generic.List(Of Elements.Opening)
+  name.vb: List(Of Opening)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Elements.Opening
+    name: Opening
+    nameWithType: Opening
+    fullName: Elements.Opening
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Elements.Opening
+    name: Opening
+    nameWithType: Opening
+    fullName: Elements.Opening
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic

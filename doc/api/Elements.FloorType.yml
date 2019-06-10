@@ -1,0 +1,730 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.FloorType
+  commentId: T:Elements.FloorType
+  id: FloorType
+  parent: Elements
+  children:
+  - Elements.FloorType.#ctor(System.String,System.Collections.Generic.List{Elements.MaterialLayer})
+  - Elements.FloorType.#ctor(System.String,System.Double)
+  - Elements.FloorType.MaterialLayers
+  - Elements.FloorType.Thickness
+  - Elements.FloorType.Type
+  langs:
+  - csharp
+  - vb
+  name: FloorType
+  nameWithType: FloorType
+  fullName: Elements.FloorType
+  type: Class
+  source:
+    remote:
+      path: src/Elements/FloorType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: FloorType
+    path: ../src/Elements/FloorType.cs
+    startLine: 10
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA container for properties common to floors.\n"
+  example: []
+  syntax:
+    content: 'public class FloorType : ElementType, IIdentifiable, ILayeredMaterial'
+    content.vb: >-
+      Public Class FloorType
+          Inherits ElementType
+          Implements IIdentifiable, ILayeredMaterial
+  inheritance:
+  - System.Object
+  - Elements.ElementType
+  implements:
+  - Elements.Interfaces.IIdentifiable
+  - Elements.Interfaces.ILayeredMaterial
+  inheritedMembers:
+  - Elements.ElementType.Id
+  - Elements.ElementType.Name
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.FloorType.Type
+  commentId: P:Elements.FloorType.Type
+  id: Type
+  parent: Elements.FloorType
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: FloorType.Type
+  fullName: Elements.FloorType.Type
+  type: Property
+  source:
+    remote:
+      path: src/Elements/FloorType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Type
+    path: ../src/Elements/FloorType.cs
+    startLine: 15
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe type of the floor type.\n"
+  example: []
+  syntax:
+    content: public override string Type { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Overrides ReadOnly Property Type As String
+  overridden: Elements.ElementType.Type
+  overload: Elements.FloorType.Type*
+  modifiers.csharp:
+  - public
+  - override
+  - get
+  modifiers.vb:
+  - Public
+  - Overrides
+  - ReadOnly
+- uid: Elements.FloorType.MaterialLayers
+  commentId: P:Elements.FloorType.MaterialLayers
+  id: MaterialLayers
+  parent: Elements.FloorType
+  langs:
+  - csharp
+  - vb
+  name: MaterialLayers
+  nameWithType: FloorType.MaterialLayers
+  fullName: Elements.FloorType.MaterialLayers
+  type: Property
+  source:
+    remote:
+      path: src/Elements/FloorType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: MaterialLayers
+    path: ../src/Elements/FloorType.cs
+    startLine: 23
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA collection of material layers.\n"
+  example: []
+  syntax:
+    content: public List<MaterialLayer> MaterialLayers { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Elements.MaterialLayer}
+    content.vb: Public ReadOnly Property MaterialLayers As List(Of MaterialLayer)
+  overload: Elements.FloorType.MaterialLayers*
+  implements:
+  - Elements.Interfaces.ILayeredMaterial.MaterialLayers
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.FloorType.#ctor(System.String,System.Double)
+  commentId: M:Elements.FloorType.#ctor(System.String,System.Double)
+  id: '#ctor(System.String,System.Double)'
+  parent: Elements.FloorType
+  langs:
+  - csharp
+  - vb
+  name: FloorType(String, Double)
+  nameWithType: FloorType.FloorType(String, Double)
+  fullName: Elements.FloorType.FloorType(System.String, System.Double)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/FloorType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/FloorType.cs
+    startLine: 30
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct a floor type.\n"
+  example: []
+  syntax:
+    content: public FloorType(string name, double thickness)
+    parameters:
+    - id: name
+      type: System.String
+      description: The name of the floor type.
+    - id: thickness
+      type: System.Double
+      description: The thickness of the associated floor.
+    content.vb: Public Sub New(name As String, thickness As Double)
+  overload: Elements.FloorType.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.FloorType.#ctor(System.String,System.Collections.Generic.List{Elements.MaterialLayer})
+  commentId: M:Elements.FloorType.#ctor(System.String,System.Collections.Generic.List{Elements.MaterialLayer})
+  id: '#ctor(System.String,System.Collections.Generic.List{Elements.MaterialLayer})'
+  parent: Elements.FloorType
+  langs:
+  - csharp
+  - vb
+  name: FloorType(String, List<MaterialLayer>)
+  nameWithType: FloorType.FloorType(String, List<MaterialLayer>)
+  fullName: Elements.FloorType.FloorType(System.String, System.Collections.Generic.List<Elements.MaterialLayer>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/FloorType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/FloorType.cs
+    startLine: 45
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct a floor type.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConstructor]
+
+      public FloorType(string name, List<MaterialLayer> materialLayers)
+    parameters:
+    - id: name
+      type: System.String
+      description: The name of the floor type.
+    - id: materialLayers
+      type: System.Collections.Generic.List{Elements.MaterialLayer}
+      description: A collection of material layers.
+    content.vb: >-
+      <JsonConstructor>
+
+      Public Sub New(name As String, materialLayers As List(Of MaterialLayer))
+  overload: Elements.FloorType.#ctor*
+  attributes:
+  - type: Newtonsoft.Json.JsonConstructorAttribute
+    ctor: Newtonsoft.Json.JsonConstructorAttribute.#ctor
+    arguments: []
+  nameWithType.vb: FloorType.FloorType(String, List(Of MaterialLayer))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.FloorType.FloorType(System.String, System.Collections.Generic.List(Of Elements.MaterialLayer))
+  name.vb: FloorType(String, List(Of MaterialLayer))
+- uid: Elements.FloorType.Thickness
+  commentId: M:Elements.FloorType.Thickness
+  id: Thickness
+  parent: Elements.FloorType
+  langs:
+  - csharp
+  - vb
+  name: Thickness()
+  nameWithType: FloorType.Thickness()
+  fullName: Elements.FloorType.Thickness()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/FloorType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Thickness
+    path: ../src/Elements/FloorType.cs
+    startLine: 54
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nCalculate the thickness of the floor by summing the thicknesses of its material layers.\n"
+  example: []
+  syntax:
+    content: public double Thickness()
+    return:
+      type: System.Double
+    content.vb: Public Function Thickness As Double
+  overload: Elements.FloorType.Thickness*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.ElementType
+  commentId: T:Elements.ElementType
+  parent: Elements
+  name: ElementType
+  nameWithType: ElementType
+  fullName: Elements.ElementType
+- uid: Elements.Interfaces.IIdentifiable
+  commentId: T:Elements.Interfaces.IIdentifiable
+  parent: Elements.Interfaces
+  name: IIdentifiable
+  nameWithType: IIdentifiable
+  fullName: Elements.Interfaces.IIdentifiable
+- uid: Elements.Interfaces.ILayeredMaterial
+  commentId: T:Elements.Interfaces.ILayeredMaterial
+  parent: Elements.Interfaces
+  name: ILayeredMaterial
+  nameWithType: ILayeredMaterial
+  fullName: Elements.Interfaces.ILayeredMaterial
+- uid: Elements.ElementType.Id
+  commentId: P:Elements.ElementType.Id
+  parent: Elements.ElementType
+  name: Id
+  nameWithType: ElementType.Id
+  fullName: Elements.ElementType.Id
+- uid: Elements.ElementType.Name
+  commentId: P:Elements.ElementType.Name
+  parent: Elements.ElementType
+  name: Name
+  nameWithType: ElementType.Name
+  fullName: Elements.ElementType.Name
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.ElementType.Type
+  commentId: P:Elements.ElementType.Type
+  parent: Elements.ElementType
+  name: Type
+  nameWithType: ElementType.Type
+  fullName: Elements.ElementType.Type
+- uid: Elements.FloorType.Type*
+  commentId: Overload:Elements.FloorType.Type
+  name: Type
+  nameWithType: FloorType.Type
+  fullName: Elements.FloorType.Type
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Elements.FloorType.MaterialLayers*
+  commentId: Overload:Elements.FloorType.MaterialLayers
+  name: MaterialLayers
+  nameWithType: FloorType.MaterialLayers
+  fullName: Elements.FloorType.MaterialLayers
+- uid: Elements.Interfaces.ILayeredMaterial.MaterialLayers
+  commentId: P:Elements.Interfaces.ILayeredMaterial.MaterialLayers
+  parent: Elements.Interfaces.ILayeredMaterial
+  name: MaterialLayers
+  nameWithType: ILayeredMaterial.MaterialLayers
+  fullName: Elements.Interfaces.ILayeredMaterial.MaterialLayers
+- uid: System.Collections.Generic.List{Elements.MaterialLayer}
+  commentId: T:System.Collections.Generic.List{Elements.MaterialLayer}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<MaterialLayer>
+  nameWithType: List<MaterialLayer>
+  fullName: System.Collections.Generic.List<Elements.MaterialLayer>
+  nameWithType.vb: List(Of MaterialLayer)
+  fullName.vb: System.Collections.Generic.List(Of Elements.MaterialLayer)
+  name.vb: List(Of MaterialLayer)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Elements.MaterialLayer
+    name: MaterialLayer
+    nameWithType: MaterialLayer
+    fullName: Elements.MaterialLayer
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Elements.MaterialLayer
+    name: MaterialLayer
+    nameWithType: MaterialLayer
+    fullName: Elements.MaterialLayer
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Elements.FloorType.#ctor*
+  commentId: Overload:Elements.FloorType.#ctor
+  name: FloorType
+  nameWithType: FloorType.FloorType
+  fullName: Elements.FloorType.FloorType
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.FloorType.Thickness*
+  commentId: Overload:Elements.FloorType.Thickness
+  name: Thickness
+  nameWithType: FloorType.Thickness
+  fullName: Elements.FloorType.Thickness

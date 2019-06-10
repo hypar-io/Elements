@@ -1,0 +1,571 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.ElementType
+  commentId: T:Elements.ElementType
+  id: ElementType
+  parent: Elements
+  children:
+  - Elements.ElementType.#ctor(System.String,System.String)
+  - Elements.ElementType.Id
+  - Elements.ElementType.Name
+  - Elements.ElementType.Type
+  langs:
+  - csharp
+  - vb
+  name: ElementType
+  nameWithType: ElementType
+  fullName: Elements.ElementType
+  type: Class
+  source:
+    remote:
+      path: src/Elements/ElementType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ElementType
+    path: ../src/Elements/ElementType.cs
+    startLine: 10
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nBase class for all ElementTypes\n"
+  example: []
+  syntax:
+    content: 'public abstract class ElementType : IIdentifiable'
+    content.vb: >-
+      Public MustInherit Class ElementType
+          Implements IIdentifiable
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - Elements.FloorType
+  - Elements.StructuralFramingType
+  - Elements.WallType
+  implements:
+  - Elements.Interfaces.IIdentifiable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - abstract
+  - class
+  modifiers.vb:
+  - Public
+  - MustInherit
+  - Class
+- uid: Elements.ElementType.Id
+  commentId: P:Elements.ElementType.Id
+  id: Id
+  parent: Elements.ElementType
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: ElementType.Id
+  fullName: Elements.ElementType.Id
+  type: Property
+  source:
+    remote:
+      path: src/Elements/ElementType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Id
+    path: ../src/Elements/ElementType.cs
+    startLine: 15
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe unique identifier of an ElementType.\n"
+  example: []
+  syntax:
+    content: public long Id { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Property Id As Long
+  overload: Elements.ElementType.Id*
+  implements:
+  - Elements.Interfaces.IIdentifiable.Id
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.ElementType.Type
+  commentId: P:Elements.ElementType.Type
+  id: Type
+  parent: Elements.ElementType
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: ElementType.Type
+  fullName: Elements.ElementType.Type
+  type: Property
+  source:
+    remote:
+      path: src/Elements/ElementType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Type
+    path: ../src/Elements/ElementType.cs
+    startLine: 21
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe type of the ElementType.\nUsed during serialization.\n"
+  example: []
+  syntax:
+    content: public abstract string Type { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public MustOverride ReadOnly Property Type As String
+  overload: Elements.ElementType.Type*
+  modifiers.csharp:
+  - public
+  - abstract
+  - get
+  modifiers.vb:
+  - Public
+  - MustOverride
+  - ReadOnly
+- uid: Elements.ElementType.Name
+  commentId: P:Elements.ElementType.Name
+  id: Name
+  parent: Elements.ElementType
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: ElementType.Name
+  fullName: Elements.ElementType.Name
+  type: Property
+  source:
+    remote:
+      path: src/Elements/ElementType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Name
+    path: ../src/Elements/ElementType.cs
+    startLine: 26
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe name of the ElementType.\n"
+  example: []
+  syntax:
+    content: public string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Name As String
+  overload: Elements.ElementType.Name*
+  implements:
+  - Elements.Interfaces.IIdentifiable.Name
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.ElementType.#ctor(System.String,System.String)
+  commentId: M:Elements.ElementType.#ctor(System.String,System.String)
+  id: '#ctor(System.String,System.String)'
+  parent: Elements.ElementType
+  langs:
+  - csharp
+  - vb
+  name: ElementType(String, String)
+  nameWithType: ElementType.ElementType(String, String)
+  fullName: Elements.ElementType.ElementType(System.String, System.String)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/ElementType.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/ElementType.cs
+    startLine: 33
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct an ElementType.\n"
+  example: []
+  syntax:
+    content: public ElementType(string name, string description = null)
+    parameters:
+    - id: name
+      type: System.String
+      description: A name.
+    - id: description
+      type: System.String
+      description: A description.
+    content.vb: Public Sub New(name As String, description As String = Nothing)
+  overload: Elements.ElementType.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.Interfaces.IIdentifiable
+  commentId: T:Elements.Interfaces.IIdentifiable
+  parent: Elements.Interfaces
+  name: IIdentifiable
+  nameWithType: IIdentifiable
+  fullName: Elements.Interfaces.IIdentifiable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.ElementType.Id*
+  commentId: Overload:Elements.ElementType.Id
+  name: Id
+  nameWithType: ElementType.Id
+  fullName: Elements.ElementType.Id
+- uid: Elements.Interfaces.IIdentifiable.Id
+  commentId: P:Elements.Interfaces.IIdentifiable.Id
+  parent: Elements.Interfaces.IIdentifiable
+  name: Id
+  nameWithType: IIdentifiable.Id
+  fullName: Elements.Interfaces.IIdentifiable.Id
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  name: Int64
+  nameWithType: Int64
+  fullName: System.Int64
+- uid: Elements.ElementType.Type*
+  commentId: Overload:Elements.ElementType.Type
+  name: Type
+  nameWithType: ElementType.Type
+  fullName: Elements.ElementType.Type
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Elements.ElementType.Name*
+  commentId: Overload:Elements.ElementType.Name
+  name: Name
+  nameWithType: ElementType.Name
+  fullName: Elements.ElementType.Name
+- uid: Elements.Interfaces.IIdentifiable.Name
+  commentId: P:Elements.Interfaces.IIdentifiable.Name
+  parent: Elements.Interfaces.IIdentifiable
+  name: Name
+  nameWithType: IIdentifiable.Name
+  fullName: Elements.Interfaces.IIdentifiable.Name
+- uid: Elements.ElementType.#ctor*
+  commentId: Overload:Elements.ElementType.#ctor
+  name: ElementType
+  nameWithType: ElementType.ElementType
+  fullName: Elements.ElementType.ElementType

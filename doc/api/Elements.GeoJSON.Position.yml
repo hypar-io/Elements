@@ -1,0 +1,646 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.GeoJSON.Position
+  commentId: T:Elements.GeoJSON.Position
+  id: Position
+  parent: Elements.GeoJSON
+  children:
+  - Elements.GeoJSON.Position.#ctor(System.Double,System.Double)
+  - Elements.GeoJSON.Position.Equals(System.Object)
+  - Elements.GeoJSON.Position.GetHashCode
+  - Elements.GeoJSON.Position.Latitude
+  - Elements.GeoJSON.Position.Longitude
+  - Elements.GeoJSON.Position.ToVectorMeters
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: Position
+  fullName: Elements.GeoJSON.Position
+  type: Class
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Position
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 28
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nA GeoJSON position specified by longitude and latitude.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConverter(typeof(PositionConverter))]
+
+      public class Position
+    content.vb: >-
+      <JsonConverter(GetType(PositionConverter))>
+
+      Public Class Position
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.GeoJSON.Position.Latitude
+  commentId: P:Elements.GeoJSON.Position.Latitude
+  id: Latitude
+  parent: Elements.GeoJSON.Position
+  langs:
+  - csharp
+  - vb
+  name: Latitude
+  nameWithType: Position.Latitude
+  fullName: Elements.GeoJSON.Position.Latitude
+  type: Property
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Latitude
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 35
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nThe latitude in decimal degrees.\n"
+  example: []
+  syntax:
+    content: public double Latitude { get; }
+    parameters: []
+    return:
+      type: System.Double
+      description: ''
+    content.vb: Public ReadOnly Property Latitude As Double
+  overload: Elements.GeoJSON.Position.Latitude*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.GeoJSON.Position.Longitude
+  commentId: P:Elements.GeoJSON.Position.Longitude
+  id: Longitude
+  parent: Elements.GeoJSON.Position
+  langs:
+  - csharp
+  - vb
+  name: Longitude
+  nameWithType: Position.Longitude
+  fullName: Elements.GeoJSON.Position.Longitude
+  type: Property
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Longitude
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 41
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nThe longitude in decimal degrees.\n"
+  example: []
+  syntax:
+    content: public double Longitude { get; }
+    parameters: []
+    return:
+      type: System.Double
+      description: ''
+    content.vb: Public ReadOnly Property Longitude As Double
+  overload: Elements.GeoJSON.Position.Longitude*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.GeoJSON.Position.#ctor(System.Double,System.Double)
+  commentId: M:Elements.GeoJSON.Position.#ctor(System.Double,System.Double)
+  id: '#ctor(System.Double,System.Double)'
+  parent: Elements.GeoJSON.Position
+  langs:
+  - csharp
+  - vb
+  name: Position(Double, Double)
+  nameWithType: Position.Position(Double, Double)
+  fullName: Elements.GeoJSON.Position.Position(System.Double, System.Double)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 48
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nConstruct a Position.\n"
+  example: []
+  syntax:
+    content: public Position(double lon, double lat)
+    parameters:
+    - id: lon
+      type: System.Double
+      description: ''
+    - id: lat
+      type: System.Double
+      description: ''
+    content.vb: Public Sub New(lon As Double, lat As Double)
+  overload: Elements.GeoJSON.Position.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.GeoJSON.Position.Equals(System.Object)
+  commentId: M:Elements.GeoJSON.Position.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Elements.GeoJSON.Position
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: Position.Equals(Object)
+  fullName: Elements.GeoJSON.Position.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Equals
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 59
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\n\n"
+  example: []
+  syntax:
+    content: public override bool Equals(object obj)
+    parameters:
+    - id: obj
+      type: System.Object
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Overrides Function Equals(obj As Object) As Boolean
+  overridden: System.Object.Equals(System.Object)
+  overload: Elements.GeoJSON.Position.Equals*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Elements.GeoJSON.Position.GetHashCode
+  commentId: M:Elements.GeoJSON.Position.GetHashCode
+  id: GetHashCode
+  parent: Elements.GeoJSON.Position
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: Position.GetHashCode()
+  fullName: Elements.GeoJSON.Position.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: GetHashCode
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 73
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\n\n"
+  example: []
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+      description: ''
+    content.vb: Public Overrides Function GetHashCode As Integer
+  overridden: System.Object.GetHashCode
+  overload: Elements.GeoJSON.Position.GetHashCode*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Elements.GeoJSON.Position.ToVectorMeters
+  commentId: M:Elements.GeoJSON.Position.ToVectorMeters
+  id: ToVectorMeters
+  parent: Elements.GeoJSON.Position
+  langs:
+  - csharp
+  - vb
+  name: ToVectorMeters()
+  nameWithType: Position.ToVectorMeters()
+  fullName: Elements.GeoJSON.Position.ToVectorMeters()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ToVectorMeters
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 82
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nConvert the position to a vector.\n"
+  example: []
+  syntax:
+    content: public Vector3 ToVectorMeters()
+    return:
+      type: Elements.Geometry.Vector3
+      description: ''
+    content.vb: Public Function ToVectorMeters As Vector3
+  overload: Elements.GeoJSON.Position.ToVectorMeters*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements.GeoJSON
+  commentId: N:Elements.GeoJSON
+  name: Elements.GeoJSON
+  nameWithType: Elements.GeoJSON
+  fullName: Elements.GeoJSON
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.GeoJSON.Position.Latitude*
+  commentId: Overload:Elements.GeoJSON.Position.Latitude
+  name: Latitude
+  nameWithType: Position.Latitude
+  fullName: Elements.GeoJSON.Position.Latitude
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.GeoJSON.Position.Longitude*
+  commentId: Overload:Elements.GeoJSON.Position.Longitude
+  name: Longitude
+  nameWithType: Position.Longitude
+  fullName: Elements.GeoJSON.Position.Longitude
+- uid: Elements.GeoJSON.Position.#ctor*
+  commentId: Overload:Elements.GeoJSON.Position.#ctor
+  name: Position
+  nameWithType: Position.Position
+  fullName: Elements.GeoJSON.Position.Position
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.GeoJSON.Position.Equals*
+  commentId: Overload:Elements.GeoJSON.Position.Equals
+  name: Equals
+  nameWithType: Position.Equals
+  fullName: Elements.GeoJSON.Position.Equals
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.GeoJSON.Position.GetHashCode*
+  commentId: Overload:Elements.GeoJSON.Position.GetHashCode
+  name: GetHashCode
+  nameWithType: Position.GetHashCode
+  fullName: Elements.GeoJSON.Position.GetHashCode
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Elements.GeoJSON.Position.ToVectorMeters*
+  commentId: Overload:Elements.GeoJSON.Position.ToVectorMeters
+  name: ToVectorMeters
+  nameWithType: Position.ToVectorMeters
+  fullName: Elements.GeoJSON.Position.ToVectorMeters
+- uid: Elements.Geometry.Vector3
+  commentId: T:Elements.Geometry.Vector3
+  parent: Elements.Geometry
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Elements.Geometry.Vector3
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry

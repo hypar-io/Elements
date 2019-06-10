@@ -1,0 +1,153 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.HorizontalAlignment
+  commentId: T:Elements.Geometry.HorizontalAlignment
+  id: HorizontalAlignment
+  parent: Elements.Geometry
+  children:
+  - Elements.Geometry.HorizontalAlignment.Center
+  - Elements.Geometry.HorizontalAlignment.Left
+  - Elements.Geometry.HorizontalAlignment.Right
+  langs:
+  - csharp
+  - vb
+  name: HorizontalAlignment
+  nameWithType: HorizontalAlignment
+  fullName: Elements.Geometry.HorizontalAlignment
+  type: Enum
+  source:
+    remote:
+      path: src/Elements/Geometry/Profile.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: HorizontalAlignment
+    path: ../src/Elements/Geometry/Profile.cs
+    startLine: 31
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe horizontal alignment of the profile.\n"
+  example: []
+  syntax:
+    content: public enum HorizontalAlignment
+    content.vb: Public Enum HorizontalAlignment
+  modifiers.csharp:
+  - public
+  - enum
+  modifiers.vb:
+  - Public
+  - Enum
+- uid: Elements.Geometry.HorizontalAlignment.Left
+  commentId: F:Elements.Geometry.HorizontalAlignment.Left
+  id: Left
+  parent: Elements.Geometry.HorizontalAlignment
+  langs:
+  - csharp
+  - vb
+  name: Left
+  nameWithType: HorizontalAlignment.Left
+  fullName: Elements.Geometry.HorizontalAlignment.Left
+  type: Field
+  source:
+    remote:
+      path: src/Elements/Geometry/Profile.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Left
+    path: ../src/Elements/Geometry/Profile.cs
+    startLine: 36
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nAlign the profile along its left edge.\n"
+  example: []
+  syntax:
+    content: Left = 0
+    return:
+      type: Elements.Geometry.HorizontalAlignment
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.Geometry.HorizontalAlignment.Center
+  commentId: F:Elements.Geometry.HorizontalAlignment.Center
+  id: Center
+  parent: Elements.Geometry.HorizontalAlignment
+  langs:
+  - csharp
+  - vb
+  name: Center
+  nameWithType: HorizontalAlignment.Center
+  fullName: Elements.Geometry.HorizontalAlignment.Center
+  type: Field
+  source:
+    remote:
+      path: src/Elements/Geometry/Profile.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Center
+    path: ../src/Elements/Geometry/Profile.cs
+    startLine: 40
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nAlign the profile along its center.\n"
+  example: []
+  syntax:
+    content: Center = 1
+    return:
+      type: Elements.Geometry.HorizontalAlignment
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Elements.Geometry.HorizontalAlignment.Right
+  commentId: F:Elements.Geometry.HorizontalAlignment.Right
+  id: Right
+  parent: Elements.Geometry.HorizontalAlignment
+  langs:
+  - csharp
+  - vb
+  name: Right
+  nameWithType: HorizontalAlignment.Right
+  fullName: Elements.Geometry.HorizontalAlignment.Right
+  type: Field
+  source:
+    remote:
+      path: src/Elements/Geometry/Profile.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Right
+    path: ../src/Elements/Geometry/Profile.cs
+    startLine: 44
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nAlign the profile along its right edge.\n"
+  example: []
+  syntax:
+    content: Right = 2
+    return:
+      type: Elements.Geometry.HorizontalAlignment
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+references:
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: Elements.Geometry.HorizontalAlignment
+  commentId: T:Elements.Geometry.HorizontalAlignment
+  parent: Elements.Geometry
+  name: HorizontalAlignment
+  nameWithType: HorizontalAlignment
+  fullName: Elements.Geometry.HorizontalAlignment

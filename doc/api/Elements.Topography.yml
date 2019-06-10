@@ -1,0 +1,1039 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Topography
+  commentId: T:Elements.Topography
+  id: Topography
+  parent: Elements
+  children:
+  - Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})
+  - Elements.Topography.Material
+  - Elements.Topography.MaxElevation
+  - Elements.Topography.Mesh
+  - Elements.Topography.MinElevation
+  - Elements.Topography.Tessellate(Elements.Geometry.Mesh@)
+  langs:
+  - csharp
+  - vb
+  name: Topography
+  nameWithType: Topography
+  fullName: Elements.Topography
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Topography.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Topography
+    path: ../src/Elements/Topography.cs
+    startLine: 14
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA topographic mesh defined by an array of elevation values.\n"
+  example: []
+  syntax:
+    content: 'public class Topography : Element, IElement, IIdentifiable, ITransformable, IPropertySet, ITessellate, IMaterial'
+    content.vb: >-
+      Public Class Topography
+          Inherits Element
+          Implements IElement, IIdentifiable, ITransformable, IPropertySet, ITessellate, IMaterial
+  inheritance:
+  - System.Object
+  - Elements.Element
+  implements:
+  - Elements.Interfaces.IElement
+  - Elements.Interfaces.IIdentifiable
+  - Elements.Geometry.Interfaces.ITransformable
+  - Elements.Interfaces.IPropertySet
+  - Elements.Geometry.Interfaces.ITessellate
+  - Elements.Interfaces.IMaterial
+  inheritedMembers:
+  - Elements.Element.Id
+  - Elements.Element.Type
+  - Elements.Element.Properties
+  - Elements.Element.Transform
+  - Elements.Element.Name
+  - Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  - Elements.Element.RemoveProperty(System.String)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Topography.Mesh
+  commentId: P:Elements.Topography.Mesh
+  id: Mesh
+  parent: Elements.Topography
+  langs:
+  - csharp
+  - vb
+  name: Mesh
+  nameWithType: Topography.Mesh
+  fullName: Elements.Topography.Mesh
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Topography.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Mesh
+    path: ../src/Elements/Topography.cs
+    startLine: 27
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe topography&apos;s mesh.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public Mesh Mesh { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Mesh
+    content.vb: >-
+      <JsonIgnore>
+
+      Public ReadOnly Property Mesh As Mesh
+  overload: Elements.Topography.Mesh*
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Topography.MaxElevation
+  commentId: P:Elements.Topography.MaxElevation
+  id: MaxElevation
+  parent: Elements.Topography
+  langs:
+  - csharp
+  - vb
+  name: MaxElevation
+  nameWithType: Topography.MaxElevation
+  fullName: Elements.Topography.MaxElevation
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Topography.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: MaxElevation
+    path: ../src/Elements/Topography.cs
+    startLine: 33
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe maximum elevation of the topography.\n"
+  example: []
+  syntax:
+    content: public double MaxElevation { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property MaxElevation As Double
+  overload: Elements.Topography.MaxElevation*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Topography.MinElevation
+  commentId: P:Elements.Topography.MinElevation
+  id: MinElevation
+  parent: Elements.Topography
+  langs:
+  - csharp
+  - vb
+  name: MinElevation
+  nameWithType: Topography.MinElevation
+  fullName: Elements.Topography.MinElevation
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Topography.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: MinElevation
+    path: ../src/Elements/Topography.cs
+    startLine: 38
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe minimum elevation of the topography.\n"
+  example: []
+  syntax:
+    content: public double MinElevation { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property MinElevation As Double
+  overload: Elements.Topography.MinElevation*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Topography.Material
+  commentId: P:Elements.Topography.Material
+  id: Material
+  parent: Elements.Topography
+  langs:
+  - csharp
+  - vb
+  name: Material
+  nameWithType: Topography.Material
+  fullName: Elements.Topography.Material
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Topography.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Material
+    path: ../src/Elements/Topography.cs
+    startLine: 43
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe material of the topography.\n"
+  example: []
+  syntax:
+    content: public Material Material { get; }
+    parameters: []
+    return:
+      type: Elements.Material
+    content.vb: Public ReadOnly Property Material As Material
+  overload: Elements.Topography.Material*
+  implements:
+  - Elements.Interfaces.IMaterial.Material
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})
+  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})
+  id: '#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})'
+  parent: Elements.Topography
+  langs:
+  - csharp
+  - vb
+  name: Topography(Vector3, Double, Double, Double[], Int32, Func<Triangle, Color>)
+  nameWithType: Topography.Topography(Vector3, Double, Double, Double[], Int32, Func<Triangle, Color>)
+  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double[], System.Int32, System.Func<Elements.Geometry.Triangle, Elements.Geometry.Color>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Topography.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Topography.cs
+    startLine: 54
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nCreate a topography.\n"
+  example: []
+  syntax:
+    content: public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int width, Func<Triangle, Color> colorizer)
+    parameters:
+    - id: origin
+      type: Elements.Geometry.Vector3
+      description: The origin of the topography.
+    - id: cellWidth
+      type: System.Double
+      description: The width of each square &quot;cell&quot; of the topography.
+    - id: cellHeight
+      type: System.Double
+      description: The height of each square &quot;cell&quot; of the topography.
+    - id: elevations
+      type: System.Double[]
+      description: An array of elevation samples which will be converted to a square array of width.
+    - id: width
+      type: System.Int32
+      description: ''
+    - id: colorizer
+      type: System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color}
+      description: A function which produces a color for a triangle.
+    content.vb: Public Sub New(origin As Vector3, cellWidth As Double, cellHeight As Double, elevations As Double(), width As Integer, colorizer As Func(Of Triangle, Color))
+  overload: Elements.Topography.#ctor*
+  nameWithType.vb: Topography.Topography(Vector3, Double, Double, Double(), Int32, Func(Of Triangle, Color))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double(), System.Int32, System.Func(Of Elements.Geometry.Triangle, Elements.Geometry.Color))
+  name.vb: Topography(Vector3, Double, Double, Double(), Int32, Func(Of Triangle, Color))
+- uid: Elements.Topography.Tessellate(Elements.Geometry.Mesh@)
+  commentId: M:Elements.Topography.Tessellate(Elements.Geometry.Mesh@)
+  id: Tessellate(Elements.Geometry.Mesh@)
+  parent: Elements.Topography
+  langs:
+  - csharp
+  - vb
+  name: Tessellate(ref Mesh)
+  nameWithType: Topography.Tessellate(ref Mesh)
+  fullName: Elements.Topography.Tessellate(ref Elements.Geometry.Mesh)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Topography.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Tessellate
+    path: ../src/Elements/Topography.cs
+    startLine: 132
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nTessellate the topography.\n"
+  example: []
+  syntax:
+    content: public void Tessellate(ref Mesh mesh)
+    parameters:
+    - id: mesh
+      type: Elements.Geometry.Mesh
+      description: The mesh into which the topography&apos;s facets will be added.
+    content.vb: Public Sub Tessellate(ByRef mesh As Mesh)
+  overload: Elements.Topography.Tessellate*
+  implements:
+  - Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@)
+  nameWithType.vb: Topography.Tessellate(ByRef Mesh)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.Topography.Tessellate(ByRef Elements.Geometry.Mesh)
+  name.vb: Tessellate(ByRef Mesh)
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.Element
+  commentId: T:Elements.Element
+  parent: Elements
+  name: Element
+  nameWithType: Element
+  fullName: Elements.Element
+- uid: Elements.Interfaces.IElement
+  commentId: T:Elements.Interfaces.IElement
+  parent: Elements.Interfaces
+  name: IElement
+  nameWithType: IElement
+  fullName: Elements.Interfaces.IElement
+- uid: Elements.Interfaces.IIdentifiable
+  commentId: T:Elements.Interfaces.IIdentifiable
+  parent: Elements.Interfaces
+  name: IIdentifiable
+  nameWithType: IIdentifiable
+  fullName: Elements.Interfaces.IIdentifiable
+- uid: Elements.Geometry.Interfaces.ITransformable
+  commentId: T:Elements.Geometry.Interfaces.ITransformable
+  parent: Elements.Geometry.Interfaces
+  name: ITransformable
+  nameWithType: ITransformable
+  fullName: Elements.Geometry.Interfaces.ITransformable
+- uid: Elements.Interfaces.IPropertySet
+  commentId: T:Elements.Interfaces.IPropertySet
+  parent: Elements.Interfaces
+  name: IPropertySet
+  nameWithType: IPropertySet
+  fullName: Elements.Interfaces.IPropertySet
+- uid: Elements.Geometry.Interfaces.ITessellate
+  commentId: T:Elements.Geometry.Interfaces.ITessellate
+  parent: Elements.Geometry.Interfaces
+  name: ITessellate
+  nameWithType: ITessellate
+  fullName: Elements.Geometry.Interfaces.ITessellate
+- uid: Elements.Interfaces.IMaterial
+  commentId: T:Elements.Interfaces.IMaterial
+  parent: Elements.Interfaces
+  name: IMaterial
+  nameWithType: IMaterial
+  fullName: Elements.Interfaces.IMaterial
+- uid: Elements.Element.Id
+  commentId: P:Elements.Element.Id
+  parent: Elements.Element
+  name: Id
+  nameWithType: Element.Id
+  fullName: Elements.Element.Id
+- uid: Elements.Element.Type
+  commentId: P:Elements.Element.Type
+  parent: Elements.Element
+  name: Type
+  nameWithType: Element.Type
+  fullName: Elements.Element.Type
+- uid: Elements.Element.Properties
+  commentId: P:Elements.Element.Properties
+  parent: Elements.Element
+  name: Properties
+  nameWithType: Element.Properties
+  fullName: Elements.Element.Properties
+- uid: Elements.Element.Transform
+  commentId: P:Elements.Element.Transform
+  parent: Elements.Element
+  name: Transform
+  nameWithType: Element.Transform
+  fullName: Elements.Element.Transform
+- uid: Elements.Element.Name
+  commentId: P:Elements.Element.Name
+  parent: Elements.Element
+  name: Name
+  nameWithType: Element.Name
+  fullName: Elements.Element.Name
+- uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  commentId: M:Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  parent: Elements.Element
+  isExternal: true
+  name: AddProperty(String, IProperty)
+  nameWithType: Element.AddProperty(String, IProperty)
+  fullName: Elements.Element.AddProperty(System.String, Elements.Interfaces.IProperty)
+  spec.csharp:
+  - uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+    name: AddProperty
+    nameWithType: Element.AddProperty
+    fullName: Elements.Element.AddProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Interfaces.IProperty
+    name: IProperty
+    nameWithType: IProperty
+    fullName: Elements.Interfaces.IProperty
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+    name: AddProperty
+    nameWithType: Element.AddProperty
+    fullName: Elements.Element.AddProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Interfaces.IProperty
+    name: IProperty
+    nameWithType: IProperty
+    fullName: Elements.Interfaces.IProperty
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Element.RemoveProperty(System.String)
+  commentId: M:Elements.Element.RemoveProperty(System.String)
+  parent: Elements.Element
+  isExternal: true
+  name: RemoveProperty(String)
+  nameWithType: Element.RemoveProperty(String)
+  fullName: Elements.Element.RemoveProperty(System.String)
+  spec.csharp:
+  - uid: Elements.Element.RemoveProperty(System.String)
+    name: RemoveProperty
+    nameWithType: Element.RemoveProperty
+    fullName: Elements.Element.RemoveProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Element.RemoveProperty(System.String)
+    name: RemoveProperty
+    nameWithType: Element.RemoveProperty
+    fullName: Elements.Element.RemoveProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.Geometry.Interfaces
+  commentId: N:Elements.Geometry.Interfaces
+  name: Elements.Geometry.Interfaces
+  nameWithType: Elements.Geometry.Interfaces
+  fullName: Elements.Geometry.Interfaces
+- uid: Elements.Topography.Mesh*
+  commentId: Overload:Elements.Topography.Mesh
+  name: Mesh
+  nameWithType: Topography.Mesh
+  fullName: Elements.Topography.Mesh
+- uid: Elements.Geometry.Mesh
+  commentId: T:Elements.Geometry.Mesh
+  parent: Elements.Geometry
+  name: Mesh
+  nameWithType: Mesh
+  fullName: Elements.Geometry.Mesh
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: Elements.Topography.MaxElevation*
+  commentId: Overload:Elements.Topography.MaxElevation
+  name: MaxElevation
+  nameWithType: Topography.MaxElevation
+  fullName: Elements.Topography.MaxElevation
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.Topography.MinElevation*
+  commentId: Overload:Elements.Topography.MinElevation
+  name: MinElevation
+  nameWithType: Topography.MinElevation
+  fullName: Elements.Topography.MinElevation
+- uid: Elements.Topography.Material*
+  commentId: Overload:Elements.Topography.Material
+  name: Material
+  nameWithType: Topography.Material
+  fullName: Elements.Topography.Material
+- uid: Elements.Interfaces.IMaterial.Material
+  commentId: P:Elements.Interfaces.IMaterial.Material
+  parent: Elements.Interfaces.IMaterial
+  name: Material
+  nameWithType: IMaterial.Material
+  fullName: Elements.Interfaces.IMaterial.Material
+- uid: Elements.Material
+  commentId: T:Elements.Material
+  parent: Elements
+  name: Material
+  nameWithType: Material
+  fullName: Elements.Material
+- uid: Elements.Topography.#ctor*
+  commentId: Overload:Elements.Topography.#ctor
+  name: Topography
+  nameWithType: Topography.Topography
+  fullName: Elements.Topography.Topography
+- uid: Elements.Geometry.Vector3
+  commentId: T:Elements.Geometry.Vector3
+  parent: Elements.Geometry
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Elements.Geometry.Vector3
+- uid: System.Double[]
+  isExternal: true
+  name: Double[]
+  nameWithType: Double[]
+  fullName: System.Double[]
+  nameWithType.vb: Double()
+  fullName.vb: System.Double()
+  name.vb: Double()
+  spec.csharp:
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color}
+  commentId: T:System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color}
+  parent: System
+  definition: System.Func`2
+  name: Func<Triangle, Color>
+  nameWithType: Func<Triangle, Color>
+  fullName: System.Func<Elements.Geometry.Triangle, Elements.Geometry.Color>
+  nameWithType.vb: Func(Of Triangle, Color)
+  fullName.vb: System.Func(Of Elements.Geometry.Triangle, Elements.Geometry.Color)
+  name.vb: Func(Of Triangle, Color)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Elements.Geometry.Triangle
+    name: Triangle
+    nameWithType: Triangle
+    fullName: Elements.Geometry.Triangle
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Geometry.Color
+    name: Color
+    nameWithType: Color
+    fullName: Elements.Geometry.Color
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Elements.Geometry.Triangle
+    name: Triangle
+    nameWithType: Triangle
+    fullName: Elements.Geometry.Triangle
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Geometry.Color
+    name: Color
+    nameWithType: Color
+    fullName: Elements.Geometry.Color
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Func`2
+  commentId: T:System.Func`2
+  isExternal: true
+  name: Func<T, TResult>
+  nameWithType: Func<T, TResult>
+  fullName: System.Func<T, TResult>
+  nameWithType.vb: Func(Of T, TResult)
+  fullName.vb: System.Func(Of T, TResult)
+  name.vb: Func(Of T, TResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Topography.Tessellate*
+  commentId: Overload:Elements.Topography.Tessellate
+  name: Tessellate
+  nameWithType: Topography.Tessellate
+  fullName: Elements.Topography.Tessellate
+- uid: Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@)
+  commentId: M:Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@)
+  parent: Elements.Geometry.Interfaces.ITessellate
+  name: Tessellate(Mesh)
+  nameWithType: ITessellate.Tessellate(Mesh)
+  fullName: Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh)
+  spec.csharp:
+  - uid: Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@)
+    name: Tessellate
+    nameWithType: ITessellate.Tessellate
+    fullName: Elements.Geometry.Interfaces.ITessellate.Tessellate
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Geometry.Mesh
+    name: Mesh
+    nameWithType: Mesh
+    fullName: Elements.Geometry.Mesh
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@)
+    name: Tessellate
+    nameWithType: ITessellate.Tessellate
+    fullName: Elements.Geometry.Interfaces.ITessellate.Tessellate
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Geometry.Mesh
+    name: Mesh
+    nameWithType: Mesh
+    fullName: Elements.Geometry.Mesh
+  - name: )
+    nameWithType: )
+    fullName: )

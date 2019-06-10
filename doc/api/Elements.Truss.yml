@@ -1,0 +1,1084 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Truss
+  commentId: T:Elements.Truss
+  id: Truss
+  parent: Elements
+  children:
+  - Elements.Truss.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double,System.Int32,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.Material,System.Double,System.Double)
+  - Elements.Truss.BottomChordType
+  - Elements.Truss.Depth
+  - Elements.Truss.Divisions
+  - Elements.Truss.Elements
+  - Elements.Truss.End
+  - Elements.Truss.Start
+  - Elements.Truss.TopChordType
+  - Elements.Truss.WebType
+  langs:
+  - csharp
+  - vb
+  name: Truss
+  nameWithType: Truss
+  fullName: Elements.Truss
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Truss
+    path: ../src/Elements/Truss.cs
+    startLine: 11
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAn aggregation of structural framing elements.\n"
+  example: []
+  syntax:
+    content: 'public class Truss : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IAggregateElements'
+    content.vb: >-
+      Public Class Truss
+          Inherits Element
+          Implements IElement, IIdentifiable, ITransformable, IPropertySet, IAggregateElements
+  inheritance:
+  - System.Object
+  - Elements.Element
+  implements:
+  - Elements.Interfaces.IElement
+  - Elements.Interfaces.IIdentifiable
+  - Elements.Geometry.Interfaces.ITransformable
+  - Elements.Interfaces.IPropertySet
+  - Elements.Interfaces.IAggregateElements
+  inheritedMembers:
+  - Elements.Element.Id
+  - Elements.Element.Type
+  - Elements.Element.Properties
+  - Elements.Element.Transform
+  - Elements.Element.Name
+  - Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  - Elements.Element.RemoveProperty(System.String)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Truss.Elements
+  commentId: P:Elements.Truss.Elements
+  id: Elements
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: Elements
+  nameWithType: Truss.Elements
+  fullName: Elements.Truss.Elements
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Elements
+    path: ../src/Elements/Truss.cs
+    startLine: 20
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe elements aggregated by this element.\n"
+  example: []
+  syntax:
+    content: public List<Element> Elements { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Elements.Element}
+    content.vb: Public ReadOnly Property Elements As List(Of Element)
+  overload: Elements.Truss.Elements*
+  implements:
+  - Elements.Interfaces.IAggregateElements.Elements
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Truss.Start
+  commentId: P:Elements.Truss.Start
+  id: Start
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: Start
+  nameWithType: Truss.Start
+  fullName: Elements.Truss.Start
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Start
+    path: ../src/Elements/Truss.cs
+    startLine: 25
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe start of the truss.\n"
+  example: []
+  syntax:
+    content: public Vector3 Start { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property Start As Vector3
+  overload: Elements.Truss.Start*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Truss.End
+  commentId: P:Elements.Truss.End
+  id: End
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: End
+  nameWithType: Truss.End
+  fullName: Elements.Truss.End
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: End
+    path: ../src/Elements/Truss.cs
+    startLine: 30
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe end of the truss.\n"
+  example: []
+  syntax:
+    content: public Vector3 End { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property End As Vector3
+  overload: Elements.Truss.End*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Truss.Depth
+  commentId: P:Elements.Truss.Depth
+  id: Depth
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: Depth
+  nameWithType: Truss.Depth
+  fullName: Elements.Truss.Depth
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Depth
+    path: ../src/Elements/Truss.cs
+    startLine: 35
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe depth of the truss.\n"
+  example: []
+  syntax:
+    content: public double Depth { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property Depth As Double
+  overload: Elements.Truss.Depth*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Truss.Divisions
+  commentId: P:Elements.Truss.Divisions
+  id: Divisions
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: Divisions
+  nameWithType: Truss.Divisions
+  fullName: Elements.Truss.Divisions
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Divisions
+    path: ../src/Elements/Truss.cs
+    startLine: 40
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe number of divisions in the truss.\n"
+  example: []
+  syntax:
+    content: public int Divisions { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Divisions As Integer
+  overload: Elements.Truss.Divisions*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Truss.TopChordType
+  commentId: P:Elements.Truss.TopChordType
+  id: TopChordType
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: TopChordType
+  nameWithType: Truss.TopChordType
+  fullName: Elements.Truss.TopChordType
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: TopChordType
+    path: ../src/Elements/Truss.cs
+    startLine: 45
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe Profile used for members in the top chord of the truss.\n"
+  example: []
+  syntax:
+    content: public StructuralFramingType TopChordType { get; }
+    parameters: []
+    return:
+      type: Elements.StructuralFramingType
+    content.vb: Public ReadOnly Property TopChordType As StructuralFramingType
+  overload: Elements.Truss.TopChordType*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Truss.BottomChordType
+  commentId: P:Elements.Truss.BottomChordType
+  id: BottomChordType
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: BottomChordType
+  nameWithType: Truss.BottomChordType
+  fullName: Elements.Truss.BottomChordType
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: BottomChordType
+    path: ../src/Elements/Truss.cs
+    startLine: 50
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe Profile used for members in the bottom chord of the truss.\n"
+  example: []
+  syntax:
+    content: public StructuralFramingType BottomChordType { get; }
+    parameters: []
+    return:
+      type: Elements.StructuralFramingType
+    content.vb: Public ReadOnly Property BottomChordType As StructuralFramingType
+  overload: Elements.Truss.BottomChordType*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Truss.WebType
+  commentId: P:Elements.Truss.WebType
+  id: WebType
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: WebType
+  nameWithType: Truss.WebType
+  fullName: Elements.Truss.WebType
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: WebType
+    path: ../src/Elements/Truss.cs
+    startLine: 55
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe Profile used for members in the web of the truss.\n"
+  example: []
+  syntax:
+    content: public StructuralFramingType WebType { get; }
+    parameters: []
+    return:
+      type: Elements.StructuralFramingType
+    content.vb: Public ReadOnly Property WebType As StructuralFramingType
+  overload: Elements.Truss.WebType*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Truss.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double,System.Int32,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.Material,System.Double,System.Double)
+  commentId: M:Elements.Truss.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double,System.Int32,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.Material,System.Double,System.Double)
+  id: '#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double,System.Int32,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.Material,System.Double,System.Double)'
+  parent: Elements.Truss
+  langs:
+  - csharp
+  - vb
+  name: Truss(Vector3, Vector3, Double, Int32, StructuralFramingType, StructuralFramingType, StructuralFramingType, Material, Double, Double)
+  nameWithType: Truss.Truss(Vector3, Vector3, Double, Int32, StructuralFramingType, StructuralFramingType, StructuralFramingType, Material, Double, Double)
+  fullName: Elements.Truss.Truss(Elements.Geometry.Vector3, Elements.Geometry.Vector3, System.Double, System.Int32, Elements.StructuralFramingType, Elements.StructuralFramingType, Elements.StructuralFramingType, Elements.Material, System.Double, System.Double)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Truss.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Truss.cs
+    startLine: 70
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct a truss.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConstructor]
+
+      public Truss(Vector3 start, Vector3 end, double depth, int divisions, StructuralFramingType topChordType, StructuralFramingType bottomChordType, StructuralFramingType webType, Material material, double startSetback = 0, double endSetback = 0)
+    parameters:
+    - id: start
+      type: Elements.Geometry.Vector3
+      description: The start of the truss.
+    - id: end
+      type: Elements.Geometry.Vector3
+      description: The end of the truss.
+    - id: depth
+      type: System.Double
+      description: The depth of the truss.
+    - id: divisions
+      type: System.Int32
+      description: The number of panels in the truss.
+    - id: topChordType
+      type: Elements.StructuralFramingType
+      description: The structural framing type to be used for the top chord.
+    - id: bottomChordType
+      type: Elements.StructuralFramingType
+      description: The structural framing type to be used for the bottom chord.
+    - id: webType
+      type: Elements.StructuralFramingType
+      description: The structural framing type to be used for the web.
+    - id: material
+      type: Elements.Material
+      description: The truss&apos; material.
+    - id: startSetback
+      type: System.Double
+      description: A setback to apply to the start of all members of the truss.
+    - id: endSetback
+      type: System.Double
+      description: A setback to apply to the end of all members of the truss.
+    content.vb: >-
+      <JsonConstructor>
+
+      Public Sub New(start As Vector3, end As Vector3, depth As Double, divisions As Integer, topChordType As StructuralFramingType, bottomChordType As StructuralFramingType, webType As StructuralFramingType, material As Material, startSetback As Double = 0, endSetback As Double = 0)
+  overload: Elements.Truss.#ctor*
+  attributes:
+  - type: Newtonsoft.Json.JsonConstructorAttribute
+    ctor: Newtonsoft.Json.JsonConstructorAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.Element
+  commentId: T:Elements.Element
+  parent: Elements
+  name: Element
+  nameWithType: Element
+  fullName: Elements.Element
+- uid: Elements.Interfaces.IElement
+  commentId: T:Elements.Interfaces.IElement
+  parent: Elements.Interfaces
+  name: IElement
+  nameWithType: IElement
+  fullName: Elements.Interfaces.IElement
+- uid: Elements.Interfaces.IIdentifiable
+  commentId: T:Elements.Interfaces.IIdentifiable
+  parent: Elements.Interfaces
+  name: IIdentifiable
+  nameWithType: IIdentifiable
+  fullName: Elements.Interfaces.IIdentifiable
+- uid: Elements.Geometry.Interfaces.ITransformable
+  commentId: T:Elements.Geometry.Interfaces.ITransformable
+  parent: Elements.Geometry.Interfaces
+  name: ITransformable
+  nameWithType: ITransformable
+  fullName: Elements.Geometry.Interfaces.ITransformable
+- uid: Elements.Interfaces.IPropertySet
+  commentId: T:Elements.Interfaces.IPropertySet
+  parent: Elements.Interfaces
+  name: IPropertySet
+  nameWithType: IPropertySet
+  fullName: Elements.Interfaces.IPropertySet
+- uid: Elements.Interfaces.IAggregateElements
+  commentId: T:Elements.Interfaces.IAggregateElements
+  parent: Elements.Interfaces
+  name: IAggregateElements
+  nameWithType: IAggregateElements
+  fullName: Elements.Interfaces.IAggregateElements
+- uid: Elements.Element.Id
+  commentId: P:Elements.Element.Id
+  parent: Elements.Element
+  name: Id
+  nameWithType: Element.Id
+  fullName: Elements.Element.Id
+- uid: Elements.Element.Type
+  commentId: P:Elements.Element.Type
+  parent: Elements.Element
+  name: Type
+  nameWithType: Element.Type
+  fullName: Elements.Element.Type
+- uid: Elements.Element.Properties
+  commentId: P:Elements.Element.Properties
+  parent: Elements.Element
+  name: Properties
+  nameWithType: Element.Properties
+  fullName: Elements.Element.Properties
+- uid: Elements.Element.Transform
+  commentId: P:Elements.Element.Transform
+  parent: Elements.Element
+  name: Transform
+  nameWithType: Element.Transform
+  fullName: Elements.Element.Transform
+- uid: Elements.Element.Name
+  commentId: P:Elements.Element.Name
+  parent: Elements.Element
+  name: Name
+  nameWithType: Element.Name
+  fullName: Elements.Element.Name
+- uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  commentId: M:Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+  parent: Elements.Element
+  isExternal: true
+  name: AddProperty(String, IProperty)
+  nameWithType: Element.AddProperty(String, IProperty)
+  fullName: Elements.Element.AddProperty(System.String, Elements.Interfaces.IProperty)
+  spec.csharp:
+  - uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+    name: AddProperty
+    nameWithType: Element.AddProperty
+    fullName: Elements.Element.AddProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Interfaces.IProperty
+    name: IProperty
+    nameWithType: IProperty
+    fullName: Elements.Interfaces.IProperty
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)
+    name: AddProperty
+    nameWithType: Element.AddProperty
+    fullName: Elements.Element.AddProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Interfaces.IProperty
+    name: IProperty
+    nameWithType: IProperty
+    fullName: Elements.Interfaces.IProperty
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Element.RemoveProperty(System.String)
+  commentId: M:Elements.Element.RemoveProperty(System.String)
+  parent: Elements.Element
+  isExternal: true
+  name: RemoveProperty(String)
+  nameWithType: Element.RemoveProperty(String)
+  fullName: Elements.Element.RemoveProperty(System.String)
+  spec.csharp:
+  - uid: Elements.Element.RemoveProperty(System.String)
+    name: RemoveProperty
+    nameWithType: Element.RemoveProperty
+    fullName: Elements.Element.RemoveProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Element.RemoveProperty(System.String)
+    name: RemoveProperty
+    nameWithType: Element.RemoveProperty
+    fullName: Elements.Element.RemoveProperty
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.Geometry.Interfaces
+  commentId: N:Elements.Geometry.Interfaces
+  name: Elements.Geometry.Interfaces
+  nameWithType: Elements.Geometry.Interfaces
+  fullName: Elements.Geometry.Interfaces
+- uid: Elements.Truss.Elements*
+  commentId: Overload:Elements.Truss.Elements
+  name: Elements
+  nameWithType: Truss.Elements
+  fullName: Elements.Truss.Elements
+- uid: Elements.Interfaces.IAggregateElements.Elements
+  commentId: P:Elements.Interfaces.IAggregateElements.Elements
+  parent: Elements.Interfaces.IAggregateElements
+  name: Elements
+  nameWithType: IAggregateElements.Elements
+  fullName: Elements.Interfaces.IAggregateElements.Elements
+- uid: System.Collections.Generic.List{Elements.Element}
+  commentId: T:System.Collections.Generic.List{Elements.Element}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Element>
+  nameWithType: List<Element>
+  fullName: System.Collections.Generic.List<Elements.Element>
+  nameWithType.vb: List(Of Element)
+  fullName.vb: System.Collections.Generic.List(Of Elements.Element)
+  name.vb: List(Of Element)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Elements.Element
+    name: Element
+    nameWithType: Element
+    fullName: Elements.Element
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Elements.Element
+    name: Element
+    nameWithType: Element
+    fullName: Elements.Element
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Elements.Truss.Start*
+  commentId: Overload:Elements.Truss.Start
+  name: Start
+  nameWithType: Truss.Start
+  fullName: Elements.Truss.Start
+- uid: Elements.Geometry.Vector3
+  commentId: T:Elements.Geometry.Vector3
+  parent: Elements.Geometry
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Elements.Geometry.Vector3
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: Elements.Truss.End*
+  commentId: Overload:Elements.Truss.End
+  name: End
+  nameWithType: Truss.End
+  fullName: Elements.Truss.End
+- uid: Elements.Truss.Depth*
+  commentId: Overload:Elements.Truss.Depth
+  name: Depth
+  nameWithType: Truss.Depth
+  fullName: Elements.Truss.Depth
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.Truss.Divisions*
+  commentId: Overload:Elements.Truss.Divisions
+  name: Divisions
+  nameWithType: Truss.Divisions
+  fullName: Elements.Truss.Divisions
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Elements.Truss.TopChordType*
+  commentId: Overload:Elements.Truss.TopChordType
+  name: TopChordType
+  nameWithType: Truss.TopChordType
+  fullName: Elements.Truss.TopChordType
+- uid: Elements.StructuralFramingType
+  commentId: T:Elements.StructuralFramingType
+  parent: Elements
+  name: StructuralFramingType
+  nameWithType: StructuralFramingType
+  fullName: Elements.StructuralFramingType
+- uid: Elements.Truss.BottomChordType*
+  commentId: Overload:Elements.Truss.BottomChordType
+  name: BottomChordType
+  nameWithType: Truss.BottomChordType
+  fullName: Elements.Truss.BottomChordType
+- uid: Elements.Truss.WebType*
+  commentId: Overload:Elements.Truss.WebType
+  name: WebType
+  nameWithType: Truss.WebType
+  fullName: Elements.Truss.WebType
+- uid: Elements.Truss.#ctor*
+  commentId: Overload:Elements.Truss.#ctor
+  name: Truss
+  nameWithType: Truss.Truss
+  fullName: Elements.Truss.Truss
+- uid: Elements.Material
+  commentId: T:Elements.Material
+  parent: Elements
+  name: Material
+  nameWithType: Material
+  fullName: Elements.Material

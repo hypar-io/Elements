@@ -1,0 +1,488 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.MaterialLayer
+  commentId: T:Elements.MaterialLayer
+  id: MaterialLayer
+  parent: Elements
+  children:
+  - Elements.MaterialLayer.#ctor(Elements.Material,System.Double)
+  - Elements.MaterialLayer.Material
+  - Elements.MaterialLayer.Thickness
+  langs:
+  - csharp
+  - vb
+  name: MaterialLayer
+  nameWithType: MaterialLayer
+  fullName: Elements.MaterialLayer
+  type: Class
+  source:
+    remote:
+      path: src/Elements/MaterialLayer.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: MaterialLayer
+    path: ../src/Elements/MaterialLayer.cs
+    startLine: 8
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA layer of homogeneous material.\n"
+  example: []
+  syntax:
+    content: public class MaterialLayer
+    content.vb: Public Class MaterialLayer
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.MaterialLayer.Thickness
+  commentId: P:Elements.MaterialLayer.Thickness
+  id: Thickness
+  parent: Elements.MaterialLayer
+  langs:
+  - csharp
+  - vb
+  name: Thickness
+  nameWithType: MaterialLayer.Thickness
+  fullName: Elements.MaterialLayer.Thickness
+  type: Property
+  source:
+    remote:
+      path: src/Elements/MaterialLayer.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Thickness
+    path: ../src/Elements/MaterialLayer.cs
+    startLine: 13
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe thickness of the layer.\n"
+  example: []
+  syntax:
+    content: public double Thickness { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property Thickness As Double
+  overload: Elements.MaterialLayer.Thickness*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.MaterialLayer.Material
+  commentId: P:Elements.MaterialLayer.Material
+  id: Material
+  parent: Elements.MaterialLayer
+  langs:
+  - csharp
+  - vb
+  name: Material
+  nameWithType: MaterialLayer.Material
+  fullName: Elements.MaterialLayer.Material
+  type: Property
+  source:
+    remote:
+      path: src/Elements/MaterialLayer.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Material
+    path: ../src/Elements/MaterialLayer.cs
+    startLine: 18
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe layer&apos;s material.\n"
+  example: []
+  syntax:
+    content: public Material Material { get; }
+    parameters: []
+    return:
+      type: Elements.Material
+    content.vb: Public ReadOnly Property Material As Material
+  overload: Elements.MaterialLayer.Material*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.MaterialLayer.#ctor(Elements.Material,System.Double)
+  commentId: M:Elements.MaterialLayer.#ctor(Elements.Material,System.Double)
+  id: '#ctor(Elements.Material,System.Double)'
+  parent: Elements.MaterialLayer
+  langs:
+  - csharp
+  - vb
+  name: MaterialLayer(Material, Double)
+  nameWithType: MaterialLayer.MaterialLayer(Material, Double)
+  fullName: Elements.MaterialLayer.MaterialLayer(Elements.Material, System.Double)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/MaterialLayer.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/MaterialLayer.cs
+    startLine: 25
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct a material layer.\n"
+  example: []
+  syntax:
+    content: public MaterialLayer(Material material, double thickness)
+    parameters:
+    - id: material
+      type: Elements.Material
+      description: The layer&apos;s material.
+    - id: thickness
+      type: System.Double
+      description: The thickness of the layer.
+    content.vb: Public Sub New(material As Material, thickness As Double)
+  overload: Elements.MaterialLayer.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.MaterialLayer.Thickness*
+  commentId: Overload:Elements.MaterialLayer.Thickness
+  name: Thickness
+  nameWithType: MaterialLayer.Thickness
+  fullName: Elements.MaterialLayer.Thickness
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.MaterialLayer.Material*
+  commentId: Overload:Elements.MaterialLayer.Material
+  name: Material
+  nameWithType: MaterialLayer.Material
+  fullName: Elements.MaterialLayer.Material
+- uid: Elements.Material
+  commentId: T:Elements.Material
+  parent: Elements
+  name: Material
+  nameWithType: Material
+  fullName: Elements.Material
+- uid: Elements.MaterialLayer.#ctor*
+  commentId: Overload:Elements.MaterialLayer.#ctor
+  name: MaterialLayer
+  nameWithType: MaterialLayer.MaterialLayer
+  fullName: Elements.MaterialLayer.MaterialLayer

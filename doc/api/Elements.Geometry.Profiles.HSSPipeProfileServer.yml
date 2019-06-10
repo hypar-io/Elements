@@ -1,0 +1,489 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.Profiles.HSSPipeProfileServer
+  commentId: T:Elements.Geometry.Profiles.HSSPipeProfileServer
+  id: HSSPipeProfileServer
+  parent: Elements.Geometry.Profiles
+  children:
+  - Elements.Geometry.Profiles.HSSPipeProfileServer.Instance
+  langs:
+  - csharp
+  - vb
+  name: HSSPipeProfileServer
+  nameWithType: HSSPipeProfileServer
+  fullName: Elements.Geometry.Profiles.HSSPipeProfileServer
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Geometry/Profiles/HSSPipeProfileServer.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: HSSPipeProfileServer
+    path: ../src/Elements/Geometry/Profiles/HSSPipeProfileServer.cs
+    startLine: 10
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Profiles
+  summary: "\nA singleton class which serves every HSS pipe section as defined by AISC.\n"
+  example: []
+  syntax:
+    content: 'public sealed class HSSPipeProfileServer : ProfileServer'
+    content.vb: >-
+      Public NotInheritable Class HSSPipeProfileServer
+          Inherits ProfileServer
+  inheritance:
+  - System.Object
+  - Elements.Geometry.Profiles.ProfileServer
+  inheritedMembers:
+  - Elements.Geometry.Profiles.ProfileServer.InchesToMeters
+  - Elements.Geometry.Profiles.ProfileServer._profiles
+  - Elements.Geometry.Profiles.ProfileServer.GetProfileByName(System.String)
+  - Elements.Geometry.Profiles.ProfileServer.AllProfiles
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Elements.Geometry.Profiles.HSSPipeProfileServer.Instance
+  commentId: P:Elements.Geometry.Profiles.HSSPipeProfileServer.Instance
+  id: Instance
+  parent: Elements.Geometry.Profiles.HSSPipeProfileServer
+  langs:
+  - csharp
+  - vb
+  name: Instance
+  nameWithType: HSSPipeProfileServer.Instance
+  fullName: Elements.Geometry.Profiles.HSSPipeProfileServer.Instance
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Profiles/HSSPipeProfileServer.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Instance
+    path: ../src/Elements/Geometry/Profiles/HSSPipeProfileServer.cs
+    startLine: 208
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry.Profiles
+  summary: "\nThe HSSPipeProfileServer singleton.\n"
+  example: []
+  syntax:
+    content: public static HSSPipeProfileServer Instance { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Profiles.HSSPipeProfileServer
+    content.vb: Public Shared ReadOnly Property Instance As HSSPipeProfileServer
+  overload: Elements.Geometry.Profiles.HSSPipeProfileServer.Instance*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+references:
+- uid: Elements.Geometry.Profiles
+  commentId: N:Elements.Geometry.Profiles
+  name: Elements.Geometry.Profiles
+  nameWithType: Elements.Geometry.Profiles
+  fullName: Elements.Geometry.Profiles
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.Geometry.Profiles.ProfileServer
+  commentId: T:Elements.Geometry.Profiles.ProfileServer
+  parent: Elements.Geometry.Profiles
+  name: ProfileServer
+  nameWithType: ProfileServer
+  fullName: Elements.Geometry.Profiles.ProfileServer
+- uid: Elements.Geometry.Profiles.ProfileServer.InchesToMeters
+  commentId: F:Elements.Geometry.Profiles.ProfileServer.InchesToMeters
+  parent: Elements.Geometry.Profiles.ProfileServer
+  name: InchesToMeters
+  nameWithType: ProfileServer.InchesToMeters
+  fullName: Elements.Geometry.Profiles.ProfileServer.InchesToMeters
+- uid: Elements.Geometry.Profiles.ProfileServer._profiles
+  commentId: F:Elements.Geometry.Profiles.ProfileServer._profiles
+  parent: Elements.Geometry.Profiles.ProfileServer
+  name: _profiles
+  nameWithType: ProfileServer._profiles
+  fullName: Elements.Geometry.Profiles.ProfileServer._profiles
+- uid: Elements.Geometry.Profiles.ProfileServer.GetProfileByName(System.String)
+  commentId: M:Elements.Geometry.Profiles.ProfileServer.GetProfileByName(System.String)
+  parent: Elements.Geometry.Profiles.ProfileServer
+  isExternal: true
+  name: GetProfileByName(String)
+  nameWithType: ProfileServer.GetProfileByName(String)
+  fullName: Elements.Geometry.Profiles.ProfileServer.GetProfileByName(System.String)
+  spec.csharp:
+  - uid: Elements.Geometry.Profiles.ProfileServer.GetProfileByName(System.String)
+    name: GetProfileByName
+    nameWithType: ProfileServer.GetProfileByName
+    fullName: Elements.Geometry.Profiles.ProfileServer.GetProfileByName
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Profiles.ProfileServer.GetProfileByName(System.String)
+    name: GetProfileByName
+    nameWithType: ProfileServer.GetProfileByName
+    fullName: Elements.Geometry.Profiles.ProfileServer.GetProfileByName
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Profiles.ProfileServer.AllProfiles
+  commentId: M:Elements.Geometry.Profiles.ProfileServer.AllProfiles
+  parent: Elements.Geometry.Profiles.ProfileServer
+  name: AllProfiles()
+  nameWithType: ProfileServer.AllProfiles()
+  fullName: Elements.Geometry.Profiles.ProfileServer.AllProfiles()
+  spec.csharp:
+  - uid: Elements.Geometry.Profiles.ProfileServer.AllProfiles
+    name: AllProfiles
+    nameWithType: ProfileServer.AllProfiles
+    fullName: Elements.Geometry.Profiles.ProfileServer.AllProfiles
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Profiles.ProfileServer.AllProfiles
+    name: AllProfiles
+    nameWithType: ProfileServer.AllProfiles
+    fullName: Elements.Geometry.Profiles.ProfileServer.AllProfiles
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Geometry.Profiles.HSSPipeProfileServer.Instance*
+  commentId: Overload:Elements.Geometry.Profiles.HSSPipeProfileServer.Instance
+  name: Instance
+  nameWithType: HSSPipeProfileServer.Instance
+  fullName: Elements.Geometry.Profiles.HSSPipeProfileServer.Instance
+- uid: Elements.Geometry.Profiles.HSSPipeProfileServer
+  commentId: T:Elements.Geometry.Profiles.HSSPipeProfileServer
+  parent: Elements.Geometry.Profiles
+  name: HSSPipeProfileServer
+  nameWithType: HSSPipeProfileServer
+  fullName: Elements.Geometry.Profiles.HSSPipeProfileServer

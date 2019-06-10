@@ -1,0 +1,2187 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Model
+  commentId: T:Elements.Model
+  id: Model
+  parent: Elements
+  children:
+  - Elements.Model.#ctor
+  - Elements.Model.AddElement(Elements.Element)
+  - Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element})
+  - Elements.Model.Elements
+  - Elements.Model.ElementsOfType``1
+  - Elements.Model.ElementTypes
+  - Elements.Model.Extensions
+  - Elements.Model.FromIFC(System.String,System.String[])
+  - Elements.Model.FromJson(System.String)
+  - Elements.Model.GetElementById(System.Int32)
+  - Elements.Model.GetElementByName(System.String)
+  - Elements.Model.GetElementTypeByName(System.String)
+  - Elements.Model.GetMaterialByName(System.String)
+  - Elements.Model.GetProfileByName(System.String)
+  - Elements.Model.Materials
+  - Elements.Model.Origin
+  - Elements.Model.Profiles
+  - Elements.Model.UpdateElement(Elements.Element)
+  - Elements.Model.UpdateElements(System.Collections.Generic.IEnumerable{Elements.Element})
+  - Elements.Model.Version
+  langs:
+  - csharp
+  - vb
+  name: Model
+  nameWithType: Model
+  fullName: Elements.Model
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Model
+    path: ../src/Elements/Model.cs
+    startLine: 18
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA container for elements, element types, materials, and profiles.\n"
+  example: []
+  syntax:
+    content: public class Model
+    content.vb: Public Class Model
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  extensionMethods:
+  - Elements.Model.Elements.Serialization.glTF.GltfExtensions.ToGlTF(System.String,System.Boolean)
+  - Elements.Model.Elements.Serialization.glTF.GltfExtensions.ToBase64String
+  - Elements.Model.Elements.Serialization.IFC.IFCExtensions.ToIFC(System.String)
+  - Elements.Model.Elements.Serialization.JSON.JsonExtensions.ToJson(System.Boolean)
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Model.Version
+  commentId: P:Elements.Model.Version
+  id: Version
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: Version
+  nameWithType: Model.Version
+  fullName: Elements.Model.Version
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Version
+    path: ../src/Elements/Model.cs
+    startLine: 32
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe version of the assembly.\n"
+  example: []
+  syntax:
+    content: public string Version { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Version As String
+  overload: Elements.Model.Version*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Model.Origin
+  commentId: P:Elements.Model.Origin
+  id: Origin
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: Origin
+  nameWithType: Model.Origin
+  fullName: Elements.Model.Origin
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Origin
+    path: ../src/Elements/Model.cs
+    startLine: 37
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nThe origin of the model.\n"
+  example: []
+  syntax:
+    content: public Position Origin { get; set; }
+    parameters: []
+    return:
+      type: Elements.GeoJSON.Position
+    content.vb: Public Property Origin As Position
+  overload: Elements.Model.Origin*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.Elements
+  commentId: P:Elements.Model.Elements
+  id: Elements
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: Elements
+  nameWithType: Model.Elements
+  fullName: Elements.Model.Elements
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Elements
+    path: ../src/Elements/Model.cs
+    startLine: 42
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAll Elements in the Model.\n"
+  example: []
+  syntax:
+    content: public Dictionary<long, Element> Elements { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.Int64,Elements.Element}
+    content.vb: Public ReadOnly Property Elements As Dictionary(Of Long, Element)
+  overload: Elements.Model.Elements*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Model.Materials
+  commentId: P:Elements.Model.Materials
+  id: Materials
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: Materials
+  nameWithType: Model.Materials
+  fullName: Elements.Model.Materials
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Materials
+    path: ../src/Elements/Model.cs
+    startLine: 50
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAll Materials in the Model.\n"
+  example: []
+  syntax:
+    content: public Dictionary<long, Material> Materials { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.Int64,Elements.Material}
+    content.vb: Public ReadOnly Property Materials As Dictionary(Of Long, Material)
+  overload: Elements.Model.Materials*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Model.ElementTypes
+  commentId: P:Elements.Model.ElementTypes
+  id: ElementTypes
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: ElementTypes
+  nameWithType: Model.ElementTypes
+  fullName: Elements.Model.ElementTypes
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ElementTypes
+    path: ../src/Elements/Model.cs
+    startLine: 58
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAll ElementTypes in the Model.\n"
+  example: []
+  syntax:
+    content: public Dictionary<long, ElementType> ElementTypes { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType}
+    content.vb: Public ReadOnly Property ElementTypes As Dictionary(Of Long, ElementType)
+  overload: Elements.Model.ElementTypes*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Model.Profiles
+  commentId: P:Elements.Model.Profiles
+  id: Profiles
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: Profiles
+  nameWithType: Model.Profiles
+  fullName: Elements.Model.Profiles
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Profiles
+    path: ../src/Elements/Model.cs
+    startLine: 66
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAll Profiles in the model.\n"
+  example: []
+  syntax:
+    content: public Dictionary<long, Profile> Profiles { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.Int64,Elements.Geometry.Profile}
+    content.vb: Public ReadOnly Property Profiles As Dictionary(Of Long, Profile)
+  overload: Elements.Model.Profiles*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Model.Extensions
+  commentId: P:Elements.Model.Extensions
+  id: Extensions
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: Extensions
+  nameWithType: Model.Extensions
+  fullName: Elements.Model.Extensions
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Extensions
+    path: ../src/Elements/Model.cs
+    startLine: 76
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nA collection of extension identifiers which representing\nextensions which must be available at the time of\nserialization or deserialization.\n"
+  example: []
+  syntax:
+    content: public IEnumerable<string> Extensions { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IEnumerable{System.String}
+    content.vb: Public ReadOnly Property Extensions As IEnumerable(Of String)
+  overload: Elements.Model.Extensions*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Model.#ctor
+  commentId: M:Elements.Model.#ctor
+  id: '#ctor'
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: Model()
+  nameWithType: Model.Model()
+  fullName: Elements.Model.Model()
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Model.cs
+    startLine: 81
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nConstruct an empty model.\n"
+  example: []
+  syntax:
+    content: public Model()
+    content.vb: Public Sub New
+  overload: Elements.Model.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.AddElement(Elements.Element)
+  commentId: M:Elements.Model.AddElement(Elements.Element)
+  id: AddElement(Elements.Element)
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: AddElement(Element)
+  nameWithType: Model.AddElement(Element)
+  fullName: Elements.Model.AddElement(Elements.Element)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: AddElement
+    path: ../src/Elements/Model.cs
+    startLine: 93
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAdd an element to the model.\n"
+  example: []
+  syntax:
+    content: public void AddElement(Element element)
+    parameters:
+    - id: element
+      type: Elements.Element
+      description: The element to add to the model.
+    content.vb: Public Sub AddElement(element As Element)
+  overload: Elements.Model.AddElement*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: "Thrown when an element \nwith the same Id already exists in the model."
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.UpdateElement(Elements.Element)
+  commentId: M:Elements.Model.UpdateElement(Elements.Element)
+  id: UpdateElement(Elements.Element)
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: UpdateElement(Element)
+  nameWithType: Model.UpdateElement(Element)
+  fullName: Elements.Model.UpdateElement(Elements.Element)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: UpdateElement
+    path: ../src/Elements/Model.cs
+    startLine: 125
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nUpdate an element existing in the model.\n"
+  example: []
+  syntax:
+    content: public void UpdateElement(Element element)
+    parameters:
+    - id: element
+      type: Elements.Element
+      description: The element to update in the model.
+    content.vb: Public Sub UpdateElement(element As Element)
+  overload: Elements.Model.UpdateElement*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: "Thrown when no element \nwith the same Id exists in the model."
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element})
+  commentId: M:Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element})
+  id: AddElements(System.Collections.Generic.IEnumerable{Elements.Element})
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: AddElements(IEnumerable<Element>)
+  nameWithType: Model.AddElements(IEnumerable<Element>)
+  fullName: Elements.Model.AddElements(System.Collections.Generic.IEnumerable<Elements.Element>)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: AddElements
+    path: ../src/Elements/Model.cs
+    startLine: 159
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nAdd a collection of elements to the model.\n"
+  example: []
+  syntax:
+    content: public void AddElements(IEnumerable<Element> elements)
+    parameters:
+    - id: elements
+      type: System.Collections.Generic.IEnumerable{Elements.Element}
+      description: The elements to add to the model.
+    content.vb: Public Sub AddElements(elements As IEnumerable(Of Element))
+  overload: Elements.Model.AddElements*
+  nameWithType.vb: Model.AddElements(IEnumerable(Of Element))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.Model.AddElements(System.Collections.Generic.IEnumerable(Of Elements.Element))
+  name.vb: AddElements(IEnumerable(Of Element))
+- uid: Elements.Model.UpdateElements(System.Collections.Generic.IEnumerable{Elements.Element})
+  commentId: M:Elements.Model.UpdateElements(System.Collections.Generic.IEnumerable{Elements.Element})
+  id: UpdateElements(System.Collections.Generic.IEnumerable{Elements.Element})
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: UpdateElements(IEnumerable<Element>)
+  nameWithType: Model.UpdateElements(IEnumerable<Element>)
+  fullName: Elements.Model.UpdateElements(System.Collections.Generic.IEnumerable<Elements.Element>)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: UpdateElements
+    path: ../src/Elements/Model.cs
+    startLine: 171
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nUpdate a collection of elements in the model.\n"
+  example: []
+  syntax:
+    content: public void UpdateElements(IEnumerable<Element> elements)
+    parameters:
+    - id: elements
+      type: System.Collections.Generic.IEnumerable{Elements.Element}
+      description: The elements to be updated in the model.
+    content.vb: Public Sub UpdateElements(elements As IEnumerable(Of Element))
+  overload: Elements.Model.UpdateElements*
+  nameWithType.vb: Model.UpdateElements(IEnumerable(Of Element))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.Model.UpdateElements(System.Collections.Generic.IEnumerable(Of Elements.Element))
+  name.vb: UpdateElements(IEnumerable(Of Element))
+- uid: Elements.Model.GetElementById(System.Int32)
+  commentId: M:Elements.Model.GetElementById(System.Int32)
+  id: GetElementById(System.Int32)
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: GetElementById(Int32)
+  nameWithType: Model.GetElementById(Int32)
+  fullName: Elements.Model.GetElementById(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: GetElementById
+    path: ../src/Elements/Model.cs
+    startLine: 185
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nGet an Element by id from the Model.\n"
+  example: []
+  syntax:
+    content: public Element GetElementById(int id)
+    parameters:
+    - id: id
+      type: System.Int32
+      description: The identifier of the Element.
+    return:
+      type: Elements.Element
+      description: "An Element or null if no Element can be found \nwith the provided id."
+    content.vb: Public Function GetElementById(id As Integer) As Element
+  overload: Elements.Model.GetElementById*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.GetElementByName(System.String)
+  commentId: M:Elements.Model.GetElementByName(System.String)
+  id: GetElementByName(System.String)
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: GetElementByName(String)
+  nameWithType: Model.GetElementByName(String)
+  fullName: Elements.Model.GetElementByName(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: GetElementByName
+    path: ../src/Elements/Model.cs
+    startLine: 200
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nGet the first Element with the specified name.\n"
+  example: []
+  syntax:
+    content: public Element GetElementByName(string name)
+    parameters:
+    - id: name
+      type: System.String
+      description: ''
+    return:
+      type: Elements.Element
+      description: "An Element or null if no Element can be found \nwith the provided name."
+    content.vb: Public Function GetElementByName(name As String) As Element
+  overload: Elements.Model.GetElementByName*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.GetMaterialByName(System.String)
+  commentId: M:Elements.Model.GetMaterialByName(System.String)
+  id: GetMaterialByName(System.String)
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: GetMaterialByName(String)
+  nameWithType: Model.GetMaterialByName(String)
+  fullName: Elements.Model.GetMaterialByName(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: GetMaterialByName
+    path: ../src/Elements/Model.cs
+    startLine: 216
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nGet a Material by name.\n"
+  example: []
+  syntax:
+    content: public Material GetMaterialByName(string name)
+    parameters:
+    - id: name
+      type: System.String
+      description: The name of the Material.
+    return:
+      type: Elements.Material
+      description: "A Material or null if no Material with the \nspecified id can be found."
+    content.vb: Public Function GetMaterialByName(name As String) As Material
+  overload: Elements.Model.GetMaterialByName*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.GetElementTypeByName(System.String)
+  commentId: M:Elements.Model.GetElementTypeByName(System.String)
+  id: GetElementTypeByName(System.String)
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: GetElementTypeByName(String)
+  nameWithType: Model.GetElementTypeByName(String)
+  fullName: Elements.Model.GetElementTypeByName(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: GetElementTypeByName
+    path: ../src/Elements/Model.cs
+    startLine: 227
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nGet an ElementType by name.\n"
+  example: []
+  syntax:
+    content: public ElementType GetElementTypeByName(string name)
+    parameters:
+    - id: name
+      type: System.String
+      description: The name of the ElementType.
+    return:
+      type: Elements.ElementType
+      description: "An ElementType or null if no ElementType with \nthe specified name can be found."
+    content.vb: Public Function GetElementTypeByName(name As String) As ElementType
+  overload: Elements.Model.GetElementTypeByName*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.GetProfileByName(System.String)
+  commentId: M:Elements.Model.GetProfileByName(System.String)
+  id: GetProfileByName(System.String)
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: GetProfileByName(String)
+  nameWithType: Model.GetProfileByName(String)
+  fullName: Elements.Model.GetProfileByName(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: GetProfileByName
+    path: ../src/Elements/Model.cs
+    startLine: 238
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nGet a Profile by name.\n"
+  example: []
+  syntax:
+    content: public Profile GetProfileByName(string name)
+    parameters:
+    - id: name
+      type: System.String
+      description: The name of the Profile.
+    return:
+      type: Elements.Geometry.Profile
+      description: "A Profile or null if no Profile with the \nspecified name can be found."
+    content.vb: Public Function GetProfileByName(name As String) As Profile
+  overload: Elements.Model.GetProfileByName*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Model.ElementsOfType``1
+  commentId: M:Elements.Model.ElementsOfType``1
+  id: ElementsOfType``1
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: ElementsOfType<T>()
+  nameWithType: Model.ElementsOfType<T>()
+  fullName: Elements.Model.ElementsOfType<T>()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ElementsOfType
+    path: ../src/Elements/Model.cs
+    startLine: 248
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nGet all Elements of the specified Type.\n"
+  example: []
+  syntax:
+    content: public IEnumerable<T> ElementsOfType<T>()
+    typeParameters:
+    - id: T
+      description: The Type of element to return.
+    return:
+      type: System.Collections.Generic.IEnumerable{{T}}
+      description: A collection of Elements of the specified type.
+    content.vb: Public Function ElementsOfType(Of T) As IEnumerable(Of T)
+  overload: Elements.Model.ElementsOfType*
+  nameWithType.vb: Model.ElementsOfType(Of T)()
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.Model.ElementsOfType(Of T)()
+  name.vb: ElementsOfType(Of T)()
+- uid: Elements.Model.FromJson(System.String)
+  commentId: M:Elements.Model.FromJson(System.String)
+  id: FromJson(System.String)
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: FromJson(String)
+  nameWithType: Model.FromJson(String)
+  fullName: Elements.Model.FromJson(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: FromJson
+    path: ../src/Elements/Model.cs
+    startLine: 258
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nCreate a model from JSON.\n"
+  example: []
+  syntax:
+    content: public static Model FromJson(string json)
+    parameters:
+    - id: json
+      type: System.String
+      description: The JSON.
+    return:
+      type: Elements.Model
+      description: A model.
+    content.vb: Public Shared Function FromJson(json As String) As Model
+  overload: Elements.Model.FromJson*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Elements.Model.FromIFC(System.String,System.String[])
+  commentId: M:Elements.Model.FromIFC(System.String,System.String[])
+  id: FromIFC(System.String,System.String[])
+  parent: Elements.Model
+  langs:
+  - csharp
+  - vb
+  name: FromIFC(String, String[])
+  nameWithType: Model.FromIFC(String, String[])
+  fullName: Elements.Model.FromIFC(System.String, System.String[])
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Model.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: FromIFC
+    path: ../src/Elements/Model.cs
+    startLine: 270
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements
+  summary: "\nCreate a model from IFC.\n"
+  example: []
+  syntax:
+    content: public static Model FromIFC(string path, string[] idsToConvert = null)
+    parameters:
+    - id: path
+      type: System.String
+      description: The path to the IFC STEP file.
+    - id: idsToConvert
+      type: System.String[]
+      description: "An optional array of string identifiers \nof IFC entities to convert."
+    return:
+      type: Elements.Model
+      description: A model.
+    content.vb: Public Shared Function FromIFC(path As String, idsToConvert As String() = Nothing) As Model
+  overload: Elements.Model.FromIFC*
+  nameWithType.vb: Model.FromIFC(String, String())
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Elements.Model.FromIFC(System.String, System.String())
+  name.vb: FromIFC(String, String())
+references:
+- uid: Elements
+  commentId: N:Elements
+  name: Elements
+  nameWithType: Elements
+  fullName: Elements
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.Elements.Serialization.glTF.GltfExtensions.ToGlTF(System.String,System.Boolean)
+  commentId: M:Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean)
+  parent: Elements.Serialization.glTF.GltfExtensions
+  definition: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean)
+  name: ToGlTF(String, Boolean)
+  nameWithType: GltfExtensions.ToGlTF(String, Boolean)
+  fullName: Elements.Serialization.glTF.GltfExtensions.ToGlTF(System.String, System.Boolean)
+  spec.csharp:
+  - uid: Elements.Serialization.glTF.GltfExtensions.ToGlTF(System.String,System.Boolean)
+    name: ToGlTF
+    nameWithType: GltfExtensions.ToGlTF
+    fullName: Elements.Serialization.glTF.GltfExtensions.ToGlTF
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Serialization.glTF.GltfExtensions.ToGlTF(System.String,System.Boolean)
+    name: ToGlTF
+    nameWithType: GltfExtensions.ToGlTF
+    fullName: Elements.Serialization.glTF.GltfExtensions.ToGlTF
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.Elements.Serialization.glTF.GltfExtensions.ToBase64String
+  commentId: M:Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
+  parent: Elements.Serialization.glTF.GltfExtensions
+  definition: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
+  name: ToBase64String()
+  nameWithType: GltfExtensions.ToBase64String()
+  fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String()
+  spec.csharp:
+  - uid: Elements.Serialization.glTF.GltfExtensions.ToBase64String
+    name: ToBase64String
+    nameWithType: GltfExtensions.ToBase64String
+    fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Serialization.glTF.GltfExtensions.ToBase64String
+    name: ToBase64String
+    nameWithType: GltfExtensions.ToBase64String
+    fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.Elements.Serialization.IFC.IFCExtensions.ToIFC(System.String)
+  commentId: M:Elements.Serialization.IFC.IFCExtensions.ToIFC(Elements.Model,System.String)
+  parent: Elements.Serialization.IFC.IFCExtensions
+  definition: Elements.Serialization.IFC.IFCExtensions.ToIFC(Elements.Model,System.String)
+  name: ToIFC(String)
+  nameWithType: IFCExtensions.ToIFC(String)
+  fullName: Elements.Serialization.IFC.IFCExtensions.ToIFC(System.String)
+  spec.csharp:
+  - uid: Elements.Serialization.IFC.IFCExtensions.ToIFC(System.String)
+    name: ToIFC
+    nameWithType: IFCExtensions.ToIFC
+    fullName: Elements.Serialization.IFC.IFCExtensions.ToIFC
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Serialization.IFC.IFCExtensions.ToIFC(System.String)
+    name: ToIFC
+    nameWithType: IFCExtensions.ToIFC
+    fullName: Elements.Serialization.IFC.IFCExtensions.ToIFC
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.Elements.Serialization.JSON.JsonExtensions.ToJson(System.Boolean)
+  commentId: M:Elements.Serialization.JSON.JsonExtensions.ToJson(Elements.Model,System.Boolean)
+  parent: Elements.Serialization.JSON.JsonExtensions
+  definition: Elements.Serialization.JSON.JsonExtensions.ToJson(Elements.Model,System.Boolean)
+  name: ToJson(Boolean)
+  nameWithType: JsonExtensions.ToJson(Boolean)
+  fullName: Elements.Serialization.JSON.JsonExtensions.ToJson(System.Boolean)
+  spec.csharp:
+  - uid: Elements.Serialization.JSON.JsonExtensions.ToJson(System.Boolean)
+    name: ToJson
+    nameWithType: JsonExtensions.ToJson
+    fullName: Elements.Serialization.JSON.JsonExtensions.ToJson
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Serialization.JSON.JsonExtensions.ToJson(System.Boolean)
+    name: ToJson
+    nameWithType: JsonExtensions.ToJson
+    fullName: Elements.Serialization.JSON.JsonExtensions.ToJson
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean)
+  commentId: M:Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean)
+  isExternal: true
+  name: ToGlTF(Model, String, Boolean)
+  nameWithType: GltfExtensions.ToGlTF(Model, String, Boolean)
+  fullName: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model, System.String, System.Boolean)
+  spec.csharp:
+  - uid: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean)
+    name: ToGlTF
+    nameWithType: GltfExtensions.ToGlTF
+    fullName: Elements.Serialization.glTF.GltfExtensions.ToGlTF
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Model
+    name: Model
+    nameWithType: Model
+    fullName: Elements.Model
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean)
+    name: ToGlTF
+    nameWithType: GltfExtensions.ToGlTF
+    fullName: Elements.Serialization.glTF.GltfExtensions.ToGlTF
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Model
+    name: Model
+    nameWithType: Model
+    fullName: Elements.Model
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Serialization.glTF.GltfExtensions
+  commentId: T:Elements.Serialization.glTF.GltfExtensions
+  parent: Elements.Serialization.glTF
+  name: GltfExtensions
+  nameWithType: GltfExtensions
+  fullName: Elements.Serialization.glTF.GltfExtensions
+- uid: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
+  commentId: M:Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
+  name: ToBase64String(Model)
+  nameWithType: GltfExtensions.ToBase64String(Model)
+  fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
+  spec.csharp:
+  - uid: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
+    name: ToBase64String
+    nameWithType: GltfExtensions.ToBase64String
+    fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Model
+    name: Model
+    nameWithType: Model
+    fullName: Elements.Model
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
+    name: ToBase64String
+    nameWithType: GltfExtensions.ToBase64String
+    fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Model
+    name: Model
+    nameWithType: Model
+    fullName: Elements.Model
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Serialization.IFC.IFCExtensions.ToIFC(Elements.Model,System.String)
+  commentId: M:Elements.Serialization.IFC.IFCExtensions.ToIFC(Elements.Model,System.String)
+  isExternal: true
+  name: ToIFC(Model, String)
+  nameWithType: IFCExtensions.ToIFC(Model, String)
+  fullName: Elements.Serialization.IFC.IFCExtensions.ToIFC(Elements.Model, System.String)
+  spec.csharp:
+  - uid: Elements.Serialization.IFC.IFCExtensions.ToIFC(Elements.Model,System.String)
+    name: ToIFC
+    nameWithType: IFCExtensions.ToIFC
+    fullName: Elements.Serialization.IFC.IFCExtensions.ToIFC
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Model
+    name: Model
+    nameWithType: Model
+    fullName: Elements.Model
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Serialization.IFC.IFCExtensions.ToIFC(Elements.Model,System.String)
+    name: ToIFC
+    nameWithType: IFCExtensions.ToIFC
+    fullName: Elements.Serialization.IFC.IFCExtensions.ToIFC
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Model
+    name: Model
+    nameWithType: Model
+    fullName: Elements.Model
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Serialization.IFC.IFCExtensions
+  commentId: T:Elements.Serialization.IFC.IFCExtensions
+  parent: Elements.Serialization.IFC
+  name: IFCExtensions
+  nameWithType: IFCExtensions
+  fullName: Elements.Serialization.IFC.IFCExtensions
+- uid: Elements.Serialization.JSON.JsonExtensions.ToJson(Elements.Model,System.Boolean)
+  commentId: M:Elements.Serialization.JSON.JsonExtensions.ToJson(Elements.Model,System.Boolean)
+  isExternal: true
+  name: ToJson(Model, Boolean)
+  nameWithType: JsonExtensions.ToJson(Model, Boolean)
+  fullName: Elements.Serialization.JSON.JsonExtensions.ToJson(Elements.Model, System.Boolean)
+  spec.csharp:
+  - uid: Elements.Serialization.JSON.JsonExtensions.ToJson(Elements.Model,System.Boolean)
+    name: ToJson
+    nameWithType: JsonExtensions.ToJson
+    fullName: Elements.Serialization.JSON.JsonExtensions.ToJson
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Model
+    name: Model
+    nameWithType: Model
+    fullName: Elements.Model
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Serialization.JSON.JsonExtensions.ToJson(Elements.Model,System.Boolean)
+    name: ToJson
+    nameWithType: JsonExtensions.ToJson
+    fullName: Elements.Serialization.JSON.JsonExtensions.ToJson
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Elements.Model
+    name: Model
+    nameWithType: Model
+    fullName: Elements.Model
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Serialization.JSON.JsonExtensions
+  commentId: T:Elements.Serialization.JSON.JsonExtensions
+  parent: Elements.Serialization.JSON
+  name: JsonExtensions
+  nameWithType: JsonExtensions
+  fullName: Elements.Serialization.JSON.JsonExtensions
+- uid: Elements.Serialization.glTF
+  commentId: N:Elements.Serialization.glTF
+  name: Elements.Serialization.glTF
+  nameWithType: Elements.Serialization.glTF
+  fullName: Elements.Serialization.glTF
+- uid: Elements.Serialization.IFC
+  commentId: N:Elements.Serialization.IFC
+  name: Elements.Serialization.IFC
+  nameWithType: Elements.Serialization.IFC
+  fullName: Elements.Serialization.IFC
+- uid: Elements.Serialization.JSON
+  commentId: N:Elements.Serialization.JSON
+  name: Elements.Serialization.JSON
+  nameWithType: Elements.Serialization.JSON
+  fullName: Elements.Serialization.JSON
+- uid: Elements.Model.Version*
+  commentId: Overload:Elements.Model.Version
+  name: Version
+  nameWithType: Model.Version
+  fullName: Elements.Model.Version
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Elements.Model.Origin*
+  commentId: Overload:Elements.Model.Origin
+  name: Origin
+  nameWithType: Model.Origin
+  fullName: Elements.Model.Origin
+- uid: Elements.GeoJSON.Position
+  commentId: T:Elements.GeoJSON.Position
+  parent: Elements.GeoJSON
+  name: Position
+  nameWithType: Position
+  fullName: Elements.GeoJSON.Position
+- uid: Elements.GeoJSON
+  commentId: N:Elements.GeoJSON
+  name: Elements.GeoJSON
+  nameWithType: Elements.GeoJSON
+  fullName: Elements.GeoJSON
+- uid: Elements.Model.Elements*
+  commentId: Overload:Elements.Model.Elements
+  name: Elements
+  nameWithType: Model.Elements
+  fullName: Elements.Model.Elements
+- uid: System.Collections.Generic.Dictionary{System.Int64,Elements.Element}
+  commentId: T:System.Collections.Generic.Dictionary{System.Int64,Elements.Element}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  name: Dictionary<Int64, Element>
+  nameWithType: Dictionary<Int64, Element>
+  fullName: System.Collections.Generic.Dictionary<System.Int64, Elements.Element>
+  nameWithType.vb: Dictionary(Of Int64, Element)
+  fullName.vb: System.Collections.Generic.Dictionary(Of System.Int64, Elements.Element)
+  name.vb: Dictionary(Of Int64, Element)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Element
+    name: Element
+    nameWithType: Element
+    fullName: Elements.Element
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Element
+    name: Element
+    nameWithType: Element
+    fullName: Elements.Element
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Elements.Model.Materials*
+  commentId: Overload:Elements.Model.Materials
+  name: Materials
+  nameWithType: Model.Materials
+  fullName: Elements.Model.Materials
+- uid: System.Collections.Generic.Dictionary{System.Int64,Elements.Material}
+  commentId: T:System.Collections.Generic.Dictionary{System.Int64,Elements.Material}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  name: Dictionary<Int64, Material>
+  nameWithType: Dictionary<Int64, Material>
+  fullName: System.Collections.Generic.Dictionary<System.Int64, Elements.Material>
+  nameWithType.vb: Dictionary(Of Int64, Material)
+  fullName.vb: System.Collections.Generic.Dictionary(Of System.Int64, Elements.Material)
+  name.vb: Dictionary(Of Int64, Material)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Material
+    name: Material
+    nameWithType: Material
+    fullName: Elements.Material
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Material
+    name: Material
+    nameWithType: Material
+    fullName: Elements.Material
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.ElementTypes*
+  commentId: Overload:Elements.Model.ElementTypes
+  name: ElementTypes
+  nameWithType: Model.ElementTypes
+  fullName: Elements.Model.ElementTypes
+- uid: System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType}
+  commentId: T:System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  name: Dictionary<Int64, ElementType>
+  nameWithType: Dictionary<Int64, ElementType>
+  fullName: System.Collections.Generic.Dictionary<System.Int64, Elements.ElementType>
+  nameWithType.vb: Dictionary(Of Int64, ElementType)
+  fullName.vb: System.Collections.Generic.Dictionary(Of System.Int64, Elements.ElementType)
+  name.vb: Dictionary(Of Int64, ElementType)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.ElementType
+    name: ElementType
+    nameWithType: ElementType
+    fullName: Elements.ElementType
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.ElementType
+    name: ElementType
+    nameWithType: ElementType
+    fullName: Elements.ElementType
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.Profiles*
+  commentId: Overload:Elements.Model.Profiles
+  name: Profiles
+  nameWithType: Model.Profiles
+  fullName: Elements.Model.Profiles
+- uid: System.Collections.Generic.Dictionary{System.Int64,Elements.Geometry.Profile}
+  commentId: T:System.Collections.Generic.Dictionary{System.Int64,Elements.Geometry.Profile}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  name: Dictionary<Int64, Profile>
+  nameWithType: Dictionary<Int64, Profile>
+  fullName: System.Collections.Generic.Dictionary<System.Int64, Elements.Geometry.Profile>
+  nameWithType.vb: Dictionary(Of Int64, Profile)
+  fullName.vb: System.Collections.Generic.Dictionary(Of System.Int64, Elements.Geometry.Profile)
+  name.vb: Dictionary(Of Int64, Profile)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Geometry.Profile
+    name: Profile
+    nameWithType: Profile
+    fullName: Elements.Geometry.Profile
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.Geometry.Profile
+    name: Profile
+    nameWithType: Profile
+    fullName: Elements.Geometry.Profile
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.Extensions*
+  commentId: Overload:Elements.Model.Extensions
+  name: Extensions
+  nameWithType: Model.Extensions
+  fullName: Elements.Model.Extensions
+- uid: System.Collections.Generic.IEnumerable{System.String}
+  commentId: T:System.Collections.Generic.IEnumerable{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<String>
+  nameWithType: IEnumerable<String>
+  fullName: System.Collections.Generic.IEnumerable<System.String>
+  nameWithType.vb: IEnumerable(Of String)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.String)
+  name.vb: IEnumerable(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.#ctor*
+  commentId: Overload:Elements.Model.#ctor
+  name: Model
+  nameWithType: Model.Model
+  fullName: Elements.Model.Model
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+- uid: Elements.Model.AddElement*
+  commentId: Overload:Elements.Model.AddElement
+  name: AddElement
+  nameWithType: Model.AddElement
+  fullName: Elements.Model.AddElement
+- uid: Elements.Element
+  commentId: T:Elements.Element
+  parent: Elements
+  name: Element
+  nameWithType: Element
+  fullName: Elements.Element
+- uid: Elements.Model.UpdateElement*
+  commentId: Overload:Elements.Model.UpdateElement
+  name: UpdateElement
+  nameWithType: Model.UpdateElement
+  fullName: Elements.Model.UpdateElement
+- uid: Elements.Model.AddElements*
+  commentId: Overload:Elements.Model.AddElements
+  name: AddElements
+  nameWithType: Model.AddElements
+  fullName: Elements.Model.AddElements
+- uid: System.Collections.Generic.IEnumerable{Elements.Element}
+  commentId: T:System.Collections.Generic.IEnumerable{Elements.Element}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<Element>
+  nameWithType: IEnumerable<Element>
+  fullName: System.Collections.Generic.IEnumerable<Elements.Element>
+  nameWithType.vb: IEnumerable(Of Element)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Elements.Element)
+  name.vb: IEnumerable(Of Element)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Elements.Element
+    name: Element
+    nameWithType: Element
+    fullName: Elements.Element
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Elements.Element
+    name: Element
+    nameWithType: Element
+    fullName: Elements.Element
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.UpdateElements*
+  commentId: Overload:Elements.Model.UpdateElements
+  name: UpdateElements
+  nameWithType: Model.UpdateElements
+  fullName: Elements.Model.UpdateElements
+- uid: Elements.Model.GetElementById*
+  commentId: Overload:Elements.Model.GetElementById
+  name: GetElementById
+  nameWithType: Model.GetElementById
+  fullName: Elements.Model.GetElementById
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Elements.Model.GetElementByName*
+  commentId: Overload:Elements.Model.GetElementByName
+  name: GetElementByName
+  nameWithType: Model.GetElementByName
+  fullName: Elements.Model.GetElementByName
+- uid: Elements.Model.GetMaterialByName*
+  commentId: Overload:Elements.Model.GetMaterialByName
+  name: GetMaterialByName
+  nameWithType: Model.GetMaterialByName
+  fullName: Elements.Model.GetMaterialByName
+- uid: Elements.Material
+  commentId: T:Elements.Material
+  parent: Elements
+  name: Material
+  nameWithType: Material
+  fullName: Elements.Material
+- uid: Elements.Model.GetElementTypeByName*
+  commentId: Overload:Elements.Model.GetElementTypeByName
+  name: GetElementTypeByName
+  nameWithType: Model.GetElementTypeByName
+  fullName: Elements.Model.GetElementTypeByName
+- uid: Elements.ElementType
+  commentId: T:Elements.ElementType
+  parent: Elements
+  name: ElementType
+  nameWithType: ElementType
+  fullName: Elements.ElementType
+- uid: Elements.Model.GetProfileByName*
+  commentId: Overload:Elements.Model.GetProfileByName
+  name: GetProfileByName
+  nameWithType: Model.GetProfileByName
+  fullName: Elements.Model.GetProfileByName
+- uid: Elements.Geometry.Profile
+  commentId: T:Elements.Geometry.Profile
+  parent: Elements.Geometry
+  name: Profile
+  nameWithType: Profile
+  fullName: Elements.Geometry.Profile
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: Elements.Model.ElementsOfType*
+  commentId: Overload:Elements.Model.ElementsOfType
+  name: ElementsOfType
+  nameWithType: Model.ElementsOfType
+  fullName: Elements.Model.ElementsOfType
+- uid: System.Collections.Generic.IEnumerable{{T}}
+  commentId: T:System.Collections.Generic.IEnumerable{``0}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Model.FromJson*
+  commentId: Overload:Elements.Model.FromJson
+  name: FromJson
+  nameWithType: Model.FromJson
+  fullName: Elements.Model.FromJson
+- uid: Elements.Model
+  commentId: T:Elements.Model
+  parent: Elements
+  name: Model
+  nameWithType: Model
+  fullName: Elements.Model
+- uid: Elements.Model.FromIFC*
+  commentId: Overload:Elements.Model.FromIFC
+  name: FromIFC
+  nameWithType: Model.FromIFC
+  fullName: Elements.Model.FromIFC
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()

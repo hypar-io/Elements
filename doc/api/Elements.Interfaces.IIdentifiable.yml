@@ -1,0 +1,144 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Interfaces.IIdentifiable
+  commentId: T:Elements.Interfaces.IIdentifiable
+  id: IIdentifiable
+  parent: Elements.Interfaces
+  children:
+  - Elements.Interfaces.IIdentifiable.Id
+  - Elements.Interfaces.IIdentifiable.Name
+  langs:
+  - csharp
+  - vb
+  name: IIdentifiable
+  nameWithType: IIdentifiable
+  fullName: Elements.Interfaces.IIdentifiable
+  type: Interface
+  source:
+    remote:
+      path: src/Elements/Interfaces/IIdentifiable.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: IIdentifiable
+    path: ../src/Elements/Interfaces/IIdentifiable.cs
+    startLine: 7
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Interfaces
+  summary: "\nThe interface for all elements which can be identified with a unique identifier.\n"
+  example: []
+  syntax:
+    content: public interface IIdentifiable
+    content.vb: Public Interface IIdentifiable
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Elements.Interfaces.IIdentifiable.Id
+  commentId: P:Elements.Interfaces.IIdentifiable.Id
+  id: Id
+  parent: Elements.Interfaces.IIdentifiable
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: IIdentifiable.Id
+  fullName: Elements.Interfaces.IIdentifiable.Id
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Interfaces/IIdentifiable.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Id
+    path: ../src/Elements/Interfaces/IIdentifiable.cs
+    startLine: 12
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Interfaces
+  summary: "\nThe unique identifier of the Element.\n"
+  example: []
+  syntax:
+    content: long Id { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: ReadOnly Property Id As Long
+  overload: Elements.Interfaces.IIdentifiable.Id*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Elements.Interfaces.IIdentifiable.Name
+  commentId: P:Elements.Interfaces.IIdentifiable.Name
+  id: Name
+  parent: Elements.Interfaces.IIdentifiable
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IIdentifiable.Name
+  fullName: Elements.Interfaces.IIdentifiable.Name
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Interfaces/IIdentifiable.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Name
+    path: ../src/Elements/Interfaces/IIdentifiable.cs
+    startLine: 17
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Interfaces
+  summary: "\nA human-readable name for the Element.\n"
+  example: []
+  syntax:
+    content: string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Name As String
+  overload: Elements.Interfaces.IIdentifiable.Name*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Elements.Interfaces
+  commentId: N:Elements.Interfaces
+  name: Elements.Interfaces
+  nameWithType: Elements.Interfaces
+  fullName: Elements.Interfaces
+- uid: Elements.Interfaces.IIdentifiable.Id*
+  commentId: Overload:Elements.Interfaces.IIdentifiable.Id
+  name: Id
+  nameWithType: IIdentifiable.Id
+  fullName: Elements.Interfaces.IIdentifiable.Id
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  name: Int64
+  nameWithType: Int64
+  fullName: System.Int64
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Interfaces.IIdentifiable.Name*
+  commentId: Overload:Elements.Interfaces.IIdentifiable.Name
+  name: Name
+  nameWithType: IIdentifiable.Name
+  fullName: Elements.Interfaces.IIdentifiable.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String

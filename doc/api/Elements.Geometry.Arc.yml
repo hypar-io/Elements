@@ -1,0 +1,1376 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.Arc
+  commentId: T:Elements.Geometry.Arc
+  id: Arc
+  parent: Elements.Geometry
+  children:
+  - Elements.Geometry.Arc.#ctor(Elements.Geometry.Plane,System.Double,System.Double,System.Double)
+  - Elements.Geometry.Arc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)
+  - Elements.Geometry.Arc.Bounds
+  - Elements.Geometry.Arc.End
+  - Elements.Geometry.Arc.EndAngle
+  - Elements.Geometry.Arc.Frames(System.Double,System.Double)
+  - Elements.Geometry.Arc.Length
+  - Elements.Geometry.Arc.Plane
+  - Elements.Geometry.Arc.PointAt(System.Double)
+  - Elements.Geometry.Arc.Radius
+  - Elements.Geometry.Arc.Reversed
+  - Elements.Geometry.Arc.Start
+  - Elements.Geometry.Arc.StartAngle
+  - Elements.Geometry.Arc.TransformAt(System.Double)
+  - Elements.Geometry.Arc.Type
+  langs:
+  - csharp
+  - vb
+  name: Arc
+  nameWithType: Arc
+  fullName: Elements.Geometry.Arc
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Arc
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 9
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nArc represents an arc defined between a start angle and an end angle.\n"
+  example: []
+  syntax:
+    content: 'public class Arc : ICurve'
+    content.vb: >-
+      Public Class Arc
+          Implements ICurve
+  inheritance:
+  - System.Object
+  implements:
+  - Elements.Geometry.Interfaces.ICurve
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Geometry.Arc.Type
+  commentId: P:Elements.Geometry.Arc.Type
+  id: Type
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: Arc.Type
+  fullName: Elements.Geometry.Arc.Type
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Type
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 17
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe type of the curve.\nUsed during deserialization to disambiguate derived types.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonProperty(Order = -100)]
+
+      public string Type { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonProperty(Order:=-100)>
+
+      Public ReadOnly Property Type As String
+  overload: Elements.Geometry.Arc.Type*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.Type
+  attributes:
+  - type: Newtonsoft.Json.JsonPropertyAttribute
+    ctor: Newtonsoft.Json.JsonPropertyAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Order
+      type: System.Int32
+      value: -100
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Arc.Plane
+  commentId: P:Elements.Geometry.Arc.Plane
+  id: Plane
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Plane
+  nameWithType: Arc.Plane
+  fullName: Elements.Geometry.Arc.Plane
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Plane
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 27
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe plane of the arc.\n"
+  example: []
+  syntax:
+    content: public Plane Plane { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Plane
+      description: ''
+    content.vb: Public ReadOnly Property Plane As Plane
+  overload: Elements.Geometry.Arc.Plane*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Arc.StartAngle
+  commentId: P:Elements.Geometry.Arc.StartAngle
+  id: StartAngle
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: StartAngle
+  nameWithType: Arc.StartAngle
+  fullName: Elements.Geometry.Arc.StartAngle
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: StartAngle
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 32
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.\n"
+  example: []
+  syntax:
+    content: public double StartAngle { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property StartAngle As Double
+  overload: Elements.Geometry.Arc.StartAngle*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Arc.EndAngle
+  commentId: P:Elements.Geometry.Arc.EndAngle
+  id: EndAngle
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: EndAngle
+  nameWithType: Arc.EndAngle
+  fullName: Elements.Geometry.Arc.EndAngle
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: EndAngle
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 37
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.\n"
+  example: []
+  syntax:
+    content: public double EndAngle { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property EndAngle As Double
+  overload: Elements.Geometry.Arc.EndAngle*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Arc.Length
+  commentId: M:Elements.Geometry.Arc.Length
+  id: Length
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Length()
+  nameWithType: Arc.Length()
+  fullName: Elements.Geometry.Arc.Length()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Length
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 42
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCalculate the length of the arc.\n"
+  example: []
+  syntax:
+    content: public double Length()
+    return:
+      type: System.Double
+    content.vb: Public Function Length As Double
+  overload: Elements.Geometry.Arc.Length*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.Length
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Arc.Start
+  commentId: P:Elements.Geometry.Arc.Start
+  id: Start
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Start
+  nameWithType: Arc.Start
+  fullName: Elements.Geometry.Arc.Start
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Start
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 50
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe start point of the arc.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public Vector3 Start { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: >-
+      <JsonIgnore>
+
+      Public ReadOnly Property Start As Vector3
+  overload: Elements.Geometry.Arc.Start*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.Start
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Arc.End
+  commentId: P:Elements.Geometry.Arc.End
+  id: End
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: End
+  nameWithType: Arc.End
+  fullName: Elements.Geometry.Arc.End
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: End
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 59
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe end point of the arc.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public Vector3 End { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: >-
+      <JsonIgnore>
+
+      Public ReadOnly Property End As Vector3
+  overload: Elements.Geometry.Arc.End*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.End
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Arc.Radius
+  commentId: P:Elements.Geometry.Arc.Radius
+  id: Radius
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Radius
+  nameWithType: Arc.Radius
+  fullName: Elements.Geometry.Arc.Radius
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Radius
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 68
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe radius of the Arc.\n"
+  example: []
+  syntax:
+    content: public double Radius { get; }
+    parameters: []
+    return:
+      type: System.Double
+    content.vb: Public ReadOnly Property Radius As Double
+  overload: Elements.Geometry.Arc.Radius*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Arc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)
+  commentId: M:Elements.Geometry.Arc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)
+  id: '#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)'
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Arc(Vector3, Double, Double, Double)
+  nameWithType: Arc.Arc(Vector3, Double, Double, Double)
+  fullName: Elements.Geometry.Arc.Arc(Elements.Geometry.Vector3, System.Double, System.Double, System.Double)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 77
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCreate a plane.\n"
+  example: []
+  syntax:
+    content: public Arc(Vector3 center, double radius, double startAngle, double endAngle)
+    parameters:
+    - id: center
+      type: Elements.Geometry.Vector3
+      description: The center of the arc.
+    - id: radius
+      type: System.Double
+      description: The radius of the arc.
+    - id: startAngle
+      type: System.Double
+      description: The start angle of the arc in degrees.
+    - id: endAngle
+      type: System.Double
+      description: The end angle of the arc in degrees.
+    content.vb: Public Sub New(center As Vector3, radius As Double, startAngle As Double, endAngle As Double)
+  overload: Elements.Geometry.Arc.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Arc.#ctor(Elements.Geometry.Plane,System.Double,System.Double,System.Double)
+  commentId: M:Elements.Geometry.Arc.#ctor(Elements.Geometry.Plane,System.Double,System.Double,System.Double)
+  id: '#ctor(Elements.Geometry.Plane,System.Double,System.Double,System.Double)'
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Arc(Plane, Double, Double, Double)
+  nameWithType: Arc.Arc(Plane, Double, Double, Double)
+  fullName: Elements.Geometry.Arc.Arc(Elements.Geometry.Plane, System.Double, System.Double, System.Double)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 108
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCreate a plane.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConstructor]
+
+      public Arc(Plane plane, double radius, double startAngle, double endAngle)
+    parameters:
+    - id: plane
+      type: Elements.Geometry.Plane
+      description: The plane of the arc.
+    - id: radius
+      type: System.Double
+      description: The radius of the arc.
+    - id: startAngle
+      type: System.Double
+      description: The start angle of the arc in degrees.
+    - id: endAngle
+      type: System.Double
+      description: The end angle of the arc in degrees.
+    content.vb: >-
+      <JsonConstructor>
+
+      Public Sub New(plane As Plane, radius As Double, startAngle As Double, endAngle As Double)
+  overload: Elements.Geometry.Arc.#ctor*
+  attributes:
+  - type: Newtonsoft.Json.JsonConstructorAttribute
+    ctor: Newtonsoft.Json.JsonConstructorAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Arc.PointAt(System.Double)
+  commentId: M:Elements.Geometry.Arc.PointAt(System.Double)
+  id: PointAt(System.Double)
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: PointAt(Double)
+  nameWithType: Arc.PointAt(Double)
+  fullName: Elements.Geometry.Arc.PointAt(System.Double)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: PointAt
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 138
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nReturn the point at parameter u on the arc.\n"
+  example: []
+  syntax:
+    content: public Vector3 PointAt(double u)
+    parameters:
+    - id: u
+      type: System.Double
+      description: A parameter between 0.0 and 1.0.
+    return:
+      type: Elements.Geometry.Vector3
+      description: A Vector3 representing the point along the arc.
+    content.vb: Public Function PointAt(u As Double) As Vector3
+  overload: Elements.Geometry.Arc.PointAt*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.PointAt(System.Double)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Arc.TransformAt(System.Double)
+  commentId: M:Elements.Geometry.Arc.TransformAt(System.Double)
+  id: TransformAt(System.Double)
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: TransformAt(Double)
+  nameWithType: Arc.TransformAt(Double)
+  fullName: Elements.Geometry.Arc.TransformAt(System.Double)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: TransformAt
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 157
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nReturn transform on the arc at parameter u.\n"
+  example: []
+  syntax:
+    content: public Transform TransformAt(double u)
+    parameters:
+    - id: u
+      type: System.Double
+      description: A parameter between 0.0 and 1.0 on the arc.
+    return:
+      type: Elements.Geometry.Transform
+      description: A transform with its origin at u along the curve and its Z axis tangent to the curve.
+    content.vb: Public Function TransformAt(u As Double) As Transform
+  overload: Elements.Geometry.Arc.TransformAt*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.TransformAt(System.Double)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Arc.Frames(System.Double,System.Double)
+  commentId: M:Elements.Geometry.Arc.Frames(System.Double,System.Double)
+  id: Frames(System.Double,System.Double)
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Frames(Double, Double)
+  nameWithType: Arc.Frames(Double, Double)
+  fullName: Elements.Geometry.Arc.Frames(System.Double, System.Double)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Frames
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 171
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nGet a collection of transforms which represent frames along the arc.\n"
+  example: []
+  syntax:
+    content: public Transform[] Frames(double startSetback, double endSetback)
+    parameters:
+    - id: startSetback
+      type: System.Double
+      description: The offset from the start of the arc.
+    - id: endSetback
+      type: System.Double
+      description: The offset from the end of the arc.
+    return:
+      type: Elements.Geometry.Transform[]
+      description: A collection of transforms.
+    content.vb: Public Function Frames(startSetback As Double, endSetback As Double) As Transform()
+  overload: Elements.Geometry.Arc.Frames*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.Frames(System.Double,System.Double)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Arc.Reversed
+  commentId: M:Elements.Geometry.Arc.Reversed
+  id: Reversed
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Reversed()
+  nameWithType: Arc.Reversed()
+  fullName: Elements.Geometry.Arc.Reversed()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Reversed
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 200
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nGet an arc which is the reverse of this Arc.\n"
+  example: []
+  syntax:
+    content: public ICurve Reversed()
+    return:
+      type: Elements.Geometry.Interfaces.ICurve
+    content.vb: Public Function Reversed As ICurve
+  overload: Elements.Geometry.Arc.Reversed*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.Reversed
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Arc.Bounds
+  commentId: M:Elements.Geometry.Arc.Bounds
+  id: Bounds
+  parent: Elements.Geometry.Arc
+  langs:
+  - csharp
+  - vb
+  name: Bounds()
+  nameWithType: Arc.Bounds()
+  fullName: Elements.Geometry.Arc.Bounds()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Arc.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Bounds
+    path: ../src/Elements/Geometry/Arc.cs
+    startLine: 214
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nGet a bounding box for this arc.\n"
+  example: []
+  syntax:
+    content: public BBox3 Bounds()
+    return:
+      type: Elements.Geometry.BBox3
+      description: A bounding box for this arc.
+    content.vb: Public Function Bounds As BBox3
+  overload: Elements.Geometry.Arc.Bounds*
+  implements:
+  - Elements.Geometry.Interfaces.ICurve.Bounds
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.Geometry.Interfaces.ICurve
+  commentId: T:Elements.Geometry.Interfaces.ICurve
+  parent: Elements.Geometry.Interfaces
+  name: ICurve
+  nameWithType: ICurve
+  fullName: Elements.Geometry.Interfaces.ICurve
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Geometry.Interfaces
+  commentId: N:Elements.Geometry.Interfaces
+  name: Elements.Geometry.Interfaces
+  nameWithType: Elements.Geometry.Interfaces
+  fullName: Elements.Geometry.Interfaces
+- uid: Elements.Geometry.Arc.Type*
+  commentId: Overload:Elements.Geometry.Arc.Type
+  name: Type
+  nameWithType: Arc.Type
+  fullName: Elements.Geometry.Arc.Type
+- uid: Elements.Geometry.Interfaces.ICurve.Type
+  commentId: P:Elements.Geometry.Interfaces.ICurve.Type
+  parent: Elements.Geometry.Interfaces.ICurve
+  name: Type
+  nameWithType: ICurve.Type
+  fullName: Elements.Geometry.Interfaces.ICurve.Type
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Elements.Geometry.Arc.Plane*
+  commentId: Overload:Elements.Geometry.Arc.Plane
+  name: Plane
+  nameWithType: Arc.Plane
+  fullName: Elements.Geometry.Arc.Plane
+- uid: Elements.Geometry.Plane
+  commentId: T:Elements.Geometry.Plane
+  parent: Elements.Geometry
+  name: Plane
+  nameWithType: Plane
+  fullName: Elements.Geometry.Plane
+- uid: Elements.Geometry.Arc.StartAngle*
+  commentId: Overload:Elements.Geometry.Arc.StartAngle
+  name: StartAngle
+  nameWithType: Arc.StartAngle
+  fullName: Elements.Geometry.Arc.StartAngle
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.Geometry.Arc.EndAngle*
+  commentId: Overload:Elements.Geometry.Arc.EndAngle
+  name: EndAngle
+  nameWithType: Arc.EndAngle
+  fullName: Elements.Geometry.Arc.EndAngle
+- uid: Elements.Geometry.Arc.Length*
+  commentId: Overload:Elements.Geometry.Arc.Length
+  name: Length
+  nameWithType: Arc.Length
+  fullName: Elements.Geometry.Arc.Length
+- uid: Elements.Geometry.Interfaces.ICurve.Length
+  commentId: M:Elements.Geometry.Interfaces.ICurve.Length
+  parent: Elements.Geometry.Interfaces.ICurve
+  name: Length()
+  nameWithType: ICurve.Length()
+  fullName: Elements.Geometry.Interfaces.ICurve.Length()
+  spec.csharp:
+  - uid: Elements.Geometry.Interfaces.ICurve.Length
+    name: Length
+    nameWithType: ICurve.Length
+    fullName: Elements.Geometry.Interfaces.ICurve.Length
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Interfaces.ICurve.Length
+    name: Length
+    nameWithType: ICurve.Length
+    fullName: Elements.Geometry.Interfaces.ICurve.Length
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Arc.Start*
+  commentId: Overload:Elements.Geometry.Arc.Start
+  name: Start
+  nameWithType: Arc.Start
+  fullName: Elements.Geometry.Arc.Start
+- uid: Elements.Geometry.Interfaces.ICurve.Start
+  commentId: P:Elements.Geometry.Interfaces.ICurve.Start
+  parent: Elements.Geometry.Interfaces.ICurve
+  name: Start
+  nameWithType: ICurve.Start
+  fullName: Elements.Geometry.Interfaces.ICurve.Start
+- uid: Elements.Geometry.Vector3
+  commentId: T:Elements.Geometry.Vector3
+  parent: Elements.Geometry
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Elements.Geometry.Vector3
+- uid: Elements.Geometry.Arc.End*
+  commentId: Overload:Elements.Geometry.Arc.End
+  name: End
+  nameWithType: Arc.End
+  fullName: Elements.Geometry.Arc.End
+- uid: Elements.Geometry.Interfaces.ICurve.End
+  commentId: P:Elements.Geometry.Interfaces.ICurve.End
+  parent: Elements.Geometry.Interfaces.ICurve
+  name: End
+  nameWithType: ICurve.End
+  fullName: Elements.Geometry.Interfaces.ICurve.End
+- uid: Elements.Geometry.Arc.Radius*
+  commentId: Overload:Elements.Geometry.Arc.Radius
+  name: Radius
+  nameWithType: Arc.Radius
+  fullName: Elements.Geometry.Arc.Radius
+- uid: Elements.Geometry.Arc.#ctor*
+  commentId: Overload:Elements.Geometry.Arc.#ctor
+  name: Arc
+  nameWithType: Arc.Arc
+  fullName: Elements.Geometry.Arc.Arc
+- uid: Elements.Geometry.Arc.PointAt*
+  commentId: Overload:Elements.Geometry.Arc.PointAt
+  name: PointAt
+  nameWithType: Arc.PointAt
+  fullName: Elements.Geometry.Arc.PointAt
+- uid: Elements.Geometry.Interfaces.ICurve.PointAt(System.Double)
+  commentId: M:Elements.Geometry.Interfaces.ICurve.PointAt(System.Double)
+  parent: Elements.Geometry.Interfaces.ICurve
+  isExternal: true
+  name: PointAt(Double)
+  nameWithType: ICurve.PointAt(Double)
+  fullName: Elements.Geometry.Interfaces.ICurve.PointAt(System.Double)
+  spec.csharp:
+  - uid: Elements.Geometry.Interfaces.ICurve.PointAt(System.Double)
+    name: PointAt
+    nameWithType: ICurve.PointAt
+    fullName: Elements.Geometry.Interfaces.ICurve.PointAt
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Interfaces.ICurve.PointAt(System.Double)
+    name: PointAt
+    nameWithType: ICurve.PointAt
+    fullName: Elements.Geometry.Interfaces.ICurve.PointAt
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Arc.TransformAt*
+  commentId: Overload:Elements.Geometry.Arc.TransformAt
+  name: TransformAt
+  nameWithType: Arc.TransformAt
+  fullName: Elements.Geometry.Arc.TransformAt
+- uid: Elements.Geometry.Interfaces.ICurve.TransformAt(System.Double)
+  commentId: M:Elements.Geometry.Interfaces.ICurve.TransformAt(System.Double)
+  parent: Elements.Geometry.Interfaces.ICurve
+  isExternal: true
+  name: TransformAt(Double)
+  nameWithType: ICurve.TransformAt(Double)
+  fullName: Elements.Geometry.Interfaces.ICurve.TransformAt(System.Double)
+  spec.csharp:
+  - uid: Elements.Geometry.Interfaces.ICurve.TransformAt(System.Double)
+    name: TransformAt
+    nameWithType: ICurve.TransformAt
+    fullName: Elements.Geometry.Interfaces.ICurve.TransformAt
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Interfaces.ICurve.TransformAt(System.Double)
+    name: TransformAt
+    nameWithType: ICurve.TransformAt
+    fullName: Elements.Geometry.Interfaces.ICurve.TransformAt
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Transform
+  commentId: T:Elements.Geometry.Transform
+  parent: Elements.Geometry
+  name: Transform
+  nameWithType: Transform
+  fullName: Elements.Geometry.Transform
+- uid: Elements.Geometry.Arc.Frames*
+  commentId: Overload:Elements.Geometry.Arc.Frames
+  name: Frames
+  nameWithType: Arc.Frames
+  fullName: Elements.Geometry.Arc.Frames
+- uid: Elements.Geometry.Interfaces.ICurve.Frames(System.Double,System.Double)
+  commentId: M:Elements.Geometry.Interfaces.ICurve.Frames(System.Double,System.Double)
+  parent: Elements.Geometry.Interfaces.ICurve
+  isExternal: true
+  name: Frames(Double, Double)
+  nameWithType: ICurve.Frames(Double, Double)
+  fullName: Elements.Geometry.Interfaces.ICurve.Frames(System.Double, System.Double)
+  spec.csharp:
+  - uid: Elements.Geometry.Interfaces.ICurve.Frames(System.Double,System.Double)
+    name: Frames
+    nameWithType: ICurve.Frames
+    fullName: Elements.Geometry.Interfaces.ICurve.Frames
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Interfaces.ICurve.Frames(System.Double,System.Double)
+    name: Frames
+    nameWithType: ICurve.Frames
+    fullName: Elements.Geometry.Interfaces.ICurve.Frames
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Transform[]
+  isExternal: true
+  name: Transform[]
+  nameWithType: Transform[]
+  fullName: Elements.Geometry.Transform[]
+  nameWithType.vb: Transform()
+  fullName.vb: Elements.Geometry.Transform()
+  name.vb: Transform()
+  spec.csharp:
+  - uid: Elements.Geometry.Transform
+    name: Transform
+    nameWithType: Transform
+    fullName: Elements.Geometry.Transform
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: Elements.Geometry.Transform
+    name: Transform
+    nameWithType: Transform
+    fullName: Elements.Geometry.Transform
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Elements.Geometry.Arc.Reversed*
+  commentId: Overload:Elements.Geometry.Arc.Reversed
+  name: Reversed
+  nameWithType: Arc.Reversed
+  fullName: Elements.Geometry.Arc.Reversed
+- uid: Elements.Geometry.Interfaces.ICurve.Reversed
+  commentId: M:Elements.Geometry.Interfaces.ICurve.Reversed
+  parent: Elements.Geometry.Interfaces.ICurve
+  name: Reversed()
+  nameWithType: ICurve.Reversed()
+  fullName: Elements.Geometry.Interfaces.ICurve.Reversed()
+  spec.csharp:
+  - uid: Elements.Geometry.Interfaces.ICurve.Reversed
+    name: Reversed
+    nameWithType: ICurve.Reversed
+    fullName: Elements.Geometry.Interfaces.ICurve.Reversed
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Interfaces.ICurve.Reversed
+    name: Reversed
+    nameWithType: ICurve.Reversed
+    fullName: Elements.Geometry.Interfaces.ICurve.Reversed
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Arc.Bounds*
+  commentId: Overload:Elements.Geometry.Arc.Bounds
+  name: Bounds
+  nameWithType: Arc.Bounds
+  fullName: Elements.Geometry.Arc.Bounds
+- uid: Elements.Geometry.Interfaces.ICurve.Bounds
+  commentId: M:Elements.Geometry.Interfaces.ICurve.Bounds
+  parent: Elements.Geometry.Interfaces.ICurve
+  name: Bounds()
+  nameWithType: ICurve.Bounds()
+  fullName: Elements.Geometry.Interfaces.ICurve.Bounds()
+  spec.csharp:
+  - uid: Elements.Geometry.Interfaces.ICurve.Bounds
+    name: Bounds
+    nameWithType: ICurve.Bounds
+    fullName: Elements.Geometry.Interfaces.ICurve.Bounds
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Elements.Geometry.Interfaces.ICurve.Bounds
+    name: Bounds
+    nameWithType: ICurve.Bounds
+    fullName: Elements.Geometry.Interfaces.ICurve.Bounds
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.BBox3
+  commentId: T:Elements.Geometry.BBox3
+  parent: Elements.Geometry
+  name: BBox3
+  nameWithType: BBox3
+  fullName: Elements.Geometry.BBox3

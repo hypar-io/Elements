@@ -1,0 +1,459 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.GeoJSON.Point
+  commentId: T:Elements.GeoJSON.Point
+  id: Point
+  parent: Elements.GeoJSON
+  children:
+  - Elements.GeoJSON.Point.#ctor(Elements.GeoJSON.Position)
+  - Elements.GeoJSON.Point.Coordinates
+  langs:
+  - csharp
+  - vb
+  name: Point
+  nameWithType: Point
+  fullName: Elements.GeoJSON.Point
+  type: Class
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Point
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 91
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nA GeoJSON point.\n"
+  example: []
+  syntax:
+    content: 'public class Point : Geometry'
+    content.vb: >-
+      Public Class Point
+          Inherits Geometry
+  inheritance:
+  - System.Object
+  - Elements.GeoJSON.Geometry
+  inheritedMembers:
+  - Elements.GeoJSON.Geometry.Type
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.GeoJSON.Point.Coordinates
+  commentId: P:Elements.GeoJSON.Point.Coordinates
+  id: Coordinates
+  parent: Elements.GeoJSON.Point
+  langs:
+  - csharp
+  - vb
+  name: Coordinates
+  nameWithType: Point.Coordinates
+  fullName: Elements.GeoJSON.Point.Coordinates
+  type: Property
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Coordinates
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 97
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nThe coordinates of the geometry.\n"
+  example: []
+  syntax:
+    content: public Position Coordinates { get; }
+    parameters: []
+    return:
+      type: Elements.GeoJSON.Position
+      description: ''
+    content.vb: Public ReadOnly Property Coordinates As Position
+  overload: Elements.GeoJSON.Point.Coordinates*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.GeoJSON.Point.#ctor(Elements.GeoJSON.Position)
+  commentId: M:Elements.GeoJSON.Point.#ctor(Elements.GeoJSON.Position)
+  id: '#ctor(Elements.GeoJSON.Position)'
+  parent: Elements.GeoJSON.Point
+  langs:
+  - csharp
+  - vb
+  name: Point(Position)
+  nameWithType: Point.Point(Position)
+  fullName: Elements.GeoJSON.Point.Point(Elements.GeoJSON.Position)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Geometry.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/GeoJSON/Geometry.cs
+    startLine: 104
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nConstruct a Point.\n"
+  example: []
+  syntax:
+    content: public Point(Position coordinates)
+    parameters:
+    - id: coordinates
+      type: Elements.GeoJSON.Position
+      description: ''
+    content.vb: Public Sub New(coordinates As Position)
+  overload: Elements.GeoJSON.Point.#ctor*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: Thrown when the provided coordinates are null.
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Elements.GeoJSON
+  commentId: N:Elements.GeoJSON
+  name: Elements.GeoJSON
+  nameWithType: Elements.GeoJSON
+  fullName: Elements.GeoJSON
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Elements.GeoJSON.Geometry
+  commentId: T:Elements.GeoJSON.Geometry
+  parent: Elements.GeoJSON
+  name: Geometry
+  nameWithType: Geometry
+  fullName: Elements.GeoJSON.Geometry
+- uid: Elements.GeoJSON.Geometry.Type
+  commentId: P:Elements.GeoJSON.Geometry.Type
+  parent: Elements.GeoJSON.Geometry
+  name: Type
+  nameWithType: Geometry.Type
+  fullName: Elements.GeoJSON.Geometry.Type
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.GeoJSON.Point.Coordinates*
+  commentId: Overload:Elements.GeoJSON.Point.Coordinates
+  name: Coordinates
+  nameWithType: Point.Coordinates
+  fullName: Elements.GeoJSON.Point.Coordinates
+- uid: Elements.GeoJSON.Position
+  commentId: T:Elements.GeoJSON.Position
+  parent: Elements.GeoJSON
+  name: Position
+  nameWithType: Position
+  fullName: Elements.GeoJSON.Position
+- uid: System.ArgumentNullException
+  commentId: T:System.ArgumentNullException
+  isExternal: true
+- uid: Elements.GeoJSON.Point.#ctor*
+  commentId: Overload:Elements.GeoJSON.Point.#ctor
+  name: Point
+  nameWithType: Point.Point
+  fullName: Elements.GeoJSON.Point.Point

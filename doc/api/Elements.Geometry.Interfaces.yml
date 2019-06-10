@@ -1,0 +1,77 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.Interfaces
+  commentId: N:Elements.Geometry.Interfaces
+  id: Elements.Geometry.Interfaces
+  children:
+  - Elements.Geometry.Interfaces.ICurve
+  - Elements.Geometry.Interfaces.IExtrude
+  - Elements.Geometry.Interfaces.ILamina
+  - Elements.Geometry.Interfaces.IProfile
+  - Elements.Geometry.Interfaces.ISolid
+  - Elements.Geometry.Interfaces.ISweepAlongCurve
+  - Elements.Geometry.Interfaces.ITessellate
+  - Elements.Geometry.Interfaces.ITransformable
+  langs:
+  - csharp
+  - vb
+  name: Elements.Geometry.Interfaces
+  nameWithType: Elements.Geometry.Interfaces
+  fullName: Elements.Geometry.Interfaces
+  type: Namespace
+  assemblies:
+  - Hypar.Elements
+references:
+- uid: Elements.Geometry.Interfaces.ICurve
+  commentId: T:Elements.Geometry.Interfaces.ICurve
+  parent: Elements.Geometry.Interfaces
+  name: ICurve
+  nameWithType: ICurve
+  fullName: Elements.Geometry.Interfaces.ICurve
+- uid: Elements.Geometry.Interfaces.IExtrude
+  commentId: T:Elements.Geometry.Interfaces.IExtrude
+  parent: Elements.Geometry.Interfaces
+  name: IExtrude
+  nameWithType: IExtrude
+  fullName: Elements.Geometry.Interfaces.IExtrude
+- uid: Elements.Geometry.Interfaces.ILamina
+  commentId: T:Elements.Geometry.Interfaces.ILamina
+  parent: Elements.Geometry.Interfaces
+  name: ILamina
+  nameWithType: ILamina
+  fullName: Elements.Geometry.Interfaces.ILamina
+- uid: Elements.Geometry.Interfaces.IProfile
+  commentId: T:Elements.Geometry.Interfaces.IProfile
+  parent: Elements.Geometry.Interfaces
+  name: IProfile
+  nameWithType: IProfile
+  fullName: Elements.Geometry.Interfaces.IProfile
+- uid: Elements.Geometry.Interfaces.ISolid
+  commentId: T:Elements.Geometry.Interfaces.ISolid
+  parent: Elements.Geometry.Interfaces
+  name: ISolid
+  nameWithType: ISolid
+  fullName: Elements.Geometry.Interfaces.ISolid
+- uid: Elements.Geometry.Interfaces.ISweepAlongCurve
+  commentId: T:Elements.Geometry.Interfaces.ISweepAlongCurve
+  parent: Elements.Geometry.Interfaces
+  name: ISweepAlongCurve
+  nameWithType: ISweepAlongCurve
+  fullName: Elements.Geometry.Interfaces.ISweepAlongCurve
+- uid: Elements.Geometry.Interfaces.ITessellate
+  commentId: T:Elements.Geometry.Interfaces.ITessellate
+  parent: Elements.Geometry.Interfaces
+  name: ITessellate
+  nameWithType: ITessellate
+  fullName: Elements.Geometry.Interfaces.ITessellate
+- uid: Elements.Geometry.Interfaces.ITransformable
+  commentId: T:Elements.Geometry.Interfaces.ITransformable
+  parent: Elements.Geometry.Interfaces
+  name: ITransformable
+  nameWithType: ITransformable
+  fullName: Elements.Geometry.Interfaces.ITransformable
+- uid: Elements.Geometry.Interfaces
+  commentId: N:Elements.Geometry.Interfaces
+  name: Elements.Geometry.Interfaces
+  nameWithType: Elements.Geometry.Interfaces
+  fullName: Elements.Geometry.Interfaces

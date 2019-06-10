@@ -1,0 +1,813 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.GeoJSON.Feature
+  commentId: T:Elements.GeoJSON.Feature
+  id: Feature
+  parent: Elements.GeoJSON
+  children:
+  - Elements.GeoJSON.Feature.#ctor(Elements.GeoJSON.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
+  - Elements.GeoJSON.Feature.BBox
+  - Elements.GeoJSON.Feature.Geometry
+  - Elements.GeoJSON.Feature.Properties
+  - Elements.GeoJSON.Feature.Type
+  langs:
+  - csharp
+  - vb
+  name: Feature
+  nameWithType: Feature
+  fullName: Elements.GeoJSON.Feature
+  type: Class
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Feature.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Feature
+    path: ../src/Elements/GeoJSON/Feature.cs
+    startLine: 10
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nA GeoJSON feature.\n"
+  example: []
+  syntax:
+    content: public class Feature
+    content.vb: Public Class Feature
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.GeoJSON.Feature.Type
+  commentId: P:Elements.GeoJSON.Feature.Type
+  id: Type
+  parent: Elements.GeoJSON.Feature
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: Feature.Type
+  fullName: Elements.GeoJSON.Feature.Type
+  type: Property
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Feature.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Type
+    path: ../src/Elements/GeoJSON/Feature.cs
+    startLine: 16
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nThe type of the feature.\n"
+  example: []
+  syntax:
+    content: public string Type { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: ''
+    content.vb: Public ReadOnly Property Type As String
+  overload: Elements.GeoJSON.Feature.Type*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.GeoJSON.Feature.Properties
+  commentId: P:Elements.GeoJSON.Feature.Properties
+  id: Properties
+  parent: Elements.GeoJSON.Feature
+  langs:
+  - csharp
+  - vb
+  name: Properties
+  nameWithType: Feature.Properties
+  fullName: Elements.GeoJSON.Feature.Properties
+  type: Property
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Feature.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Properties
+    path: ../src/Elements/GeoJSON/Feature.cs
+    startLine: 27
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nAll properties of the feature.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+      public Dictionary<string, object> Properties { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,System.Object}
+      description: ''
+    content.vb: >-
+      <JsonProperty(NullValueHandling:=NullValueHandling.Ignore)>
+
+      Public Property Properties As Dictionary(Of String, Object)
+  overload: Elements.GeoJSON.Feature.Properties*
+  attributes:
+  - type: Newtonsoft.Json.JsonPropertyAttribute
+    ctor: Newtonsoft.Json.JsonPropertyAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: NullValueHandling
+      type: Newtonsoft.Json.NullValueHandling
+      value: 1
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Elements.GeoJSON.Feature.Geometry
+  commentId: P:Elements.GeoJSON.Feature.Geometry
+  id: Geometry
+  parent: Elements.GeoJSON.Feature
+  langs:
+  - csharp
+  - vb
+  name: Geometry
+  nameWithType: Feature.Geometry
+  fullName: Elements.GeoJSON.Feature.Geometry
+  type: Property
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Feature.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Geometry
+    path: ../src/Elements/GeoJSON/Feature.cs
+    startLine: 33
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nThe geometry of the feature.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConverter(typeof(GeometryConverter))]
+
+      public Geometry Geometry { get; set; }
+    parameters: []
+    return:
+      type: Elements.GeoJSON.Geometry
+    content.vb: >-
+      <JsonConverter(GetType(GeometryConverter))>
+
+      Public Property Geometry As Geometry
+  overload: Elements.GeoJSON.Feature.Geometry*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Elements.GeoJSON.Feature.BBox
+  commentId: P:Elements.GeoJSON.Feature.BBox
+  id: BBox
+  parent: Elements.GeoJSON.Feature
+  langs:
+  - csharp
+  - vb
+  name: BBox
+  nameWithType: Feature.BBox
+  fullName: Elements.GeoJSON.Feature.BBox
+  type: Property
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Feature.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: BBox
+    path: ../src/Elements/GeoJSON/Feature.cs
+    startLine: 39
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nThe bounding box of the feature.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+
+      public IEnumerable<double> BBox { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IEnumerable{System.Double}
+    content.vb: >-
+      <JsonProperty(NullValueHandling:=NullValueHandling.Ignore)>
+
+      Public ReadOnly Property BBox As IEnumerable(Of Double)
+  overload: Elements.GeoJSON.Feature.BBox*
+  attributes:
+  - type: Newtonsoft.Json.JsonPropertyAttribute
+    ctor: Newtonsoft.Json.JsonPropertyAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: NullValueHandling
+      type: Newtonsoft.Json.NullValueHandling
+      value: 1
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.GeoJSON.Feature.#ctor(Elements.GeoJSON.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
+  commentId: M:Elements.GeoJSON.Feature.#ctor(Elements.GeoJSON.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
+  id: '#ctor(Elements.GeoJSON.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})'
+  parent: Elements.GeoJSON.Feature
+  langs:
+  - csharp
+  - vb
+  name: Feature(Geometry, Dictionary<String, Object>)
+  nameWithType: Feature.Feature(Geometry, Dictionary<String, Object>)
+  fullName: Elements.GeoJSON.Feature.Feature(Elements.GeoJSON.Geometry, System.Collections.Generic.Dictionary<System.String, System.Object>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/GeoJSON/Feature.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/GeoJSON/Feature.cs
+    startLine: 47
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.GeoJSON
+  summary: "\nConstruct a feature.\n"
+  example: []
+  syntax:
+    content: public Feature(Geometry geometry, Dictionary<string, object> properties)
+    parameters:
+    - id: geometry
+      type: Elements.GeoJSON.Geometry
+      description: ''
+    - id: properties
+      type: System.Collections.Generic.Dictionary{System.String,System.Object}
+      description: ''
+    content.vb: Public Sub New(geometry As Geometry, properties As Dictionary(Of String, Object))
+  overload: Elements.GeoJSON.Feature.#ctor*
+  nameWithType.vb: Feature.Feature(Geometry, Dictionary(Of String, Object))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.GeoJSON.Feature.Feature(Elements.GeoJSON.Geometry, System.Collections.Generic.Dictionary(Of System.String, System.Object))
+  name.vb: Feature(Geometry, Dictionary(Of String, Object))
+references:
+- uid: Elements.GeoJSON
+  commentId: N:Elements.GeoJSON
+  name: Elements.GeoJSON
+  nameWithType: Elements.GeoJSON
+  fullName: Elements.GeoJSON
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.GeoJSON.Feature.Type*
+  commentId: Overload:Elements.GeoJSON.Feature.Type
+  name: Type
+  nameWithType: Feature.Type
+  fullName: Elements.GeoJSON.Feature.Type
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Elements.GeoJSON.Feature.Properties*
+  commentId: Overload:Elements.GeoJSON.Feature.Properties
+  name: Properties
+  nameWithType: Feature.Properties
+  fullName: Elements.GeoJSON.Feature.Properties
+- uid: System.Collections.Generic.Dictionary{System.String,System.Object}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  name: Dictionary<String, Object>
+  nameWithType: Dictionary<String, Object>
+  fullName: System.Collections.Generic.Dictionary<System.String, System.Object>
+  nameWithType.vb: Dictionary(Of String, Object)
+  fullName.vb: System.Collections.Generic.Dictionary(Of System.String, System.Object)
+  name.vb: Dictionary(Of String, Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Elements.GeoJSON.Feature.Geometry*
+  commentId: Overload:Elements.GeoJSON.Feature.Geometry
+  name: Geometry
+  nameWithType: Feature.Geometry
+  fullName: Elements.GeoJSON.Feature.Geometry
+- uid: Elements.GeoJSON.Geometry
+  commentId: T:Elements.GeoJSON.Geometry
+  parent: Elements.GeoJSON
+  name: Geometry
+  nameWithType: Geometry
+  fullName: Elements.GeoJSON.Geometry
+- uid: Elements.GeoJSON.Feature.BBox*
+  commentId: Overload:Elements.GeoJSON.Feature.BBox
+  name: BBox
+  nameWithType: Feature.BBox
+  fullName: Elements.GeoJSON.Feature.BBox
+- uid: System.Collections.Generic.IEnumerable{System.Double}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Double}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<Double>
+  nameWithType: IEnumerable<Double>
+  fullName: System.Collections.Generic.IEnumerable<System.Double>
+  nameWithType.vb: IEnumerable(Of Double)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.Double)
+  name.vb: IEnumerable(Of Double)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Double
+    name: Double
+    nameWithType: Double
+    fullName: System.Double
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.GeoJSON.Feature.#ctor*
+  commentId: Overload:Elements.GeoJSON.Feature.#ctor
+  name: Feature
+  nameWithType: Feature.Feature
+  fullName: Elements.GeoJSON.Feature.Feature

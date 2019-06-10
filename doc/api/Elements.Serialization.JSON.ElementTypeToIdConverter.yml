@@ -1,0 +1,930 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter
+  commentId: T:Elements.Serialization.JSON.ElementTypeToIdConverter
+  id: ElementTypeToIdConverter
+  parent: Elements.Serialization.JSON
+  children:
+  - Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType})
+  - Elements.Serialization.JSON.ElementTypeToIdConverter.CanConvert(System.Type)
+  - Elements.Serialization.JSON.ElementTypeToIdConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  - Elements.Serialization.JSON.ElementTypeToIdConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  langs:
+  - csharp
+  - vb
+  name: ElementTypeToIdConverter
+  nameWithType: ElementTypeToIdConverter
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ElementTypeToIdConverter
+    path: ../src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+    startLine: 9
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Serialization.JSON
+  summary: "\nConverter for objects of ElementType.\n"
+  example: []
+  syntax:
+    content: 'public class ElementTypeToIdConverter : JsonConverter'
+    content.vb: >-
+      Public Class ElementTypeToIdConverter
+          Inherits JsonConverter
+  inheritance:
+  - System.Object
+  - Newtonsoft.Json.JsonConverter
+  inheritedMembers:
+  - Newtonsoft.Json.JsonConverter.CanRead
+  - Newtonsoft.Json.JsonConverter.CanWrite
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType})
+  commentId: M:Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType})
+  id: '#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType})'
+  parent: Elements.Serialization.JSON.ElementTypeToIdConverter
+  langs:
+  - csharp
+  - vb
+  name: ElementTypeToIdConverter(Dictionary<Int64, ElementType>)
+  nameWithType: ElementTypeToIdConverter.ElementTypeToIdConverter(Dictionary<Int64, ElementType>)
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.ElementTypeToIdConverter(System.Collections.Generic.Dictionary<System.Int64, Elements.ElementType>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+    startLine: 17
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Serialization.JSON
+  summary: "\nConstruct an ElementTypeConverter.\n"
+  example: []
+  syntax:
+    content: public ElementTypeToIdConverter(Dictionary<long, ElementType> elementTypes)
+    parameters:
+    - id: elementTypes
+      type: System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType}
+      description: ''
+    content.vb: Public Sub New(elementTypes As Dictionary(Of Long, ElementType))
+  overload: Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor*
+  nameWithType.vb: ElementTypeToIdConverter.ElementTypeToIdConverter(Dictionary(Of Int64, ElementType))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Elements.Serialization.JSON.ElementTypeToIdConverter.ElementTypeToIdConverter(System.Collections.Generic.Dictionary(Of System.Int64, Elements.ElementType))
+  name.vb: ElementTypeToIdConverter(Dictionary(Of Int64, ElementType))
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.CanConvert(System.Type)
+  commentId: M:Elements.Serialization.JSON.ElementTypeToIdConverter.CanConvert(System.Type)
+  id: CanConvert(System.Type)
+  parent: Elements.Serialization.JSON.ElementTypeToIdConverter
+  langs:
+  - csharp
+  - vb
+  name: CanConvert(Type)
+  nameWithType: ElementTypeToIdConverter.CanConvert(Type)
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.CanConvert(System.Type)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: CanConvert
+    path: ../src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+    startLine: 27
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Serialization.JSON
+  summary: "\nCan this converter convert and object of type objectType?\n"
+  example: []
+  syntax:
+    content: public override bool CanConvert(Type objectType)
+    parameters:
+    - id: objectType
+      type: System.Type
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Overrides Function CanConvert(objectType As Type) As Boolean
+  overridden: Newtonsoft.Json.JsonConverter.CanConvert(System.Type)
+  overload: Elements.Serialization.JSON.ElementTypeToIdConverter.CanConvert*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  commentId: M:Elements.Serialization.JSON.ElementTypeToIdConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  id: ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  parent: Elements.Serialization.JSON.ElementTypeToIdConverter
+  langs:
+  - csharp
+  - vb
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  nameWithType: ElementTypeToIdConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ReadJson
+    path: ../src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+    startLine: 40
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Serialization.JSON
+  summary: "\nRead json.\n"
+  example: []
+  syntax:
+    content: public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    parameters:
+    - id: reader
+      type: Newtonsoft.Json.JsonReader
+      description: ''
+    - id: objectType
+      type: System.Type
+      description: ''
+    - id: existingValue
+      type: System.Object
+      description: ''
+    - id: serializer
+      type: Newtonsoft.Json.JsonSerializer
+      description: ''
+    return:
+      type: System.Object
+      description: ''
+    content.vb: Public Overrides Function ReadJson(reader As JsonReader, objectType As Type, existingValue As Object, serializer As JsonSerializer) As Object
+  overridden: Newtonsoft.Json.JsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  overload: Elements.Serialization.JSON.ElementTypeToIdConverter.ReadJson*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  commentId: M:Elements.Serialization.JSON.ElementTypeToIdConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  id: WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  parent: Elements.Serialization.JSON.ElementTypeToIdConverter
+  langs:
+  - csharp
+  - vb
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  nameWithType: ElementTypeToIdConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: WriteJson
+    path: ../src/Elements/Serialization/JSON/ElementTypeToIdConverter.cs
+    startLine: 59
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Serialization.JSON
+  summary: "\nWrite json.\n"
+  example: []
+  syntax:
+    content: public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    parameters:
+    - id: writer
+      type: Newtonsoft.Json.JsonWriter
+      description: ''
+    - id: value
+      type: System.Object
+      description: ''
+    - id: serializer
+      type: Newtonsoft.Json.JsonSerializer
+      description: ''
+    content.vb: Public Overrides Sub WriteJson(writer As JsonWriter, value As Object, serializer As JsonSerializer)
+  overridden: Newtonsoft.Json.JsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  overload: Elements.Serialization.JSON.ElementTypeToIdConverter.WriteJson*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Elements.Serialization.JSON
+  commentId: N:Elements.Serialization.JSON
+  name: Elements.Serialization.JSON
+  nameWithType: Elements.Serialization.JSON
+  fullName: Elements.Serialization.JSON
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Newtonsoft.Json.JsonConverter
+  commentId: T:Newtonsoft.Json.JsonConverter
+  parent: Newtonsoft.Json
+  isExternal: true
+  name: JsonConverter
+  nameWithType: JsonConverter
+  fullName: Newtonsoft.Json.JsonConverter
+- uid: Newtonsoft.Json.JsonConverter.CanRead
+  commentId: P:Newtonsoft.Json.JsonConverter.CanRead
+  parent: Newtonsoft.Json.JsonConverter
+  isExternal: true
+  name: CanRead
+  nameWithType: JsonConverter.CanRead
+  fullName: Newtonsoft.Json.JsonConverter.CanRead
+- uid: Newtonsoft.Json.JsonConverter.CanWrite
+  commentId: P:Newtonsoft.Json.JsonConverter.CanWrite
+  parent: Newtonsoft.Json.JsonConverter
+  isExternal: true
+  name: CanWrite
+  nameWithType: JsonConverter.CanWrite
+  fullName: Newtonsoft.Json.JsonConverter.CanWrite
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Newtonsoft.Json
+  commentId: N:Newtonsoft.Json
+  isExternal: true
+  name: Newtonsoft.Json
+  nameWithType: Newtonsoft.Json
+  fullName: Newtonsoft.Json
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor*
+  commentId: Overload:Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor
+  name: ElementTypeToIdConverter
+  nameWithType: ElementTypeToIdConverter.ElementTypeToIdConverter
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.ElementTypeToIdConverter
+- uid: System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType}
+  commentId: T:System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  name: Dictionary<Int64, ElementType>
+  nameWithType: Dictionary<Int64, ElementType>
+  fullName: System.Collections.Generic.Dictionary<System.Int64, Elements.ElementType>
+  nameWithType.vb: Dictionary(Of Int64, ElementType)
+  fullName.vb: System.Collections.Generic.Dictionary(Of System.Int64, Elements.ElementType)
+  name.vb: Dictionary(Of Int64, ElementType)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.ElementType
+    name: ElementType
+    nameWithType: ElementType
+    fullName: Elements.ElementType
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Int64
+    name: Int64
+    nameWithType: Int64
+    fullName: System.Int64
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Elements.ElementType
+    name: ElementType
+    nameWithType: ElementType
+    fullName: Elements.ElementType
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    nameWithType: Dictionary
+    fullName: System.Collections.Generic.Dictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Newtonsoft.Json.JsonConverter.CanConvert(System.Type)
+  commentId: M:Newtonsoft.Json.JsonConverter.CanConvert(System.Type)
+  parent: Newtonsoft.Json.JsonConverter
+  isExternal: true
+  name: CanConvert(Type)
+  nameWithType: JsonConverter.CanConvert(Type)
+  fullName: Newtonsoft.Json.JsonConverter.CanConvert(System.Type)
+  spec.csharp:
+  - uid: Newtonsoft.Json.JsonConverter.CanConvert(System.Type)
+    name: CanConvert
+    nameWithType: JsonConverter.CanConvert
+    fullName: Newtonsoft.Json.JsonConverter.CanConvert
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Type
+    name: Type
+    nameWithType: Type
+    fullName: System.Type
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Newtonsoft.Json.JsonConverter.CanConvert(System.Type)
+    name: CanConvert
+    nameWithType: JsonConverter.CanConvert
+    fullName: Newtonsoft.Json.JsonConverter.CanConvert
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Type
+    name: Type
+    nameWithType: Type
+    fullName: System.Type
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.CanConvert*
+  commentId: Overload:Elements.Serialization.JSON.ElementTypeToIdConverter.CanConvert
+  name: CanConvert
+  nameWithType: ElementTypeToIdConverter.CanConvert
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.CanConvert
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Newtonsoft.Json.JsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  commentId: M:Newtonsoft.Json.JsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  parent: Newtonsoft.Json.JsonConverter
+  isExternal: true
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  nameWithType: JsonConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+  fullName: Newtonsoft.Json.JsonConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
+  spec.csharp:
+  - uid: Newtonsoft.Json.JsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+    name: ReadJson
+    nameWithType: JsonConverter.ReadJson
+    fullName: Newtonsoft.Json.JsonConverter.ReadJson
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Newtonsoft.Json.JsonReader
+    name: JsonReader
+    nameWithType: JsonReader
+    fullName: Newtonsoft.Json.JsonReader
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Type
+    name: Type
+    nameWithType: Type
+    fullName: System.Type
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Newtonsoft.Json.JsonSerializer
+    name: JsonSerializer
+    nameWithType: JsonSerializer
+    fullName: Newtonsoft.Json.JsonSerializer
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Newtonsoft.Json.JsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+    name: ReadJson
+    nameWithType: JsonConverter.ReadJson
+    fullName: Newtonsoft.Json.JsonConverter.ReadJson
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Newtonsoft.Json.JsonReader
+    name: JsonReader
+    nameWithType: JsonReader
+    fullName: Newtonsoft.Json.JsonReader
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Type
+    name: Type
+    nameWithType: Type
+    fullName: System.Type
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Newtonsoft.Json.JsonSerializer
+    name: JsonSerializer
+    nameWithType: JsonSerializer
+    fullName: Newtonsoft.Json.JsonSerializer
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.ReadJson*
+  commentId: Overload:Elements.Serialization.JSON.ElementTypeToIdConverter.ReadJson
+  name: ReadJson
+  nameWithType: ElementTypeToIdConverter.ReadJson
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.ReadJson
+- uid: Newtonsoft.Json.JsonReader
+  commentId: T:Newtonsoft.Json.JsonReader
+  parent: Newtonsoft.Json
+  isExternal: true
+  name: JsonReader
+  nameWithType: JsonReader
+  fullName: Newtonsoft.Json.JsonReader
+- uid: Newtonsoft.Json.JsonSerializer
+  commentId: T:Newtonsoft.Json.JsonSerializer
+  parent: Newtonsoft.Json
+  isExternal: true
+  name: JsonSerializer
+  nameWithType: JsonSerializer
+  fullName: Newtonsoft.Json.JsonSerializer
+- uid: Newtonsoft.Json.JsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  commentId: M:Newtonsoft.Json.JsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  parent: Newtonsoft.Json.JsonConverter
+  isExternal: true
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  nameWithType: JsonConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+  fullName: Newtonsoft.Json.JsonConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
+  spec.csharp:
+  - uid: Newtonsoft.Json.JsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+    name: WriteJson
+    nameWithType: JsonConverter.WriteJson
+    fullName: Newtonsoft.Json.JsonConverter.WriteJson
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Newtonsoft.Json.JsonWriter
+    name: JsonWriter
+    nameWithType: JsonWriter
+    fullName: Newtonsoft.Json.JsonWriter
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Newtonsoft.Json.JsonSerializer
+    name: JsonSerializer
+    nameWithType: JsonSerializer
+    fullName: Newtonsoft.Json.JsonSerializer
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Newtonsoft.Json.JsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+    name: WriteJson
+    nameWithType: JsonConverter.WriteJson
+    fullName: Newtonsoft.Json.JsonConverter.WriteJson
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Newtonsoft.Json.JsonWriter
+    name: JsonWriter
+    nameWithType: JsonWriter
+    fullName: Newtonsoft.Json.JsonWriter
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Newtonsoft.Json.JsonSerializer
+    name: JsonSerializer
+    nameWithType: JsonSerializer
+    fullName: Newtonsoft.Json.JsonSerializer
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.WriteJson*
+  commentId: Overload:Elements.Serialization.JSON.ElementTypeToIdConverter.WriteJson
+  name: WriteJson
+  nameWithType: ElementTypeToIdConverter.WriteJson
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.WriteJson
+- uid: Newtonsoft.Json.JsonWriter
+  commentId: T:Newtonsoft.Json.JsonWriter
+  parent: Newtonsoft.Json
+  isExternal: true
+  name: JsonWriter
+  nameWithType: JsonWriter
+  fullName: Newtonsoft.Json.JsonWriter

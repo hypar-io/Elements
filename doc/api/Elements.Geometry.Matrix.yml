@@ -1,0 +1,1250 @@
+### YamlMime:ManagedReference
+items:
+- uid: Elements.Geometry.Matrix
+  commentId: T:Elements.Geometry.Matrix
+  id: Matrix
+  parent: Elements.Geometry
+  children:
+  - Elements.Geometry.Matrix.#ctor
+  - Elements.Geometry.Matrix.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  - Elements.Geometry.Matrix.Determinant
+  - Elements.Geometry.Matrix.Inverse
+  - Elements.Geometry.Matrix.op_Multiply(Elements.Geometry.Matrix,Elements.Geometry.Matrix)
+  - Elements.Geometry.Matrix.op_Multiply(Elements.Geometry.Vector3,Elements.Geometry.Matrix)
+  - Elements.Geometry.Matrix.SetIdentity
+  - Elements.Geometry.Matrix.SetTranslation(Elements.Geometry.Vector3)
+  - Elements.Geometry.Matrix.SetupProject(Elements.Geometry.Plane)
+  - Elements.Geometry.Matrix.SetupRotate(Elements.Geometry.Vector3,System.Double)
+  - Elements.Geometry.Matrix.SetupRotate(System.Int32,System.Double)
+  - Elements.Geometry.Matrix.SetupScale(Elements.Geometry.Vector3)
+  - Elements.Geometry.Matrix.SetupTranslation(Elements.Geometry.Vector3)
+  - Elements.Geometry.Matrix.ToString
+  - Elements.Geometry.Matrix.Translation
+  - Elements.Geometry.Matrix.Transpose
+  - Elements.Geometry.Matrix.XAxis
+  - Elements.Geometry.Matrix.YAxis
+  - Elements.Geometry.Matrix.ZAxis
+  - Elements.Geometry.Matrix.ZeroTranslation
+  langs:
+  - csharp
+  - vb
+  name: Matrix
+  nameWithType: Matrix
+  fullName: Elements.Geometry.Matrix
+  type: Class
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Matrix
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 8
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nA column-ordered 4x3 matrix.\n"
+  example: []
+  syntax:
+    content: public class Matrix
+    content.vb: Public Class Matrix
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Elements.Geometry.Matrix.XAxis
+  commentId: P:Elements.Geometry.Matrix.XAxis
+  id: XAxis
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: XAxis
+  nameWithType: Matrix.XAxis
+  fullName: Elements.Geometry.Matrix.XAxis
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: XAxis
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 26
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe X axis of the Matrix.\n"
+  example: []
+  syntax:
+    content: public Vector3 XAxis { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property XAxis As Vector3
+  overload: Elements.Geometry.Matrix.XAxis*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Matrix.YAxis
+  commentId: P:Elements.Geometry.Matrix.YAxis
+  id: YAxis
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: YAxis
+  nameWithType: Matrix.YAxis
+  fullName: Elements.Geometry.Matrix.YAxis
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: YAxis
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 34
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe Y axis of the Matrix.\n"
+  example: []
+  syntax:
+    content: public Vector3 YAxis { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property YAxis As Vector3
+  overload: Elements.Geometry.Matrix.YAxis*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Matrix.ZAxis
+  commentId: P:Elements.Geometry.Matrix.ZAxis
+  id: ZAxis
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: ZAxis
+  nameWithType: Matrix.ZAxis
+  fullName: Elements.Geometry.Matrix.ZAxis
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ZAxis
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 42
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe Z axis of the Matrix.\n"
+  example: []
+  syntax:
+    content: public Vector3 ZAxis { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property ZAxis As Vector3
+  overload: Elements.Geometry.Matrix.ZAxis*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Matrix.Translation
+  commentId: P:Elements.Geometry.Matrix.Translation
+  id: Translation
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Translation
+  nameWithType: Matrix.Translation
+  fullName: Elements.Geometry.Matrix.Translation
+  type: Property
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Translation
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 50
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nThe translation component of the Matrix.\n"
+  example: []
+  syntax:
+    content: public Vector3 Translation { get; }
+    parameters: []
+    return:
+      type: Elements.Geometry.Vector3
+    content.vb: Public ReadOnly Property Translation As Vector3
+  overload: Elements.Geometry.Matrix.Translation*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Elements.Geometry.Matrix.#ctor
+  commentId: M:Elements.Geometry.Matrix.#ctor
+  id: '#ctor'
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Matrix()
+  nameWithType: Matrix.Matrix()
+  fullName: Elements.Geometry.Matrix.Matrix()
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 58
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nConstruct a 4X3 matrix.\n"
+  example: []
+  syntax:
+    content: public Matrix()
+    content.vb: Public Sub New
+  overload: Elements.Geometry.Matrix.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  commentId: M:Elements.Geometry.Matrix.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  id: '#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)'
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Matrix(Vector3, Vector3, Vector3, Vector3)
+  nameWithType: Matrix.Matrix(Vector3, Vector3, Vector3, Vector3)
+  fullName: Elements.Geometry.Matrix.Matrix(Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  type: Constructor
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: .ctor
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 70
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nConstruct a matrix from axes.\n"
+  example: []
+  syntax:
+    content: >-
+      [JsonConstructor]
+
+      public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)
+    parameters:
+    - id: xAxis
+      type: Elements.Geometry.Vector3
+      description: The X axis.
+    - id: yAxis
+      type: Elements.Geometry.Vector3
+      description: The Y axis.
+    - id: zAxis
+      type: Elements.Geometry.Vector3
+      description: The Z axis.
+    - id: translation
+      type: Elements.Geometry.Vector3
+      description: The translation.
+    content.vb: >-
+      <JsonConstructor>
+
+      Public Sub New(xAxis As Vector3, yAxis As Vector3, zAxis As Vector3, translation As Vector3)
+  overload: Elements.Geometry.Matrix.#ctor*
+  attributes:
+  - type: Newtonsoft.Json.JsonConstructorAttribute
+    ctor: Newtonsoft.Json.JsonConstructorAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.SetIdentity
+  commentId: M:Elements.Geometry.Matrix.SetIdentity
+  id: SetIdentity
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: SetIdentity()
+  nameWithType: Matrix.SetIdentity()
+  fullName: Elements.Geometry.Matrix.SetIdentity()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: SetIdentity
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 82
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nSet the matrix to identity.\n"
+  example: []
+  syntax:
+    content: public void SetIdentity()
+    content.vb: Public Sub SetIdentity
+  overload: Elements.Geometry.Matrix.SetIdentity*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.ZeroTranslation
+  commentId: M:Elements.Geometry.Matrix.ZeroTranslation
+  id: ZeroTranslation
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: ZeroTranslation()
+  nameWithType: Matrix.ZeroTranslation()
+  fullName: Elements.Geometry.Matrix.ZeroTranslation()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ZeroTranslation
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 93
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nSet the translation of the matrix to zero.\n"
+  example: []
+  syntax:
+    content: public void ZeroTranslation()
+    content.vb: Public Sub ZeroTranslation
+  overload: Elements.Geometry.Matrix.ZeroTranslation*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.SetTranslation(Elements.Geometry.Vector3)
+  commentId: M:Elements.Geometry.Matrix.SetTranslation(Elements.Geometry.Vector3)
+  id: SetTranslation(Elements.Geometry.Vector3)
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: SetTranslation(Vector3)
+  nameWithType: Matrix.SetTranslation(Vector3)
+  fullName: Elements.Geometry.Matrix.SetTranslation(Elements.Geometry.Vector3)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: SetTranslation
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 102
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nSet the translation of the matrix.\n"
+  example: []
+  syntax:
+    content: public void SetTranslation(Vector3 v)
+    parameters:
+    - id: v
+      type: Elements.Geometry.Vector3
+      description: The translation vector.
+    content.vb: Public Sub SetTranslation(v As Vector3)
+  overload: Elements.Geometry.Matrix.SetTranslation*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.SetupTranslation(Elements.Geometry.Vector3)
+  commentId: M:Elements.Geometry.Matrix.SetupTranslation(Elements.Geometry.Vector3)
+  id: SetupTranslation(Elements.Geometry.Vector3)
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: SetupTranslation(Vector3)
+  nameWithType: Matrix.SetupTranslation(Vector3)
+  fullName: Elements.Geometry.Matrix.SetupTranslation(Elements.Geometry.Vector3)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: SetupTranslation
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 113
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nSetup the matrix to translate.\n"
+  example: []
+  syntax:
+    content: public void SetupTranslation(Vector3 v)
+    parameters:
+    - id: v
+      type: Elements.Geometry.Vector3
+      description: The translation.
+    content.vb: Public Sub SetupTranslation(v As Vector3)
+  overload: Elements.Geometry.Matrix.SetupTranslation*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.SetupRotate(System.Int32,System.Double)
+  commentId: M:Elements.Geometry.Matrix.SetupRotate(System.Int32,System.Double)
+  id: SetupRotate(System.Int32,System.Double)
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: SetupRotate(Int32, Double)
+  nameWithType: Matrix.SetupRotate(Int32, Double)
+  fullName: Elements.Geometry.Matrix.SetupRotate(System.Int32, System.Double)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: SetupRotate
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 127
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nSetup the matrix to rotate.\n"
+  example: []
+  syntax:
+    content: public void SetupRotate(int axis, double theta)
+    parameters:
+    - id: axis
+      type: System.Int32
+      description: The axis of rotation. 1-x, 2-y, 3-z
+    - id: theta
+      type: System.Double
+      description: The angle of rotation in radians.
+    content.vb: Public Sub SetupRotate(axis As Integer, theta As Double)
+  overload: Elements.Geometry.Matrix.SetupRotate*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: Thrown when the provided axis is not 1-3.
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.SetupRotate(Elements.Geometry.Vector3,System.Double)
+  commentId: M:Elements.Geometry.Matrix.SetupRotate(Elements.Geometry.Vector3,System.Double)
+  id: SetupRotate(Elements.Geometry.Vector3,System.Double)
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: SetupRotate(Vector3, Double)
+  nameWithType: Matrix.SetupRotate(Vector3, Double)
+  fullName: Elements.Geometry.Matrix.SetupRotate(Elements.Geometry.Vector3, System.Double)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: SetupRotate
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 160
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nSetup the matrix to perform rotation.\n"
+  example: []
+  syntax:
+    content: public void SetupRotate(Vector3 axis, double theta)
+    parameters:
+    - id: axis
+      type: Elements.Geometry.Vector3
+      description: The axis of rotation.
+    - id: theta
+      type: System.Double
+      description: The angle of rotation in radians.
+    content.vb: Public Sub SetupRotate(axis As Vector3, theta As Double)
+  overload: Elements.Geometry.Matrix.SetupRotate*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.SetupScale(Elements.Geometry.Vector3)
+  commentId: M:Elements.Geometry.Matrix.SetupScale(Elements.Geometry.Vector3)
+  id: SetupScale(Elements.Geometry.Vector3)
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: SetupScale(Vector3)
+  nameWithType: Matrix.SetupScale(Vector3)
+  fullName: Elements.Geometry.Matrix.SetupScale(Elements.Geometry.Vector3)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: SetupScale
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 194
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nSetup the matrix to scale.\n"
+  example: []
+  syntax:
+    content: public void SetupScale(Vector3 s)
+    parameters:
+    - id: s
+      type: Elements.Geometry.Vector3
+      description: The scale value.
+    content.vb: Public Sub SetupScale(s As Vector3)
+  overload: Elements.Geometry.Matrix.SetupScale*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.SetupProject(Elements.Geometry.Plane)
+  commentId: M:Elements.Geometry.Matrix.SetupProject(Elements.Geometry.Plane)
+  id: SetupProject(Elements.Geometry.Plane)
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: SetupProject(Plane)
+  nameWithType: Matrix.SetupProject(Plane)
+  fullName: Elements.Geometry.Matrix.SetupProject(Elements.Geometry.Plane)
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: SetupProject
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 208
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nSetup the matrix to project.\n"
+  example: []
+  syntax:
+    content: public void SetupProject(Plane p)
+    parameters:
+    - id: p
+      type: Elements.Geometry.Plane
+      description: The plane on which to project.
+    content.vb: Public Sub SetupProject(p As Plane)
+  overload: Elements.Geometry.Matrix.SetupProject*
+  exceptions:
+  - type: System.Exception
+    commentId: T:System.Exception
+    description: Thrown when provided Plane&apos;s normal is not unit length.
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.op_Multiply(Elements.Geometry.Vector3,Elements.Geometry.Matrix)
+  commentId: M:Elements.Geometry.Matrix.op_Multiply(Elements.Geometry.Vector3,Elements.Geometry.Matrix)
+  id: op_Multiply(Elements.Geometry.Vector3,Elements.Geometry.Matrix)
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Multiply(Vector3, Matrix)
+  nameWithType: Matrix.Multiply(Vector3, Matrix)
+  fullName: Elements.Geometry.Matrix.Multiply(Elements.Geometry.Vector3, Elements.Geometry.Matrix)
+  type: Operator
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: op_Multiply
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 233
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nTransform the specified vector.\n"
+  example: []
+  syntax:
+    content: public static Vector3 operator *(Vector3 p, Matrix m)
+    parameters:
+    - id: p
+      type: Elements.Geometry.Vector3
+      description: The vector to transform.
+    - id: m
+      type: Elements.Geometry.Matrix
+      description: The transformation matrix.
+    return:
+      type: Elements.Geometry.Vector3
+      description: ''
+    content.vb: Public Shared Operator *(p As Vector3, m As Matrix) As Vector3
+  overload: Elements.Geometry.Matrix.op_Multiply*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Elements.Geometry.Matrix.op_Multiply(Elements.Geometry.Matrix,Elements.Geometry.Matrix)
+  commentId: M:Elements.Geometry.Matrix.op_Multiply(Elements.Geometry.Matrix,Elements.Geometry.Matrix)
+  id: op_Multiply(Elements.Geometry.Matrix,Elements.Geometry.Matrix)
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Multiply(Matrix, Matrix)
+  nameWithType: Matrix.Multiply(Matrix, Matrix)
+  fullName: Elements.Geometry.Matrix.Multiply(Elements.Geometry.Matrix, Elements.Geometry.Matrix)
+  type: Operator
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: op_Multiply
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 248
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nMultiply two matrices.\n"
+  example: []
+  syntax:
+    content: public static Matrix operator *(Matrix a, Matrix b)
+    parameters:
+    - id: a
+      type: Elements.Geometry.Matrix
+      description: ''
+    - id: b
+      type: Elements.Geometry.Matrix
+      description: ''
+    return:
+      type: Elements.Geometry.Matrix
+      description: ''
+    content.vb: Public Shared Operator *(a As Matrix, b As Matrix) As Matrix
+  overload: Elements.Geometry.Matrix.op_Multiply*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Elements.Geometry.Matrix.Transpose
+  commentId: M:Elements.Geometry.Matrix.Transpose
+  id: Transpose
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Transpose()
+  nameWithType: Matrix.Transpose()
+  fullName: Elements.Geometry.Matrix.Transpose()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Transpose
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 274
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nTranspose the matrix.\n"
+  example: []
+  syntax:
+    content: public Matrix Transpose()
+    return:
+      type: Elements.Geometry.Matrix
+    content.vb: Public Function Transpose As Matrix
+  overload: Elements.Geometry.Matrix.Transpose*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.Determinant
+  commentId: M:Elements.Geometry.Matrix.Determinant
+  id: Determinant
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Determinant()
+  nameWithType: Matrix.Determinant()
+  fullName: Elements.Geometry.Matrix.Determinant()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Determinant
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 287
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCompute the determinant of the 3x3 portion of the matrix.\n"
+  example: []
+  syntax:
+    content: public double Determinant()
+    return:
+      type: System.Double
+    content.vb: Public Function Determinant As Double
+  overload: Elements.Geometry.Matrix.Determinant*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.Inverse
+  commentId: M:Elements.Geometry.Matrix.Inverse
+  id: Inverse
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: Inverse()
+  nameWithType: Matrix.Inverse()
+  fullName: Elements.Geometry.Matrix.Inverse()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: Inverse
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 297
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nCompute the inverse of the matrix.\n"
+  example: []
+  syntax:
+    content: public Matrix Inverse()
+    return:
+      type: Elements.Geometry.Matrix
+    content.vb: Public Function Inverse As Matrix
+  overload: Elements.Geometry.Matrix.Inverse*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Elements.Geometry.Matrix.ToString
+  commentId: M:Elements.Geometry.Matrix.ToString
+  id: ToString
+  parent: Elements.Geometry.Matrix
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: Matrix.ToString()
+  fullName: Elements.Geometry.Matrix.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Elements/Geometry/Matrix.cs
+      branch: ba40cd59bf67c7e003af07d127bdae94e7e8fbbc
+      repo: https://github.com/hypar-io/Elements
+    id: ToString
+    path: ../src/Elements/Geometry/Matrix.cs
+    startLine: 331
+  assemblies:
+  - Hypar.Elements
+  namespace: Elements.Geometry
+  summary: "\nReturn the string representation of the matrix.\n"
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: ''
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Elements.Geometry.Matrix.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Elements.Geometry
+  commentId: N:Elements.Geometry
+  name: Elements.Geometry
+  nameWithType: Elements.Geometry
+  fullName: Elements.Geometry
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Elements.Geometry.Matrix.XAxis*
+  commentId: Overload:Elements.Geometry.Matrix.XAxis
+  name: XAxis
+  nameWithType: Matrix.XAxis
+  fullName: Elements.Geometry.Matrix.XAxis
+- uid: Elements.Geometry.Vector3
+  commentId: T:Elements.Geometry.Vector3
+  parent: Elements.Geometry
+  name: Vector3
+  nameWithType: Vector3
+  fullName: Elements.Geometry.Vector3
+- uid: Elements.Geometry.Matrix.YAxis*
+  commentId: Overload:Elements.Geometry.Matrix.YAxis
+  name: YAxis
+  nameWithType: Matrix.YAxis
+  fullName: Elements.Geometry.Matrix.YAxis
+- uid: Elements.Geometry.Matrix.ZAxis*
+  commentId: Overload:Elements.Geometry.Matrix.ZAxis
+  name: ZAxis
+  nameWithType: Matrix.ZAxis
+  fullName: Elements.Geometry.Matrix.ZAxis
+- uid: Elements.Geometry.Matrix.Translation*
+  commentId: Overload:Elements.Geometry.Matrix.Translation
+  name: Translation
+  nameWithType: Matrix.Translation
+  fullName: Elements.Geometry.Matrix.Translation
+- uid: Elements.Geometry.Matrix.#ctor*
+  commentId: Overload:Elements.Geometry.Matrix.#ctor
+  name: Matrix
+  nameWithType: Matrix.Matrix
+  fullName: Elements.Geometry.Matrix.Matrix
+- uid: Elements.Geometry.Matrix.SetIdentity*
+  commentId: Overload:Elements.Geometry.Matrix.SetIdentity
+  name: SetIdentity
+  nameWithType: Matrix.SetIdentity
+  fullName: Elements.Geometry.Matrix.SetIdentity
+- uid: Elements.Geometry.Matrix.ZeroTranslation*
+  commentId: Overload:Elements.Geometry.Matrix.ZeroTranslation
+  name: ZeroTranslation
+  nameWithType: Matrix.ZeroTranslation
+  fullName: Elements.Geometry.Matrix.ZeroTranslation
+- uid: Elements.Geometry.Matrix.SetTranslation*
+  commentId: Overload:Elements.Geometry.Matrix.SetTranslation
+  name: SetTranslation
+  nameWithType: Matrix.SetTranslation
+  fullName: Elements.Geometry.Matrix.SetTranslation
+- uid: Elements.Geometry.Matrix.SetupTranslation*
+  commentId: Overload:Elements.Geometry.Matrix.SetupTranslation
+  name: SetupTranslation
+  nameWithType: Matrix.SetupTranslation
+  fullName: Elements.Geometry.Matrix.SetupTranslation
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+- uid: Elements.Geometry.Matrix.SetupRotate*
+  commentId: Overload:Elements.Geometry.Matrix.SetupRotate
+  name: SetupRotate
+  nameWithType: Matrix.SetupRotate
+  fullName: Elements.Geometry.Matrix.SetupRotate
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System.Double
+  commentId: T:System.Double
+  parent: System
+  isExternal: true
+  name: Double
+  nameWithType: Double
+  fullName: System.Double
+- uid: Elements.Geometry.Matrix.SetupScale*
+  commentId: Overload:Elements.Geometry.Matrix.SetupScale
+  name: SetupScale
+  nameWithType: Matrix.SetupScale
+  fullName: Elements.Geometry.Matrix.SetupScale
+- uid: System.Exception
+  commentId: T:System.Exception
+  isExternal: true
+- uid: Elements.Geometry.Matrix.SetupProject*
+  commentId: Overload:Elements.Geometry.Matrix.SetupProject
+  name: SetupProject
+  nameWithType: Matrix.SetupProject
+  fullName: Elements.Geometry.Matrix.SetupProject
+- uid: Elements.Geometry.Plane
+  commentId: T:Elements.Geometry.Plane
+  parent: Elements.Geometry
+  name: Plane
+  nameWithType: Plane
+  fullName: Elements.Geometry.Plane
+- uid: Elements.Geometry.Matrix.op_Multiply*
+  commentId: Overload:Elements.Geometry.Matrix.op_Multiply
+  name: Multiply
+  nameWithType: Matrix.Multiply
+  fullName: Elements.Geometry.Matrix.Multiply
+- uid: Elements.Geometry.Matrix
+  commentId: T:Elements.Geometry.Matrix
+  parent: Elements.Geometry
+  name: Matrix
+  nameWithType: Matrix
+  fullName: Elements.Geometry.Matrix
+- uid: Elements.Geometry.Matrix.Transpose*
+  commentId: Overload:Elements.Geometry.Matrix.Transpose
+  name: Transpose
+  nameWithType: Matrix.Transpose
+  fullName: Elements.Geometry.Matrix.Transpose
+- uid: Elements.Geometry.Matrix.Determinant*
+  commentId: Overload:Elements.Geometry.Matrix.Determinant
+  name: Determinant
+  nameWithType: Matrix.Determinant
+  fullName: Elements.Geometry.Matrix.Determinant
+- uid: Elements.Geometry.Matrix.Inverse*
+  commentId: Overload:Elements.Geometry.Matrix.Inverse
+  name: Inverse
+  nameWithType: Matrix.Inverse
+  fullName: Elements.Geometry.Matrix.Inverse
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Elements.Geometry.Matrix.ToString*
+  commentId: Overload:Elements.Geometry.Matrix.ToString
+  name: ToString
+  nameWithType: Matrix.ToString
+  fullName: Elements.Geometry.Matrix.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
