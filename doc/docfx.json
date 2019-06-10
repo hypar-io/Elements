@@ -58,11 +58,11 @@
         "files": [],
         "exclude": [
           "obj/**",
-          "_site/**"
+          "../docs/**"
         ]
       }
     ],
-    "dest": "_site",
+    "dest": "../docs/",
     "globalMetadata": {
       "_appTitle": "Hypar",
       "_appFooter": "Copyright © Hypar Inc., 2019",

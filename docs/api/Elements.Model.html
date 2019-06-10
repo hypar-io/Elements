@@ -1,0 +1,847 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Model
+   | Hypar </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Model
+   | Hypar ">
+    <meta name="generator" content="docfx 2.40.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.Model">
+  
+  <h1 id="Elements_Model" data-uid="Elements.Model" class="text-break">Class Model
+  </h1>
+  <div class="markdown level0 summary"><p>A container for elements, element types, materials, and profiles.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Model</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Model_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Model</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Model__ctor_" data-uid="Elements.Model.#ctor*"></a>
+  <h4 id="Elements_Model__ctor" data-uid="Elements.Model.#ctor">Model()</h4>
+  <div class="markdown level1 summary"><p>Construct an empty model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Model()</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Model_Elements_" data-uid="Elements.Model.Elements*"></a>
+  <h4 id="Elements_Model_Elements" data-uid="Elements.Model.Elements">Elements</h4>
+  <div class="markdown level1 summary"><p>All Elements in the Model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;long, Element&gt; Elements { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_ElementTypes_" data-uid="Elements.Model.ElementTypes*"></a>
+  <h4 id="Elements_Model_ElementTypes" data-uid="Elements.Model.ElementTypes">ElementTypes</h4>
+  <div class="markdown level1 summary"><p>All ElementTypes in the Model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;long, ElementType&gt; ElementTypes { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.ElementType.html">ElementType</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_Extensions_" data-uid="Elements.Model.Extensions*"></a>
+  <h4 id="Elements_Model_Extensions" data-uid="Elements.Model.Extensions">Extensions</h4>
+  <div class="markdown level1 summary"><p>A collection of extension identifiers which representing
+extensions which must be available at the time of
+serialization or deserialization.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;string&gt; Extensions { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_Materials_" data-uid="Elements.Model.Materials*"></a>
+  <h4 id="Elements_Model_Materials" data-uid="Elements.Model.Materials">Materials</h4>
+  <div class="markdown level1 summary"><p>All Materials in the Model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;long, Material&gt; Materials { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Material.html">Material</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_Origin_" data-uid="Elements.Model.Origin*"></a>
+  <h4 id="Elements_Model_Origin" data-uid="Elements.Model.Origin">Origin</h4>
+  <div class="markdown level1 summary"><p>The origin of the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Position Origin { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_Profiles_" data-uid="Elements.Model.Profiles*"></a>
+  <h4 id="Elements_Model_Profiles" data-uid="Elements.Model.Profiles">Profiles</h4>
+  <div class="markdown level1 summary"><p>All Profiles in the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;long, Profile&gt; Profiles { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_Version_" data-uid="Elements.Model.Version*"></a>
+  <h4 id="Elements_Model_Version" data-uid="Elements.Model.Version">Version</h4>
+  <div class="markdown level1 summary"><p>The version of the assembly.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Version { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Model_AddElement_" data-uid="Elements.Model.AddElement*"></a>
+  <h4 id="Elements_Model_AddElement_Elements_Element_" data-uid="Elements.Model.AddElement(Elements.Element)">AddElement(Element)</h4>
+  <div class="markdown level1 summary"><p>Add an element to the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddElement(Element element)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><span class="parametername">element</span></td>
+        <td><p>The element to add to the model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ArgumentException</span></td>
+        <td><p>Thrown when an element
+with the same Id already exists in the model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_AddElements_" data-uid="Elements.Model.AddElements*"></a>
+  <h4 id="Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__" data-uid="Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element})">AddElements(IEnumerable&lt;Element&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add a collection of elements to the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddElements(IEnumerable&lt;Element&gt; elements)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="parametername">elements</span></td>
+        <td><p>The elements to add to the model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_ElementsOfType_" data-uid="Elements.Model.ElementsOfType*"></a>
+  <h4 id="Elements_Model_ElementsOfType__1" data-uid="Elements.Model.ElementsOfType``1">ElementsOfType&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Get all Elements of the specified Type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;T&gt; ElementsOfType&lt;T&gt;()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td><p>A collection of Elements of the specified type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The Type of element to return.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_FromIFC_" data-uid="Elements.Model.FromIFC*"></a>
+  <h4 id="Elements_Model_FromIFC_System_String_System_String___" data-uid="Elements.Model.FromIFC(System.String,System.String[])">FromIFC(String, String[])</h4>
+  <div class="markdown level1 summary"><p>Create a model from IFC.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Model FromIFC(string path, string[] idsToConvert = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">path</span></td>
+        <td><p>The path to the IFC STEP file.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">idsToConvert</span></td>
+        <td><p>An optional array of string identifiers
+of IFC entities to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Model.html">Model</a></td>
+        <td><p>A model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_FromJson_" data-uid="Elements.Model.FromJson*"></a>
+  <h4 id="Elements_Model_FromJson_System_String_" data-uid="Elements.Model.FromJson(System.String)">FromJson(String)</h4>
+  <div class="markdown level1 summary"><p>Create a model from JSON.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Model FromJson(string json)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">json</span></td>
+        <td><p>The JSON.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Model.html">Model</a></td>
+        <td><p>A model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_GetElementById_" data-uid="Elements.Model.GetElementById*"></a>
+  <h4 id="Elements_Model_GetElementById_System_Int32_" data-uid="Elements.Model.GetElementById(System.Int32)">GetElementById(Int32)</h4>
+  <div class="markdown level1 summary"><p>Get an Element by id from the Model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Element GetElementById(int id)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The identifier of the Element.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><p>An Element or null if no Element can be found
+with the provided id.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_GetElementByName_" data-uid="Elements.Model.GetElementByName*"></a>
+  <h4 id="Elements_Model_GetElementByName_System_String_" data-uid="Elements.Model.GetElementByName(System.String)">GetElementByName(String)</h4>
+  <div class="markdown level1 summary"><p>Get the first Element with the specified name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Element GetElementByName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><p>An Element or null if no Element can be found
+with the provided name.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_GetElementTypeByName_" data-uid="Elements.Model.GetElementTypeByName*"></a>
+  <h4 id="Elements_Model_GetElementTypeByName_System_String_" data-uid="Elements.Model.GetElementTypeByName(System.String)">GetElementTypeByName(String)</h4>
+  <div class="markdown level1 summary"><p>Get an ElementType by name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ElementType GetElementTypeByName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the ElementType.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.ElementType.html">ElementType</a></td>
+        <td><p>An ElementType or null if no ElementType with
+the specified name can be found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_GetMaterialByName_" data-uid="Elements.Model.GetMaterialByName*"></a>
+  <h4 id="Elements_Model_GetMaterialByName_System_String_" data-uid="Elements.Model.GetMaterialByName(System.String)">GetMaterialByName(String)</h4>
+  <div class="markdown level1 summary"><p>Get a Material by name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Material GetMaterialByName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the Material.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><p>A Material or null if no Material with the
+specified id can be found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_GetProfileByName_" data-uid="Elements.Model.GetProfileByName*"></a>
+  <h4 id="Elements_Model_GetProfileByName_System_String_" data-uid="Elements.Model.GetProfileByName(System.String)">GetProfileByName(String)</h4>
+  <div class="markdown level1 summary"><p>Get a Profile by name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Profile GetProfileByName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the Profile.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><p>A Profile or null if no Profile with the
+specified name can be found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_UpdateElement_" data-uid="Elements.Model.UpdateElement*"></a>
+  <h4 id="Elements_Model_UpdateElement_Elements_Element_" data-uid="Elements.Model.UpdateElement(Elements.Element)">UpdateElement(Element)</h4>
+  <div class="markdown level1 summary"><p>Update an element existing in the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UpdateElement(Element element)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><span class="parametername">element</span></td>
+        <td><p>The element to update in the model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ArgumentException</span></td>
+        <td><p>Thrown when no element
+with the same Id exists in the model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_UpdateElements_" data-uid="Elements.Model.UpdateElements*"></a>
+  <h4 id="Elements_Model_UpdateElements_System_Collections_Generic_IEnumerable_Elements_Element__" data-uid="Elements.Model.UpdateElements(System.Collections.Generic.IEnumerable{Elements.Element})">UpdateElements(IEnumerable&lt;Element&gt;)</h4>
+  <div class="markdown level1 summary"><p>Update a collection of elements in the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UpdateElements(IEnumerable&lt;Element&gt; elements)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="parametername">elements</span></td>
+        <td><p>The elements to be updated in the model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_String_System_Boolean_">GltfExtensions.ToGlTF(Model, String, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToBase64String_Elements_Model_">GltfExtensions.ToBase64String(Model)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Serialization.IFC.IFCExtensions.html#Elements_Serialization_IFC_IFCExtensions_ToIFC_Elements_Model_System_String_">IFCExtensions.ToIFC(Model, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Serialization.JSON.JsonExtensions.html#Elements_Serialization_JSON_JsonExtensions_ToJson_Elements_Model_System_Boolean_">JsonExtensions.ToJson(Model, Boolean)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright © Hypar Inc., 2019
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

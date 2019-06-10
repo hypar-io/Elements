@@ -1,0 +1,389 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class StandardWall
+   | Hypar </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class StandardWall
+   | Hypar ">
+    <meta name="generator" content="docfx 2.40.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.StandardWall">
+  
+  <h1 id="Elements_StandardWall" data-uid="Elements.StandardWall" class="text-break">Class StandardWall
+  </h1>
+  <div class="markdown level0 summary"><p>A wall defined by a planar curve, a height, and a thickness.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
+    <div class="level2"><a class="xref" href="Elements.Wall.html">Wall</a></div>
+    <div class="level3"><span class="xref">StandardWall</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
+    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
+    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
+    <div><a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType</a>&lt;<a class="xref" href="Elements.WallType.html">WallType</a>&gt;</div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
+    <div><a class="xref" href="Hypar.Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_Height">Wall.Height</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_ElementType">Wall.ElementType</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_Geometry">Wall.Geometry</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_ExtrudeDirection">Wall.ExtrudeDirection</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_ExtrudeDepth">Wall.ExtrudeDepth</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_Profile">Wall.Profile</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_Thickness">Wall.Thickness()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Type">Element.Type</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Properties">Element.Properties</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Transform">Element.Transform</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_">Element.AddProperty(String, IProperty)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RemoveProperty_System_String_">Element.RemoveProperty(String)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_StandardWall_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class StandardWall : Wall, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType&lt;WallType&gt;, ISolid, IExtrude, IProfile, IHasOpenings</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_StandardWall__ctor_" data-uid="Elements.StandardWall.#ctor*"></a>
+  <h4 id="Elements_StandardWall__ctor_Elements_Geometry_Line_Elements_WallType_System_Double_System_Collections_Generic_List_Elements_Opening__Elements_Geometry_Transform_" data-uid="Elements.StandardWall.#ctor(Elements.Geometry.Line,Elements.WallType,System.Double,System.Collections.Generic.List{Elements.Opening},Elements.Geometry.Transform)">StandardWall(Line, WallType, Double, List&lt;Opening&gt;, Transform)</h4>
+  <div class="markdown level1 summary"><p>Construct a wall along a line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public StandardWall(Line centerLine, WallType elementType, double height, List&lt;Opening&gt; openings = null, Transform transform = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">centerLine</span></td>
+        <td><p>The center line of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.WallType.html">WallType</a></td>
+        <td><span class="parametername">elementType</span></td>
+        <td><p>The wall type of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">height</span></td>
+        <td><p>The height of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
+        <td><span class="parametername">openings</span></td>
+        <td><p>A collection of Openings in the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform of the wall.
+This transform will be concatenated to the transform created to describe the wall in 2D.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
+        <td><p>Thrown when the height of the wall is less than or equal to zero.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
+        <td><p>Thrown when the Z components of wall's start and end points are not the same.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_StandardWall_BothSides_" data-uid="Elements.StandardWall.BothSides*"></a>
+  <h4 id="Elements_StandardWall_BothSides" data-uid="Elements.StandardWall.BothSides">BothSides</h4>
+  <div class="markdown level1 summary"><p>Extrude to both sides?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool BothSides { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Wall.html#Elements_Wall_BothSides">Wall.BothSides</a></div>
+  <a id="Elements_StandardWall_CenterLine_" data-uid="Elements.StandardWall.CenterLine*"></a>
+  <h4 id="Elements_StandardWall_CenterLine" data-uid="Elements.StandardWall.CenterLine">CenterLine</h4>
+  <div class="markdown level1 summary"><p>The center line of the wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line CenterLine { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_StandardWall_Openings_" data-uid="Elements.StandardWall.Openings*"></a>
+  <h4 id="Elements_StandardWall_Openings" data-uid="Elements.StandardWall.Openings">Openings</h4>
+  <div class="markdown level1 summary"><p>An array of openings in the wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Opening&gt; Openings { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType&lt;TElementType&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
+  </div>
+  <div>
+      <a class="xref" href="Hypar.Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright © Hypar Inc., 2019
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
