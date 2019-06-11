@@ -14,14 +14,35 @@
     --hy-co-shadow: #dfe9eb;
 }
 
+h1,h2,h3,h4,h5,h6 {
+    color: var(--hy-co-dark-blue)
+}
+
 a {
-    color:var(--hy-co-pink)
+    color: var(--hy-co-pink)
 }
 
 #navbar > ul > li > a {
+    color: var(--hy-co-pink)
+}
+
+#toc > ul > li.active.in > a{
+    color: var(--hy-co-medium-blue)
+}
+
+header .navbar{
+    border-width: 0px;
+}
+
+#navbar > ul > li.active > a.active {
+    background: var(--hy-co-medium-blue);
+    color: var(--hy-co-pale-green);
+}
+
+/* #navbar > ul > li > a {
     color: var(--hy-co-pale-green);
     background-color: var(--hy-co-medium-blue)
-}
+} */
 
 #logo {
     height: 50px;

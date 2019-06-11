@@ -29,6 +29,18 @@
       },
       {
         "files": [
+          "Functions/**.yml",
+          "Functions/**.md"
+        ]
+      },
+      {
+        "files": [
+          "Elements/**.yml",
+          "Elements/**.md"
+        ]
+      },
+      {
+        "files": [
           "toc.yml",
           "*.md"
         ]
@@ -67,7 +79,9 @@
       "_appTitle": "Hypar",
       "_appFooter": "Copyright © Hypar Inc., 2019",
       "_disableContribution": true,
-      "_enableSearch": true
+      "_enableSearch": true,
+      "_disableBreadcrumb": true,
+      "_disableFooter": true
     },
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],

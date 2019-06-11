@@ -1,2 +1,6 @@
-- name: Elements API
-  href: api/
+- name: Home
+  href: index.md
+- name: Elements
+  href: Elements/
+- name: Functions
+  href: Functions/
