@@ -7,7 +7,7 @@
   var div = document.getElementById("model")
   var camera = new THREE.PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
 
-  var renderer = new THREE.WebGLRenderer({ alpha: true });
+  var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize( div.clientWidth, div.clientHeight );
   renderer.setClearColor( 0x000000, 0 );
   div.appendChild( renderer.domElement );

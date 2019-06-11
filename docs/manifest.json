@@ -24,12 +24,34 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Column.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Column.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Floor.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Floor.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/Elements.Beam.yml",
       "output": {
         ".html": {
           "relative_path": "api/Elements.Beam.html",
-          "hash": "SFOY4Jc0NBzVFQONtuPc8Q=="
+          "hash": "kcp7triAvpsMupsbvDx8tg=="
         }
       },
       "is_incremental": false,
@@ -77,7 +99,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Column.html",
-          "hash": "Jtx/91WDPazbFPsuGk30bg=="
+          "hash": "uenE+LRrxakfE1TerPzYxg=="
         }
       },
       "is_incremental": false,
@@ -125,7 +147,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Floor.html",
-          "hash": "G3+VndffmDl+XwiYJogH/Q=="
+          "hash": "itbazr37jjpWkJ+4CaJ1Ng=="
         }
       },
       "is_incremental": false,
@@ -1568,17 +1590,17 @@
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
-        "TocDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build"
         },
-        "ManagedReferenceDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

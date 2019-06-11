@@ -7,6 +7,9 @@ namespace Elements
     /// <summary>
     /// A vertical structural framing element.
     /// </summary>
+    /// <example>
+    /// <code source="../../test/ColumnTest.cs"/>
+    /// </example>
     public class Column : StructuralFraming
     {
         /// <summary>
