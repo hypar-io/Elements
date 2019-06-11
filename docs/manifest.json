@@ -1,0 +1,1623 @@
+{
+  "homepages": [],
+  "source_base_path": "/Users/ikeough/Documents/hypar/Hypar/Elements/doc",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      },
+      "is_incremental": false
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Beam.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Beam.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Column.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Column.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Floor.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Floor.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Beam.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Beam.html",
+          "hash": "kcp7triAvpsMupsbvDx8tg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.BeamSystem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.BeamSystem.html",
+          "hash": "aMAGEtKfxbOhMrvPf1TKmw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Brace.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Brace.html",
+          "hash": "TrKN8WsP280txfr/UrIw/Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.BuiltInMaterials.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.BuiltInMaterials.html",
+          "hash": "nj5XPZBHS0O3VhgucaKJcw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Column.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Column.html",
+          "hash": "uenE+LRrxakfE1TerPzYxg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Element.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Element.html",
+          "hash": "s0YP7bfYO3g/8fmNCPMaRQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.ElementOfType-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.ElementOfType-1.html",
+          "hash": "3jzEPfZFwTRNlReqBa68kQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.ElementType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.ElementType.html",
+          "hash": "1nWAmeBRGxkYLlaTA3hUfA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Floor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Floor.html",
+          "hash": "itbazr37jjpWkJ+4CaJ1Ng=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.FloorType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.FloorType.html",
+          "hash": "79lonhc9O1K1xODGuT8xtA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Frame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Frame.html",
+          "hash": "upr9BO7sFuQrxhiYtRbmTw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.Feature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.Feature.html",
+          "hash": "6dtj25GstqjL54g4+ayrOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.FeatureCollection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.FeatureCollection.html",
+          "hash": "D0EYgPQstTl8JKOvUvYFRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.Geometry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.Geometry.html",
+          "hash": "7jq1boePb7F42tXrRclh1Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.GeometryCollection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.GeometryCollection.html",
+          "hash": "v/lqWZHNU64vfWv7A0S46g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.Line.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.Line.html",
+          "hash": "pW3gpMBmvW3/U5wkoKFYNA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.LineString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.LineString.html",
+          "hash": "3YCpaJ5vRDPK/Su7V2BYFA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.MercatorProjection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.MercatorProjection.html",
+          "hash": "8Y54t1F3oCxkC60dvMsFKA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.MultiLineString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.MultiLineString.html",
+          "hash": "a9rLiHvNtb4fZO+vnvcrLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.MultiPoint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.MultiPoint.html",
+          "hash": "6wGRAf5WKgiuxX+ymQVrBg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.MultiPolygon.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.MultiPolygon.html",
+          "hash": "baNAhJ9OmH75/FJCwsKveg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.Point.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.Point.html",
+          "hash": "4Y/GswrhJQGIa5PbdNPKRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.Polygon.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.Polygon.html",
+          "hash": "vxHutzPL9iD+J3N4TFzkLA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.Position.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.Position.html",
+          "hash": "wNITNGMiyOpG2w+zbwipbA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.GeoJSON.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.GeoJSON.html",
+          "hash": "xieAqYCmSr8DJs7fO3U2RQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Arc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Arc.html",
+          "hash": "yDGEon/yX8anopF2GnWteA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.BBox3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.BBox3.html",
+          "hash": "V6n7w/9BObdiPu5GkbzNPA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Color.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Color.html",
+          "hash": "n4GfHfFb1v/G90MD8J6YSA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Colors.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Colors.html",
+          "hash": "880nvTWMsd0V+60fpqAEtQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.HorizontalAlignment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.HorizontalAlignment.html",
+          "hash": "YBrqBm/S7ezwEtNuT4qUdg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.ICurve.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.ICurve.html",
+          "hash": "FIg/sJh3QZu1KAqZgazBtw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.IExtrude.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.IExtrude.html",
+          "hash": "QV2lVRt/WyhF2WAMbotv5A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.ILamina.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.ILamina.html",
+          "hash": "QwfipcgMR9sYewAQYgNn9Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.IProfile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.IProfile.html",
+          "hash": "GRwERXrWpGOEQxdiHeUceA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.ISolid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.ISolid.html",
+          "hash": "WY5lqRnh0B+z9bZTkMwoeA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.ISweepAlongCurve.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.ISweepAlongCurve.html",
+          "hash": "jvvd3Ps/hLxelljDoBTWeA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.ITessellate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.ITessellate.html",
+          "hash": "4nkxhBRxCVUYKCyir+HRug=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.ITransformable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.ITransformable.html",
+          "hash": "G5baJZh2dAhhSuQOip/E3Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Interfaces.html",
+          "hash": "way9oIqllw4jwDTi9VoKAQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Line.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Line.html",
+          "hash": "0sEyJEwWBsSDeg2T4j+AaA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Matrix.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Matrix.html",
+          "hash": "uh+Cc5SEN4JH3ZSQw+OMbw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Mesh.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Mesh.html",
+          "hash": "I6TwsjYuRKPtEWyWwV8rHw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Plane.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Plane.html",
+          "hash": "a+5125DKZeX+k8QuMA+i9A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Polygon.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Polygon.html",
+          "hash": "eyXRNftqATa5Bv+tr1lStA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Polyline.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Polyline.html",
+          "hash": "VP89Q+hgXozveTsRqeAsGg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Profile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Profile.html",
+          "hash": "gR8EbjB25BZsnlS6ynpG2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Profiles.HSSPipeProfile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Profiles.HSSPipeProfile.html",
+          "hash": "CwO4Cpz8SqRJ9uS7ji3EWg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Profiles.HSSPipeProfileServer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Profiles.HSSPipeProfileServer.html",
+          "hash": "3+4ILcRSrfBUCTQB7gNw+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Profiles.ProfileServer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Profiles.ProfileServer.html",
+          "hash": "WYi6TVjuaJk0KODcHrOzQw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Profiles.WideFlangeProfile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Profiles.WideFlangeProfile.html",
+          "hash": "yYZR187QensDCdCgowhR2g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Profiles.WideFlangeProfileServer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Profiles.WideFlangeProfileServer.html",
+          "hash": "Y5ptxv6kAigfQaUwGbY7uw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Profiles.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Profiles.html",
+          "hash": "IMeYzz+Oc48dQc52juCrvg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Quaternion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Quaternion.html",
+          "hash": "FE5AU4o6hlQVKHwDlq20ZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Solids.Edge.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Solids.Edge.html",
+          "hash": "gsn58zhAAyUvTFApw53lVQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Solids.Face.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Solids.Face.html",
+          "hash": "RVd1oScPjPCn5oAPrXaDRA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Solids.HalfEdge.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Solids.HalfEdge.html",
+          "hash": "FabPE1eZ3Ndn7c0WTB63qw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Solids.Loop.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Solids.Loop.html",
+          "hash": "rCKO3f//mOzSfQ+Fget04w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Solids.Solid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Solids.Solid.html",
+          "hash": "nZ3X6PSZt450nku3iN2Xpg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Solids.Vertex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Solids.Vertex.html",
+          "hash": "zDIyMOJ7Jv+5zobfNWZjMw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Solids.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Solids.html",
+          "hash": "IQ6xuhw2xXo0TpIxT9gDrQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Transform.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Transform.html",
+          "hash": "aoHOa5PlbCTcXMqL6+Kdmg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Triangle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Triangle.html",
+          "hash": "dJrJNtXx8XVUHtNqcTcrCw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Vector3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Vector3.html",
+          "hash": "XgqrWvpS7+dYF8Z4ceSVmg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Vector3Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Vector3Extensions.html",
+          "hash": "M4HlReammVxZQKfPXQoaTA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Vertex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Vertex.html",
+          "hash": "8W9HcuGL6xkiOCib3mk2kQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.VerticalAlignment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.VerticalAlignment.html",
+          "hash": "zWa7UT6V/kCg+QUBZnQNag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.html",
+          "hash": "gHpQe3Y6me87QDcE95z3WA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Grid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Grid.html",
+          "hash": "eG/tKKHD2qUF9A0hjtDXTA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.IdProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.IdProvider.html",
+          "hash": "M5g6Dmr2zCFtCb06vi/D2Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.IAggregateElements.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.IAggregateElements.html",
+          "hash": "cfDtiSS0iWrVgkwrQ4Pprg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.IElement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.IElement.html",
+          "hash": "q5pi5HoXO38JxIAKqJEwNQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.IElementType-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.IElementType-1.html",
+          "hash": "djq8cWepNeMDWkrj0S6GHQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.IIdentifiable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.IIdentifiable.html",
+          "hash": "vegHVqW0ULqPe6rx2NeHIw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.ILayeredMaterial.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.ILayeredMaterial.html",
+          "hash": "OkvVLKRfMqQBWM8dY+/6Jg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.IMaterial.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.IMaterial.html",
+          "hash": "UFFlJ6YP80OBkw+RCiHMZg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.IProperty.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.IProperty.html",
+          "hash": "FV11NYvMR8vMJsSC+EFksw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.IPropertySet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.IPropertySet.html",
+          "hash": "f8+SfL8osZERLe+RYBGZgA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.IPropertySingleValue-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.IPropertySingleValue-1.html",
+          "hash": "5yK8piJsxmpjdOFeue0LEw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Interfaces.html",
+          "hash": "NfzuxvZ87gGx+9yuHlnOIA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Mass.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Mass.html",
+          "hash": "qQMPE+P0YvjCaXRcbdbtcQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Material.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Material.html",
+          "hash": "R860aQpm8z910jow6R8opg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.MaterialLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.MaterialLayer.html",
+          "hash": "ivSpG6zrLvLOqVl9HPRI8w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Model.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Model.html",
+          "hash": "+RDsnj+wldVZYUE1bUj7kQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.NumericProperty.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.NumericProperty.html",
+          "hash": "8bvErNKogpaOo6+LFJ1Lww=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Opening.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Opening.html",
+          "hash": "ubXhRRWI+jtPOy4r/yrXLQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Panel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Panel.html",
+          "hash": "IWhWGWer8yDlUW6vsn5XXg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.IFC.IFCExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.IFC.IFCExtensions.html",
+          "hash": "QpuHTLIpkILU9PIzsIZq9Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.IFC.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.IFC.html",
+          "hash": "zqwYW/Q2pJPJNtjOIaMUIw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.ColorConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.ColorConverter.html",
+          "hash": "OaSJXkKIFKWKD0ieWu6Sxg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.ElementConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.ElementConverter.html",
+          "hash": "3pD/jbtVZ1sBA3LJeYqSxw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.ElementTypeConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.ElementTypeConverter.html",
+          "hash": "EPIIkgKgwGAJoEPU9EOfoA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.ElementTypeToIdConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.ElementTypeToIdConverter.html",
+          "hash": "GPgXAG/kEKYl9Za+GNFnqg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.ICurveConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.ICurveConverter.html",
+          "hash": "zSo5Qu2P80NT5j9veV2gKQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.IListVector3Converter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.IListVector3Converter.html",
+          "hash": "a52f+etkKjx9lToswLg0nw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.IProfileConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.IProfileConverter.html",
+          "hash": "2TAzWN1sidfUWoEpROX6yg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.JsonExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.JsonExtensions.html",
+          "hash": "vi3cyR85LicZlUXemtuXMw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.MaterialToIdConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.MaterialToIdConverter.html",
+          "hash": "Yt6Yd/c6nSKD+QMzKvmh8g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.ModelConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.ModelConverter.html",
+          "hash": "1fnu+v199FnWN8Uz528JWg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.PolygonConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.PolygonConverter.html",
+          "hash": "+Lt0fknJXHdlqENpYWs63g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.ProfileToIdConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.ProfileToIdConverter.html",
+          "hash": "O1IAHfN0crIkXPOileAflQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.PropertyConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.PropertyConverter.html",
+          "hash": "yhJs/iCT4i+n+n+ILIMz5g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.PropertyDictionaryConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.PropertyDictionaryConverter.html",
+          "hash": "ENAThOc/lSGxZEbgHKKKHA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.SolidConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.SolidConverter.html",
+          "hash": "iVAVPvidNU5zMkTfsAwOLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.Vector3Converter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.Vector3Converter.html",
+          "hash": "G+N4i9dxrdoroULDKV/c0w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.html",
+          "hash": "sxAaKRzfDu7WfTUfCwkCiw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.glTF.GltfExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.glTF.GltfExtensions.html",
+          "hash": "THbHQyQXiyJRI0jGj3diOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.glTF.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.glTF.html",
+          "hash": "4KltRSgIYmS58zeYWHos0w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Space.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Space.html",
+          "hash": "6rAeRta0sUl4q+1uC3ZgbQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.StandardWall.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.StandardWall.html",
+          "hash": "wBtLH4rxnNJAFdJgUOOD8A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.StringProperty.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.StringProperty.html",
+          "hash": "6R3T+5/x8sy+9CZGLHI4zg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.StructuralFraming.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.StructuralFraming.html",
+          "hash": "YBm1etI+VgdDLOOZZnyO4Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.StructuralFramingType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.StructuralFramingType.html",
+          "hash": "9oNSBFwkdBT7fuu0fdFrBg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Topography.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Topography.html",
+          "hash": "tnuC6w3FLn9EJGIwQZyu1g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Truss.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Truss.html",
+          "hash": "PvYThu6MSwCEb1N/PpL9aw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.UnitType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.UnitType.html",
+          "hash": "+DPOFCsGHsCBamw1JN4XKA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Wall.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Wall.html",
+          "hash": "IC+0N9eyyOuHbErsB6RG1Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.WallType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.WallType.html",
+          "hash": "w/y8LCnC/xVuB04OM3/AsQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.html",
+          "hash": "2EKgwY/9LEvESK5q/nzDOQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Hypar.Elements.Interfaces.IHasOpenings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Hypar.Elements.Interfaces.IHasOpenings.html",
+          "hash": "Hi6CvdlbTe1luSKstuKmyA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Hypar.Elements.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Hypar.Elements.Interfaces.html",
+          "hash": "epEOP0zgLdSJf2mg/IVZhw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "QEJ2iN4Mq91EF7ZCPCj1MQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/hypar_logo.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/hypar_logo.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/hypar_logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "images/hypar_logo.svg"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "Qi2IJPRxQlO5e07U4XgyHg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "js/GLTFLoader.js",
+      "output": {
+        "resource": {
+          "relative_path": "js/GLTFLoader.js"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "js/OrbitControls.js",
+      "output": {
+        "resource": {
+          "relative_path": "js/OrbitControls.js"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "js/three.js",
+      "output": {
+        "resource": {
+          "relative_path": "js/three.js"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "Ix/BpJvAz3bKusEGcecItA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Disable incremental build by force rebuild option.",
+        "incrementalPhase": "build"
+      },
+      "processors": {
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build"
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build"
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: should not trace intermediate info.",
+        "incrementalPhase": "postProcessing"
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

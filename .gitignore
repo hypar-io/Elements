@@ -329,8 +329,8 @@ ASALocalRun/
 .mfractor/
 
 *.glb
+!docs/models/*.glb
 .DS_Store
 appsettings.json
 appsettings.dev.json
-docs
 *.icloud
