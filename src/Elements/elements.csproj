@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Hypar.Elements</AssemblyName>
+    <PackageTitle>Hypar Elements</PackageTitle>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Title>Hypar Elements</Title>
     <Authors>Hypar</Authors>
