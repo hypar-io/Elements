@@ -5,7 +5,7 @@ A BIM library for everybody.
 ![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
-# Documentation
+## Documentation
 Find the documentation [here](https://hypar-io.github.io/Elements/index.html).
 
 ## What
