@@ -55,6 +55,7 @@ The following table shows the types available in the Elements library and their 
 |Floor|IfcSlab|
 |Space|IfcSpace|
 ||IfcStair|
+|Topography||
 |Wall|IfcWall|
 |StandardWall|IfcWallStandardCase|
 ||IfcWindow|
