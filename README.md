@@ -53,6 +53,7 @@ The following table shows the types available in the Elements library and their 
 ||IfcRoof|
 ||IfcShadingDevice|
 |Floor|IfcSlab|
+|Space|IfcSpace|
 ||IfcStair|
 |Wall|IfcWall|
 |StandardWall|IfcWallStandardCase|
