@@ -40,7 +40,7 @@ The following tables shows the types available in the Elements library and their
 
 |Elements Geometry Type|IFC Type|
 |--|--|
-|Arc|
+|Arc|IfcTrimmedCurve|
 |Line|IfcLine|
 |Polygon|IfcPolyline|
 |Polyline|IfcPolyline|
