@@ -8,6 +8,9 @@ namespace Elements
     /// <summary>
     /// A structural framing element defined by a center line curve and a profile.
     /// </summary>
+    /// <example>
+    /// <code source="../../test/BeamTest.cs"/>
+    /// </example>
     public class Beam : StructuralFraming
     {
         /// <summary>

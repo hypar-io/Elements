@@ -24,7 +24,19 @@
       {
         "files": [
           "api/**.yml",
-          "api/index.md"
+          "index.md"
+        ]
+      },
+      {
+        "files": [
+          "Functions/**.yml",
+          "Functions/**.md"
+        ]
+      },
+      {
+        "files": [
+          "Elements/**.yml",
+          "Elements/**.md"
         ]
       },
       {
@@ -39,6 +51,18 @@
         "files": [
           "images/**"
         ]
+      },
+      {
+        "files": [
+          "js/**"
+        ]
+      },
+      {
+        "src": "../test/bin/debug/netcoreapp2.0/models/",
+        "files": [
+          "Elements_**.glb"
+        ],
+        "dest": "models"
       }
     ],
     "overwrite": [
@@ -46,21 +70,23 @@
         "files": [],
         "exclude": [
           "obj/**",
-          "_site/**"
+          "../docs/**"
         ]
       }
     ],
-    "dest": "_site",
+    "dest": "../docs/",
     "globalMetadata": {
       "_appTitle": "Hypar",
       "_appFooter": "Copyright © Hypar Inc., 2019",
-      "_appLogoPath": "images/hypar_logo.svg",
-      "_disableContribution": true
+      "_disableContribution": true,
+      "_enableSearch": true,
+      "_disableBreadcrumb": true,
+      "_disableFooter": true
     },
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "default"
+      "./template/hypar"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",

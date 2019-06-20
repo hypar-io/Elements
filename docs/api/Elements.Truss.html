@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Truss
+   | Hypar </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Truss
+   | Hypar ">
+    <meta name="generator" content="docfx 2.40.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.Truss">
+  
+  <h1 id="Elements_Truss" data-uid="Elements.Truss" class="text-break">Class Truss
+  </h1>
+  <div class="markdown level0 summary"><p>An aggregation of structural framing elements.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
+    <div class="level2"><span class="xref">Truss</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
+    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
+    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
+    <div><a class="xref" href="Elements.Interfaces.IAggregateElements.html">IAggregateElements</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Type">Element.Type</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Properties">Element.Properties</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Transform">Element.Transform</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_">Element.AddProperty(String, IProperty)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RemoveProperty_System_String_">Element.RemoveProperty(String)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Truss_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Truss : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IAggregateElements</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Truss__ctor_" data-uid="Elements.Truss.#ctor*"></a>
+  <h4 id="Elements_Truss__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Double_System_Int32_Elements_StructuralFramingType_Elements_StructuralFramingType_Elements_StructuralFramingType_Elements_Material_System_Double_System_Double_" data-uid="Elements.Truss.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double,System.Int32,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.StructuralFramingType,Elements.Material,System.Double,System.Double)">Truss(Vector3, Vector3, Double, Int32, StructuralFramingType, StructuralFramingType, StructuralFramingType, Material, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Construct a truss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Truss(Vector3 start, Vector3 end, double depth, int divisions, StructuralFramingType topChordType, StructuralFramingType bottomChordType, StructuralFramingType webType, Material material, double startSetback = 0, double endSetback = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">start</span></td>
+        <td><p>The start of the truss.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">end</span></td>
+        <td><p>The end of the truss.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">depth</span></td>
+        <td><p>The depth of the truss.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">divisions</span></td>
+        <td><p>The number of panels in the truss.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a></td>
+        <td><span class="parametername">topChordType</span></td>
+        <td><p>The structural framing type to be used for the top chord.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a></td>
+        <td><span class="parametername">bottomChordType</span></td>
+        <td><p>The structural framing type to be used for the bottom chord.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a></td>
+        <td><span class="parametername">webType</span></td>
+        <td><p>The structural framing type to be used for the web.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The truss' material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startSetback</span></td>
+        <td><p>A setback to apply to the start of all members of the truss.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endSetback</span></td>
+        <td><p>A setback to apply to the end of all members of the truss.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Truss_BottomChordType_" data-uid="Elements.Truss.BottomChordType*"></a>
+  <h4 id="Elements_Truss_BottomChordType" data-uid="Elements.Truss.BottomChordType">BottomChordType</h4>
+  <div class="markdown level1 summary"><p>The Profile used for members in the bottom chord of the truss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public StructuralFramingType BottomChordType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Truss_Depth_" data-uid="Elements.Truss.Depth*"></a>
+  <h4 id="Elements_Truss_Depth" data-uid="Elements.Truss.Depth">Depth</h4>
+  <div class="markdown level1 summary"><p>The depth of the truss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Depth { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Truss_Divisions_" data-uid="Elements.Truss.Divisions*"></a>
+  <h4 id="Elements_Truss_Divisions" data-uid="Elements.Truss.Divisions">Divisions</h4>
+  <div class="markdown level1 summary"><p>The number of divisions in the truss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Divisions { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Truss_Elements_" data-uid="Elements.Truss.Elements*"></a>
+  <h4 id="Elements_Truss_Elements" data-uid="Elements.Truss.Elements">Elements</h4>
+  <div class="markdown level1 summary"><p>The elements aggregated by this element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Element&gt; Elements { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Truss_End_" data-uid="Elements.Truss.End*"></a>
+  <h4 id="Elements_Truss_End" data-uid="Elements.Truss.End">End</h4>
+  <div class="markdown level1 summary"><p>The end of the truss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Truss_Start_" data-uid="Elements.Truss.Start*"></a>
+  <h4 id="Elements_Truss_Start" data-uid="Elements.Truss.Start">Start</h4>
+  <div class="markdown level1 summary"><p>The start of the truss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Truss_TopChordType_" data-uid="Elements.Truss.TopChordType*"></a>
+  <h4 id="Elements_Truss_TopChordType" data-uid="Elements.Truss.TopChordType">TopChordType</h4>
+  <div class="markdown level1 summary"><p>The Profile used for members in the top chord of the truss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public StructuralFramingType TopChordType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Truss_WebType_" data-uid="Elements.Truss.WebType*"></a>
+  <h4 id="Elements_Truss_WebType" data-uid="Elements.Truss.WebType">WebType</h4>
+  <div class="markdown level1 summary"><p>The Profile used for members in the web of the truss.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public StructuralFramingType WebType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IAggregateElements.html">IAggregateElements</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

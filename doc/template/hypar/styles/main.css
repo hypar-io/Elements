@@ -1,0 +1,74 @@
+
+:root {
+	/* Hypar brand colors */
+    /* --hy-co-dark-blue:#1a4b5d; */
+    --hy-co-dark-blue: rgb(24,54,73);
+	--hy-co-dark-blue-half:#27718b;
+	--hy-co-gray:#a3c3cb;
+	--hy-co-pale-green:#e7f2df;
+	--hy-co-pink:#f05b6b;
+	--hy-co-medium-blue:#1e85b4;
+	--hy-co-light-blue:#0dafd3;
+	--hy-co-pale-blue:#ebf6f9; /* Hypar dark blue lightened */
+    --hy-co-warning: #f2cc5a;
+    --hy-co-shadow: #dfe9eb;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color: var(--hy-co-dark-blue)
+}
+
+a {
+    color: var(--hy-co-pink)
+}
+
+#navbar > ul > li > a {
+    color: var(--hy-co-pink)
+}
+
+#toc > ul > li.active.in > a{
+    color: var(--hy-co-medium-blue)
+}
+
+header .navbar{
+    border-width: 0px;
+}
+
+#navbar > ul > li.active > a.active {
+    background: var(--hy-co-medium-blue);
+    color: var(--hy-co-pale-green);
+}
+
+/* #navbar > ul > li > a {
+    color: var(--hy-co-pale-green);
+    background-color: var(--hy-co-medium-blue)
+} */
+
+#logo {
+    height: 50px;
+}
+
+.navbar a {
+    background: none;
+}
+
+.navbar {
+    background: var(--hy-co-dark-blue)
+}
+
+.subnav {
+    background: var(--hy-co-pale-blue)
+}
+
+.title {
+    margin: 0px;
+    padding: 15px;
+    color: var(--hy-co-pale-green)
+}
+
+#model {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    /* background-image: linear-gradient(white, var(--hy-co-shadow)) */
+}

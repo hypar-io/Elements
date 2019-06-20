@@ -1,3 +1,6 @@
-- name: API Documentation
-  href: api/
-  homepage: api/index.md
+- name: Home
+  href: index.md
+- name: Elements
+  href: Elements/
+- name: Functions
+  href: Functions/

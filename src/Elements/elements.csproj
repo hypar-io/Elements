@@ -2,22 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Hypar.Elements</AssemblyName>
+    <PackageTitle>Hypar Elements</PackageTitle>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Title>Hypar Elements</Title>
-    <Authors>Hypar</Authors>
     <PackageId>Hypar.Elements</PackageId>
     <PackageDescription>A building elements library for AEC.</PackageDescription>
     <Summary>The Elements library provides object types for creating the built environment.</Summary>
-    <Copyright>Hypar LLC, 2019</Copyright>
     <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>0.2.5</Version>
-    <PackageTags>AEC, Architecture, Structure, Engineering</PackageTags>
+    <Version>$(Version)</Version>
   </PropertyGroup>
 
   <ItemGroup>

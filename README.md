@@ -5,6 +5,9 @@ A BIM library for everybody.
 ![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
+## Documentation
+Find the documentation [here](https://hypar-io.github.io/Elements/index.html).
+
 ## What
 Elements is a cross-platform library for creating building elements. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings. Here's an example using Elements to create a `Beam`:
 ```c#
@@ -33,7 +36,27 @@ Hypar Elements is open source and will remain so **forever**. Your donation will
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
 ## Relation To IFC
-The following table shows the types available in the Elements library and their corresponding types in IFC.
+The following tables shows the types available in the Elements library and their corresponding types in IFC.
+
+|Elements Geometry Type|IFC Type|
+|--|--|
+|Arc|IfcTrimmedCurve|
+|Line|IfcLine|
+|Polygon|IfcPolyline|
+|Polyline|IfcPolyline|
+|Plane|IfcPlane|
+|Vector3|IfcCartesianPoint|
+|Transform|IfcAxisPlacement2D|
+|Transform|IfcAxisPlacement3D|
+||IfcTrimmedCurve|
+||IfcBSplineCurve|
+||IfcCompositeCurve|
+||IfcTrimmedCurve|
+||IfcOffsetCurve2D|
+||IfcOffsetCurve3D|
+||IfcCircle|
+||IfcEllipse|
+||IfcElementarySurface|
 
 |Elements Type|IFC Type|
 |--|--|
@@ -50,7 +73,9 @@ The following table shows the types available in the Elements library and their 
 ||IfcRoof|
 ||IfcShadingDevice|
 |Floor|IfcSlab|
+|Space|IfcSpace|
 ||IfcStair|
+|Topography||
 |Wall|IfcWall|
 |StandardWall|IfcWallStandardCase|
 ||IfcWindow|
