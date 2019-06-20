@@ -166,6 +166,13 @@ namespace Elements.Serialization.IFC
                         var ifcSlab = f.ToIfcSlab(context, ifc);
                         products.Add(ifcSlab);
                     }
+
+                    if(e is Space)
+                    {
+                        var s = (Space)e;
+                        var ifcSpace = s.ToIfcSpace(context, ifc);
+                        products.Add(ifcSpace);
+                    }
                 }
                 catch(Exception ex)
                 {
@@ -779,6 +786,32 @@ namespace Elements.Serialization.IFC
             }
 
             return slab;
+        }
+
+        private static IfcSpace ToIfcSpace(this Space space, IfcRepresentationContext context, Document doc)
+        {
+            var position = space.Transform.ToIfcAxis2Placement3D(doc);
+            var sweptArea = space.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();
+            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(space.ExtrudeDepth));
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
+            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+
+            var ifcSpace = new IfcSpace(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, 
+                null, localPlacement, productRep, null, IfcElementCompositionEnum.ELEMENT, IfcInternalOrExternalEnum.NOTDEFINED, new IfcLengthMeasure(space.Transform.Origin.Z));
+            
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(repItem);
+            doc.AddEntity(rep);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(productRep);
+            doc.AddEntity(ifcSpace);
+
+            return ifcSpace;
         }
 
         private static Solid Representations(this IfcProduct product)
