@@ -543,15 +543,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Compute the Plane defined by the first three vertices of the Polygon.
-        /// </summary>
-        /// <returns>A Plane.</returns>
-        public Plane Plane()
-        {
-            return new Plane(this._vertices[0], this._vertices[1], this._vertices[2]);
-        }
-
-        /// <summary>
         /// The string representation of the Polygon.
         /// </summary>
         /// <returns>A string containing the string representations of this Polygon's vertices.</returns>
