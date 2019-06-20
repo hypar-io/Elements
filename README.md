@@ -36,7 +36,25 @@ Hypar Elements is open source and will remain so **forever**. Your donation will
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
 ## Relation To IFC
-The following table shows the types available in the Elements library and their corresponding types in IFC.
+The following tables shows the types available in the Elements library and their corresponding types in IFC.
+
+|Elements Geometry Type|IFC Type|
+|--|--|
+|Arc|
+|Line|IfcLine|
+|Polygon|IfcPolyline|
+|Polyline|IfcPolyline|
+|Vector3|IfcCartesianPoint|
+|Transform|IfcAxisPlacement2D|
+|Transform|IfcAxisPlacement3D|
+||IfcTrimmedCurve|
+||IfcBSplineCurve|
+||IfcCompositeCurve|
+||IfcTrimmedCurve|
+||IfcOffsetCurve2D|
+||IfcOffsetCurve3D|
+||IfcCircle|
+||IfcEllipse|
 
 |Elements Type|IFC Type|
 |--|--|
