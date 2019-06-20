@@ -44,6 +44,7 @@ The following tables shows the types available in the Elements library and their
 |Line|IfcLine|
 |Polygon|IfcPolyline|
 |Polyline|IfcPolyline|
+|Plane|IfcPlane|
 |Vector3|IfcCartesianPoint|
 |Transform|IfcAxisPlacement2D|
 |Transform|IfcAxisPlacement3D|
@@ -55,6 +56,7 @@ The following tables shows the types available in the Elements library and their
 ||IfcOffsetCurve3D|
 ||IfcCircle|
 ||IfcEllipse|
+||IfcElementarySurface|
 
 |Elements Type|IFC Type|
 |--|--|
