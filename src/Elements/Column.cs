@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Elements
 {

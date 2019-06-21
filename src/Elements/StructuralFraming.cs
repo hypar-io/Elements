@@ -64,8 +64,12 @@ namespace Elements
             }
             this.StartSetback = startSetback;
             this.EndSetback = endSetback;
-            this.Transform = transform;
             this.ElementType = elementType;
+
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
         }
 
         /// <summary>

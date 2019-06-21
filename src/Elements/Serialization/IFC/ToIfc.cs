@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using IFC;
@@ -12,19 +13,21 @@ namespace Elements.Serialization.IFC
         {
             if (curve is Line)
             {
-                return ((Line)curve).ToIfcTrimmedCurve();
+                return ((Line)curve).ToIfcTrimmedCurve(doc);
             }
             else if(curve is Arc)
             {
                 return ((Arc)curve).ToIfcTrimmedCurve(doc);
             }
-            else if(curve is Polyline)
-            {
-                return ((Polyline)curve).ToIfcPolyline(doc);
-            }
+            // Test Polygon before Polyline to avoid 
+            // Polygons being treated as Polylines.
             else if(curve is Polygon)
             {
                 return ((Polygon)curve).ToIfcPolyline(doc);
+            }
+            else if(curve is Polyline)
+            {
+                return ((Polyline)curve).ToIfcPolyline(doc);
             }
             else
             {
@@ -32,16 +35,37 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static IfcProduct ConvertElementToIfcProduct(dynamic element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        private static IfcProduct ConvertElementToIfcProduct(Element element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             try
             {
-                var e = element.ToIfc(localPlacement, shape);
+                IfcProduct e = null;
+                if(element is Beam)
+                {
+                    e = ((Beam)element).ToIfc(localPlacement, shape);
+                }
+                else if (element is Wall)
+                {
+                    e = ((Wall)element).ToIfc(localPlacement, shape);
+                }
+                else if (element is Floor)
+                {
+                    e = ((Floor)element).ToIfc(localPlacement, shape);
+                }
+                else if (element is Space)
+                {
+                    e = ((Space)element).ToIfc(localPlacement, shape);
+                }
+                else if (element is StandardWall)
+                {
+                    e = ((StandardWall)element).ToIfc(localPlacement, shape);
+                }
                 return e;
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"{ex.GetType()} cannot be serialized to IFC.");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine($"{element.GetType()} cannot be serialized to IFC.");
             }
             return null;
         }
@@ -91,15 +115,21 @@ namespace Elements.Serialization.IFC
             var position = transform.ToIfcAxis2Placement3D(doc);
             var sweptArea = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
             var directrix = sweep.Curve.ToIfcCurve(doc);
-            var curvePlane = sweep.Curve.ToPlane();
-            var elementarySurface = curvePlane.ToIfcPlane(doc);
             
-            var solid = new IfcSurfaceCurveSweptAreaSolid(sweptArea, position, directrix, sweep.StartSetback, sweep.EndSetback, elementarySurface);
+            var extrudeDir = Vector3.ZAxis.ToIfcDirection();
+            var profile = new IfcArbitraryClosedProfileDef(IfcProfileTypeEnum.CURVE, directrix);
+            var surface = new IfcSurfaceOfLinearExtrusion(profile, position, extrudeDir, new IfcPositiveLengthMeasure(1.0));
+
+            var solid = new IfcSurfaceCurveSweptAreaSolid(sweptArea, position, directrix, sweep.StartSetback, sweep.EndSetback, surface);
             
             doc.AddEntity(position);
             doc.AddEntity(sweptArea);
             doc.AddEntity(directrix);
-            doc.AddEntity(elementarySurface);
+
+            doc.AddEntity(extrudeDir);
+            doc.AddEntity(profile);
+
+            doc.AddEntity(surface);
             doc.AddEntity(solid);
 
             return solid;
@@ -141,12 +171,11 @@ namespace Elements.Serialization.IFC
         {
             var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", 
                 new List<IfcRepresentationItem>{solid});
-            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+            var shape = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
 
             doc.AddEntity(rep);
-            doc.AddEntity(productRep);
 
-            return productRep;
+            return shape;
         }
 
         private static IfcSlab ToIfc(this Floor floor, 
@@ -185,11 +214,6 @@ namespace Elements.Serialization.IFC
         private static IfcBeam ToIfc(this Beam beam, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var line = beam.Curve as Line;
-            if(line == null) {
-                throw new Exception("The beam could not be exported to IFC. Only linear beams are currently supported.");
-            }
-            
             var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, 
                 null, null, null, localPlacement, shape, null);
             return ifcBeam;
@@ -212,6 +236,8 @@ namespace Elements.Serialization.IFC
                 doc.AddEntity(p);
                 points.Add(p);
             }
+            // Add the first point to close the curve.
+            points.Add(points.First());
             return new IfcPolyline(points);
         }
 
@@ -227,28 +253,54 @@ namespace Elements.Serialization.IFC
             return new IfcPolyline(points);
         }
 
-        private static IfcTrimmedCurve ToIfcTrimmedCurve(this Line line)
+        private static IfcTrimmedCurve ToIfcTrimmedCurve(this Line line, Document doc)
         {
-            var ifcLine = new IfcLine(line.Start.ToIfcCartesianPoint(), line.Direction().ToIfcVector());
-            var trim1 = new IfcTrimmingSelect(line.Start.ToIfcCartesianPoint());
-            var trim2 = new IfcTrimmingSelect(line.End.ToIfcCartesianPoint());
-            var tc = new IfcTrimmedCurve(ifcLine, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, true, IfcTrimmingPreference.CARTESIAN);
+            var start = line.Start.ToIfcCartesianPoint();
+            var end = line.End.ToIfcCartesianPoint();
+
+            var dir = line.Direction().ToIfcVector(doc);
+
+            var ifcLine = new IfcLine(start, dir);
+            var trim1 = new IfcTrimmingSelect(start);
+            var trim2 = new IfcTrimmingSelect(end);
+            var tc = new IfcTrimmedCurve(ifcLine, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, 
+                true, IfcTrimmingPreference.CARTESIAN);
+            
+            doc.AddEntity(start);
+            doc.AddEntity(end);
+            doc.AddEntity(dir);
+            doc.AddEntity(ifcLine);
+
             return tc;
         }
 
         private static IfcTrimmedCurve ToIfcTrimmedCurve(this Arc arc, Document doc)
         {
             var t = new Transform(arc.Plane.Origin, arc.Plane.Normal);
-            var ifcCircle = new IfcCircle(new IfcAxis2Placement(t.ToIfcAxis2Placement3D(doc)), new IfcPositiveLengthMeasure(arc.Radius));
-            var trim1 = new IfcTrimmingSelect(arc.Start.ToIfcCartesianPoint());
-            var trim2 = new IfcTrimmingSelect(arc.End.ToIfcCartesianPoint());
+            var placement = new IfcAxis2Placement(t.ToIfcAxis2Placement3D(doc));
+            var radius = new IfcPositiveLengthMeasure(arc.Radius);
+            var ifcCircle = new IfcCircle(placement, radius);
+            var start = arc.Start.ToIfcCartesianPoint();
+            var end = arc.End.ToIfcCartesianPoint();
+            var trim1 = new IfcTrimmingSelect(start);
+            var trim2 = new IfcTrimmingSelect(end);
             var tc = new IfcTrimmedCurve(ifcCircle, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, true, IfcTrimmingPreference.CARTESIAN);
+            
+            doc.AddEntity(start);
+            doc.AddEntity(end);
+            doc.AddEntity(placement);
+            doc.AddEntity(radius);
+            doc.AddEntity(ifcCircle);
+
             return tc;
         }
 
-        private static IfcVector ToIfcVector(this Vector3 v)
+        private static IfcVector ToIfcVector(this Vector3 v, Document doc)
         {
-            return new IfcVector(v.ToIfcDirection(), new IfcLengthMeasure(0));
+            var dir = v.ToIfcDirection();
+            var vector = new IfcVector(dir, new IfcLengthMeasure(0));
+            doc.AddEntity(dir);
+            return vector;
         }
 
         private static IfcLocalPlacement ToIfcLocalPlacement(this Transform transform, Document doc)
@@ -285,7 +337,11 @@ namespace Elements.Serialization.IFC
         private static IfcPlane ToIfcPlane(this Plane plane, Document doc)
         {
             var t = new Transform(plane.Origin, plane.Normal);
-            var ifcPlane = new IfcPlane(t.ToIfcAxis2Placement3D(doc));
+            var position = t.ToIfcAxis2Placement3D(doc);
+            var ifcPlane = new IfcPlane(position);
+            
+            doc.AddEntity(position);
+
             return ifcPlane;
         }
     }

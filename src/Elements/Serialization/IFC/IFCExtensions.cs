@@ -140,30 +140,30 @@ namespace Elements.Serialization.IFC
                 try
                 {
                     IfcProductDefinitionShape shape = null;
-                    IfcLocalPlacement localPlacement = null;
+                    IfcLocalPlacement localPlacement = new Transform().ToIfcLocalPlacement(ifc);
+                    IfcSweptAreaSolid solid = null;
 
                     if(e is ISweepAlongCurve)
-                    {
-                        localPlacement = ((ISweepAlongCurve)e).Curve.TransformAt(0.0).ToIfcLocalPlacement(ifc);
-                    }
-                    else
-                    {
-                        localPlacement = new Transform().ToIfcLocalPlacement(ifc);
-                    }
-                    
-                    IfcSweptAreaSolid solid = null;
-                    if(e is IExtrude)
-                    {
-                        var extrude = (IExtrude)e;
-                        solid = extrude.ToIfcExtrudedAreaSolid(e.Transform, ifc);
-                    }
-                    else if(e is ISweepAlongCurve)
                     {
                         var sweep = (ISweepAlongCurve)e;
                         solid = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, ifc);
                     }
-
+                    else if(e is IExtrude)
+                    {
+                        var extrude = (IExtrude)e;
+                        solid = extrude.ToIfcExtrudedAreaSolid(e.Transform, ifc);
+                    }
+                    else
+                    {
+                        throw new Exception("Only IExtrude and ISweepAlongCurve representations are currently supported.");
+                    }
+                    
                     shape = ToIfcProductDefinitionShape(solid, context, ifc);
+
+                    ifc.AddEntity(shape);
+                    ifc.AddEntity(localPlacement);
+                    ifc.AddEntity(solid);
+
                     var product = ConvertElementToIfcProduct(e, localPlacement, shape);
                     products.Add(product);
                     ifc.AddEntity(product);
@@ -188,6 +188,7 @@ namespace Elements.Serialization.IFC
                 catch(Exception ex)
                 {
                     Console.WriteLine("There was an error writing to IFC: " + ex.Message);
+                    Console.WriteLine(ex.StackTrace);
                     continue;
                 }
             }
