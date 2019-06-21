@@ -2,28 +2,36 @@ using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using Xunit;
 
-namespace Elements.Tests
+namespace Elements.Tests.Examples
 {
-    public class BeamTest : ModelTest
+    public class BeamExample : ModelTest
     {
         [Fact]
-        public void Beam()
+        public void Example()
         {
             this.Name = "Elements_Beam";
 
+            // <example>
+            // Create a framing type.
             var profile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
             var framingType = new StructuralFramingType(profile.Name, profile, BuiltInMaterials.Steel);
 
-            // A straight beam.
+            // Create a straight beam.
             var line = new Line(Vector3.Origin, new Vector3(5,0,5));
             var linearBeam = new Beam(line, framingType);
 
-            // A polygon beam.
+            // Create a polygon beam.
             var polygon = Polygon.Ngon(5, 2);
             var polygonBeam = new Beam(polygon, framingType, 0, 0, new Transform(6,0,0));
 
+            // Create a curved beam.
+            var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
+            var arcBeam = new Beam(arc, framingType, 0, 0, new Transform(12,0,0));
+            // </example>
+            
             this.Model.AddElement(linearBeam);
             this.Model.AddElement(polygonBeam);
+            this.Model.AddElement(arcBeam);
         }
     }
 }

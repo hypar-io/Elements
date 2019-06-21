@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using Hypar.Elements.Interfaces;
 
 namespace Elements
@@ -9,6 +8,9 @@ namespace Elements
     /// <summary>
     /// A wall defined by a planar curve, a height, and a thickness.
     /// </summary>
+    /// <example>
+    /// <code source="../../test/Examples/WallExample.cs"/>
+    /// </example>
     public class StandardWall : Wall, IHasOpenings
     {
         /// <summary>

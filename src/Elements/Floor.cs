@@ -12,7 +12,7 @@ namespace Elements
     /// A floor is a horizontal element defined by a perimeter and one or several voids.
     /// </summary>
     /// <example>
-    /// <code source="../../test/FloorTest.cs"/>
+    /// [!code-csharp[Main](../../test/Examples/FloorExample.cs?name=example)]
     /// </example>
     public class Floor : Element, IElementType<FloorType>, ISolid, IExtrude, IHasOpenings
     {

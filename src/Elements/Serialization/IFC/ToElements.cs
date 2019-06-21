@@ -411,33 +411,35 @@ namespace Elements.Serialization.IFC
             return null;
         }
 
-        private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc)
+        private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc, IfcObjectPlacement parent)
         {
-            var sweptArea = opening.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-
+            // var sweptArea = opening.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
             // We use the Z extrude direction because the direction is 
             // relative to the local placement, which is a transform at the
             // beam's end with the Z axis pointing along the direction.
             
-            var extrudeDirection = opening.ExtrudeDirection.ToIfcDirection();
+            // var extrudeDirection = opening.ExtrudeDirection.ToIfcDirection();
+            // var position = new Transform().ToIfcAxis2Placement3D(doc);
+            // var solid = new IfcExtrudedAreaSolid(sweptArea, position, 
+            //     extrudeDirection, new IfcPositiveLengthMeasure(opening.ExtrudeDepth));
 
-            var position = new Transform().ToIfcAxis2Placement3D(doc);
-            var repItem = new IfcExtrudedAreaSolid(sweptArea, position, 
-                extrudeDirection, new IfcPositiveLengthMeasure(opening.ExtrudeDepth));
-            var localPlacement = new Transform().ToIfcLocalPlacement(doc);
-            // var placement = beam.Transform.ToIfcAxis2Placement3D(doc);
-            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{repItem});
-            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+            var solid = opening.ToIfcExtrudedAreaSolid(new Transform(), doc);
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc, parent);
+
+            var shape = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{solid});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{shape});
+
             var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, null, localPlacement, productRep, null);
             
-            doc.AddEntity(sweptArea);
-            doc.AddEntity(extrudeDirection);
-            doc.AddEntity(position);
-            doc.AddEntity(repItem);
-            doc.AddEntity(rep);
+            // doc.AddEntity(sweptArea);
+            // doc.AddEntity(extrudeDirection);
+            // doc.AddEntity(position);
+            // doc.AddEntity(repItem);
+
+            doc.AddEntity(solid);
             doc.AddEntity(localPlacement);
+            doc.AddEntity(shape);
             doc.AddEntity(productRep);
-            doc.AddEntity(ifcOpening);
 
             return ifcOpening;
         }

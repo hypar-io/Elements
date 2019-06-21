@@ -3389,19 +3389,6 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Offset
   nameWithType: Polygon.Offset
-- uid: Elements.Geometry.Polygon.Plane
-  name: Plane()
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Plane
-  commentId: M:Elements.Geometry.Polygon.Plane
-  fullName: Elements.Geometry.Polygon.Plane()
-  nameWithType: Polygon.Plane()
-- uid: Elements.Geometry.Polygon.Plane*
-  name: Plane
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Plane_
-  commentId: Overload:Elements.Geometry.Polygon.Plane
-  isSpec: "True"
-  fullName: Elements.Geometry.Polygon.Plane
-  nameWithType: Polygon.Plane
 - uid: Elements.Geometry.Polygon.Project(Elements.Geometry.Plane)
   name: Project(Plane)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Project_Elements_Geometry_Plane_
@@ -3620,6 +3607,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.Length
   nameWithType: Polyline.Length
+- uid: Elements.Geometry.Polyline.Plane
+  name: Plane()
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Plane
+  commentId: M:Elements.Geometry.Polyline.Plane
+  fullName: Elements.Geometry.Polyline.Plane()
+  nameWithType: Polyline.Plane()
+- uid: Elements.Geometry.Polyline.Plane*
+  name: Plane
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Plane_
+  commentId: Overload:Elements.Geometry.Polyline.Plane
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.Plane
+  nameWithType: Polyline.Plane
 - uid: Elements.Geometry.Polyline.PointAt(System.Double)
   name: PointAt(Double)
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_PointAt_System_Double_

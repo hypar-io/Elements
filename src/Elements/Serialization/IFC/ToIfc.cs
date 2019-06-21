@@ -44,6 +44,18 @@ namespace Elements.Serialization.IFC
                 {
                     e = ((Beam)element).ToIfc(localPlacement, shape);
                 }
+                if(element is Brace)
+                {
+                    e = ((Brace)element).ToIfc(localPlacement, shape);
+                }
+                else if(element is Column)
+                {
+                    e = ((Column)element).ToIfc(localPlacement, shape);
+                }
+                else if (element is StandardWall)
+                {
+                    e = ((StandardWall)element).ToIfc(localPlacement, shape);
+                }
                 else if (element is Wall)
                 {
                     e = ((Wall)element).ToIfc(localPlacement, shape);
@@ -55,10 +67,6 @@ namespace Elements.Serialization.IFC
                 else if (element is Space)
                 {
                     e = ((Space)element).ToIfc(localPlacement, shape);
-                }
-                else if (element is StandardWall)
-                {
-                    e = ((StandardWall)element).ToIfc(localPlacement, shape);
                 }
                 return e;
             }
@@ -72,33 +80,15 @@ namespace Elements.Serialization.IFC
 
         private static IfcExtrudedAreaSolid ToIfcExtrudedAreaSolid(this IExtrude extrude, Transform transform, Document doc)
         {
-            var position = transform.ToIfcAxis2Placement3D(doc);
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
 
             double extrudeDepth = 0.0;
             IfcArbitraryClosedProfileDef extrudeProfile = null;
             IfcDirection extrudeDirection = null;
 
-            if (extrude is StandardWall)
-            {
-                // TODO: Implement boolean operations so
-                // that we don't have to keep doing this.
-
-                var w = (StandardWall)extrude;
-
-                // We don't use the Wall's transform for positioning, because
-                // our walls have a transform that lays the wall "flat". Just
-                // use an identity transform or a transform that includes
-                // the elevation.
-                extrudeProfile = w.CenterLine.Thicken(w.Thickness()).ToIfcArbitraryClosedProfileDef(doc);
-                extrudeDirection = Vector3.ZAxis.ToIfcDirection();
-                extrudeDepth = w.Height;
-            } 
-            else
-            {
-                extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-                extrudeDirection = extrude.ExtrudeDirection.ToIfcDirection();
-                extrudeDepth = extrude.ExtrudeDepth;
-            }
+            extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            extrudeDirection = extrude.ExtrudeDirection.ToIfcDirection();
+            extrudeDepth = extrude.ExtrudeDepth;
 
             var solid = new IfcExtrudedAreaSolid(extrudeProfile, position, 
                 extrudeDirection, new IfcPositiveLengthMeasure(extrude.ExtrudeDepth));
@@ -219,6 +209,22 @@ namespace Elements.Serialization.IFC
             return ifcBeam;
         }
 
+        private static IfcColumn ToIfc(this Column column,
+            IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        {
+            var ifcColumn = new IfcColumn(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
+                null, null, null, localPlacement, shape, null);
+            return ifcColumn;
+        }
+
+        private static IfcMember ToIfc(this Brace column,
+            IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        {
+            var member = new IfcMember(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
+                null, null, null, localPlacement, shape, null);
+            return member;
+        }
+
         private static IfcArbitraryClosedProfileDef ToIfcArbitraryClosedProfileDef(this Polygon polygon, Document doc)
         {
             var pline = polygon.ToIfcPolyline(doc);
@@ -277,19 +283,18 @@ namespace Elements.Serialization.IFC
         private static IfcTrimmedCurve ToIfcTrimmedCurve(this Arc arc, Document doc)
         {
             var t = new Transform(arc.Plane.Origin, arc.Plane.Normal);
-            var placement = new IfcAxis2Placement(t.ToIfcAxis2Placement3D(doc));
-            var radius = new IfcPositiveLengthMeasure(arc.Radius);
-            var ifcCircle = new IfcCircle(placement, radius);
+            var placement = t.ToIfcAxis2Placement3D(doc);
+            var ifcCircle = new IfcCircle(new IfcAxis2Placement(placement), new IfcPositiveLengthMeasure(arc.Radius));
             var start = arc.Start.ToIfcCartesianPoint();
             var end = arc.End.ToIfcCartesianPoint();
             var trim1 = new IfcTrimmingSelect(start);
             var trim2 = new IfcTrimmingSelect(end);
-            var tc = new IfcTrimmedCurve(ifcCircle, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, true, IfcTrimmingPreference.CARTESIAN);
+            var tc = new IfcTrimmedCurve(ifcCircle, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, 
+                true, IfcTrimmingPreference.CARTESIAN);
             
             doc.AddEntity(start);
             doc.AddEntity(end);
             doc.AddEntity(placement);
-            doc.AddEntity(radius);
             doc.AddEntity(ifcCircle);
 
             return tc;
@@ -303,10 +308,15 @@ namespace Elements.Serialization.IFC
             return vector;
         }
 
-        private static IfcLocalPlacement ToIfcLocalPlacement(this Transform transform, Document doc)
+        private static IfcLocalPlacement ToIfcLocalPlacement(this Transform transform, Document doc, IfcObjectPlacement parent = null)
         {
             var placement = transform.ToIfcAxis2Placement3D(doc);
             var localPlacement = new IfcLocalPlacement(new IfcAxis2Placement(placement));
+            if(parent != null)
+            {
+                localPlacement.PlacementRelTo = parent;
+            }
+            
             doc.AddEntity(placement);
             return localPlacement;
         }

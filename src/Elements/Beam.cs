@@ -1,7 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Elements
 {
@@ -9,7 +8,7 @@ namespace Elements
     /// A structural framing element defined by a center line curve and a profile.
     /// </summary>
     /// <example>
-    /// <code source="../../test/BeamTest.cs"/>
+    /// [!code-csharp[Main](../../test/Examples/BeamExample.cs?name=example)]
     /// </example>
     public class Beam : StructuralFraming
     {

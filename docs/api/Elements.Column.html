@@ -96,8 +96,15 @@
     var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
     scene.add( light );
   
-    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    var material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+    var axesHelper = new THREE.AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    var size = 100;
+    var divisions = 100;
+    var colorCenterLine = new THREE.Color( 0xa0a0a0 );
+    var colorGrid = new THREE.Color( 0xdbdbdb );
+    var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
+    scene.add( gridHelper );
   
     window.addEventListener( 'resize', onWindowResize, false );
   
@@ -191,32 +198,7 @@
   
     animate();
   </script><h5 id="Elements_Column_examples"><strong>Examples</strong></h5>
-  <pre><code source="../../test/ColumnTest.cs">using Elements;
-using Elements.Geometry;
-using Elements.Geometry.Interfaces;
-using Elements.Geometry.Profiles;
-using System;
-using System.Linq;
-using Xunit;
-
-namespace Elements.Tests
-{
-public class ColumnTest : ModelTest
-{
-    [Fact]
-    public void Column()
-    {
-        this.Name = &quot;Elements_Column&quot;;
-
-        var profile = WideFlangeProfileServer.Instance.GetProfileByName(&quot;W44x335&quot;);
-        var framingType = new StructuralFramingType(profile.Name, profile, BuiltInMaterials.Steel);
-        var column = new Column(Vector3.Origin, 3.0, framingType);
-
-        this.Model.AddElement(column);
-    }
-}
-}</code></pre>
-
+  <pre><code class="lang-csharp" name="Main"></code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>

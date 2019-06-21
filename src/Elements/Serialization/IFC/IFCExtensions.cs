@@ -125,13 +125,6 @@ namespace Elements.Serialization.IFC
             ifc.AddEntity(aggregate);
             ifc.AddEntity(siteAggregate);
 
-            // Materials
-            // foreach(var m in model.Materials.Values)
-            // {
-            //     var ifcMaterial = new IfcMaterial(m.Name);
-            //     ifc.AddEntity(ifcMaterial);
-            // }
-
             var products = new List<IfcProduct>();
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
             
@@ -140,7 +133,7 @@ namespace Elements.Serialization.IFC
                 try
                 {
                     IfcProductDefinitionShape shape = null;
-                    IfcLocalPlacement localPlacement = new Transform().ToIfcLocalPlacement(ifc);
+                    var localPlacement = e.Transform.ToIfcLocalPlacement(ifc);
                     IfcSweptAreaSolid solid = null;
 
                     if(e is ISweepAlongCurve)
@@ -178,9 +171,10 @@ namespace Elements.Serialization.IFC
                         foreach(var o in openings.Openings)
                         {
                             var element = (IfcElement)products.Last();
-                            var opening = o.ToIfcOpeningElement(context, ifc);
+                            var opening = o.ToIfcOpeningElement(context, ifc, localPlacement);
                             var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
                             element.HasOpenings.Add(voidRel);
+                            ifc.AddEntity(opening);
                             ifc.AddEntity(voidRel);
                         }
                     }

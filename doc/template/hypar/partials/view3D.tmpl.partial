@@ -17,8 +17,15 @@
   var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
   scene.add( light );
 
-  var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-  var material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+  var axesHelper = new THREE.AxesHelper( 2 );
+  scene.add( axesHelper );
+
+  var size = 100;
+  var divisions = 100;
+  var colorCenterLine = new THREE.Color( 0xa0a0a0 );
+  var colorGrid = new THREE.Color( 0xdbdbdb );
+  var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
+  scene.add( gridHelper );
 
   window.addEventListener( 'resize', onWindowResize, false );
 

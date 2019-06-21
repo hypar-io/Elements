@@ -9,6 +9,9 @@ namespace Elements
     /// <summary>
     /// An aggregation of structural framing elements.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Examples/TrussExample.cs?name=example)]
+    /// </example>
     public class Truss : Element, IAggregateElements
     {
         private List<Beam> _web = new List<Beam>();
