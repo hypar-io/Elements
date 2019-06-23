@@ -68,6 +68,14 @@ namespace Elements.Serialization.IFC
                 {
                     e = ((Space)element).ToIfc(localPlacement, shape);
                 }
+                else if (element is Panel)
+                {
+                    e = ((Panel)element).ToIfc(localPlacement, shape);
+                }
+                else if (element is Mass)
+                {
+                    e = ((Mass)element).ToIfc(localPlacement, shape);
+                }
                 return e;
             }
             catch(Exception ex)
@@ -125,6 +133,36 @@ namespace Elements.Serialization.IFC
             return solid;
         }
 
+        private static IfcShellBasedSurfaceModel ToIfcShellBasedSurfaceModel(this ILamina lamina, Transform transform, Document doc)
+        {
+            var position = transform.ToIfcAxis2Placement3D(doc);
+
+            var plane = lamina.Perimeter.Plane().ToIfcPlane(doc);
+            var outer = lamina.Perimeter.ToIfcCurve(doc);
+            var bplane = new IfcCurveBoundedPlane(plane, outer, new List<IfcCurve>{});
+
+            var bounds = new List<IfcFaceBound>{};
+            var loop = lamina.Perimeter.ToIfcPolyLoop(doc);
+            var faceBounds = new IfcFaceBound(loop, true);
+            bounds.Add(faceBounds);
+
+            var face = new IfcFaceSurface(bounds, bplane, true);
+            var openShell = new IfcOpenShell(new List<IfcFace>{face});
+
+            var shell = new IfcShell(openShell);
+            var ssm = new IfcShellBasedSurfaceModel(new List<IfcShell>{shell});
+
+            doc.AddEntity(plane);
+            doc.AddEntity(outer);
+            doc.AddEntity(bplane);
+            doc.AddEntity(loop);
+            doc.AddEntity(faceBounds);
+            doc.AddEntity(face);
+            doc.AddEntity(openShell);
+            
+            return ssm;
+        }
+
         private static Plane ToPlane(this ICurve curve)
         {
             if (curve is Line)
@@ -157,10 +195,10 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static IfcProductDefinitionShape ToIfcProductDefinitionShape(this IfcSweptAreaSolid solid, IfcRepresentationContext context, Document doc)
+        private static IfcProductDefinitionShape ToIfcProductDefinitionShape(this IfcGeometricRepresentationItem geom, IfcRepresentationContext context, Document doc)
         {
             var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", 
-                new List<IfcRepresentationItem>{solid});
+                new List<IfcRepresentationItem>{geom});
             var shape = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
 
             doc.AddEntity(rep);
@@ -175,6 +213,10 @@ namespace Elements.Serialization.IFC
                 null, localPlacement, shape, null, IfcSlabTypeEnum.FLOOR);
             return slab;
         }
+
+        // TODO: There is a lot of duplicate code used to create products.
+        // Can we make a generic method like ToIfc<TProduct>()? There are 
+        // exceptions for which this won't work like IfcSpace.
 
         private static IfcSpace ToIfc(this Space space, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
@@ -223,6 +265,40 @@ namespace Elements.Serialization.IFC
             var member = new IfcMember(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
                 null, null, null, localPlacement, shape, null);
             return member;
+        }
+
+        private static IfcPlate ToIfc(this Panel panel,
+            IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        {
+            var plate = new IfcPlate(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
+                null, null, null, localPlacement, shape, null);
+            return plate;
+        }
+
+        private static IfcBuildingElementProxy ToIfc(this Mass mass, 
+            IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        {
+            var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
+                null, null, null, localPlacement, shape, null, IfcElementCompositionEnum.ELEMENT);
+            return proxy;
+        }
+
+        private static IfcLoop ToIfcPolyLoop(this Polygon polygon, Document doc)
+        {
+            var loop = new IfcPolyLoop(polygon.Vertices.ToIfcCartesianPointList(doc));
+            return loop;
+        }
+
+        private static List<IfcCartesianPoint> ToIfcCartesianPointList(this Vector3[] pts, Document doc)
+        {
+            var icps = new List<IfcCartesianPoint>();
+            foreach(var pt in pts)
+            {
+                var icp = pt.ToIfcCartesianPoint();
+                doc.AddEntity(icp);
+                icps.Add(icp);
+            }
+            return icps;
         }
 
         private static IfcArbitraryClosedProfileDef ToIfcArbitraryClosedProfileDef(this Polygon polygon, Document doc)

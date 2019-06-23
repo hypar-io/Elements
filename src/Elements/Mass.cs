@@ -10,6 +10,9 @@ namespace Elements
     /// <summary>
     /// An extruded building mass.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Examples/MassExample.cs?name=example)]
+    /// </example>
     public class Mass : Element, ISolid, IExtrude, IMaterial
     {
         /// <summary>

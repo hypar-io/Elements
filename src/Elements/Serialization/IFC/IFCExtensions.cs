@@ -1,4 +1,3 @@
-using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Hypar.Elements.Interfaces;
 using IFC;
@@ -134,28 +133,33 @@ namespace Elements.Serialization.IFC
                 {
                     IfcProductDefinitionShape shape = null;
                     var localPlacement = e.Transform.ToIfcLocalPlacement(ifc);
-                    IfcSweptAreaSolid solid = null;
+                    IfcGeometricRepresentationItem geom = null;
 
                     if(e is ISweepAlongCurve)
                     {
                         var sweep = (ISweepAlongCurve)e;
-                        solid = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, ifc);
+                        geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, ifc);
                     }
                     else if(e is IExtrude)
                     {
                         var extrude = (IExtrude)e;
-                        solid = extrude.ToIfcExtrudedAreaSolid(e.Transform, ifc);
+                        geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, ifc);
+                    }
+                    else if(e is ILamina)
+                    {
+                        var lamina = (ILamina)e;
+                        geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, ifc);
                     }
                     else
                     {
                         throw new Exception("Only IExtrude and ISweepAlongCurve representations are currently supported.");
                     }
                     
-                    shape = ToIfcProductDefinitionShape(solid, context, ifc);
+                    shape = ToIfcProductDefinitionShape(geom, context, ifc);
 
                     ifc.AddEntity(shape);
                     ifc.AddEntity(localPlacement);
-                    ifc.AddEntity(solid);
+                    ifc.AddEntity(geom);
 
                     var product = ConvertElementToIfcProduct(e, localPlacement, shape);
                     products.Add(product);
@@ -181,7 +185,7 @@ namespace Elements.Serialization.IFC
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine("There was an error writing to IFC: " + ex.Message);
+                    Console.WriteLine($"There was an error writing an element of type {e.GetType()} to IFC: " + ex.Message);
                     Console.WriteLine(ex.StackTrace);
                     continue;
                 }

@@ -9,20 +9,6 @@ namespace Elements.Tests
     public class MassTests : ModelTest
     {
         [Fact]
-        public void Mass()
-        {
-            this.Name = "Mass";
-            var a = new Vector3();
-            var b = new Vector3(30, 10);
-            var c = new Vector3(20, 50);
-            var d = new Vector3(-10, 5);
-            var poly = new Polygon(new[] { a, b, c, d });
-            var mass = new Mass(poly, 5.0);
-            var model = new Model();
-            this.Model.AddElement(mass);
-        }
-
-        [Fact]
         public void TopBottomSame_ThrowsException()
         {
             var a = new Vector3();

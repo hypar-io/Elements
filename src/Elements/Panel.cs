@@ -8,6 +8,9 @@ namespace Elements
     /// <summary>
     /// A zero-thickness planar element defined by a perimeter.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Examples/PanelExample.cs?name=example)]
+    /// </example>
     public class Panel : Element, IMaterial, ILamina
     {
         /// <summary>

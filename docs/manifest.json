@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "/Users/ikeough/Documents/hypar/Elements/doc",
+  "source_base_path": "/Users/ikeough/Documents/Hypar/Elements/doc",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -40,6 +40,28 @@
       "output": {
         "resource": {
           "relative_path": "models/Elements_Floor.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Mass.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Mass.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Panel.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Panel.glb"
         }
       },
       "is_incremental": false,
@@ -143,7 +165,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Beam.html",
-          "hash": "KY2bocVoD4Ga29EniReBgA=="
+          "hash": "koVAbvmfQltrJ7drK/MKhw=="
         }
       },
       "is_incremental": false,
@@ -203,7 +225,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Element.html",
-          "hash": "FC8PFrpxgSTTLpKQHK8EmA=="
+          "hash": "lAGytdwopmCgvfBEalCsDg=="
         }
       },
       "is_incremental": false,
@@ -239,7 +261,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Floor.html",
-          "hash": "DiphyILThDrl4ZsPBHQekQ=="
+          "hash": "gaW3/8PZUTzaHvJGLQoxWA=="
         }
       },
       "is_incremental": false,
@@ -1091,7 +1113,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Mass.html",
-          "hash": "DRFYhXJdyzxH0RxFg7+DTg=="
+          "hash": "LVzXbxpLh6UAJu1snlBuGA=="
         }
       },
       "is_incremental": false,
@@ -1163,7 +1185,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Panel.html",
-          "hash": "N1I8XRbrt9f11WRcRZEHPQ=="
+          "hash": "zZd8QzawdEYXXxLe48muRg=="
         }
       },
       "is_incremental": false,
@@ -1547,7 +1569,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.html",
-          "hash": "ybDw2MbKRstR8ukILfuxNw=="
+          "hash": "AYD1ljJzcRfZS5auKPM75A=="
         }
       },
       "is_incremental": false,
@@ -1668,14 +1690,14 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build"
-        },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ConceptualDocumentProcessor": {
