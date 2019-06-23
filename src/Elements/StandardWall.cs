@@ -13,6 +13,8 @@ namespace Elements
     /// </example>
     public class StandardWall : Wall, IHasOpenings
     {
+        private List<Opening> _openings = new List<Opening>();
+
         /// <summary>
         /// The center line of the wall.
         /// </summary>
@@ -21,7 +23,11 @@ namespace Elements
         /// <summary>
         /// An array of openings in the wall.
         /// </summary>
-        public List<Opening> Openings{ get; protected set;}
+        public List<Opening> Openings
+        {
+            get{return _openings;}
+            protected set{_openings = value;}
+        }
 
         /// <summary>
         /// Extrude to both sides?
@@ -54,7 +60,10 @@ namespace Elements
             this.CenterLine = centerLine;
             this.Height = height;
             this.ElementType = elementType;
-            this.Openings = openings != null ? openings : new List<Opening>();
+            if(openings != null)
+            {
+                this._openings = openings;
+            }
             
             // Construct a transform whose X axis is the centerline of the wall.
             // The wall is described as if it's lying flat in the XY plane of that Transform.

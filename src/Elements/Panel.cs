@@ -30,7 +30,10 @@ namespace Elements
         [JsonConstructor]
         public Panel(Polygon perimeter, Material material = null, Transform transform = null)
         {
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.Perimeter = perimeter;
             this.Material = material == null ? BuiltInMaterials.Default : material;
         }

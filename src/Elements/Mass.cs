@@ -4,7 +4,6 @@ using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace Elements
 {
@@ -73,7 +72,10 @@ namespace Elements
             }
             this.Profile = profile;
             this.Height = height;
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.Material = material == null ? BuiltInMaterials.Mass : material;
         }
 
@@ -92,7 +94,10 @@ namespace Elements
             }
             this.Profile = new Profile(profile);
             this.Height = height;
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.Material = material == null ? BuiltInMaterials.Mass : material;
         }
 
