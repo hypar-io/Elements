@@ -1,4 +1,3 @@
-using Elements;
 using Elements.Geometry;
 using System;
 using System.Collections.Generic;
@@ -8,30 +7,6 @@ namespace Elements.Tests
 {
     public class FloorTests : ModelTest
     {
-        [Fact]
-        public void Floor()
-        {
-            this.Name = "Floor";
-            var p = Polygon.L(10, 20, 5);
-            var floorType = new FloorType("test", new List<MaterialLayer> { new MaterialLayer(new Material("green", Colors.Green, 0.0f, 0.0f), 0.1) });
-            var openings = new List<Opening>(){
-                new Opening(1, 1, 1, 1),
-                new Opening(3, 3, 1, 3),
-            };
-            var floor1 = new Floor(p, floorType, 0.5, null, openings);
-            var floor2 = new Floor(p, floorType, 2.0, null, openings);
-
-            var model = new Model();
-
-            Assert.Equal(2, floor1.Openings.Count);
-            Assert.Equal(0.5, floor1.Elevation);
-            Assert.Equal(0.1, floor1.ElementType.Thickness());
-            Assert.Equal(0.5, floor1.Transform.Origin.Z);
-
-            this.Model.AddElement(floor1);
-            this.Model.AddElement(floor2);
-        }
-
         [Fact]
         public void FloorWithAddedOpenings()
         {

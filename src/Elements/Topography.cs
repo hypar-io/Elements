@@ -12,6 +12,9 @@ namespace Elements
     /// <summary>
     /// A topographic mesh defined by an array of elevation values.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Examples/TopographyExample.cs?name=example)]
+    /// </example>
     public class Topography : Element, ITessellate, IMaterial
     {
         private Func<Triangle, Color> _colorizer;

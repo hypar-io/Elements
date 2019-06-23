@@ -31,7 +31,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// A map of Properties for the Element.
+        /// A map of properties for the Element.
         /// </summary>
         [JsonProperty(NullValueHandling=NullValueHandling.Ignore), 
             JsonConverter(typeof(PropertyDictionaryConverter))]
@@ -46,7 +46,7 @@ namespace Elements
         public Transform Transform { get; protected set; }
 
         /// <summary>
-        /// A human-readable name for the Element.
+        /// The element's name.
         /// </summary>
         public string Name { get; set; }
 

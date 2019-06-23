@@ -1,10 +1,4 @@
 using ClipperLib;
-using Elements.Geometry.Interfaces;
-using Elements.Serialization;
-using LibTessDotNet.Double;
-using Newtonsoft.Json;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -540,15 +534,6 @@ namespace Elements.Geometry
         public override Transform[] Frames(double startSetback, double endSetback)
         {
             return FramesInternal(startSetback, endSetback, true);
-        }
-
-        /// <summary>
-        /// Compute the Plane defined by the first three vertices of the Polygon.
-        /// </summary>
-        /// <returns>A Plane.</returns>
-        public Plane Plane()
-        {
-            return new Plane(this._vertices[0], this._vertices[1], this._vertices[2]);
         }
 
         /// <summary>

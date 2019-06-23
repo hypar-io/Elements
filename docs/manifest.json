@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "/Users/ikeough/Documents/hypar/Hypar/Elements/doc",
+  "source_base_path": "/Users/ikeough/Documents/Hypar/Elements/doc",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -40,6 +40,72 @@
       "output": {
         "resource": {
           "relative_path": "models/Elements_Floor.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Mass.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Mass.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Panel.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Panel.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Space.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Space.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Topography.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Topography.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Truss.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Truss.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/bin/debug/netcoreapp2.0/models/Elements_Wall.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Wall.glb"
         }
       },
       "is_incremental": false,
@@ -99,7 +165,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Beam.html",
-          "hash": "4R5qO6Hj+UrhIDxOBqzFdA=="
+          "hash": "koVAbvmfQltrJ7drK/MKhw=="
         }
       },
       "is_incremental": false,
@@ -147,7 +213,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Column.html",
-          "hash": "Ox4rZz0ndhbF1oKN/tJVQQ=="
+          "hash": "Y3XUcCIUZvRpPaD7uih6Eg=="
         }
       },
       "is_incremental": false,
@@ -159,7 +225,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Element.html",
-          "hash": "FC8PFrpxgSTTLpKQHK8EmA=="
+          "hash": "lAGytdwopmCgvfBEalCsDg=="
         }
       },
       "is_incremental": false,
@@ -195,7 +261,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Floor.html",
-          "hash": "h+3/6CQJ4db8IJnTX36xDw=="
+          "hash": "gaW3/8PZUTzaHvJGLQoxWA=="
         }
       },
       "is_incremental": false,
@@ -615,7 +681,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "OqcKsR+pZ95Dv58mlDq6AA=="
+          "hash": "2wpWsLIuGiSYsoO1Rhrb0w=="
         }
       },
       "is_incremental": false,
@@ -627,7 +693,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polyline.html",
-          "hash": "Pi7Y4iTcQY0RwPWmAdZ5zQ=="
+          "hash": "+DYXX3ZO4mfsCIiNVo2Heg=="
         }
       },
       "is_incremental": false,
@@ -1047,7 +1113,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Mass.html",
-          "hash": "DRFYhXJdyzxH0RxFg7+DTg=="
+          "hash": "LVzXbxpLh6UAJu1snlBuGA=="
         }
       },
       "is_incremental": false,
@@ -1119,7 +1185,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Panel.html",
-          "hash": "N1I8XRbrt9f11WRcRZEHPQ=="
+          "hash": "zZd8QzawdEYXXxLe48muRg=="
         }
       },
       "is_incremental": false,
@@ -1383,7 +1449,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Space.html",
-          "hash": "Vkjp2oQpVUriClvE39ZPFA=="
+          "hash": "DwLaC/OlsN5dOKBx3TRJaQ=="
         }
       },
       "is_incremental": false,
@@ -1395,7 +1461,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.StandardWall.html",
-          "hash": "cS2Fltfp4v5YlLC4w8h86w=="
+          "hash": "g5sBdvZDl5O8fuSOZs4gSg=="
         }
       },
       "is_incremental": false,
@@ -1443,7 +1509,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Topography.html",
-          "hash": "x2GY6GlcdSqhIINRArAwuQ=="
+          "hash": "s1ct4xklfZV0VQBAWNDBIw=="
         }
       },
       "is_incremental": false,
@@ -1455,7 +1521,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Truss.html",
-          "hash": "coCGwwcvnSv5/wZ7AfamSA=="
+          "hash": "i7nNTAJnHr1nHK9p9XbVEg=="
         }
       },
       "is_incremental": false,
@@ -1479,7 +1545,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Wall.html",
-          "hash": "jUVDzt6II0DWtdo/rBYyjA=="
+          "hash": "2F9I83ZHHmqcL8WkbHN3Kw=="
         }
       },
       "is_incremental": false,
@@ -1503,7 +1569,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.html",
-          "hash": "ybDw2MbKRstR8ukILfuxNw=="
+          "hash": "AYD1ljJzcRfZS5auKPM75A=="
         }
       },
       "is_incremental": false,
@@ -1619,26 +1685,27 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Disable incremental build by force rebuild option.",
         "incrementalPhase": "build"
       },
       "processors": {
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ConceptualDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build"
         },
         "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build"
-        },
-        "ResourceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

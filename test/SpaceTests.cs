@@ -1,9 +1,6 @@
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using System;
-using System.Linq;
 using Xunit;
-using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
@@ -12,7 +9,8 @@ namespace Elements.Tests
         [Fact]
         public void SpaceExtrude()
         {
-            this.Name = "SpaceExtrude";
+            this.Name = "Space";
+
             var a = new Vector3();
             var b = new Vector3(30, 10);
             var c = new Vector3(20, 50);
@@ -20,6 +18,7 @@ namespace Elements.Tests
             var profile = new Polygon(new[]{a,b,c,d});
             var material = new Material("Space Color", Colors.Coral, 0.0f, 0.0f);
             var space = new Space(profile, 10, 0, material);
+
             this.Model.AddElement(space);
         }
 

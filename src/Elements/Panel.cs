@@ -8,6 +8,9 @@ namespace Elements
     /// <summary>
     /// A zero-thickness planar element defined by a perimeter.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Examples/PanelExample.cs?name=example)]
+    /// </example>
     public class Panel : Element, IMaterial, ILamina
     {
         /// <summary>
@@ -30,7 +33,10 @@ namespace Elements
         [JsonConstructor]
         public Panel(Polygon perimeter, Material material = null, Transform transform = null)
         {
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.Perimeter = perimeter;
             this.Material = material == null ? BuiltInMaterials.Default : material;
         }

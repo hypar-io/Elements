@@ -9,13 +9,15 @@ using System.Collections.Generic;
 namespace Elements
 {
     /// <summary>
-    /// A floor is a horizontal element defined by a perimeter and one or several voids.
+    /// A floor is a horizontal element defined by a profile.
     /// </summary>
     /// <example>
-    /// <code source="../../test/FloorTest.cs"/>
+    /// [!code-csharp[Main](../../test/Examples/FloorExample.cs?name=example)]
     /// </example>
     public class Floor : Element, IElementType<FloorType>, ISolid, IExtrude, IHasOpenings
     {
+        private List<Opening> _openings = new List<Opening>();
+
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
@@ -39,7 +41,11 @@ namespace Elements
         /// <summary>
         /// The openings in the floor.
         /// </summary>
-        public List<Opening> Openings { get; }
+        public List<Opening> Openings
+        {
+            get{return _openings;}
+            set{_openings = value;}
+        }
 
         /// <summary>
         /// The extrude direction of the floor.
@@ -67,7 +73,10 @@ namespace Elements
         public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
         {
             this.Profile = new Profile(profile);
-            this.Openings = openings != null ? openings : new List<Opening>();
+            if(openings != null)
+            {
+                this._openings = openings;
+            }
             this.Elevation = elevation;
             this.ElementType = elementType;
             var thickness = elementType.Thickness();
@@ -86,7 +95,6 @@ namespace Elements
         /// <param name="transform">The floor's transform. If set, this will override the elevation.</param>
         public Floor(Profile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Transform transform = null)
         {
-            // this.Profile = new Profile(profile);
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
@@ -98,7 +106,10 @@ namespace Elements
         internal Floor(Profile profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
         {
             this.Profile = profile;
-            this.Openings = openings != null ? openings : new List<Opening>();
+            if(openings != null)
+            {
+                this._openings = openings;
+            }
             this.Elevation = elevation;
             this.ElementType = elementType;
             var thickness = elementType.Thickness();

@@ -4,13 +4,15 @@ using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace Elements
 {
     /// <summary>
     /// An extruded building mass.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Examples/MassExample.cs?name=example)]
+    /// </example>
     public class Mass : Element, ISolid, IExtrude, IMaterial
     {
         /// <summary>
@@ -73,7 +75,10 @@ namespace Elements
             }
             this.Profile = profile;
             this.Height = height;
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.Material = material == null ? BuiltInMaterials.Mass : material;
         }
 
@@ -92,7 +97,10 @@ namespace Elements
             }
             this.Profile = new Profile(profile);
             this.Height = height;
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.Material = material == null ? BuiltInMaterials.Mass : material;
         }
 

@@ -10,6 +10,9 @@ namespace Elements
     /// <summary>
     /// A wall defined by a planar profile extruded to a height.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Examples/WallExample.cs?name=example)]
+    /// </example>
     public class Wall : Element, IElementType<WallType>, ISolid, IExtrude
     {
         /// <summary>

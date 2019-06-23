@@ -1,8 +1,6 @@
 using Elements.Geometry.Interfaces;
-using Elements.Serialization;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
@@ -249,6 +247,15 @@ namespace Elements.Geometry
         public BBox3 Bounds()
         {
             return new BBox3(this.Vertices);
+        }
+
+        /// <summary>
+        /// Compute the Plane defined by the first three vertices of the Polygon.
+        /// </summary>
+        /// <returns>A Plane.</returns>
+        public Plane Plane()
+        {
+            return new Plane(this._vertices[0], this._vertices[1], this._vertices[2]);
         }
 
         internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)

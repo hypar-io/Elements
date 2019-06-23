@@ -10,6 +10,9 @@ namespace Elements
     /// <summary>
     /// A boundary of an occupiable region.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Examples/SpaceExample.cs?name=example)]
+    /// </example>
     public class Space : Element, ISolid, IExtrude, IMaterial
     {
         /// <summary>

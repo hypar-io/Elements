@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Elements.Geometry.Interfaces;
-using Elements.Interfaces;
 using Newtonsoft.Json.Serialization;
 
 namespace Elements.Serialization.JSON

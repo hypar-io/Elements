@@ -73,7 +73,5 @@ namespace Elements.Geometry
             this.Origin = origin;
             this.Normal = (points[0]-points[1]).Normalized().Cross((points[2] - points[0]).Normalized());
         }
-
-        
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Elements;
 using Elements.Geometry;
 using Xunit;
 
@@ -8,25 +7,6 @@ namespace Elements.Tests
 {
     public class WallTests : ModelTest
     {
-        [Fact]
-        public void Wall()
-        {
-            this.Name = "Wall";
-            var testWallType = new WallType("test", new List<MaterialLayer> { new MaterialLayer(new Material("blue", Colors.Blue, 0.0f, 0.0f), 0.1) });
-
-            var l = new Line(new Vector3(0, 0, 0), new Vector3(10, 10, 0));
-            var openings = new List<Opening>(){
-                new Opening(1.0, 2.0, 1.0, 1.0),
-                new Opening(3.0, 1.0, 1.0, 2.0),
-                new Opening(Polygon.Ngon(3, 2.0), 8,2)
-            };
-
-            var frameProfile = new Profile(Polygon.Rectangle(0.075, 0.01));
-
-            var w = new StandardWall(l, testWallType, 3.0, openings);
-            this.Model.AddElement(w);
-        }
-
         [Fact]
         public void WallWithAddedOpenings()
         {
