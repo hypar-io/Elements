@@ -98,8 +98,8 @@ namespace Elements.Serialization.IFC
         /// <param name="path">The path to the generated IFC STEP file.</param>
         public static void ToIFC(this Model model, string path)
         {
-            var ifc = new Document("elements", "elements", Environment.UserName, 
-                                    null, null, null, "elements", null, null,
+            var ifc = new Document("Elements", "Elements", Environment.UserName, 
+                                    null, null, null, "Elements", null, null,
                                     null, null, null, null, null, null
                                     );
 
