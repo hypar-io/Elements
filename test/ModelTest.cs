@@ -1,10 +1,5 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Reflection;
-using Elements;
-using Xunit;
-using Xunit.Sdk;
 using Elements.Geometry;
 using System.Linq;
 using System.Diagnostics;
@@ -14,6 +9,11 @@ using Elements.Serialization.IFC;
 
 namespace Elements.Tests
 {
+    /// <summary>
+    /// ModelTest is the base class for all tests which
+    /// create models. After a test is complete, the model
+    /// is serialized to JSON, glTF, and IFC
+    /// </summary>
     public class ModelTest : IDisposable
     {
         private Model _model;
@@ -66,18 +66,18 @@ namespace Elements.Tests
                     var modelPath = $"models/{this._name}.glb";
                     this._model.ToGlTF($"models/{this._name}.glb");
                     sw.Stop();
-                    Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed.TotalMilliseconds}ms)");
+                    // Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed.TotalMilliseconds}ms)");
                 }
 
                 if(this.GenerateJson)
                 {
                     // Write the model as json
                     var jsonPath = $"models/{this._name}.json";
-                    Console.WriteLine($"Serializing {this._name} to JSON: {jsonPath}");
+                    // Console.WriteLine($"Serializing {this._name} to JSON: {jsonPath}");
                     File.WriteAllText(jsonPath, this._model.ToJson());
 
                     // Try deserializing JSON
-                    Console.WriteLine($"Deserializing {this._name} from JSON.");
+                    // Console.WriteLine($"Deserializing {this._name} from JSON.");
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
                 }
 
@@ -85,7 +85,7 @@ namespace Elements.Tests
                 {
                     // Write the model as an IFC
                     var ifcPath = $"models/{this._name}.ifc";
-                    Console.WriteLine($"Serializing {this._name} to IFC: {ifcPath}");
+                    // Console.WriteLine($"Serializing {this._name} to IFC: {ifcPath}");
                     this._model.ToIFC(ifcPath);
                 }
             }
