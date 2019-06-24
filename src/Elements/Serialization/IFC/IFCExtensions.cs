@@ -125,7 +125,7 @@ namespace Elements.Serialization.IFC
             ifc.AddEntity(aggregate);
             ifc.AddEntity(siteAggregate);
 
-            var products = new List<IfcProduct>();
+            var products = new Dictionary<Element, IfcProduct>();
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
             
             foreach(var e in model.Elements.Values)
@@ -153,7 +153,7 @@ namespace Elements.Serialization.IFC
                     }
                     else
                     {
-                        throw new Exception("Only IExtrude and ISweepAlongCurve representations are currently supported.");
+                        throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
                     }
                     
                     shape = ToIfcProductDefinitionShape(geom, context, ifc);
@@ -162,16 +162,24 @@ namespace Elements.Serialization.IFC
                     ifc.AddEntity(localPlacement);
                     ifc.AddEntity(geom);
 
+                    var product = ConvertElementToIfcProduct(e, localPlacement, shape);
+                    products.Add(e, product);
+                    ifc.AddEntity(product);
+
                     // If the element has openings,
                     // Make opening relationships in
                     // the IfcElement.
                     if(e is IHasOpenings)
                     {
                         var openings = (IHasOpenings)e;
+                        if(openings.Openings.Count == 0)
+                        {
+                            break;
+                        }
 
                         foreach(var o in openings.Openings)
                         {
-                            var element = (IfcElement)products.Last();
+                            var element = (IfcElement)products[e];
                             var opening = o.ToIfcOpeningElement(context, ifc, localPlacement);
                             var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
                             element.HasOpenings.Add(voidRel);
@@ -208,10 +216,6 @@ namespace Elements.Serialization.IFC
     
                     geom.StyledByItem = new List<IfcStyledItem>{style};
                     ifc.AddEntity(style);
-                    
-                    var product = ConvertElementToIfcProduct(e, localPlacement, shape);
-                    products.Add(product);
-                    ifc.AddEntity(product);
                 }
                 catch(Exception ex)
                 {
@@ -221,7 +225,7 @@ namespace Elements.Serialization.IFC
                 }
             }
 
-            var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, products, storey);
+            var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, products.Values.ToList(), storey);
             ifc.AddEntity(spatialRel);
 
             if(File.Exists(path))
