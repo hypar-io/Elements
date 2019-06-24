@@ -1,6 +1,3 @@
-using Elements.Geometry.Interfaces;
-using Elements.Interfaces;
-using Hypar.Elements.Interfaces;
 using IFC;
 using STEP;
 using System;
