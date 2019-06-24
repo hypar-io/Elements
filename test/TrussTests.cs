@@ -11,12 +11,15 @@ namespace Elements.Tests
         [Fact]
         public void Serialize()
         {
-            var model = new Model();
-            var profile = WideFlangeProfileServer.Instance.GetProfileByName("W33x387");
-            var framingType = new StructuralFramingType("W33x387", profile, BuiltInMaterials.Steel);
-            var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,10,0), 1.0, 10, framingType, framingType, framingType, BuiltInMaterials.Steel, 0.1, 0.1);
-            model.AddElement(truss);
-            var json = model.ToJson();
+            this.Name = "Truss";
+
+            var profile = WideFlangeProfileServer.Instance.GetProfileByName("W8x13");
+            var chordType = new StructuralFramingType("W33x387", profile, new Material("Chord", Colors.Aqua));
+            var webType = new StructuralFramingType("W33x387", profile, new Material("Web", Colors.Orange));
+            var truss = new Truss(new Vector3(0, 0, 0), new Vector3(0,10,0), 1.0, 10, chordType, chordType, webType, BuiltInMaterials.Steel, 0.1, 0.1);
+            this.Model.AddElement(truss);
+            
+            var json = this.Model.ToJson();
             var newModel = Model.FromJson(json);
             var newTruss = newModel.ElementsOfType<Truss>().FirstOrDefault();
             Assert.Equal(truss.Divisions, newTruss.Divisions);

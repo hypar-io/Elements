@@ -125,97 +125,14 @@ namespace Elements.Serialization.IFC
             ifc.AddEntity(aggregate);
             ifc.AddEntity(siteAggregate);
 
-            var products = new Dictionary<Element, IfcProduct>();
+            var products = new List<IfcProduct>();
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
             
             foreach(var e in model.Elements.Values)
             {
                 try
                 {
-                    IfcProductDefinitionShape shape = null;
-                    var localPlacement = e.Transform.ToIfcLocalPlacement(ifc);
-                    IfcGeometricRepresentationItem geom = null;
-
-                    if(e is ISweepAlongCurve)
-                    {
-                        var sweep = (ISweepAlongCurve)e;
-                        geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, ifc);
-                    }
-                    else if(e is IExtrude)
-                    {
-                        var extrude = (IExtrude)e;
-                        geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, ifc);
-                    }
-                    else if(e is ILamina)
-                    {
-                        var lamina = (ILamina)e;
-                        geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, ifc);
-                    }
-                    else
-                    {
-                        throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
-                    }
-                    
-                    shape = ToIfcProductDefinitionShape(geom, context, ifc);
-
-                    ifc.AddEntity(shape);
-                    ifc.AddEntity(localPlacement);
-                    ifc.AddEntity(geom);
-
-                    var product = ConvertElementToIfcProduct(e, localPlacement, shape);
-                    products.Add(e, product);
-                    ifc.AddEntity(product);
-
-                    // If the element has openings,
-                    // Make opening relationships in
-                    // the IfcElement.
-                    if(e is IHasOpenings)
-                    {
-                        var openings = (IHasOpenings)e;
-                        if(openings.Openings.Count == 0)
-                        {
-                            break;
-                        }
-
-                        foreach(var o in openings.Openings)
-                        {
-                            var element = (IfcElement)products[e];
-                            var opening = o.ToIfcOpeningElement(context, ifc, localPlacement);
-                            var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
-                            element.HasOpenings.Add(voidRel);
-                            ifc.AddEntity(opening);
-                            ifc.AddEntity(voidRel);
-                        }
-                    }
-
-                    IfcStyledItem style = null;
-
-                    if(e is IMaterial)
-                    {
-                        var m = (IMaterial)e;
-                        style = m.Material.ToIfcStyledItem(geom, ifc);
-                    }
-                    if(e is IElementType<StructuralFramingType>)
-                    {
-                        var m = (IElementType<StructuralFramingType>)e;
-                        style = m.ElementType.Material.ToIfcStyledItem(geom, ifc);
-                    }
-                    else if(e is IElementType<WallType>)
-                    {
-                        var m = (IElementType<WallType>)e;
-                        style = m.ElementType.MaterialLayers[0].Material.ToIfcStyledItem(geom, ifc);
-                    }
-                    else if(e is IElementType<FloorType>)
-                    {
-                        var m = (IElementType<FloorType>)e;
-                        style = m.ElementType.MaterialLayers[0].Material.ToIfcStyledItem(geom, ifc);
-                    }
-                    
-                    // Associate the style with the element
-                    style.Item = geom;
-    
-                    geom.StyledByItem = new List<IfcStyledItem>{style};
-                    ifc.AddEntity(style);
+                    products.AddRange(e.ToIfcProducts(context, ifc));
                 }
                 catch(Exception ex)
                 {
@@ -225,7 +142,7 @@ namespace Elements.Serialization.IFC
                 }
             }
 
-            var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, products.Values.ToList(), storey);
+            var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, products, storey);
             ifc.AddEntity(spatialRel);
 
             if(File.Exists(path))
