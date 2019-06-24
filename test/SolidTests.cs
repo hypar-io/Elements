@@ -63,7 +63,7 @@ namespace Elements.Tests
                 Assert.NotSame(e.Left, e.Right);
             }
 
-            Console.WriteLine(solid.ToString());
+            // Console.WriteLine(solid.ToString());
             // Assert.Equal(2 * n + 2, solid.Faces.Count);
             // Assert.Equal(n * 6, solid.Edges.Count);
             // Assert.Equal(n * 4, solid.Vertices.Count);
