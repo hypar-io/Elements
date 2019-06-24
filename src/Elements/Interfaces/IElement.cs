@@ -1,5 +1,4 @@
 #pragma warning disable CS1591
-using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 
 namespace Elements.Interfaces

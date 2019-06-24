@@ -1,4 +1,5 @@
 using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
 using Hypar.Elements.Interfaces;
 using IFC;
 using STEP;
@@ -161,10 +162,6 @@ namespace Elements.Serialization.IFC
                     ifc.AddEntity(localPlacement);
                     ifc.AddEntity(geom);
 
-                    var product = ConvertElementToIfcProduct(e, localPlacement, shape);
-                    products.Add(product);
-                    ifc.AddEntity(product);
-
                     // If the element has openings,
                     // Make opening relationships in
                     // the IfcElement.
@@ -182,6 +179,39 @@ namespace Elements.Serialization.IFC
                             ifc.AddEntity(voidRel);
                         }
                     }
+
+                    IfcStyledItem style = null;
+
+                    if(e is IMaterial)
+                    {
+                        var m = (IMaterial)e;
+                        style = m.Material.ToIfcStyledItem(geom, ifc);
+                    }
+                    if(e is IElementType<StructuralFramingType>)
+                    {
+                        var m = (IElementType<StructuralFramingType>)e;
+                        style = m.ElementType.Material.ToIfcStyledItem(geom, ifc);
+                    }
+                    else if(e is IElementType<WallType>)
+                    {
+                        var m = (IElementType<WallType>)e;
+                        style = m.ElementType.MaterialLayers[0].Material.ToIfcStyledItem(geom, ifc);
+                    }
+                    else if(e is IElementType<FloorType>)
+                    {
+                        var m = (IElementType<FloorType>)e;
+                        style = m.ElementType.MaterialLayers[0].Material.ToIfcStyledItem(geom, ifc);
+                    }
+                    
+                    // Associate the style with the element
+                    style.Item = geom;
+    
+                    geom.StyledByItem = new List<IfcStyledItem>{style};
+                    ifc.AddEntity(style);
+                    
+                    var product = ConvertElementToIfcProduct(e, localPlacement, shape);
+                    products.Add(product);
+                    ifc.AddEntity(product);
                 }
                 catch(Exception ex)
                 {

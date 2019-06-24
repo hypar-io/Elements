@@ -430,5 +430,39 @@ namespace Elements.Serialization.IFC
 
             return ifcPlane;
         }
+    
+        private static IfcColourRgb ToIfcColourRgb(this Color color, Document doc)
+        {
+            var red = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Red));
+            var green = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Green));
+            var blue = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Blue));
+            
+            var ifcColor = new IfcColourRgb(red, green, blue);
+
+            return ifcColor;
+        }
+
+        private static IfcStyledItem ToIfcStyledItem(this Material material, IfcRepresentationItem shape, Document doc)
+        {
+            var color = material.Color.ToIfcColourRgb(doc);
+            var shading = new IfcSurfaceStyleShading(color);
+
+            var styles = new List<IfcSurfaceStyleElementSelect>{};
+            styles.Add(new IfcSurfaceStyleElementSelect(shading));
+            var surfaceStyle = new IfcSurfaceStyle(material.Name, IfcSurfaceSide.POSITIVE, styles);
+            var styleSelect = new IfcPresentationStyleSelect(surfaceStyle);
+            var assign = new IfcPresentationStyleAssignment(new List<IfcPresentationStyleSelect>{styleSelect});
+            var assignments = new List<IfcPresentationStyleAssignment>();
+            assignments.Add(assign);
+            var styledByItem = new IfcStyledItem(shape, assignments, material.Name);
+            
+            doc.AddEntity(color);
+            doc.AddEntity(shading);
+            doc.AddEntity(surfaceStyle);
+            doc.AddEntity(styleSelect);
+            doc.AddEntity(assign);
+
+            return styledByItem;
+        }
     }
 }
