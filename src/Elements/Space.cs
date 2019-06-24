@@ -110,6 +110,7 @@ namespace Elements
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Mass : material;
             this.Height = height;
+            this.Geometry = Solid.SweepFace(profile, new Polygon[] {}, this.Height, this.BothSides);
         }
 
         /// <summary>

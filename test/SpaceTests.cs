@@ -19,6 +19,7 @@ namespace Elements.Tests
             var material = new Material("Space Color", Colors.Coral, 0.0f, 0.0f);
             var space = new Space(profile, 10, 0, material);
 
+            Assert.NotNull(space.Geometry);
             this.Model.AddElement(space);
         }
 
