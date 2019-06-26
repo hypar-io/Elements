@@ -1,5 +1,4 @@
 # Elements
-The smallest useful BIM.
 
 [![Build Status](https://travis-ci.org/hypar-io/elements.svg?branch=master)](https://travis-ci.org/hypar-io/elements)
 ![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
