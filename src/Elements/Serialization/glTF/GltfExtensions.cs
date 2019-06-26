@@ -575,8 +575,6 @@ namespace Elements.Serialization.glTF
                         GetRenderDataForElement(esub, gltf, materials, lines, buffer);
                     }
                 }
-
-                return;
             }
 
             var materialName = BuiltInMaterials.Default.Name;
