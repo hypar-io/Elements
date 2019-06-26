@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
+using Hypar.Elements.Interfaces;
 using IFC;
 
 namespace Elements.Serialization.IFC
@@ -429,6 +431,140 @@ namespace Elements.Serialization.IFC
             doc.AddEntity(position);
 
             return ifcPlane;
+        }
+    
+        private static IfcColourRgb ToIfcColourRgb(this Color color, Document doc)
+        {
+            var red = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Red));
+            var green = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Green));
+            var blue = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Blue));
+            
+            var ifcColor = new IfcColourRgb(red, green, blue);
+
+            return ifcColor;
+        }
+
+        private static IfcStyledItem ToIfcStyledItem(this Material material, IfcRepresentationItem shape, Document doc)
+        {
+            var color = material.Color.ToIfcColourRgb(doc);
+            var shading = new IfcSurfaceStyleShading(color);
+
+            var styles = new List<IfcSurfaceStyleElementSelect>{};
+            styles.Add(new IfcSurfaceStyleElementSelect(shading));
+            var surfaceStyle = new IfcSurfaceStyle(material.Name, IfcSurfaceSide.POSITIVE, styles);
+            var styleSelect = new IfcPresentationStyleSelect(surfaceStyle);
+            var assign = new IfcPresentationStyleAssignment(new List<IfcPresentationStyleSelect>{styleSelect});
+            var assignments = new List<IfcPresentationStyleAssignment>();
+            assignments.Add(assign);
+            var styledByItem = new IfcStyledItem(shape, assignments, material.Name);
+            
+            doc.AddEntity(color);
+            doc.AddEntity(shading);
+            doc.AddEntity(surfaceStyle);
+            doc.AddEntity(styleSelect);
+            doc.AddEntity(assign);
+
+            return styledByItem;
+        }
+
+        private static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc)
+        {
+            var products = new List<IfcProduct>();
+            if(e is IAggregateElements)
+            {
+                // TODO: Create the IFC aggregation relationship
+                foreach(var subEl in ((IAggregateElements)e).Elements)
+                {
+                    products.AddRange(subEl.ToIfcProducts(context, doc));
+                }
+                
+                return products;
+            }
+
+            IfcProductDefinitionShape shape = null;
+            var localPlacement = e.Transform.ToIfcLocalPlacement(doc);
+            IfcGeometricRepresentationItem geom = null;
+
+            if(e is ISweepAlongCurve)
+            {
+                var sweep = (ISweepAlongCurve)e;
+                geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, doc);
+            }
+            else if(e is IExtrude)
+            {
+                var extrude = (IExtrude)e;
+                geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, doc);
+            }
+            else if(e is ILamina)
+            {
+                var lamina = (ILamina)e;
+                geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, doc);
+            }
+            else
+            {
+                throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
+            }
+            
+            shape = ToIfcProductDefinitionShape(geom, context, doc);
+
+            doc.AddEntity(shape);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(geom);
+
+            var product = ConvertElementToIfcProduct(e, localPlacement, shape);
+            products.Add(product);
+            doc.AddEntity(product);
+
+            // If the element has openings,
+            // Make opening relationships in
+            // the IfcElement.
+            if(e is IHasOpenings)
+            {
+                var openings = (IHasOpenings)e;
+                if(openings.Openings.Count > 0)
+                {
+                    foreach(var o in openings.Openings)
+                    {
+                        var element = (IfcElement)product;
+                        var opening = o.ToIfcOpeningElement(context, doc, localPlacement);
+                        var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
+                        element.HasOpenings.Add(voidRel);
+                        doc.AddEntity(opening);
+                        doc.AddEntity(voidRel);
+                    }
+                }
+            }
+
+            IfcStyledItem style = null;
+
+            if(e is IMaterial)
+            {
+                var m = (IMaterial)e;
+                style = m.Material.ToIfcStyledItem(geom, doc);
+            }
+            if(e is IElementType<StructuralFramingType>)
+            {
+                var m = (IElementType<StructuralFramingType>)e;
+                style = m.ElementType.Material.ToIfcStyledItem(geom, doc);
+            }
+            else if(e is IElementType<WallType>)
+            {
+                var m = (IElementType<WallType>)e;
+                style = m.ElementType.MaterialLayers[0].Material.ToIfcStyledItem(geom, doc);
+            }
+            else if(e is IElementType<FloorType>)
+            {
+                var m = (IElementType<FloorType>)e;
+                style = m.ElementType.MaterialLayers[0].Material.ToIfcStyledItem(geom, doc);
+            }
+            
+            // Associate the style with the element
+            style.Item = geom;
+
+            geom.StyledByItem = new List<IfcStyledItem>{style};
+            doc.AddEntity(style);
+
+            return products;
         }
     }
 }

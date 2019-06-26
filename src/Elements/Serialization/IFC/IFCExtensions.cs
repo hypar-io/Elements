@@ -1,5 +1,3 @@
-using Elements.Geometry.Interfaces;
-using Hypar.Elements.Interfaces;
 using IFC;
 using STEP;
 using System;
@@ -131,57 +129,7 @@ namespace Elements.Serialization.IFC
             {
                 try
                 {
-                    IfcProductDefinitionShape shape = null;
-                    var localPlacement = e.Transform.ToIfcLocalPlacement(ifc);
-                    IfcGeometricRepresentationItem geom = null;
-
-                    if(e is ISweepAlongCurve)
-                    {
-                        var sweep = (ISweepAlongCurve)e;
-                        geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, ifc);
-                    }
-                    else if(e is IExtrude)
-                    {
-                        var extrude = (IExtrude)e;
-                        geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, ifc);
-                    }
-                    else if(e is ILamina)
-                    {
-                        var lamina = (ILamina)e;
-                        geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, ifc);
-                    }
-                    else
-                    {
-                        throw new Exception("Only IExtrude and ISweepAlongCurve representations are currently supported.");
-                    }
-                    
-                    shape = ToIfcProductDefinitionShape(geom, context, ifc);
-
-                    ifc.AddEntity(shape);
-                    ifc.AddEntity(localPlacement);
-                    ifc.AddEntity(geom);
-
-                    var product = ConvertElementToIfcProduct(e, localPlacement, shape);
-                    products.Add(product);
-                    ifc.AddEntity(product);
-
-                    // If the element has openings,
-                    // Make opening relationships in
-                    // the IfcElement.
-                    if(e is IHasOpenings)
-                    {
-                        var openings = (IHasOpenings)e;
-
-                        foreach(var o in openings.Openings)
-                        {
-                            var element = (IfcElement)products.Last();
-                            var opening = o.ToIfcOpeningElement(context, ifc, localPlacement);
-                            var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
-                            element.HasOpenings.Add(voidRel);
-                            ifc.AddEntity(opening);
-                            ifc.AddEntity(voidRel);
-                        }
-                    }
+                    products.AddRange(e.ToIfcProducts(context, ifc));
                 }
                 catch(Exception ex)
                 {

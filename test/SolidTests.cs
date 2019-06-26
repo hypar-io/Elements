@@ -2,10 +2,8 @@ using Xunit;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Geometry.Profiles;
-using System;
 using Newtonsoft.Json;
 using Xunit.Abstractions;
-using Elements.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using Elements.Serialization.JSON;
@@ -63,7 +61,7 @@ namespace Elements.Tests
                 Assert.NotSame(e.Left, e.Right);
             }
 
-            Console.WriteLine(solid.ToString());
+            // Console.WriteLine(solid.ToString());
             // Assert.Equal(2 * n + 2, solid.Faces.Count);
             // Assert.Equal(n * 6, solid.Edges.Count);
             // Assert.Equal(n * 4, solid.Vertices.Count);

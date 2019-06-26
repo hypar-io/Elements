@@ -68,7 +68,10 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
             }
             
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.ElementType = elementType;
             this.Profile = profile;
             this.ExtrudeDirection = Vector3.ZAxis;
@@ -90,7 +93,10 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
             }
             
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.ElementType = elementType;
             this.Profile = new Profile(profile);
             this.ExtrudeDirection = Vector3.ZAxis;
@@ -112,7 +118,10 @@ namespace Elements
             }
             
             this.ElementType = wallType;
-            this.Transform = transform;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
             this.Geometry = geometry;
         }
 
