@@ -489,17 +489,21 @@ namespace Elements.Serialization.glTF
             }
 
             var uri = Path.GetFileNameWithoutExtension(path) + ".bin";
-            if (File.Exists(uri))
-            {
-                File.Delete(uri);
-            }
-
             gltf.Buffers[0].Uri = uri;
 
-            using (var fs = new FileStream(uri, FileMode.Create, FileAccess.Write))
+
+            var binSaveDir = Path.GetDirectoryName(path);
+            var binSaveName = Path.GetFileNameWithoutExtension(path) + ".bin";
+            var binSavePath = Path.Combine(binSaveDir, binSaveName);
+            if (File.Exists(binSavePath))
+            {
+                File.Delete(binSavePath);
+            }
+            using (var fs = new FileStream(binSavePath, FileMode.Create, FileAccess.Write))
             {
                 fs.Write(buffer.ToArray(), 0, buffer.Count());
             }
+            gltf.SaveModel(path);
             gltf.SaveModel(path);
         }
 
