@@ -11,6 +11,7 @@ using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
 using Hypar.Elements.Interfaces;
+using System.Diagnostics;
 
 [assembly:InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -509,6 +510,9 @@ namespace Elements.Serialization.glTF
 
         private static Gltf InitializeGlTF(Model model, List<byte> buffer)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var gltf = new Gltf();
             var asset = new Asset();
             asset.Version = "2.0";
@@ -536,6 +540,11 @@ namespace Elements.Serialization.glTF
 
             gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
 
+            sw.Stop();
+            Console.WriteLine($"glTF: {sw.Elapsed.Milliseconds}ms elapsed for writing root node.");
+            sw.Reset();
+
+            sw.Start();
             var materialsToAdd = model.Materials.Values.ToList();
             materialsToAdd.Add(BuiltInMaterials.XAxis);
             materialsToAdd.Add(BuiltInMaterials.YAxis);
@@ -545,28 +554,60 @@ namespace Elements.Serialization.glTF
             
             var materials = gltf.AddMaterials(materialsToAdd);
 
-            var lines = new List<Vector3>();
+            sw.Stop();
+            Console.WriteLine($"glTF: {sw.Elapsed.Milliseconds}ms elapsed for writing materials.");
+            sw.Reset();
+
+            sw.Start();
+
+            // Lines are stored in a list of lists
+            // according to the max available index size.
+            var lines = new List<List<Vector3>>(){new List<Vector3>()};
 
             foreach (var kvp in model.Elements)
             {
                 var e = kvp.Value;
                 GetRenderDataForElement(e, gltf, materials, lines, buffer);
             }
+            sw.Stop();
+            Console.WriteLine($"glTF: {sw.Elapsed.Milliseconds}ms elapsed for getting render data for nodes.");
+            sw.Reset();
 
+            sw.Start();
+            var lineArr = lines.ToArray();
+            var lineCounter = 0;
+            for(var i=0; i<lineArr.Length; i++)
+            {
+                lineCounter++;
+                if(lineCounter > 20000)
+                {
+                    lineCounter = 0;
+                }
+            }
             if (lines.Count() > 0)
             {
-                AddLines(100000, lines.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], buffer, null);
+                foreach(var lineSet in lines)
+                {
+                    AddLines(100000, lineSet.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], buffer, null);
+                }
             }
+            sw.Stop();
+            Console.WriteLine($"glTF: {sw.Elapsed.Milliseconds}ms elapsed for writing edges.");
+            sw.Reset();
 
+            sw.Start();
             var buff = new glTFLoader.Schema.Buffer();
             buff.ByteLength = buffer.Count();
             gltf.Buffers = new[] { buff };
+            sw.Stop();
+            Console.WriteLine($"glTF: {sw.Elapsed.Milliseconds}ms elapsed for assigning buffer.");
+            sw.Reset();
 
             return gltf;
         }
 
         private static void GetRenderDataForElement(IElement e, Gltf gltf, 
-            Dictionary<string, int> materials, List<Vector3> lines, List<byte> buffer)
+            Dictionary<string, int> materials, List<List<Vector3>> lines, List<byte> buffer)
         {
             if (e is IAggregateElements)
             {
@@ -574,8 +615,9 @@ namespace Elements.Serialization.glTF
 
                 if (ae.Elements.Count > 0)
                 {
-                    foreach (var esub in ae.Elements)
+                    for(var i=0; i< ae.Elements.Count; i++)
                     {
+                        var esub = ae.Elements[i];
                         GetRenderDataForElement(esub, gltf, materials, lines, buffer);
                     }
                 }
@@ -692,19 +734,29 @@ namespace Elements.Serialization.glTF
         }
 
         private static void ProcessSolid(Solid solid, Transform t, string id, string materialName, ref Gltf gltf, 
-            ref Dictionary<string, int> materials, ref List<Vector3> lines, ref List<byte> buffer)
+            ref Dictionary<string, int> materials, ref List<List<Vector3>> lines, ref List<byte> buffer)
         {
             Elements.Geometry.Mesh mesh = null;
+            var currLines = lines.Last();
             
+            // Check if we'll overrun the index size
+            // for the current line array. If so,
+            // create a new line array.
+            if(currLines.Count * 2 > ushort.MaxValue)
+            {
+                currLines = new List<Vector3>();
+                lines.Add(currLines);
+            }
+
             foreach (var edge in solid.Edges.Values)
             {
                 if (t != null)
                 {
-                    lines.AddRange(new[] { t.OfPoint(edge.Left.Vertex.Point), t.OfPoint(edge.Right.Vertex.Point) });
+                    currLines.AddRange(new[] { t.OfPoint(edge.Left.Vertex.Point), t.OfPoint(edge.Right.Vertex.Point) });
                 }
                 else
                 {
-                    lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
+                    currLines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
                 }
             }
 
@@ -734,15 +786,20 @@ namespace Elements.Serialization.glTF
         {
             var vBuff = vertices.ToArray();
             var vCount = vertices.Length;
-            var indices = new List<ushort>();
-            for (ushort i = 0; i < vertices.Length; i += 2)
+            var indices = new ushort[vertices.Length * 2];
+        
+            Console.WriteLine($"glTF: Writing {vBuff.Length} vertices, and {indices.Length} indices.");
+            var idx = 0;
+            for (var i = 0; i < vertices.Length; i += 2)
             {
-                indices.Add(i);
-                indices.Add((ushort)(i + 1));
+                indices[i] = (ushort)i;
+                indices[i+1] = (ushort)(i+1);
+                idx++;
             }
-            // var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
+
+            Console.WriteLine($"glTF: Calculating the bounding box of the edges.");
             var bbox = new BBox3(vertices);
-            gltf.AddLineLoop($"{id}_curve", buffer, vBuff, indices.ToArray(), bbox.Min.ToArray(),
+            gltf.AddLineLoop($"{id}_curve", buffer, vBuff, indices, bbox.Min.ToArray(),
                             bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, MeshPrimitive.ModeEnum.LINES, t);
         }
 
