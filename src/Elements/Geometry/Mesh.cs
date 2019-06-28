@@ -174,24 +174,25 @@ Triangles:{_triangles.Count}";
         /// <summary>
         /// Get all buffers required for rendering.
         /// </summary>
-        public void GetBuffers(out double[] vertexBuffer, out ushort[] indexBuffer,
-                                out double[] normalBuffer, out float[] colorBuffer,
+        public void GetBuffers(out byte[] vertexBuffer, out byte[] indexBuffer,
+                                out byte[] normalBuffer, out byte[] colorBuffer,
                                 out double[] v_max, out double[] v_min, out double[] n_min, out double[] n_max,
                                 out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max)
         {
-            vertexBuffer = new double[this._vertices.Count * 3];
-            normalBuffer = new double[this._vertices.Count * 3];
-            indexBuffer = new ushort[this._triangles.Count * 3];
+            var vb = new List<byte>(this._vertices.Count * sizeof(double) * 3);
+            var nb = new List<byte>(this._vertices.Count * sizeof(double) * 3);
+            var ib = new List<byte>(this._triangles.Count * sizeof(ushort) * 3);
 
+            List<byte> cb = null;
             if(this._vertices[0].Color != null)
             {
-                colorBuffer = new float[this._vertices.Count * 3];
+                cb = new List<byte>(this._vertices.Count * sizeof(float) * 3);
                 c_min = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
                 c_max = new float[] { float.MinValue, float.MinValue, float.MinValue };
             }
             else
             {
-                colorBuffer = new float[0];
+                colorBuffer = new byte[0];
                 c_min = new float[0];
                 c_max= new float[0];
             }
@@ -204,19 +205,16 @@ Triangles:{_triangles.Count}";
             index_max = ushort.MinValue;
             index_min = ushort.MaxValue;
 
-            var vi = 0;
-            var ci = 0;
-
             for (var i = 0; i < this._vertices.Count; i++)
             {
                 var v = this._vertices[i];
-                vertexBuffer[vi] = v.Position.X;
-                vertexBuffer[vi + 1] = v.Position.Y;
-                vertexBuffer[vi + 2] = v.Position.Z;
+                vb.AddRange(BitConverter.GetBytes((float)v.Position.X));
+                vb.AddRange(BitConverter.GetBytes((float)v.Position.Y));
+                vb.AddRange(BitConverter.GetBytes((float)v.Position.Z));
 
-                normalBuffer[vi] = v.Normal.X;
-                normalBuffer[vi + 1] = v.Normal.Y;
-                normalBuffer[vi + 2] = v.Normal.Z;
+                nb.AddRange(BitConverter.GetBytes((float)v.Normal.X));
+                nb.AddRange(BitConverter.GetBytes((float)v.Normal.Y));
+                nb.AddRange(BitConverter.GetBytes((float)v.Normal.Z));
 
                 v_max[0] = Math.Max(v_max[0], v.Position.X);
                 v_max[1] = Math.Max(v_max[1], v.Position.Y);
@@ -235,8 +233,6 @@ Triangles:{_triangles.Count}";
                 index_max = Math.Max(index_max, (ushort)v.Index);
                 index_min = Math.Min(index_min, (ushort)v.Index);
 
-                vi += 3;
-
                 if (v.Color != null)
                 {
                     c_max[0] = Math.Max(c_max[0], v.Color.Red);
@@ -246,22 +242,30 @@ Triangles:{_triangles.Count}";
                     c_min[1] = Math.Min(c_min[1], v.Color.Green);
                     c_min[2] = Math.Min(c_min[2], v.Color.Blue);
 
-                    colorBuffer[ci] = v.Color.Red;
-                    colorBuffer[ci + 1] = v.Color.Green;
-                    colorBuffer[ci + 2] = v.Color.Blue;
-
-                    ci += 3;
+                    cb.AddRange(BitConverter.GetBytes(v.Color.Red));
+                    cb.AddRange(BitConverter.GetBytes(v.Color.Green));
+                    cb.AddRange(BitConverter.GetBytes(v.Color.Blue));
                 }
             }
 
-            var ti = 0;
             for (var i = 0; i < this._triangles.Count; i++)
             {
                 var t = this._triangles[i];
-                indexBuffer[ti] = (ushort)t.Vertices[0].Index;
-                indexBuffer[ti + 1] = (ushort)t.Vertices[1].Index;
-                indexBuffer[ti + 2] = (ushort)t.Vertices[2].Index;
-                ti += 3;
+                ib.AddRange(BitConverter.GetBytes((ushort)t.Vertices[0].Index));
+                ib.AddRange(BitConverter.GetBytes((ushort)t.Vertices[1].Index));
+                ib.AddRange(BitConverter.GetBytes((ushort)t.Vertices[2].Index));
+            }
+
+            vertexBuffer = vb.ToArray();
+            normalBuffer = nb.ToArray();
+            indexBuffer = ib.ToArray();
+            if(this._vertices[0].Color != null)
+            {
+                colorBuffer = cb.ToArray();
+            }
+            else
+            {
+                colorBuffer = new byte[0];
             }
         }
 
