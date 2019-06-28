@@ -66,7 +66,7 @@ namespace Elements.Tests
                     var modelPath = $"models/{this._name}.glb";
                     this._model.ToGlTF($"models/{this._name}.glb");
                     sw.Stop();
-                    // Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed.TotalMilliseconds}ms)");
+                    Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed})");
                 }
 
                 if(this.GenerateJson)

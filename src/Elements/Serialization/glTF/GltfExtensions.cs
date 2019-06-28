@@ -735,9 +735,9 @@ namespace Elements.Serialization.glTF
             var vBuff = vertices.ToArray();
             var vCount = vertices.Length;
             var indices = new List<ushort>();
-            for (ushort i = 0; i < vertices.Length; i += 2)
+            for (var i = 0; i < vertices.Length; i += 2)
             {
-                indices.Add(i);
+                indices.Add((ushort)i);
                 indices.Add((ushort)(i + 1));
             }
             // var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
