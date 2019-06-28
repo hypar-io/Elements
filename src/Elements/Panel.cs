@@ -2,6 +2,7 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using Elements.Interfaces;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
@@ -48,6 +49,11 @@ namespace Elements
         public Vector3 Normal()
         {
             return this.Perimeter.Plane().Normal;
+        }
+
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateLamina(this);
         }
     }
 }

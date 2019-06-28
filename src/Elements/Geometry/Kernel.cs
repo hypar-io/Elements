@@ -53,5 +53,10 @@ namespace Elements.Geometry
                 return Solid.SweepFace(extrude.Profile.Perimeter, null, extrude.ExtrudeDirection, extrude.ExtrudeDepth, extrude.BothSides);
             }
         }
+    
+        public Solid CreateLamina(ILamina lamina)
+        {
+            return Solid.CreateLamina(lamina.Perimeter.Vertices);
+        }
     }
 }
