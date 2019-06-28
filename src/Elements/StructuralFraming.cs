@@ -4,6 +4,7 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Serialization.JSON;
 using Elements.Interfaces;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
@@ -86,6 +87,14 @@ namespace Elements
         public Profile ProfileTransformed()
         {
             return this.Transform != null ? this.Transform.OfProfile(this.ElementType.Profile) : this.ElementType.Profile;
+        }
+
+        /// <summary>
+        /// Get the updated solid representation of the framing element.
+        /// </summary>
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateSweepAlongCurve(this);
         }
     }
 }

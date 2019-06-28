@@ -41,8 +41,6 @@ namespace Elements.Tests
                 }
             }
 
-            this.Model.ToGlTF("Performance_Elements.gltf", false);
-
             sw.Stop();
             _helper.WriteLine($"{sw.Elapsed} for creating {dim*dim} masses.");
 

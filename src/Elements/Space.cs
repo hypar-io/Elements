@@ -119,5 +119,13 @@ namespace Elements
         {
             return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
         }
+
+        /// <summary>
+        /// Get the updated solid representation of the space.
+        /// </summary>
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateExtrude(this);
+        }
     }
 }

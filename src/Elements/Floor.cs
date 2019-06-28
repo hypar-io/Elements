@@ -141,5 +141,14 @@ namespace Elements
         {
             return this.ElementType.Thickness();
         }
+
+        /// <summary>
+        /// Get the updated solid representation of the floor.
+        /// </summary>
+        /// <returns></returns>
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateExtrude(this);
+        }
     }
 }

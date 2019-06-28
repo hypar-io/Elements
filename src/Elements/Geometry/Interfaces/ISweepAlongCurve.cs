@@ -3,7 +3,7 @@ namespace Elements.Geometry.Interfaces
     /// <summary>
     /// Sweeps an area along a directrix.
     /// </summary>
-    public interface ISweepAlongCurve : IProfile
+    public interface ISweepAlongCurve : IProfile, ISolid
     {
         /// <summary>
         /// The curve along which the area is swept.
