@@ -1,7 +1,7 @@
 using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry;
-using Newtonsoft.Json;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
@@ -49,6 +49,15 @@ namespace Elements
             this.Profile = profile;
             this.Transform = transform;
             this.Material = material != null ? material : BuiltInMaterials.Default;
+        }
+
+        /// <summary>
+        /// Get the updated solid representation of the frame.
+        /// </summary>
+        /// <returns></returns>
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateSweepAlongCurve(this);
         }
     }
 }

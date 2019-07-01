@@ -13,7 +13,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/WallExample.cs?name=example)]
     /// </example>
-    public class Wall : Element, IElementType<WallType>, ISolid, IExtrude
+    public class Wall : Element, IElementType<WallType>, IExtrude
     {
         /// <summary>
         /// The height of the wall.
@@ -131,6 +131,14 @@ namespace Elements
         public double Thickness()
         {
             return this.ElementType.Thickness();
+        }
+
+        /// <summary>
+        /// Get the updated solid representation of a wall.
+        /// </summary>
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateExtrude(this);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Elements.Tests
             
             var w = 1.0;
             var l = 1.0;
-            var dim = 60;
+            var dim = 100;
 
             var profile = new Profile(Polygon.Rectangle(w,l, new Vector3(w, l)));
 

@@ -1,5 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -83,6 +84,14 @@ namespace Elements
             this.Profile = profile;
             this.Transform = transform;
             this.ExtrudeDepth = extrudeDepth;
+        }
+
+        /// <summary>
+        /// Get the updated solid representation of the opening.
+        /// </summary>
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateExtrude(this);
         }
     }
 }

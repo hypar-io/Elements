@@ -1,4 +1,24 @@
 # Changelog
+
+## [0.2.17]
+### Added
+- The `Kernel` singleton has been added to contain all geometry methods for creating solids.
+
+### Fixed
+- Fixed an error where, when writing edges to gltf, ushort would be overflowed and wrap back to 0 causing a loop not to terminate. 
+
+## [0.2.16]
+### Added
+- Materials are now serialized to IFC using `IfcStyledItem`.
+
+### Fixed
+- Fixed an error where we returned directly after processing child Elements of an `IAggregateElements`, before we could process the parent element.
+- Fixed writing of gltf files so that the `.bin` file is located adjacent to the `.gltf`.
+
+## [0.2.15]
+### Added
+- `Space` elements are now serialized to IFC as `IfcSpace`.
+
 ## [0.2.5]
 ### Changed
 - `IHasOpenings.Openings[]` is now `IHasOpenings.List<Opening>[]`.

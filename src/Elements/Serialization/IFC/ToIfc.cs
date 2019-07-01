@@ -4,7 +4,6 @@ using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
-using Hypar.Elements.Interfaces;
 using IFC;
 
 namespace Elements.Serialization.IFC

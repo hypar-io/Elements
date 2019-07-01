@@ -26,9 +26,9 @@ namespace Elements.Geometry
         {
             this.Min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
             this.Max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
-            foreach (var p in points)
+            for(var i=0;i<points.Length; i++)
             {
-                this.Extend(p);
+                this.Extend(points[i]);
             }
         }
 
@@ -51,16 +51,17 @@ namespace Elements.Geometry
         {
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
             this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
-            foreach (var v in profile.Perimeter.Vertices)
+            for(var i=0;i<profile.Perimeter.Vertices.Length; i++)
             {
-                this.Extend(v);
+                this.Extend(profile.Perimeter.Vertices[i]);
             }
 
-            foreach (var v in profile.Voids)
+            for(var i=0; i<profile.Voids.Length; i++)
             {
-                foreach (var vtx in v.Vertices)
+                var v = profile.Voids[i];
+                for(var j=0;j<v.Vertices.Length; j++)
                 {
-                    this.Extend(vtx);
+                    this.Extend(v.Vertices[j]);
                 }
             }
         }

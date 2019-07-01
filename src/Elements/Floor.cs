@@ -2,7 +2,6 @@ using Elements.Geometry;
 using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
-using Hypar.Elements.Interfaces;
 using Elements.Geometry.Solids;
 using System.Collections.Generic;
 
@@ -140,6 +139,15 @@ namespace Elements
         public double Thickness()
         {
             return this.ElementType.Thickness();
+        }
+
+        /// <summary>
+        /// Get the updated solid representation of the floor.
+        /// </summary>
+        /// <returns></returns>
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateExtrude(this);
         }
     }
 }
