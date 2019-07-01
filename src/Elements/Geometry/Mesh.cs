@@ -179,14 +179,16 @@ Triangles:{_triangles.Count}";
                                 out double[] v_max, out double[] v_min, out double[] n_min, out double[] n_max,
                                 out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max)
         {
-            var vb = new List<byte>(this._vertices.Count * sizeof(double) * 3);
-            var nb = new List<byte>(this._vertices.Count * sizeof(double) * 3);
-            var ib = new List<byte>(this._triangles.Count * sizeof(ushort) * 3);
+            var floatSize = sizeof(float);
+            var ushortSize = sizeof(ushort);
 
-            List<byte> cb = null;
+            vertexBuffer = new byte[this._vertices.Count * floatSize * 3];
+            normalBuffer = new byte[this._vertices.Count * floatSize * 3];
+            indexBuffer = new byte[this._triangles.Count * ushortSize * 3];
+
             if(this._vertices[0].Color != null)
             {
-                cb = new List<byte>(this._vertices.Count * sizeof(float) * 3);
+                colorBuffer = new byte[this._vertices.Count * floatSize * 3];
                 c_min = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
                 c_max = new float[] { float.MinValue, float.MinValue, float.MinValue };
             }
@@ -205,16 +207,23 @@ Triangles:{_triangles.Count}";
             index_max = ushort.MinValue;
             index_min = ushort.MaxValue;
 
+            var vi = 0;
+            var ii = 0;
+            var ci = 0;
+
             for (var i = 0; i < this._vertices.Count; i++)
             {
                 var v = this._vertices[i];
-                vb.AddRange(BitConverter.GetBytes((float)v.Position.X));
-                vb.AddRange(BitConverter.GetBytes((float)v.Position.Y));
-                vb.AddRange(BitConverter.GetBytes((float)v.Position.Z));
 
-                nb.AddRange(BitConverter.GetBytes((float)v.Normal.X));
-                nb.AddRange(BitConverter.GetBytes((float)v.Normal.Y));
-                nb.AddRange(BitConverter.GetBytes((float)v.Normal.Z));
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.X), 0, vertexBuffer, vi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Y), 0, vertexBuffer, vi + floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Z), 0, vertexBuffer, vi + 2 * floatSize, floatSize);
+
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.X), 0, normalBuffer, vi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.Y), 0, normalBuffer, vi + floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
+
+                vi += 3 * floatSize;
 
                 v_max[0] = Math.Max(v_max[0], v.Position.X);
                 v_max[1] = Math.Max(v_max[1], v.Position.Y);
@@ -242,30 +251,21 @@ Triangles:{_triangles.Count}";
                     c_min[1] = Math.Min(c_min[1], v.Color.Green);
                     c_min[2] = Math.Min(c_min[2], v.Color.Blue);
 
-                    cb.AddRange(BitConverter.GetBytes(v.Color.Red));
-                    cb.AddRange(BitConverter.GetBytes(v.Color.Green));
-                    cb.AddRange(BitConverter.GetBytes(v.Color.Blue));
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Color.Red), 0, colorBuffer, ci, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Color.Green), 0, colorBuffer, ci + floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Color.Blue), 0, colorBuffer, ci + 2 * floatSize, floatSize);
+                    ci += 3 * floatSize;
                 }
             }
 
             for (var i = 0; i < this._triangles.Count; i++)
             {
                 var t = this._triangles[i];
-                ib.AddRange(BitConverter.GetBytes((ushort)t.Vertices[0].Index));
-                ib.AddRange(BitConverter.GetBytes((ushort)t.Vertices[1].Index));
-                ib.AddRange(BitConverter.GetBytes((ushort)t.Vertices[2].Index));
-            }
 
-            vertexBuffer = vb.ToArray();
-            normalBuffer = nb.ToArray();
-            indexBuffer = ib.ToArray();
-            if(this._vertices[0].Color != null)
-            {
-                colorBuffer = cb.ToArray();
-            }
-            else
-            {
-                colorBuffer = new byte[0];
+                System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)t.Vertices[0].Index), 0, indexBuffer, ii, ushortSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)t.Vertices[1].Index), 0, indexBuffer, ii + ushortSize, ushortSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)t.Vertices[2].Index), 0, indexBuffer, ii + 2 * ushortSize, ushortSize);
+                ii += 3 * ushortSize;
             }
         }
 

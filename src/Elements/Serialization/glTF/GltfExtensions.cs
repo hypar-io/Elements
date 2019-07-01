@@ -729,21 +729,27 @@ namespace Elements.Serialization.glTF
         private static void AddLines(long id, Vector3[] vertices, Gltf gltf, 
             int material, List<byte> buffer, List<BufferView> bufferViews, List<Accessor> accessors, Transform t = null)
         {
-            var vBuff = new List<byte>();
-            var indices = new List<byte>();
+            var floatSize = sizeof(float);
+            var ushortSize = sizeof(ushort);
+            var vBuff = new byte[vertices.Length * 3 * floatSize];
+            var indices = new byte[vertices.Length / 2 *  2 * ushortSize];
 
+            var vi = 0;
+            var ii = 0;
             for(var i=0; i < vertices.Length; i++)
             {
                 var v = vertices[i];
-                vBuff.AddRange(BitConverter.GetBytes((float)v.X));
-                vBuff.AddRange(BitConverter.GetBytes((float)v.Y));
-                vBuff.AddRange(BitConverter.GetBytes((float)v.Z));
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.X), 0, vBuff, vi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Y), 0, vBuff, vi + floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Z), 0, vBuff, vi +  2 * floatSize, floatSize);
+                vi += 3 * floatSize;
 
                 // On every even index, write a line segment.
                 if(i % 2 == 0 && i < vertices.Length - 1)
                 {
-                    indices.AddRange(BitConverter.GetBytes((ushort)i));
-                    indices.AddRange(BitConverter.GetBytes((ushort)(i+1)));
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)i), 0, indices, ii, ushortSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)(i+1)), 0, indices, ii + ushortSize, ushortSize);
+                    ii += 2 * ushortSize;
                 }
             }
             // Console.WriteLine($"{vBuff.Count / sizeof(float)/3} vertices, {indices.Count / sizeof(ushort)} indices");
