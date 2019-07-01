@@ -538,7 +538,10 @@ namespace Elements.Serialization.glTF
             {
                 foreach(var lineSet in lines)
                 {
-                    AddLines(100000, lineSet.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors);
+                    if(lineSet.Count > 0)
+                    {
+                        AddLines(100000, lineSet.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors);
+                    }
                 }
             }
             sw.Stop();
