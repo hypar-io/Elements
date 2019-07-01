@@ -2,6 +2,7 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using Elements.Interfaces;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
@@ -48,6 +49,14 @@ namespace Elements
         public Vector3 Normal()
         {
             return this.Perimeter.Plane().Normal;
+        }
+
+        /// <summary>
+        /// Get the updated solid representation of the panel.
+        /// </summary>
+        public Solid GetUpdatedSolid()
+        {
+            return Kernel.Instance.CreateLamina(this);
         }
     }
 }

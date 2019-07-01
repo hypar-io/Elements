@@ -21,7 +21,7 @@ namespace Elements.Tests
 
             var model = new Model();
 
-            Assert.Equal(0, floor1.Openings.Count);
+            Assert.Empty(floor1.Openings);
             Assert.Equal(0.5, floor1.Elevation);
             Assert.Equal(0.1, floor1.ElementType.Thickness());
             Assert.Equal(0.5, floor1.Transform.Origin.Z);

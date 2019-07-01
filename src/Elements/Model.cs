@@ -5,11 +5,9 @@ using Elements.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using System.Reflection;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
-using Hypar.Elements.Interfaces;
 
 namespace Elements
 {

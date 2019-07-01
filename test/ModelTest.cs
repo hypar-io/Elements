@@ -66,18 +66,18 @@ namespace Elements.Tests
                     var modelPath = $"models/{this._name}.glb";
                     this._model.ToGlTF($"models/{this._name}.glb");
                     sw.Stop();
-                    // Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed.TotalMilliseconds}ms)");
+                    Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed})");
                 }
 
                 if(this.GenerateJson)
                 {
                     // Write the model as json
                     var jsonPath = $"models/{this._name}.json";
-                    // Console.WriteLine($"Serializing {this._name} to JSON: {jsonPath}");
+                    Console.WriteLine($"Serializing {this._name} to JSON: {jsonPath}");
                     File.WriteAllText(jsonPath, this._model.ToJson());
 
                     // Try deserializing JSON
-                    // Console.WriteLine($"Deserializing {this._name} from JSON.");
+                    Console.WriteLine($"Deserializing {this._name} from JSON.");
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
                 }
 
@@ -85,7 +85,7 @@ namespace Elements.Tests
                 {
                     // Write the model as an IFC
                     var ifcPath = $"models/{this._name}.ifc";
-                    // Console.WriteLine($"Serializing {this._name} to IFC: {ifcPath}");
+                    Console.WriteLine($"Serializing {this._name} to IFC: {ifcPath}");
                     this._model.ToIFC(ifcPath);
                 }
             }

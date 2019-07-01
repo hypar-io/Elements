@@ -6,6 +6,6 @@ namespace Elements.Geometry.Interfaces
 {
     public interface ISolid
     {
-        Solid Geometry { get; }
+        Solid GetUpdatedSolid();
     }
 }

@@ -1,7 +1,6 @@
-using Elements;
 using System.Collections.Generic;
 
-namespace Hypar.Elements.Interfaces
+namespace Elements.Interfaces
 {
     /// <summary>
     /// Has a collection of opening.
