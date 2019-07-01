@@ -1,14 +1,20 @@
 using System.Linq;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
-using Hypar.Elements.Interfaces;
+using Elements.Interfaces;
 
 namespace Elements.Geometry
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Kernel
     {
         private static Kernel _instance;
 
+        /// <summary>
+        /// The Kernel singleton.
+        /// </summary>
         public static Kernel Instance
         {
             get
@@ -20,12 +26,22 @@ namespace Elements.Geometry
                 return _instance;
             }
         }
-
+        
+        /// <summary>
+        /// Create a sweep along a curve.
+        /// </summary>
+        /// <param name="sweep">The ISweepAlongCurve object.</param>
+        /// <returns>A solid.</returns>
         public Solid CreateSweepAlongCurve(ISweepAlongCurve sweep)
         {
             return Solid.SweepFaceAlongCurve(sweep.Profile.Perimeter, sweep.Profile.Voids, sweep.Curve, sweep.StartSetback, sweep.EndSetback);
         }
 
+        /// <summary>
+        /// Create an extrude.
+        /// </summary>
+        /// <param name="extrude">The IExtrude object.</param>
+        /// <returns>A solid.</returns>
         public Solid CreateExtrude(IExtrude extrude)
         {
             if(extrude is IHasOpenings)
@@ -53,7 +69,12 @@ namespace Elements.Geometry
                 return Solid.SweepFace(extrude.Profile.Perimeter, null, extrude.ExtrudeDirection, extrude.ExtrudeDepth, extrude.BothSides);
             }
         }
-    
+
+        /// <summary>
+        /// Create a lamina.
+        /// </summary>
+        /// <param name="lamina">The ILamina object.</param>
+        /// <returns>A solid.</returns>
         public Solid CreateLamina(ILamina lamina)
         {
             return Solid.CreateLamina(lamina.Perimeter.Vertices);

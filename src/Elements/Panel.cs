@@ -51,6 +51,9 @@ namespace Elements
             return this.Perimeter.Plane().Normal;
         }
 
+        /// <summary>
+        /// Get the updated solid representation of the panel.
+        /// </summary>
         public Solid GetUpdatedSolid()
         {
             return Kernel.Instance.CreateLamina(this);

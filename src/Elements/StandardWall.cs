@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Hypar.Elements.Interfaces;
+using Elements.Interfaces;
 
 namespace Elements
 {
