@@ -407,7 +407,7 @@ namespace Elements.Serialization.glTF
             if(verticesHighlighted.Count > 0)
             {
                 // Draw highlighted edges
-                AddLines(100000, verticesHighlighted.ToArray(), gltf, materials[BuiltInMaterials.EdgesHighlighted.Name], buffer, bufferViews, accessors);
+                AddLines(100001, verticesHighlighted.ToArray(), gltf, materials[BuiltInMaterials.EdgesHighlighted.Name], buffer, bufferViews, accessors);
             }
 
             var buff = new glTFLoader.Schema.Buffer();
