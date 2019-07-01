@@ -578,7 +578,7 @@ namespace Elements.Geometry
             var divisor = this.Area() * 6;
             x /= divisor;
             y /= divisor;
-            return new Vector3(System.Math.Abs(x), System.Math.Abs(y));
+            return new Vector3(x, y);
         }
 
         /// <summary>
