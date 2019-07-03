@@ -74,7 +74,7 @@
   
   <h1 id="Elements_Geometry_Profile" data-uid="Elements.Geometry.Profile" class="text-break">Class Profile
   </h1>
-  <div class="markdown level0 summary"><p>A Profile describes a polygonal perimeter
+  <div class="markdown level0 summary"><p>A profile describes a polygonal perimeter
 with zero or more polygonal voids.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -123,7 +123,7 @@ with zero or more polygonal voids.</p>
   </h3>
   <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
   <h4 id="Elements_Geometry_Profile__ctor_Elements_Geometry_Polygon_Elements_Geometry_Polygon_System_String_" data-uid="Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Polygon,System.String)">Profile(Polygon, Polygon, String)</h4>
-  <div class="markdown level1 summary"><p>Construct a Profile.</p>
+  <div class="markdown level1 summary"><p>Construct a profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -143,32 +143,31 @@ with zero or more polygonal voids.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">perimeter</span></td>
-        <td><p>The perimeter of the Profile.</p>
+        <td><p>The perimeter of the profile.</p>
 </td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">singleVoid</span></td>
-        <td><p>A void in the Profile.</p>
+        <td><p>A void in the profile.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td><p>The name of the Profile.</p>
+        <td><p>The name of the profile.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
   <h4 id="Elements_Geometry_Profile__ctor_Elements_Geometry_Polygon_Elements_Geometry_Polygon___System_String_" data-uid="Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Polygon[],System.String)">Profile(Polygon, Polygon[], String)</h4>
-  <div class="markdown level1 summary"><p>Construct a Profile.</p>
+  <div class="markdown level1 summary"><p>Construct a profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -183,26 +182,26 @@ public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></p
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">perimeter</span></td>
-        <td><p>The perimeter of the Profile.</p>
+        <td><p>The perimeter of the profile.</p>
 </td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>[]</td>
         <td><span class="parametername">voids</span></td>
-        <td><p>A collection of Polygons representing voids in the Profile.</p>
+        <td><p>A collection of Polygons representing voids in the profile.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td><p>The name of the Profile.</p>
+        <td><p>The name of the profile.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
   <h4 id="Elements_Geometry_Profile__ctor_Elements_Geometry_Polygon_System_String_" data-uid="Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,System.String)">Profile(Polygon, String)</h4>
-  <div class="markdown level1 summary"><p>Construct a Profile.</p>
+  <div class="markdown level1 summary"><p>Construct a profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -222,20 +221,66 @@ public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></p
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">perimeter</span></td>
-        <td><p>The perimeter of the Profile</p>
+        <td><p>The perimeter of the profile</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td><p>The name of the Profile.</p>
+        <td><p>The name of the profile.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
+  <h4 id="Elements_Geometry_Profile__ctor_System_Guid_Elements_Geometry_Polygon_Elements_Geometry_Polygon___System_String_" data-uid="Elements.Geometry.Profile.#ctor(System.Guid,Elements.Geometry.Polygon,Elements.Geometry.Polygon[],System.String)">Profile(Guid, Polygon, Polygon[], String)</h4>
+  <div class="markdown level1 summary"><p>Construct a profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Profile(Guid id, Polygon perimeter, Polygon[] voids, string name = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The unique identifier of the profile.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td><p>The perimeter of the profile.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>[]</td>
+        <td><span class="parametername">voids</span></td>
+        <td><p>A collection of Polygons representing voids in the profile.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the profile.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
   <h4 id="Elements_Geometry_Profile__ctor_System_String_" data-uid="Elements.Geometry.Profile.#ctor(System.String)">Profile(String)</h4>
-  <div class="markdown level1 summary"><p>Default constructor for Profile.</p>
+  <div class="markdown level1 summary"><p>Default constructor for profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -263,12 +308,12 @@ public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></p
   </h3>
   <a id="Elements_Geometry_Profile_Id_" data-uid="Elements.Geometry.Profile.Id*"></a>
   <h4 id="Elements_Geometry_Profile_Id" data-uid="Elements.Geometry.Profile.Id">Id</h4>
-  <div class="markdown level1 summary"><p>The identifier of the Profile.</p>
+  <div class="markdown level1 summary"><p>The identifier of the profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long Id { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Guid Id { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -280,14 +325,14 @@ public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile_Name_" data-uid="Elements.Geometry.Profile.Name*"></a>
   <h4 id="Elements_Geometry_Profile_Name" data-uid="Elements.Geometry.Profile.Name">Name</h4>
-  <div class="markdown level1 summary"><p>The name of the Profile.</p>
+  <div class="markdown level1 summary"><p>The name of the profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -311,7 +356,7 @@ public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></p
   </table>
   <a id="Elements_Geometry_Profile_Perimeter_" data-uid="Elements.Geometry.Profile.Perimeter*"></a>
   <h4 id="Elements_Geometry_Profile_Perimeter" data-uid="Elements.Geometry.Profile.Perimeter">Perimeter</h4>
-  <div class="markdown level1 summary"><p>The perimeter of the Profile.</p>
+  <div class="markdown level1 summary"><p>The perimeter of the profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -335,7 +380,7 @@ public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></p
   </table>
   <a id="Elements_Geometry_Profile_Voids_" data-uid="Elements.Geometry.Profile.Voids*"></a>
   <h4 id="Elements_Geometry_Profile_Voids" data-uid="Elements.Geometry.Profile.Voids">Voids</h4>
-  <div class="markdown level1 summary"><p>A collection of Polygons representing voids in the Profile.</p>
+  <div class="markdown level1 summary"><p>A collection of Polygons representing voids in the profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -361,7 +406,7 @@ public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></p
   </h3>
   <a id="Elements_Geometry_Profile_Area_" data-uid="Elements.Geometry.Profile.Area*"></a>
   <h4 id="Elements_Geometry_Profile_Area" data-uid="Elements.Geometry.Profile.Area">Area()</h4>
-  <div class="markdown level1 summary"><p>The area of the Profile.</p>
+  <div class="markdown level1 summary"><p>The area of the profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -385,7 +430,7 @@ public Profile(Polygon perimeter, Polygon[] voids, string name = null)</code></p
   </table>
   <a id="Elements_Geometry_Profile_Reversed_" data-uid="Elements.Geometry.Profile.Reversed*"></a>
   <h4 id="Elements_Geometry_Profile_Reversed" data-uid="Elements.Geometry.Profile.Reversed">Reversed()</h4>
-  <div class="markdown level1 summary"><p>Get a new Profile which is the reverse of this Profile.</p>
+  <div class="markdown level1 summary"><p>Get a new profile which is the reverse of this profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

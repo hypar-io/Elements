@@ -93,6 +93,7 @@
     <div><a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType</a>&lt;<a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a>&gt;</div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ISweepAlongCurve.html">ISweepAlongCurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -116,6 +117,9 @@
     </div>
     <div>
       <a class="xref" href="Elements.StructuralFraming.html#Elements_StructuralFraming_ProfileTransformed">StructuralFraming.ProfileTransformed()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.StructuralFraming.html#Elements_StructuralFraming_GetUpdatedSolid">StructuralFraming.GetUpdatedSolid()</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -164,7 +168,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Brace_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Brace : StructuralFraming, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType&lt;StructuralFramingType&gt;, ISweepAlongCurve, IProfile</code></pre>
+    <pre><code class="lang-csharp hljs">public class Brace : StructuralFraming, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType&lt;StructuralFramingType&gt;, ISweepAlongCurve, IProfile, ISolid</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -234,6 +238,9 @@
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
   </div>
 </article>
           </div>

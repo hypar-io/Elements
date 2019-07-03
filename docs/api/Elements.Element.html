@@ -134,24 +134,52 @@
   </h3>
   <a id="Elements_Element__ctor_" data-uid="Elements.Element.#ctor*"></a>
   <h4 id="Elements_Element__ctor" data-uid="Elements.Element.#ctor">Element()</h4>
-  <div class="markdown level1 summary"><p>Construct a default Element.</p>
+  <div class="markdown level1 summary"><p>Construct an element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public Element()</code></pre>
   </div>
+  <a id="Elements_Element__ctor_" data-uid="Elements.Element.#ctor*"></a>
+  <h4 id="Elements_Element__ctor_System_Guid_" data-uid="Elements.Element.#ctor(System.Guid)">Element(Guid)</h4>
+  <div class="markdown level1 summary"><p>Construct an element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Element(Guid id)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The unique identifer of the element.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Element_Id_" data-uid="Elements.Element.Id*"></a>
   <h4 id="Elements_Element_Id" data-uid="Elements.Element.Id">Id</h4>
-  <div class="markdown level1 summary"><p>The unique identifier of the Element.</p>
+  <div class="markdown level1 summary"><p>The unique identifier of the element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(Order = -101)]
-public long Id { get; }</code></pre>
+public Guid Id { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -163,7 +191,7 @@ public long Id { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -194,7 +222,7 @@ public long Id { get; }</code></pre>
   </table>
   <a id="Elements_Element_Properties_" data-uid="Elements.Element.Properties*"></a>
   <h4 id="Elements_Element_Properties" data-uid="Elements.Element.Properties">Properties</h4>
-  <div class="markdown level1 summary"><p>A map of properties for the Element.</p>
+  <div class="markdown level1 summary"><p>A map of properties for the element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

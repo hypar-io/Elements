@@ -92,6 +92,7 @@
     <div><a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ISweepAlongCurve.html">ISweepAlongCurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -142,7 +143,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Frame_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Frame : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IMaterial, ISweepAlongCurve, IProfile</code></pre>
+    <pre><code class="lang-csharp hljs">public class Frame : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IMaterial, ISweepAlongCurve, IProfile, ISolid</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -319,6 +320,32 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Frame_GetUpdatedSolid_" data-uid="Elements.Frame.GetUpdatedSolid*"></a>
+  <h4 id="Elements_Frame_GetUpdatedSolid" data-uid="Elements.Frame.GetUpdatedSolid">GetUpdatedSolid()</h4>
+  <div class="markdown level1 summary"><p>Get the updated solid representation of the frame.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Solid GetUpdatedSolid()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
@@ -340,6 +367,9 @@
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
   </div>
 </article>
           </div>

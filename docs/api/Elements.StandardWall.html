@@ -244,10 +244,10 @@ public class WallExample : ModelTest
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
     <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
     <div><a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType</a>&lt;<a class="xref" href="Elements.WallType.html">WallType</a>&gt;</div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
-    <div><a class="xref" href="Hypar.Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
+    <div><a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -271,6 +271,9 @@ public class WallExample : ModelTest
     </div>
     <div>
       <a class="xref" href="Elements.Wall.html#Elements_Wall_Thickness">Wall.Thickness()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_GetUpdatedSolid">Wall.GetUpdatedSolid()</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -319,7 +322,7 @@ public class WallExample : ModelTest
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_StandardWall_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class StandardWall : Wall, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType&lt;WallType&gt;, ISolid, IExtrude, IProfile, IHasOpenings</code></pre>
+    <pre><code class="lang-csharp hljs">public class StandardWall : Wall, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType&lt;WallType&gt;, IExtrude, IProfile, ISolid, IHasOpenings</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -489,16 +492,16 @@ This transform will be concatenated to the transform created to describe the wal
       <a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType&lt;TElementType&gt;</a>
   </div>
   <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
-  </div>
-  <div>
       <a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a>
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
   </div>
   <div>
-      <a class="xref" href="Hypar.Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
+      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
   </div>
 </article>
           </div>

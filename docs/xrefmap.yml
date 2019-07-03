@@ -334,6 +334,12 @@ references:
   commentId: M:Elements.Element.#ctor
   fullName: Elements.Element.Element()
   nameWithType: Element.Element()
+- uid: Elements.Element.#ctor(System.Guid)
+  name: Element(Guid)
+  href: api/Elements.Element.html#Elements_Element__ctor_System_Guid_
+  commentId: M:Elements.Element.#ctor(System.Guid)
+  fullName: Elements.Element.Element(System.Guid)
+  nameWithType: Element.Element(Guid)
 - uid: Elements.Element.#ctor*
   name: Element
   href: api/Elements.Element.html#Elements_Element__ctor_
@@ -464,12 +470,18 @@ references:
   commentId: T:Elements.ElementType
   fullName: Elements.ElementType
   nameWithType: ElementType
-- uid: Elements.ElementType.#ctor(System.String,System.String)
-  name: ElementType(String, String)
-  href: api/Elements.ElementType.html#Elements_ElementType__ctor_System_String_System_String_
-  commentId: M:Elements.ElementType.#ctor(System.String,System.String)
-  fullName: Elements.ElementType.ElementType(System.String, System.String)
-  nameWithType: ElementType.ElementType(String, String)
+- uid: Elements.ElementType.#ctor(System.Guid,System.String)
+  name: ElementType(Guid, String)
+  href: api/Elements.ElementType.html#Elements_ElementType__ctor_System_Guid_System_String_
+  commentId: M:Elements.ElementType.#ctor(System.Guid,System.String)
+  fullName: Elements.ElementType.ElementType(System.Guid, System.String)
+  nameWithType: ElementType.ElementType(Guid, String)
+- uid: Elements.ElementType.#ctor(System.String)
+  name: ElementType(String)
+  href: api/Elements.ElementType.html#Elements_ElementType__ctor_System_String_
+  commentId: M:Elements.ElementType.#ctor(System.String)
+  fullName: Elements.ElementType.ElementType(System.String)
+  nameWithType: ElementType.ElementType(String)
 - uid: Elements.ElementType.#ctor*
   name: ElementType
   href: api/Elements.ElementType.html#Elements_ElementType__ctor_
@@ -635,6 +647,19 @@ references:
   isSpec: "True"
   fullName: Elements.Floor.Geometry
   nameWithType: Floor.Geometry
+- uid: Elements.Floor.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.Floor.html#Elements_Floor_GetUpdatedSolid
+  commentId: M:Elements.Floor.GetUpdatedSolid
+  fullName: Elements.Floor.GetUpdatedSolid()
+  nameWithType: Floor.GetUpdatedSolid()
+- uid: Elements.Floor.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.Floor.html#Elements_Floor_GetUpdatedSolid_
+  commentId: Overload:Elements.Floor.GetUpdatedSolid
+  isSpec: "True"
+  fullName: Elements.Floor.GetUpdatedSolid
+  nameWithType: Floor.GetUpdatedSolid
 - uid: Elements.Floor.Openings
   name: Openings
   href: api/Elements.Floor.html#Elements_Floor_Openings
@@ -799,6 +824,19 @@ references:
   isSpec: "True"
   fullName: Elements.Frame.EndSetback
   nameWithType: Frame.EndSetback
+- uid: Elements.Frame.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.Frame.html#Elements_Frame_GetUpdatedSolid
+  commentId: M:Elements.Frame.GetUpdatedSolid
+  fullName: Elements.Frame.GetUpdatedSolid()
+  nameWithType: Frame.GetUpdatedSolid()
+- uid: Elements.Frame.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.Frame.html#Elements_Frame_GetUpdatedSolid_
+  commentId: Overload:Elements.Frame.GetUpdatedSolid
+  isSpec: "True"
+  fullName: Elements.Frame.GetUpdatedSolid
+  nameWithType: Frame.GetUpdatedSolid
 - uid: Elements.Frame.Material
   name: Material
   href: api/Elements.Frame.html#Elements_Frame_Material
@@ -2447,19 +2485,19 @@ references:
   commentId: T:Elements.Geometry.Interfaces.ISolid
   fullName: Elements.Geometry.Interfaces.ISolid
   nameWithType: ISolid
-- uid: Elements.Geometry.Interfaces.ISolid.Geometry
-  name: Geometry
-  href: api/Elements.Geometry.Interfaces.ISolid.html#Elements_Geometry_Interfaces_ISolid_Geometry
-  commentId: P:Elements.Geometry.Interfaces.ISolid.Geometry
-  fullName: Elements.Geometry.Interfaces.ISolid.Geometry
-  nameWithType: ISolid.Geometry
-- uid: Elements.Geometry.Interfaces.ISolid.Geometry*
-  name: Geometry
-  href: api/Elements.Geometry.Interfaces.ISolid.html#Elements_Geometry_Interfaces_ISolid_Geometry_
-  commentId: Overload:Elements.Geometry.Interfaces.ISolid.Geometry
+- uid: Elements.Geometry.Interfaces.ISolid.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.Geometry.Interfaces.ISolid.html#Elements_Geometry_Interfaces_ISolid_GetUpdatedSolid
+  commentId: M:Elements.Geometry.Interfaces.ISolid.GetUpdatedSolid
+  fullName: Elements.Geometry.Interfaces.ISolid.GetUpdatedSolid()
+  nameWithType: ISolid.GetUpdatedSolid()
+- uid: Elements.Geometry.Interfaces.ISolid.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.Geometry.Interfaces.ISolid.html#Elements_Geometry_Interfaces_ISolid_GetUpdatedSolid_
+  commentId: Overload:Elements.Geometry.Interfaces.ISolid.GetUpdatedSolid
   isSpec: "True"
-  fullName: Elements.Geometry.Interfaces.ISolid.Geometry
-  nameWithType: ISolid.Geometry
+  fullName: Elements.Geometry.Interfaces.ISolid.GetUpdatedSolid
+  nameWithType: ISolid.GetUpdatedSolid
 - uid: Elements.Geometry.Interfaces.ISweepAlongCurve
   name: ISweepAlongCurve
   href: api/Elements.Geometry.Interfaces.ISweepAlongCurve.html
@@ -2546,6 +2584,64 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Interfaces.ITransformable.Transform
   nameWithType: ITransformable.Transform
+- uid: Elements.Geometry.Kernel
+  name: Kernel
+  href: api/Elements.Geometry.Kernel.html
+  commentId: T:Elements.Geometry.Kernel
+  fullName: Elements.Geometry.Kernel
+  nameWithType: Kernel
+- uid: Elements.Geometry.Kernel.CreateExtrude(Elements.Geometry.Interfaces.IExtrude)
+  name: CreateExtrude(IExtrude)
+  href: api/Elements.Geometry.Kernel.html#Elements_Geometry_Kernel_CreateExtrude_Elements_Geometry_Interfaces_IExtrude_
+  commentId: M:Elements.Geometry.Kernel.CreateExtrude(Elements.Geometry.Interfaces.IExtrude)
+  fullName: Elements.Geometry.Kernel.CreateExtrude(Elements.Geometry.Interfaces.IExtrude)
+  nameWithType: Kernel.CreateExtrude(IExtrude)
+- uid: Elements.Geometry.Kernel.CreateExtrude*
+  name: CreateExtrude
+  href: api/Elements.Geometry.Kernel.html#Elements_Geometry_Kernel_CreateExtrude_
+  commentId: Overload:Elements.Geometry.Kernel.CreateExtrude
+  isSpec: "True"
+  fullName: Elements.Geometry.Kernel.CreateExtrude
+  nameWithType: Kernel.CreateExtrude
+- uid: Elements.Geometry.Kernel.CreateLamina(Elements.Geometry.Interfaces.ILamina)
+  name: CreateLamina(ILamina)
+  href: api/Elements.Geometry.Kernel.html#Elements_Geometry_Kernel_CreateLamina_Elements_Geometry_Interfaces_ILamina_
+  commentId: M:Elements.Geometry.Kernel.CreateLamina(Elements.Geometry.Interfaces.ILamina)
+  fullName: Elements.Geometry.Kernel.CreateLamina(Elements.Geometry.Interfaces.ILamina)
+  nameWithType: Kernel.CreateLamina(ILamina)
+- uid: Elements.Geometry.Kernel.CreateLamina*
+  name: CreateLamina
+  href: api/Elements.Geometry.Kernel.html#Elements_Geometry_Kernel_CreateLamina_
+  commentId: Overload:Elements.Geometry.Kernel.CreateLamina
+  isSpec: "True"
+  fullName: Elements.Geometry.Kernel.CreateLamina
+  nameWithType: Kernel.CreateLamina
+- uid: Elements.Geometry.Kernel.CreateSweepAlongCurve(Elements.Geometry.Interfaces.ISweepAlongCurve)
+  name: CreateSweepAlongCurve(ISweepAlongCurve)
+  href: api/Elements.Geometry.Kernel.html#Elements_Geometry_Kernel_CreateSweepAlongCurve_Elements_Geometry_Interfaces_ISweepAlongCurve_
+  commentId: M:Elements.Geometry.Kernel.CreateSweepAlongCurve(Elements.Geometry.Interfaces.ISweepAlongCurve)
+  fullName: Elements.Geometry.Kernel.CreateSweepAlongCurve(Elements.Geometry.Interfaces.ISweepAlongCurve)
+  nameWithType: Kernel.CreateSweepAlongCurve(ISweepAlongCurve)
+- uid: Elements.Geometry.Kernel.CreateSweepAlongCurve*
+  name: CreateSweepAlongCurve
+  href: api/Elements.Geometry.Kernel.html#Elements_Geometry_Kernel_CreateSweepAlongCurve_
+  commentId: Overload:Elements.Geometry.Kernel.CreateSweepAlongCurve
+  isSpec: "True"
+  fullName: Elements.Geometry.Kernel.CreateSweepAlongCurve
+  nameWithType: Kernel.CreateSweepAlongCurve
+- uid: Elements.Geometry.Kernel.Instance
+  name: Instance
+  href: api/Elements.Geometry.Kernel.html#Elements_Geometry_Kernel_Instance
+  commentId: P:Elements.Geometry.Kernel.Instance
+  fullName: Elements.Geometry.Kernel.Instance
+  nameWithType: Kernel.Instance
+- uid: Elements.Geometry.Kernel.Instance*
+  name: Instance
+  href: api/Elements.Geometry.Kernel.html#Elements_Geometry_Kernel_Instance_
+  commentId: Overload:Elements.Geometry.Kernel.Instance
+  isSpec: "True"
+  fullName: Elements.Geometry.Kernel.Instance
+  nameWithType: Kernel.Instance
 - uid: Elements.Geometry.Line
   name: Line
   href: api/Elements.Geometry.Line.html
@@ -3017,15 +3113,15 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Mesh.Mesh
   nameWithType: Mesh.Mesh
-- uid: Elements.Geometry.Mesh.GetBuffers(System.Double[]@,System.UInt16[]@,System.Double[]@,System.Single[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)
-  name: GetBuffers(out Double[], out UInt16[], out Double[], out Single[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)
-  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_GetBuffers_System_Double____System_UInt16____System_Double____System_Single____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__
-  commentId: M:Elements.Geometry.Mesh.GetBuffers(System.Double[]@,System.UInt16[]@,System.Double[]@,System.Single[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)
-  name.vb: GetBuffers(ByRef Double(), ByRef UInt16(), ByRef Double(), ByRef Single(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16)
-  fullName: Elements.Geometry.Mesh.GetBuffers(out System.Double[], out System.UInt16[], out System.Double[], out System.Single[], out System.Double[], out System.Double[], out System.Double[], out System.Double[], out System.Single[], out System.Single[], out System.UInt16, out System.UInt16)
-  fullName.vb: Elements.Geometry.Mesh.GetBuffers(ByRef System.Double(), ByRef System.UInt16(), ByRef System.Double(), ByRef System.Single(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Single(), ByRef System.Single(), ByRef System.UInt16, ByRef System.UInt16)
-  nameWithType: Mesh.GetBuffers(out Double[], out UInt16[], out Double[], out Single[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)
-  nameWithType.vb: Mesh.GetBuffers(ByRef Double(), ByRef UInt16(), ByRef Double(), ByRef Single(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16)
+- uid: Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)
+  name: GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__
+  commentId: M:Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)
+  name.vb: GetBuffers(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16)
+  fullName: Elements.Geometry.Mesh.GetBuffers(out System.Byte[], out System.Byte[], out System.Byte[], out System.Byte[], out System.Double[], out System.Double[], out System.Double[], out System.Double[], out System.Single[], out System.Single[], out System.UInt16, out System.UInt16)
+  fullName.vb: Elements.Geometry.Mesh.GetBuffers(ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Single(), ByRef System.Single(), ByRef System.UInt16, ByRef System.UInt16)
+  nameWithType: Mesh.GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)
+  nameWithType.vb: Mesh.GetBuffers(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16)
 - uid: Elements.Geometry.Mesh.GetBuffers*
   name: GetBuffers
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_GetBuffers_
@@ -3751,6 +3847,15 @@ references:
   commentId: M:Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,System.String)
   fullName: Elements.Geometry.Profile.Profile(Elements.Geometry.Polygon, System.String)
   nameWithType: Profile.Profile(Polygon, String)
+- uid: Elements.Geometry.Profile.#ctor(System.Guid,Elements.Geometry.Polygon,Elements.Geometry.Polygon[],System.String)
+  name: Profile(Guid, Polygon, Polygon[], String)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile__ctor_System_Guid_Elements_Geometry_Polygon_Elements_Geometry_Polygon___System_String_
+  commentId: M:Elements.Geometry.Profile.#ctor(System.Guid,Elements.Geometry.Polygon,Elements.Geometry.Polygon[],System.String)
+  name.vb: Profile(Guid, Polygon, Polygon(), String)
+  fullName: Elements.Geometry.Profile.Profile(System.Guid, Elements.Geometry.Polygon, Elements.Geometry.Polygon[], System.String)
+  fullName.vb: Elements.Geometry.Profile.Profile(System.Guid, Elements.Geometry.Polygon, Elements.Geometry.Polygon(), System.String)
+  nameWithType: Profile.Profile(Guid, Polygon, Polygon[], String)
+  nameWithType.vb: Profile.Profile(Guid, Polygon, Polygon(), String)
 - uid: Elements.Geometry.Profile.#ctor(System.String)
   name: Profile(String)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile__ctor_System_String_
@@ -3893,19 +3998,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profiles.HSSPipeProfile.I
   nameWithType: HSSPipeProfile.I
-- uid: Elements.Geometry.Profiles.HSSPipeProfile.ID
-  name: ID
-  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_ID
-  commentId: P:Elements.Geometry.Profiles.HSSPipeProfile.ID
-  fullName: Elements.Geometry.Profiles.HSSPipeProfile.ID
-  nameWithType: HSSPipeProfile.ID
-- uid: Elements.Geometry.Profiles.HSSPipeProfile.ID*
-  name: ID
-  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_ID_
-  commentId: Overload:Elements.Geometry.Profiles.HSSPipeProfile.ID
+- uid: Elements.Geometry.Profiles.HSSPipeProfile.InnerDiam
+  name: InnerDiam
+  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_InnerDiam
+  commentId: P:Elements.Geometry.Profiles.HSSPipeProfile.InnerDiam
+  fullName: Elements.Geometry.Profiles.HSSPipeProfile.InnerDiam
+  nameWithType: HSSPipeProfile.InnerDiam
+- uid: Elements.Geometry.Profiles.HSSPipeProfile.InnerDiam*
+  name: InnerDiam
+  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_InnerDiam_
+  commentId: Overload:Elements.Geometry.Profiles.HSSPipeProfile.InnerDiam
   isSpec: "True"
-  fullName: Elements.Geometry.Profiles.HSSPipeProfile.ID
-  nameWithType: HSSPipeProfile.ID
+  fullName: Elements.Geometry.Profiles.HSSPipeProfile.InnerDiam
+  nameWithType: HSSPipeProfile.InnerDiam
 - uid: Elements.Geometry.Profiles.HSSPipeProfile.J
   name: J
   href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_J
@@ -3919,19 +4024,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profiles.HSSPipeProfile.J
   nameWithType: HSSPipeProfile.J
-- uid: Elements.Geometry.Profiles.HSSPipeProfile.OD
-  name: OD
-  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_OD
-  commentId: P:Elements.Geometry.Profiles.HSSPipeProfile.OD
-  fullName: Elements.Geometry.Profiles.HSSPipeProfile.OD
-  nameWithType: HSSPipeProfile.OD
-- uid: Elements.Geometry.Profiles.HSSPipeProfile.OD*
-  name: OD
-  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_OD_
-  commentId: Overload:Elements.Geometry.Profiles.HSSPipeProfile.OD
+- uid: Elements.Geometry.Profiles.HSSPipeProfile.OuterDiam
+  name: OuterDiam
+  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_OuterDiam
+  commentId: P:Elements.Geometry.Profiles.HSSPipeProfile.OuterDiam
+  fullName: Elements.Geometry.Profiles.HSSPipeProfile.OuterDiam
+  nameWithType: HSSPipeProfile.OuterDiam
+- uid: Elements.Geometry.Profiles.HSSPipeProfile.OuterDiam*
+  name: OuterDiam
+  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_OuterDiam_
+  commentId: Overload:Elements.Geometry.Profiles.HSSPipeProfile.OuterDiam
   isSpec: "True"
-  fullName: Elements.Geometry.Profiles.HSSPipeProfile.OD
-  nameWithType: HSSPipeProfile.OD
+  fullName: Elements.Geometry.Profiles.HSSPipeProfile.OuterDiam
+  nameWithType: HSSPipeProfile.OuterDiam
 - uid: Elements.Geometry.Profiles.HSSPipeProfile.r
   name: r
   href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile_r
@@ -6163,38 +6268,6 @@ references:
   isSpec: "True"
   fullName: Elements.Grid.Cells
   nameWithType: Grid.Cells
-- uid: Elements.IdProvider
-  name: IdProvider
-  href: api/Elements.IdProvider.html
-  commentId: T:Elements.IdProvider
-  fullName: Elements.IdProvider
-  nameWithType: IdProvider
-- uid: Elements.IdProvider.GetNextId
-  name: GetNextId()
-  href: api/Elements.IdProvider.html#Elements_IdProvider_GetNextId
-  commentId: M:Elements.IdProvider.GetNextId
-  fullName: Elements.IdProvider.GetNextId()
-  nameWithType: IdProvider.GetNextId()
-- uid: Elements.IdProvider.GetNextId*
-  name: GetNextId
-  href: api/Elements.IdProvider.html#Elements_IdProvider_GetNextId_
-  commentId: Overload:Elements.IdProvider.GetNextId
-  isSpec: "True"
-  fullName: Elements.IdProvider.GetNextId
-  nameWithType: IdProvider.GetNextId
-- uid: Elements.IdProvider.Instance
-  name: Instance
-  href: api/Elements.IdProvider.html#Elements_IdProvider_Instance
-  commentId: P:Elements.IdProvider.Instance
-  fullName: Elements.IdProvider.Instance
-  nameWithType: IdProvider.Instance
-- uid: Elements.IdProvider.Instance*
-  name: Instance
-  href: api/Elements.IdProvider.html#Elements_IdProvider_Instance_
-  commentId: Overload:Elements.IdProvider.Instance
-  isSpec: "True"
-  fullName: Elements.IdProvider.Instance
-  nameWithType: IdProvider.Instance
 - uid: Elements.Interfaces
   name: Elements.Interfaces
   href: api/Elements.Interfaces.html
@@ -6265,6 +6338,25 @@ references:
   fullName.vb: Elements.Interfaces.IElementType(Of TElementType).ElementType
   nameWithType: IElementType<TElementType>.ElementType
   nameWithType.vb: IElementType(Of TElementType).ElementType
+- uid: Elements.Interfaces.IHasOpenings
+  name: IHasOpenings
+  href: api/Elements.Interfaces.IHasOpenings.html
+  commentId: T:Elements.Interfaces.IHasOpenings
+  fullName: Elements.Interfaces.IHasOpenings
+  nameWithType: IHasOpenings
+- uid: Elements.Interfaces.IHasOpenings.Openings
+  name: Openings
+  href: api/Elements.Interfaces.IHasOpenings.html#Elements_Interfaces_IHasOpenings_Openings
+  commentId: P:Elements.Interfaces.IHasOpenings.Openings
+  fullName: Elements.Interfaces.IHasOpenings.Openings
+  nameWithType: IHasOpenings.Openings
+- uid: Elements.Interfaces.IHasOpenings.Openings*
+  name: Openings
+  href: api/Elements.Interfaces.IHasOpenings.html#Elements_Interfaces_IHasOpenings_Openings_
+  commentId: Overload:Elements.Interfaces.IHasOpenings.Openings
+  isSpec: "True"
+  fullName: Elements.Interfaces.IHasOpenings.Openings
+  nameWithType: IHasOpenings.Openings
 - uid: Elements.Interfaces.IIdentifiable
   name: IIdentifiable
   href: api/Elements.Interfaces.IIdentifiable.html
@@ -6493,6 +6585,19 @@ references:
   isSpec: "True"
   fullName: Elements.Mass.Geometry
   nameWithType: Mass.Geometry
+- uid: Elements.Mass.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.Mass.html#Elements_Mass_GetUpdatedSolid
+  commentId: M:Elements.Mass.GetUpdatedSolid
+  fullName: Elements.Mass.GetUpdatedSolid()
+  nameWithType: Mass.GetUpdatedSolid()
+- uid: Elements.Mass.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.Mass.html#Elements_Mass_GetUpdatedSolid_
+  commentId: Overload:Elements.Mass.GetUpdatedSolid
+  isSpec: "True"
+  fullName: Elements.Mass.GetUpdatedSolid
+  nameWithType: Mass.GetUpdatedSolid
 - uid: Elements.Mass.Height
   name: Height
   href: api/Elements.Mass.html#Elements_Mass_Height
@@ -6577,6 +6682,12 @@ references:
   commentId: T:Elements.Material
   fullName: Elements.Material
   nameWithType: Material
+- uid: Elements.Material.#ctor(System.Guid,System.String,Elements.Geometry.Color,System.Single,System.Single,System.Boolean)
+  name: Material(Guid, String, Color, Single, Single, Boolean)
+  href: api/Elements.Material.html#Elements_Material__ctor_System_Guid_System_String_Elements_Geometry_Color_System_Single_System_Single_System_Boolean_
+  commentId: M:Elements.Material.#ctor(System.Guid,System.String,Elements.Geometry.Color,System.Single,System.Single,System.Boolean)
+  fullName: Elements.Material.Material(System.Guid, System.String, Elements.Geometry.Color, System.Single, System.Single, System.Boolean)
+  nameWithType: Material.Material(Guid, String, Color, Single, Single, Boolean)
 - uid: Elements.Material.#ctor(System.String)
   name: Material(String)
   href: api/Elements.Material.html#Elements_Material__ctor_System_String_
@@ -6877,12 +6988,12 @@ references:
   isSpec: "True"
   fullName: Elements.Model.FromJson
   nameWithType: Model.FromJson
-- uid: Elements.Model.GetElementById(System.Int32)
-  name: GetElementById(Int32)
-  href: api/Elements.Model.html#Elements_Model_GetElementById_System_Int32_
-  commentId: M:Elements.Model.GetElementById(System.Int32)
-  fullName: Elements.Model.GetElementById(System.Int32)
-  nameWithType: Model.GetElementById(Int32)
+- uid: Elements.Model.GetElementById(System.Guid)
+  name: GetElementById(Guid)
+  href: api/Elements.Model.html#Elements_Model_GetElementById_System_Guid_
+  commentId: M:Elements.Model.GetElementById(System.Guid)
+  fullName: Elements.Model.GetElementById(System.Guid)
+  nameWithType: Model.GetElementById(Guid)
 - uid: Elements.Model.GetElementById*
   name: GetElementById
   href: api/Elements.Model.html#Elements_Model_GetElementById_
@@ -7151,6 +7262,19 @@ references:
   isSpec: "True"
   fullName: Elements.Opening.ExtrudeDirection
   nameWithType: Opening.ExtrudeDirection
+- uid: Elements.Opening.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.Opening.html#Elements_Opening_GetUpdatedSolid
+  commentId: M:Elements.Opening.GetUpdatedSolid
+  fullName: Elements.Opening.GetUpdatedSolid()
+  nameWithType: Opening.GetUpdatedSolid()
+- uid: Elements.Opening.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.Opening.html#Elements_Opening_GetUpdatedSolid_
+  commentId: Overload:Elements.Opening.GetUpdatedSolid
+  isSpec: "True"
+  fullName: Elements.Opening.GetUpdatedSolid
+  nameWithType: Opening.GetUpdatedSolid
 - uid: Elements.Opening.Profile
   name: Profile
   href: api/Elements.Opening.html#Elements_Opening_Profile
@@ -7183,6 +7307,19 @@ references:
   isSpec: "True"
   fullName: Elements.Panel.Panel
   nameWithType: Panel.Panel
+- uid: Elements.Panel.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.Panel.html#Elements_Panel_GetUpdatedSolid
+  commentId: M:Elements.Panel.GetUpdatedSolid
+  fullName: Elements.Panel.GetUpdatedSolid()
+  nameWithType: Panel.GetUpdatedSolid()
+- uid: Elements.Panel.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.Panel.html#Elements_Panel_GetUpdatedSolid_
+  commentId: Overload:Elements.Panel.GetUpdatedSolid
+  isSpec: "True"
+  fullName: Elements.Panel.GetUpdatedSolid
+  nameWithType: Panel.GetUpdatedSolid
 - uid: Elements.Panel.Material
   name: Material
   href: api/Elements.Panel.html#Elements_Panel_Material
@@ -7500,15 +7637,15 @@ references:
   commentId: T:Elements.Serialization.JSON.ElementTypeToIdConverter
   fullName: Elements.Serialization.JSON.ElementTypeToIdConverter
   nameWithType: ElementTypeToIdConverter
-- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType})
-  name: ElementTypeToIdConverter(Dictionary<Int64, ElementType>)
-  href: api/Elements.Serialization.JSON.ElementTypeToIdConverter.html#Elements_Serialization_JSON_ElementTypeToIdConverter__ctor_System_Collections_Generic_Dictionary_System_Int64_Elements_ElementType__
-  commentId: M:Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.ElementType})
-  name.vb: ElementTypeToIdConverter(Dictionary(Of Int64, ElementType))
-  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.ElementTypeToIdConverter(System.Collections.Generic.Dictionary<System.Int64, Elements.ElementType>)
-  fullName.vb: Elements.Serialization.JSON.ElementTypeToIdConverter.ElementTypeToIdConverter(System.Collections.Generic.Dictionary(Of System.Int64, Elements.ElementType))
-  nameWithType: ElementTypeToIdConverter.ElementTypeToIdConverter(Dictionary<Int64, ElementType>)
-  nameWithType.vb: ElementTypeToIdConverter.ElementTypeToIdConverter(Dictionary(Of Int64, ElementType))
+- uid: Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Guid,Elements.ElementType})
+  name: ElementTypeToIdConverter(Dictionary<Guid, ElementType>)
+  href: api/Elements.Serialization.JSON.ElementTypeToIdConverter.html#Elements_Serialization_JSON_ElementTypeToIdConverter__ctor_System_Collections_Generic_Dictionary_System_Guid_Elements_ElementType__
+  commentId: M:Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Guid,Elements.ElementType})
+  name.vb: ElementTypeToIdConverter(Dictionary(Of Guid, ElementType))
+  fullName: Elements.Serialization.JSON.ElementTypeToIdConverter.ElementTypeToIdConverter(System.Collections.Generic.Dictionary<System.Guid, Elements.ElementType>)
+  fullName.vb: Elements.Serialization.JSON.ElementTypeToIdConverter.ElementTypeToIdConverter(System.Collections.Generic.Dictionary(Of System.Guid, Elements.ElementType))
+  nameWithType: ElementTypeToIdConverter.ElementTypeToIdConverter(Dictionary<Guid, ElementType>)
+  nameWithType.vb: ElementTypeToIdConverter.ElementTypeToIdConverter(Dictionary(Of Guid, ElementType))
 - uid: Elements.Serialization.JSON.ElementTypeToIdConverter.#ctor*
   name: ElementTypeToIdConverter
   href: api/Elements.Serialization.JSON.ElementTypeToIdConverter.html#Elements_Serialization_JSON_ElementTypeToIdConverter__ctor_
@@ -7754,15 +7891,15 @@ references:
   commentId: T:Elements.Serialization.JSON.MaterialToIdConverter
   fullName: Elements.Serialization.JSON.MaterialToIdConverter
   nameWithType: MaterialToIdConverter
-- uid: Elements.Serialization.JSON.MaterialToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.Material})
-  name: MaterialToIdConverter(Dictionary<Int64, Material>)
-  href: api/Elements.Serialization.JSON.MaterialToIdConverter.html#Elements_Serialization_JSON_MaterialToIdConverter__ctor_System_Collections_Generic_Dictionary_System_Int64_Elements_Material__
-  commentId: M:Elements.Serialization.JSON.MaterialToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.Material})
-  name.vb: MaterialToIdConverter(Dictionary(Of Int64, Material))
-  fullName: Elements.Serialization.JSON.MaterialToIdConverter.MaterialToIdConverter(System.Collections.Generic.Dictionary<System.Int64, Elements.Material>)
-  fullName.vb: Elements.Serialization.JSON.MaterialToIdConverter.MaterialToIdConverter(System.Collections.Generic.Dictionary(Of System.Int64, Elements.Material))
-  nameWithType: MaterialToIdConverter.MaterialToIdConverter(Dictionary<Int64, Material>)
-  nameWithType.vb: MaterialToIdConverter.MaterialToIdConverter(Dictionary(Of Int64, Material))
+- uid: Elements.Serialization.JSON.MaterialToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Guid,Elements.Material})
+  name: MaterialToIdConverter(Dictionary<Guid, Material>)
+  href: api/Elements.Serialization.JSON.MaterialToIdConverter.html#Elements_Serialization_JSON_MaterialToIdConverter__ctor_System_Collections_Generic_Dictionary_System_Guid_Elements_Material__
+  commentId: M:Elements.Serialization.JSON.MaterialToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Guid,Elements.Material})
+  name.vb: MaterialToIdConverter(Dictionary(Of Guid, Material))
+  fullName: Elements.Serialization.JSON.MaterialToIdConverter.MaterialToIdConverter(System.Collections.Generic.Dictionary<System.Guid, Elements.Material>)
+  fullName.vb: Elements.Serialization.JSON.MaterialToIdConverter.MaterialToIdConverter(System.Collections.Generic.Dictionary(Of System.Guid, Elements.Material))
+  nameWithType: MaterialToIdConverter.MaterialToIdConverter(Dictionary<Guid, Material>)
+  nameWithType.vb: MaterialToIdConverter.MaterialToIdConverter(Dictionary(Of Guid, Material))
 - uid: Elements.Serialization.JSON.MaterialToIdConverter.#ctor*
   name: MaterialToIdConverter
   href: api/Elements.Serialization.JSON.MaterialToIdConverter.html#Elements_Serialization_JSON_MaterialToIdConverter__ctor_
@@ -7918,15 +8055,15 @@ references:
   commentId: T:Elements.Serialization.JSON.ProfileToIdConverter
   fullName: Elements.Serialization.JSON.ProfileToIdConverter
   nameWithType: ProfileToIdConverter
-- uid: Elements.Serialization.JSON.ProfileToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.Geometry.Profile})
-  name: ProfileToIdConverter(Dictionary<Int64, Profile>)
-  href: api/Elements.Serialization.JSON.ProfileToIdConverter.html#Elements_Serialization_JSON_ProfileToIdConverter__ctor_System_Collections_Generic_Dictionary_System_Int64_Elements_Geometry_Profile__
-  commentId: M:Elements.Serialization.JSON.ProfileToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.Geometry.Profile})
-  name.vb: ProfileToIdConverter(Dictionary(Of Int64, Profile))
-  fullName: Elements.Serialization.JSON.ProfileToIdConverter.ProfileToIdConverter(System.Collections.Generic.Dictionary<System.Int64, Elements.Geometry.Profile>)
-  fullName.vb: Elements.Serialization.JSON.ProfileToIdConverter.ProfileToIdConverter(System.Collections.Generic.Dictionary(Of System.Int64, Elements.Geometry.Profile))
-  nameWithType: ProfileToIdConverter.ProfileToIdConverter(Dictionary<Int64, Profile>)
-  nameWithType.vb: ProfileToIdConverter.ProfileToIdConverter(Dictionary(Of Int64, Profile))
+- uid: Elements.Serialization.JSON.ProfileToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Guid,Elements.Geometry.Profile})
+  name: ProfileToIdConverter(Dictionary<Guid, Profile>)
+  href: api/Elements.Serialization.JSON.ProfileToIdConverter.html#Elements_Serialization_JSON_ProfileToIdConverter__ctor_System_Collections_Generic_Dictionary_System_Guid_Elements_Geometry_Profile__
+  commentId: M:Elements.Serialization.JSON.ProfileToIdConverter.#ctor(System.Collections.Generic.Dictionary{System.Guid,Elements.Geometry.Profile})
+  name.vb: ProfileToIdConverter(Dictionary(Of Guid, Profile))
+  fullName: Elements.Serialization.JSON.ProfileToIdConverter.ProfileToIdConverter(System.Collections.Generic.Dictionary<System.Guid, Elements.Geometry.Profile>)
+  fullName.vb: Elements.Serialization.JSON.ProfileToIdConverter.ProfileToIdConverter(System.Collections.Generic.Dictionary(Of System.Guid, Elements.Geometry.Profile))
+  nameWithType: ProfileToIdConverter.ProfileToIdConverter(Dictionary<Guid, Profile>)
+  nameWithType.vb: ProfileToIdConverter.ProfileToIdConverter(Dictionary(Of Guid, Profile))
 - uid: Elements.Serialization.JSON.ProfileToIdConverter.#ctor*
   name: ProfileToIdConverter
   href: api/Elements.Serialization.JSON.ProfileToIdConverter.html#Elements_Serialization_JSON_ProfileToIdConverter__ctor_
@@ -8108,15 +8245,15 @@ references:
   commentId: T:Elements.Serialization.JSON.SolidConverter
   fullName: Elements.Serialization.JSON.SolidConverter
   nameWithType: SolidConverter
-- uid: Elements.Serialization.JSON.SolidConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.Material})
-  name: SolidConverter(Dictionary<Int64, Material>)
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter__ctor_System_Collections_Generic_Dictionary_System_Int64_Elements_Material__
-  commentId: M:Elements.Serialization.JSON.SolidConverter.#ctor(System.Collections.Generic.Dictionary{System.Int64,Elements.Material})
-  name.vb: SolidConverter(Dictionary(Of Int64, Material))
-  fullName: Elements.Serialization.JSON.SolidConverter.SolidConverter(System.Collections.Generic.Dictionary<System.Int64, Elements.Material>)
-  fullName.vb: Elements.Serialization.JSON.SolidConverter.SolidConverter(System.Collections.Generic.Dictionary(Of System.Int64, Elements.Material))
-  nameWithType: SolidConverter.SolidConverter(Dictionary<Int64, Material>)
-  nameWithType.vb: SolidConverter.SolidConverter(Dictionary(Of Int64, Material))
+- uid: Elements.Serialization.JSON.SolidConverter.#ctor(System.Collections.Generic.Dictionary{System.Guid,Elements.Material})
+  name: SolidConverter(Dictionary<Guid, Material>)
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter__ctor_System_Collections_Generic_Dictionary_System_Guid_Elements_Material__
+  commentId: M:Elements.Serialization.JSON.SolidConverter.#ctor(System.Collections.Generic.Dictionary{System.Guid,Elements.Material})
+  name.vb: SolidConverter(Dictionary(Of Guid, Material))
+  fullName: Elements.Serialization.JSON.SolidConverter.SolidConverter(System.Collections.Generic.Dictionary<System.Guid, Elements.Material>)
+  fullName.vb: Elements.Serialization.JSON.SolidConverter.SolidConverter(System.Collections.Generic.Dictionary(Of System.Guid, Elements.Material))
+  nameWithType: SolidConverter.SolidConverter(Dictionary<Guid, Material>)
+  nameWithType.vb: SolidConverter.SolidConverter(Dictionary(Of Guid, Material))
 - uid: Elements.Serialization.JSON.SolidConverter.#ctor*
   name: SolidConverter
   href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter__ctor_
@@ -8298,6 +8435,19 @@ references:
   isSpec: "True"
   fullName: Elements.Space.Geometry
   nameWithType: Space.Geometry
+- uid: Elements.Space.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.Space.html#Elements_Space_GetUpdatedSolid
+  commentId: M:Elements.Space.GetUpdatedSolid
+  fullName: Elements.Space.GetUpdatedSolid()
+  nameWithType: Space.GetUpdatedSolid()
+- uid: Elements.Space.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.Space.html#Elements_Space_GetUpdatedSolid_
+  commentId: Overload:Elements.Space.GetUpdatedSolid
+  isSpec: "True"
+  fullName: Elements.Space.GetUpdatedSolid
+  nameWithType: Space.GetUpdatedSolid
 - uid: Elements.Space.Height
   name: Height
   href: api/Elements.Space.html#Elements_Space_Height
@@ -8527,6 +8677,19 @@ references:
   isSpec: "True"
   fullName: Elements.StructuralFraming.EndSetback
   nameWithType: StructuralFraming.EndSetback
+- uid: Elements.StructuralFraming.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.StructuralFraming.html#Elements_StructuralFraming_GetUpdatedSolid
+  commentId: M:Elements.StructuralFraming.GetUpdatedSolid
+  fullName: Elements.StructuralFraming.GetUpdatedSolid()
+  nameWithType: StructuralFraming.GetUpdatedSolid()
+- uid: Elements.StructuralFraming.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.StructuralFraming.html#Elements_StructuralFraming_GetUpdatedSolid_
+  commentId: Overload:Elements.StructuralFraming.GetUpdatedSolid
+  isSpec: "True"
+  fullName: Elements.StructuralFraming.GetUpdatedSolid
+  nameWithType: StructuralFraming.GetUpdatedSolid
 - uid: Elements.StructuralFraming.Profile
   name: Profile
   href: api/Elements.StructuralFraming.html#Elements_StructuralFraming_Profile
@@ -8982,6 +9145,19 @@ references:
   isSpec: "True"
   fullName: Elements.Wall.Geometry
   nameWithType: Wall.Geometry
+- uid: Elements.Wall.GetUpdatedSolid
+  name: GetUpdatedSolid()
+  href: api/Elements.Wall.html#Elements_Wall_GetUpdatedSolid
+  commentId: M:Elements.Wall.GetUpdatedSolid
+  fullName: Elements.Wall.GetUpdatedSolid()
+  nameWithType: Wall.GetUpdatedSolid()
+- uid: Elements.Wall.GetUpdatedSolid*
+  name: GetUpdatedSolid
+  href: api/Elements.Wall.html#Elements_Wall_GetUpdatedSolid_
+  commentId: Overload:Elements.Wall.GetUpdatedSolid
+  isSpec: "True"
+  fullName: Elements.Wall.GetUpdatedSolid
+  nameWithType: Wall.GetUpdatedSolid
 - uid: Elements.Wall.Height
   name: Height
   href: api/Elements.Wall.html#Elements_Wall_Height
@@ -9094,28 +9270,3 @@ references:
   isSpec: "True"
   fullName: Elements.WallType.Type
   nameWithType: WallType.Type
-- uid: Hypar.Elements.Interfaces
-  name: Hypar.Elements.Interfaces
-  href: api/Hypar.Elements.Interfaces.html
-  commentId: N:Hypar.Elements.Interfaces
-  fullName: Hypar.Elements.Interfaces
-  nameWithType: Hypar.Elements.Interfaces
-- uid: Hypar.Elements.Interfaces.IHasOpenings
-  name: IHasOpenings
-  href: api/Hypar.Elements.Interfaces.IHasOpenings.html
-  commentId: T:Hypar.Elements.Interfaces.IHasOpenings
-  fullName: Hypar.Elements.Interfaces.IHasOpenings
-  nameWithType: IHasOpenings
-- uid: Hypar.Elements.Interfaces.IHasOpenings.Openings
-  name: Openings
-  href: api/Hypar.Elements.Interfaces.IHasOpenings.html#Hypar_Elements_Interfaces_IHasOpenings_Openings
-  commentId: P:Hypar.Elements.Interfaces.IHasOpenings.Openings
-  fullName: Hypar.Elements.Interfaces.IHasOpenings.Openings
-  nameWithType: IHasOpenings.Openings
-- uid: Hypar.Elements.Interfaces.IHasOpenings.Openings*
-  name: Openings
-  href: api/Hypar.Elements.Interfaces.IHasOpenings.html#Hypar_Elements_Interfaces_IHasOpenings_Openings_
-  commentId: Overload:Hypar.Elements.Interfaces.IHasOpenings.Openings
-  isSpec: "True"
-  fullName: Hypar.Elements.Interfaces.IHasOpenings.Openings
-  nameWithType: IHasOpenings.Openings

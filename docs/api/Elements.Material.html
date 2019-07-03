@@ -113,6 +113,85 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
+  <h4 id="Elements_Material__ctor_System_Guid_System_String_Elements_Geometry_Color_System_Single_System_Single_System_Boolean_" data-uid="Elements.Material.#ctor(System.Guid,System.String,Elements.Geometry.Color,System.Single,System.Single,System.Boolean)">Material(Guid, String, Color, Single, Single, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Construct a material.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Material(Guid id, string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, bool doubleSided = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The unique identifier of the material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The identifier of the material. Identifiers should be unique within a model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
+        <td><span class="parametername">color</span></td>
+        <td><p>The RGBA color of the material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Single</span></td>
+        <td><span class="parametername">specularFactor</span></td>
+        <td><p>The specular component of the color. Between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Single</span></td>
+        <td><span class="parametername">glossinessFactor</span></td>
+        <td><p>The glossiness component of the color. Between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">doubleSided</span></td>
+        <td><p>Is the material double sided?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
+        <td><p>Thrown when the specular or glossiness value is less than 0.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
+        <td><p>Thrown when the specular or glossiness value is greater than 1.0.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
   <h4 id="Elements_Material__ctor_System_String_" data-uid="Elements.Material.#ctor(System.String)">Material(String)</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
@@ -145,8 +224,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Material(string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, bool doubleSided = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, bool doubleSided = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -215,7 +293,7 @@ public Material(string name, Color color, float specularFactor = 0.1F, float glo
   </h3>
   <a id="Elements_Material_Color_" data-uid="Elements.Material.Color*"></a>
   <h4 id="Elements_Material_Color" data-uid="Elements.Material.Color">Color</h4>
-  <div class="markdown level1 summary"><p>The RGBA Color of the material.</p>
+  <div class="markdown level1 summary"><p>The RGBA color of the material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -292,7 +370,7 @@ public Material(string name, Color color, float specularFactor = 0.1F, float glo
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long Id { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Guid Id { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -304,7 +382,7 @@ public Material(string name, Color color, float specularFactor = 0.1F, float glo
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td></td>
       </tr>
     </tbody>

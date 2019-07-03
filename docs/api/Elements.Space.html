@@ -218,9 +218,9 @@ var space = new Space(profile, 10, 0);
     <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
     <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
     <div><a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a></div>
   </div>
   <div class="inheritedMembers">
@@ -272,7 +272,7 @@ var space = new Space(profile, 10, 0);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Space_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Space : Element, IElement, IIdentifiable, ITransformable, IPropertySet, ISolid, IExtrude, IProfile, IMaterial</code></pre>
+    <pre><code class="lang-csharp hljs">public class Space : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IExtrude, IProfile, ISolid, IMaterial</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -568,6 +568,30 @@ public Solid Geometry { get; }</code></pre>
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Space_GetUpdatedSolid_" data-uid="Elements.Space.GetUpdatedSolid*"></a>
+  <h4 id="Elements_Space_GetUpdatedSolid" data-uid="Elements.Space.GetUpdatedSolid">GetUpdatedSolid()</h4>
+  <div class="markdown level1 summary"><p>Get the updated solid representation of the space.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Solid GetUpdatedSolid()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Space_ProfileTransformed_" data-uid="Elements.Space.ProfileTransformed*"></a>
   <h4 id="Elements_Space_ProfileTransformed" data-uid="Elements.Space.ProfileTransformed">ProfileTransformed()</h4>
   <div class="markdown level1 summary"><p>Get the profile of the space transformed by the space's transform.</p>
@@ -606,13 +630,13 @@ public Solid Geometry { get; }</code></pre>
       <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
   </div>
   <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
-  </div>
-  <div>
       <a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a>
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
   </div>
   <div>
       <a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a>

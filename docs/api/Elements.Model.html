@@ -127,12 +127,12 @@
   </h3>
   <a id="Elements_Model_Elements_" data-uid="Elements.Model.Elements*"></a>
   <h4 id="Elements_Model_Elements" data-uid="Elements.Model.Elements">Elements</h4>
-  <div class="markdown level1 summary"><p>All Elements in the Model.</p>
+  <div class="markdown level1 summary"><p>All elements in the Model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;long, Element&gt; Elements { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;Guid, Element&gt; Elements { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -144,19 +144,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Model_ElementTypes_" data-uid="Elements.Model.ElementTypes*"></a>
   <h4 id="Elements_Model_ElementTypes" data-uid="Elements.Model.ElementTypes">ElementTypes</h4>
-  <div class="markdown level1 summary"><p>All ElementTypes in the Model.</p>
+  <div class="markdown level1 summary"><p>All element types in the Model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;long, ElementType&gt; ElementTypes { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;Guid, ElementType&gt; ElementTypes { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -168,7 +168,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.ElementType.html">ElementType</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.ElementType.html">ElementType</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -206,7 +206,7 @@ serialization or deserialization.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;long, Material&gt; Materials { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;Guid, Material&gt; Materials { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -218,7 +218,7 @@ serialization or deserialization.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Material.html">Material</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.Material.html">Material</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -249,12 +249,12 @@ serialization or deserialization.</p>
   </table>
   <a id="Elements_Model_Profiles_" data-uid="Elements.Model.Profiles*"></a>
   <h4 id="Elements_Model_Profiles" data-uid="Elements.Model.Profiles">Profiles</h4>
-  <div class="markdown level1 summary"><p>All Profiles in the model.</p>
+  <div class="markdown level1 summary"><p>All profiles in the model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;long, Profile&gt; Profiles { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;Guid, Profile&gt; Profiles { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -266,7 +266,7 @@ serialization or deserialization.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -370,7 +370,7 @@ with the same Id already exists in the model.</p>
   </table>
   <a id="Elements_Model_ElementsOfType_" data-uid="Elements.Model.ElementsOfType*"></a>
   <h4 id="Elements_Model_ElementsOfType__1" data-uid="Elements.Model.ElementsOfType``1">ElementsOfType&lt;T&gt;()</h4>
-  <div class="markdown level1 summary"><p>Get all Elements of the specified Type.</p>
+  <div class="markdown level1 summary"><p>Get all elements of the specified Type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -388,7 +388,7 @@ with the same Id already exists in the model.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
-        <td><p>A collection of Elements of the specified type.</p>
+        <td><p>A collection of elements of the specified type.</p>
 </td>
       </tr>
     </tbody>
@@ -503,13 +503,13 @@ of IFC entities to convert.</p>
     </tbody>
   </table>
   <a id="Elements_Model_GetElementById_" data-uid="Elements.Model.GetElementById*"></a>
-  <h4 id="Elements_Model_GetElementById_System_Int32_" data-uid="Elements.Model.GetElementById(System.Int32)">GetElementById(Int32)</h4>
-  <div class="markdown level1 summary"><p>Get an Element by id from the Model.</p>
+  <h4 id="Elements_Model_GetElementById_System_Guid_" data-uid="Elements.Model.GetElementById(System.Guid)">GetElementById(Guid)</h4>
+  <div class="markdown level1 summary"><p>Get an element by id from the Model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Element GetElementById(int id)</code></pre>
+    <pre><code class="lang-csharp hljs">public Element GetElementById(Guid id)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -522,9 +522,9 @@ of IFC entities to convert.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
-        <td><p>The identifier of the Element.</p>
+        <td><p>The identifier of the element.</p>
 </td>
       </tr>
     </tbody>
@@ -540,7 +540,7 @@ of IFC entities to convert.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Element.html">Element</a></td>
-        <td><p>An Element or null if no Element can be found
+        <td><p>An element or null if no element can be found
 with the provided id.</p>
 </td>
       </tr>
@@ -548,7 +548,7 @@ with the provided id.</p>
   </table>
   <a id="Elements_Model_GetElementByName_" data-uid="Elements.Model.GetElementByName*"></a>
   <h4 id="Elements_Model_GetElementByName_System_String_" data-uid="Elements.Model.GetElementByName(System.String)">GetElementByName(String)</h4>
-  <div class="markdown level1 summary"><p>Get the first Element with the specified name.</p>
+  <div class="markdown level1 summary"><p>Get the first element with the specified name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -583,7 +583,7 @@ with the provided id.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Element.html">Element</a></td>
-        <td><p>An Element or null if no Element can be found
+        <td><p>An element or null if no element can be found
 with the provided name.</p>
 </td>
       </tr>
@@ -591,7 +591,7 @@ with the provided name.</p>
   </table>
   <a id="Elements_Model_GetElementTypeByName_" data-uid="Elements.Model.GetElementTypeByName*"></a>
   <h4 id="Elements_Model_GetElementTypeByName_System_String_" data-uid="Elements.Model.GetElementTypeByName(System.String)">GetElementTypeByName(String)</h4>
-  <div class="markdown level1 summary"><p>Get an ElementType by name.</p>
+  <div class="markdown level1 summary"><p>Get an element type by name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -611,7 +611,7 @@ with the provided name.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td><p>The name of the ElementType.</p>
+        <td><p>The name of the element type.</p>
 </td>
       </tr>
     </tbody>
@@ -627,7 +627,7 @@ with the provided name.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.ElementType.html">ElementType</a></td>
-        <td><p>An ElementType or null if no ElementType with
+        <td><p>An element type or null if no element type with
 the specified name can be found.</p>
 </td>
       </tr>
