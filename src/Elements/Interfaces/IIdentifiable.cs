@@ -1,5 +1,7 @@
 #pragma warning disable CS1591
 
+using System;
+
 namespace Elements.Interfaces
 {
     /// <summary>
@@ -10,7 +12,7 @@ namespace Elements.Interfaces
         /// <summary>
         /// The unique identifier of the Element.
         /// </summary>
-        long Id { get; }
+        Guid Id { get; }
 
         /// <summary>
         /// A human-readable name for the Element.

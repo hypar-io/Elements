@@ -16,12 +16,12 @@ namespace Elements
     /// </summary>
     public class Model
     {
-        private Dictionary<long, Material> _materials = new Dictionary<long, Material>();
-        private Dictionary<long, Element> _elements = new Dictionary<long, Element>();
+        private Dictionary<Guid, Material> _materials = new Dictionary<Guid, Material>();
+        private Dictionary<Guid, Element> _elements = new Dictionary<Guid, Element>();
 
-        private Dictionary<long, ElementType> _elementTypes = new Dictionary<long, ElementType>();
+        private Dictionary<Guid, ElementType> _elementTypes = new Dictionary<Guid, ElementType>();
 
-        private Dictionary<long, Profile> _profiles = new Dictionary<long, Profile>();
+        private Dictionary<Guid, Profile> _profiles = new Dictionary<Guid, Profile>();
 
         private List<string> _extensions = new List<string>();
 
@@ -36,9 +36,9 @@ namespace Elements
         public Position Origin { get; set; }
 
         /// <summary>
-        /// All Elements in the Model.
+        /// All elements in the Model.
         /// </summary>
-        public Dictionary<long, Element> Elements
+        public Dictionary<Guid, Element> Elements
         {
             get { return this._elements; }
         }
@@ -46,23 +46,23 @@ namespace Elements
         /// <summary>
         /// All Materials in the Model.
         /// </summary>
-        public Dictionary<long, Material> Materials
+        public Dictionary<Guid, Material> Materials
         {
             get { return this._materials; }
         }
 
         /// <summary>
-        /// All ElementTypes in the Model.
+        /// All element types in the Model.
         /// </summary>
-        public Dictionary<long, ElementType> ElementTypes
+        public Dictionary<Guid, ElementType> ElementTypes
         {
             get { return this._elementTypes; }
         }
 
         /// <summary>
-        /// All Profiles in the model.
+        /// All profiles in the model.
         /// </summary>
-        public Dictionary<long, Profile> Profiles
+        public Dictionary<Guid, Profile> Profiles
         {
             get { return this._profiles; }
         }
@@ -115,7 +115,7 @@ namespace Elements
             AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
         }
 
-                /// <summary>
+        /// <summary>
         /// Update an element existing in the model.
         /// </summary>
         /// <param name="element">The element to update in the model.</param>
@@ -163,7 +163,7 @@ namespace Elements
             }
         }
 
-                /// <summary>
+        /// <summary>
         /// Update a collection of elements in the model.
         /// </summary>
         /// <param name="elements">The elements to be updated in the model.</param>
@@ -181,7 +181,7 @@ namespace Elements
         /// <param name="id">The identifier of the Element.</param>
         /// <returns>An Element or null if no Element can be found 
         /// with the provided id.</returns>
-        public Element GetElementById(int id)
+        public Element GetElementById(Guid id)
         {
             if (this._elements.ContainsKey(id))
             {
@@ -271,9 +271,9 @@ namespace Elements
             return IFCExtensions.FromIFC(path, idsToConvert);
         }
 
-        internal Model(Dictionary<long, Element> elements, Dictionary<long,
-            Material> materials, Dictionary<long, ElementType> elementTypes,
-            Dictionary<long, Profile> profiles, List<string> extensions)
+        internal Model(Dictionary<Guid, Element> elements, Dictionary<Guid,
+            Material> materials, Dictionary<Guid, ElementType> elementTypes,
+            Dictionary<Guid, Profile> profiles, List<string> extensions)
         {
             this._elements = elements;
             this._materials = materials;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
 {
@@ -10,13 +9,13 @@ namespace Elements.Serialization.JSON
     /// </summary>
     public class MaterialToIdConverter : JsonConverter
     {
-        private Dictionary<long, Material> _materials;
+        private Dictionary<Guid, Material> _materials;
 
         /// <summary>
         /// Construct a MaterialConverter.
         /// </summary>
         /// <param name="materials">A collection of Materials.</param>
-        public MaterialToIdConverter(Dictionary<long, Material> materials)
+        public MaterialToIdConverter(Dictionary<Guid, Material> materials)
         {
             this._materials = materials;
         }
@@ -40,7 +39,7 @@ namespace Elements.Serialization.JSON
         /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var id = (long)reader.Value;
+            var id = Guid.Parse((string)reader.Value);
             if(this._materials.ContainsKey(id))
             {
                 return this._materials[id]; 

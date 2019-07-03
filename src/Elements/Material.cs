@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using Elements.Geometry;
 using Elements.Interfaces;
-using Elements.Serialization;
 
 namespace Elements
 {
@@ -15,10 +14,10 @@ namespace Elements
         /// <summary>
         /// The unique identifier of the material.
         /// </summary>
-        public long Id{get; internal set;}
+        public Guid Id{get; internal set;}
 
         /// <summary>
-        /// The RGBA Color of the material.
+        /// The RGBA color of the material.
         /// </summary>
         public Color Color{get;}
 
@@ -55,6 +54,7 @@ namespace Elements
         /// <summary>
         /// Construct a material.
         /// </summary>
+        /// <param name="id">The unique identifier of the material.</param>
         /// <param name="name">The identifier of the material. Identifiers should be unique within a model.</param>
         /// <param name="color">The RGBA color of the material.</param>
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
@@ -63,7 +63,7 @@ namespace Elements
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is greater than 1.0.</exception>
         [JsonConstructor]
-        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, bool doubleSided = false)
+        public Material(Guid id, string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, bool doubleSided = false)
         {
             if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {
@@ -75,13 +75,26 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("The material could not be created. Color, specular, and glossiness values must be less than 1.0.");
             }
             
-            this.Id = IdProvider.Instance.GetNextId();
+            this.Id = id;
             this.Name = name;
             this.Color = color;
             this.SpecularFactor = specularFactor;
             this.GlossinessFactor = glossinessFactor;
             this.DoubleSided = doubleSided;
         }
+
+        /// <summary>
+        /// Construct a material.
+        /// </summary>
+        /// <param name="name">The identifier of the material. Identifiers should be unique within a model.</param>
+        /// <param name="color">The RGBA color of the material.</param>
+        /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
+        /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
+        /// <param name="doubleSided">Is the material double sided?</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is less than 0.0.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is greater than 1.0.</exception>
+        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, bool doubleSided = false): 
+            this(Guid.NewGuid(), name, color, specularFactor, glossinessFactor, doubleSided){}
 
         /// <summary>
         /// Is this material equal to the provided material?

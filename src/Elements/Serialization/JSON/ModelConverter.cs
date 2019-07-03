@@ -31,13 +31,13 @@ namespace Elements.Serialization.JSON
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
-            var materials = JsonConvert.DeserializeObject<Dictionary<long, Material>>(obj.GetValue("materials").ToString());
-            var profiles = JsonConvert.DeserializeObject<Dictionary<long, Profile>>(obj.GetValue("profiles").ToString(),
+            var materials = JsonConvert.DeserializeObject<Dictionary<Guid, Material>>(obj.GetValue("materials").ToString());
+            var profiles = JsonConvert.DeserializeObject<Dictionary<Guid, Profile>>(obj.GetValue("profiles").ToString(),
                                 new[] { new IProfileConverter() });
-            var elementTypes = JsonConvert.DeserializeObject<Dictionary<long, ElementType>>(obj.GetValue("elementTypes").ToString(),
+            var elementTypes = JsonConvert.DeserializeObject<Dictionary<Guid, ElementType>>(obj.GetValue("elementTypes").ToString(),
                                 new JsonConverter[] { new ElementTypeConverter(), new ProfileToIdConverter(profiles) });
             var extensions = JsonConvert.DeserializeObject<List<string>>(obj.GetValue("extensions").ToString());
-            var elements = JsonConvert.DeserializeObject<Dictionary<long, Element>>(obj.GetValue("elements").ToString(),
+            var elements = JsonConvert.DeserializeObject<Dictionary<Guid, Element>>(obj.GetValue("elements").ToString(),
                             new JsonSerializerSettings()
                             {
                                 Converters = new JsonConverter[]

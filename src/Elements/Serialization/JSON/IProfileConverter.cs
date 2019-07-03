@@ -1,7 +1,6 @@
 #pragma warning disable CS1591
 
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -43,8 +42,10 @@ namespace Elements.Serialization.JSON
                 result = o.ToObject<T>();
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
                 result = null;
                 return false;
             }

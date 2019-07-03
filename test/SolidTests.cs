@@ -5,6 +5,7 @@ using Elements.Geometry.Profiles;
 using Newtonsoft.Json;
 using Xunit.Abstractions;
 using System.Collections.Generic;
+using System;
 using System.IO;
 using Elements.Serialization.JSON;
 using Elements.Serialization.glTF;
@@ -159,7 +160,7 @@ namespace Elements.Tests
             var n = 4;
             var outer = Polygon.Ngon(n, 2);
             var solid = Solid.SweepFace(outer, null, 2.0);
-            var materials = new Dictionary<long,Material>();
+            var materials = new Dictionary<Guid,Material>();
             var defMaterial = BuiltInMaterials.Default;
             materials.Add(defMaterial.Id, defMaterial);
             var json = JsonConvert.SerializeObject(solid, new JsonSerializerSettings(){

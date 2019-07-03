@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.0]
+### Changed
+- `Element.Id` is now a `Guid`.
+
 ## [0.2.17]
 ### Added
 - The `Kernel` singleton has been added to contain all geometry methods for creating solids.

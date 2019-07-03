@@ -1,5 +1,4 @@
 using Elements.Interfaces;
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -46,7 +45,7 @@ namespace Elements.Geometry
     }
 
     /// <summary>
-    /// A Profile describes a polygonal perimeter
+    /// A profile describes a polygonal perimeter
     /// with zero or more polygonal voids.
     /// </summary>
     public class Profile : IIdentifiable
@@ -55,89 +54,78 @@ namespace Elements.Geometry
         private Polygon[] _voids;
 
         /// <summary>
-        /// The identifier of the Profile.
+        /// The identifier of the profile.
         /// </summary>
-        public long Id { get; internal set; }
+        public Guid Id { get; internal set; }
 
         /// <summary>
-        /// The name of the Profile.
+        /// The name of the profile.
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// The perimeter of the Profile.
+        /// The perimeter of the profile.
         /// </summary>
         public Polygon Perimeter { get => _perimeter; protected set => _perimeter = value; }
 
         /// <summary>
-        /// A collection of Polygons representing voids in the Profile.
+        /// A collection of Polygons representing voids in the profile.
         /// </summary>
         public Polygon[] Voids { get => _voids; protected set => _voids = value; }
 
         /// <summary>
-        /// Construct a Profile.
+        /// Construct a profile.
         /// </summary>
-        /// <param name="name">The name of the Profile.</param>
-        /// <param name="perimeter">The perimeter of the Profile.</param>
-        /// <param name="voids">A collection of Polygons representing voids in the Profile.</param>
+        /// <param name="id">The unique identifier of the profile.</param>
+        /// <param name="name">The name of the profile.</param>
+        /// <param name="perimeter">The perimeter of the profile.</param>
+        /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
         [JsonConstructor]
-        public Profile(Polygon perimeter, Polygon[] voids, string name = null)
+        public Profile(Guid id, Polygon perimeter, Polygon[] voids, string name = null)
         {
-            this.Id = IdProvider.Instance.GetNextId();
+            this.Id = id;
             this.Perimeter = perimeter;
             this.Voids = voids;
 
             this.Name = name;
             if (!IsPlanar())
             {
-                throw new Exception("To construct a Profile, all points must line in the same Plane.");
+                throw new Exception("To construct a profile, all points must line in the same plane.");
             }
             if(this.Voids != null)
             {
                 this.Clip();
             }
         }
-
+        
         /// <summary>
-        /// Construct a Profile.
+        /// Construct a profile.
         /// </summary>
-        /// <param name="name">The name of the Profile.</param>
-        /// <param name="perimeter">The perimeter of the Profile</param>
-        public Profile(Polygon perimeter, string name = null)
-        {
-            this.Id = IdProvider.Instance.GetNextId();
-            this.Perimeter = perimeter;
-            this.Name = name;
-            if (!IsPlanar())
-            {
-                throw new Exception("To construct a Profile, all points must line in the same Plane.");
-            }
-        }
+        /// <param name="name">The name of the profile.</param>
+        /// <param name="perimeter">The perimeter of the profile.</param>
+        /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
+        public Profile(Polygon perimeter, Polygon[] voids, string name = null):
+            this(Guid.NewGuid(), perimeter, voids, name){}
 
         /// <summary>
-        /// Construct a Profile.
+        /// Construct a profile.
         /// </summary>
-        /// <param name="name">The name of the Profile.</param>
-        /// <param name="perimeter">The perimeter of the Profile.</param>
-        /// <param name="singleVoid">A void in the Profile.</param>
-        public Profile(Polygon perimeter, Polygon singleVoid, string name = null)
-        {
-            this.Id = IdProvider.Instance.GetNextId();
-            this.Perimeter = perimeter;
-            this.Voids = new[] { singleVoid };
-            this.Name = name;
-            if (!IsPlanar())
-            {
-                throw new Exception("To construct a Profile, all points must line in the same Plane.");
-            }
-            if(singleVoid != null)
-            {
-                this.Clip();
-            }
-        }
+        /// <param name="name">The name of the profile.</param>
+        /// <param name="perimeter">The perimeter of the profile</param>
+        public Profile(Polygon perimeter, string name = null): 
+            this(Guid.NewGuid(), perimeter, null, name){}
 
         /// <summary>
-        /// Get a new Profile which is the reverse of this Profile.
+        /// Construct a profile.
+        /// </summary>
+        /// <param name="name">The name of the profile.</param>
+        /// <param name="perimeter">The perimeter of the profile.</param>
+        /// <param name="singleVoid">A void in the profile.</param>
+        public Profile(Polygon perimeter, Polygon singleVoid, string name = null):
+            this(Guid.NewGuid(), perimeter, new[] { singleVoid }, name){}
+
+        /// <summary>
+        /// Get a new profile which is the reverse of this profile.
         /// </summary>
         public Profile Reversed()
         {
@@ -154,7 +142,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The area of the Profile.
+        /// The area of the profile.
         /// </summary>
         public double Area()
         {
@@ -162,11 +150,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Default constructor for Profile.
+        /// Default constructor for profile.
         /// </summary>
         protected Profile(string name)
         {
-            this.Id = IdProvider.Instance.GetNextId();
+            this.Id = Guid.NewGuid();
             this.Name = name;
         }
 
