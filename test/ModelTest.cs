@@ -79,6 +79,14 @@ namespace Elements.Tests
                     // Try deserializing JSON
                     Console.WriteLine($"Deserializing {this._name} from JSON.");
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
+                    foreach(var kvp in this._model.Elements)
+                    {
+                        var newEl = newModel.GetElementById(kvp.Value.Id);
+                        if(newEl == null)
+                        {
+                            throw new Exception($"{this.Name}: An element with the id {kvp.Value.Id}, could not be found in the new model.");
+                        }
+                    }
                 }
 
                 if(this.GenerateIfc)

@@ -103,7 +103,7 @@ namespace Elements
             }
             else
             {
-                throw new ArgumentException("An Element with the same Id already exists in the Model.");
+                throw new ArgumentException("An element with the same Id already exists in the Model.");
             }
 
             if (element is IAggregateElements)
@@ -139,7 +139,7 @@ namespace Elements
             }
             else
             {
-                throw new ArgumentException("No Element with this Id exists in the Model.");
+                throw new ArgumentException("No element with this Id exists in the Model.");
             }
 
             if (element is IAggregateElements)
@@ -176,10 +176,10 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get an Element by id from the Model.
+        /// Get an element by id from the Model.
         /// </summary>
-        /// <param name="id">The identifier of the Element.</param>
-        /// <returns>An Element or null if no Element can be found 
+        /// <param name="id">The identifier of the element.</param>
+        /// <returns>An element or null if no element can be found 
         /// with the provided id.</returns>
         public Element GetElementById(Guid id)
         {
@@ -191,10 +191,10 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get the first Element with the specified name.
+        /// Get the first element with the specified name.
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>An Element or null if no Element can be found 
+        /// <returns>An element or null if no element can be found 
         /// with the provided name.</returns>
         public Element GetElementByName(string name)
         {
@@ -218,10 +218,10 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get an ElementType by name.
+        /// Get an element type by name.
         /// </summary>
-        /// <param name="name">The name of the ElementType.</param>
-        /// <returns>An ElementType or null if no ElementType with 
+        /// <param name="name">The name of the element type.</param>
+        /// <returns>An element type or null if no element type with 
         /// the specified name can be found.</returns>
         public ElementType GetElementTypeByName(string name)
         {
@@ -240,10 +240,10 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get all Elements of the specified Type.
+        /// Get all elements of the specified Type.
         /// </summary>
         /// <typeparam name="T">The Type of element to return.</typeparam>
-        /// <returns>A collection of Elements of the specified type.</returns>
+        /// <returns>A collection of elements of the specified type.</returns>
         public IEnumerable<T> ElementsOfType<T>()
         {
             return this._elements.Values.OfType<T>();
