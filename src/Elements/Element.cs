@@ -15,10 +15,10 @@ namespace Elements
         private Dictionary<string, IProperty> _properties = new Dictionary<string, IProperty>();
 
         /// <summary>
-        /// The unique identifier of the Element.
+        /// The unique identifier of the element.
         /// </summary>
         [JsonProperty(Order = -101)]
-        public long Id { get; internal set; }
+        public Guid Id { get; internal set; }
 
         /// <summary>
         /// The type of the element.
@@ -31,7 +31,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// A map of properties for the Element.
+        /// A map of properties for the element.
         /// </summary>
         [JsonProperty(NullValueHandling=NullValueHandling.Ignore), 
             JsonConverter(typeof(PropertyDictionaryConverter))]
@@ -51,11 +51,22 @@ namespace Elements
         public string Name { get; set; }
 
         /// <summary>
-        /// Construct a default Element.
+        /// Construct an element.
         /// </summary>
         public Element()
         {
-            this.Id = IdProvider.Instance.GetNextId();
+            this.Id = Guid.NewGuid();
+            this.Transform = new Transform();
+        }
+
+        /// <summary>
+        /// Construct an element.
+        /// </summary>
+        /// <param name="id">The unique identifer of the element.</param>
+        [JsonConstructor]
+        public Element(Guid id)
+        {
+            this.Id = id;
             this.Transform = new Transform();
         }
 

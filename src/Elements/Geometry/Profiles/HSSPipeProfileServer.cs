@@ -1,6 +1,4 @@
-using Elements.Geometry;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Elements.Geometry.Profiles

@@ -9,13 +9,13 @@ namespace Elements.Serialization.JSON
     /// </summary>
     public class ElementTypeToIdConverter : JsonConverter
     {
-        private Dictionary<long, ElementType> _elementTypes;
+        private Dictionary<Guid, ElementType> _elementTypes;
 
         /// <summary>
         /// Construct an ElementTypeConverter.
         /// </summary>
         /// <param name="elementTypes"></param>
-        public ElementTypeToIdConverter(Dictionary<long, ElementType> elementTypes)
+        public ElementTypeToIdConverter(Dictionary<Guid, ElementType> elementTypes)
         {
             this._elementTypes = elementTypes;
         }
@@ -40,7 +40,7 @@ namespace Elements.Serialization.JSON
         /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var id = (long)reader.Value;
+            var id = Guid.Parse((string)reader.Value);
             if(this._elementTypes.ContainsKey(id))
             {
                 return this._elementTypes[id]; 

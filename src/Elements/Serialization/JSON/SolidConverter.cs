@@ -22,7 +22,7 @@ namespace Elements.Serialization.JSON
     {
         private List<Type> _solidTypes;
         
-        public SolidConverter(Dictionary<long, Material> materials)
+        public SolidConverter(Dictionary<Guid, Material> materials)
         {
             try
             {

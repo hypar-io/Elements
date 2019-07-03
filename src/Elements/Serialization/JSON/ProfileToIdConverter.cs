@@ -1,7 +1,6 @@
 #pragma warning disable CS1591
 
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,9 +9,9 @@ namespace Elements.Serialization.JSON
 {
     public class ProfileToIdConverter : JsonConverter
     {
-        private Dictionary<long, Profile> _profiles;
+        private Dictionary<Guid, Profile> _profiles;
 
-        public ProfileToIdConverter(Dictionary<long, Profile> profiles)
+        public ProfileToIdConverter(Dictionary<Guid, Profile> profiles)
         {
             this._profiles = profiles;
         }
@@ -35,7 +34,7 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var id = (long)reader.Value;
+            var id = Guid.Parse((string)reader.Value);
             
             if(this._profiles.ContainsKey(id))
             {

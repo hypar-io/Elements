@@ -1,6 +1,5 @@
 #pragma warning disable CS1591
 
-using Elements.Geometry;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry.Profiles
@@ -87,8 +86,6 @@ namespace Elements.Geometry.Profiles
                                     HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
                                     double verticalOffset = 0.0, double horizontalOffset = 0.0) : base(name)
         {
-            
-
             this.Perimeter = CreateProfile(bf, d, tf, tw, verticalAlignment, horizontalAlignment, verticalOffset, horizontalOffset);
         }
 
