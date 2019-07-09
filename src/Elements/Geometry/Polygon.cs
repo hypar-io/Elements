@@ -1,4 +1,5 @@
 using ClipperLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -593,7 +594,7 @@ namespace Elements.Geometry
                 area += _vertices[i].X * _vertices[j].Y;
                 area -= _vertices[i].Y * _vertices[j].X;
             }
-            return area/2.0;
+            return Math.Abs(area/2.0);
         }
     }
 

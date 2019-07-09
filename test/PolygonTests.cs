@@ -556,6 +556,8 @@ namespace Elements.Geometry.Tests
             var p4 = new Vector3(0.0, 1.0);
             var pp = new Polygon(new[]{p1,p2,p3,p4});
             Assert.Equal(1.0, pp.Area());
+            var pr = new Polygon(new[] {p4,p3,p2,p1});
+            Assert.Equal(1.0, pr.Area());
         }
 
         [Fact]
