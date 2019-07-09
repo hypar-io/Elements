@@ -20,21 +20,99 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void Centroid()
         {
+            // Square in Quadrant I
             var polygon = new Polygon
             (
                 new[]
                 {
-                    new Vector3(),
-                    new Vector3(3, 3),
-                    new Vector3(6, 0),
-                    new Vector3(6, 8),
-                    new Vector3(3, 5),
-                    new Vector3(0, 8)
+                    Vector3.Origin,
+                    new Vector3(6.0, 0.0),
+                    new Vector3(6.0, 6.0),
+                    new Vector3(0.0, 6.0),
                 }
             );
             var centroid = polygon.Centroid();
-            Assert.Equal(3, centroid.X);
-            Assert.Equal(4, centroid.Y);
+            Assert.Equal(3.0, centroid.X);
+            Assert.Equal(3.0, centroid.Y);
+
+            // Square in Quadrant II
+            polygon = new Polygon
+            (
+                new[]
+                {
+                    Vector3.Origin,
+                    new Vector3(-6.0, 0.0),
+                    new Vector3(-6.0, 6.0),
+                    new Vector3(0.0, 6.0),
+                }
+            );
+            centroid = polygon.Centroid();
+            Assert.Equal(-3.0, centroid.X);
+            Assert.Equal(3.0, centroid.Y);
+
+            // Square in Quadrant III
+            polygon = new Polygon
+            (
+                new[]
+                {
+                    Vector3.Origin,
+                    new Vector3(-6.0, 0.0),
+                    new Vector3(-6.0, -6.0),
+                    new Vector3(0.0, -6.0),
+                }
+            );
+            centroid = polygon.Centroid();
+            Assert.Equal(-3.0, centroid.X);
+            Assert.Equal(-3.0, centroid.Y);
+
+            // Square in Quadrant IV
+            polygon = new Polygon
+            (
+                new[]
+                {
+                    Vector3.Origin,
+                    new Vector3(6.0, 0.0),
+                    new Vector3(6.0, -6.0),
+                    new Vector3(0.0, -6.0),
+                }
+            );
+            centroid = polygon.Centroid();
+            Assert.Equal(3.0, centroid.X);
+            Assert.Equal(-3.0, centroid.Y);
+
+            // Bow Tie in Quadrant I
+            polygon = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(1.0, 1.0),
+                    new Vector3(4.0, 4.0),
+                    new Vector3(7.0, 1.0),
+                    new Vector3(7.0, 9.0),
+                    new Vector3(4.0, 6.0),
+                    new Vector3(1.0, 9.0)
+                }
+            );
+            centroid = polygon.Centroid();
+            Assert.Equal(4.0, centroid.X);
+            Assert.Equal(5.0, centroid.Y);
+
+            // Bow Tie in Quadrant III
+            polygon = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(-1.0, -1.0),
+                    new Vector3(-4.0, -4.0),
+                    new Vector3(-7.0, -1.0),
+                    new Vector3(-7.0, -9.0),
+                    new Vector3(-4.0, -6.0),
+                    new Vector3(-1.0, -9.0)
+                }
+            );
+            centroid = polygon.Centroid();
+            Assert.Equal(-4.0, centroid.X);
+            Assert.Equal(-5.0, centroid.Y);
         }
 
         [Fact]
