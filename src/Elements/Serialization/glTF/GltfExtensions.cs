@@ -21,6 +21,13 @@ namespace Elements.Serialization.glTF
     /// </summary>
     public static class GltfExtensions
     {
+        private const string emptyGltf = @"{
+    ""asset"": {""version"": ""2.0""},
+    ""nodes"": [{""name"": ""empty""}],
+    ""scenes"": [{""nodes"": [0]}],
+    ""scene"": 0
+}";
+
         /// <summary>
         /// Save a model to gltf.
         /// </summary>
@@ -29,6 +36,12 @@ namespace Elements.Serialization.glTF
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true)
         {
+            if(model.Elements.Values.Count == 0)
+            {
+                File.WriteAllText(path, emptyGltf);
+                return;
+            }
+
             if(useBinarySerialization)
             {
                 SaveGlb(model, path);
