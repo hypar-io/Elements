@@ -6,6 +6,7 @@ using Xunit;
 using Elements;
 using Elements.Geometry;
 using Elements.Serialization.glTF;
+using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
@@ -42,6 +43,16 @@ namespace Elements.Tests
             var bytes = Convert.FromBase64String(base64);
             File.WriteAllBytes("models/SaveFromBase64String.glb", bytes);
             Assert.True(File.Exists("models/SaveFromBase64String.glb"));
+        }
+
+        [Fact]
+        public void HasOriginAfterSerialization()
+        {
+            var model = new Model();
+            model.Origin = new GeoJSON.Position(10.0, 10.0);
+            var json = model.ToJson();
+            var newModel = Model.FromJson(json);
+            Assert.Equal(model.Origin, newModel.Origin);
         }
   
         private Model QuadPanelModel()
