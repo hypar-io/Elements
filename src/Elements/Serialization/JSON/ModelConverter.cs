@@ -51,7 +51,11 @@ namespace Elements.Serialization.JSON
                                 NullValueHandling = NullValueHandling.Ignore,
                                 ContractResolver = new CamelCasePropertyNamesContractResolver() 
                             });
-            return new Model(elements, materials, elementTypes, profiles, extensions);
+            var origin = JsonConvert.DeserializeObject<GeoJSON.Position>(obj.GetValue("origin").ToString());
+            var model = new Model(elements, materials, elementTypes, profiles, extensions){
+                Origin = origin
+            };
+            return model;
         }
 
         /// <summary>
@@ -110,6 +114,10 @@ namespace Elements.Serialization.JSON
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver() 
             }));
+
+            // Write origin
+            writer.WritePropertyName("origin");
+            writer.WriteRawValue(JsonConvert.SerializeObject(model.Origin, settings));
 
             // Serialize materials
             writer.WriteEndObject();
