@@ -20,7 +20,6 @@ namespace Elements.Tests
                 new Opening(3, 3, 1, 3),
             };
             var floor = new Floor(p, floorType, 0.5, null, openings);
-            var model = new Model();
 
             this.Model.AddElement(floor);
         }
