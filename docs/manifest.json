@@ -71,11 +71,11 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "Functions/GetStartedWithFunctions.md",
+      "source_relative_path": "Platform/GettingStartedWithTheHyparPlatform.md",
       "output": {
         ".html": {
-          "relative_path": "Functions/GetStartedWithFunctions.html",
-          "hash": "81t2u7RLqDKGHn6ws264VQ=="
+          "relative_path": "Platform/GettingStartedWithTheHyparPlatform.html",
+          "hash": "ukqgLnfoXapKPWBQNEZcqA=="
         }
       },
       "is_incremental": false,
@@ -83,11 +83,11 @@
     },
     {
       "type": "Toc",
-      "source_relative_path": "Functions/toc.yml",
+      "source_relative_path": "Platform/toc.yml",
       "output": {
         ".html": {
-          "relative_path": "Functions/toc.html",
-          "hash": "+P7tcPiotR9PL0LIhvR6Uw=="
+          "relative_path": "Platform/toc.html",
+          "hash": "brE1vIRHklgbGZrjDNxniA=="
         }
       },
       "is_incremental": false,
@@ -1523,6 +1523,622 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "images/HyparAddNumericProperty.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparAddNumericProperty.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparAddProperties.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparAddProperties.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparAddProperty.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparAddProperty.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparAddPropertyName.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparAddPropertyName.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparAreaOptions.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparAreaOptions.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparAreaOutput.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparAreaOutput.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparAreaResult.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparAreaResult.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparCLIinstall2019.06.16.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparCLIinstall2019.06.16.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparCardFlip2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparCardFlip2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparFunctionName2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparFunctionName2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparFunctionNewLogin2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparFunctionNewLogin2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparFunctionPublished2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparFunctionPublished2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparHeight20Options.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparHeight20Options.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparHeightInput2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparHeightInput2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparHeightInputJSON2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparHeightInputJSON2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparHeightUpdate.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparHeightUpdate.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparInit2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparInit2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparInitChange2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparInitChange2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparInitCommand2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparInitCommand2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparInputs2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparInputs2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparInputsClass2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparInputsClass2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparInputsClassJSON2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparInputsClassJSON2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparIntro.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparIntro.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparJSONCreate019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparJSONCreate019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparJSONHeightMinMaxStep.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparJSONHeightMinMaxStep.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparJSONOutputs.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparJSONOutputs.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparLabels.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparLabels.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparLabels2.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparLabels2.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparLabels3.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparLabels3.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparLabels4.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparLabels4.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparLanding2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparLanding2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparLogin2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparLogin2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparNewNumericProperty.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparNewNumericProperty.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparOption2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparOption2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparOptions2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparOptions2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparOutputs.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparOutputs.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparOutputs2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparOutputs2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparOutputsChanged.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparOutputsChanged.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparPublish2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparPublish2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparSLN2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparSLN2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparSRC2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparSRC2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparSample20Options.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparSample20Options.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparSignIn2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparSignIn2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparSignUp2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparSignUp2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparSignUpConfirm2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparSignUpConfirm2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparSignUpEmail2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparSignUpEmail2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparSignUpNotice2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparSignUpNotice2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStartFunctionCreate2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStartFunctionCreate2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStartFunctionLabels1.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStartFunctionLabels1.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStartFunctionTests2019.06.16.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStartFunctionTests2019.06.16.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStarter20Height2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStarter20Height2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStarterFolder2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStarterFolder2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStarterFunction2019.06.16.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStarterFunction2019.06.16.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStarterFunctionError.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStarterFunctionError.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStarterFunctionNoOptions2019.06.16.PNG",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStarterFunctionNoOptions2019.06.16.PNG"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparStarterHeight2019.06.16.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparStarterHeight2019.06.16.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "images/hypar_logo.png",
       "output": {
         "resource": {
@@ -1552,7 +2168,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "sT1xAxG/jkDDG9YsjKEaAg=="
+          "hash": "AVg/C0+P7yPLArqO6mZ3hw=="
         }
       },
       "is_incremental": false,
@@ -1597,7 +2213,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "n+seT1/40R+Sm0FU7CyRzg=="
+          "hash": "t6m/BJz8+QBFgmKEBGH6RA=="
         }
       },
       "is_incremental": false,
@@ -1607,26 +2223,27 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Disable incremental build by force rebuild option.",
         "incrementalPhase": "build"
       },
       "processors": {
-        "ResourceDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build"
-        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build"
         },
         "ConceptualDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
+          "incrementalPhase": "build"
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

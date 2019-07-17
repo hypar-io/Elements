@@ -29,8 +29,8 @@
       },
       {
         "files": [
-          "Functions/**.yml",
-          "Functions/**.md"
+          "Platform/**.yml",
+          "Platform/**.md"
         ]
       },
       {
