@@ -1,10 +1,9 @@
 using System;
-using Elements.Geometry;
 
 namespace Elements.GeoJSON
 {
     /// <summary>
-    /// Methods for computing geographic coordinates.
+    /// Methods for computing geographic coordinates using the Mercator projection.
     /// </summary>
     public static class MercatorProjection
     {
