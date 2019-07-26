@@ -75,7 +75,7 @@
     ],
     "dest": "../docs/",
     "globalMetadata": {
-      "_appTitle": "Hypar",
+      "_appTitle": "Hypar Docs",
       "_appFooter": "Copyright © Hypar Inc., 2019",
       "_disableContribution": true,
       "_enableSearch": true,

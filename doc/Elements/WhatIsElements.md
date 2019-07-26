@@ -21,7 +21,7 @@ Elements is also open source. The code is available in the [github repository](h
 ## Where Can I Use Elements?
 Elements will work in any project that supports the .NET Standard 2.0 API set. This includes Revit Addins (including Dynamo), Rhino addins (including Grasshopper), Unity games, and more! You can find out about more about .NET Standard API coverage [here](https://github.com/dotnet/standard/blob/master/docs/versions.md).
 
-Code you write with Elements is **just code**, you are free to use it wherever it is compatible. One place we recommend is [Hypar](https://hypar-io.github.io/Elements/GettingStarted.html)
+Code you write with Elements is **just code**, you are free to use it wherever it is compatible. One place we recommend is [Hypar](./GettingStarted.html)
 
 ## Where Can I Get Some Code Examples?
 The Elements library reference documentation is located [here](../api/Elements.html).
