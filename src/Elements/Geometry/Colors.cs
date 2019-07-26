@@ -1,7 +1,7 @@
 namespace Elements.Geometry
 {
     /// <summary>
-    /// Commonly used Colors.
+    /// Commonly used colors.
     /// </summary>
     public static class Colors
     {

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// Arc represents an arc defined between a start angle and an end angle.
+    /// An arc defined around a center between a start angle and an end angle.
     /// </summary>
     public class Arc : ICurve
     {

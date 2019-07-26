@@ -7,7 +7,7 @@ using System.Linq;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// The vertical alignment of the profile.
+    /// The vertical alignment of a profile.
     /// </summary>
     public enum VerticalAlignment
     {
@@ -26,7 +26,7 @@ namespace Elements.Geometry
     }
 
     /// <summary>
-    /// The horizontal alignment of the profile.
+    /// The horizontal alignment of a profile.
     /// </summary>
     public enum HorizontalAlignment
     {
@@ -45,8 +45,7 @@ namespace Elements.Geometry
     }
 
     /// <summary>
-    /// A profile describes a polygonal perimeter
-    /// with zero or more polygonal voids.
+    /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
     public class Profile : IIdentifiable
     {

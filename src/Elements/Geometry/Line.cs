@@ -5,7 +5,7 @@ using System;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// Line represents a linear curve between two points.
+    /// A linear curve between two points.
     /// </summary>
     public class Line : ICurve
     {
