@@ -16,20 +16,20 @@ Before getting started, there are a few things you'll need and some other things
 ### Things you'll need
 * A 'modern' web browser. 
     * We'll use **Google Chrome** for this guide, but **Firefox** or **Brave** should also work fine.
-        * **Chrome**: https://www.google.com/chrome/
-        * **Firefox**: https://www.mozilla.org/en-US/firefox/new/
-        * **Brave**: https://brave.com/download/
+        * [Chrome](https://www.google.com/chrome/)
+        * [Firefox](https://www.mozilla.org/en-US/firefox/new/)
+        * [Brave](https://brave.com/download/)
     
 * **Visual Studio Community** (Windows) or **VS Code** (Windows, Mac OS, Linux)
     * We'll use **Visual Studio Community** or **VSC** for this guide, but if you're more comfortable in **VS Code**, take analogous actions in that editor when we come to those steps.
-        * **Visual Studio Community**: https://visualstudio.microsoft.com/vs/community/
+        * [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/)
     
 * Access to a command line for your operating system.
     * We'll use the **Windows Command Prompt** for this guide, but other operating system command prompts should work similarly.
     
-* The Microsoft .Net Core 2.1. 
+* Microsoft .Net Core 2.1. 
     * Hypar uses the cross-platform dotnet framework created and maintained by Microsoft. The version number is important! There might be issues with later or earlier versions of .Net Core.
-        * **.Net Core 2.1**: https://dotnet.microsoft.com/download/dotnet-core/2.1
+        * [.Net Core 2.1](https://dotnet.microsoft.com/download/dotnet-core/2.1)
     
 ### Things you might want to know
 * Basic familiarity with the **C#** programming language will help, but if you're not familiar with C# we'll do our best to walk you through making changes to the initial code you'll get by following the steps in this guide.
