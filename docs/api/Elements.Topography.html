@@ -205,8 +205,8 @@ var w = 512/8 - 1;
 var data = JsonConvert.DeserializeObject&lt;Dictionary&lt;string,double[]&gt;&gt;(File.ReadAllText(&quot;./elevations.json&quot;));
 var elevations = data[&quot;points&quot;];
 
-// Compute the mapbox tile side lenth.
-var d = (40075016.685578 / Math.Pow(2, 15))/w;
+// Compute the mapbox tile size.
+var cellSize = (40075016.685578 / Math.Pow(2, 15))/w;
 
 // Create a colorizer which colors a triangle
 // according to its slope.
@@ -232,7 +232,7 @@ Func&lt;Triangle,Color&gt; colorizer = (tri) =&gt; {
 };
 
 // Create a topography.
-var topo = new Topography(Vector3.Origin, d, d, elevations, w, colorizer);
+var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, colorizer);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
