@@ -200,7 +200,13 @@
   
     animate();
   </script><h5 id="Elements_Column_examples"><strong>Examples</strong></h5>
-  <pre><code class="lang-csharp" name="Main"></code></pre>
+  <pre><code class="lang-csharp" name="Main">// Create a framing type.
+var profile = WideFlangeProfileServer.Instance.GetProfileByName(&quot;W44x335&quot;);
+var framingType = new StructuralFramingType(profile.Name, profile, BuiltInMaterials.Steel);
+
+// Create a column.
+var column = new Column(Vector3.Origin, 3.0, framingType);
+</code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
