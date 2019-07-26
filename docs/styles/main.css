@@ -5,7 +5,7 @@
     --hy-co-dark-blue: rgb(24,54,73);
 	--hy-co-dark-blue-half:#27718b;
 	--hy-co-gray:#a3c3cb;
-	--hy-co-pale-green:#e7f2df;
+	--hy-co-pale-green:#eff0f3;
 	--hy-co-pink:#f05b6b;
 	--hy-co-medium-blue:#1e85b4;
 	--hy-co-light-blue:#0dafd3;
@@ -14,24 +14,50 @@
     --hy-co-shadow: #dfe9eb;
 }
 
-h1,h2,h3,h4,h5,h6 {
-    color: var(--hy-co-dark-blue)
-}
-
 a {
-    color: var(--hy-co-pink)
+    color: var(--hy-co-pink);
+    font-family: 'Roboto', sans-serif;
 }
 
-#navbar > ul > li > a {
-    color: var(--hy-co-pink)
+body {
+    background-color: var(--hy-co-pale-green)
 }
 
-#toc > ul > li.active.in > a{
-    color: var(--hy-co-medium-blue)
+body .toc {
+    background-color: var(--hy-co-pale-green)
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color: var(--hy-co-dark-blue);
+    font-family: 'Roboto', sans-serif;
 }
 
 header .navbar{
     border-width: 0px;
+}
+
+li {
+    font-family: 'Roboto', sans-serif;
+}
+
+#logo {
+    height: 50px;
+}
+
+#model {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    /* background-image: linear-gradient(white, var(--hy-co-shadow)) */
+}
+
+.navbar {
+    background: var(--hy-co-dark-blue);
+    min-height: 40px;
+}
+
+.navbar a {
+    background: none;
 }
 
 #navbar > ul > li.active > a.active {
@@ -39,25 +65,39 @@ header .navbar{
     color: var(--hy-co-pale-green);
 }
 
-/* #navbar > ul > li > a {
-    color: var(--hy-co-pale-green);
-    background-color: var(--hy-co-medium-blue)
-} */
-
-#logo {
-    height: 50px;
+#navbar > ul > li > a {
+    color: var(--hy-co-pink)
 }
 
-.navbar a {
-    background: none;
+p {
+    font-family: 'Roboto', sans-serif;
 }
 
-.navbar {
+pre {
     background: var(--hy-co-dark-blue)
+}
+
+.sidefilter {
+    background: var(--hy-co-pale-green);
+    border: none
+}
+
+.sidetoc {
+    background: var(--hy-co-pale-green);
+    border: none
+}
+
+.sidenav {
+    background: var(--hy-co-pale-green);
 }
 
 .subnav {
     background: var(--hy-co-pale-blue)
+}
+
+th {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700
 }
 
 .title {
@@ -66,9 +106,14 @@ header .navbar{
     color: var(--hy-co-pale-green)
 }
 
-#model {
-    position: relative;
-    width: 100%;
-    height: 500px;
-    /* background-image: linear-gradient(white, var(--hy-co-shadow)) */
+.toc {
+    background: var(--hy-co-pale-green)
+}
+
+#toc > ul > li.active.in > a{
+    color: var(--hy-co-medium-blue)
+}
+
+.xref.text-break {
+    font-family: 'Roboto', sans-serif;
 }

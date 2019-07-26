@@ -1,6 +1,6 @@
-﻿# Getting Started with the Hypar Platform
+﻿# Getting Started with Hypar
 
-Hypar is a cloud platform for AEC Generative Design that makes it easy to publish, distribute, and maintain your building design logic. Rather than requiring web development skills to scale and deliver your generative design procedures, Hypar lets you concentrate on what you want to get done while the platform creates the interface for your audience and provides computation, visualization, delivery, interoperability, and access control for your functions.
+Hypar is a cloud platform for generating buildings that makes it easy to publish, distribute, and maintain your building design logic. Rather than requiring web development skills to scale and deliver your design logic, Hypar lets you concentrate on what you want to get done while the platform creates the interface for your audience and provides computation, visualization, delivery, interoperability, and access control for your functions.
 
 By uploading a function to Hypar you can produce twenty options for a building problem in just a few seconds:
 
@@ -82,7 +82,7 @@ That's it! You now have a Hypar account. Later in this guide you'll sign in to s
 
 Open a Windows Command Prompt and input the following command:
 
-```text
+```bash
 dotnet tool install -g hypar.cli
 ```
 ![](../images/HyparCLIinstall2019.06.16.PNG)
@@ -90,7 +90,7 @@ dotnet tool install -g hypar.cli
 Now you're ready to send your first function to Hypar. First use the command prompt cd (for "<u>c</u>hange <u>d</u>irectory") command to navigate to the folder where you'd like to place your function project.
 
 Now try this in the same Windows Command Prompt:
-```text
+```bash
 hypar new
 ```
 ![](../images/HyparFunctionName2019.06.16.png)

@@ -1,4 +1,6 @@
-- name: Getting Started
-  href: GetStartedWithElements.md
-- name: Reference
+- name: Getting Started with the Hypar Platform
+  href: GettingStarted.md
+- name: What is Elements?
+  href: WhatIsElements.md
+- name: Elements Reference
   href: ../api/toc.yml

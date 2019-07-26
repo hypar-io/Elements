@@ -1,6 +1,4 @@
-- name: Home
-  href: index.md
+- name: HYPAR
+  href: https://hypar.io
 - name: Elements
   href: Elements/
-- name: Hypar Platform
-  href: Platform/
