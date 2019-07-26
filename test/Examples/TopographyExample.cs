@@ -20,8 +20,8 @@ namespace Elements.Tests.Examples
             var data = JsonConvert.DeserializeObject<Dictionary<string,double[]>>(File.ReadAllText("./elevations.json"));
             var elevations = data["points"];
 
-            // Compute the mapbox tile side lenth.
-            var d = (40075016.685578 / Math.Pow(2, 15))/w;
+            // Compute the mapbox tile size.
+            var cellSize = (40075016.685578 / Math.Pow(2, 15))/w;
 
             // Create a colorizer which colors a triangle
             // according to its slope.
@@ -47,7 +47,7 @@ namespace Elements.Tests.Examples
             };
 
             // Create a topography.
-            var topo = new Topography(Vector3.Origin, d, d, elevations, w, colorizer);
+            var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, colorizer);
             // </example>
 
             this.Model.AddElement(topo);
