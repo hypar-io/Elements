@@ -1,12 +1,11 @@
 using Elements.Geometry;
 using Elements.Interfaces;
-using System;
 using System.Collections.Generic;
 
 namespace Elements
 {
     /// <summary>
-    /// BeamSystem represents a collection of beams within a perimeter.
+    /// A collection of beams within a perimeter.
     /// </summary>
     public class BeamSystem : IAggregateElements
     {

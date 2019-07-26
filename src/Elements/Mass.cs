@@ -8,7 +8,7 @@ using System;
 namespace Elements
 {
     /// <summary>
-    /// An extruded building mass.
+    /// An extruded volume.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/MassExample.cs?name=example)]

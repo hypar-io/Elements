@@ -8,7 +8,7 @@ using Elements.Geometry.Solids;
 namespace Elements
 {
     /// <summary>
-    /// A boundary of an occupiable region.
+    /// An extruded region of occupiable space.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/SpaceExample.cs?name=example)]
