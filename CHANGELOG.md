@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.4]
+### Changed
+- Numerous comments were updated for clarity.
+- Numerous styling changes were made to the documentation to align with the Hypar brand.
+
+### Fixed
+- Fixed an error where vertex colors were not correctly encoded in the glTF.
+
 ## [0.3.0]
 ### Changed
 - `Element.Id` is now a `Guid`.
