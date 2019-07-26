@@ -90,7 +90,7 @@
     const size = boundingBox.getSize();
 
     // get the max side of the bounding box
-    const maxDim = Math.max( size.x, size.y, size.z );
+    const maxDim = Math.max( size.x, size.y, size.z ) * 3;
     const fov = this.camera.fov * ( Math.PI / 180 );
     let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
     

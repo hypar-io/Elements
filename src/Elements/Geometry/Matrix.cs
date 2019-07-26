@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Elements.Geometry
 {   
     /// <summary>
-    /// A column-ordered 4x3 matrix.
+    /// A column-ordered 4x4 matrix.
     /// </summary>
     public class Matrix
     {

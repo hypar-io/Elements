@@ -29,12 +29,6 @@
       },
       {
         "files": [
-          "Platform/**.yml",
-          "Platform/**.md"
-        ]
-      },
-      {
-        "files": [
           "Elements/**.yml",
           "Elements/**.md"
         ]
@@ -50,6 +44,11 @@
       {
         "files": [
           "images/**"
+        ]
+      },
+      {
+        "files": [
+          "favicon.ico"
         ]
       },
       {
@@ -81,7 +80,8 @@
       "_disableContribution": true,
       "_enableSearch": true,
       "_disableBreadcrumb": true,
-      "_disableFooter": true
+      "_disableFooter": true,
+      "_appFaviconPath": "favicon.ico"
     },
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],

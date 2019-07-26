@@ -9,7 +9,7 @@ using Elements.Geometry.Solids;
 namespace Elements
 {
     /// <summary>
-    /// A structural element with a Profile swept along a curve or extruded.
+    /// A structural element with a profile swept along a curve.
     /// </summary>
     public abstract class StructuralFraming : Element, IElementType<StructuralFramingType>, ISweepAlongCurve
     {

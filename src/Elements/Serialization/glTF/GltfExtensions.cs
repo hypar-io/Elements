@@ -221,7 +221,7 @@ namespace Elements.Serialization.glTF
                 var cBuff = AddBufferView(bufferViews, 0, buffer.Count, colors.Length, null, null);
                 buffer.AddRange(colors);
 
-                var cAccess = AddAccessor(accessors, cBuff, 0, Accessor.ComponentTypeEnum.FLOAT, colors.Length/3, cMin, cMax, Accessor.TypeEnum.VEC3);
+                var cAccess = AddAccessor(accessors, cBuff, 0, Accessor.ComponentTypeEnum.FLOAT, colors.Length/sizeof(float)/3, cMin, cMax, Accessor.TypeEnum.VEC3);
                 prim.Attributes.Add("COLOR_0", cAccess);
             }
 

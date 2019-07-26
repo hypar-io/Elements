@@ -12,9 +12,11 @@
   <link rel="stylesheet" href="{{_rel}}styles/docfx.vendor.css">
   <link rel="stylesheet" href="{{_rel}}styles/docfx.css">
   <link rel="stylesheet" href="{{_rel}}styles/main.css">
+  <link rel="stylesheet" href="{{_rel}}styles/vs2015.css">
   <meta property="docfx:navrel" content="{{_navRel}}">
   <meta property="docfx:tocrel" content="{{_tocRel}}">
   {{#_noindex}}<meta name="searchOption" content="noindex">{{/_noindex}}
   {{#_enableSearch}}<meta property="docfx:rel" content="{{_rel}}">{{/_enableSearch}}
   {{#_enableNewTab}}<meta property="docfx:newtab" content="true">{{/_enableNewTab}}
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
 </head>

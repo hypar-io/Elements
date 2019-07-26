@@ -1,11 +1,9 @@
-using Elements.Serialization;
-using Newtonsoft.Json;
 using System;
 
 namespace Elements.Geometry
 {
     /// <summary>
-    /// Color represents an RGBA color.
+    /// An RGBA color.
     /// </summary>
     public class Color
     {

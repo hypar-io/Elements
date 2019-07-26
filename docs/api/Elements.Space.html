@@ -16,11 +16,13 @@
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../styles/docfx.css">
     <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="../Elements/toc.html">
     
     <meta property="docfx:rel" content="../">
     
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -74,7 +76,7 @@
   
   <h1 id="Elements_Space" data-uid="Elements.Space" class="text-break">Class Space
   </h1>
-  <div class="markdown level0 summary"><p>A boundary of an occupiable region.</p>
+  <div class="markdown level0 summary"><p>An extruded region of occupiable space.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
@@ -169,7 +171,7 @@
       const size = boundingBox.getSize();
   
       // get the max side of the bounding box
-      const maxDim = Math.max( size.x, size.y, size.z );
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
       const fov = this.camera.fov * ( Math.PI / 180 );
       let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
       

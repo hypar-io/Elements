@@ -18,7 +18,7 @@ namespace Elements.Tests.Examples
 
             // Create a column.
             var column = new Column(Vector3.Origin, 3.0, framingType);
-            // </example
+            // </example>
 
             this.Model.AddElement(column);
         }
