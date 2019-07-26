@@ -112,18 +112,6 @@
       "version": ""
     },
     {
-      "type": "Conceptual",
-      "source_relative_path": "Elements/GettingStarted.md",
-      "output": {
-        ".html": {
-          "relative_path": "Elements/GettingStarted.html",
-          "hash": "v2PafwJUz4TLXnC4WVfeTg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
       "log_codes": [
         "InvalidFileLink"
       ],
@@ -132,7 +120,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/WhatIsElements.html",
-          "hash": "WAxqPhIUzFyMU0AwK89W1Q=="
+          "hash": "oQyBvsondWsOaPVNaCC6Hg=="
         }
       },
       "is_incremental": false,
@@ -144,7 +132,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "n2bhMLKebCrtmxjfvhgdpg=="
+          "hash": "L28iw5Q92v9/0DzyJ0+C/A=="
         }
       },
       "is_incremental": false,
@@ -2228,6 +2216,18 @@
       "version": ""
     },
     {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "CuiO36MUFIPSHcTWJmwl9A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
       "type": "Resource",
       "source_relative_path": "js/GLTFLoader.js",
       "output": {
@@ -2266,7 +2266,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "1F8wi6kgY161XvTD+pMUSg=="
+          "hash": "jHqil+F3yL3eZvMtCkt1wQ=="
         }
       },
       "is_incremental": false,
@@ -2277,7 +2277,7 @@
     {
       "status": {
         "can_incremental": false,
-        "details": "Cannot build incrementally because config changed.",
+        "details": "Disable incremental build by force rebuild option.",
         "incrementalPhase": "build"
       },
       "processors": {
@@ -2286,17 +2286,17 @@
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build"
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build"
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
+          "incrementalPhase": "build"
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

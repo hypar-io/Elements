@@ -21,10 +21,10 @@ Elements is also open source. The code is available in the [github repository](h
 ## Where Can I Use Elements?
 Elements will work in any project that supports the .NET Standard 2.0 API set. This includes Revit Addins (including Dynamo), Rhino addins (including Grasshopper), Unity games, and more! You can find out about more about .NET Standard API coverage [here](https://github.com/dotnet/standard/blob/master/docs/versions.md).
 
-Code you write with Elements is **just code**, you are free to use it wherever it is compatible. One place we recommend is [Hypar](./GettingStarted.html)
+Code you write with Elements is **just code**, you are free to use it wherever it is compatible. One place we recommend is [Hypar](../index.html)
 
 ## Where Can I Get Some Code Examples?
-The Elements library reference documentation is located [here](../api/Elements.html).
+The Elements library API documentation is located [here](../api/Elements.html).
 
 ## Does Elements Create Geometry?
 Elements contains a very simple geometry library full of classes like `Vector3`, `Line`, `Polygon`, and `Arc`. It contains [boundary representation](https://en.wikipedia.org/wiki/Boundary_representation)(BREP) classes with methods for creating extrusions and sweeps, a `Mesh` class for stuff like topographies that don't represent well using BREPs, and classes for working with [GeoJSON](https://geojson.org/). We like to joke that Elements' geometry library does "flat stuff with holes in it" really well.

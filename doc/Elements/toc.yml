@@ -1,6 +1,4 @@
-- name: Getting Started with Hypar
-  href: GettingStarted.md
-- name: Elements
+- name: What is Elements
   href: WhatIsElements.md
-- name: Elements Reference
+- name: API Documentation
   href: ../api/toc.yml
