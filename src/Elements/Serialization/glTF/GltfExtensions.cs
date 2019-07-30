@@ -680,6 +680,7 @@ namespace Elements.Serialization.glTF
             List<BufferView> bufferViews, List<Accessor> accessors)
         {
             var currLines = lines.Last();
+            // var sw = new Stopwatch();
 
             foreach (var edge in solid.Edges.Values)
             {
@@ -702,8 +703,10 @@ namespace Elements.Serialization.glTF
                     currLines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
                 }
             }
-
-            // var sw = new Stopwatch();
+            // sw.Stop();
+            // Console.WriteLine($"glTF:\t\t{sw.Elapsed} for parsing the edges.");
+            // sw.Reset();
+            
             // sw.Start();
             byte[] vertexBuffer;
             byte[] normalBuffer;
