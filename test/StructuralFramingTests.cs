@@ -1,4 +1,3 @@
-using Elements;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Profiles;

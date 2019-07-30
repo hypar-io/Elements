@@ -578,7 +578,7 @@ namespace Elements.Serialization.glTF
         private static void GetRenderDataForElement(IElement e, Gltf gltf, 
             Dictionary<string, int> materials, List<List<Vector3>> lines, List<byte> buffer, List<BufferView> bufferViews , List<Accessor> accessors)
         {
-            // var sw = new Stopwatch();
+            var sw = new Stopwatch();
             // sw.Start();
             if (e is IAggregateElements)
             {
@@ -679,7 +679,6 @@ namespace Elements.Serialization.glTF
             ref Dictionary<string, int> materials, ref List<List<Vector3>> lines, ref List<byte> buffer, 
             List<BufferView> bufferViews, List<Accessor> accessors)
         {
-            Elements.Geometry.Mesh mesh = null;
             var currLines = lines.Last();
 
             foreach (var edge in solid.Edges.Values)
@@ -706,14 +705,6 @@ namespace Elements.Serialization.glTF
 
             // var sw = new Stopwatch();
             // sw.Start();
-
-            mesh = new Elements.Geometry.Mesh();
-            solid.Tessellate(ref mesh);
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t\t{sw.Elapsed} for tessellating the solid.");
-            // sw.Reset();
-
-            // sw.Start();
             byte[] vertexBuffer;
             byte[] normalBuffer;
             byte[] indexBuffer;
@@ -723,11 +714,11 @@ namespace Elements.Serialization.glTF
             float[] cmin; float[] cmax;
             ushort imin; ushort imax;
 
-            mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+            solid.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin,
                             out cmax, out imin, out imax);
             // sw.Stop();
-            // Console.WriteLine($"glTF:\t\t{sw.Elapsed} for getting the mesh buffers.");
+            // Console.WriteLine($"glTF:\t\t{sw.Elapsed} for tessellating the solid.");
             // sw.Reset();
 
             // sw.Start();

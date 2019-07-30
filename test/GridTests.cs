@@ -1,9 +1,4 @@
-using Elements.Geometry;
 using Elements.Geometry.Profiles;
-using Elements;
-using System;
-using System.IO;
-using System.Linq;
 using Xunit;
 using Elements.Tests;
 
