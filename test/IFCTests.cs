@@ -1,11 +1,8 @@
 using Elements.Geometry;
-using Elements;
 using System;
 using System.IO;
-using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using System.Reflection;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
 
