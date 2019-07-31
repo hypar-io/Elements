@@ -380,17 +380,12 @@ namespace Elements.Geometry.Solids
             
             var tessellations = new Tess[this.Faces.Count];
 
-            // TODO: I would prefer to get the normals from the tesselated elements,
-            // but my experience has been that those normals are not consistent.
-            var normals = new Vector3[this.Faces.Count];
-
             var fi = 0;
             foreach (var f in this.Faces.Values)
             {
                 var tess = new Tess();
                 tess.NoEmptyPolygons = true;
                 tess.AddContour(f.Outer.ToContourVertexArray(f));
-                normals[fi] = f.Outer.Face.Plane().Normal;
 
                 if (f.Inner != null)
                 {
@@ -437,7 +432,11 @@ namespace Elements.Geometry.Solids
             for(var i=0; i<tessellations.Length; i++)
             {
                 var tess = tessellations[i];
-                var n = normals[i];
+
+                var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
+                var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
+                var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
+                var n = (b-a).Cross(c-a).Normalized();
 
                 for (var j = 0; j < tess.Vertices.Length; j++)
                 {
