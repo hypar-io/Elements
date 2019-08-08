@@ -430,11 +430,6 @@ namespace Elements.Serialization.glTF
             gltf.BufferViews = bufferViews.ToArray();
             gltf.Accessors = accessors.ToArray();
 
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-
             gltf.SaveBinaryModel(buffer.ToArray(), path);
         }
 
@@ -442,11 +437,6 @@ namespace Elements.Serialization.glTF
         {
             var buffer = new List<byte>();
             var gltf = InitializeGlTF(model, buffer);
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-
             gltf.SaveBinaryModel(buffer.ToArray(), path);
         }
 
@@ -455,11 +445,6 @@ namespace Elements.Serialization.glTF
             var buffer = new List<byte>();
 
             var gltf = InitializeGlTF(model, buffer);
-
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
 
             var uri = Path.GetFileNameWithoutExtension(path) + ".bin";
             gltf.Buffers[0].Uri = uri;
