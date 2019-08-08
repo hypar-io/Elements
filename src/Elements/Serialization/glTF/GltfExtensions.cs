@@ -629,7 +629,7 @@ namespace Elements.Serialization.glTF
             if(solid != null)
             {
                 ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
-                            ref materials, ref lines, ref buffer, bufferViews, accessors);
+                            ref materials, ref buffer, bufferViews, accessors);
             }
             // sw.Stop();
             // Console.WriteLine($"glTF:\t{sw.Elapsed} for processing element solids.");
@@ -661,36 +661,9 @@ namespace Elements.Serialization.glTF
         }
 
         private static void ProcessSolid(Solid solid, Transform t, string id, string materialName, ref Gltf gltf, 
-            ref Dictionary<string, int> materials, ref List<List<Vector3>> lines, ref List<byte> buffer, 
+            ref Dictionary<string, int> materials, ref List<byte> buffer, 
             List<BufferView> bufferViews, List<Accessor> accessors)
         {
-            var currLines = lines.Last();
-            // var sw = new Stopwatch();
-
-            foreach (var edge in solid.Edges.Values)
-            {
-                // Check if we'll overrun the index size
-                // for the current line array. If so,
-                // create a new line array.
-                if(currLines.Count + 2 > ushort.MaxValue)
-                {
-                    // Console.WriteLine($"Creating new line array at {currLines.Count}.");
-                    currLines = new List<Vector3>();
-                    lines.Add(currLines);
-                }
-
-                if (t != null)
-                {
-                    currLines.AddRange(new[] { t.OfPoint(edge.Left.Vertex.Point), t.OfPoint(edge.Right.Vertex.Point) });
-                }
-                else
-                {
-                    currLines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
-                }
-            }
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t\t{sw.Elapsed} for parsing the edges.");
-            // sw.Reset();
             
             // sw.Start();
             byte[] vertexBuffer;
