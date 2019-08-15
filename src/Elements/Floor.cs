@@ -69,7 +69,8 @@ namespace Elements
         /// <param name="elevation">The elevation of the top of the floor.</param>
         /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
         /// <param name="openings">An array of openings in the floor.</param>
-        public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
+        /// <param name="extrudeUp">A boolean indicating the polygon extrusion direction along either the positive or negative z-axis. Defaults to positive.</param>
+        public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null, bool extrudeUp = true)
         {
             this.Profile = new Profile(profile);
             if(openings != null)
@@ -80,7 +81,14 @@ namespace Elements
             this.ElementType = elementType;
             var thickness = elementType.Thickness();
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.ExtrudeDirection = Vector3.ZAxis;
+            if (extrudeUp)
+            {
+                this.ExtrudeDirection = Vector3.ZAxis;
+            }
+            else
+            {
+                this.ExtrudeDirection = Vector3.ZAxis * -1;
+            }
         }
 
         /// <summary>
@@ -92,6 +100,7 @@ namespace Elements
         /// <param name="elementType">The floor type of the floor.</param>
         /// <param name="elevation">The elevation of the floor.</param>
         /// <param name="transform">The floor's transform. If set, this will override the elevation.</param>
+        /// <param name="extrudeUp">A boolean indicating the polygon extrusion direction along either the positive or negative z-axis. Defaults to positive.</param>/// 
         public Floor(Profile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Transform transform = null)
         {
             this.Elevation = elevation;
