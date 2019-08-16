@@ -193,7 +193,7 @@ namespace Elements.Geometry
             clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             var solution = new List<List<ClipperLib.IntPoint>>();
             clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-            return solution.Sum(s => ClipperLib.Clipper.Area(s)) / Math.Pow(1024.0, 2);
+            return Math.Abs(solution.Sum(s => ClipperLib.Clipper.Area(s)) / Math.Pow(1024.0, 2));
         }
 
         private Transform ComputeTransform()

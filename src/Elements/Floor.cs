@@ -65,13 +65,12 @@ namespace Elements
         /// <summary>
         /// Create a floor.
         /// </summary>
-        /// <param name="polygon">The polygon representing the floor perimeter.</param>
+        /// <param name="perimeter">The floor perimeter.</param>
         /// <param name="elementType">The floor type of the floor.</param>
         /// <param name="elevation">The elevation of the top of the floor.</param>
         /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
         /// <param name="openings">An array of openings in the floor.</param>
-        /// <param name="extrudeUp">Indicates the polygon extrusion direction along either the positive or negative z-axis. Default is positive.</param>
-        public Floor(Polygon polygon, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null, bool extrudeUp = true)
+        public Floor(Polygon perimeter, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
         {
             if(openings != null)
             {
@@ -81,63 +80,41 @@ namespace Elements
             this.ElementType = elementType;
             var thickness = elementType.Thickness();
             this.Transform = transform ?? new Transform(new Vector3(0, 0, elevation));
-            if (extrudeUp)
-            {
-                this.Profile = new Profile(polygon);
-                this.ExtrudeDirection = Vector3.ZAxis;
-            }
-            else
-            {
-                var vertices = new Vector3[polygon.Vertices.Length];
-                Array.Copy(polygon.Vertices, vertices, polygon.Vertices.Length);
-                Array.Reverse(vertices);
-                this.Profile = new Profile(new Polygon(vertices));
-                this.ExtrudeDirection = Vector3.ZAxis * -1;
-            }
+            this.Profile = new Profile(perimeter.Reversed());
+            this.ExtrudeDirection = Vector3.ZAxis * -1;
         }
 
         /// <summary>
         /// Create a floor.
         /// </summary>
-        /// <param name="profile">The profile of the floor.</param>
+        /// <param name="perimeter">The floor perimeter.</param>
         /// <param name="start">A tranform used to pre-transform the profile and direction vector before sweeping the geometry.</param>
         /// <param name="direction">The direction of the floor's sweep.</param>
         /// <param name="elementType">The floor type of the floor.</param>
         /// <param name="elevation">The elevation of the floor.</param>
         /// <param name="transform">The floor's transform. If set, this will override the elevation.</param>
-        public Floor(Profile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Transform transform = null)
+        public Floor(Profile perimeter, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Transform transform = null)
         {
             this.Elevation = elevation;
             this.ElementType = elementType;
             this.Transform = transform ?? new Transform(new Vector3(0, 0, elevation));
-            this.Profile = start.OfProfile(profile);
+            this.Profile = start.OfProfile(perimeter);
             this.ExtrudeDirection = start.OfVector(direction);
         }
 
         [JsonConstructor]
-        internal Floor(Profile profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null, bool extrudeUp = true)
+        internal Floor(Profile profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
         {
-            if(openings != null)
+            this.Profile = profile;
+            if (openings != null)
             {
                 this._openings = openings;
             }
             this.Elevation = elevation;
             this.ElementType = elementType;
             var thickness = elementType.Thickness();
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            if (extrudeUp)
-            {
-                this.Profile = profile;
-                this.ExtrudeDirection = Vector3.ZAxis;
-            }
-            else
-            {
-                var vertices = new Vector3[profile.Perimeter.Vertices.Length];
-                Array.Copy(profile.Perimeter.Vertices, vertices, profile.Perimeter.Vertices.Length);
-                Array.Reverse(vertices);
-                this.Profile = new Profile(new Polygon(vertices));
-                this.ExtrudeDirection = Vector3.ZAxis * -1;
-            }
+            this.Transform = transform ?? new Transform(new Vector3(0, 0, elevation));
+            this.ExtrudeDirection = Vector3.ZAxis;
         }
 
         /// <summary>

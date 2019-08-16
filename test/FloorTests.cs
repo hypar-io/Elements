@@ -1,5 +1,4 @@
-//Uncomment for visual checks.
-//using Elements.Serialization.glTF;
+using Elements.Serialization.glTF;
 using Elements.Geometry;
 using System;
 using System.Collections.Generic;
@@ -9,25 +8,6 @@ namespace Elements.Tests
 {
     public class FloorTests : ModelTest
     {
-        [Fact]
-        public void FloorExtrusions()
-        {
-            var p = Polygon.L(10, 20, 5);
-            var floorType = new FloorType("test", 0.5);
-
-            var floor1 = new Floor(p, floorType, 0.0, null, null, true);
-            var floor2 = new Floor(p, floorType, 0.0, null, null, false);
-
-            Assert.Equal(Vector3.ZAxis, floor1.ExtrudeDirection);
-            Assert.Equal(Vector3.ZAxis * -1, floor2.ExtrudeDirection);
-
-            //Uncomment for visual check.
-            //var model = new Model();
-            //model.AddElement(floor1);
-            //model.AddElement(floor2);
-            //model.ToGlTF("../../../../FloorExtrusions.glb");
-        }
-
         [Fact]
         public void FloorWithAddedOpenings()
         {
@@ -46,6 +26,7 @@ namespace Elements.Tests
             Assert.Equal(0.5, floor1.Elevation);
             Assert.Equal(0.1, floor1.ElementType.Thickness());
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
+            Assert.Equal(Vector3.ZAxis * -1, floor1.ExtrudeDirection);
 
             this.Model.AddElement(floor1);
 
