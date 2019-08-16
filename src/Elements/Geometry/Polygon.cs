@@ -567,19 +567,12 @@ namespace Elements.Geometry
         {
             var x = 0.0;
             var y = 0.0;
-            var factor = 0.0;
-            for (var i = 0; i < this._vertices.Length; i++)
+            foreach (var pnt in Vertices)
             {
-                factor =
-                    (_vertices[i].X * _vertices[(i + 1) % _vertices.Length].Y) -
-                    (_vertices[(i + 1) % _vertices.Length].X * _vertices[i].Y);
-                x += (_vertices[i].X + _vertices[(i + 1) % _vertices.Length].X) * factor;
-                y += (_vertices[i].Y + _vertices[(i + 1) % _vertices.Length].Y) * factor;
+                x += pnt.X;
+                y += pnt.Y;
             }
-            var divisor = this.Area() * 6;
-            x /= divisor;
-            y /= divisor;
-            return new Vector3(x, y);
+            return new Vector3(x / Vertices.Length, y / Vertices.Length);
         }
 
         /// <summary>
