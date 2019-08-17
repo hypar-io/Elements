@@ -1,4 +1,7 @@
 # Changelog
+## [0.3.6]
+### Changed
+- Edges are no longer written to the glTF file.
 
 ## [0.3.4]
 ### Changed
