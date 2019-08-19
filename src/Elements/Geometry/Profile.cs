@@ -85,7 +85,7 @@ namespace Elements.Geometry
         {
             this.Id = id;
             this.Perimeter = perimeter;
-            this.Voids = voids;
+            this.Voids = voids ?? new Polygon[] {};
 
             this.Name = name;
             if (!IsPlanar())
@@ -154,15 +154,24 @@ namespace Elements.Geometry
         /// <param name="other">The other Profile with which to union.</param>
         /// </summary>
         public Profile Union(Profile other) {
-            var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
-            clipper.AddPath(other.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
+            var clipper1 = new ClipperLib.Clipper();
 
+            clipper1.AddPath(this.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
+            clipper1.AddPath(other.Perimeter.ToClipperPath(), PolyType.ptClip, true);
+            var perimeterSolution = new List<List<ClipperLib.IntPoint>>();
+            clipper1.Execute(ClipType.ctUnion, perimeterSolution);
+            var perimeterPolys = perimeterSolution.Select(s => s.ToPolygon()).ToArray();
+            var perimeterPolygon = perimeterPolys[0];
+            var perimeterholes = perimeterPolys.Skip(1);
+
+            var clipper = new ClipperLib.Clipper();
+            clipper.AddPath(perimeterPolygon.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPaths(perimeterholes.Select(p => p.ToClipperPath()).ToList(), PolyType.ptClip, true);
             clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), PolyType.ptClip, true);
             clipper.AddPaths(other.Voids.Select(p => p.ToClipperPath()).ToList(), PolyType.ptClip, true);
 
             var solution = new List<List<ClipperLib.IntPoint>>();
-            clipper.Execute(ClipperLib.ClipType.ctUnion, solution, PolyFillType.pftEvenOdd, PolyFillType.pftEvenOdd);
+            clipper.Execute(ClipperLib.ClipType.ctDifference, solution, PolyFillType.pftEvenOdd, PolyFillType.pftEvenOdd);
             var polys = solution.Select(s => s.ToPolygon()).ToArray();
             var solutionProfile = new Profile(polys[0], polys.Skip(1).ToArray());
             return solutionProfile;
