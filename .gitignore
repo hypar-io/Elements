@@ -334,3 +334,6 @@ ASALocalRun/
 appsettings.json
 appsettings.dev.json
 *.icloud
+test/*.gltf
+test/*.bin
+.ionide
