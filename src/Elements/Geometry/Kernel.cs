@@ -49,17 +49,10 @@ namespace Elements.Geometry
                 var o = (IHasOpenings)extrude;
                 // The voids in the profiles are concatenated with the
                 // voids provided by the openings.
-                Polygon[] voids = null;
+                Polygon[] voids = extrude.Profile.Voids ?? new Polygon[] {};
                 if(o.Openings != null && o.Openings.Count > 0)
                 {
-                    if(extrude.Profile.Voids == null)
-                    {
-                        voids = o.Openings.Select(op=>op.Profile.Perimeter).ToArray();
-                    }
-                    else
-                    {
-                        voids = extrude.Profile.Voids.Concat(o.Openings.Select(op=>op.Profile.Perimeter)).ToArray();
-                    }
+                        voids = voids.Concat( o.Openings.Select(op=>op.Profile.Perimeter)).ToArray();
                 }
 
                 return Solid.SweepFace(extrude.Profile.Perimeter, voids, extrude.ExtrudeDirection, extrude.ExtrudeDepth, extrude.BothSides);
