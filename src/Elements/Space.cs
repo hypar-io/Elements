@@ -47,6 +47,22 @@ namespace Elements
         public double ExtrudeDepth => this.Height;
 
         /// <summary>
+        /// The spaces's area.
+        /// </summary>
+        public double Area
+        {
+            get { return Math.Abs(Profile.Area()); }
+        }
+
+        /// <summary>
+        /// The spaces's volume.
+        /// </summary>
+        public double Volume
+        {
+            get { return Math.Abs(Profile.Area()) * this.Height; }
+        }
+
+        /// <summary>
         /// Should the space extrude to both sides of the profile?
         /// </summary>
         public bool BothSides => false;

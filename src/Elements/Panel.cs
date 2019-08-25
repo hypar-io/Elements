@@ -3,6 +3,7 @@ using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using Elements.Interfaces;
 using Elements.Geometry.Solids;
+using System;
 
 namespace Elements
 {
@@ -23,6 +24,14 @@ namespace Elements
         /// The panel's material.
         /// </summary>
         public Material Material {get;}
+
+        /// <summary>
+        /// The panel's area.
+        /// </summary>
+        public double Area
+        {
+            get { return Math.Abs(Perimeter.Area());  }
+        }
 
         /// <summary>
         /// Create a panel.

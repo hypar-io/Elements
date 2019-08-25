@@ -78,7 +78,7 @@ namespace Elements
         /// </summary>
         public double Volume()
         {
-            return this.ElementType.Profile.Area() * this.Curve.Length();
+            return Math.Abs(this.ElementType.Profile.Area()) * this.Curve.Length();
         }
     
         /// <summary>

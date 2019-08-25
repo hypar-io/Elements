@@ -3,6 +3,7 @@ using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using Elements.Geometry.Solids;
+using System;
 using System.Collections.Generic;
 
 namespace Elements
@@ -122,7 +123,7 @@ namespace Elements
         /// <returns>The area of the floor, not including the area of openings.</returns>
         public double Area()
         {
-            return this.Profile.Area();
+            return Math.Abs(this.Profile.Area());
         }
 
         /// <summary>
@@ -149,5 +150,15 @@ namespace Elements
         {
             return Kernel.Instance.CreateExtrude(this);
         }
+
+        /// <summary>
+        /// The area of the floor.
+        /// </summary>
+        /// <returns>The area of the floor, not including the area of openings.</returns>
+        public double Volume()
+        {
+            return Math.Abs(this.Profile.Area()) * this.Thickness();
+        }
+
     }
 }
