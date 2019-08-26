@@ -151,30 +151,18 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Perform a union operation, returning a new profile that is the union of the current profile with the other profile
-        /// <param name="other">The other Profile with which to union.</param>
+        /// <param name="profile">The profile with which to create a union.</param>
         /// </summary>
-        public Profile Union(Profile other) {
-            var clipper1 = new ClipperLib.Clipper();
-
-            clipper1.AddPath(this.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
-            clipper1.AddPath(other.Perimeter.ToClipperPath(), PolyType.ptClip, true);
-            var perimeterSolution = new List<List<ClipperLib.IntPoint>>();
-            clipper1.Execute(ClipType.ctUnion, perimeterSolution);
-            var perimeterPolys = perimeterSolution.Select(s => s.ToPolygon()).ToArray();
-            var perimeterPolygon = perimeterPolys[0];
-            var perimeterholes = perimeterPolys.Skip(1);
-
+        public Profile Union(Profile profile) {
             var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(perimeterPolygon.ToClipperPath(), PolyType.ptSubject, true);
-            clipper.AddPaths(perimeterholes.Select(p => p.ToClipperPath()).ToList(), PolyType.ptClip, true);
-            clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), PolyType.ptClip, true);
-            clipper.AddPaths(other.Voids.Select(p => p.ToClipperPath()).ToList(), PolyType.ptClip, true);
+            clipper.AddPath(this.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPath(profile.Perimeter.ToClipperPath(), PolyType.ptClip, true);
 
+            clipper.AddPaths(this.Voids.Select(v => v.ToClipperPath()).ToList(), PolyType.ptSubject, true);
+            clipper.AddPaths(profile.Voids.Select(v => v.ToClipperPath()).ToList(), PolyType.ptClip, true);
             var solution = new List<List<ClipperLib.IntPoint>>();
-            clipper.Execute(ClipperLib.ClipType.ctDifference, solution, PolyFillType.pftEvenOdd, PolyFillType.pftEvenOdd);
-            var polys = solution.Select(s => s.ToPolygon()).ToArray();
-            var solutionProfile = new Profile(polys[0], polys.Skip(1).ToArray());
-            return solutionProfile;
+            clipper.Execute(ClipType.ctUnion, solution);
+            return new Profile(solution[0].ToPolygon(), solution.Skip(1).Select(s => s.ToPolygon()).ToArray());
         }
 
         /// <summary>

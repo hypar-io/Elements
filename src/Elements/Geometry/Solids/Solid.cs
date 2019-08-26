@@ -162,8 +162,9 @@ namespace Elements.Geometry.Solids
             // We do a difference of the polygons
             // to get the clipped shape. This will fail in interesting
             // ways if the clip creates two islands.
-            if(holes != null)
+            if(holes != null && holes.Count()>0)
             {
+                var area = perimeter.Area();
                 var newPerimeter = perimeter.Difference(holes);
                 perimeter = newPerimeter[0];
                 holes = newPerimeter.Skip(1).Take(newPerimeter.Count - 1).ToArray();
