@@ -1,4 +1,11 @@
 # Changelog
+## [0.3.6]
+### Changed
+- Edges are no longer written to the glTF file.
+- Large performance improvements made to glTF writing using `Buffer.BlockCopy` and writing buffers directly from tesselation to glTF buffer. 
+
+### Fixed
+- Fix #177.
 
 ## [0.3.4]
 ### Changed
@@ -8,9 +15,21 @@
 ### Fixed
 - Fixed an error where vertex colors were not correctly encoded in the glTF.
 
+## [0.3.3]
+### Fixed
+- Fix #173.
+- Fix #7.
+
 ## [0.3.0]
 ### Changed
 - `Element.Id` is now a `Guid`.
+
+### Fixed
+- Fix #107.
+- Fix #132.
+- Fix #137.
+- Fix #144.
+- Fix #142.
 
 ## [0.2.17]
 ### Added
