@@ -26,14 +26,6 @@ namespace Elements
         public Material Material {get;}
 
         /// <summary>
-        /// The panel's area.
-        /// </summary>
-        public double Area
-        {
-            get { return Math.Abs(Perimeter.Area());  }
-        }
-
-        /// <summary>
         /// Create a panel.
         /// </summary>
         /// <param name="perimeter">The perimeter of the panel.</param>
@@ -49,6 +41,14 @@ namespace Elements
             }
             this.Perimeter = perimeter;
             this.Material = material == null ? BuiltInMaterials.Default : material;
+        }
+
+        /// <summary>
+        /// The panel's area.
+        /// </summary>
+        public double Area()
+        {
+            return Math.Abs(Perimeter.Area());
         }
 
         /// <summary>
