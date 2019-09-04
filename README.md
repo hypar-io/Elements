@@ -82,3 +82,6 @@ docfx -f --serve
 - [Clipper](http://www.angusj.com/delphi/clipper.php)
 - [GeoJson](http://geojson.org/)
 - [glTF](https://www.khronos.org/gltf/).
+
+## Updating the Changelog
+We use `CHANGELOG.md` to provide a list of changes to Elements. The easiest way to compile this log for new releases is to look at the commits that occurred between changes. This can be done as follows: `git log --pretty=oneline v0.3.6...v0.3.7`, where the tags are changed appropriately.

@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
-using System.Diagnostics;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -176,27 +175,18 @@ namespace Elements.Serialization.glTF
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
-            
-            // var sw = new Stopwatch();
-            // sw.Start();
+
             var vBuff = AddBufferView(bufferViews, 0, buffer.Count, vertices.Length, null, null);
             var nBuff = AddBufferView(bufferViews, 0, buffer.Count + vertices.Length, normals.Length, null, null);
             var iBuff = AddBufferView(bufferViews, 0, buffer.Count + vertices.Length + normals.Length, indices.Length, null, null);
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t\t\t{sw.Elapsed} for adding buffer views.");
-            // sw.Reset();
 
-            // sw.Start();
             buffer.AddRange(vertices);
             buffer.AddRange(normals);
             buffer.AddRange(indices);
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t\t\t{sw.Elapsed} for extending the buffer.");
-            // sw.Reset();
-            
+
             while(buffer.Count % 4 != 0)
             {
-                Console.WriteLine("Padding...");
+                // Console.WriteLine("Padding...");
                 buffer.Add(0);
             }
 
@@ -430,11 +420,6 @@ namespace Elements.Serialization.glTF
             gltf.BufferViews = bufferViews.ToArray();
             gltf.Accessors = accessors.ToArray();
 
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-
             gltf.SaveBinaryModel(buffer.ToArray(), path);
         }
 
@@ -442,11 +427,6 @@ namespace Elements.Serialization.glTF
         {
             var buffer = new List<byte>();
             var gltf = InitializeGlTF(model, buffer);
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-
             gltf.SaveBinaryModel(buffer.ToArray(), path);
         }
 
@@ -455,11 +435,6 @@ namespace Elements.Serialization.glTF
             var buffer = new List<byte>();
 
             var gltf = InitializeGlTF(model, buffer);
-
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
 
             var uri = Path.GetFileNameWithoutExtension(path) + ".bin";
             gltf.Buffers[0].Uri = uri;
@@ -480,9 +455,6 @@ namespace Elements.Serialization.glTF
 
         private static Gltf InitializeGlTF(Model model, List<byte> buffer)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var gltf = new Gltf();
             var asset = new Asset();
             asset.Version = "2.0";
@@ -510,11 +482,6 @@ namespace Elements.Serialization.glTF
 
             gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
 
-            sw.Stop();
-            Console.WriteLine($"glTF: {sw.Elapsed} elapsed for writing root node.");
-            sw.Reset();
-
-            sw.Start();
             var materialsToAdd = model.Materials.Values.ToList();
             materialsToAdd.Add(BuiltInMaterials.XAxis);
             materialsToAdd.Add(BuiltInMaterials.YAxis);
@@ -524,11 +491,6 @@ namespace Elements.Serialization.glTF
             
             var materials = gltf.AddMaterials(materialsToAdd);
 
-            sw.Stop();
-            Console.WriteLine($"glTF: {sw.Elapsed} elapsed for writing materials.");
-            sw.Reset();
-
-            sw.Start();
             // Lines are stored in a list of lists
             // according to the max available index size of ushort.
             var lines = new List<List<Vector3>>(){new List<Vector3>()};
@@ -542,11 +504,7 @@ namespace Elements.Serialization.glTF
                 var e = elements[i];
                 GetRenderDataForElement(e, gltf, materials, lines, buffer, bufferViews, accessors);
             }
-            sw.Stop();
-            Console.WriteLine($"glTF: {sw.Elapsed} elapsed for getting render data for nodes.");
-            sw.Reset();
 
-            sw.Start();
             if (lines.Count > 0)
             {
                 foreach(var lineSet in lines)
@@ -557,18 +515,10 @@ namespace Elements.Serialization.glTF
                     }
                 }
             }
-            sw.Stop();
-            Console.WriteLine($"glTF: {sw.Elapsed} elapsed for writing edges.");
-            sw.Reset();
 
-            sw.Start();
             var buff = new glTFLoader.Schema.Buffer();
             buff.ByteLength = buffer.Count();
             gltf.Buffers = new[] { buff };
-            sw.Stop();
-            Console.WriteLine($"glTF: {sw.Elapsed} elapsed for assigning buffer.");
-            sw.Reset();
-
             gltf.BufferViews = bufferViews.ToArray();
             gltf.Accessors = accessors.ToArray();
 
@@ -578,8 +528,6 @@ namespace Elements.Serialization.glTF
         private static void GetRenderDataForElement(IElement e, Gltf gltf, 
             Dictionary<string, int> materials, List<List<Vector3>> lines, List<byte> buffer, List<BufferView> bufferViews , List<Accessor> accessors)
         {
-            var sw = new Stopwatch();
-            // sw.Start();
             if (e is IAggregateElements)
             {
                 var ae = (IAggregateElements)e;
@@ -593,11 +541,7 @@ namespace Elements.Serialization.glTF
                     }
                 }
             }
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t{sw.Elapsed} for processing aggregates");
-            // sw.Reset();
 
-            // sw.Start();
             var materialName = BuiltInMaterials.Default.Name;
 
             if(e is IElementType<StructuralFramingType>)
@@ -623,11 +567,7 @@ namespace Elements.Serialization.glTF
                 // Get the material from the material property.
                 materialName = ((IMaterial)e).Material.Name;
             }
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t{sw.Elapsed} for getting the material name.");
-            // sw.Reset();
 
-            // sw.Start();
             Solid solid = null;
 
             if (e is ISolid)
@@ -636,19 +576,12 @@ namespace Elements.Serialization.glTF
                 var geo = e as ISolid;
                 solid = geo.GetUpdatedSolid();
             }
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t{sw.Elapsed} for updating element solids.");
-            // sw.Reset();
 
-            // sw.Start();
             if(solid != null)
             {
                 ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
-                            ref materials, ref lines, ref buffer, bufferViews, accessors);
+                            ref materials, ref buffer, bufferViews, accessors);
             }
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t{sw.Elapsed} for processing element solids.");
-            // sw.Reset();
 
             if (e is ITessellate)
             {
@@ -676,38 +609,9 @@ namespace Elements.Serialization.glTF
         }
 
         private static void ProcessSolid(Solid solid, Transform t, string id, string materialName, ref Gltf gltf, 
-            ref Dictionary<string, int> materials, ref List<List<Vector3>> lines, ref List<byte> buffer, 
+            ref Dictionary<string, int> materials, ref List<byte> buffer, 
             List<BufferView> bufferViews, List<Accessor> accessors)
         {
-            var currLines = lines.Last();
-            // var sw = new Stopwatch();
-
-            foreach (var edge in solid.Edges.Values)
-            {
-                // Check if we'll overrun the index size
-                // for the current line array. If so,
-                // create a new line array.
-                if(currLines.Count + 2 > ushort.MaxValue)
-                {
-                    // Console.WriteLine($"Creating new line array at {currLines.Count}.");
-                    currLines = new List<Vector3>();
-                    lines.Add(currLines);
-                }
-
-                if (t != null)
-                {
-                    currLines.AddRange(new[] { t.OfPoint(edge.Left.Vertex.Point), t.OfPoint(edge.Right.Vertex.Point) });
-                }
-                else
-                {
-                    currLines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
-                }
-            }
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t\t{sw.Elapsed} for parsing the edges.");
-            // sw.Reset();
-            
-            // sw.Start();
             byte[] vertexBuffer;
             byte[] normalBuffer;
             byte[] indexBuffer;
@@ -720,17 +624,10 @@ namespace Elements.Serialization.glTF
             solid.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin,
                             out cmax, out imin, out imax);
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t\t{sw.Elapsed} for tessellating the solid.");
-            // sw.Reset();
 
-            // sw.Start();
             gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
                                 indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
                                 imin, imax, materials[materialName], cmin, cmax, null, t);
-            // sw.Stop();
-            // Console.WriteLine($"glTF:\t\t{sw.Elapsed} for adding a triangle mesh.");
-            // sw.Reset();
         }
 
         private static void AddLines(long id, Vector3[] vertices, Gltf gltf, 
@@ -759,7 +656,6 @@ namespace Elements.Serialization.glTF
                     ii += 2 * ushortSize;
                 }
             }
-            // Console.WriteLine($"{vBuff.Count / sizeof(float)/3} vertices, {indices.Count / sizeof(ushort)} indices");
 
             var bbox = new BBox3(vertices);
             gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff.ToArray(), indices.ToArray(), bbox.Min.ToArray(),

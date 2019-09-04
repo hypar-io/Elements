@@ -11,7 +11,7 @@ namespace Elements.GeoJSON
         /// <summary>
         /// The type of the feature.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("type")]
         public string Type{
             get
             {
@@ -22,7 +22,7 @@ namespace Elements.GeoJSON
         /// <summary>
         /// A collection of features.
         /// </summary>
-        /// <returns></returns>
+        [JsonProperty("features")]
         public IEnumerable<Feature> Features{get;set;}
 
         /// <summary>
