@@ -127,5 +127,21 @@ namespace Elements
         {
             return Kernel.Instance.CreateExtrude(this);
         }
+
+        /// <summary>
+        /// The spaces's area.
+        /// </summary>
+        public double Area()
+        {
+            return Math.Abs(Profile.Area());
+        }
+
+        /// <summary>
+        /// The spaces's volume.
+        /// </summary>
+        public double Volume()
+        {
+            return Math.Abs(Profile.Area()) * this.Height;
+        }
     }
 }

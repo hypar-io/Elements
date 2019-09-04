@@ -1,4 +1,20 @@
 # Changelog
+## [0.3.8]
+### Changed
+- Elements representing building components now return positive areas.
+- Added Area property to:
+Panel
+Space
+Added Volume property to:
+- Floor
+- Space
+Added positive area calculation to:
+- Floor
+- Mass
+- Added positive Volume calculation to:
+- StructuralFraming
+- Beam.Volume() throws an InvalidOperationException for non-linear beams.
+- Added TODO to support Volume() for all beam curves.
 ## [0.3.6]
 ### Changed
 - Edges are no longer written to the glTF file.
