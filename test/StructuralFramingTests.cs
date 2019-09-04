@@ -51,6 +51,15 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void NonLinearVolumeException()
+        {
+            ICurve cl = ModelTest.TestArc;
+            var framingType = new StructuralFramingType(Guid.NewGuid().ToString(), this._testProfile, BuiltInMaterials.Steel);
+            var beam = new Beam(cl, framingType);
+            Assert.Throws<InvalidOperationException>(()=>beam.Volume());
+        }
+
+        [Fact]
         public void WideFlange()
         {
             this.Name = "WideFlange";

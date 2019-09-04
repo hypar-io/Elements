@@ -78,6 +78,11 @@ namespace Elements
         /// </summary>
         public double Volume()
         {
+            if (this.Curve.Type != "elements.geometry.line")
+            {
+                throw new InvalidOperationException("Volume calculation for non-linear elements is not yet supported");
+            }
+            //TODO: Support all curve / profile calculations.
             return Math.Abs(this.ElementType.Profile.Area()) * this.Curve.Length();
         }
     
