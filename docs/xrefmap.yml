@@ -712,6 +712,19 @@ references:
   isSpec: "True"
   fullName: Elements.Floor.Thickness
   nameWithType: Floor.Thickness
+- uid: Elements.Floor.Volume
+  name: Volume()
+  href: api/Elements.Floor.html#Elements_Floor_Volume
+  commentId: M:Elements.Floor.Volume
+  fullName: Elements.Floor.Volume()
+  nameWithType: Floor.Volume()
+- uid: Elements.Floor.Volume*
+  name: Volume
+  href: api/Elements.Floor.html#Elements_Floor_Volume_
+  commentId: Overload:Elements.Floor.Volume
+  isSpec: "True"
+  fullName: Elements.Floor.Volume
+  nameWithType: Floor.Volume
 - uid: Elements.FloorType
   name: FloorType
   href: api/Elements.FloorType.html
@@ -5095,6 +5108,15 @@ references:
   fullName.vb: Elements.Geometry.Solids.Solid.Tessellate(ByRef Elements.Geometry.Mesh)
   nameWithType: Solid.Tessellate(ref Mesh)
   nameWithType.vb: Solid.Tessellate(ByRef Mesh)
+- uid: Elements.Geometry.Solids.Solid.Tessellate(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)
+  name: Tessellate(out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Tessellate_System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__
+  commentId: M:Elements.Geometry.Solids.Solid.Tessellate(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)
+  name.vb: Tessellate(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16)
+  fullName: Elements.Geometry.Solids.Solid.Tessellate(out System.Byte[], out System.Byte[], out System.Byte[], out System.Byte[], out System.Double[], out System.Double[], out System.Double[], out System.Double[], out System.Single[], out System.Single[], out System.UInt16, out System.UInt16)
+  fullName.vb: Elements.Geometry.Solids.Solid.Tessellate(ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Single(), ByRef System.Single(), ByRef System.UInt16, ByRef System.UInt16)
+  nameWithType: Solid.Tessellate(out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)
+  nameWithType.vb: Solid.Tessellate(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16)
 - uid: Elements.Geometry.Solids.Solid.Tessellate*
   name: Tessellate
   href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Tessellate_
@@ -7307,6 +7329,19 @@ references:
   isSpec: "True"
   fullName: Elements.Panel.Panel
   nameWithType: Panel.Panel
+- uid: Elements.Panel.Area
+  name: Area()
+  href: api/Elements.Panel.html#Elements_Panel_Area
+  commentId: M:Elements.Panel.Area
+  fullName: Elements.Panel.Area()
+  nameWithType: Panel.Area()
+- uid: Elements.Panel.Area*
+  name: Area
+  href: api/Elements.Panel.html#Elements_Panel_Area_
+  commentId: Overload:Elements.Panel.Area
+  isSpec: "True"
+  fullName: Elements.Panel.Area
+  nameWithType: Panel.Area
 - uid: Elements.Panel.GetUpdatedSolid
   name: GetUpdatedSolid()
   href: api/Elements.Panel.html#Elements_Panel_GetUpdatedSolid
@@ -8383,6 +8418,19 @@ references:
   isSpec: "True"
   fullName: Elements.Space.Space
   nameWithType: Space.Space
+- uid: Elements.Space.Area
+  name: Area()
+  href: api/Elements.Space.html#Elements_Space_Area
+  commentId: M:Elements.Space.Area
+  fullName: Elements.Space.Area()
+  nameWithType: Space.Area()
+- uid: Elements.Space.Area*
+  name: Area
+  href: api/Elements.Space.html#Elements_Space_Area_
+  commentId: Overload:Elements.Space.Area
+  isSpec: "True"
+  fullName: Elements.Space.Area
+  nameWithType: Space.Area
 - uid: Elements.Space.BothSides
   name: BothSides
   href: api/Elements.Space.html#Elements_Space_BothSides
@@ -8500,6 +8548,19 @@ references:
   isSpec: "True"
   fullName: Elements.Space.ProfileTransformed
   nameWithType: Space.ProfileTransformed
+- uid: Elements.Space.Volume
+  name: Volume()
+  href: api/Elements.Space.html#Elements_Space_Volume
+  commentId: M:Elements.Space.Volume
+  fullName: Elements.Space.Volume()
+  nameWithType: Space.Volume()
+- uid: Elements.Space.Volume*
+  name: Volume
+  href: api/Elements.Space.html#Elements_Space_Volume_
+  commentId: Overload:Elements.Space.Volume
+  isSpec: "True"
+  fullName: Elements.Space.Volume
+  nameWithType: Space.Volume
 - uid: Elements.StandardWall
   name: StandardWall
   href: api/Elements.StandardWall.html
