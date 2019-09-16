@@ -12,10 +12,10 @@
             "description": "An identifier for the element which must be unique within the system. Element ids can contain any lowercase alphanumeric character, '_', and '-'."
         },
         "Components": {
-            "type": "array",
+            "type": "object",
             "description": "A collection of components.",
-            "items": {
-                "$ref": "#/definitions/Component"
+            "patternProperties": {
+                "^.*$": {"$ref": "#/definitions/Component"}
             }
         }
     },
@@ -24,40 +24,23 @@
         "Component": {
             "type": "object",
             "description": "A collection of properties.",
-            "required": ["Name", "Properties"],
-            "properties": {
-                "Name": {
-                    "type": "string"
-                },
-                "Properties": {
-                    "type": "array",
-                    "items": {
-                        "anyOf": [
-                            {"$ref": "#/definitions/StringProperty"},
-                            {"$ref": "#/definitions/NumericProperty"},
-                            {"$ref": "#/definitions/PointProperty"},
-                            {"$ref": "#/definitions/PolygonProperty"}
-                        ]
-                    },
-                    "minItems": 1
-                }
-            },
-            "additionalProperties": false
-        },
-        "Property": {
-            "type": "object",
-            "description": "The base type for all properties.",
-            "required": ["Name", "Value"],
-            "properties": {
-                "Name": {
-                    "type": "string"
+            "patternProperties": {
+                "^.*$": {
+                    "anyOf": [
+                        {"$ref": "#/definitions/NumericValue"},
+                        {"$ref": "#/definitions/StringValue"},
+                        {"$ref": "#/definitions/Vector"},
+                        {"$ref": "#/definitions/Polygon"},
+                        {"$ref": "#/definitions/Line"},
+                        {"$ref": "#/definitions/Profile"}
+                    ]
                 }
             }
         },
-        "StringProperty": {
+        "StringValue": {
             "type": "object",
             "description": "A property with a string value.",
-            "allOf": [{"$ref": "#/definitions/Property"}],
+            "required": ["Value"],
             "properties": {
                 "Value": {
                     "type": "string",
@@ -66,11 +49,10 @@
             },
             "additionalProperties": false
         },
-        "NumericProperty": {
+        "NumericValue": {
             "type": "object",
             "description": "A property with a numeric value.",
-            "required": ["ValueType"],
-            "allOf": [{"$ref": "#/definitions/Property"}],
+            "required": ["Value", "ValueType"],
             "properties": {
                 "Value": {
                     "type": "number",
@@ -80,24 +62,6 @@
                     "type": "string",
                     "enum": ["Length","Mass","Force","Area","Pressure","Currency","Time","Number"]
                 }
-            },
-            "additionalProperties": false
-        },
-        "PointProperty": {
-            "type": "object",
-            "description": "A point.",
-            "allOf": [{"$ref": "#/definitions/Property"}],
-            "properties": {
-                "Value": {"$ref": "#/definitions/Vector"}
-            },
-            "additionalProperties": false
-        },
-        "PolygonProperty": {
-            "type": "object",
-            "description": "A property with a polygon value.",
-            "allOf": [{"$ref": "#/definitions/Property"}],
-            "properties": {
-                "Value": {"$ref": "#/definitions/Polygon"}
             },
             "additionalProperties": false
         },
@@ -128,6 +92,16 @@
                 "Z": {
                     "type": "number"
                 }
+            },
+            "additionalProperties": false
+        },
+        "Line": {
+            "type": "object",
+            "description": "A line.",
+            "required": ["Start","End"],
+            "properties": {
+                "Start": {"$ref": "#/definitions/Vector"},
+                "End": {"$ref": "#/definitions/Vector"}
             },
             "additionalProperties": false
         },
