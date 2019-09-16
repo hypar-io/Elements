@@ -41,7 +41,8 @@
                     },
                     "minItems": 1
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "Property": {
             "type": "object",
@@ -62,7 +63,8 @@
                     "type": "string",
                     "description": "The property's value."
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "NumericProperty": {
             "type": "object",
@@ -78,7 +80,8 @@
                     "type": "string",
                     "enum": ["Length","Mass","Force","Area","Pressure","Currency","Time","Number"]
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "PointProperty": {
             "type": "object",
@@ -86,7 +89,8 @@
             "allOf": [{"$ref": "#/definitions/Property"}],
             "properties": {
                 "Value": {"$ref": "#/definitions/Vector"}
-            }
+            },
+            "additionalProperties": false
         },
         "PolygonProperty": {
             "type": "object",
@@ -94,7 +98,8 @@
             "allOf": [{"$ref": "#/definitions/Property"}],
             "properties": {
                 "Value": {"$ref": "#/definitions/Polygon"}
-            }
+            },
+            "additionalProperties": false
         },
         "Polygon": {
             "type": "object",
