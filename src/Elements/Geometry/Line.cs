@@ -1,38 +1,19 @@
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// A linear curve between two points.
     /// </summary>
-    public class Line : ICurve
+    public partial class Line : Curve
     {
-        /// <summary>
-        /// The type of the curve.
-        /// Used during deserialization to disambiguate derived types.
-        /// </summary>
-        [JsonProperty(Order = -100)]
-        public string Type
-        {
-            get { return this.GetType().FullName.ToLower(); }
-        }
-        
-        /// <summary>
-        /// The start of the line.
-        /// </summary>
-        public Vector3 Start { get; }
-
-        /// <summary>
-        /// The end of the line.
-        /// </summary>
-        public Vector3 End { get; }
-
         /// <summary>
         /// Calculate the length of the line.
         /// </summary>
-        public double Length()
+        public override double Length()
         {
             return this.Start.DistanceTo(this.End);
         }
@@ -72,7 +53,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
         /// <returns>A transform.</returns>
-        public Transform TransformAt(double u)
+        public override Transform TransformAt(double u)
         {
             return new Transform(PointAt(u), this.Start, this.End, null);
         }
@@ -82,7 +63,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u"></param>
         /// <returns>A point on the curve at parameter u.</returns>
-        public Vector3 PointAt(double u)
+        public override Vector3 PointAt(double u)
         {
             if (u == 0.0)
             {
@@ -106,7 +87,7 @@ namespace Elements.Geometry
         /// Get a new line that is the reverse of the original line.
         /// </summary>
         /// <returns></returns>
-        public ICurve Reversed()
+        public override ICurve Reversed()
         {
             return new Line(End, Start);
         }
@@ -128,7 +109,7 @@ namespace Elements.Geometry
             var b = this.End + (offsetN * (amount / 2));
             var c = this.End - (offsetN * (amount / 2));
             var d = this.Start - (offsetN * (amount / 2));
-            return new Polygon(new[] { a, b, c, d });
+            return new Polygon(new List<Vector3>() { a, b, c, d });
         }
 
         /// <summary>
@@ -161,7 +142,7 @@ namespace Elements.Geometry
         /// <param name="startSetback">The offset from the start of the line.</param>
         /// <param name="endSetback">The offset from the end of the line.</param>
         /// <returns>A collection of transforms.</returns>
-        public Transform[] Frames(double startSetback, double endSetback)
+        public override Transform[] Frames(double startSetback, double endSetback)
         {
             var l = this.Length();
             return new Transform[] { TransformAt(0.0 + startSetback / l), TransformAt(1.0 - endSetback / l) };
@@ -191,7 +172,7 @@ namespace Elements.Geometry
         /// Get the bounding box for this line.
         /// </summary>
         /// <returns>A bounding box for this line.</returns>
-        public BBox3 Bounds()
+        public override BBox3 Bounds()
         {
             if(this.Start < this.End)
             {

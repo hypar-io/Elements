@@ -1,31 +1,31 @@
 {
     "$id": "https://hypar.io/schemas/elements/Geometry/Color.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Extrusion",
-    "type": "object",
+    "title": "Color",
+    "type": ["object","null"],
     "description": "An RGBA color.",
     "required": ["Red", "Green", "Blue", "Alpha"],
     "properties": {
         "Red": {
-            "description": "The red component of the color.",
+            "description": "The red component of the color between 0.0 and 1.0.",
             "type": "number",
             "minimum": 0.0,
             "maximum": 1.0
         },
         "Green": {
-            "description": "The green component of the color.",
+            "description": "The green component of the color between 0.0 and 1.0..",
             "type": "number",
             "minimum": 0.0,
             "maximum": 1.0
         },
         "Blue": {
-            "description": "The blue component of the color.",
+            "description": "The blue component of the color between 0.0 and 1.0..",
             "type": "number",
             "minimum": 0.0,
             "maximum": 1.0
         },
         "Alpha": {
-            "description": "The alpha component of the color.",
+            "description": "The alpha component of the color between 0.0 and 1.0..",
             "type": "number",
             "minimum": 0.0,
             "maximum": 1.0

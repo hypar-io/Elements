@@ -13,7 +13,7 @@
         },
         "Components": {
             "type": "array",
-            "items": {"$ref": "Components/Component.json"},
+            "items": {"$ref": "Component.json"},
             "description": "A collection of components."
         }
     },

@@ -1,7 +1,7 @@
 {
     "$id": "https://hypar.io/schemas/elements/Components/Material.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Point",
+    "title": "Material",
     "type": "object",
     "description": "A material.",
     "required": ["Color", "SpecularFactor", "GlossinessFactor"],
@@ -9,7 +9,7 @@
     "properties": {
         "Color": {
             "description": "The material's color.",
-            "$ref": "../Geometry/Color.json"
+            "$ref": "Geometry/Color.json"
         },
         "SpecularFactor": {
             "description": "The material's specular factor.",

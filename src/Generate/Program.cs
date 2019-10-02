@@ -20,19 +20,19 @@ namespace Elements.Generate
 
             var elementOutPath = Path.Combine(outRoot, "Element.g.cs");
             var schemaPath = Path.Combine(schemaRoot, "Element.json");
-            var excludedTypes = new string[]{"Vector3", "Line", "Plane", "Polygon", "Profile", "Component", "Curve"};
-            await WriteTypes(schemaPath, elementOutPath, "Elements.Generate", null);
+            var excludedTypes = new string[]{"Vector3", "Line", "Plane", "Polyline", "Polygon", "Profile", "Component", "Curve", "Solid", "Color"};
 
+            var typesDict = new Dictionary<string, CodeArtifact>();
             var di = new DirectoryInfo(schemaRoot);
             foreach(var fi in di.EnumerateFiles("*.json", SearchOption.AllDirectories))
             {
-                if(fi.Name == "Element.json")
-                {
-                    continue;
-                }
+                var index = fi.Directory.FullName.IndexOf("Schemas");
+                var subDir = fi.Directory.FullName.Substring(index + 7).Replace(fi.Name, "").TrimStart('/');
+                
+                var ns = $"Elements{fi.Directory.FullName.Substring(index + 7).Replace(fi.Name, "").Replace("/",".")}";
 
-                var ns = $"Elements.{fi.Directory.Name}";
-                var outDir = Path.Combine(outRoot, fi.Directory.Name);
+                var outDir = Path.Combine(outRoot, subDir);
+                // Console.WriteLine(outDir);
                 if(!Directory.Exists(outDir))
                 {
                     Directory.CreateDirectory(outDir);
@@ -49,12 +49,16 @@ namespace Elements.Generate
             var schema = await JsonSchema.FromJsonAsync(File.ReadAllText(schemaPath), schemaPath);
             var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings(){
                 Namespace = ns, 
-                ClassStyle = CSharpClassStyle.Poco, 
+                ArrayType = "System.Collections.Generic.List",
+                ArrayInstanceType = "System.Collections.Generic.List",
                 ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes, 
+                GenerateDefaultValues = false,
+                GenerateDataAnnotations = false, 
+                PropertySetterAccessModifier = "internal"
             });
         
             var file = generator.GenerateFile();
-            file = file.Insert(0, "using Elements.Geometry;\n");
+            file = file.Insert(0, "using Elements.Geometry;\nusing Elements.Geometry.Solids;\n");
             File.WriteAllText(outPath, file);
         }
     }

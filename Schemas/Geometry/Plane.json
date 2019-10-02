@@ -2,7 +2,7 @@
     "$id": "https://hypar.io/schemas/elements/Geometry/Plane.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Plane",
-    "type": ["null","object"],
+    "type": ["object","null"],
     "description": "A plane.",
     "required": ["Origin","Normal"],
     "properties": {

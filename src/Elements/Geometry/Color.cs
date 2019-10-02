@@ -5,28 +5,8 @@ namespace Elements.Geometry
     /// <summary>
     /// An RGBA color.
     /// </summary>
-    public class Color
+    public partial class Color
     {
-        /// <summary>
-        /// The red component of the color.
-        /// </summary>
-        public float Red{get;}
-
-        /// <summary>
-        /// The green component of the color.
-        /// </summary>
-        public float Green{get;}
-
-        /// <summary>
-        /// The blue component of the color.
-        /// </summary>
-        public float Blue{get;}
-
-        /// <summary>
-        /// The alpha component of the color.
-        /// </summary>
-        public float Alpha{get;}
-
         /// <summary>
         /// Construct a color from its components.
         /// </summary>

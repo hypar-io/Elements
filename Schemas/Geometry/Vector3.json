@@ -1,9 +1,9 @@
 {
     "$id": "https://hypar.io/schemas/elements/Geometry/Vector3.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "A 3D vector.",
-    "type": ["object"],
-    "description": "A vector.",
+    "title": "Vector3",
+    "description": "A 3D vector.",
+    "type": ["object", "null"],
     "required": ["X","Y","Z"],
     "properties": {
         "X": {

@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/schemas/elements/Geometry/Sweep.json",
+    "$id": "https://hypar.io/schemas/elements/Geometry/Solids/Sweep.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Sweep",
     "type": "object",
@@ -9,11 +9,11 @@
     "properties": {
         "Profile": {
             "description": "The profile to be swept along the curve.",
-            "$ref": "Profile.json"
+            "$ref": "../Profile.json"
         },
         "Curve": {
             "description": "The curve along which the profile will be swept.",
-            "$ref": "Curve.json"
+            "$ref": "../Curve.json"
         }
     },
     "additionalProperties": false

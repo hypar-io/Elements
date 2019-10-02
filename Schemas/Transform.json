@@ -9,19 +9,19 @@
     "properties": {
         "Origin": {
             "description": "The origin.",
-            "$ref": "../Geometry/Vector3.json"
+            "$ref": "Geometry/Vector3.json"
         },
         "XAxis": {
             "description": "The X axis.",
-            "$ref": "../Geometry/Vector3.json"
+            "$ref": "Geometry/Vector3.json"
         },
         "YAxis": {
             "description": "The Y axis.",
-            "$ref": "../Geometry/Vector3.json"
+            "$ref": "Geometry/Vector3.json"
         },
         "ZAxis": {
             "description": "The Z axis.",
-            "$ref": "../Geometry/Vector3.json"
+            "$ref": "Geometry/Vector3.json"
         }
     },
     "additionalProperties": false

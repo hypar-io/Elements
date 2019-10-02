@@ -1,16 +1,16 @@
 {
     "$id": "https://hypar.io/schemas/elements/Components/Geometry.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Geometry",
+    "title": "Representation3D",
     "type": "object",
-    "description": "A geometry component comprised of one or more geometries.",
+    "description": "A representation component comprised of one or more geometries.",
     "required": ["Geometries"],
     "allOf": [{"$ref": "Component.json"}],
     "properties": {
         "Geometries": {
             "type": "array",
             "description": "A collection of geometries.",
-            "items": {"$ref": "../Geometry/Solid.json"},
+            "items": {"$ref": "Geometry/Solids/Solid.json"},
             "minLength": 1
         }
     },
