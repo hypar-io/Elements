@@ -1,0 +1,23 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Geometry/Curve.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Curve",
+    "type": ["null","object"],
+    "discriminator": "discriminator",
+    "description": "A curve.",
+    "required": ["Start","End"],
+    "properties": {
+        "Start": {
+            "description": "The start of the curve.",
+            "$ref": "Vector3.json"
+        },
+        "End": {
+            "description": "The end of the curve.",
+            "$ref": "Vector3.json"
+        },
+        "discriminator": {
+            "type": "string"
+        }
+    },
+    "additionalProperties": false
+}

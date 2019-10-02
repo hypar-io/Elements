@@ -20,6 +20,8 @@
     <PackageReference Include="Hypar.IFC2X3" Version="0.1.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.CodeDom" Version="4.6.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
   </ItemGroup>
 

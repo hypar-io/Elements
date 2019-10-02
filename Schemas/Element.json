@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/schemas/elements/element.json",
+    "$id": "https://hypar.io/schemas/elements/Element.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "The base type for all elements.",
     "title": "Element",
@@ -8,117 +8,14 @@
     "properties": {
         "Id": {
             "type": "string",
-            "pattern": "^[a-z0-9-_]+$",
-            "description": "An identifier for the element which must be unique within the system. Element ids can contain any lowercase alphanumeric character, '_', and '-'."
+            "format": "guid",
+            "description": "An identifier for the element which must be unique within the system."
         },
         "Components": {
-            "type": "object",
-            "description": "A collection of components.",
-            "patternProperties": {
-                "^.*$": {"$ref": "#/definitions/Component"}
-            }
+            "type": "array",
+            "items": {"$ref": "Components/Component.json"},
+            "description": "A collection of components."
         }
     },
-    "additionalProperties": false,
-    "definitions": {
-        "Component": {
-            "type": "object",
-            "description": "A collection of properties.",
-            "patternProperties": {
-                "^.*$": {
-                    "anyOf": [
-                        {"$ref": "#/definitions/NumericValue"},
-                        {"$ref": "#/definitions/StringValue"},
-                        {"$ref": "#/definitions/Vector"},
-                        {"$ref": "#/definitions/Polygon"},
-                        {"$ref": "#/definitions/Line"},
-                        {"$ref": "#/definitions/Profile"}
-                    ]
-                }
-            }
-        },
-        "StringValue": {
-            "type": "object",
-            "description": "A property with a string value.",
-            "required": ["Value"],
-            "properties": {
-                "Value": {
-                    "type": "string",
-                    "description": "The property's value."
-                }
-            },
-            "additionalProperties": false
-        },
-        "NumericValue": {
-            "type": "object",
-            "description": "A property with a numeric value.",
-            "required": ["Value", "ValueType"],
-            "properties": {
-                "Value": {
-                    "type": "number",
-                    "description": "The property's value"
-                },
-                "ValueType": {
-                    "type": "string",
-                    "enum": ["Length","Mass","Force","Area","Pressure","Currency","Time","Number"]
-                }
-            },
-            "additionalProperties": false
-        },
-        "Polygon": {
-            "type": "object",
-            "description": "A polygon.",
-            "required": ["Vertices"],
-            "properties": {
-                "Vertices": {
-                    "type": "array",
-                    "items": {"$ref": "#/definitions/Vector"},
-                    "minItems": 2
-                }
-            },
-            "additionalProperties": false
-        },
-        "Vector": {
-            "type": "object",
-            "description": "A vector.",
-            "required": ["X","Y","Z"],
-            "properties": {
-                "X": {
-                    "type": "number"
-                },
-                "Y": {
-                    "type": "number"
-                },
-                "Z": {
-                    "type": "number"
-                }
-            },
-            "additionalProperties": false
-        },
-        "Line": {
-            "type": "object",
-            "description": "A line.",
-            "required": ["Start","End"],
-            "properties": {
-                "Start": {"$ref": "#/definitions/Vector"},
-                "End": {"$ref": "#/definitions/Vector"}
-            },
-            "additionalProperties": false
-        },
-        "Profile": {
-            "type": "object",
-            "description": "A profile comprised of an external boundary and one or several holes.",
-            "required": ["Perimeter", "Holes"],
-            "properties": {
-                "Perimeter": {"$ref": "#/definitions/Polygon"},
-                "Holes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Polygon"
-                    }
-                }
-            },
-            "additionalProperties": false
-        }
-    }
+    "additionalProperties": false
 }

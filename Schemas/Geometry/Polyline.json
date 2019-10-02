@@ -1,0 +1,18 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Geometry/Polyline.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Polyline",
+    "type": ["null","object"],
+    "description": "A coplanar continuous set of lines.",
+    "allOf": [{"$ref": "Curve.json"}],
+    "required": ["Vertices"],
+    "properties": {
+        "Vertices": {
+            "type": ["null", "array"],
+            "items": {"$ref": "Vector3.json"},
+            "minItems": 2,
+            "description": "The vertices of the polygon."
+        }
+    },
+    "additionalProperties": false
+}

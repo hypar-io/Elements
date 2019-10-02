@@ -1,0 +1,19 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Geometry/Plane.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Plane",
+    "type": ["null","object"],
+    "description": "A plane.",
+    "required": ["Origin","Normal"],
+    "properties": {
+        "Origin": {
+            "description": "The origin of the plane.",
+            "$ref": "Vector3.json"
+        },
+        "Normal": {
+            "description": "The normal of the plane.",
+            "$ref": "Vector3.json"
+        }
+    },
+    "additionalProperties": false
+}

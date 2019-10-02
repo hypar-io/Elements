@@ -1,0 +1,63 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Components/PropertySet.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "PropertySet",
+    "type": "object",
+    "description": "A set of properties.",
+    "required": ["Properties"],
+    "allOf": [{"$ref": "Component.json"}],
+    "properties": {
+        "Properties": {
+            "type": "array",
+            "items": {"$ref": "#/definitions/Property"}
+        }
+    },
+    "additionalProperties": false,
+    "definitions": {
+        "Property": {
+            "type": "object",
+            "discriminator": "discriminator",
+            "required": ["discriminator", "Name"],
+            "properties": {
+                "discriminator": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string",
+                    "description": "The name of the property."
+                }
+            }
+        },
+        "StringProperty": {
+            "type": "object",
+            "description": "A property with a string value.",
+            "allOf": [{"$ref": "#/definitions/Property"}],
+            "required": ["Value"],
+            "properties": {
+                "Value": {
+                    "type": "string",
+                    "description": "The property's value."
+                }
+            },
+            "additionalProperties": false
+        },
+        "NumericProperty": {
+            "type": "object",
+            "description": "A property with a numeric value.",
+            "allOf": [{"$ref": "#/definitions/Property"}],
+            "required": ["Value", "ValueType"],
+            "properties": {
+                "Value": {
+                    "type": "number",
+                    "description": "The property's value"
+                },
+                "ValueType": {
+                    "type": "string",
+                    "description": "The value type.",
+                    "enum": ["Length","Mass","Force","Area","Pressure","Currency","Time","Number"]
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

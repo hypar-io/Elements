@@ -1,0 +1,9 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Geometry/Polygon.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Polygon",
+    "type": ["null","object"],
+    "description": "A closed planar polygon.",
+    "allOf": [{"$ref": "Polyline.json"}],
+    "additionalProperties": false
+}
