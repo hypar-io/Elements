@@ -290,7 +290,7 @@ namespace Elements.Serialization.IFC
             return loop;
         }
 
-        private static List<IfcCartesianPoint> ToIfcCartesianPointList(this Vector3[] pts, Document doc)
+        private static List<IfcCartesianPoint> ToIfcCartesianPointList(this IList<Vector3> pts, Document doc)
         {
             var icps = new List<IfcCartesianPoint>();
             foreach(var pt in pts)
@@ -362,8 +362,8 @@ namespace Elements.Serialization.IFC
             var t = new Transform(arc.Plane.Origin, arc.Plane.Normal);
             var placement = t.ToIfcAxis2Placement3D(doc);
             var ifcCircle = new IfcCircle(new IfcAxis2Placement(placement), new IfcPositiveLengthMeasure(arc.Radius));
-            var start = arc.Start.ToIfcCartesianPoint();
-            var end = arc.End.ToIfcCartesianPoint();
+            var start = arc.PointAt(0.0).ToIfcCartesianPoint();
+            var end = arc.PointAt(1.0).ToIfcCartesianPoint();
             var trim1 = new IfcTrimmingSelect(start);
             var trim2 = new IfcTrimmingSelect(end);
             var tc = new IfcTrimmedCurve(ifcCircle, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, 

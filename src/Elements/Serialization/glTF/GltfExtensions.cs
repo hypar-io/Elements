@@ -82,7 +82,7 @@ namespace Elements.Serialization.glTF
                 newMaterials.Add(m);
 
                 m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness();
-                m.PbrMetallicRoughness.BaseColorFactor = new[]{material.Color.Red,material.Color.Green,material.Color.Blue,material.Color.Alpha};
+                m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
                 m.DoubleSided = material.DoubleSided;
                 m.Name = material.Name;

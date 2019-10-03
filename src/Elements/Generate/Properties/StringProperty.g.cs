@@ -4,7 +4,7 @@
 // </auto-generated>
 //----------------------
 
-namespace Elements
+namespace Elements.Properties
 {
     #pragma warning disable // Disable all warnings
 
@@ -13,14 +13,14 @@ namespace Elements
     using Elements.Properties;
     using System.Collections.Generic;
     
-    /// <summary>A representation component comprised of one or more geometries.</summary>
+    /// <summary>A property with a string value.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Representation3D 
+    public partial class StringProperty : Property
     {
-        /// <summary>A collection of geometries.</summary>
-        [Newtonsoft.Json.JsonProperty("Geometries", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IList<Solid> Geometries { get; internal set; } = new System.Collections.Generic.List<Solid>();
+        /// <summary>The property's value.</summary>
+        [Newtonsoft.Json.JsonProperty("Value", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Value { get; internal set; }
     
     
     }

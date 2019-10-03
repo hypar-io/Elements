@@ -29,8 +29,16 @@ When we started [Hypar](https://www.hypar.io) we needed a library that would gen
 - The library must be free of dependencies on host applications like Rhino or Revit or geometry kernels like Open Cascade which, while really cool, become a black box in your system.
 - The library must be able to serialize data to formats like JSON, [IFC](https://www.buildingsmart.org/about/what-is-openbim/ifc-introduction/),and [glTF](https://www.khronos.org/gltf/), that are useful to architects, engineers, contractors, and people building real-time visualization applications for AEC.
 - The library must be written in a language that supports developer productivity through things like type safety, and which supports code re-use in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
+- Serialization and deserialization of types that extend `Element` should be possible provided that those types are made up of primitives defined in this library.
 
 We couldn't find anything quite right. So we started building this. 
+
+## Code Generation
+Elements constructs its primitive types from schemas in the `/Schemas` directory. These schemas are provided as JSON schema. The generator mechanism can be found in the `/src/Generate` directory. Some things to note about code generation:
+- Elements uses [NJsonSchema](https://github.com/RicoSuter/NJsonSchema) to generate C# classes from JSON schemas.
+- The default collection type used is `System.Collections.Generic.IList`. Primitive types have constructors which take `T[]` for historical support, but these will be upgraded in the future to `IList<T>`.
+- Generated classes are marked as `partial` and do not contain constructors. The constructors are contained in the their partial counterparts.
+
 
 ## Geometry
 We are often asked whether the Elements library supports the ____ geometry kernel. It does not. Yet. The geometry kernel that we've created for Elements is a very simple BREP kernel which does "flat stuff with holes in it" really well. We think Nurbs are sexy, and we'll definitely support more curvy stuff in the future, it's just that the effort required to support ____ geometry kernel for micro-services running in the cloud is not small. Good geometry kernels are also usually large, expensive, and not open source, so they introduce a lot of concerns which are orthogonal to why we built this library in the first place. If you are interested in using Elements with another geometry library, we love pull requests.

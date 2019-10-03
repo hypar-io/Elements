@@ -11,8 +11,8 @@ namespace Elements.Tests
         [Fact]
         public void Construct()
         {
-            var e = new Element();
-            var t = e.FirstComponentOfType<Transform>();
+            // var e = new Element();
+            // var t = e.FirstComponentOfType<Transform>();
         }
     }
 }

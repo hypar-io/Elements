@@ -42,11 +42,6 @@ namespace Elements.Geometry
         public abstract Vector3 PointAt(double u);
 
         /// <summary>
-        /// Get a new curve that is the reverse of the original line.
-        /// </summary>
-        public abstract ICurve Reversed();
-
-        /// <summary>
         /// Get a transform whose XY plane is perpendicular to the curve, and whose
         /// positive Z axis points along the curve.
         /// </summary>

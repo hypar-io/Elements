@@ -53,9 +53,9 @@ namespace Elements.Generate
             var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings(){
                 Namespace = ns, 
                 ArrayType = "System.Collections.Generic.IList",
-                ArrayInstanceType = "System.Collection.Generic.List",
+                ArrayInstanceType = "System.Collections.Generic.List",
                 ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes,
-                ClassStyle = CSharpClassStyle.Record,
+                // ClassStyle = CSharpClassStyle.Record,
                 TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates")
             });
         

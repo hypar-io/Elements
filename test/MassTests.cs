@@ -1,4 +1,3 @@
-using Elements;
 using Elements.Geometry;
 using System;
 using Xunit;
@@ -72,7 +71,7 @@ namespace Elements.Tests
             var mass = new Mass(profile, 5.0, BuiltInMaterials.Mass, new Transform());
             var t = new Vector3(5, 0, 0);
             mass.Transform.Move(t);
-            for (var i = 0; i < profile.Vertices.Length; i++)
+            for (var i = 0; i < profile.Vertices.Count; i++)
             {
                 Assert.Equal(profile.Vertices[i] + t, mass.Profile.Perimeter.Vertices[i] + t);
             }

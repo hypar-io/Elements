@@ -16,6 +16,13 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
+        public Polygon(IList<Vector3> vertices): base(vertices){}
+
+        /// <summary>
+        /// Construct a Polygon from a collection of vertices.
+        /// </summary>
+        /// <param name="vertices">A collection of vertices.</param>
+        /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
         public Polygon(Vector3[] vertices) : base(vertices){}
 
         /// <summary>
@@ -432,18 +439,18 @@ namespace Elements.Geometry
         /// <returns>A collection of Lines.</returns>
         public override Line[] Segments()
         {
-            var lines = new Line[_vertices.Length];
-            for(var i=0; i<_vertices.Length; i++)
+            var lines = new Line[this.Vertices.Count];
+            for(var i=0; i<this.Vertices.Count; i++)
             {
-                var a = _vertices[i];
+                var a = this.Vertices[i];
                 Vector3 b;
-                if(i == _vertices.Length-1)
+                if(i == this.Vertices.Count-1)
                 {
-                    b = _vertices[0];
+                    b = this.Vertices[0];
                 }
                 else
                 {
-                    b = _vertices[i+1];
+                    b = this.Vertices[i+1];
                 }
                 lines[i] = new Line(a, b);
             }
@@ -456,7 +463,7 @@ namespace Elements.Geometry
         /// <returns>Returns a new Polygon whose vertices are reversed.</returns>
         public new Polygon Reversed()
         {
-            return new Polygon(this._vertices.Reverse().ToArray());
+            return new Polygon(this.Vertices.Reverse().ToArray());
         }
 
         /// <summary>
@@ -470,12 +477,12 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            if(this.Vertices.Length != p.Vertices.Length)
+            if(this.Vertices.Count != p.Vertices.Count)
             {
                 return false;
             }
 
-            for(var i=0; i<this.Vertices.Length; i++)
+            for(var i=0; i<this.Vertices.Count; i++)
             {
                 if(!this.Vertices[i].Equals(p.Vertices[i]))
                 {
@@ -501,7 +508,7 @@ namespace Elements.Geometry
         /// <param name="p"></param>
         public Polygon Project(Plane p)
         {
-            var projected = new Vector3[this.Vertices.Length];
+            var projected = new Vector3[this.Vertices.Count];
             for(var i=0; i<projected.Length; i++)
             {
                 projected[i] = this.Vertices[i].Project(p);
@@ -517,8 +524,8 @@ namespace Elements.Geometry
         /// <returns>A Polygon projected onto the Plane.</returns>
         public Polygon ProjectAlong(Vector3 direction, Plane p)
         {
-            var projected = new Vector3[this.Vertices.Length];
-            for(var i=0; i<this.Vertices.Length; i++)
+            var projected = new Vector3[this.Vertices.Count];
+            for(var i=0; i<this.Vertices.Count; i++)
             {
                 projected[i] = this.Vertices[i].ProjectAlong(direction, p);
             }
@@ -542,7 +549,7 @@ namespace Elements.Geometry
         /// <returns>A string containing the string representations of this Polygon's vertices.</returns>
         public override string ToString()
         {
-            return string.Join(", ", this._vertices.Select(v=>v.ToString()));
+            return string.Join(", ", this.Vertices.Select(v=>v.ToString()));
         }
 
         /// <summary>
@@ -551,10 +558,10 @@ namespace Elements.Geometry
         public override double Length()
         {
             var length = 0.0;
-            for(var i=0; i<this._vertices.Length; i++)
+            for(var i=0; i<this.Vertices.Count; i++)
             {
-                var next = i == this._vertices.Length - 1 ? 0 : i+1;
-                length += this._vertices[i].DistanceTo(this._vertices[next]);
+                var next = i == this.Vertices.Count - 1 ? 0 : i+1;
+                length += this.Vertices[i].DistanceTo(this.Vertices[next]);
             }
             return length;
         }
@@ -571,7 +578,7 @@ namespace Elements.Geometry
                 x += pnt.X;
                 y += pnt.Y;
             }
-            return new Vector3(x / Vertices.Length, y / Vertices.Length);
+            return new Vector3(x / Vertices.Count, y / Vertices.Count);
         }
 
         /// <summary>
@@ -580,11 +587,11 @@ namespace Elements.Geometry
         public double Area()
         {
             var area = 0.0;
-            for(var i = 0; i<= _vertices.Length-1; i++)
+            for(var i = 0; i<= this.Vertices.Count-1; i++)
             {
-                var j = (i+1) % _vertices.Length;
-                area += _vertices[i].X * _vertices[j].Y;
-                area -= _vertices[i].Y * _vertices[j].X;
+                var j = (i+1) % this.Vertices.Count;
+                area += this.Vertices[i].X * this.Vertices[j].Y;
+                area -= this.Vertices[i].Y * this.Vertices[j].X;
             }
             return area/2.0;
         }

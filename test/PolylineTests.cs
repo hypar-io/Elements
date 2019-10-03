@@ -14,7 +14,7 @@ namespace Elements.Geometry.Tests
             var d = new Vector3(2, 1);
 
             var pline = new Polyline(new[]{a,b,c,d});
-            Assert.Equal(4, pline.Vertices.Length);
+            Assert.Equal(4, pline.Vertices.Count);
             Assert.Equal(3, pline.Segments().Length);
         }
     }

@@ -15,7 +15,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid : ITessellate
+    public partial class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -50,15 +50,15 @@ namespace Elements.Geometry.Solids
         /// Construct a lamina solid.
         /// </summary>
         /// <param name="perimeter">The perimeter of the lamina's faces.</param>
-        public static Solid CreateLamina(Vector3[] perimeter)
+        public static Solid CreateLamina(IList<Vector3> perimeter)
         {   
             var solid = new Solid();
             var loop1 = new Loop();
             var loop2 = new Loop();
-            for (var i = 0; i < perimeter.Length; i++)
+            for (var i = 0; i < perimeter.Count; i++)
             {
                 var a = solid.AddVertex(perimeter[i]);
-                var b = solid.AddVertex(perimeter[i == perimeter.Length - 1 ? 0 : i + 1]);
+                var b = solid.AddVertex(perimeter[i == perimeter.Count - 1 ? 0 : i + 1]);
                 var e = solid.AddEdge(a, b);
                 loop1.AddEdgeToEnd(e.Left);
                 loop2.AddEdgeToStart(e.Right);
@@ -90,7 +90,7 @@ namespace Elements.Geometry.Solids
         /// <param name="startSetback">The setback of the sweep from the start of the curve.</param>
         /// <param name="endSetback">The setback of the sweep from the end of the curve.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFaceAlongCurve(Polygon perimeter, Polygon[] holes, ICurve curve,  double startSetback = 0, double endSetback = 0)
+        public static Solid SweepFaceAlongCurve(Polygon perimeter, IList<Polygon> holes, ICurve curve,  double startSetback = 0, double endSetback = 0)
         {
             var solid = new Solid();
 
@@ -117,7 +117,7 @@ namespace Elements.Geometry.Solids
                 if(holes != null)
                 {
                     cap = solid.AddFace(transforms[0].OfPolygon(perimeter), transforms[0].OfPolygons(holes));
-                    openEdges = new Edge[1 + holes.Length][];
+                    openEdges = new Edge[1 + holes.Count][];
                 }
                 else
                 {
@@ -287,15 +287,15 @@ namespace Elements.Geometry.Solids
         /// <param name="p"></param>
         public Edge[] AddEdges(Polygon p)
         {
-            var loop = new Edge[p.Vertices.Length];
-            var vertices = new Vertex[p.Vertices.Length];
-            for (var i = 0; i < p.Vertices.Length; i++)
+            var loop = new Edge[p.Vertices.Count];
+            var vertices = new Vertex[p.Vertices.Count];
+            for (var i = 0; i < p.Vertices.Count; i++)
             {
                 vertices[i] = AddVertex(p.Vertices[i]);
             }
-            for(var i=0; i< p.Vertices.Length; i++)
+            for(var i=0; i< p.Vertices.Count; i++)
             {
-                loop[i] = AddEdge(vertices[i], i == p.Vertices.Length - 1 ? vertices[0] : vertices[i+1]);
+                loop[i] = AddEdge(vertices[i], i == p.Vertices.Count - 1 ? vertices[0] : vertices[i+1]);
             }
             return loop;
         }
@@ -525,12 +525,12 @@ namespace Elements.Geometry.Solids
         protected Loop LoopFromPolygon(Polygon p)
         {
             var loop = new Loop();
-            var verts = new Vertex[p.Vertices.Length];
-            for (var i = 0; i < p.Vertices.Length; i++)
+            var verts = new Vertex[p.Vertices.Count];
+            for (var i = 0; i < p.Vertices.Count; i++)
             {
                 verts[i] = AddVertex(p.Vertices[i]);
             }
-            for (var i=0; i<p.Vertices.Length; i++)
+            for (var i=0; i<p.Vertices.Count; i++)
             {
                 var v1 = verts[i];
                 var v2 = i == verts.Length - 1 ? verts[0] : verts[i+1];

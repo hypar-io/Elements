@@ -47,30 +47,17 @@ namespace Elements.Geometry
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public class Profile : IIdentifiable
+    public partial class Profile : IIdentifiable
     {
-        private Polygon _perimeter;
-        private Polygon[] _voids;
-
         /// <summary>
         /// The identifier of the profile.
         /// </summary>
         public Guid Id { get; internal set; }
 
         /// <summary>
-        /// The name of the profile.
+        /// Internal constructor for default initialization.
         /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// The perimeter of the profile.
-        /// </summary>
-        public Polygon Perimeter { get => _perimeter; protected set => _perimeter = value; }
-
-        /// <summary>
-        /// A collection of Polygons representing voids in the profile.
-        /// </summary>
-        public Polygon[] Voids { get => _voids; protected set => _voids = value; }
+        internal Profile(){}
 
         /// <summary>
         /// Construct a profile.
@@ -131,8 +118,8 @@ namespace Elements.Geometry
             Polygon[] voids = null;
             if (this.Voids != null)
             {
-                voids = new Polygon[this.Voids.Length];
-                for (var i = 0; i < this.Voids.Length; i++)
+                voids = new Polygon[this.Voids.Count];
+                for (var i = 0; i < this.Voids.Count; i++)
                 {
                     voids[i] = this.Voids[i].Reversed();
                 }
@@ -183,7 +170,7 @@ namespace Elements.Geometry
 
         private double ClippedArea()
         {
-            if (this.Voids == null || this.Voids.Length == 0)
+            if (this.Voids == null || this.Voids.Count == 0)
             {
                 return this.Perimeter.Area();
             }

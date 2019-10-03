@@ -10,26 +10,10 @@ namespace Elements
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
-    public abstract class Element : IElement
+    public abstract partial class Element : IElement
     {
         private Dictionary<string, IProperty> _properties = new Dictionary<string, IProperty>();
-
-        /// <summary>
-        /// The unique identifier of the element.
-        /// </summary>
-        [JsonProperty(Order = -101)]
-        public Guid Id { get; internal set; }
-
-        /// <summary>
-        /// The type of the element.
-        /// Used during deserialization to disambiguate derived types.
-        /// </summary>
-        [JsonProperty(Order = -100)]
-        public string Type
-        {
-            get { return this.GetType().FullName.ToLower(); }
-        }
-
+        
         /// <summary>
         /// A map of properties for the element.
         /// </summary>
@@ -39,16 +23,6 @@ namespace Elements
         {
             get { return _properties; }
         }
-
-        /// <summary>
-        /// The element's transform.
-        /// </summary>
-        public Transform Transform { get; protected set; }
-
-        /// <summary>
-        /// The element's name.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Construct an element.

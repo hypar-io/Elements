@@ -4,7 +4,7 @@
 // </auto-generated>
 //----------------------
 
-namespace Elements.Geometry
+namespace Elements.Properties
 {
     #pragma warning disable // Disable all warnings
 
@@ -13,15 +13,13 @@ namespace Elements.Geometry
     using Elements.Properties;
     using System.Collections.Generic;
     
-    /// <summary>A coplanar continuous set of lines.</summary>
+    /// <summary>A set of properties.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Polyline : Curve
+    public partial class PropertySet 
     {
-        /// <summary>The vertices of the polygon.</summary>
-        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("Properties", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.MinLength(2)]
-        public System.Collections.Generic.IList<Vector3> Vertices { get; internal set; } = new System.Collections.Generic.List<Vector3>();
+        public System.Collections.Generic.IList<Property> Properties { get; internal set; } = new System.Collections.Generic.List<Property>();
     
     
     }
