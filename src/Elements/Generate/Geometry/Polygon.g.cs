@@ -8,9 +8,12 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A closed planar polygon.</summary>

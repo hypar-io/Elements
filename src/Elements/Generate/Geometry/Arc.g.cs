@@ -8,9 +8,12 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A linear curve between two points.</summary>
@@ -20,20 +23,20 @@ namespace Elements.Geometry
         /// <summary>The center of the arc.</summary>
         [Newtonsoft.Json.JsonProperty("Center", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Vector3 Center { get; internal set; } = new Vector3();
+        public  Vector3 Center { get; internal set; } = new Vector3();
     
         /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
         [Newtonsoft.Json.JsonProperty("StartAngle", Required = Newtonsoft.Json.Required.Always)]
-        public double StartAngle { get; internal set; }
+        public  double StartAngle { get; internal set; }
     
         /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
         [Newtonsoft.Json.JsonProperty("EndAngle", Required = Newtonsoft.Json.Required.Always)]
-        public double EndAngle { get; internal set; }
+        public  double EndAngle { get; internal set; }
     
         /// <summary>The radius of the arc.</summary>
         [Newtonsoft.Json.JsonProperty("Radius", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public double Radius { get; internal set; }
+        public  double Radius { get; internal set; }
     
     
     }

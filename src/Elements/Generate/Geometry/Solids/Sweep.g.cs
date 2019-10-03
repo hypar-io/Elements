@@ -8,9 +8,12 @@ namespace Elements.Geometry.Solids
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A sweep of a profile along a curve.</summary>
@@ -18,13 +21,12 @@ namespace Elements.Geometry.Solids
     public partial class Sweep : Solid
     {
         /// <summary>The profile to be swept along the curve.</summary>
-        [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public Profile Profile { get; internal set; } = new Profile();
+        [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Profile Profile { get; internal set; }
     
         /// <summary>The curve along which the profile will be swept.</summary>
         [Newtonsoft.Json.JsonProperty("Curve", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Curve Curve { get; internal set; }
+        public  Curve Curve { get; internal set; }
     
     
     }

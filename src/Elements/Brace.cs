@@ -1,7 +1,5 @@
-using Elements.Geometry;
+using Elements.ElementTypes;
 using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Elements
 {

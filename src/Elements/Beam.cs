@@ -1,3 +1,4 @@
+using Elements.ElementTypes;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;

@@ -8,9 +8,12 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>An RGBA color.</summary>
@@ -20,22 +23,22 @@ namespace Elements.Geometry
         /// <summary>The red component of the color between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("Red", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double Red { get; internal set; }
+        public  double Red { get; internal set; }
     
         /// <summary>The green component of the color between 0.0 and 1.0..</summary>
         [Newtonsoft.Json.JsonProperty("Green", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double Green { get; internal set; }
+        public  double Green { get; internal set; }
     
         /// <summary>The blue component of the color between 0.0 and 1.0..</summary>
         [Newtonsoft.Json.JsonProperty("Blue", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double Blue { get; internal set; }
+        public  double Blue { get; internal set; }
     
         /// <summary>The alpha component of the color between 0.0 and 1.0..</summary>
         [Newtonsoft.Json.JsonProperty("Alpha", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double Alpha { get; internal set; }
+        public  double Alpha { get; internal set; }
     
     
     }

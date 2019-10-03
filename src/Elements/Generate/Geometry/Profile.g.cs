@@ -8,9 +8,12 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A profile comprised of an external boundary and one or several holes.</summary>
@@ -19,15 +22,15 @@ namespace Elements.Geometry
     {
         /// <summary>The name of the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Name { get; internal set; }
+        public  string Name { get; internal set; }
     
         /// <summary>The perimeter of the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Polygon Perimeter { get; internal set; }
+        public  Polygon Perimeter { get; internal set; }
     
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.IList<Polygon> Voids { get; internal set; }
+        public  IList<Polygon> Voids { get; internal set; }
     
     
     }

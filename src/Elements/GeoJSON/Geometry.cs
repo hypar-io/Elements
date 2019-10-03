@@ -27,20 +27,8 @@ namespace Elements.GeoJSON
     /// A GeoJSON position specified by longitude and latitude.
     /// </summary>
     [JsonConverter(typeof(PositionConverter))]
-    public class Position
+    public partial class Position
     {
-        /// <summary>
-        /// The latitude in decimal degrees.
-        /// </summary>
-        [JsonProperty("latitude")]
-        public double Latitude {get;}
-
-        /// <summary>
-        /// The longitude in decimal degrees.
-        /// </summary>
-        [JsonProperty("longitude")]
-        public double Longitude{get;}
-
         /// <summary>
         /// Construct a Position.
         /// </summary>

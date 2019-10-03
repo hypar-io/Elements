@@ -1,3 +1,4 @@
+using Elements.ElementTypes;
 using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using System;

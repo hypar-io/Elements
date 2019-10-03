@@ -8,9 +8,12 @@ namespace Elements.Properties
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A property with a numeric value.</summary>
@@ -19,13 +22,13 @@ namespace Elements.Properties
     {
         /// <summary>The property's value</summary>
         [Newtonsoft.Json.JsonProperty("Value", Required = Newtonsoft.Json.Required.Always)]
-        public double Value { get; internal set; }
+        public  double Value { get; internal set; }
     
         /// <summary>The value type.</summary>
         [Newtonsoft.Json.JsonProperty("ValueType", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public NumericPropertyValueType ValueType { get; internal set; }
+        public  NumericPropertyValueType ValueType { get; internal set; }
     
     
     }

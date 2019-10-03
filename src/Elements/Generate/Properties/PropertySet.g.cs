@@ -8,9 +8,12 @@ namespace Elements.Properties
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A set of properties.</summary>
@@ -19,7 +22,7 @@ namespace Elements.Properties
     {
         [Newtonsoft.Json.JsonProperty("Properties", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IList<Property> Properties { get; internal set; } = new System.Collections.Generic.List<Property>();
+        public  IList<Property> Properties { get; internal set; } = new List<Property>();
     
     
     }

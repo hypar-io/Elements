@@ -8,64 +8,21 @@ using System.Linq;
 using System.Reflection;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
+using Elements.ElementTypes;
 
 namespace Elements
 {
     /// <summary>
     /// A container for elements, element types, materials, and profiles.
     /// </summary>
-    public class Model
+    public partial class Model
     {
-        private Dictionary<Guid, Material> _materials = new Dictionary<Guid, Material>();
-        private Dictionary<Guid, Element> _elements = new Dictionary<Guid, Element>();
-
-        private Dictionary<Guid, ElementType> _elementTypes = new Dictionary<Guid, ElementType>();
-
-        private Dictionary<Guid, Profile> _profiles = new Dictionary<Guid, Profile>();
-
         private List<string> _extensions = new List<string>();
 
         /// <summary>
         /// The version of the assembly.
         /// </summary>
         public string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-        /// <summary>
-        /// The origin of the model.
-        /// </summary>
-        public Position Origin { get; set; }
-
-        /// <summary>
-        /// All elements in the Model.
-        /// </summary>
-        public Dictionary<Guid, Element> Elements
-        {
-            get { return this._elements; }
-        }
-
-        /// <summary>
-        /// All Materials in the Model.
-        /// </summary>
-        public Dictionary<Guid, Material> Materials
-        {
-            get { return this._materials; }
-        }
-
-        /// <summary>
-        /// All element types in the Model.
-        /// </summary>
-        public Dictionary<Guid, ElementType> ElementTypes
-        {
-            get { return this._elementTypes; }
-        }
-
-        /// <summary>
-        /// All profiles in the model.
-        /// </summary>
-        public Dictionary<Guid, Profile> Profiles
-        {
-            get { return this._profiles; }
-        }
 
         /// <summary>
         /// A collection of extension identifiers which representing
@@ -80,6 +37,11 @@ namespace Elements
         public Model()
         {
             this.Origin = new Position(0, 0);
+            this.Elements = new Dictionary<Guid, Element>();
+            this.Profiles = new Dictionary<Guid, Profile>();
+            this.Materials = new Dictionary<Guid, Material>();
+            this.ElementTypes = new Dictionary<Guid, ElementType>();
+
             AddMaterial(BuiltInMaterials.Edges);
         }
 
@@ -96,9 +58,9 @@ namespace Elements
                 return;
             }
 
-            if (!this._elements.ContainsKey(element.Id))
+            if (!this.Elements.ContainsKey(element.Id))
             {
-                this._elements.Add(element.Id, element);
+                this.Elements.Add(element.Id, element);
                 GetRootLevelElementData(element);
             }
             else
@@ -128,12 +90,12 @@ namespace Elements
                 return;
             }
 
-            if (this._elements.ContainsKey(element.Id))
+            if (this.Elements.ContainsKey(element.Id))
             {
                 // remove the previous element
-                this._elements.Remove(element.Id);
+                this.Elements.Remove(element.Id);
                 // Update the element itselft
-                this._elements.Add(element.Id, element);
+                this.Elements.Add(element.Id, element);
                 // Update the root elements
                 GetRootLevelElementData(element);
             }
@@ -183,9 +145,9 @@ namespace Elements
         /// with the provided id.</returns>
         public Element GetElementById(Guid id)
         {
-            if (this._elements.ContainsKey(id))
+            if (this.Elements.ContainsKey(id))
             {
-                return this._elements[id];
+                return this.Elements[id];
             }
             return null;
         }
@@ -214,7 +176,7 @@ namespace Elements
         /// specified id can be found.</returns>
         public Material GetMaterialByName(string name)
         {
-            return this._materials.Values.FirstOrDefault(m => m.Name == name);
+            return this.Materials.Values.FirstOrDefault(m => m.Name == name);
         }
 
         /// <summary>
@@ -225,7 +187,7 @@ namespace Elements
         /// the specified name can be found.</returns>
         public ElementType GetElementTypeByName(string name)
         {
-            return this._elementTypes.Values.FirstOrDefault(et => et.Name == name);
+            return this.ElementTypes.Values.FirstOrDefault(et => et.Name == name);
         }
 
         /// <summary>
@@ -236,7 +198,7 @@ namespace Elements
         /// specified name can be found.</returns>
         public Profile GetProfileByName(string name)
         {
-            return this._profiles.Values.FirstOrDefault(p => p.Name != null && p.Name == name);
+            return this.Profiles.Values.FirstOrDefault(p => p.Name != null && p.Name == name);
         }
 
         /// <summary>
@@ -246,7 +208,7 @@ namespace Elements
         /// <returns>A collection of elements of the specified type.</returns>
         public IEnumerable<T> ElementsOfType<T>()
         {
-            return this._elements.Values.OfType<T>();
+            return this.Elements.Values.OfType<T>();
         }
 
         /// <summary>
@@ -275,10 +237,10 @@ namespace Elements
             Material> materials, Dictionary<Guid, ElementType> elementTypes,
             Dictionary<Guid, Profile> profiles, List<string> extensions)
         {
-            this._elements = elements;
-            this._materials = materials;
-            this._elementTypes = elementTypes;
-            this._profiles = profiles;
+            this.Elements = elements;
+            this.Materials = materials;
+            this.ElementTypes = elementTypes;
+            this.Profiles = profiles;
             this._extensions = extensions;
             AddMaterial(BuiltInMaterials.Edges);
             AddMaterial(BuiltInMaterials.Void);
@@ -294,13 +256,13 @@ namespace Elements
 
         private void AddMaterial(Material material)
         {
-            if (!this._materials.ContainsKey(material.Id))
+            if (!this.Materials.ContainsKey(material.Id))
             {
-                this._materials.Add(material.Id, material);
+                this.Materials.Add(material.Id, material);
             }
             else
             {
-                this._materials[material.Id] = material;
+                this.Materials[material.Id] = material;
             }
         }
 
@@ -385,25 +347,25 @@ namespace Elements
 
         private void AddElementType(ElementType elementType)
         {
-            if (!this._elementTypes.ContainsKey(elementType.Id))
+            if (!this.ElementTypes.ContainsKey(elementType.Id))
             {
-                this._elementTypes.Add(elementType.Id, elementType);
+                this.ElementTypes.Add(elementType.Id, elementType);
             }
             else
             {
-                this._elementTypes[elementType.Id] = elementType;
+                this.ElementTypes[elementType.Id] = elementType;
             }
         }
 
         private void AddProfile(Profile profile)
         {
-            if (!this._profiles.ContainsKey(profile.Id))
+            if (!this.Profiles.ContainsKey(profile.Id))
             {
-                this._profiles.Add(profile.Id, profile);
+                this.Profiles.Add(profile.Id, profile);
             }
             else
             {
-                this._profiles[profile.Id] = profile;
+                this.Profiles[profile.Id] = profile;
             }
         }
     }

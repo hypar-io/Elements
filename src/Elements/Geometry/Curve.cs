@@ -6,16 +6,6 @@ namespace Elements.Geometry
     public abstract partial class Curve : ICurve
     {
         /// <summary>
-        /// The type of the curve.
-        /// Used during deserialization to disambiguate derived types.
-        /// </summary>
-        [JsonProperty(Order = -100)]
-        public string Type
-        {
-            get { return this.GetType().FullName.ToLower(); }
-        }
-        
-        /// <summary>
         /// Get the bounding box for this curve.
         /// </summary>
         /// <returns>A bounding box for this curve.</returns>

@@ -2,28 +2,17 @@ using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 
-namespace Elements
+namespace Elements.ElementTypes
 {
     /// <summary>
     /// Base class for all ElementTypes
     /// </summary>
-    public abstract class ElementType : IIdentifiable
+    public abstract partial class ElementType : IIdentifiable
     {
         /// <summary>
         /// The unique identifier of an ElementType.
         /// </summary>
         public Guid Id{get;internal set;}
-
-        /// <summary>
-        /// The type of the ElementType.
-        /// Used during serialization.
-        /// </summary>
-        public abstract string Type{get;}
-
-        /// <summary>
-        /// The name of the ElementType.
-        /// </summary>
-        public string Name{get;}
 
         /// <summary>
         /// Construct an element type.

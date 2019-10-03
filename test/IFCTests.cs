@@ -5,6 +5,7 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
+using Elements.ElementTypes;
 
 namespace Elements.Tests
 {

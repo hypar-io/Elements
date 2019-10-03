@@ -8,9 +8,12 @@ namespace Elements
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A material.</summary>
@@ -19,21 +22,21 @@ namespace Elements
     {
         /// <summary>The name of the material.</summary>
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Name { get; internal set; }
+        public  string Name { get; internal set; }
     
         /// <summary>The material's color.</summary>
         [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Color Color { get; internal set; }
+        public  Color Color { get; internal set; }
     
         /// <summary>The material's specular factor.</summary>
         [Newtonsoft.Json.JsonProperty("SpecularFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
-        public double SpecularFactor { get; internal set; }
+        public  double SpecularFactor { get; internal set; }
     
         /// <summary>The material's glossiness factor.</summary>
         [Newtonsoft.Json.JsonProperty("GlossinessFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
-        public double GlossinessFactor { get; internal set; }
+        public  double GlossinessFactor { get; internal set; }
     
     
     }

@@ -8,11 +8,6 @@ namespace Elements.Geometry.Interfaces
     public interface ICurve
     {
         /// <summary>
-        /// A type descriptor for use in deserialization.
-        /// </summary>
-        string Type { get; }
-
-        /// <summary>
         /// Calculate the length of the curve.
         /// </summary>
         double Length();

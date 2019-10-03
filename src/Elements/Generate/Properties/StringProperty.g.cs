@@ -8,9 +8,12 @@ namespace Elements.Properties
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A property with a string value.</summary>
@@ -20,7 +23,7 @@ namespace Elements.Properties
         /// <summary>The property's value.</summary>
         [Newtonsoft.Json.JsonProperty("Value", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Value { get; internal set; }
+        public  string Value { get; internal set; }
     
     
     }

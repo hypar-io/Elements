@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Elements.ElementTypes;
 using Newtonsoft.Json;
 
 namespace Elements.Serialization.JSON
@@ -9,13 +10,13 @@ namespace Elements.Serialization.JSON
     /// </summary>
     public class ElementTypeToIdConverter : JsonConverter
     {
-        private Dictionary<Guid, ElementType> _elementTypes;
+        private IDictionary<Guid, ElementType> _elementTypes;
 
         /// <summary>
         /// Construct an ElementTypeConverter.
         /// </summary>
         /// <param name="elementTypes"></param>
-        public ElementTypeToIdConverter(Dictionary<Guid, ElementType> elementTypes)
+        public ElementTypeToIdConverter(IDictionary<Guid, ElementType> elementTypes)
         {
             this._elementTypes = elementTypes;
         }

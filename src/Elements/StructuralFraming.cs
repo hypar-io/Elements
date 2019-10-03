@@ -5,6 +5,7 @@ using Elements.Geometry.Interfaces;
 using Elements.Serialization.JSON;
 using Elements.Interfaces;
 using Elements.Geometry.Solids;
+using Elements.ElementTypes;
 
 namespace Elements
 {
@@ -78,7 +79,7 @@ namespace Elements
         /// </summary>
         public double Volume()
         {
-            if (this.Curve.Type != "elements.geometry.line")
+            if (this.Curve.GetType() != typeof(Line))
             {
                 throw new InvalidOperationException("Volume calculation for non-linear elements is not yet supported");
             }

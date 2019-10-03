@@ -8,9 +8,12 @@ namespace Elements
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>The base type for all elements.</summary>
@@ -21,17 +24,17 @@ namespace Elements
         /// <summary>An identifier for the element which must be unique within the system.</summary>
         [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid Id { get; internal set; }
+        public  System.Guid Id { get; internal set; }
     
         /// <summary>The element's name.</summary>
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Name { get; internal set; }
+        public  string Name { get; internal set; }
     
         /// <summary>The element's transform.</summary>
         [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Transform Transform { get; internal set; } = new Transform();
+        public  Transform Transform { get; internal set; } = new Transform();
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     

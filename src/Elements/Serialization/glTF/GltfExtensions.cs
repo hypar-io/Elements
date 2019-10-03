@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
+using Elements.ElementTypes;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 

@@ -1,0 +1,43 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Model.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A container of elements.",
+    "title": "Model",
+    "type": "object",
+    "required": ["Elements", "Materials", "Profiles", "ElementTypes"],
+    "properties": {
+        "Elements": {
+            "type": ["array","null"],
+            "items": {
+                "$ref": "Element.json"
+            },
+            "description": "All elements in the model."
+        },
+        "Materials": {
+            "type": ["array","null"],
+            "items": {
+                "$ref": "Material.json"
+            },
+            "description": "All materials in the model."
+        },
+        "Profiles": {
+            "type": ["array","null"],
+            "items": {
+                "$ref": "Geometry/Profile.json"
+            },
+            "description": "All profiles in the model."
+        },
+        "ElementTypes": {
+            "type": ["array","null"],
+            "items": {
+                "$ref": "ElementTypes/ElementType.json"
+            },
+            "description": "All element types in the model."
+        },
+        "Origin": {
+            "description": "The origin of the model.",
+            "$ref": "GeoJSON/Position.json"
+        }
+    },
+    "additionalProperties": false
+}

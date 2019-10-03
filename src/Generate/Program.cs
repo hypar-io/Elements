@@ -24,7 +24,11 @@ namespace Elements.Generate
             // By passing a set of excluded types, we can tell the code 
             // generator not to generate inline type definitions if types
             // reference those types.
-            var excludedTypes = new string[]{"Vector3", "Line", "Plane", "Polyline", "Polygon", "Profile", "Component", "Curve", "Solid", "Color", "Property", "Transform"};
+            var excludedTypes = new string[]{"Vector3", "Line", "Plane", "Polyline", 
+                    "Polygon", "Profile", "Component", "Curve", "Solid", 
+                    "Color", "Property", "Transform", "Element", "Material",
+                    "Position", "ElementType", "FloorType", "WallType", 
+                    "StructuralFramingType", "MaterialLayer", "Elements"};
 
             var typesDict = new Dictionary<string, CodeArtifact>();
             var di = new DirectoryInfo(schemaRoot);
@@ -52,10 +56,9 @@ namespace Elements.Generate
             var schema = await JsonSchema.FromJsonAsync(File.ReadAllText(schemaPath), schemaPath);
             var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings(){
                 Namespace = ns, 
-                ArrayType = "System.Collections.Generic.IList",
-                ArrayInstanceType = "System.Collections.Generic.List",
+                ArrayType = "IList",
+                ArrayInstanceType = "List",
                 ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes,
-                // ClassStyle = CSharpClassStyle.Record,
                 TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates")
             });
         

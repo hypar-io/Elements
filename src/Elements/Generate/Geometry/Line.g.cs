@@ -8,9 +8,12 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A linear curve between two points.</summary>
@@ -20,12 +23,12 @@ namespace Elements.Geometry
         /// <summary>The start of the line.</summary>
         [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Vector3 Start { get; internal set; } = new Vector3();
+        public  Vector3 Start { get; internal set; } = new Vector3();
     
         /// <summary>The end of the line.</summary>
         [Newtonsoft.Json.JsonProperty("End", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Vector3 End { get; internal set; } = new Vector3();
+        public  Vector3 End { get; internal set; } = new Vector3();
     
     
     }

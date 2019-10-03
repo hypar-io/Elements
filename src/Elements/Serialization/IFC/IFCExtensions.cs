@@ -1,3 +1,4 @@
+using Elements.ElementTypes;
 using IFC;
 using STEP;
 using System;

@@ -8,9 +8,12 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A 3D vector.</summary>
@@ -19,15 +22,15 @@ namespace Elements.Geometry
     {
         /// <summary>The X component of the vector.</summary>
         [Newtonsoft.Json.JsonProperty("X", Required = Newtonsoft.Json.Required.Always)]
-        public double X { get; internal set; }
+        public  double X { get; internal set; }
     
         /// <summary>The Y component of the vector.</summary>
         [Newtonsoft.Json.JsonProperty("Y", Required = Newtonsoft.Json.Required.Always)]
-        public double Y { get; internal set; }
+        public  double Y { get; internal set; }
     
         /// <summary>The Z component of the vector.</summary>
         [Newtonsoft.Json.JsonProperty("Z", Required = Newtonsoft.Json.Required.Always)]
-        public double Z { get; internal set; }
+        public  double Z { get; internal set; }
     
     
     }

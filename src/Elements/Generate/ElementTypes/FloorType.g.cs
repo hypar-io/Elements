@@ -4,23 +4,25 @@
 // </auto-generated>
 //----------------------
 
-namespace Elements
+namespace Elements.ElementTypes
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
-    /// <summary>A representation component comprised of one or more geometries.</summary>
+    /// <summary>A container for properties common to floors.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Representation3D 
+    public partial class FloorType : ElementType
     {
-        /// <summary>A collection of geometries.</summary>
-        [Newtonsoft.Json.JsonProperty("Geometries", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IList<Solid> Geometries { get; internal set; } = new System.Collections.Generic.List<Solid>();
+        /// <summary>The material layers of the floor.</summary>
+        [Newtonsoft.Json.JsonProperty("MaterialLayers", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  IList<MaterialLayer> MaterialLayers { get; internal set; }
     
     
     }

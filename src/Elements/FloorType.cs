@@ -3,26 +3,13 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Elements
+namespace Elements.ElementTypes
 {
     /// <summary>
     /// A container for properties common to floors.
     /// </summary>
-    public class FloorType : ElementType, ILayeredMaterial
+    public partial class FloorType : ElementType, ILayeredMaterial
     {
-        /// <summary>
-        /// The type of the floor type.
-        /// </summary>
-        public override string Type
-        {
-            get{return "floorType";}
-        }
-
-        /// <summary>
-        /// A collection of material layers.
-        /// </summary>
-        public List<MaterialLayer> MaterialLayers {get;}
-
         /// <summary>
         /// Construct a floor type.
         /// </summary>

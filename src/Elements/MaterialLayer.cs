@@ -1,23 +1,10 @@
-using Elements.Geometry;
-using Newtonsoft.Json;
-
 namespace Elements
 {
     /// <summary>
     /// A layer of homogeneous material.
     /// </summary>
-    public class MaterialLayer
+    public partial class MaterialLayer
     {
-        /// <summary>
-        /// The thickness of the layer.
-        /// </summary>
-        public double Thickness {get;}
-
-        /// <summary>
-        /// The layer's material.
-        /// </summary>
-        public Material Material{get;}
-
         /// <summary>
         /// Construct a material layer.
         /// </summary>

@@ -2,6 +2,7 @@ using Elements.Geometry;
 using System;
 using Xunit;
 using System.Linq;
+using Elements.ElementTypes;
 
 namespace Elements.Tests
 {

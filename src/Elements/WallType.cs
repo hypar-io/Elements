@@ -3,26 +3,13 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Elements
+namespace Elements.ElementTypes
 {
     /// <summary>
     /// A container for properties common to walls.
     /// </summary>
-    public class WallType : ElementType, ILayeredMaterial
+    public partial class WallType : ElementType, ILayeredMaterial
     {
-        /// <summary>
-        /// The type of the wall type.
-        /// </summary>
-        public override string Type
-        {
-            get { return "wallType"; }
-        }
-
-        /// <summary>
-        /// The material layers of the wall.
-        /// </summary>
-        public List<MaterialLayer> MaterialLayers {get;}
-
         /// <summary>
         /// Construct a wall type.
         /// </summary>

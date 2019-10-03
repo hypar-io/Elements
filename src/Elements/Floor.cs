@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Elements.Geometry.Solids;
 using System;
 using System.Collections.Generic;
+using Elements.ElementTypes;
 
 namespace Elements
 {

@@ -1,0 +1,19 @@
+{
+    "$id": "https://hypar.io/schemas/elements/GeoJSON/Position.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A position.",
+    "title": "Position",
+    "type": ["object","null"],
+    "required": ["latitude","longitude"],
+    "properties": {
+        "latitude": {
+            "type": "number",
+            "description": "The latitude in decimal degrees."
+        },
+        "longitude": {
+            "type": "number",
+            "description": "The longitude in decimal degrees."
+        }
+    },
+    "additionalProperties": false
+}

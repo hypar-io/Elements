@@ -3,7 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "The base type for all elements.",
     "title": "Element",
-    "type": "object",
+    "type": ["object", "null"],
     "required": ["Id","Name","Transform","discriminator"],
     "discriminator": "discriminator",
     "properties": {

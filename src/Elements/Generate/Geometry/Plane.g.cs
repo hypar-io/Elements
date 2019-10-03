@@ -8,9 +8,12 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A plane.</summary>
@@ -20,12 +23,12 @@ namespace Elements.Geometry
         /// <summary>The origin of the plane.</summary>
         [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Vector3 Origin { get; internal set; } = new Vector3();
+        public  Vector3 Origin { get; internal set; } = new Vector3();
     
         /// <summary>The normal of the plane.</summary>
         [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Vector3 Normal { get; internal set; } = new Vector3();
+        public  Vector3 Normal { get; internal set; } = new Vector3();
     
     
     }

@@ -8,9 +8,12 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
+    using Elements.ElementTypes;
+    using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using System;
     using System.Collections.Generic;
     
     /// <summary>A coplanar continuous set of lines.</summary>
@@ -21,7 +24,7 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(2)]
-        public System.Collections.Generic.IList<Vector3> Vertices { get; internal set; } = new System.Collections.Generic.List<Vector3>();
+        public  IList<Vector3> Vertices { get; internal set; } = new List<Vector3>();
     
     
     }

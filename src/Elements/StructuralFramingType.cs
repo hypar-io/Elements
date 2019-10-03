@@ -1,34 +1,14 @@
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Interfaces;
-using Elements.Serialization.JSON;
-using Newtonsoft.Json;
 
-namespace Elements
+namespace Elements.ElementTypes
 {
     /// <summary>
     /// A container for properties common to a type of structural framing.
     /// </summary>
-    public class StructuralFramingType : ElementType, IProfile, IMaterial
-    {   
-        /// <summary>
-        /// The profile used by the structural framing type.
-        /// </summary>
-        public Profile Profile {get;}
-
-        /// <summary>
-        /// The material used by the structural framing type.
-        /// </summary>
-        public Material Material {get;}
-
-        /// <summary>
-        /// The type of the structural framing type.
-        /// </summary>
-        public override string Type
-        {
-            get{return "structuralFramingType";}
-        }
-
+    public partial class StructuralFramingType : ElementType, IProfile, IMaterial
+    {
         /// <summary>
         /// Construct a structural framing type.
         /// </summary>

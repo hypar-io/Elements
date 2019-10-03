@@ -21,6 +21,6 @@ namespace Elements.Interfaces
         /// <summary>
         /// A collection of material layers.
         /// </summary>
-        List<MaterialLayer> MaterialLayers{get;}
+        IList<MaterialLayer> MaterialLayers{get;}
     }
 }

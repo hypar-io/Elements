@@ -9,9 +9,9 @@ namespace Elements.Serialization.JSON
 {
     public class ProfileToIdConverter : JsonConverter
     {
-        private Dictionary<Guid, Profile> _profiles;
+        private IDictionary<Guid, Profile> _profiles;
 
-        public ProfileToIdConverter(Dictionary<Guid, Profile> profiles)
+        public ProfileToIdConverter(IDictionary<Guid, Profile> profiles)
         {
             this._profiles = profiles;
         }

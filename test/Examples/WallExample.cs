@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Elements.ElementTypes;
 using Elements.Geometry;
 using Xunit;
 

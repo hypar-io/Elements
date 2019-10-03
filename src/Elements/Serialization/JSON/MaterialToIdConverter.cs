@@ -9,13 +9,13 @@ namespace Elements.Serialization.JSON
     /// </summary>
     public class MaterialToIdConverter : JsonConverter
     {
-        private Dictionary<Guid, Material> _materials;
+        private IDictionary<Guid, Material> _materials;
 
         /// <summary>
         /// Construct a MaterialConverter.
         /// </summary>
         /// <param name="materials">A collection of Materials.</param>
-        public MaterialToIdConverter(Dictionary<Guid, Material> materials)
+        public MaterialToIdConverter(IDictionary<Guid, Material> materials)
         {
             this._materials = materials;
         }

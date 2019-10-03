@@ -1,0 +1,20 @@
+{
+    "$id": "https://hypar.io/schemas/elements/MaterialLayer.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A layer of homogeneous material.",
+    "title": "MaterialLayer",
+    "type": ["object","null"],
+    "required": ["Name"],
+    "properties": {
+        "Thickness": {
+            "type": "number",
+            "description": "The thickness of the layer.",
+            "min": 0.0
+        },
+        "Material": {
+            "description": "The layer's material.",
+            "$ref": "Material.json"
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,6 +1,9 @@
+using Elements.ElementTypes;
+using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using System;
 using System.Collections.Generic;
 
 {% if HasDescription -%}
@@ -66,7 +69,7 @@ using System.Collections.Generic;
     [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
 {%   endif -%}
     {% template Class.Property.Annotations %}
-    public {{ property.Type }} {{ property.PropertyName }}{% if RenderInpc == false and RenderPrism == false %} { get; {% if property.HasSetter and RenderRecord == false %}internal set; {% endif %}}{% if property.HasDefaultValue and RenderRecord == false %} = {{ property.DefaultValue }};{% endif %}
+    public {% if property.PropertyName == "Elements" -%}IDictionary<Guid, Element> {% elseif property.PropertyName == "Materials" %}IDictionary<Guid, Material> {% elseif property.PropertyName == "ElementTypes" %}IDictionary<Guid, ElementType> {% elseif property.PropertyName == "Profiles" %}IDictionary<Guid, Profile> {% else %} {{ property.Type }} {% endif -%}  {{ property.PropertyName }}{% if RenderInpc == false and RenderPrism == false %} { get; {% if property.HasSetter and RenderRecord == false %}internal set; {% endif %}}{% if property.HasDefaultValue and RenderRecord == false %} = {{ property.DefaultValue }};{% endif %}
 {% else %}
     {
         get { return {{ property.FieldName }}; }
