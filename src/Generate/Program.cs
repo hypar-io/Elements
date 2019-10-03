@@ -52,17 +52,14 @@ namespace Elements.Generate
             var schema = await JsonSchema.FromJsonAsync(File.ReadAllText(schemaPath), schemaPath);
             var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings(){
                 Namespace = ns, 
-                ArrayType = "System.Collections.Generic.List",
-                ArrayInstanceType = "System.Collections.Generic.List",
-                ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes, 
-                GenerateDefaultValues = false,
-                GenerateDataAnnotations = false, 
-                PropertySetterAccessModifier = "internal", 
-                HandleReferences = true
+                ArrayType = "System.Collections.Generic.IList",
+                ArrayInstanceType = "System.Collection.Generic.List",
+                ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes,
+                ClassStyle = CSharpClassStyle.Record,
+                TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates")
             });
         
             var file = generator.GenerateFile();
-            file = file.Insert(0, "using Elements.Geometry;\nusing Elements.Geometry.Solids;\nusing Elements.Properties;\n");
             File.WriteAllText(outPath, file);
         }
     }
