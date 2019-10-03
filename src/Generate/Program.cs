@@ -20,7 +20,11 @@ namespace Elements.Generate
 
             var elementOutPath = Path.Combine(outRoot, "Element.g.cs");
             var schemaPath = Path.Combine(schemaRoot, "Element.json");
-            var excludedTypes = new string[]{"Vector3", "Line", "Plane", "Polyline", "Polygon", "Profile", "Component", "Curve", "Solid", "Color"};
+
+            // By passing a set of excluded types, we can tell the code 
+            // generator not to generate inline type definitions if types
+            // reference those types.
+            var excludedTypes = new string[]{"Vector3", "Line", "Plane", "Polyline", "Polygon", "Profile", "Component", "Curve", "Solid", "Color", "Property", "Transform"};
 
             var typesDict = new Dictionary<string, CodeArtifact>();
             var di = new DirectoryInfo(schemaRoot);
@@ -32,7 +36,6 @@ namespace Elements.Generate
                 var ns = $"Elements{fi.Directory.FullName.Substring(index + 7).Replace(fi.Name, "").Replace("/",".")}";
 
                 var outDir = Path.Combine(outRoot, subDir);
-                // Console.WriteLine(outDir);
                 if(!Directory.Exists(outDir))
                 {
                     Directory.CreateDirectory(outDir);
@@ -54,11 +57,12 @@ namespace Elements.Generate
                 ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes, 
                 GenerateDefaultValues = false,
                 GenerateDataAnnotations = false, 
-                PropertySetterAccessModifier = "internal"
+                PropertySetterAccessModifier = "internal", 
+                HandleReferences = true
             });
         
             var file = generator.GenerateFile();
-            file = file.Insert(0, "using Elements.Geometry;\nusing Elements.Geometry.Solids;\n");
+            file = file.Insert(0, "using Elements.Geometry;\nusing Elements.Geometry.Solids;\nusing Elements.Properties;\n");
             File.WriteAllText(outPath, file);
         }
     }

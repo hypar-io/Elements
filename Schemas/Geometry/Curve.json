@@ -5,16 +5,8 @@
     "type": ["object","null"],
     "discriminator": "discriminator",
     "description": "A curve.",
-    "required": ["Start","End"],
+    "required": ["discriminator"],
     "properties": {
-        "Start": {
-            "description": "The start of the curve.",
-            "$ref": "Vector3.json"
-        },
-        "End": {
-            "description": "The end of the curve.",
-            "$ref": "Vector3.json"
-        },
         "discriminator": {
             "type": "string"
         }

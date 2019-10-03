@@ -4,18 +4,25 @@
     "description": "The base type for all elements.",
     "title": "Element",
     "type": "object",
-    "required": ["Id","Components"],
+    "required": ["Id","Name","Transform","discriminator"],
+    "discriminator": "discriminator",
     "properties": {
         "Id": {
             "type": "string",
             "format": "guid",
             "description": "An identifier for the element which must be unique within the system."
         },
-        "Components": {
-            "type": "array",
-            "items": {"$ref": "Component.json"},
-            "description": "A collection of components."
+        "Name": {
+            "type": "string",
+            "description": "The element's name."
+        },
+        "Transform": {
+            "description": "The element's transform.",
+            "$ref": "Geometry/Transform.json"
+        },
+        "discriminator": {
+            "type": "string"
         }
     },
-    "additionalProperties": false
+    "additionalProperties": true
 }

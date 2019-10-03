@@ -5,8 +5,11 @@
     "type": "object",
     "description": "A material.",
     "required": ["Color", "SpecularFactor", "GlossinessFactor"],
-    "allOf": [{"$ref": "Component.json"}],
     "properties": {
+        "Name": {
+            "description": "The name of the material.",
+            "type": "string"
+        },
         "Color": {
             "description": "The material's color.",
             "$ref": "Geometry/Color.json"

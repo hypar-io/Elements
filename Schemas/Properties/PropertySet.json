@@ -1,0 +1,15 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Properties/PropertySet.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "PropertySet",
+    "type": "object",
+    "description": "A set of properties.",
+    "required": ["Properties"],
+    "properties": {
+        "Properties": {
+            "type": "array",
+            "items": {"$ref": "Property.json"}
+        }
+    },
+    "additionalProperties": false
+}

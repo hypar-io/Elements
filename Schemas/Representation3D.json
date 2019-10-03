@@ -5,7 +5,6 @@
     "type": "object",
     "description": "A representation component comprised of one or more geometries.",
     "required": ["Geometries"],
-    "allOf": [{"$ref": "Component.json"}],
     "properties": {
         "Geometries": {
             "type": "array",

@@ -1,27 +1,26 @@
 {
-    "$id": "https://hypar.io/schemas/elements/Element.json",
+    "$id": "https://hypar.io/schemas/elements/Transform.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Transform",
     "type": "object",
     "description": "A transform.",
-    "required": ["Origin","XAxis","YAxis","ZAxis"],
-    "allOf": [{"$ref": "Component.json"}],
+    "required": ["Origin", "XAxis", "YAxis", "ZAxis"],
     "properties": {
         "Origin": {
             "description": "The origin.",
-            "$ref": "Geometry/Vector3.json"
+            "$ref": "Vector3.json"
         },
         "XAxis": {
             "description": "The X axis.",
-            "$ref": "Geometry/Vector3.json"
+            "$ref": "Vector3.json"
         },
         "YAxis": {
             "description": "The Y axis.",
-            "$ref": "Geometry/Vector3.json"
+            "$ref": "Vector3.json"
         },
         "ZAxis": {
             "description": "The Z axis.",
-            "$ref": "Geometry/Vector3.json"
+            "$ref": "Vector3.json"
         }
     },
     "additionalProperties": false

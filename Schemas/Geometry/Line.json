@@ -5,5 +5,16 @@
     "type": ["object","null"],
     "description": "A linear curve between two points.",
     "allOf": [{"$ref": "Curve.json"}],
+    "required": ["Start", "End"],
+    "properties": {
+        "Start": {
+            "description": "The start of the line.",
+            "$ref": "Vector3.json"
+        },
+        "End": {
+            "description": "The end of the line.",
+            "$ref": "Vector3.json"
+        }
+    },
     "additionalProperties": false
 }
