@@ -1,19 +1,41 @@
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// A coplanar continuous set of lines.
     /// </summary>
-    public partial class Polyline : Curve
+    public class Polyline : ICurve
     {
+        /// <summary>
+        /// The type of the curve.
+        /// Used during deserialization to disambiguate derived types.
+        /// </summary>
+        [JsonProperty(Order = -100)]
+        public string Type
+        {
+            get { return this.GetType().FullName.ToLower(); }
+        }
+
+        /// <summary>
+        /// The internal collection of vertices.
+        /// </summary>
+        protected Vector3[] _vertices;
+
+        /// <summary>
+        /// The vertices of the polygon.
+        /// </summary>
+        public Vector3[] Vertices
+        {
+            get { return this._vertices; }
+        }
+
         /// <summary>
         /// Calculate the length of the polygon.
         /// </summary>
-        public override double Length()
+        public virtual double Length()
         {
             var length = 0.0;
             for(var i=0; i<this._vertices.Length-1; i++)
@@ -29,7 +51,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Vector3 Start
         {
-            get { return this.Vertices[0]; }
+            get { return this._vertices[0]; }
         }
 
         /// <summary>
@@ -38,18 +60,18 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Vector3 End
         {
-            get { return this.Vertices[this.Vertices.Count - 1]; }
+            get { return this._vertices[this._vertices.Length - 1]; }
         }
 
         /// <summary>
         /// Construct a polyline from a collection of vertices.
         /// </summary>
         /// <param name="vertices">A CCW wound set of vertices.</param>
-        public Polyline(List<Vector3> vertices)
+        public Polyline(Vector3[] vertices)
         {
-            for (var i = 0; i < vertices.Count; i++)
+            for (var i = 0; i < vertices.Length; i++)
             {
-                for (var j = 0; j < vertices.Count; j++)
+                for (var j = 0; j < vertices.Length; j++)
                 {
                     if (i == j)
                     {
@@ -61,17 +83,18 @@ namespace Elements.Geometry
                     }
                 }
             }
-            this.Vertices = vertices;
+            this._vertices = vertices;
         }
 
         /// <summary>
         /// Reverse the direction of a polyline.
         /// </summary>
         /// <returns>Returns a new polyline with opposite winding.</returns>
-        public override ICurve Reversed()
+        public ICurve Reversed()
         {
-            var revVerts = new List<Vector3>(this.Vertices);
-            revVerts.Reverse();
+            Vector3[] revVerts = new Vector3[this._vertices.Length];
+            Array.Copy(this._vertices, revVerts, this._vertices.Length);
+            Array.Reverse(revVerts);
             return new Polyline(revVerts);
         }
 
@@ -81,7 +104,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Join<Vector3>(",", this.Vertices);
+            return string.Join<Vector3>(",", this._vertices);
         }
 
         /// <summary>
@@ -90,11 +113,11 @@ namespace Elements.Geometry
         /// <returns>A collection of Lines.</returns>
         public virtual Line[] Segments()
         {
-            var result = new Line[this.Vertices.Count - 1];
-            for (var i = 0; i < this.Vertices.Count - 1; i++)
+            var result = new Line[_vertices.Length - 1];
+            for (var i = 0; i < _vertices.Length - 1; i++)
             {
-                var a = this.Vertices[i];
-                var b = this.Vertices[i + 1];
+                var a = _vertices[i];
+                var b = _vertices[i + 1];
                 result[i] = new Line(a, b);
             }
             return result;
@@ -106,7 +129,7 @@ namespace Elements.Geometry
         /// <param name="u">A value between 0.0 and 1.0.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
 
-        public override Vector3 PointAt(double u)
+        public Vector3 PointAt(double u)
         {
             var segmentIndex = 0;
             var p = PointAtInternal(u, out segmentIndex);
@@ -128,10 +151,10 @@ namespace Elements.Geometry
 
             var d = this.Length() * u;
             var totalLength = 0.0;
-            for (var i = 0; i < this.Vertices.Count - 1; i++)
+            for (var i = 0; i < this._vertices.Length - 1; i++)
             {
-                var a = this.Vertices[i];
-                var b = this.Vertices[i + 1];
+                var a = this._vertices[i];
+                var b = this._vertices[i + 1];
                 var currLength = a.DistanceTo(b);
                 var currVec = (b - a);
                 if (totalLength <= d && totalLength + currLength >= d)
@@ -141,7 +164,7 @@ namespace Elements.Geometry
                 }
                 totalLength += currLength;
             }
-            segmentIndex = this.Vertices.Count - 1;
+            segmentIndex = this._vertices.Length - 1;
             return this.End;
         }
 
@@ -150,7 +173,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">The parameter on the Polygon between 0.0 and 1.0.</param>
         /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
-        public override Transform TransformAt(double u)
+        public Transform TransformAt(double u)
         {
             if (u < 0.0 || u > 1.0)
             {
@@ -175,9 +198,9 @@ namespace Elements.Geometry
 
             if (a != null)
             {
-                var idx = this.Vertices.IndexOf(a);
+                var idx = Array.IndexOf(this.Vertices, a);
 
-                if (idx == 0 || idx == this.Vertices.Count - 1)
+                if (idx == 0 || idx == this.Vertices.Length - 1)
                 {
                     return CreateOthogonalTransform(idx, a);
                 }
@@ -213,7 +236,7 @@ namespace Elements.Geometry
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
         /// <returns></returns>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        public virtual Transform[] Frames(double startSetback, double endSetback)
         {
             return FramesInternal(startSetback, endSetback, false);
         }
@@ -221,7 +244,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get the bounding box for this curve.
         /// </summary>
-        public override BBox3 Bounds()
+        public BBox3 Bounds()
         {
             return new BBox3(this.Vertices);
         }
@@ -232,17 +255,17 @@ namespace Elements.Geometry
         /// <returns>A Plane.</returns>
         public Plane Plane()
         {
-            return new Plane(this.Vertices[0], this.Vertices[1], this.Vertices[2]);
+            return new Plane(this._vertices[0], this._vertices[1], this._vertices[2]);
         }
 
         internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)
         {
             // Create an array of transforms with the same
             // number of items as the vertices.
-            var result = new Transform[this.Vertices.Count];
+            var result = new Transform[this._vertices.Length];
             for (var i = 0; i < result.Length; i++)
             {
-                var a = this.Vertices[i];
+                var a = this._vertices[i];
                 if (closed)
                 {
                     result[i] = CreateMiterTransform(i, a);
@@ -258,12 +281,12 @@ namespace Elements.Geometry
         private Transform CreateMiterTransform(int i, Vector3 a)
         {
             // Create transforms at 'miter' planes.
-            var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
-            var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+            var b = i == 0 ? this._vertices[this._vertices.Length - 1] : this._vertices[i - 1];
+            var c = i == this._vertices.Length - 1 ? this._vertices[0] : this._vertices[i + 1];
             var x = (b - a).Normalized().Average((c - a).Normalized()).Negated();
             var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
 
-            return new Transform(this.Vertices[i], x, up.Cross(x));
+            return new Transform(this._vertices[i], x, up.Cross(x));
         }
 
         private Transform CreateOthogonalTransform(int i, Vector3 a)
@@ -272,23 +295,23 @@ namespace Elements.Geometry
 
             if (i == 0)
             {
-                b = this.Vertices[i + 1];
+                b = this._vertices[i + 1];
                 return new Transform(a, a, b, null);
             }
-            else if (i == this.Vertices.Count - 1)
+            else if (i == this.Vertices.Length - 1)
             {
-                b = this.Vertices[i - 1];
+                b = this._vertices[i - 1];
                 return new Transform(a, b, a, null);
             }
             else
             {
-                b = this.Vertices[i - 1];
-                c = this.Vertices[i + 1];
+                b = this._vertices[i - 1];
+                c = this._vertices[i + 1];
                 var v1 = (b - a).Normalized();
                 var v2 = (c - a).Normalized();
                 x = v1.Average(v2).Negated();
                 var up = v2.Cross(v1);
-                return new Transform(this.Vertices[i], x, up.Cross(x));
+                return new Transform(this._vertices[i], x, up.Cross(x));
             }
         }
     }

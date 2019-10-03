@@ -7,8 +7,18 @@ namespace Elements.Geometry
     /// <summary>
     /// A cartesian plane.
     /// </summary>
-    public partial class Plane
+    public class Plane
     {
+        /// <summary>
+        /// The origin of the plane.
+        /// </summary>
+        public Vector3 Origin{get;}
+
+        /// <summary>
+        /// The normal of the plane.
+        /// </summary>
+        public Vector3 Normal{get;}
+
         /// <summary>
         /// Construct a plane.
         /// </summary>

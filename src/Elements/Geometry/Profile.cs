@@ -47,12 +47,30 @@ namespace Elements.Geometry
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public partial class Profile : IIdentifiable
+    public class Profile : IIdentifiable
     {
+        private Polygon _perimeter;
+        private Polygon[] _voids;
+
         /// <summary>
         /// The identifier of the profile.
         /// </summary>
         public Guid Id { get; internal set; }
+
+        /// <summary>
+        /// The name of the profile.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// The perimeter of the profile.
+        /// </summary>
+        public Polygon Perimeter { get => _perimeter; protected set => _perimeter = value; }
+
+        /// <summary>
+        /// A collection of Polygons representing voids in the profile.
+        /// </summary>
+        public Polygon[] Voids { get => _voids; protected set => _voids = value; }
 
         /// <summary>
         /// Construct a profile.
@@ -62,7 +80,7 @@ namespace Elements.Geometry
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
         [JsonConstructor]
-        public Profile(Guid id, Polygon perimeter, List<Polygon> voids, string name = null)
+        public Profile(Guid id, Polygon perimeter, Polygon[] voids, string name = null)
         {
             this.Id = id;
             this.Perimeter = perimeter;
@@ -85,7 +103,7 @@ namespace Elements.Geometry
         /// <param name="name">The name of the profile.</param>
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
-        public Profile(Polygon perimeter, List<Polygon> voids, string name = null):
+        public Profile(Polygon perimeter, Polygon[] voids, string name = null):
             this(Guid.NewGuid(), perimeter, voids, name){}
 
         /// <summary>
@@ -103,18 +121,18 @@ namespace Elements.Geometry
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="singleVoid">A void in the profile.</param>
         public Profile(Polygon perimeter, Polygon singleVoid, string name = null):
-            this(Guid.NewGuid(), perimeter, new List<Polygon> { singleVoid }, name){}
+            this(Guid.NewGuid(), perimeter, new[] { singleVoid }, name){}
 
         /// <summary>
         /// Get a new profile which is the reverse of this profile.
         /// </summary>
         public Profile Reversed()
         {
-            List<Polygon> voids = null;
+            Polygon[] voids = null;
             if (this.Voids != null)
             {
-                voids = new List<Polygon>(this.Voids.Count);
-                for (var i = 0; i < this.Voids.Count; i++)
+                voids = new Polygon[this.Voids.Length];
+                for (var i = 0; i < this.Voids.Length; i++)
                 {
                     voids[i] = this.Voids[i].Reversed();
                 }
@@ -157,15 +175,15 @@ namespace Elements.Geometry
             // profile will result in an empty solution.
             if (solution.Count > 0)
             {
-                var polys = solution.Select(s => s.ToPolygon()).ToList();
+                var polys = solution.Select(s => s.ToPolygon()).ToArray();
                 this.Perimeter = polys[0];
-                this.Voids = polys.Skip(1).ToList();
+                this.Voids = polys.Skip(1).ToArray();
             }
         }
 
         private double ClippedArea()
         {
-            if (this.Voids == null || this.Voids.Count == 0)
+            if (this.Voids == null || this.Voids.Length == 0)
             {
                 return this.Perimeter.Area();
             }

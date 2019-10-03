@@ -7,7 +7,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A 3D vector.
     /// </summary>
-    public partial class Vector3 : IComparable<Vector3>, IEquatable<Vector3>
+    public class Vector3 : IComparable<Vector3>, IEquatable<Vector3>
     {
         /// <summary>
         /// A tolerance for comparison operations.
@@ -18,6 +18,24 @@ namespace Elements.Geometry
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
         private static Vector3 _zAxis = new Vector3(0, 0, 1);
         private static Vector3 _origin = new Vector3();
+
+        /// <summary>
+        /// The X component of the vector.
+        /// </summary>
+        /// <returns></returns>
+        public double X { get; internal set; }
+
+        /// <summary>
+        /// The Y component of the vector.
+        /// </summary>
+        /// <returns></returns>
+        public double Y { get; internal set; }
+
+        /// <summary>
+        /// The Z component of the vector.
+        /// </summary>
+        /// <returns></returns>
+        public double Z { get; internal set; }
 
         /// <summary>
         /// Construct a vector at the origin.

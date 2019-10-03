@@ -1,18 +1,24 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Elements.Geometry;
 using Elements.Interfaces;
 using Elements.Serialization.JSON;
-using System.Linq;
 
 namespace Elements
 {
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
-    public partial class Element : IElement
+    public abstract class Element : IElement
     {
         private Dictionary<string, IProperty> _properties = new Dictionary<string, IProperty>();
+
+        /// <summary>
+        /// The unique identifier of the element.
+        /// </summary>
+        [JsonProperty(Order = -101)]
+        public Guid Id { get; internal set; }
 
         /// <summary>
         /// The type of the element.
@@ -94,36 +100,6 @@ namespace Elements
             }
 
             throw new Exception("The specified parameter could not be found.");
-        }
-
-        /// <summary>
-        /// Get the first component of the provided type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>The first component of type T or null.</returns>
-        public Component FirstComponentOfType<T>() where T: Component
-        {
-            return this.Components.FirstOrDefault(c=>c is T);
-        }
-
-        /// <summary>
-        /// Get all components of the provided type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>A collection of components.</returns>
-        public IEnumerable<Component> AllComponentsOfType<T>() where T: Component
-        {
-            return this.Components.OfType<T>();
-        }
-        
-        /// <summary>
-        /// Gets the component with the specified name.
-        /// </summary>
-        /// <param name="name">The name of the component.</param>
-        /// <returns>The first component with the specified name or null.</returns>
-        public Component GetComponentByName(string name)
-        {
-            return this.Components.FirstOrDefault(c=>c.Name == name);
         }
     }
 }

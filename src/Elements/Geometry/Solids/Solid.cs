@@ -15,7 +15,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public partial class Solid : ITessellate
+    public class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -286,17 +286,16 @@ namespace Elements.Geometry.Solids
         /// </summary>
         /// <param name="p"></param>
         public Edge[] AddEdges(Polygon p)
-        {   
-            var count = p.Vertices.Count;
-            var loop = new Edge[count];
-            var vertices = new Vertex[count];
-            for (var i = 0; i < count; i++)
+        {
+            var loop = new Edge[p.Vertices.Length];
+            var vertices = new Vertex[p.Vertices.Length];
+            for (var i = 0; i < p.Vertices.Length; i++)
             {
                 vertices[i] = AddVertex(p.Vertices[i]);
             }
-            for(var i=0; i< count; i++)
+            for(var i=0; i< p.Vertices.Length; i++)
             {
-                loop[i] = AddEdge(vertices[i], i == count - 1 ? vertices[0] : vertices[i+1]);
+                loop[i] = AddEdge(vertices[i], i == p.Vertices.Length - 1 ? vertices[0] : vertices[i+1]);
             }
             return loop;
         }
@@ -526,13 +525,12 @@ namespace Elements.Geometry.Solids
         protected Loop LoopFromPolygon(Polygon p)
         {
             var loop = new Loop();
-            var count = p.Vertices.Count;
-            var verts = new Vertex[count];
-            for (var i = 0; i < count; i++)
+            var verts = new Vertex[p.Vertices.Length];
+            for (var i = 0; i < p.Vertices.Length; i++)
             {
                 verts[i] = AddVertex(p.Vertices[i]);
             }
-            for (var i=0; i<count; i++)
+            for (var i=0; i<p.Vertices.Length; i++)
             {
                 var v1 = verts[i];
                 var v2 = i == verts.Length - 1 ? verts[0] : verts[i+1];

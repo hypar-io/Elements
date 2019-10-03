@@ -9,12 +9,32 @@ namespace Elements
     /// <summary>
     /// A material with red, green, blue, alpha, and metallic factor components.
     /// </summary>
-    public partial class Material: IIdentifiable
+    public class Material: IIdentifiable
     {   
         /// <summary>
         /// The unique identifier of the material.
         /// </summary>
         public Guid Id{get; internal set;}
+
+        /// <summary>
+        /// The RGBA color of the material.
+        /// </summary>
+        public Color Color{get;}
+
+        /// <summary>
+        /// The specular factor.
+        /// </summary>
+        public float SpecularFactor{get;}
+
+        /// <summary>
+        /// The glossiness factor.
+        /// </summary>
+        public float GlossinessFactor{get;}
+
+        /// <summary>
+        /// The name of the material.
+        /// </summary>
+        public string Name {get; internal set;}
 
         /// <summary>
         /// Is the material double sided?

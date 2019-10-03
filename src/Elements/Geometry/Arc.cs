@@ -7,10 +7,20 @@ namespace Elements.Geometry
     /// <summary>
     /// An arc defined around a center between a start angle and an end angle.
     /// </summary>
-    public partial class Arc : ICurve
+    public class Arc : ICurve
     {
         private Transform _transform;
 
+        /// <summary>
+        /// The type of the curve.
+        /// Used during deserialization to disambiguate derived types.
+        /// </summary>
+        [JsonProperty(Order = -100)]
+        public string Type
+        {
+            get { return this.GetType().FullName.ToLower(); }
+        }
+        
         /// <summary>
         /// The plane of the arc.
         /// </summary>
@@ -18,9 +28,19 @@ namespace Elements.Geometry
         public Plane Plane{get;}
 
         /// <summary>
+        /// The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.
+        /// </summary>
+        public double StartAngle { get; internal set; }
+
+        /// <summary>
+        /// The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.
+        /// </summary>
+        public double EndAngle { get; internal set; }
+
+        /// <summary>
         /// Calculate the length of the arc.
         /// </summary>
-        public override double Length()
+        public double Length()
         {
             return 2 * Math.PI * this.Radius * (Math.Abs(this.EndAngle - this.StartAngle)) / 360.0;
         }
@@ -42,6 +62,11 @@ namespace Elements.Geometry
         {
             get { return PointAt(1.0); }
         }
+
+        /// <summary>
+        /// The radius of the Arc.
+        /// </summary>
+        public double Radius { get; }
 
         /// <summary>
         /// Create a plane.
@@ -111,7 +136,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">A parameter between 0.0 and 1.0.</param>
         /// <returns>A Vector3 representing the point along the arc.</returns>
-        public override Vector3 PointAt(double u)
+        public Vector3 PointAt(double u)
         {
             if (u > 1.0 || u < 0.0)
             {
@@ -130,7 +155,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">A parameter between 0.0 and 1.0 on the arc.</param>
         /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
-        public override Transform TransformAt(double u)
+        public Transform TransformAt(double u)
         {
             var o = PointAt(u);
             var x = (o - this.Plane.Origin).Normalized();
@@ -144,7 +169,7 @@ namespace Elements.Geometry
         /// <param name="startSetback">The offset from the start of the arc.</param>
         /// <param name="endSetback">The offset from the end of the arc.</param>
         /// <returns>A collection of transforms.</returns>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        public Transform[] Frames(double startSetback, double endSetback)
         {
             var div = 10;
             var l = this.Length();
@@ -173,7 +198,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get an arc which is the reverse of this Arc.
         /// </summary>
-        public override ICurve Reversed()
+        public ICurve Reversed()
         {
             return new Arc(this.Plane, this.Radius, this.EndAngle, this.StartAngle);
         }
@@ -187,7 +212,7 @@ namespace Elements.Geometry
         /// Get a bounding box for this arc.
         /// </summary>
         /// <returns>A bounding box for this arc.</returns>
-        public override BBox3 Bounds()
+        public BBox3 Bounds()
         {
             var delta = new Vector3(this.Radius, this.Radius, this.Radius);
             var min = new Vector3(this.Plane.Origin - delta);
