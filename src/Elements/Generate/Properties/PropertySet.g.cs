@@ -27,12 +27,12 @@ namespace Elements.Properties
     
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
         public static PropertySet FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<PropertySet>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<PropertySet>(data);
         }
     
     }

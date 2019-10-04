@@ -24,12 +24,12 @@ namespace Elements.Geometry.Solids
     {
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
         public static Solid FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Solid>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Solid>(data);
         }
     
     }

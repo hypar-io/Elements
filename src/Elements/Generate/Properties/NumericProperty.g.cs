@@ -33,12 +33,12 @@ namespace Elements.Properties
     
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
         public static NumericProperty FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<NumericProperty>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<NumericProperty>(data);
         }
     
     }

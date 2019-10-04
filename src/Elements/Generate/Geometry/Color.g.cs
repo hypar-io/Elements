@@ -43,12 +43,12 @@ namespace Elements.Geometry
     
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
         public static Color FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Color>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Color>(data);
         }
     
     }

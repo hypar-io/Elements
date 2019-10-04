@@ -61,7 +61,7 @@ namespace Elements.Generate
                 ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes,
                 TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates"),
                 GenerateJsonMethods = true, 
-                JsonConverters = new []{"ModelConverter"},
+                // JsonConverters = new []{"ModelConverter"},
                 ClassStyle = CSharpClassStyle.Poco
             });
         

@@ -31,12 +31,12 @@ namespace Elements
     
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
         public static MaterialLayer FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<MaterialLayer>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<MaterialLayer>(data);
         }
     
     }

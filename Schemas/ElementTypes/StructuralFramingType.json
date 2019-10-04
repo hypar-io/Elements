@@ -3,7 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "A container for properties common to a type of structural framing.",
     "title": "StructuralFramingType",
-    "type": ["object","null"],
+    "type": "object",
     "allOf": [{"$ref": "ElementType.json"}],
     "required": ["Profile", "Material"],
     "properties": {

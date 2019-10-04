@@ -36,12 +36,12 @@ namespace Elements.Geometry.Solids
     
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
         public static Extrusion FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Extrusion>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Extrusion>(data);
         }
     
     }

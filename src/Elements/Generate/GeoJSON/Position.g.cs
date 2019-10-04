@@ -31,12 +31,12 @@ namespace Elements.GeoJSON
     
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     
         public static Position FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Position>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Position>(data);
         }
     
     }
