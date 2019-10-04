@@ -4,11 +4,16 @@
     "title": "Profile",
     "type": ["object","null"],
     "description": "A profile comprised of an external boundary and one or several holes.",
-    "required": ["Perimeter", "Holes"],
+    "required": ["Name","Id","Perimeter","Voids"],
     "properties": {
+        "Id": {
+            "type": "string",
+            "format": "guid",
+            "description": "An identifier for the entity which must be unique within the system."
+        },
         "Name": {
-            "description": "The name of the profile.",
-            "type": "string"
+            "type": ["string","null"],
+            "description": "The entity's name."
         },
         "Perimeter":{
             "description": "The perimeter of the profile.",

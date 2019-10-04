@@ -4,7 +4,7 @@
 // </auto-generated>
 //----------------------
 
-namespace Elements
+namespace Elements.ElementTypes
 {
     #pragma warning disable // Disable all warnings
 
@@ -17,42 +17,27 @@ namespace Elements
     using System;
     using System.Collections.Generic;
     
-    /// <summary>The base type for all elements.</summary>
+    /// <summary>A container of elements.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Element 
+    public partial class ElementType 
     {
         /// <summary>An identifier for the entity which must be unique within the system.</summary>
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  System.Guid Id { get; internal set; }
     
         /// <summary>The entity's name.</summary>
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
         public  string Name { get; internal set; }
     
-        /// <summary>The element's transform.</summary>
-        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Transform Transform { get; internal set; } = new Transform();
-    
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties; }
-            set { _additionalProperties = value; }
-        }
-    
         public string ToJson() 
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
         }
     
-        public static Element FromJson(string data)
+        public static ElementType FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Element>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<ElementType>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
         }
     
     }

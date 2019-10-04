@@ -19,7 +19,7 @@ namespace Elements.ElementTypes
     
     /// <summary>A container for properties common to walls.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class WallType 
+    public partial class WallType : ElementType
     {
         /// <summary>The material layers of the wall.</summary>
         [Newtonsoft.Json.JsonProperty("MaterialLayers", Required = Newtonsoft.Json.Required.Always)]

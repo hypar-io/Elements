@@ -50,11 +50,6 @@ namespace Elements.Geometry
     public partial class Profile : IIdentifiable
     {
         /// <summary>
-        /// The identifier of the profile.
-        /// </summary>
-        public Guid Id { get; internal set; }
-
-        /// <summary>
         /// Internal constructor for default initialization.
         /// </summary>
         internal Profile(){}

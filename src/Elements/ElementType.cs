@@ -10,17 +10,6 @@ namespace Elements.ElementTypes
     public abstract partial class ElementType : IIdentifiable
     {
         /// <summary>
-        /// The unique identifier of the element type.
-        /// </summary>
-        public Guid Id{get;internal set;}
-
-        /// <summary>
-        /// The name of the element type.
-        /// </summary>
-        /// <value></value>
-        public string Name {get; internal set;}
-
-        /// <summary>
         /// Construct an element type.
         /// </summary>
         /// <param name="name">A name.</param>

@@ -4,6 +4,7 @@
     "description": "A container for properties common to a type of structural framing.",
     "title": "StructuralFramingType",
     "type": ["object","null"],
+    "allOf": [{"$ref": "ElementType.json"}],
     "required": ["Profile", "Material"],
     "properties": {
         "Profile": {

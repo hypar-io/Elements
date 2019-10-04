@@ -19,7 +19,7 @@ namespace Elements.ElementTypes
     
     /// <summary>A container for properties common to a type of structural framing.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class StructuralFramingType 
+    public partial class StructuralFramingType : ElementType
     {
         /// <summary>The profile used by the structural framing type.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]

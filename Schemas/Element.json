@@ -5,9 +5,17 @@
     "title": "Element",
     "type": ["object", "null"],
     "required": ["Id","Name","Transform","discriminator"],
-    "allOf": [{"$ref": "Identifiable.json"}],
     "discriminator": "discriminator",
     "properties": {
+        "Id": {
+            "type": "string",
+            "format": "guid",
+            "description": "An identifier for the entity which must be unique within the system."
+        },
+        "Name": {
+            "type": ["string","null"],
+            "description": "The entity's name."
+        },
         "Transform": {
             "description": "The element's transform.",
             "$ref": "Geometry/Transform.json"

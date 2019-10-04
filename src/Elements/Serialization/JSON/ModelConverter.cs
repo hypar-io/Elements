@@ -33,8 +33,8 @@ namespace Elements.Serialization.JSON
         {
             var obj = JObject.Load(reader);
             var materials = JsonConvert.DeserializeObject<Dictionary<Guid, Material>>(obj.GetValue("materials").ToString());
-            var profiles = JsonConvert.DeserializeObject<Dictionary<Guid, Profile>>(obj.GetValue("profiles").ToString(),
-                                new[] { new IProfileConverter() });
+            var profiles = JsonConvert.DeserializeObject<Dictionary<Guid, Profile>>(obj.GetValue("profiles").ToString());
+                                // new[] { new IProfileConverter() });
             var elementTypes = JsonConvert.DeserializeObject<Dictionary<Guid, ElementType>>(obj.GetValue("elementTypes").ToString(),
                                 new JsonConverter[] { new ElementTypeConverter(), new ProfileToIdConverter(profiles) });
             var elements = JsonConvert.DeserializeObject<Dictionary<Guid, Element>>(obj.GetValue("elements").ToString(),
@@ -43,7 +43,7 @@ namespace Elements.Serialization.JSON
                     Converters = new JsonConverter[]
                                     {
                                         new MaterialToIdConverter(materials),
-                                        new ElementTypeToIdConverter(elementTypes),
+                                        // new ElementTypeToIdConverter(elementTypes),
                                         new ProfileToIdConverter(profiles),
                                         new SolidConverter(materials)
                                     },
@@ -87,7 +87,7 @@ namespace Elements.Serialization.JSON
                     new MaterialToIdConverter(model.Materials),
                     new ProfileToIdConverter(model.Profiles)
                 },
-                ContractResolver = new CamelCasePropertyNamesContractResolver() 
+                // ContractResolver = new CamelCasePropertyNamesContractResolver() 
             };
             writer.WriteRawValue(JsonConvert.SerializeObject(model.ElementTypes, etSettings));
 
@@ -103,7 +103,7 @@ namespace Elements.Serialization.JSON
                 Converters = new JsonConverter[]
                     {
                         new MaterialToIdConverter(model.Materials),
-                        new ElementTypeToIdConverter(model.ElementTypes),
+                        // new ElementTypeToIdConverter(model.ElementTypes),
                         new ProfileToIdConverter(model.Profiles),
                         new SolidConverter(model.Materials)
                     },
