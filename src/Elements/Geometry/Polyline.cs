@@ -63,9 +63,9 @@ namespace Elements.Geometry
 
         private void CheckCoincidenceAndThrow(IList<Vector3> vertices)
         {
-            for (var i = 0; i < Vertices.Count; i++)
+            for (var i = 0; i < vertices.Count; i++)
             {
-                for (var j = 0; j < Vertices.Count; j++)
+                for (var j = 0; j < vertices.Count; j++)
                 {
                     if (i == j)
                     {
