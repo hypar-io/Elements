@@ -11,9 +11,10 @@
             "description": "The thickness of the layer.",
             "min": 0.0
         },
-        "Material": {
-            "description": "The layer's material.",
-            "$ref": "Material.json"
+        "MaterialId": {
+            "description": "The layer's material id.",
+            "type": "string",
+            "format": "guid"
         }
     },
     "additionalProperties": false

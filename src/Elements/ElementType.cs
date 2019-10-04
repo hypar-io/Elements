@@ -21,7 +21,7 @@ namespace Elements.ElementTypes
         /// <param name="id">The unique identifier of the element type.</param>
         /// <param name="name">The name of the element type.</param>
         [JsonConstructor]
-        public ElementType(Guid id, string name)
+        internal ElementType(Guid id, string name)
         {
             this.Id = id;
             this.Name = name;

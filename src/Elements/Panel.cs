@@ -15,6 +15,8 @@ namespace Elements
     /// </example>
     public class Panel : Element, IMaterial, ILamina
     {
+        private Guid _materialId;
+
         /// <summary>
         /// The perimeter of the panel.
         /// </summary>
@@ -23,7 +25,19 @@ namespace Elements
         /// <summary>
         /// The panel's material.
         /// </summary>
-        public Material Material {get;}
+        [JsonIgnore]
+        public Material Material { get; private set;}
+
+        /// <summary>
+        /// The panel's material id.
+        /// </summary>
+        public Guid MaterialId
+        {
+            get
+            {
+                return this.Material != null ? this.Material.Id : this._materialId;
+            }
+        }
 
         /// <summary>
         /// Create a panel.
@@ -32,7 +46,6 @@ namespace Elements
         /// <param name="material">The panel's material</param>
         /// <param name="transform">The panel's transform.</param>
         /// <exception cref="System.ArgumentException">Thrown when the provided perimeter points are not coplanar.</exception>
-        [JsonConstructor]
         public Panel(Polygon perimeter, Material material = null, Transform transform = null)
         {
             if(transform != null)
@@ -41,6 +54,17 @@ namespace Elements
             }
             this.Perimeter = perimeter;
             this.Material = material == null ? BuiltInMaterials.Default : material;
+        }
+
+        [JsonConstructor]
+        internal Panel(Polygon perimeter, Guid materialId, Transform transform = null)
+        {
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
+            this.Perimeter = perimeter;
+            this._materialId = materialId;
         }
 
         /// <summary>
@@ -66,6 +90,15 @@ namespace Elements
         public Solid GetUpdatedSolid()
         {
             return Kernel.Instance.CreateLamina(this);
+        }
+
+        /// <summary>
+        /// Set the material.
+        /// </summary>
+        public void SetReference(Material material)
+        {
+            this.Material = material;
+            this._materialId = material.Id;
         }
     }
 }

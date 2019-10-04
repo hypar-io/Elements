@@ -44,7 +44,12 @@ namespace Elements
         /// <summary>
         /// The material of the topography.
         /// </summary>
-        public Material Material { get; }
+        public Material Material { get; private set;}
+
+        /// <summary>
+        /// The material id of the topography.
+        /// </summary>
+        public Guid MaterialId { get; private set; }
 
         /// <summary>
         /// Create a topography.
@@ -348,7 +353,16 @@ namespace Elements
             }
 
             return output;
-        } 
+        }
+
+        /// <summary>
+        /// Set the material;
+        /// </summary>
+        public void SetReference(Material obj)
+        {
+            this.Material = obj;
+            this.MaterialId = obj.Id;
+        }
     }
 
     internal static class TopographyExtensions

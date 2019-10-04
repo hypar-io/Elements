@@ -18,6 +18,7 @@ namespace Elements
     public class Floor : Element, IElementType<FloorType>, ISolid, IExtrude, IHasOpenings
     {
         private List<Opening> _openings = new List<Opening>();
+        private Guid _elementTypeId;
 
         /// <summary>
         /// The elevation from which the floor is extruded.
@@ -27,12 +28,29 @@ namespace Elements
         /// <summary>
         /// The floor type of the floor.
         /// </summary>
-        public FloorType ElementType { get; }
+        [JsonIgnore]
+        public FloorType ElementType { get; private set;}
+
+        /// <summary>
+        /// The element type of the floor.
+        /// </summary>
+        public Guid ElementTypeId {
+            get
+            {
+                return this.ElementType != null ? this.ElementType.Id : this._elementTypeId;
+            }
+        }
 
         /// <summary>
         /// The untransformed profile of the floor.
         /// </summary>
-        public Profile Profile { get; }
+        [JsonIgnore]
+        public Profile Profile { get; private set; }
+
+        /// <summary>
+        /// The untransformed profile of the floor.
+        /// </summary>
+        public Guid ProfileId { get; private set; }
 
         /// <summary>
         /// The floor's geometry.
@@ -104,16 +122,16 @@ namespace Elements
         }
 
         [JsonConstructor]
-        internal Floor(Profile profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
+        internal Floor(Guid profileId, Guid elementTypeId, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
         {
-            this.Profile = profile;
+            this.ProfileId = profileId;
             if(openings != null)
             {
                 this._openings = openings;
             }
             this.Elevation = elevation;
-            this.ElementType = elementType;
-            var thickness = elementType.Thickness();
+            this._elementTypeId = elementTypeId;
+            
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.ExtrudeDirection = Vector3.ZAxis;
         }
@@ -161,5 +179,22 @@ namespace Elements
             return Math.Abs(this.Profile.Area()) * this.Thickness();
         }
 
+        /// <summary>
+        /// Set the floor type.
+        /// </summary>
+        public void SetReference(FloorType type)
+        {
+            this.ElementType = type;
+            this._elementTypeId = type.Id;
+        }
+
+        /// <summary>
+        /// Set the profile.
+        /// </summary>
+        public void SetReference(Profile profile)
+        {
+            this.Profile = profile;
+            this.ProfileId = profile.Id;
+        }
     }
 }

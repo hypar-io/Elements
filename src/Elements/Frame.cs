@@ -2,6 +2,8 @@ using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Newtonsoft.Json;
+using System;
 
 namespace Elements
 {
@@ -13,12 +15,24 @@ namespace Elements
         /// <summary>
         /// The frame's profile.
         /// </summary>
-        public Profile Profile { get; }
+        [JsonIgnore]
+        public Profile Profile { get; private set;}
+
+        /// <summary>
+        /// The frame's profile id.
+        /// </summary>
+        public Guid ProfileId { get; private set;}
 
         /// <summary>
         /// The frame's material.
         /// </summary>
-        public Material Material { get; }
+        [JsonIgnore]
+        public Material Material { get; private set; }
+
+        /// <summary>
+        /// The frame's material id.
+        /// </summary>
+        public Guid MaterialId { get; private set;}
 
         /// <summary>
         /// The perimeter of the frame.
@@ -51,6 +65,15 @@ namespace Elements
             this.Material = material != null ? material : BuiltInMaterials.Default;
         }
 
+        [JsonConstructor]
+        internal Frame(Polygon curve, Guid profileId, Guid materialId, double offset = 0.0, Transform transform = null)
+        {
+            this.Curve = curve.Offset(-offset)[0];
+            this.ProfileId = profileId;
+            this.Transform = transform;
+            this.MaterialId = materialId;
+        }
+
         /// <summary>
         /// Get the updated solid representation of the frame.
         /// </summary>
@@ -58,6 +81,24 @@ namespace Elements
         public Solid GetUpdatedSolid()
         {
             return Kernel.Instance.CreateSweepAlongCurve(this);
+        }
+
+        /// <summary>
+        /// Set the material.
+        /// </summary>
+        public void SetReference(Material material)
+        {
+            this.Material = material;
+            this.MaterialId = material.Id;
+        }
+
+        /// <summary>
+        /// Set the profile.
+        /// </summary>
+        public void SetReference(Profile profile)
+        {
+            this.Profile = profile;
+            this.MaterialId = profile.Id;
         }
     }
 }

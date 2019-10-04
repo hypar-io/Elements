@@ -15,10 +15,25 @@ namespace Elements
     /// </example>
     public class Space : Element, ISolid, IExtrude, IMaterial
     {
+        private Guid _profileId;
+        private Guid _materialId;
+
         /// <summary>
         /// The profile of the space.
         /// </summary>
-        public Profile Profile { get; }
+        [JsonIgnore]
+        public Profile Profile { get; private set; }
+
+        /// <summary>
+        /// The profile id of the space.
+        /// </summary>
+        public Guid ProfileId
+        {
+            get
+            {
+                return this.Profile != null ? this.Profile.Id : this._profileId;
+            }
+        }
 
         /// <summary>
         /// The space's geometry.
@@ -29,7 +44,19 @@ namespace Elements
         /// <summary>
         /// The space's material.
         /// </summary>
-        public Material Material { get; }
+        [JsonIgnore]
+        public Material Material { get; private set; }
+
+        /// <summary>
+        /// The space's material id.
+        /// </summary>
+        public Guid MaterialId
+        {
+            get
+            {
+                return this.Material != null ? this.Material.Id : this._materialId;
+            }
+        }
 
         /// <summary>
         /// The space's height.
@@ -77,7 +104,6 @@ namespace Elements
         /// <param name="material">The space's material.</param>
         /// <param name="transform">The space's transform.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
-        [JsonConstructor]
         public Space(Profile profile, double height, double elevation = 0.0, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
@@ -87,6 +113,20 @@ namespace Elements
 
             this.Profile = profile;
             this.Material = material == null ? BuiltInMaterials.Default : material;
+            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
+            this.Height = height;
+        }
+
+        [JsonConstructor]
+        internal Space(Guid profileId, Guid materialId, double height, double elevation = 0.0, Transform transform = null)
+        {
+            if (height <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The Space could not be created. The height provided, {height}, was less than zero. The height must be greater than zero.", "height");
+            }
+
+            this._profileId = profileId;
+            this._materialId = materialId;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Height = height;
         }
@@ -142,6 +182,24 @@ namespace Elements
         public double Volume()
         {
             return Math.Abs(Profile.Area()) * this.Height;
+        }
+
+        /// <summary>
+        /// Set the profile reference.
+        /// </summary>
+        public void SetReference(Profile profile)
+        {
+            this.Profile = profile;
+            this._profileId = profile.Id;
+        }
+
+        /// <summary>
+        /// Set the material reference.
+        /// </summary>
+        public void SetReference(Material material)
+        {
+            this.Material = material;
+            this._materialId = material.Id;
         }
     }
 }

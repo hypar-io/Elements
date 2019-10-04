@@ -21,13 +21,13 @@ namespace Elements.ElementTypes
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class StructuralFramingType : ElementType
     {
-        /// <summary>The profile used by the structural framing type.</summary>
-        [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
-        public  Profile Profile { get; internal set; }
+        /// <summary>The id of the profile used by the structural framing type.</summary>
+        [Newtonsoft.Json.JsonProperty("ProfileId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public  System.Guid ProfileId { get; internal set; }
     
-        /// <summary>The material used by the structural framing type.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        public  Material Material { get; internal set; }
+        /// <summary>The id of the material used by the structural framing type.</summary>
+        [Newtonsoft.Json.JsonProperty("MaterialId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public  System.Guid MaterialId { get; internal set; }
     
         public string ToJson() 
         {

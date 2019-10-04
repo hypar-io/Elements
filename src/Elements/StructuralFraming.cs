@@ -13,6 +13,9 @@ namespace Elements
     /// </summary>
     public abstract class StructuralFraming : Element, IElementType<StructuralFramingType>, ISweepAlongCurve
     {
+        private Guid _elementTypeId;
+        private Guid _profileId;
+
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
@@ -27,11 +30,23 @@ namespace Elements
         /// The setback of the framing's extrusion at the end.
         /// </summary>
         public double EndSetback { get; }
-        
+
         /// <summary>
         /// The element type of the structural framing.
         /// </summary>
-        public StructuralFramingType ElementType {get;}
+        [JsonIgnore]
+        public StructuralFramingType ElementType { get; private set;}
+
+        /// <summary>
+        /// The id of the element type.
+        /// </summary>
+        public Guid ElementTypeId
+        {
+            get
+            {
+                return this.ElementType != null ? this.ElementType.Id : this._elementTypeId;
+            }
+        }
 
         /// <summary>
         /// The extrusion's profile.
@@ -41,6 +56,22 @@ namespace Elements
             get
             {
                 return this.ElementType.Profile;
+            }
+            set
+            {
+                // Do nothing. The profile is now set
+                // through the element type.
+            }
+        }
+        
+        /// <summary>
+        /// The extrusion's profile id.
+        /// </summary>
+        public Guid ProfileId
+        {
+            get
+            {
+                return this.Profile != null ? this.Profile.Id : this._profileId;
             }
         }
 
@@ -52,7 +83,6 @@ namespace Elements
         /// <param name="startSetback">The setback of the beam's extrusion at its start.</param>
         /// <param name="endSetback">The setback of the beam's extrusion at its end.</param>
         /// <param name="transform">The element's Transform.</param>
-        [JsonConstructor]
         public StructuralFraming(Curve curve, StructuralFramingType elementType, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
         {
             this.Curve = curve;
@@ -64,6 +94,25 @@ namespace Elements
             this.StartSetback = startSetback;
             this.EndSetback = endSetback;
             this.ElementType = elementType;
+
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
+        }
+
+        [JsonConstructor]
+        internal StructuralFraming(Curve curve, Guid elementTypeId, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
+        {
+            this.Curve = curve;
+            var l = this.Curve.Length();
+            if (startSetback > l || endSetback > l)
+            {
+                throw new ArgumentOutOfRangeException($"The start and end setbacks ({startSetback},{endSetback}) must be less than the length of the beam ({l}).");
+            }
+            this.StartSetback = startSetback;
+            this.EndSetback = endSetback;
+            this._elementTypeId = elementTypeId;
 
             if(transform != null)
             {
@@ -98,6 +147,24 @@ namespace Elements
         public Solid GetUpdatedSolid()
         {
             return Kernel.Instance.CreateSweepAlongCurve(this);
+        }
+
+        /// <summary>
+        /// Set the structural framing type.
+        /// </summary>
+        public void SetReference(StructuralFramingType type)
+        {
+            this.ElementType = type;
+            this._elementTypeId = type.Id;
+        }
+
+        /// <summary>
+        /// Set the profile.
+        /// </summary>
+        public void SetReference(Profile profile)
+        {
+            this.Profile = profile;
+            this._profileId = profile.Id;
         }
     }
 }

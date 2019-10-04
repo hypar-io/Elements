@@ -1,3 +1,4 @@
+using System;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
@@ -10,11 +11,25 @@ namespace Elements
     /// </summary>
     public class Opening : Element, IExtrude
     {
+        Guid _profileId;
+
         /// <summary>
         /// The perimeter of the opening.
         /// </summary>
         /// <value>A polygon of Width and Height translated by X and Y.</value>
+        [JsonIgnore]
         public Profile Profile { get; internal set; }
+
+        /// <summary>
+        /// The profile id.
+        /// </summary>
+        public Guid ProfileId
+        {
+            get
+            {
+                return this.Profile != null ? this.Profile.Id : this._profileId;
+            }
+        }
 
         /// <summary>
         /// The extrude direction of the opening.
@@ -78,10 +93,17 @@ namespace Elements
         /// <param name="profile">A polygon representing the profile of the opening.</param>
         /// <param name="extrudeDepth">The depth of the opening's extrusion.</param>
         /// <param name="transform">An additional transform applied to the opening.</param>
-        [JsonConstructor]
         internal Opening(Profile profile, double extrudeDepth, Transform transform = null)
         {
             this.Profile = profile;
+            this.Transform = transform;
+            this.ExtrudeDepth = extrudeDepth;
+        }
+
+        [JsonConstructor]
+        internal Opening(Guid profileId, double extrudeDepth, Transform transform = null)
+        {
+            this._profileId = profileId;
             this.Transform = transform;
             this.ExtrudeDepth = extrudeDepth;
         }
@@ -92,6 +114,15 @@ namespace Elements
         public Solid GetUpdatedSolid()
         {
             return Kernel.Instance.CreateExtrude(this);
+        }
+
+        /// <summary>
+        /// Set the profile.
+        /// </summary>
+        public void SetReference(Profile profile)
+        {
+            this.Profile = profile;
+            this._profileId = profile.Id;
         }
     }
 }

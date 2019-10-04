@@ -1,3 +1,4 @@
+using System;
 using Elements.ElementTypes;
 using Elements.Geometry;
 using Newtonsoft.Json;
@@ -31,10 +32,18 @@ namespace Elements
         /// <param name="transform">The column's transform.</param>
         /// <param name="startSetback">The setback of the column's extrusion from the base of the column.</param>
         /// <param name="endSetback">The setback of the column's extrusion from the top of the column.</param>
-        [JsonConstructor]
         public Column(Vector3 location, double height, StructuralFramingType elementType, 
             Transform transform = null, double startSetback = 0.0, double endSetback = 0.0) 
             : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), elementType, startSetback, endSetback, transform)
+        {
+            this.Location = location;
+            this.Height = height;
+        }
+
+        [JsonConstructor]
+        internal Column(Vector3 location, double height, Guid elementTypeId, 
+            Transform transform = null, double startSetback = 0.0, double endSetback = 0.0) 
+            : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), elementTypeId, startSetback, endSetback, transform)
         {
             this.Location = location;
             this.Height = height;

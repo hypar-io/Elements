@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Elements.Interfaces
@@ -5,12 +6,17 @@ namespace Elements.Interfaces
     /// <summary>
     /// A material.
     /// </summary>
-    public interface IMaterial
+    public interface IMaterial: IReference<Material>
     {
         /// <summary>
         /// The object's material.
         /// </summary>
         Material Material{get;}
+
+        /// <summary>
+        /// The object's material id.
+        /// </summary>
+        Guid MaterialId { get; }
     }
     
     /// <summary>

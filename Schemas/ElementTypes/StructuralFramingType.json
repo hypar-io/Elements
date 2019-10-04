@@ -7,13 +7,15 @@
     "allOf": [{"$ref": "ElementType.json"}],
     "required": ["Profile", "Material"],
     "properties": {
-        "Profile": {
-            "description": "The profile used by the structural framing type.",
-            "$ref": "../Geometry/Profile.json"
+        "ProfileId": {
+            "description": "The id of the profile used by the structural framing type.",
+            "type": "string",
+            "format": "guid"
         },
-        "Material": {
-            "description": "The material used by the structural framing type.",
-            "$ref": "../Material.json"
+        "MaterialId": {
+            "description": "The id of the material used by the structural framing type.",
+            "type": "string",
+            "format": "guid"
         }
     },
     "additionalProperties": false

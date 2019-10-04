@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Elements.ElementTypes;
 using Elements.Geometry;
 using Elements.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -80,6 +81,52 @@ namespace Elements
             this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
             this.ExtrudeDepth = this.Thickness();
             this.ExtrudeDirection = Vector3.ZAxis;
+        }
+
+        [JsonConstructor]
+        internal StandardWall(Line centerLine, Guid elementTypeId, double height, List<Opening> openings = null, Transform transform = null)
+        {
+            if (height <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The wall could not be created. The height of the wall provided, {height}, must be greater than 0.0.");
+            }
+
+            if (centerLine.Start.Z != centerLine.End.Z)
+            {
+                throw new ArgumentException("The wall could not be created. The Z component of the start and end points of the wall's center line must be the same.");
+            }
+
+            this.CenterLine = centerLine;
+            this.Height = height;
+            this._elementTypeId = elementTypeId;
+            if(openings != null)
+            {
+                this._openings = openings;
+            }
+            
+            // Construct a transform whose X axis is the centerline of the wall.
+            // The wall is described as if it's lying flat in the XY plane of that Transform.
+            var d = centerLine.Direction();
+            var z = d.Cross(Vector3.ZAxis);
+            var wallTransform = new Transform(centerLine.Start, d, z);
+            this.Transform = wallTransform;
+            if(transform != null) 
+            {
+                wallTransform.Concatenate(transform);
+            }
+
+            this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
+            this.ExtrudeDirection = Vector3.ZAxis;
+        }
+
+        /// <summary>
+        /// Set the wall type.
+        /// </summary>
+        public override void SetReference(WallType type)
+        {
+            this.ElementType = type;
+            this._elementTypeId = this.ElementType.Id;
+            this.ExtrudeDepth = this.Thickness();
         }
     }
 }

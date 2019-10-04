@@ -25,9 +25,9 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("Thickness", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  double Thickness { get; internal set; }
     
-        /// <summary>The layer's material.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public  Material Material { get; internal set; }
+        /// <summary>The layer's material id.</summary>
+        [Newtonsoft.Json.JsonProperty("MaterialId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public  System.Guid MaterialId { get; internal set; }
     
         public string ToJson() 
         {

@@ -15,10 +15,25 @@ namespace Elements
     /// </example>
     public class Mass : Element, ISolid, IExtrude, IMaterial
     {
+        private Guid _profileId;
+        private Guid _materialId;
+
         /// <summary>
-        /// The Profile of the mass.
+        /// The profile of the mass.
         /// </summary>
-        public Profile Profile { get; }
+        [JsonIgnore]
+        public Profile Profile { get; private set; }
+
+        /// <summary>
+        /// The profile id of the mass.
+        /// </summary>
+        public Guid ProfileId
+        {
+            get
+            {
+                return this.Profile != null ? this.Profile.Id : this._profileId;
+            }
+        }
 
         /// <summary>
         /// The height of the mass.
@@ -42,7 +57,19 @@ namespace Elements
         /// <summary>
         /// The mass' material.
         /// </summary>
-        public Material Material {get;}
+        [JsonIgnore]
+        public Material Material { get; private set; }
+
+        /// <summary>
+        /// The mass' material id.
+        /// </summary>
+        public Guid MaterialId
+        {
+            get
+            {
+                return this.Material != null ? this.Material.Id : this._materialId;
+            }
+        }
 
         /// <summary>
         /// The direction of the mass's extrusion.
@@ -66,7 +93,6 @@ namespace Elements
         /// <param name="height">The height of the mass from the bottom elevation.</param>
         /// <param name="material">The mass' material. The default is the built in mass material.</param>
         /// <param name="transform">The mass' transform.</param>
-        [JsonConstructor]
         public Mass(Profile profile, double height = 1.0, Material material = null, Transform transform = null)
         {
             if (height <= 0)
@@ -81,6 +107,22 @@ namespace Elements
             }
             this.Material = material == null ? BuiltInMaterials.Mass : material;
         }
+
+        [JsonConstructor]
+        internal Mass(Guid profileId, Guid materialId, double height = 1.0, Transform transform = null)
+        {
+            if (height <= 0)
+            {
+                throw new ArgumentOutOfRangeException($"The Mass could not be created. The height provided, {height}, must be greater than zero.");
+            }
+            this._profileId = profileId;
+            this.Height = height;
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
+            this._materialId = materialId;
+        } 
 
         /// <summary>
         /// Construct a Mass.
@@ -126,6 +168,24 @@ namespace Elements
         public Solid GetUpdatedSolid()
         {
             return Kernel.Instance.CreateExtrude(this);
+        }
+
+        /// <summary>
+        /// Set the material.
+        /// </summary>
+        public void SetReference(Material material)
+        {
+            this.Material = material;
+            this._materialId = material.Id;
+        }
+
+        /// <summary>
+        /// Set the profile.
+        /// </summary>
+        public void SetReference(Profile profile)
+        {
+            this.Profile = profile;
+            this._profileId = profile.Id;
         }
     }
 }

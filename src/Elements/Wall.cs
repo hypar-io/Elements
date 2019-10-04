@@ -17,6 +17,13 @@ namespace Elements
     public class Wall : Element, IElementType<WallType>, IExtrude
     {
         /// <summary>
+        /// The element type id.
+        /// </summary>
+        protected Guid _elementTypeId;
+        
+        private Guid _profileId;
+
+        /// <summary>
         /// The height of the wall.
         /// </summary>
         public double Height{get; protected set;}
@@ -24,7 +31,19 @@ namespace Elements
         /// <summary>
         /// The WallType of the Wall.
         /// </summary>
+        [JsonIgnore]
         public WallType ElementType { get; protected set;}
+
+        /// <summary>
+        /// The element type of the wall.
+        /// </summary>
+        public Guid ElementTypeId
+        {
+            get
+            {
+                return this.ElementType != null ? this.ElementType.Id : this._elementTypeId;
+            }
+        }
 
         /// <summary>
         /// The wall's geometry.
@@ -45,7 +64,19 @@ namespace Elements
         /// <summary>
         /// The extruded area of the wall.
         /// </summary>
+        [JsonIgnore]
         public Profile Profile{get; protected set;}
+
+        /// <summary>
+        /// The profile id of the wall.
+        /// </summary>
+        public Guid ProfileId
+        {
+            get
+            {
+                return this.Profile != null ? this.Profile.Id : this._profileId;
+            }
+        }
 
         /// <summary>
         /// Extrude to both sides?
@@ -61,7 +92,6 @@ namespace Elements
         /// <param name="elementType">The wall type of the wall.</param>
         /// <param name="height">The height of the wall.</param>
         /// <param name="transform">An option transform for the wall.</param>
-        [JsonConstructor]
         internal Wall(Profile profile, WallType elementType, double height, Transform transform = null)
         {
             if (height <= 0.0)
@@ -75,6 +105,25 @@ namespace Elements
             }
             this.ElementType = elementType;
             this.Profile = profile;
+            this.ExtrudeDirection = Vector3.ZAxis;
+            this.ExtrudeDepth = height;
+            this.Height = height;
+        }
+
+        [JsonConstructor]
+        internal Wall(Guid profileId, Guid elementTypeId, double height, Transform transform = null)
+        {
+            if (height <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
+            }
+            
+            if(transform != null)
+            {
+                this.Transform = transform;
+            }
+            this._elementTypeId = elementTypeId;
+            this._profileId = profileId;
             this.ExtrudeDirection = Vector3.ZAxis;
             this.ExtrudeDepth = height;
             this.Height = height;
@@ -140,6 +189,25 @@ namespace Elements
         public Solid GetUpdatedSolid()
         {
             return Kernel.Instance.CreateExtrude(this);
+        }
+
+        /// <summary>
+        /// Set the wall type.
+        /// </summary>
+        public virtual void SetReference(WallType type)
+        {
+            this.ElementType = type;
+            this._elementTypeId = this.ElementType.Id;
+        }
+
+        /// <summary>
+        /// Set the profile;
+        /// </summary>
+        /// <param name="obj"></param>
+        public void SetReference(Profile obj)
+        {
+            this.Profile = obj;
+            this._profileId = obj.Id;
         }
     }
 }
