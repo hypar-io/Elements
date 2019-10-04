@@ -23,7 +23,7 @@ namespace Elements
         /// <summary>
         /// The perimeter of the frame.
         /// </summary>
-        public ICurve Curve { get; }
+        public Curve Curve { get; }
 
         /// <summary>
         /// The start setback of the sweep along the curve.

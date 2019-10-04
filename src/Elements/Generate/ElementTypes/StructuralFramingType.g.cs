@@ -13,12 +13,13 @@ namespace Elements.ElementTypes
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
     /// <summary>A container for properties common to a type of structural framing.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class StructuralFramingType : ElementType
+    public partial class StructuralFramingType 
     {
         /// <summary>The profile used by the structural framing type.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
@@ -28,6 +29,15 @@ namespace Elements.ElementTypes
         [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
         public  Material Material { get; internal set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static StructuralFramingType FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<StructuralFramingType>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }

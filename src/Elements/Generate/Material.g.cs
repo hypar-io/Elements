@@ -13,6 +13,7 @@ namespace Elements
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
@@ -38,6 +39,15 @@ namespace Elements
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
         public  double GlossinessFactor { get; internal set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static Material FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Material>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }

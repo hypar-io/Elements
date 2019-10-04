@@ -5,14 +5,20 @@ using System;
 namespace Elements.ElementTypes
 {
     /// <summary>
-    /// Base class for all ElementTypes
+    /// Base class for all element types.
     /// </summary>
     public abstract partial class ElementType : IIdentifiable
     {
         /// <summary>
-        /// The unique identifier of an ElementType.
+        /// The unique identifier of the element type.
         /// </summary>
         public Guid Id{get;internal set;}
+
+        /// <summary>
+        /// The name of the element type.
+        /// </summary>
+        /// <value></value>
+        public string Name {get; internal set;}
 
         /// <summary>
         /// Construct an element type.

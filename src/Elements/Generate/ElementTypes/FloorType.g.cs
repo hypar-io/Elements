@@ -13,17 +13,27 @@ namespace Elements.ElementTypes
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
     /// <summary>A container for properties common to floors.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class FloorType : ElementType
+    public partial class FloorType 
     {
         /// <summary>The material layers of the floor.</summary>
         [Newtonsoft.Json.JsonProperty("MaterialLayers", Required = Newtonsoft.Json.Required.AllowNull)]
         public  IList<MaterialLayer> MaterialLayers { get; internal set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static FloorType FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<FloorType>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }

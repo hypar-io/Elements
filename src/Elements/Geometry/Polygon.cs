@@ -1,4 +1,5 @@
 using ClipperLib;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,6 +24,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
+        [JsonConstructor]
         public Polygon(Vector3[] vertices) : base(vertices){}
 
         /// <summary>

@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Serialization.JSON;
 using Elements.Interfaces;
 using Elements.Geometry.Solids;
 using Elements.ElementTypes;
@@ -17,8 +16,7 @@ namespace Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        [JsonConverter(typeof(ICurveConverter))]
-        public ICurve Curve { get; }
+        public Curve Curve { get; }
 
         /// <summary>
         /// The setback of the framing's extrusion at the start.
@@ -29,7 +27,7 @@ namespace Elements
         /// The setback of the framing's extrusion at the end.
         /// </summary>
         public double EndSetback { get; }
-
+        
         /// <summary>
         /// The element type of the structural framing.
         /// </summary>
@@ -46,7 +44,6 @@ namespace Elements
             }
         }
 
-
         /// <summary>
         /// Construct a beam.
         /// </summary>
@@ -56,7 +53,7 @@ namespace Elements
         /// <param name="endSetback">The setback of the beam's extrusion at its end.</param>
         /// <param name="transform">The element's Transform.</param>
         [JsonConstructor]
-        public StructuralFraming(ICurve curve, StructuralFramingType elementType, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
+        public StructuralFraming(Curve curve, StructuralFramingType elementType, double startSetback = 0.0, double endSetback = 0.0, Transform transform = null)
         {
             this.Curve = curve;
             var l = this.Curve.Length();

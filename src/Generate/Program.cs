@@ -28,7 +28,7 @@ namespace Elements.Generate
                     "Polygon", "Profile", "Component", "Curve", "Solid", 
                     "Color", "Property", "Transform", "Element", "Material",
                     "Position", "ElementType", "FloorType", "WallType", 
-                    "StructuralFramingType", "MaterialLayer", "Elements"};
+                    "StructuralFramingType", "MaterialLayer", "Elements", "Identifiable"};
 
             var typesDict = new Dictionary<string, CodeArtifact>();
             var di = new DirectoryInfo(schemaRoot);
@@ -59,7 +59,9 @@ namespace Elements.Generate
                 ArrayType = "IList",
                 ArrayInstanceType = "List",
                 ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes,
-                TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates")
+                TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates"),
+                GenerateJsonMethods = true, 
+                JsonConverters = new []{"ModelConverter"},
             });
         
             var file = generator.GenerateFile();

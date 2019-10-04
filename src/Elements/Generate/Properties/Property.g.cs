@@ -13,6 +13,7 @@ namespace Elements.Properties
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
@@ -29,6 +30,15 @@ namespace Elements.Properties
             set { _additionalProperties = value; }
         }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static Property FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Property>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
     

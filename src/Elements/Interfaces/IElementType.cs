@@ -3,7 +3,7 @@
 namespace Elements.Interfaces
 {
     /// <summary>
-    /// Interface implemented by classes which provide and ElementType.
+    /// Interface implemented by classes which provide an element type.
     /// </summary>
     /// <typeparam name="TElementType"></typeparam>
     public interface IElementType<TElementType>

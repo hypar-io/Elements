@@ -13,24 +13,15 @@ namespace Elements
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
     /// <summary>The base type for all elements.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Element 
+    public partial class Element : Identifiable
     {
-        /// <summary>An identifier for the element which must be unique within the system.</summary>
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public  System.Guid Id { get; internal set; }
-    
-        /// <summary>The element's name.</summary>
-        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public  string Name { get; internal set; }
-    
         /// <summary>The element's transform.</summary>
         [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
@@ -45,6 +36,15 @@ namespace Elements
             set { _additionalProperties = value; }
         }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static Element FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Element>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
     

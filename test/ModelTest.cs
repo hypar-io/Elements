@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
@@ -45,7 +46,7 @@ namespace Elements.Tests
         {
             this._model = new Model();
             this.GenerateGlb = true;
-            this.GenerateIfc = true;
+            this.GenerateIfc = false;
             this.GenerateJson = true;
         }
 
@@ -77,16 +78,16 @@ namespace Elements.Tests
                     File.WriteAllText(jsonPath, this._model.ToJson());
 
                     // Try deserializing JSON
-                    Console.WriteLine($"Deserializing {this._name} from JSON.");
-                    var newModel = Model.FromJson(File.ReadAllText(jsonPath));
-                    foreach(var kvp in this._model.Elements)
-                    {
-                        var newEl = newModel.GetElementById(kvp.Value.Id);
-                        if(newEl == null)
-                        {
-                            throw new Exception($"{this.Name}: An element with the id {kvp.Value.Id}, could not be found in the new model.");
-                        }
-                    }
+                    // Console.WriteLine($"Deserializing {this._name} from JSON.");
+                    // var newModel = Model.FromJson(File.ReadAllText(jsonPath));
+                    // foreach(var kvp in this._model.Elements)
+                    // {
+                    //     var newEl = newModel.GetElementById(kvp.Value.Id);
+                    //     if(newEl == null)
+                    //     {
+                    //         throw new Exception($"{this.Name}: An element with the id {kvp.Value.Id}, could not be found in the new model.");
+                    //     }
+                    // }
                 }
 
                 if(this.GenerateIfc)

@@ -13,6 +13,7 @@ namespace Elements.Geometry.Solids
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
@@ -28,6 +29,15 @@ namespace Elements.Geometry.Solids
         [Newtonsoft.Json.JsonProperty("Curve", Required = Newtonsoft.Json.Required.AllowNull)]
         public  Curve Curve { get; internal set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static Sweep FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Sweep>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }

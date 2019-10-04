@@ -8,7 +8,7 @@ namespace Elements.Geometry.Interfaces
         /// <summary>
         /// The curve along which the area is swept.
         /// </summary>
-        ICurve Curve { get; }
+        Curve Curve { get; }
 
         /// <summary>
         /// The setback of the extrusion at the start.

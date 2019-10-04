@@ -37,23 +37,21 @@ namespace Elements.Serialization.JSON
                                 new[] { new IProfileConverter() });
             var elementTypes = JsonConvert.DeserializeObject<Dictionary<Guid, ElementType>>(obj.GetValue("elementTypes").ToString(),
                                 new JsonConverter[] { new ElementTypeConverter(), new ProfileToIdConverter(profiles) });
-            var extensions = JsonConvert.DeserializeObject<List<string>>(obj.GetValue("extensions").ToString());
             var elements = JsonConvert.DeserializeObject<Dictionary<Guid, Element>>(obj.GetValue("elements").ToString(),
-                            new JsonSerializerSettings()
-                            {
-                                Converters = new JsonConverter[]
-                                                {
-                                                    new ElementConverter(extensions),
-                                                    new MaterialToIdConverter(materials),
-                                                    new ElementTypeToIdConverter(elementTypes),
-                                                    new ProfileToIdConverter(profiles),
-                                                    new SolidConverter(materials)
-                                                },
-                                NullValueHandling = NullValueHandling.Ignore,
-                                ContractResolver = new CamelCasePropertyNamesContractResolver() 
-                            });
+                new JsonSerializerSettings()
+                {
+                    Converters = new JsonConverter[]
+                                    {
+                                        new MaterialToIdConverter(materials),
+                                        new ElementTypeToIdConverter(elementTypes),
+                                        new ProfileToIdConverter(profiles),
+                                        new SolidConverter(materials)
+                                    },
+                    NullValueHandling = NullValueHandling.Ignore,
+                    ContractResolver = new CamelCasePropertyNamesContractResolver() 
+                });
             var origin = JsonConvert.DeserializeObject<GeoJSON.Position>(obj.GetValue("origin").ToString());
-            var model = new Model(elements, materials, elementTypes, profiles, extensions){
+            var model = new Model(elements, materials, elementTypes, profiles){
                 Origin = origin
             };
             return model;
@@ -73,12 +71,8 @@ namespace Elements.Serialization.JSON
             var settings = new JsonSerializerSettings(){
                 Formatting = Formatting.Indented,
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new CamelCasePropertyNamesContractResolver() 
+                // ContractResolver = new CamelCasePropertyNamesContractResolver() 
             };
-
-            // Write extensions
-            writer.WritePropertyName("extensions");
-            writer.WriteRawValue(JsonConvert.SerializeObject(model.Extensions));
 
             // Write materials
             writer.WritePropertyName("materials");
@@ -90,6 +84,7 @@ namespace Elements.Serialization.JSON
                 Formatting = Formatting.Indented,
                 NullValueHandling = NullValueHandling.Ignore,
                 Converters = new JsonConverter[]{
+                    new MaterialToIdConverter(model.Materials),
                     new ProfileToIdConverter(model.Profiles)
                 },
                 ContractResolver = new CamelCasePropertyNamesContractResolver() 
@@ -120,7 +115,6 @@ namespace Elements.Serialization.JSON
             writer.WritePropertyName("origin");
             writer.WriteRawValue(JsonConvert.SerializeObject(model.Origin, settings));
 
-            // Serialize materials
             writer.WriteEndObject();
         }
     }

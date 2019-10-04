@@ -13,6 +13,7 @@ namespace Elements.Geometry
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
@@ -26,6 +27,15 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.MinLength(2)]
         public  IList<Vector3> Vertices { get; internal set; } = new List<Vector3>();
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static Polyline FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Polyline>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }

@@ -1,0 +1,20 @@
+{
+    "$id": "https://hypar.io/schemas/elements/ElementTypes/ElementType.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A an identifiable entity.",
+    "title": "Identifiable",
+    "type": "object",
+    "required": ["Name"],
+    "properties": {
+        "Id": {
+            "type": "string",
+            "format": "guid",
+            "description": "An identifier for the entity which must be unique within the system."
+        },
+        "Name": {
+            "type": ["string","null"],
+            "description": "The entity's name."
+        }
+    },
+    "additionalProperties": false
+}

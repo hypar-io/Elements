@@ -4,7 +4,7 @@
 // </auto-generated>
 //----------------------
 
-namespace Elements.Properties
+namespace Elements
 {
     #pragma warning disable // Disable all warnings
 
@@ -17,22 +17,26 @@ namespace Elements.Properties
     using System;
     using System.Collections.Generic;
     
-    /// <summary>A set of properties.</summary>
+    /// <summary>A an identifiable entity.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class PropertySet 
+    public partial class Identifiable 
     {
-        [Newtonsoft.Json.JsonProperty("Properties", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  IList<Property> Properties { get; internal set; } = new List<Property>();
+        /// <summary>An identifier for the entity which must be unique within the system.</summary>
+        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public  System.Guid Id { get; internal set; }
+    
+        /// <summary>The entity's name.</summary>
+        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  string Name { get; internal set; }
     
         public string ToJson() 
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
         }
     
-        public static PropertySet FromJson(string data)
+        public static Identifiable FromJson(string data)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<PropertySet>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Identifiable>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
         }
     
     }

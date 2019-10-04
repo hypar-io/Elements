@@ -4,7 +4,6 @@
     "description": "A container for properties common to floors.",
     "title": "FloorType",
     "type": "object",
-    "allOf": [{"$ref": "ElementType.json"}],
     "required": ["MaterialLayers"],
     "properties": {
         "MaterialLayers": {

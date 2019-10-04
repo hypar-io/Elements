@@ -13,6 +13,7 @@ namespace Elements
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
@@ -28,6 +29,15 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  Material Material { get; internal set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static MaterialLayer FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<MaterialLayer>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }

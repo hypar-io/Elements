@@ -28,7 +28,13 @@ namespace Elements.Serialization.JSON
         /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
-            return typeof(ElementType).IsAssignableFrom(objectType);
+            var found = typeof(ElementType).IsAssignableFrom(objectType);
+            if(found)
+            {
+                Console.WriteLine($"Found element type: {objectType.Name}");
+            }
+            
+            return found;
         }
 
         /// <summary>

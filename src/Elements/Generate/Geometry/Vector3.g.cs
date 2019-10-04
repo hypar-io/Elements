@@ -13,6 +13,7 @@ namespace Elements.Geometry
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
@@ -32,6 +33,15 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonProperty("Z", Required = Newtonsoft.Json.Required.Always)]
         public  double Z { get; internal set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static Vector3 FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Vector3>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }

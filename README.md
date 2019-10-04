@@ -38,6 +38,7 @@ Elements constructs its primitive types from schemas in the `/Schemas` directory
 - Elements uses [NJsonSchema](https://github.com/RicoSuter/NJsonSchema) to generate C# classes from JSON schemas.
 - The default collection type used is `System.Collections.Generic.IList`. Primitive types have constructors which take `T[]` for historical support, but these will be upgraded in the future to `IList<T>`.
 - Generated classes are marked as `partial` and do not contain constructors. The constructors are contained in the their partial counterparts.
+- Elements uses a custom class liquid template for the code generator which can be found in `/Generate/Templates`.
 
 
 ## Geometry

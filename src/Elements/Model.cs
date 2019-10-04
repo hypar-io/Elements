@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
 using Elements.ElementTypes;
 
@@ -17,19 +16,10 @@ namespace Elements
     /// </summary>
     public partial class Model
     {
-        private List<string> _extensions = new List<string>();
-
         /// <summary>
         /// The version of the assembly.
         /// </summary>
         public string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-        /// <summary>
-        /// A collection of extension identifiers which representing
-        /// extensions which must be available at the time of
-        /// serialization or deserialization.
-        /// </summary>
-        public IEnumerable<string> Extensions => _extensions;
 
         /// <summary>
         /// Construct an empty model.
@@ -73,8 +63,6 @@ namespace Elements
                 var agg = (IAggregateElements)element;
                 AddElements(agg.Elements);
             }
-
-            AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
         }
 
         /// <summary>
@@ -109,8 +97,6 @@ namespace Elements
                 var agg = (IAggregateElements)element;
                 UpdateElements(agg.Elements);
             }
-
-            AddExtension(element.GetType().Assembly.GetName().Name.ToLower());
         }
 
         /// <summary>
@@ -212,16 +198,6 @@ namespace Elements
         }
 
         /// <summary>
-        /// Create a model from JSON.
-        /// </summary>
-        /// <param name="json">The JSON.</param>
-        /// <returns>A model.</returns>
-        public static Model FromJson(string json)
-        {
-            return JsonExtensions.FromJson(json);
-        }
-
-        /// <summary>
         /// Create a model from IFC.
         /// </summary>
         /// <param name="path">The path to the IFC STEP file.</param>
@@ -235,23 +211,14 @@ namespace Elements
 
         internal Model(Dictionary<Guid, Element> elements, Dictionary<Guid,
             Material> materials, Dictionary<Guid, ElementType> elementTypes,
-            Dictionary<Guid, Profile> profiles, List<string> extensions)
+            Dictionary<Guid, Profile> profiles)
         {
             this.Elements = elements;
             this.Materials = materials;
             this.ElementTypes = elementTypes;
             this.Profiles = profiles;
-            this._extensions = extensions;
             AddMaterial(BuiltInMaterials.Edges);
             AddMaterial(BuiltInMaterials.Void);
-        }
-
-        private void AddExtension(string extensionId)
-        {
-            if (!_extensions.Contains(extensionId))
-            {
-                _extensions.Add(extensionId);
-            }
         }
 
         private void AddMaterial(Material material)

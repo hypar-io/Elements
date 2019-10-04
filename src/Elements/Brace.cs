@@ -1,5 +1,5 @@
 using Elements.ElementTypes;
-using Elements.Geometry.Interfaces;
+using Elements.Geometry;
 
 namespace Elements
 {
@@ -15,8 +15,7 @@ namespace Elements
         /// <param name="elementType">The structural framing type of the brace.</param>
         /// <param name="startSetback">The setback of the brace's geometry at the start.</param>
         /// <param name="endSetback">The setback of the brace's geometry at the end.</param>
-        /// [JsonConstructor]
-        public Brace(ICurve curve, StructuralFramingType elementType, 
+        public Brace(Curve curve, StructuralFramingType elementType, 
             double startSetback = 0.0, double endSetback = 0.0) 
             : base(curve, elementType, startSetback, endSetback){}
     }

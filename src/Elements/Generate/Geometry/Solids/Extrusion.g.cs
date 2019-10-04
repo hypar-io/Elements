@@ -13,6 +13,7 @@ namespace Elements.Geometry.Solids
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
@@ -33,6 +34,15 @@ namespace Elements.Geometry.Solids
         [System.ComponentModel.DataAnnotations.Required]
         public  Vector3 Direction { get; internal set; } = new Vector3();
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static Extrusion FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Extrusion>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }

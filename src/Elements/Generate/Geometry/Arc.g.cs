@@ -13,6 +13,7 @@ namespace Elements.Geometry
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
+    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
     
@@ -38,6 +39,15 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
         public  double Radius { get; internal set; }
     
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
+    
+        public static Arc FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Arc>(data, new Newtonsoft.Json.JsonConverter[] { new ModelConverter() });
+        }
     
     }
 }
