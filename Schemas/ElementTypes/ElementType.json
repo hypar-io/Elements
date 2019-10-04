@@ -1,11 +1,11 @@
 {
     "$id": "https://hypar.io/schemas/elements/ElementTypes/ElementType.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "description": "A container of elements.",
+    "description": "A container for shared element properties.",
     "title": "ElementType",
     "type": "object",
     "discriminator": "discriminator",
-    "required": ["Name"],
+    "required": ["Id"],
     "properties": {
         "Id": {
             "type": "string",

@@ -17,17 +17,18 @@ namespace Elements.ElementTypes
     using System;
     using System.Collections.Generic;
     
-    /// <summary>A container of elements.</summary>
+    /// <summary>A container for shared element properties.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class ElementType 
     {
         /// <summary>An identifier for the entity which must be unique within the system.</summary>
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public  System.Guid Id { get; internal set; }
     
         /// <summary>The entity's name.</summary>
-        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  string Name { get; internal set; }
     
         public string ToJson() 

@@ -11,28 +11,28 @@
             "items": {
                 "$ref": "Element.json"
             },
-            "description": "All elements in the model."
+            "description": "A dictionary of elements in the model keyed by their id."
         },
         "Materials": {
             "type": ["array","null"],
             "items": {
                 "$ref": "Material.json"
             },
-            "description": "All materials in the model."
+            "description": "A dictionary of materials in the model keyed by their id."
         },
         "Profiles": {
             "type": ["array","null"],
             "items": {
                 "$ref": "Geometry/Profile.json"
             },
-            "description": "All profiles in the model."
+            "description": "A dictionary of profiles in the model keyed by their id."
         },
         "ElementTypes": {
             "type": ["array","null"],
             "items": {
                 "$ref": "ElementTypes/ElementType.json"
             },
-            "description": "All element types in the model."
+            "description": "A dictionary of element types in the model keyed by their id."
         },
         "Origin": {
             "description": "The origin of the model.",

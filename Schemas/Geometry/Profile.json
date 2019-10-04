@@ -4,7 +4,7 @@
     "title": "Profile",
     "type": ["object","null"],
     "description": "A profile comprised of an external boundary and one or several holes.",
-    "required": ["Name","Id","Perimeter","Voids"],
+    "required": ["Id","Perimeter"],
     "properties": {
         "Id": {
             "type": "string",

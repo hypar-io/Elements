@@ -39,6 +39,7 @@ Elements constructs its primitive types from schemas in the `/Schemas` directory
 - The default collection type used is `System.Collections.Generic.IList`. Primitive types have constructors which take `T[]` for historical support, but these will be upgraded in the future to `IList<T>`.
 - Generated classes are marked as `partial` and do not contain constructors. The constructors are contained in the their partial counterparts.
 - Elements uses a custom class liquid template for the code generator which can be found in `/Generate/Templates`.
+- Core class definitions are generated as `CSharpClassStyle.POCO` using NJsonSchema. This results in class definitions without constructors. For user-defined types, class definitions will be generated as `CSharpClassStyle.Record` with JSON constructors.
 
 
 ## Geometry

@@ -62,6 +62,7 @@ namespace Elements.Generate
                 TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates"),
                 GenerateJsonMethods = true, 
                 JsonConverters = new []{"ModelConverter"},
+                ClassStyle = CSharpClassStyle.Poco
             });
         
             var file = generator.GenerateFile();

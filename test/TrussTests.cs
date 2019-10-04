@@ -2,7 +2,6 @@ using Xunit;
 using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using System.Linq;
-using Elements.Serialization.JSON;
 using Elements.ElementTypes;
 
 namespace Elements.Tests

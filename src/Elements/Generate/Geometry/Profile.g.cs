@@ -27,7 +27,7 @@ namespace Elements.Geometry
         public  System.Guid Id { get; internal set; }
     
         /// <summary>The entity's name.</summary>
-        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  string Name { get; internal set; }
     
         /// <summary>The perimeter of the profile.</summary>
@@ -35,7 +35,7 @@ namespace Elements.Geometry
         public  Polygon Perimeter { get; internal set; }
     
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
-        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  IList<Polygon> Voids { get; internal set; }
     
         public string ToJson() 
