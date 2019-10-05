@@ -526,7 +526,7 @@ namespace Elements.Serialization.glTF
             return gltf;
         }
 
-        private static void GetRenderDataForElement(IElement e, Gltf gltf, 
+        private static void GetRenderDataForElement(Element e, Gltf gltf, 
             Dictionary<string, int> materials, List<List<Vector3>> lines, List<byte> buffer, List<BufferView> bufferViews , List<Accessor> accessors)
         {
             var materialName = BuiltInMaterials.Default.Name;

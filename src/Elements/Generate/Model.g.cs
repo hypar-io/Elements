@@ -41,15 +41,6 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  Position Origin { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Model FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(data);
-        }
     
     }
 }

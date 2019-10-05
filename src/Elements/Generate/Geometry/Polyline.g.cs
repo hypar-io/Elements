@@ -27,15 +27,6 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.MinLength(2)]
         public  IList<Vector3> Vertices { get; internal set; } = new List<Vector3>();
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Polyline FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Polyline>(data);
-        }
     
     }
 }

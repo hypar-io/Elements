@@ -29,15 +29,6 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("MaterialId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  System.Guid MaterialId { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static MaterialLayer FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<MaterialLayer>(data);
-        }
     
     }
 }

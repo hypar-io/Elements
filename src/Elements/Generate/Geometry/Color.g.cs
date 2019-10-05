@@ -41,15 +41,6 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public  double Alpha { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Color FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Color>(data);
-        }
     
     }
 }

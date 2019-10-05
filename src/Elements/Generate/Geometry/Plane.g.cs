@@ -31,15 +31,6 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Required]
         public  Vector3 Normal { get; internal set; } = new Vector3();
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Plane FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Plane>(data);
-        }
     
     }
 }

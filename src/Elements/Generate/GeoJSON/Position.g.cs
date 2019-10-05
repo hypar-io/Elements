@@ -29,15 +29,6 @@ namespace Elements.GeoJSON
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
         public  double Longitude { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Position FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Position>(data);
-        }
     
     }
 }

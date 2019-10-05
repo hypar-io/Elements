@@ -5,17 +5,18 @@ using System;
 namespace Elements.Interfaces
 {
     /// <summary>
-    /// The interface for all elements which can be identified with a unique identifier.
+    /// An object which is identified 
+    /// with a unique identifier and a name.
     /// </summary>
     public interface IIdentifiable
     {
         /// <summary>
-        /// The unique identifier of the Element.
+        /// The unique identifier of the object.
         /// </summary>
         Guid Id { get; }
 
         /// <summary>
-        /// A human-readable name for the Element.
+        /// A name for the object.
         /// </summary>
         string Name { get; }
     }

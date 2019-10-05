@@ -22,15 +22,6 @@ namespace Elements.Geometry
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class Curve 
     {
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Curve FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Curve>(data);
-        }
     
     }
     

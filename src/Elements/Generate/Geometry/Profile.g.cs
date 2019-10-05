@@ -38,15 +38,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  IList<Polygon> Voids { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Profile FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Profile>(data);
-        }
     
     }
 }

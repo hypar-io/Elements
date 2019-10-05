@@ -45,15 +45,6 @@ namespace Elements
             set { _additionalProperties = value; }
         }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Element FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Element>(data);
-        }
     
     }
     

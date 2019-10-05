@@ -197,6 +197,31 @@ namespace Elements
             return IFCExtensions.FromIFC(path, idsToConvert);
         }
 
+        /// <summary>
+        /// Serialize the model to JSON.
+        /// </summary>
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+
+        /// <summary>
+        /// Deserialize a model from JSON.
+        /// </summary>
+        /// <param name="data">The JSON representing the model.</param>
+        public static Model FromJson(string data)
+        {
+            // Step 1
+            // Deserialize the model.
+            // Model will now have id fields set.
+            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(data);
+
+            // Step 2
+            // Find all properties with ReferencedByProperty attributes,
+            // find the referenced entity and set the reference.
+            return model;
+        }
+
         internal Model(Dictionary<Guid, Element> elements, Dictionary<Guid,
             Material> materials, Dictionary<Guid, ElementType> elementTypes,
             Dictionary<Guid, Profile> profiles)
@@ -221,7 +246,7 @@ namespace Elements
             }
         }
 
-        private void GetRootLevelElementData(IElement element)
+        private void GetRootLevelElementData(Element element)
         {
             if (element is IMaterial)
             {

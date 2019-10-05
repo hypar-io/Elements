@@ -21,15 +21,6 @@ namespace Elements.Geometry
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class Polygon : Polyline
     {
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Polygon FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Polygon>(data);
-        }
     
     }
 }

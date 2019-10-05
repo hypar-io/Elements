@@ -33,7 +33,7 @@ namespace Elements
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
-    public abstract partial class Element : IElement
+    public abstract partial class Element : IIdentifiable
     {
         /// <summary>
         /// Construct an element.

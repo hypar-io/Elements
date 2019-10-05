@@ -39,15 +39,6 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
         public  double Radius { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Arc FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Arc>(data);
-        }
     
     }
 }

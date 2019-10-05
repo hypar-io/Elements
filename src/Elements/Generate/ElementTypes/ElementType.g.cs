@@ -31,15 +31,6 @@ namespace Elements.ElementTypes
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public  string Name { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static ElementType FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ElementType>(data);
-        }
     
     }
     

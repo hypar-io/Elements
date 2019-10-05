@@ -22,15 +22,6 @@ namespace Elements.Geometry.Solids
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class Solid 
     {
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Solid FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Solid>(data);
-        }
     
     }
     

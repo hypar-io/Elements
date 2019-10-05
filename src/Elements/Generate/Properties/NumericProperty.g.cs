@@ -30,15 +30,6 @@ namespace Elements.Properties
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public  NumericPropertyUnitType UnitType { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static NumericProperty FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<NumericProperty>(data);
-        }
     
     }
     

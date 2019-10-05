@@ -26,15 +26,6 @@ namespace Elements.ElementTypes
         [System.ComponentModel.DataAnnotations.Required]
         public  IList<MaterialLayer> MaterialLayers { get; internal set; } = new List<MaterialLayer>();
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static WallType FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<WallType>(data);
-        }
     
     }
 }

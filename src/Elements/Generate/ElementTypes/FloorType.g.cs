@@ -25,15 +25,6 @@ namespace Elements.ElementTypes
         [Newtonsoft.Json.JsonProperty("MaterialLayers", Required = Newtonsoft.Json.Required.AllowNull)]
         public  IList<MaterialLayer> MaterialLayers { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static FloorType FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<FloorType>(data);
-        }
     
     }
 }

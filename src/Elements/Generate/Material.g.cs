@@ -39,15 +39,6 @@ namespace Elements
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
         public  double GlossinessFactor { get; internal set; }
     
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static Material FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Material>(data);
-        }
     
     }
 }
