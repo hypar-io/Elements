@@ -7,6 +7,9 @@ namespace Elements.ElementTypes
     /// <summary>
     /// Base class for all element types.
     /// </summary>
+    [JsonInheritance("Elements.ElementTypes.WallType", typeof(WallType))]
+    [JsonInheritance("Elements.ElementTypes.FloorType", typeof(FloorType))]
+    [JsonInheritance("Elements.ElementTypes.StructuralFramingType", typeof(StructuralFramingType))]
     public abstract partial class ElementType : IIdentifiable
     {
         /// <summary>

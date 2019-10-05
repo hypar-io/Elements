@@ -529,20 +529,6 @@ namespace Elements.Serialization.glTF
         private static void GetRenderDataForElement(IElement e, Gltf gltf, 
             Dictionary<string, int> materials, List<List<Vector3>> lines, List<byte> buffer, List<BufferView> bufferViews , List<Accessor> accessors)
         {
-            if (e is IAggregateElements)
-            {
-                var ae = (IAggregateElements)e;
-
-                if (ae.Elements.Count > 0)
-                {
-                    for(var i=0; i< ae.Elements.Count; i++)
-                    {
-                        var esub = ae.Elements[i];
-                        GetRenderDataForElement(esub, gltf, materials, lines, buffer, bufferViews, accessors);
-                    }
-                }
-            }
-
             var materialName = BuiltInMaterials.Default.Name;
 
             if(e is IElementType<StructuralFramingType>)

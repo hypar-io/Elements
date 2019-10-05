@@ -9,6 +9,7 @@ namespace Elements
     /// <summary>
     /// A rectangular opening in a wall or floor.
     /// </summary>
+    [UserElement]
     public class Opening : Element, IExtrude
     {
         Guid _profileId;
@@ -18,6 +19,7 @@ namespace Elements
         /// </summary>
         /// <value>A polygon of Width and Height translated by X and Y.</value>
         [JsonIgnore]
+        [ReferencedByProperty("ProfileId")]
         public Profile Profile { get; internal set; }
 
         /// <summary>

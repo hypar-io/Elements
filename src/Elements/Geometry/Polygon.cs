@@ -17,6 +17,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
+        [JsonConstructor]
         public Polygon(IList<Vector3> vertices): base(vertices){}
 
         /// <summary>
@@ -24,7 +25,6 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
-        [JsonConstructor]
         public Polygon(Vector3[] vertices) : base(vertices){}
 
         /// <summary>

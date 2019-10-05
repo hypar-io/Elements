@@ -1,7 +1,6 @@
 using System;
 using Elements.ElementTypes;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -12,6 +11,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/BeamExample.cs?name=example)]
     /// </example>
+    [UserElement]
     public class Beam : StructuralFraming
     {
         /// <summary>

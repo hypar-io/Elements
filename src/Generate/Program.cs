@@ -60,8 +60,7 @@ namespace Elements.Generate
                 ArrayInstanceType = "List",
                 ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes,
                 TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates"),
-                GenerateJsonMethods = true, 
-                // JsonConverters = new []{"ModelConverter"},
+                GenerateJsonMethods = true,
                 ClassStyle = CSharpClassStyle.Poco
             });
         

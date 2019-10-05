@@ -14,6 +14,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/WallExample.cs?name=example)]
     /// </example>
+    [UserElement]
     public class Wall : Element, IElementType<WallType>, IExtrude
     {
         /// <summary>
@@ -32,6 +33,7 @@ namespace Elements
         /// The WallType of the Wall.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ElementTypeId")]
         public WallType ElementType { get; protected set;}
 
         /// <summary>
@@ -65,6 +67,7 @@ namespace Elements
         /// The extruded area of the wall.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ProfileId")]
         public Profile Profile{get; protected set;}
 
         /// <summary>

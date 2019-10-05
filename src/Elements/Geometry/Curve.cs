@@ -3,6 +3,10 @@ using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
+    [JsonInheritanceAttribute("Elements.Geometry.Line", typeof(Line))]
+    [JsonInheritanceAttribute("Elements.Geometry.Arc", typeof(Arc))]
+    [JsonInheritanceAttribute("Elements.Geometry.Polyline", typeof(Polyline))]
+    [JsonInheritanceAttribute("Elements.Geometry.Polygon", typeof(Polygon))]
     public abstract partial class Curve : ICurve
     {
         /// <summary>

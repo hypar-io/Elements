@@ -15,6 +15,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/TopographyExample.cs?name=example)]
     /// </example>
+    [UserElement]
     public class Topography : Element, ITessellate, IMaterial
     {
         private Func<Triangle, Color> _colorizer;

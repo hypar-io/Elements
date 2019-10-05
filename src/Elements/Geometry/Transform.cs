@@ -95,7 +95,7 @@ namespace Elements.Geometry
         /// Create a transform by a matrix.
         /// </summary>
         /// <param name="matrix">The transform's Matrix.</param>
-        [JsonConstructor]
+        
         public Transform(Matrix matrix)
         {
             this._matrix = matrix;
@@ -109,9 +109,10 @@ namespace Elements.Geometry
         /// <param name="xAxis">The X axis of the transform.</param>
         /// <param name="yAxis">The Y axis of the transform.</param>
         /// <param name="zAxis">The Z axis of the transform.</param>
+        [JsonConstructor]
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)
         {
-            this._matrix = new Matrix();
+            this._matrix = new Matrix(xAxis, yAxis, zAxis, origin);
             SetComponentsFromMatrix(this._matrix);
         }
 

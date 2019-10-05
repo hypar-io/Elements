@@ -13,6 +13,7 @@ namespace Elements
         /// The layer's material.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("MaterialId")]
         public Material Material { get; private set; }
 
         /// <summary>

@@ -7,8 +7,8 @@ using Xunit.Abstractions;
 using System.Collections.Generic;
 using System;
 using System.IO;
-using Elements.Serialization.JSON;
 using Elements.Serialization.glTF;
+using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {

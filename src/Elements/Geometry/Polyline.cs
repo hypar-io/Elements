@@ -45,6 +45,7 @@ namespace Elements.Geometry
         /// Construct a polyline from a collection of vertices.
         /// </summary>
         /// <param name="vertices">A CCW wound set of vertices.</param>
+        [JsonConstructor]
         public Polyline(IList<Vector3> vertices)
         {
             CheckCoincidenceAndThrow(vertices);

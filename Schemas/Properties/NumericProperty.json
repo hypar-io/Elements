@@ -5,15 +5,14 @@
     "type": "object",
     "description": "A property with a numeric value.",
     "required": ["Value", "ValueType"],
-    "allOf": [{"$ref": "Property.json"}],
     "properties": {
         "Value": {
             "type": "number",
             "description": "The property's value"
         },
-        "ValueType": {
+        "UnitType": {
             "type": "string",
-            "description": "The value type.",
+            "description": "The unit type.",
             "enum": ["Length","Mass","Force","Area","Pressure","Currency","Time","Number"]
         }
     },

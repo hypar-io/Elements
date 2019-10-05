@@ -13,9 +13,9 @@ namespace Elements
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
-    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     
     /// <summary>The base type for all elements.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
@@ -85,14 +85,43 @@ namespace Elements
         [System.ThreadStatic]
         private static bool _isWriting;
     
+        private Dictionary<string, Type> _typeCache;
+    
         public JsonInheritanceConverter()
         {
             _discriminator = DefaultDiscriminatorName;
+            _typeCache = BuildUserElementTypeCache();
         }
     
         public JsonInheritanceConverter(string discriminator)
         {
             _discriminator = discriminator;
+            _typeCache = BuildUserElementTypeCache();
+        }
+    
+        private Dictionary<string, Type> BuildUserElementTypeCache()
+        {
+            var typeCache = new Dictionary<string, Type>();
+    
+            // Build the user element type cache
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach(var asm in asms)
+            {
+                try
+                {
+                    var userTypes = asm.GetTypes().Where(t=>t.GetCustomAttributes(typeof(UserElement), true).Length > 0);
+                    foreach(var ut in userTypes)
+                    {
+                        typeCache.Add(ut.FullName, ut);
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+    
+            return typeCache;
         }
     
         public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
@@ -150,7 +179,7 @@ namespace Elements
     
             var discriminator = Newtonsoft.Json.Linq.Extensions.Value<string>(jObject.GetValue(_discriminator));
             var subtype = GetObjectSubtype(objectType, discriminator);
-           
+            
             var objectContract = serializer.ContractResolver.ResolveContract(subtype) as Newtonsoft.Json.Serialization.JsonObjectContract;
             if (objectContract == null || System.Linq.Enumerable.All(objectContract.Properties, p => p.PropertyName != _discriminator))
             {
@@ -170,10 +199,21 @@ namespace Elements
     
         private System.Type GetObjectSubtype(System.Type objectType, string discriminator)
         {
+            // Check the existing inheritance attributes.
+            // This block will be hit when a type contains
+            // an inheritance attribute specifying one of its subtypes.
             foreach (var attribute in System.Reflection.CustomAttributeExtensions.GetCustomAttributes<JsonInheritanceAttribute>(System.Reflection.IntrospectionExtensions.GetTypeInfo(objectType), true))
             {
                 if (attribute.Key == discriminator)
                     return attribute.Type;
+            }
+    
+            // If the inheritance attributes is not supplied, as in the case
+            // of a user-provided type, then we use the type cache of all
+            // types with the UserElementType attribute.
+            if(_typeCache.ContainsKey(discriminator))
+            {
+                return _typeCache[discriminator];
             }
     
             return objectType;
@@ -186,8 +226,8 @@ namespace Elements
                 if (attribute.Type == objectType)
                     return attribute.Key;
             }
-    
-            return objectType.Name;
+            
+            return objectType.FullName;
         }
     }
 }

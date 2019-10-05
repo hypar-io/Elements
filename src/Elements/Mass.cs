@@ -13,6 +13,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/MassExample.cs?name=example)]
     /// </example>
+    [UserElement]
     public class Mass : Element, ISolid, IExtrude, IMaterial
     {
         private Guid _profileId;
@@ -22,6 +23,7 @@ namespace Elements
         /// The profile of the mass.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ProfileId")]
         public Profile Profile { get; private set; }
 
         /// <summary>
@@ -58,6 +60,7 @@ namespace Elements
         /// The mass' material.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("MaterialId")]
         public Material Material { get; private set; }
 
         /// <summary>

@@ -33,13 +33,26 @@ When we started [Hypar](https://www.hypar.io) we needed a library that would gen
 
 We couldn't find anything quite right. So we started building this. 
 
+## Design Principles
+- There is one base type: Element.
+  - Elements have a unique identifier and a transform.
+  - An Element can have any number of properties whose types are defined in the provided schemas.
+- The library is schema first. 
+  - Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C# (ex: attributes) to convey meaning of the types or their properties. 
+- The core Element types will be defined in exactly the same way that third-party types will be defined. 
+  - It is possible that over time these types (ex: Beam, Column, Wall, etc.) are removed from the library and only made available as schemas from which user elements can be derived.
+- User-defined element schemas should perform as first class citizens in the system.
+
 ## Code Generation
-Elements constructs its primitive types from schemas in the `/Schemas` directory. These schemas are provided as JSON schema. The generator mechanism can be found in the `/src/Generate` directory. Some things to note about code generation:
+- Elements constructs its primitive types from schemas in the `/Schemas` directory. These schemas are provided as JSON schema. The generator mechanism can be found in the `/src/Generate` directory.
 - Elements uses [NJsonSchema](https://github.com/RicoSuter/NJsonSchema) to generate C# classes from JSON schemas.
 - The default collection type used is `System.Collections.Generic.IList`. Primitive types have constructors which take `T[]` for historical support, but these will be upgraded in the future to `IList<T>`.
 - Generated classes are marked as `partial` and do not contain constructors. The constructors are contained in the their partial counterparts.
-- Elements uses a custom class liquid template for the code generator which can be found in `/Generate/Templates`.
-- Core class definitions are generated as `CSharpClassStyle.POCO` using NJsonSchema. This results in class definitions without constructors. For user-defined types, class definitions will be generated as `CSharpClassStyle.Record` with JSON constructors.
+- The custom class template for the code generator can be found in `/Generate/Templates`.
+- Core class definitions are generated as `CSharpClassStyle.POCO` using NJsonSchema. This results in class definitions without constructors.
+- Deserialization into inherited types is handled in two ways:
+  - Base types that live in the Elements library are decorated with one or more `JsonInheritanceAttribute` pointing to their derived types.
+  - External types that inherit from `Element` are decorated with the `UserElement` attribute.  
 
 
 ## Geometry

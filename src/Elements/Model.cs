@@ -57,12 +57,6 @@ namespace Elements
             {
                 throw new ArgumentException("An element with the same Id already exists in the Model.");
             }
-
-            if (element is IAggregateElements)
-            {
-                var agg = (IAggregateElements)element;
-                AddElements(agg.Elements);
-            }
         }
 
         /// <summary>
@@ -90,12 +84,6 @@ namespace Elements
             else
             {
                 throw new ArgumentException("No element with this Id exists in the Model.");
-            }
-
-            if (element is IAggregateElements)
-            {
-                var agg = (IAggregateElements)element;
-                UpdateElements(agg.Elements);
             }
         }
 
@@ -296,18 +284,6 @@ namespace Elements
                     AddElementType(sft.ElementType);
                     AddProfile(sft.ElementType.Profile);
                     AddMaterial(sft.ElementType.Material);
-                }
-            }
-
-            if (element is IAggregateElements)
-            {
-                var ae = (IAggregateElements)element;
-                if (ae.Elements.Count > 0)
-                {
-                    foreach (var esub in ae.Elements)
-                    {
-                        GetRootLevelElementData(esub);
-                    }
                 }
             }
         }

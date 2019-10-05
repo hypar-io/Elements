@@ -470,16 +470,6 @@ namespace Elements.Serialization.IFC
         private static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc)
         {
             var products = new List<IfcProduct>();
-            if(e is IAggregateElements)
-            {
-                // TODO: Create the IFC aggregation relationship
-                foreach(var subEl in ((IAggregateElements)e).Elements)
-                {
-                    products.AddRange(subEl.ToIfcProducts(context, doc));
-                }
-                
-                return products;
-            }
 
             IfcProductDefinitionShape shape = null;
             var localPlacement = e.Transform.ToIfcLocalPlacement(doc);

@@ -13,6 +13,7 @@ namespace Elements
     /// <example>
     /// <code source="../../test/Examples/WallExample.cs"/>
     /// </example>
+    [UserElement]
     public class StandardWall : Wall, IHasOpenings
     {
         private List<Opening> _openings = new List<Opening>();

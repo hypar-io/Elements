@@ -10,12 +10,14 @@ namespace Elements
     /// <summary>
     /// An element defined by a perimeter and a cross section swept along that perimeter.
     /// </summary>
+    [UserElement]
     public class Frame : Element, IProfile, IMaterial, ISweepAlongCurve
     {
         /// <summary>
         /// The frame's profile.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ProfileId")]
         public Profile Profile { get; private set;}
 
         /// <summary>
@@ -27,6 +29,7 @@ namespace Elements
         /// The frame's material.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("MaterialId")]
         public Material Material { get; private set; }
 
         /// <summary>

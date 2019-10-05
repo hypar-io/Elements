@@ -13,9 +13,9 @@ namespace Elements.Geometry.Solids
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
-    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     
     /// <summary>A sweep of a profile along a curve.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]

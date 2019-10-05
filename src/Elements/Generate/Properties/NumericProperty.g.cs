@@ -13,23 +13,22 @@ namespace Elements.Properties
     using Elements.Geometry;
     using Elements.Geometry.Solids;
     using Elements.Properties;
-    using Elements.Serialization.JSON;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     
     /// <summary>A property with a numeric value.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class NumericProperty : Property
+    public partial class NumericProperty 
     {
         /// <summary>The property's value</summary>
         [Newtonsoft.Json.JsonProperty("Value", Required = Newtonsoft.Json.Required.Always)]
         public  double Value { get; internal set; }
     
-        /// <summary>The value type.</summary>
-        [Newtonsoft.Json.JsonProperty("ValueType", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        /// <summary>The unit type.</summary>
+        [Newtonsoft.Json.JsonProperty("UnitType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public  NumericPropertyValueType ValueType { get; internal set; }
+        public  NumericPropertyUnitType UnitType { get; internal set; }
     
         public string ToJson() 
         {
@@ -44,7 +43,7 @@ namespace Elements.Properties
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public enum NumericPropertyValueType
+    public enum NumericPropertyUnitType
     {
         [System.Runtime.Serialization.EnumMember(Value = @"Length")]
         Length = 0,

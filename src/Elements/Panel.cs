@@ -13,6 +13,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/PanelExample.cs?name=example)]
     /// </example>
+    [UserElement]
     public class Panel : Element, IMaterial, ILamina
     {
         private Guid _materialId;
@@ -26,6 +27,7 @@ namespace Elements
         /// The panel's material.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("MaterialId")]
         public Material Material { get; private set;}
 
         /// <summary>

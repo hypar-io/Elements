@@ -5,12 +5,13 @@ using Xunit;
 
 namespace Elements.Tests
 {
-    internal class UserElement : Element
+    [UserElement]
+    public class FooBar : Element
     {
         public Line Foo {get;set;}
         public Profile Bar {get;set;}
 
-        public UserElement(Line line, Profile profile)
+        public FooBar(Line line, Profile profile)
         {
             this.Foo = line;
             this.Bar = profile;
@@ -23,7 +24,7 @@ namespace Elements.Tests
         public void CreateCustomElement()
         {
             var line = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var ue = new UserElement(line, new Profile(Polygon.L(1,2,0.5)));
+            var ue = new FooBar(line, new Profile(Polygon.L(1,2,0.5)));
             var model = new Model();
             model.AddElement(ue);
 
@@ -34,7 +35,7 @@ namespace Elements.Tests
             var json = model.ToJson();
             var newModel = Model.FromJson(json);
             Assert.Equal(2, model.Elements.Count);
-            Assert.Equal(1, model.ElementsOfType<UserElement>().ToArray().Count());
+            Assert.Equal(1, model.ElementsOfType<FooBar>().ToArray().Count());
         }
     }
 }

@@ -35,6 +35,7 @@ namespace Elements
         /// The element type of the structural framing.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ElementTypeId")]
         public StructuralFramingType ElementType { get; private set;}
 
         /// <summary>
@@ -52,6 +53,7 @@ namespace Elements
         /// The extrusion's profile.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ProfileId")]
         public Profile Profile {
             get
             {

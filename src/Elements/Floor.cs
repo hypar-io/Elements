@@ -15,6 +15,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/FloorExample.cs?name=example)]
     /// </example>
+    [UserElement]
     public class Floor : Element, IElementType<FloorType>, ISolid, IExtrude, IHasOpenings
     {
         private List<Opening> _openings = new List<Opening>();
@@ -29,6 +30,7 @@ namespace Elements
         /// The floor type of the floor.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ElementTypeId")]
         public FloorType ElementType { get; private set;}
 
         /// <summary>
@@ -45,6 +47,7 @@ namespace Elements
         /// The untransformed profile of the floor.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ProfileId")]
         public Profile Profile { get; private set; }
 
         /// <summary>

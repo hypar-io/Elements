@@ -36,12 +36,14 @@ namespace Elements.ElementTypes
         /// The framing type's profile.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ProfileId")]
         public Profile Profile { get; private set;}
 
         /// <summary>
         /// The framing type's material.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("MaterialId")]
         public Material Material { get; private set; }
 
         /// <summary>

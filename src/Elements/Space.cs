@@ -13,6 +13,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Examples/SpaceExample.cs?name=example)]
     /// </example>
+    [UserElement]
     public class Space : Element, ISolid, IExtrude, IMaterial
     {
         private Guid _profileId;
@@ -22,6 +23,7 @@ namespace Elements
         /// The profile of the space.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("ProfileId")]
         public Profile Profile { get; private set; }
 
         /// <summary>
@@ -45,6 +47,7 @@ namespace Elements
         /// The space's material.
         /// </summary>
         [JsonIgnore]
+        [ReferencedByProperty("MaterialId")]
         public Material Material { get; private set; }
 
         /// <summary>

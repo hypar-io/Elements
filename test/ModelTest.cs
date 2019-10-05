@@ -4,9 +4,7 @@ using Elements.Geometry;
 using System.Linq;
 using System.Diagnostics;
 using Elements.Serialization.glTF;
-using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
-using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
