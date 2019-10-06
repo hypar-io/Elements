@@ -19,6 +19,11 @@ namespace Elements
         string _propertyName;
 
         /// <summary>
+        /// The name of the property referenced by this property.
+        /// </summary>
+        public string PropertyName => _propertyName;
+
+        /// <summary>
         /// Create an ReferencedByProperty.
         /// </summary>
         /// <param name="propertyName">The name of the id property corresponding 

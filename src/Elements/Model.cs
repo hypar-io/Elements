@@ -198,10 +198,23 @@ namespace Elements
 
             // Step 2
             // Find all properties with ReferencedByProperty attributes,
-            // find the referenced entity and set the reference.
-            // TODO (Ian): Finish me!
-            var refs = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a=>a.GetTypes().Select(t=>t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                   .FirstOrDefault(p => p.GetCustomAttributes(typeof(ReferencedByProperty), false).Count() == 1)));
+            // find the referenced entity and set the reference.            
+            foreach(var e in model.Entities.Values)
+            {
+                var pis =  e.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p=>p.GetCustomAttributes(typeof(ReferencedByProperty)).Count() == 1);
+                foreach(var pi in pis)
+                {
+                    // Get the value of the attribute, which is the name of the
+                    // property which we will set.
+                    var refPropName = ((ReferencedByProperty)(pi.GetCustomAttribute(typeof(ReferencedByProperty), false))).PropertyName;
+
+                    // Get the id of the entity to be referenced.
+                    var entityId = (Guid)e.GetType().GetProperty(refPropName).GetValue(e);
+
+                    // Set the referenced property value to the value of the entity with the id.
+                    pi.SetValue(e, model[entityId]);
+                }
+            }
 
             return model;
         }

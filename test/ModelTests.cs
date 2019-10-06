@@ -44,7 +44,7 @@ namespace Elements.Tests
         [Fact]
         public void HasOriginAfterSerialization()
         {
-            var model = new Model();
+            var model = QuadPanelModel();
             model.Origin = new GeoJSON.Position(10.0, 10.0);
             var json = model.ToJson();
             var newModel = Model.FromJson(json);
