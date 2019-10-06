@@ -19,17 +19,8 @@ namespace Elements.Geometry
     
     /// <summary>A profile comprised of an external boundary and one or several holes.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Profile 
+    public partial class Profile : Identifiable
     {
-        /// <summary>An identifier for the entity which must be unique within the system.</summary>
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public  System.Guid Id { get; internal set; }
-    
-        /// <summary>The entity's name.</summary>
-        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public  string Name { get; internal set; }
-    
         /// <summary>The perimeter of the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
         public  Polygon Perimeter { get; internal set; }

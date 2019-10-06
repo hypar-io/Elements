@@ -17,10 +17,10 @@ namespace Elements.Tests
         private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
 
         [Theory]
-        [InlineData("LinearBeam", BeamType.Line, 0.25, 0.25)]
-        [InlineData("PolylineBeam", BeamType.Polyline, 0.25, 0.25)]
+        // [InlineData("LinearBeam", BeamType.Line, 0.25, 0.25)]
+        // [InlineData("PolylineBeam", BeamType.Polyline, 0.25, 0.25)]
         [InlineData("PolygonBeam", BeamType.Polygon, 0.25, 0.25)]
-        [InlineData("ArcBeam", BeamType.Arc, 0.25, 0.25)]
+        // [InlineData("ArcBeam", BeamType.Arc, 0.25, 0.25)]
         public void Beam(string testName, BeamType beamType, double startSetback, double endSetback)
         {
             this.Name = testName;

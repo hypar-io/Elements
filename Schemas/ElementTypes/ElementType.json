@@ -4,18 +4,10 @@
     "description": "A container for shared element properties.",
     "title": "ElementType",
     "type": "object",
+    "allOf": [{"$ref": "../Identifiable.json"}],
     "discriminator": "discriminator",
     "required": ["Id"],
     "properties": {
-        "Id": {
-            "type": "string",
-            "format": "guid",
-            "description": "An identifier for the entity which must be unique within the system."
-        },
-        "Name": {
-            "type": ["string","null"],
-            "description": "The entity's name."
-        },
         "discriminator": {
             "type": "string"
         }

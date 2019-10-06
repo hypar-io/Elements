@@ -19,12 +19,8 @@ namespace Elements
     
     /// <summary>A material.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Material 
+    public partial class Material : Identifiable
     {
-        /// <summary>The name of the material.</summary>
-        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public  string Name { get; internal set; }
-    
         /// <summary>The material's color.</summary>
         [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.AllowNull)]
         public  Color Color { get; internal set; }

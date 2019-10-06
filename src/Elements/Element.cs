@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System;
 using Elements.Geometry;
-using Elements.Interfaces;
 
 namespace Elements
 {
@@ -33,14 +32,13 @@ namespace Elements
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
-    public abstract partial class Element : IIdentifiable
+    public abstract partial class Element : Identifiable
     {
         /// <summary>
         /// Construct an element.
         /// </summary>
-        public Element()
+        public Element(): base()
         {
-            this.Id = Guid.NewGuid();
             this.Transform = new Transform();
         }
 
@@ -49,9 +47,8 @@ namespace Elements
         /// </summary>
         /// <param name="id">The unique identifer of the element.</param>
         [JsonConstructor]
-        public Element(Guid id)
+        public Element(Guid id): base(id)
         {
-            this.Id = id;
             this.Transform = new Transform();
         }
     }

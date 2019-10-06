@@ -2,20 +2,14 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using Elements.Geometry;
-using Elements.Interfaces;
 
 namespace Elements
 {
     /// <summary>
     /// A material with red, green, blue, alpha, and metallic factor components.
     /// </summary>
-    public partial class Material: IIdentifiable
-    {   
-        /// <summary>
-        /// The unique identifier of the material.
-        /// </summary>
-        public Guid Id{get; internal set;}
-
+    public partial class Material: Identifiable
+    {
         /// <summary>
         /// Is the material double sided?
         /// </summary>
@@ -25,9 +19,8 @@ namespace Elements
         /// Construct a material.
         /// </summary>
         /// <param name="name"></param>
-        public Material(string name)
+        public Material(string name): base(Guid.NewGuid(), name)
         {
-            this.Name = name;
             this.Color = Colors.Gray;
         }
 
@@ -43,7 +36,7 @@ namespace Elements
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is greater than 1.0.</exception>
         [JsonConstructor]
-        public Material(Guid id, string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, bool doubleSided = false)
+        public Material(Guid id, string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, bool doubleSided = false): base(id, name)
         {
             if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {
@@ -55,8 +48,6 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("The material could not be created. Color, specular, and glossiness values must be less than 1.0.");
             }
             
-            this.Id = id;
-            this.Name = name;
             this.Color = color;
             this.SpecularFactor = specularFactor;
             this.GlossinessFactor = glossinessFactor;

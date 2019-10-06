@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using NJsonSchema;
-using NJsonSchema.CodeGeneration;
 using NJsonSchema.CodeGeneration.CSharp;
 using System.Linq;
 
@@ -18,9 +16,6 @@ namespace Elements.Generate
             var schemaRoot = Path.GetFullPath(Path.Combine(asmDir, "../../../../../Schemas"));
             var outRoot = Path.GetFullPath(Path.Combine(asmDir, "../../../../Elements/Generate"));
 
-            var elementOutPath = Path.Combine(outRoot, "Element.g.cs");
-            var schemaPath = Path.Combine(schemaRoot, "Element.json");
-
             // By passing a set of excluded types, we can tell the code 
             // generator not to generate inline type definitions if types
             // reference those types.
@@ -28,9 +23,9 @@ namespace Elements.Generate
                     "Polygon", "Profile", "Component", "Curve", "Solid", 
                     "Color", "Property", "Transform", "Element", "Material",
                     "Position", "ElementType", "FloorType", "WallType", 
-                    "StructuralFramingType", "MaterialLayer", "Elements", "Identifiable"};
+                    "StructuralFramingType", "MaterialLayer", "Elements", 
+                    "Identifiable"};
 
-            var typesDict = new Dictionary<string, CodeArtifact>();
             var di = new DirectoryInfo(schemaRoot);
             foreach(var fi in di.EnumerateFiles("*.json", SearchOption.AllDirectories))
             {

@@ -21,24 +21,8 @@ namespace Elements
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class Model 
     {
-        /// <summary>A dictionary of elements in the model keyed by their id.</summary>
-        [Newtonsoft.Json.JsonProperty("Elements", Required = Newtonsoft.Json.Required.AllowNull)]
-        public IDictionary<Guid, Element> Elements { get; internal set; }
-    
-        /// <summary>A dictionary of materials in the model keyed by their id.</summary>
-        [Newtonsoft.Json.JsonProperty("Materials", Required = Newtonsoft.Json.Required.AllowNull)]
-        public IDictionary<Guid, Material> Materials { get; internal set; }
-    
-        /// <summary>A dictionary of profiles in the model keyed by their id.</summary>
-        [Newtonsoft.Json.JsonProperty("Profiles", Required = Newtonsoft.Json.Required.AllowNull)]
-        public IDictionary<Guid, Profile> Profiles { get; internal set; }
-    
-        /// <summary>A dictionary of element types in the model keyed by their id.</summary>
-        [Newtonsoft.Json.JsonProperty("ElementTypes", Required = Newtonsoft.Json.Required.AllowNull)]
-        public IDictionary<Guid, ElementType> ElementTypes { get; internal set; }
-    
         /// <summary>The origin of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
         public  Position Origin { get; internal set; }
     
     

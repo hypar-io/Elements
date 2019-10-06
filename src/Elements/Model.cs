@@ -1,3 +1,5 @@
+#pragma warning disable CS1591
+
 using Elements.Geometry;
 using Elements.GeoJSON;
 using Elements.Geometry.Interfaces;
@@ -8,31 +10,42 @@ using System.Linq;
 using System.Reflection;
 using Elements.Serialization.IFC;
 using Elements.ElementTypes;
+using System.Collections;
+using Newtonsoft.Json;
 
 namespace Elements
 {
     /// <summary>
     /// A container for elements, element types, materials, and profiles.
     /// </summary>
-    public partial class Model
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    public partial class Model : IDictionary<Guid, Identifiable>
     {
-        /// <summary>
-        /// The version of the assembly.
-        /// </summary>
-        public string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        private Dictionary<Guid, Identifiable> _entities = new Dictionary<Guid, Identifiable>();
 
+        /// <summary>
+        /// Items provides a serializable wrapper around the
+        /// internal entities collection.
+        /// </summary>
+        [JsonProperty]
+        public Dictionary<Guid, Identifiable> Entities => this._entities;
+
+        public ICollection<Guid> Keys => _entities.Keys;
+
+        public ICollection<Identifiable> Values => _entities.Values;
+
+        public int Count => _entities.Count;
+
+        public bool IsReadOnly => false;
+
+        public Identifiable this[Guid key] { get => _entities[key]; set => _entities[key] = value; }
+        
         /// <summary>
         /// Construct an empty model.
         /// </summary>
         public Model()
         {
             this.Origin = new Position(0, 0);
-            this.Elements = new Dictionary<Guid, Element>();
-            this.Profiles = new Dictionary<Guid, Profile>();
-            this.Materials = new Dictionary<Guid, Material>();
-            this.ElementTypes = new Dictionary<Guid, ElementType>();
-
-            AddMaterial(BuiltInMaterials.Edges);
         }
 
         /// <summary>
@@ -48,9 +61,9 @@ namespace Elements
                 return;
             }
 
-            if (!this.Elements.ContainsKey(element.Id))
+            if (!_entities.ContainsKey(element.Id))
             {
-                this.Elements.Add(element.Id, element);
+                _entities.Add(element.Id, element);
                 GetRootLevelElementData(element);
             }
             else
@@ -72,12 +85,12 @@ namespace Elements
                 return;
             }
 
-            if (this.Elements.ContainsKey(element.Id))
+            if (_entities.ContainsKey(element.Id))
             {
                 // remove the previous element
-                this.Elements.Remove(element.Id);
+                _entities.Remove(element.Id);
                 // Update the element itselft
-                this.Elements.Add(element.Id, element);
+                _entities.Add(element.Id, element);
                 // Update the root elements
                 GetRootLevelElementData(element);
             }
@@ -112,77 +125,44 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get an element by id from the Model.
+        /// Get an entity by id from the Model.
         /// </summary>
         /// <param name="id">The identifier of the element.</param>
-        /// <returns>An element or null if no element can be found 
+        /// <returns>An entity or null if no entity can be found 
         /// with the provided id.</returns>
-        public Element GetElementById(Guid id)
+        public T GetEntityOfType<T>(Guid id) where T: Identifiable
         {
-            if (this.Elements.ContainsKey(id))
+            if (_entities.ContainsKey(id))
             {
-                return this.Elements[id];
+                return (T)_entities[id];
             }
             return null;
         }
 
         /// <summary>
-        /// Get the first element with the specified name.
+        /// Get the first entity with the specified name.
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>An element or null if no element can be found 
+        /// <returns>An entity or null if no entity can be found 
         /// with the provided name.</returns>
-        public Element GetElementByName(string name)
+        public T GetEntityByName<T>(string name) where T: Identifiable
         {
-            var found = this.Elements.FirstOrDefault(e => e.Value.Name == name);
+            var found = _entities.FirstOrDefault(e => e.Value.Name == name);
             if (found.Equals(new KeyValuePair<long, Element>()))
             {
                 return null;
             }
-            return found.Value;
+            return (T)found.Value;
         }
 
         /// <summary>
-        /// Get a Material by name.
-        /// </summary>
-        /// <param name="name">The name of the Material.</param>
-        /// <returns>A Material or null if no Material with the 
-        /// specified id can be found.</returns>
-        public Material GetMaterialByName(string name)
-        {
-            return this.Materials.Values.FirstOrDefault(m => m.Name == name);
-        }
-
-        /// <summary>
-        /// Get an element type by name.
-        /// </summary>
-        /// <param name="name">The name of the element type.</param>
-        /// <returns>An element type or null if no element type with 
-        /// the specified name can be found.</returns>
-        public ElementType GetElementTypeByName(string name)
-        {
-            return this.ElementTypes.Values.FirstOrDefault(et => et.Name == name);
-        }
-
-        /// <summary>
-        /// Get a Profile by name.
-        /// </summary>
-        /// <param name="name">The name of the Profile.</param>
-        /// <returns>A Profile or null if no Profile with the 
-        /// specified name can be found.</returns>
-        public Profile GetProfileByName(string name)
-        {
-            return this.Profiles.Values.FirstOrDefault(p => p.Name != null && p.Name == name);
-        }
-
-        /// <summary>
-        /// Get all elements of the specified Type.
+        /// Get all entities of the specified Type.
         /// </summary>
         /// <typeparam name="T">The Type of element to return.</typeparam>
         /// <returns>A collection of elements of the specified type.</returns>
-        public IEnumerable<T> ElementsOfType<T>()
+        public IEnumerable<T> AllEntitiesOfType<T>()
         {
-            return this.Elements.Values.OfType<T>();
+            return _entities.Values.OfType<T>();
         }
 
         /// <summary>
@@ -219,30 +199,28 @@ namespace Elements
             // Step 2
             // Find all properties with ReferencedByProperty attributes,
             // find the referenced entity and set the reference.
+            // TODO (Ian): Finish me!
+            var refs = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a=>a.GetTypes().Select(t=>t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                   .FirstOrDefault(p => p.GetCustomAttributes(typeof(ReferencedByProperty), false).Count() == 1)));
+
             return model;
         }
 
-        internal Model(Dictionary<Guid, Element> elements, Dictionary<Guid,
-            Material> materials, Dictionary<Guid, ElementType> elementTypes,
-            Dictionary<Guid, Profile> profiles)
+        internal Model(Dictionary<Guid, Identifiable> entities, Position origin)
         {
-            this.Elements = elements;
-            this.Materials = materials;
-            this.ElementTypes = elementTypes;
-            this.Profiles = profiles;
-            AddMaterial(BuiltInMaterials.Edges);
-            AddMaterial(BuiltInMaterials.Void);
+            _entities = entities;
+            this.Origin = origin;
         }
 
         private void AddMaterial(Material material)
         {
-            if (!this.Materials.ContainsKey(material.Id))
+            if (!_entities.ContainsKey(material.Id))
             {
-                this.Materials.Add(material.Id, material);
+                _entities.Add(material.Id, material);
             }
             else
             {
-                this.Materials[material.Id] = material;
+                _entities[material.Id] = material;
             }
         }
 
@@ -315,26 +293,81 @@ namespace Elements
 
         private void AddElementType(ElementType elementType)
         {
-            if (!this.ElementTypes.ContainsKey(elementType.Id))
+            if (!_entities.ContainsKey(elementType.Id))
             {
-                this.ElementTypes.Add(elementType.Id, elementType);
+                _entities.Add(elementType.Id, elementType);
             }
             else
             {
-                this.ElementTypes[elementType.Id] = elementType;
+                _entities[elementType.Id] = elementType;
             }
         }
 
         private void AddProfile(Profile profile)
         {
-            if (!this.Profiles.ContainsKey(profile.Id))
+            if (!_entities.ContainsKey(profile.Id))
             {
-                this.Profiles.Add(profile.Id, profile);
+                _entities.Add(profile.Id, profile);
             }
             else
             {
-                this.Profiles[profile.Id] = profile;
+                _entities[profile.Id] = profile;
             }
+        }
+
+        public void Add(Guid key, Identifiable value)
+        {
+            _entities.Add(key, value);
+        }
+
+        public bool ContainsKey(Guid key)
+        {
+            return _entities.ContainsKey(key);
+        }
+
+        public bool Remove(Guid key)
+        {
+            return _entities.Remove(key);
+        }
+
+        public bool TryGetValue(Guid key, out Identifiable value)
+        {
+            return _entities.TryGetValue(key, out value);
+        }
+
+        public void Add(KeyValuePair<Guid, Identifiable> item)
+        {
+            _entities.Add(item.Key, item.Value);
+        }
+
+        public void Clear()
+        {
+            _entities.Clear();
+        }
+
+        public bool Contains(KeyValuePair<Guid, Identifiable> item)
+        {
+            return _entities.Contains(item);
+        }
+
+        public void CopyTo(KeyValuePair<Guid, Identifiable>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(KeyValuePair<Guid, Identifiable> item)
+        {
+            return _entities.Remove(item.Key);
+        }
+
+        public IEnumerator<KeyValuePair<Guid, Identifiable>> GetEnumerator()
+        {
+            return _entities.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _entities.GetEnumerator();
         }
     }
 }

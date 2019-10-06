@@ -50,7 +50,7 @@ namespace Elements.Tests
 
         public void Dispose()
         {
-            if(this._model.Elements.Any())
+            if(this._model.Any())
             {
                 if(!Directory.Exists("models"))
                 {
@@ -78,12 +78,14 @@ namespace Elements.Tests
                     // Try deserializing JSON
                     Console.WriteLine($"Deserializing {this._name} from JSON.");
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
-                    foreach(var kvp in this._model.Elements)
+
+                    var elements = this._model.AllEntitiesOfType<Element>();
+                    foreach(var e in elements)
                     {
-                        var newEl = newModel.GetElementById(kvp.Value.Id);
+                        var newEl = newModel.GetEntityOfType<Element>(e.Id);
                         if(newEl == null)
                         {
-                            throw new Exception($"{this.Name}: An element with the id {kvp.Value.Id}, could not be found in the new model.");
+                            throw new Exception($"{this.Name}: An element with the id {e.Id}, could not be found in the new model.");
                         }
                     }
                 }

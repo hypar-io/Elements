@@ -11,7 +11,7 @@ using System.Linq;
 /// <summary>{{ Description | csharpdocs }}</summary>
 {% endif -%}
 {% if HasDiscriminator -%}
-[Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "{{ Discriminator }}")]
+[Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "{{ Discriminator }}")]
 {% for derivedClass in DerivedClasses -%}
 [JsonInheritanceAttribute("{{ derivedClass.Discriminator }}", typeof({{ derivedClass.ClassName }}))]
 {% endfor -%}

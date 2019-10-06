@@ -1,0 +1,24 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Identifiable.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A uniquely identifiable entity.",
+    "title": "Identifiable",
+    "type": "object",
+    "required": ["Id","Name","discriminator"],
+    "discriminator": "discriminator",
+    "properties": {
+        "Id": {
+            "description": "A unique id.",
+            "type": "string",
+            "format": "guid"
+        },
+        "Name": {
+            "description": "A name.",
+            "type": ["string","null"]
+        },
+        "discriminator": {
+            "type": "string"
+        }
+    },
+    "additionalProperties": true
+}

@@ -36,7 +36,7 @@ namespace Elements.Serialization.glTF
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true)
         {
-            if(model.Elements.Values.Count == 0)
+            if(model.Values.Count == 0)
             {
                 File.WriteAllText(path, emptyGltf);
                 return;
@@ -483,7 +483,7 @@ namespace Elements.Serialization.glTF
 
             gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
 
-            var materialsToAdd = model.Materials.Values.ToList();
+            var materialsToAdd = model.AllEntitiesOfType<Material>().ToList();
             materialsToAdd.Add(BuiltInMaterials.XAxis);
             materialsToAdd.Add(BuiltInMaterials.YAxis);
             materialsToAdd.Add(BuiltInMaterials.ZAxis);
@@ -499,7 +499,7 @@ namespace Elements.Serialization.glTF
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
 
-            var elements = model.Elements.Values.ToArray();
+            var elements = model.AllEntitiesOfType<Element>().ToArray();
             for(var i=0;i<elements.Length;i++)
             {
                 var e = elements[i];

@@ -20,6 +20,7 @@ namespace Elements
     {
         private List<Opening> _openings = new List<Opening>();
         private Guid _elementTypeId;
+        private Guid _profileId;
 
         /// <summary>
         /// The elevation from which the floor is extruded.
@@ -53,11 +54,18 @@ namespace Elements
         /// <summary>
         /// The untransformed profile of the floor.
         /// </summary>
-        public Guid ProfileId { get; private set; }
+        public Guid ProfileId
+        {
+            get
+            {
+                return this.Profile != null ? this.Profile.Id : this._profileId;
+            }
+        }
 
         /// <summary>
         /// The floor's geometry.
         /// </summary>
+        [JsonIgnore]
         public Solid Geometry { get; }
 
         /// <summary>
@@ -127,7 +135,7 @@ namespace Elements
         [JsonConstructor]
         internal Floor(Guid profileId, Guid elementTypeId, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
         {
-            this.ProfileId = profileId;
+            this._profileId = profileId;
             if(openings != null)
             {
                 this._openings = openings;
@@ -197,7 +205,7 @@ namespace Elements
         public void SetReference(Profile profile)
         {
             this.Profile = profile;
-            this.ProfileId = profile.Id;
+            this._profileId = profile.Id;
         }
     }
 }

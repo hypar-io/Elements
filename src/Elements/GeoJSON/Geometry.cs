@@ -32,12 +32,12 @@ namespace Elements.GeoJSON
         /// <summary>
         /// Construct a Position.
         /// </summary>
-        /// <param name="lon"></param>
-        /// <param name="lat"></param>
-        public Position(double lon, double lat)
+        /// <param name="longitude"></param>
+        /// <param name="latitude"></param>
+        public Position(double longitude, double latitude)
         {
-            this.Latitude = lat;
-            this.Longitude = lon;
+            this.Latitude = latitude;
+            this.Longitude = longitude;
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace Elements.Tests
             var w = new StandardWall(l, testWallType, 3.0, null);
             this.Model.AddElement(w);
 
-            List<StandardWall> updatedWalls = new List<StandardWall>(this.Model.ElementsOfType<StandardWall>());
+            List<StandardWall> updatedWalls = new List<StandardWall>(this.Model.AllEntitiesOfType<StandardWall>());
 
             foreach (StandardWall wall in updatedWalls)
             {

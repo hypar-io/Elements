@@ -1,7 +1,5 @@
-using Elements;
 using Elements.ElementTypes;
 using Elements.Geometry;
-using System;
 using System.Collections.Generic;
 using Xunit;
 

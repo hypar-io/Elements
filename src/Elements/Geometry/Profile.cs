@@ -1,4 +1,3 @@
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -47,7 +46,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public partial class Profile : IIdentifiable
+    public partial class Profile : Identifiable
     {
         /// <summary>
         /// Internal constructor for default initialization.
@@ -62,13 +61,11 @@ namespace Elements.Geometry
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
         [JsonConstructor]
-        public Profile(Guid id, Polygon perimeter, Polygon[] voids, string name = null)
+        public Profile(Guid id, Polygon perimeter, Polygon[] voids, string name = null): base(id, name)
         {
-            this.Id = id;
             this.Perimeter = perimeter;
             this.Voids = voids;
 
-            this.Name = name;
             if (!IsPlanar())
             {
                 throw new Exception("To construct a profile, all points must line in the same plane.");
@@ -133,11 +130,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Default constructor for profile.
         /// </summary>
-        protected Profile(string name)
-        {
-            this.Id = Guid.NewGuid();
-            this.Name = name;
-        }
+        protected Profile(string name): base(Guid.NewGuid(), name){}
 
         /// <summary>
         ///  Conduct a clip operation on this profile.

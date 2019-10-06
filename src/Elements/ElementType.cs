@@ -1,4 +1,4 @@
-using Elements.Interfaces;
+using Elements.Serialization.JSON;
 using Newtonsoft.Json;
 using System;
 
@@ -10,7 +10,7 @@ namespace Elements.ElementTypes
     [JsonInheritance("Elements.ElementTypes.WallType", typeof(WallType))]
     [JsonInheritance("Elements.ElementTypes.FloorType", typeof(FloorType))]
     [JsonInheritance("Elements.ElementTypes.StructuralFramingType", typeof(StructuralFramingType))]
-    public abstract partial class ElementType : IIdentifiable
+    public abstract partial class ElementType : Identifiable
     {
         /// <summary>
         /// Construct an element type.
@@ -24,10 +24,6 @@ namespace Elements.ElementTypes
         /// <param name="id">The unique identifier of the element type.</param>
         /// <param name="name">The name of the element type.</param>
         [JsonConstructor]
-        internal ElementType(Guid id, string name)
-        {
-            this.Id = id;
-            this.Name = name;
-        }
+        internal ElementType(Guid id, string name): base(id, name){}
     }
 }

@@ -26,7 +26,7 @@ namespace Elements.ElementTypes
         }
         
         [JsonConstructor]
-        internal StructuralFramingType(string name, Guid profileId, Guid materialId) : base(name)
+        internal StructuralFramingType(Guid id, string name, Guid profileId, Guid materialId) : base(id, name)
         {
             this.ProfileId = profileId;
             this.MaterialId = materialId;

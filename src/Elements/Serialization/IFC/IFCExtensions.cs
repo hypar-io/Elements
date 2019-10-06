@@ -126,7 +126,7 @@ namespace Elements.Serialization.IFC
             var products = new List<IfcProduct>();
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
             
-            foreach(var e in model.Elements.Values)
+            foreach(var e in model.AllEntitiesOfType<Element>())
             {
                 try
                 {

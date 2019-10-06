@@ -29,7 +29,7 @@ namespace Elements.Tests
 
             this.Model.AddElement(floor1);
 
-            List<Floor> updatedFloors = new List<Floor>(this.Model.ElementsOfType<Floor>());
+            List<Floor> updatedFloors = new List<Floor>(this.Model.AllEntitiesOfType<Floor>());
 
             foreach (Floor floor in updatedFloors)
             {
