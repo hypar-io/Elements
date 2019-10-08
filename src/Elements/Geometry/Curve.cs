@@ -1,6 +1,5 @@
 using Elements.Geometry.Interfaces;
 using Elements.Serialization.JSON;
-using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {

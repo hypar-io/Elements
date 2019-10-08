@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Elements.Geometry.Interfaces
 {
     /// <summary>

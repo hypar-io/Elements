@@ -1,7 +1,5 @@
 using System;
-using Elements.ElementTypes;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -29,22 +27,17 @@ namespace Elements
         /// </summary>
         /// <param name="location">The location of the base of the column.</param>
         /// <param name="height">The column's height.</param>
-        /// <param name="elementType">The column's structural framing type.</param>
+        /// <param name="profile">The column's profile.</param>
+        /// <param name="material">The column's material.</param>
         /// <param name="transform">The column's transform.</param>
         /// <param name="startSetback">The setback of the column's extrusion from the base of the column.</param>
         /// <param name="endSetback">The setback of the column's extrusion from the top of the column.</param>
-        public Column(Vector3 location, double height, StructuralFramingType elementType, 
-            Transform transform = null, double startSetback = 0.0, double endSetback = 0.0) 
-            : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), elementType, startSetback, endSetback, transform)
-        {
-            this.Location = location;
-            this.Height = height;
-        }
-
-        [JsonConstructor]
-        internal Column(Vector3 location, double height, Guid elementTypeId, 
-            Transform transform = null, double startSetback = 0.0, double endSetback = 0.0) 
-            : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), elementTypeId, startSetback, endSetback, transform)
+        /// <param name="id">The column's id.</param>
+        /// <param name="name">The column's name.</param>
+        public Column(Vector3 location, double height, Profile profile, Material material = null, 
+            Transform transform = null, double startSetback = 0.0, double endSetback = 0.0, Guid id = default(Guid), string name = null) 
+            : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material, 
+                startSetback, endSetback, transform, id, name)
         {
             this.Location = location;
             this.Height = height;

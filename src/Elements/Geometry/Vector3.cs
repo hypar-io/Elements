@@ -177,10 +177,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Return a new vector which is the normalized version of this vector.
+        /// Return a new vector which is the unitized version of this vector.
         /// </summary>
         /// <returns></returns>
-        public Vector3 Normalized()
+        public Vector3 Unit()
         {
             var length = Length();
             return new Vector3(X / length, Y / length, Z / length);
@@ -414,7 +414,7 @@ namespace Elements.Geometry
         /// <returns>A point on the plane.</returns>
         public Vector3 ProjectAlong(Vector3 v, Plane p)
         {
-            var x = ((p.Origin - this).Dot(p.Normal)) / p.Normal.Dot(v.Normalized());
+            var x = ((p.Origin - this).Dot(p.Normal)) / p.Normal.Dot(v.Unit());
             return this + x * v;
         }
 
@@ -526,7 +526,7 @@ namespace Elements.Geometry
             for (var i = 0; i < shrink.Length; i++)
             {
                 var p = points[i];
-                shrink[i] = p + (avg - p).Normalized() * distance;
+                shrink[i] = p + (avg - p).Unit() * distance;
             }
             return shrink;
         }

@@ -24,7 +24,7 @@ namespace Elements.Generate
                     "Color", "Property", "Transform", "Element", "Material",
                     "Position", "ElementType", "FloorType", "WallType", 
                     "StructuralFramingType", "MaterialLayer", "Elements", 
-                    "Identifiable"};
+                    "Identifiable", "SolidOperation"};
 
             var di = new DirectoryInfo(schemaRoot);
             foreach(var fi in di.EnumerateFiles("*.json", SearchOption.AllDirectories))

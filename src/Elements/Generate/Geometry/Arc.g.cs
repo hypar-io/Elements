@@ -8,7 +8,6 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
-    using Elements.ElementTypes;
     using Elements.GeoJSON;
     using Elements.Geometry;
     using Elements.Geometry.Solids;

@@ -15,7 +15,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public partial class Solid : ITessellate
+    public class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -76,7 +76,7 @@ namespace Elements.Geometry.Solids
         /// <param name="distance">The distance to sweep.</param>
         /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon perimeter, Polygon[] holes, double distance, bool bothSides = false) 
+        public static Solid SweepFace(Polygon perimeter, IList<Polygon> holes, double distance, bool bothSides = false) 
         {
             return Solid.SweepFace(perimeter, holes, Vector3.ZAxis, distance, bothSides);
         }
@@ -157,7 +157,7 @@ namespace Elements.Geometry.Solids
         /// <param name="distance">The distance to sweep.</param>
         /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon perimeter, Polygon[] holes, Vector3 direction, double distance, bool bothSides = false)
+        public static Solid SweepFace(Polygon perimeter, IList<Polygon> holes, Vector3 direction, double distance, bool bothSides = false)
         {
             // We do a difference of the polygons
             // to get the clipped shape. This will fail in interesting
@@ -199,8 +199,8 @@ namespace Elements.Geometry.Solids
 
             if(holes != null)
             {
-                var fEndInner = new Loop[holes.Length];
-                for(var i=0; i<holes.Length; i++)
+                var fEndInner = new Loop[holes.Count];
+                for(var i=0; i<holes.Count; i++)
                 {
                     fEndInner[i] = solid.SweepLoop(fStart.Inner[i], direction, distance);
                 }
@@ -233,15 +233,15 @@ namespace Elements.Geometry.Solids
         /// <param name="outer">A polygon representing the perimeter of the face.</param>
         /// <param name="inner">An array of polygons representing the holes in the face.</param>
         /// <returns>The newly added face.</returns>
-        public Face AddFace(Polygon outer, Polygon[] inner = null)
+        public Face AddFace(Polygon outer, IList<Polygon> inner = null)
         {
             var outerLoop = LoopFromPolygon(outer);
             Loop[] innerLoops = null;
 
             if(inner != null)
             {
-                innerLoops = new Loop[inner.Length];
-                for(var i=0; i<inner.Length; i++)
+                innerLoops = new Loop[inner.Count];
+                for(var i=0; i<inner.Count; i++)
                 {
                     innerLoops[i] = LoopFromPolygon(inner[i]);
                 }
@@ -436,7 +436,7 @@ namespace Elements.Geometry.Solids
                 var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
                 var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
                 var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
-                var n = (b-a).Cross(c-a).Normalized();
+                var n = (b-a).Cross(c-a).Unit();
 
                 for (var j = 0; j < tess.Vertices.Length; j++)
                 {
@@ -565,7 +565,7 @@ namespace Elements.Geometry.Solids
         {
             for (var i = 0; i < transforms.Length - 1; i++)
             {
-                var v = (transforms[i + 1].Origin - transforms[i].Origin).Normalized();
+                var v = (transforms[i + 1].Origin - transforms[i].Origin).Unit();
                 openEdge = SweepEdgesBetweenPlanes(openEdge, v, transforms[i + 1].XY());
             }
             return openEdge;
@@ -644,7 +644,7 @@ namespace Elements.Geometry.Solids
         {
             // Transform the polygon to the mid plane between two transforms.
             var mid = new Line(start.Origin, end.Origin).TransformAt(0.5).OfPolygon(p);
-            var v = (end.Origin - start.Origin).Normalized();
+            var v = (end.Origin - start.Origin).Unit();
             var startP = mid.ProjectAlong(v, start);
             var endP = mid.ProjectAlong(v, end);
 

@@ -19,6 +19,17 @@ namespace Elements.Serialization.JSON
 
         private Dictionary<string, Type> _typeCache;
 
+        [System.ThreadStatic]
+        private static Dictionary<Guid, Identifiable> _identifiables = new Dictionary<Guid, Identifiable>();
+        
+        public static Dictionary<Guid, Identifiable> Identifiables
+        {
+            get
+            {
+                return _identifiables;
+            }
+        }
+
         public JsonInheritanceConverter()
         {
             _discriminator = DefaultDiscriminatorName;
@@ -62,9 +73,19 @@ namespace Elements.Serialization.JSON
             {
                 _isWriting = true;
 
-                var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
-                jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, GetSubtypeDiscriminator(value.GetType())));
-                writer.WriteToken(jObject.CreateReader());
+                // Operate on all identifiables with a path less than Entities.xxxxx
+                // This will get all properties.
+                if(value is Identifiable && writer.Path.Split('.').Length == 1)
+                {
+                    var ident = (Identifiable)value;
+                    writer.WriteValue(ident.Id);
+                }
+                else
+                {
+                    var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
+                    jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, GetSubtypeDiscriminator(value.GetType())));
+                    writer.WriteToken(jObject.CreateReader());
+                }
             }
             finally
             {
@@ -105,6 +126,12 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(Newtonsoft.Json.JsonReader reader, System.Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
+            if(typeof(Identifiable).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1)
+            {
+                var id = Guid.Parse(reader.Value.ToString());
+                return Identifiables[id];
+            }
+
             var jObject = serializer.Deserialize<Newtonsoft.Json.Linq.JObject>(reader);
             if (jObject == null)
                 return null;
@@ -121,7 +148,18 @@ namespace Elements.Serialization.JSON
             try
             {
                 _isReading = true;
-                return serializer.Deserialize(jObject.CreateReader(), subtype);
+                var obj = serializer.Deserialize(jObject.CreateReader(), subtype);
+                
+                if(typeof(Identifiable).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
+                {
+                    var ident = (Identifiable)obj;
+                    if(!Identifiables.ContainsKey(ident.Id))
+                    {
+                        Identifiables.Add(ident.Id, ident);
+                    }
+                }
+
+                return obj;
             }
             finally
             {

@@ -42,7 +42,7 @@ namespace Elements.Geometry
         public Line(Vector3 start, Vector3 direction, double length)
         {
             this.Start = start;
-            this.End = start + direction.Normalized()*length;
+            this.End = start + direction.Unit()*length;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), (this.End-this.Start));
+            return new Transform(PointAt(u), (this.End-this.Start).Unit());
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Direction()
         {
-            return (this.End - this.Start).Normalized();
+            return (this.End - this.Start).Unit();
         }
     }
 }

@@ -1,0 +1,25 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Geometry/Solids/Extrude.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Extrude",
+    "type": "object",
+    "allOf": [{"$ref": "SolidOperation.json"}],
+    "description": "An extrusion of a profile, in a direction, to a height.",
+    "required": ["Profile", "Height", "Direction"],
+    "properties": {
+        "Profile": {
+            "description": "The id of the profile to extrude.",
+            "$ref": "../Profile.json"
+        },
+        "Height": {
+            "description": "The height of the extrusion.",
+            "type": "number",
+            "minimum": 0
+        },
+        "Direction": {
+            "description": "The direction in which to extrude.",
+            "$ref": "../Vector3.json"
+        }
+    },
+    "additionalProperties": false
+}

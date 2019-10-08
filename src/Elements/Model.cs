@@ -1,17 +1,14 @@
 #pragma warning disable CS1591
 
-using Elements.Geometry;
 using Elements.GeoJSON;
-using Elements.Geometry.Interfaces;
-using Elements.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Elements.Serialization.IFC;
-using Elements.ElementTypes;
 using System.Collections;
 using Newtonsoft.Json;
+using Elements.Serialization.JSON;
+using Elements.Geometry;
 
 namespace Elements
 {
@@ -63,8 +60,8 @@ namespace Elements
 
             if (!_entities.ContainsKey(element.Id))
             {
-                _entities.Add(element.Id, element);
                 GetRootLevelElementData(element);
+                _entities.Add(element.Id, element);
             }
             else
             {
@@ -166,23 +163,13 @@ namespace Elements
         }
 
         /// <summary>
-        /// Create a model from IFC.
-        /// </summary>
-        /// <param name="path">The path to the IFC STEP file.</param>
-        /// <param name="idsToConvert">An optional array of string identifiers 
-        /// of IFC entities to convert.</param>
-        /// <returns>A model.</returns>
-        public static Model FromIFC(string path, string[] idsToConvert = null)
-        {
-            return IFCExtensions.FromIFC(path, idsToConvert);
-        }
-
-        /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new JsonSerializerSettings(){
+                Formatting = Formatting.Indented
+            });
         }
 
         /// <summary>
@@ -191,31 +178,8 @@ namespace Elements
         /// <param name="data">The JSON representing the model.</param>
         public static Model FromJson(string data)
         {
-            // Step 1
-            // Deserialize the model.
-            // Model will now have id fields set.
             var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(data);
-
-            // Step 2
-            // Find all properties with ReferencedByProperty attributes,
-            // find the referenced entity and set the reference.            
-            foreach(var e in model.Entities.Values)
-            {
-                var pis =  e.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p=>p.GetCustomAttributes(typeof(ReferencedByProperty)).Count() == 1);
-                foreach(var pi in pis)
-                {
-                    // Get the value of the attribute, which is the name of the
-                    // property which we will set.
-                    var refPropName = ((ReferencedByProperty)(pi.GetCustomAttribute(typeof(ReferencedByProperty), false))).PropertyName;
-
-                    // Get the id of the entity to be referenced.
-                    var entityId = (Guid)e.GetType().GetProperty(refPropName).GetValue(e);
-
-                    // Set the referenced property value to the value of the entity with the id.
-                    pi.SetValue(e, model[entityId]);
-                }
-            }
-
+            JsonInheritanceConverter.Identifiables.Clear();
             return model;
         }
 
@@ -225,112 +189,27 @@ namespace Elements
             this.Origin = origin;
         }
 
-        private void AddMaterial(Material material)
+        private void GetRootLevelElementData(object element)
         {
-            if (!_entities.ContainsKey(material.Id))
+            var props = element.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach(var p in props)
             {
-                _entities.Add(material.Id, material);
-            }
-            else
-            {
-                _entities[material.Id] = material;
-            }
-        }
-
-        private void GetRootLevelElementData(Element element)
-        {
-            if (element is IMaterial)
-            {
-                var mat = (IMaterial)element;
-                AddMaterial(mat.Material);
-            }
-
-            if (element is IProfile)
-            {
-                var ipp = (IProfile)element;
-                if (ipp.Profile != null)
+                var pValue = p.GetValue(element);
+                if (typeof(Identifiable).IsAssignableFrom(p.PropertyType))
                 {
-                    AddProfile((Profile)ipp.Profile);
+                    var ident =(Identifiable)pValue;
+                    Add(ident.Id, ident);
                 }
-            }
-
-            if (element is IHasOpenings)
-            {
-                var ho = (IHasOpenings)element;
-                if (ho.Openings != null)
-                {
-                    foreach (var o in ho.Openings)
-                    {
-                        AddProfile(o.Profile);
-                    }
-                }
-            }
-
-            if (element is IElementType<WallType>)
-            {
-                var wtp = (IElementType<WallType>)element;
-                if (wtp.ElementType != null)
-                {
-                    AddElementType(wtp.ElementType);
-                    foreach (var layer in wtp.ElementType.MaterialLayers)
-                    {
-                        AddMaterial(layer.Material);
-                    }
-                }
-            }
-
-            if (element is IElementType<FloorType>)
-            {
-                var ftp = (IElementType<FloorType>)element;
-                if (ftp.ElementType != null)
-                {
-                    AddElementType(ftp.ElementType);
-                    foreach (var layer in ftp.ElementType.MaterialLayers)
-                    {
-                        AddMaterial(layer.Material);
-                    }
-                }
-            }
-
-            if (element is IElementType<StructuralFramingType>)
-            {
-                var sft = (IElementType<StructuralFramingType>)element;
-                if (sft.ElementType != null)
-                {
-                    AddElementType(sft.ElementType);
-                    AddProfile(sft.ElementType.Profile);
-                    AddMaterial(sft.ElementType.Material);
-                }
-            }
-        }
-
-        private void AddElementType(ElementType elementType)
-        {
-            if (!_entities.ContainsKey(elementType.Id))
-            {
-                _entities.Add(elementType.Id, elementType);
-            }
-            else
-            {
-                _entities[elementType.Id] = elementType;
-            }
-        }
-
-        private void AddProfile(Profile profile)
-        {
-            if (!_entities.ContainsKey(profile.Id))
-            {
-                _entities.Add(profile.Id, profile);
-            }
-            else
-            {
-                _entities[profile.Id] = profile;
+                // GetRootLevelElementData(pValue);
             }
         }
 
         public void Add(Guid key, Identifiable value)
         {
-            _entities.Add(key, value);
+            if(!_entities.ContainsKey(key))
+            {
+                _entities.Add(key, value);
+            }
         }
 
         public bool ContainsKey(Guid key)

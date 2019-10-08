@@ -11,23 +11,14 @@ namespace Elements
     /// </summary>
     [JsonInheritanceAttribute("Elements.Element", typeof(Elements.Element))]
     [JsonInheritanceAttribute("Elements.Material", typeof(Elements.Material))]
-    [JsonInheritanceAttribute("Elements.ElementTypes.ElementType", typeof(Elements.ElementTypes.ElementType))]
-    [JsonInheritanceAttribute("Elements.ElementTypes.WallType", typeof(Elements.ElementTypes.WallType))]
-    [JsonInheritanceAttribute("Elements.ElementTypes.FloorType", typeof(Elements.ElementTypes.FloorType))]
-    [JsonInheritanceAttribute("Elements.ElementTypes.StructuralFramingType", typeof(Elements.ElementTypes.StructuralFramingType))]
     [JsonInheritanceAttribute("Elements.Geometry.Profile", typeof(Elements.Geometry.Profile))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.WideFlangeProfile", typeof(Elements.Geometry.Profiles.WideFlangeProfile))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.HSSPipeProfile", typeof(Elements.Geometry.Profiles.HSSPipeProfile))]
     public abstract partial class Identifiable
     {
-        public Identifiable()
+        public Identifiable(Guid id=default(Guid), string name=null)
         {
-            this.Id = Guid.NewGuid();
-        }
-
-        public Identifiable(Guid id, string name=null)
-        {
-            this.Id = id;
+            this.Id = id == Guid.Empty ? Guid.NewGuid() : id;
             this.Name = name;
         }
     }

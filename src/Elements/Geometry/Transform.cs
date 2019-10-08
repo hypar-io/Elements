@@ -56,22 +56,26 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Create a transform centered at origin with its Z axis pointing
-        /// along up. 
-        /// The X axis of the transform is set to the world X axis by default.
-        /// If up is parallel to the world X axis, then the X axis is set to
-        /// the world Y Axis.
+        /// along up.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
         /// <param name="up">The vector which will define the Z axis of the transform.</param>
         public Transform(Vector3 origin, Vector3 up)
         {
-            var test = Vector3.XAxis;
-            if(up.IsParallelTo(Vector3.XAxis))
+            Vector3 test;
+            if(up.IsAlmostEqualTo(Vector3.ZAxis))
             {
-                test = Vector3.YAxis;
+                test = Vector3.XAxis;
             }
-            var y = up.Cross(test);
-            var x = y.Cross(up); 
+            else
+            {   
+                // Project up onto the ortho plane
+                var p = new Plane(origin, up);
+                test = Vector3.ZAxis.Project(p);
+            }
+            
+            var x = up.Cross(test);
+            var y = x.Cross(up); 
             this._matrix = new Matrix(x, y, up, origin);
             SetComponentsFromMatrix(this._matrix);
         }
@@ -84,9 +88,9 @@ namespace Elements.Geometry
         /// <param name="zAxis">The Z axis of the transform.</param>
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis)
         {
-            var x = xAxis.Normalized();
-            var z = zAxis.Normalized();
-            var y = z.Cross(x).Normalized();
+            var x = xAxis.Unit();
+            var z = zAxis.Unit();
+            var y = z.Cross(x).Unit();
             this._matrix = new Matrix(x, y, z, origin);
             SetComponentsFromMatrix(this._matrix);
         }

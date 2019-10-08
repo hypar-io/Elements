@@ -1,32 +1,9 @@
-using System;
-using System.Collections.Generic;
+#pragma warning disable CS1591
 
 namespace Elements.Interfaces
 {
-    /// <summary>
-    /// A material.
-    /// </summary>
-    public interface IMaterial: IReference<Material>
+    public interface IMaterial
     {
-        /// <summary>
-        /// The object's material.
-        /// </summary>
-        Material Material{get;}
-
-        /// <summary>
-        /// The object's material id.
-        /// </summary>
-        Guid MaterialId { get; }
-    }
-    
-    /// <summary>
-    /// A layered material.
-    /// </summary>
-    public interface ILayeredMaterial
-    {
-        /// <summary>
-        /// A collection of material layers.
-        /// </summary>
-        IList<MaterialLayer> MaterialLayers{get;}
+        Material Material { get; }
     }
 }

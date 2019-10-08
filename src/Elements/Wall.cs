@@ -1,6 +1,4 @@
-using Elements.ElementTypes;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Newtonsoft.Json;
@@ -15,202 +13,107 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Examples/WallExample.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Wall : Element, IElementType<WallType>, IExtrude
+    public class Wall : Element, IGeometry, IMaterial
     {
-        /// <summary>
-        /// The element type id.
-        /// </summary>
-        protected Guid _elementTypeId;
-        
-        private Guid _profileId;
-
         /// <summary>
         /// The height of the wall.
         /// </summary>
-        public double Height{get; protected set;}
-
-        /// <summary>
-        /// The WallType of the Wall.
-        /// </summary>
-        [JsonIgnore]
-        [ReferencedByProperty("ElementTypeId")]
-        public WallType ElementType { get; protected set;}
-
-        /// <summary>
-        /// The element type of the wall.
-        /// </summary>
-        public Guid ElementTypeId
-        {
-            get
-            {
-                return this.ElementType != null ? this.ElementType.Id : this._elementTypeId;
-            }
-        }
+        public double Height { get; protected set; }
 
         /// <summary>
         /// The wall's geometry.
         /// </summary>
-        [JsonIgnore]
-        public Solid Geometry { get; protected set;}
+        public Elements.Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
 
         /// <summary>
-        /// The extruded direction of the wall.
+        /// The profile of the wall.
         /// </summary>
-        public Vector3 ExtrudeDirection{get; protected set;}
+        public Profile Profile { get; protected set; }
 
         /// <summary>
-        /// The extruded depth of the wall.
+        /// The material of the wall.
         /// </summary>
-        public double ExtrudeDepth{get; protected set;}
-
-        /// <summary>
-        /// The extruded area of the wall.
-        /// </summary>
-        [JsonIgnore]
-        [ReferencedByProperty("ProfileId")]
-        public Profile Profile{get; protected set;}
-
-        /// <summary>
-        /// The profile id of the wall.
-        /// </summary>
-        public Guid ProfileId
-        {
-            get
-            {
-                return this.Profile != null ? this.Profile.Id : this._profileId;
-            }
-        }
-
-        /// <summary>
-        /// Extrude to both sides?
-        /// </summary>
-        public virtual bool BothSides => false;
-
-        internal Wall(){}
+        public Material Material { get; protected set; }
 
         /// <summary>
         /// Construct a wall by extruding a profile.
         /// </summary>
         /// <param name="profile">The plan profile of the wall.</param>
-        /// <param name="elementType">The wall type of the wall.</param>
         /// <param name="height">The height of the wall.</param>
+        /// <param name="material">The material of the wall.</param>
         /// <param name="transform">An option transform for the wall.</param>
-        internal Wall(Profile profile, WallType elementType, double height, Transform transform = null)
-        {
-            if (height <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
-            }
-            
-            if(transform != null)
-            {
-                this.Transform = transform;
-            }
-            this.ElementType = elementType;
-            this.Profile = profile;
-            this.ExtrudeDirection = Vector3.ZAxis;
-            this.ExtrudeDepth = height;
-            this.Height = height;
-        }
-
+        /// <param name="id">The id of the wall.</param>
+        /// <param name="name">The name of the wall.</param>
         [JsonConstructor]
-        internal Wall(Guid profileId, Guid elementTypeId, double height, Transform transform = null)
+        public Wall(Profile profile,
+                      double height,
+                      Material material = null,
+                      Transform transform = null,
+                      Guid id = default(Guid),
+                      string name = null) : base(id, name, transform)
         {
             if (height <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
             }
-            
-            if(transform != null)
-            {
-                this.Transform = transform;
-            }
-            this._elementTypeId = elementTypeId;
-            this._profileId = profileId;
-            this.ExtrudeDirection = Vector3.ZAxis;
-            this.ExtrudeDepth = height;
+
+            this.Profile = profile;
             this.Height = height;
+            this.Material = material != null ? material : BuiltInMaterials.Concrete;
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis));
         }
 
+        /// <summary>
+        /// A pass-through constructor to set the id, name, and transform.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        protected Wall(Guid id, string name, Transform transform) : base(id, name, transform){}
+
+        /*
         /// <summary>
         /// Construct a wall by extruding a profile.
         /// </summary>
         /// <param name="profile">The plan profile of the wall.</param>
-        /// <param name="elementType">The wall type of the wall.</param>
         /// <param name="height">The height of the wall.</param>
+        /// <param name="material">The material of the wall.</param>
         /// <param name="transform">An option transform for the wall.</param>
-        public Wall(Polygon profile, WallType elementType, double height, Transform transform = null)
+        public Wall(Polygon profile, double height, Material material = null, Transform transform = null)
         {
             if (height <= 0.0)
             {
                 throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
             }
-            
-            if(transform != null)
+
+            if (transform != null)
             {
                 this.Transform = transform;
             }
-            this.ElementType = elementType;
             this.Profile = new Profile(profile);
-            this.ExtrudeDirection = Vector3.ZAxis;
-            this.ExtrudeDepth = height;
             this.Height = height;
-        }
+            this.Material = material != null ? material : BuiltInMaterials.Concrete;
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, height, Vector3.ZAxis));
+        }*/
 
         /// <summary>
         /// Construct a wall from geometry.
         /// </summary>
         /// <param name="geometry">The geometry of the wall.</param>
-        /// <param name="wallType">The wall type of the wall.</param>
         /// <param name="transform">The wall's Transform.</param>
-        internal Wall(Solid geometry, WallType wallType, Transform transform = null)
+        internal Wall(Solid geometry, Transform transform = null)
         {
             if (geometry == null)
             {
                 throw new ArgumentOutOfRangeException("You must supply one solid to construct a Wall.");
             }
-            
-            this.ElementType = wallType;
-            if(transform != null)
+
+            if (transform != null)
             {
                 this.Transform = transform;
             }
-            this.Geometry = geometry;
-        }
-
-        /// <summary>
-        /// Calculate the thickness of the wall's extrusion from its wall type.
-        /// </summary>
-        public double Thickness()
-        {
-            return this.ElementType.Thickness();
-        }
-
-        /// <summary>
-        /// Get the updated solid representation of a wall.
-        /// </summary>
-        public Solid GetUpdatedSolid()
-        {
-            return Kernel.Instance.CreateExtrude(this);
-        }
-
-        /// <summary>
-        /// Set the wall type.
-        /// </summary>
-        public virtual void SetReference(WallType type)
-        {
-            this.ElementType = type;
-            this._elementTypeId = this.ElementType.Id;
-        }
-
-        /// <summary>
-        /// Set the profile;
-        /// </summary>
-        /// <param name="obj"></param>
-        public void SetReference(Profile obj)
-        {
-            this.Profile = obj;
-            this._profileId = obj.Id;
+            this.Geometry.SolidOperations.Add(new Import(geometry));
         }
     }
 }

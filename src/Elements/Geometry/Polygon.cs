@@ -28,6 +28,12 @@ namespace Elements.Geometry
         public Polygon(Vector3[] vertices) : base(vertices){}
 
         /// <summary>
+        /// Implicitly convert a polygon to a profile.
+        /// </summary>
+        /// <param name="p">The polygon to convert.</param>
+        public static implicit operator Profile(Polygon p) => new Profile(p);
+
+        /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
@@ -637,7 +643,7 @@ namespace Elements.Geometry
             return new Polygon(converted);
         }
 
-        public static Polygon[] Reversed(this Polygon[] polygons)
+        public static IList<Polygon> Reversed(this IList<Polygon> polygons)
         {
             return polygons.Select(p=>p.Reversed()).ToArray();
         }

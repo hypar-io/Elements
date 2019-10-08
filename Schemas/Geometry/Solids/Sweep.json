@@ -4,16 +4,24 @@
     "title": "Sweep",
     "type": "object",
     "description": "A sweep of a profile along a curve.",
-    "required": ["Profile", "Curve"],
-    "allOf": [{"$ref": "Solid.json"}],
+    "required": ["Profile", "Curve","StartSetback","EndSetback"],
+    "allOf": [{"$ref": "SolidOperation.json"}],
     "properties": {
         "Profile": {
-            "description": "The profile to be swept along the curve.",
+            "description": "The id of the profile to be swept along the curve.",
             "$ref": "../Profile.json"
         },
         "Curve": {
             "description": "The curve along which the profile will be swept.",
             "$ref": "../Curve.json"
+        },
+        "StartSetback": {
+            "description": "The amount to set back the resulting solid from the start of the curve.",
+            "type": "number"
+        },
+        "EndSetback": {
+            "description": "The amount to set back the resulting solid from the end of the curve.",
+            "type": "number"
         }
     },
     "additionalProperties": false

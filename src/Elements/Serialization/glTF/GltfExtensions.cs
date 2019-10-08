@@ -8,9 +8,8 @@ using glTFLoader.Schema;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Elements.Geometry.Interfaces;
-using Elements.ElementTypes;
+using Elements.Interfaces;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -531,45 +530,27 @@ namespace Elements.Serialization.glTF
         {
             var materialName = BuiltInMaterials.Default.Name;
 
-            if(e is IElementType<StructuralFramingType>)
+            if(e is IMaterial)
             {
                 // Get the material from the framing type's material.
-                materialName = ((IElementType<StructuralFramingType>)e).ElementType.Material.Name;
-            }
-
-            if(e is IElementType<WallType>)
-            {
-                // Get the material from the first layer of the wall.
-                materialName = ((IElementType<WallType>)e).ElementType.MaterialLayers[0].Material.Name;
-            }
-
-            if(e is IElementType<FloorType>)
-            {
-                // Get the material from the first layer of the floor.
-                materialName = ((IElementType<FloorType>)e).ElementType.MaterialLayers[0].Material.Name;
-            }
-
-            if (e is IMaterial)
-            {
-                // Get the material from the material property.
                 materialName = ((IMaterial)e).Material.Name;
             }
 
-            Solid solid = null;
-
-            if (e is ISolid)
+            if (e is IGeometry)
             {
                 // Element already has a solid representation.
-                var geo = e as ISolid;
-                solid = geo.GetUpdatedSolid();
-            }
-
-            if(solid != null)
-            {
-                ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
+                var geo = e as IGeometry;
+                foreach(var solidOp in geo.Geometry.SolidOperations)
+                {
+                    var solid = solidOp.GetUpdatedSolid();
+                    if(solid != null)
+                    {
+                        ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
                             ref materials, ref buffer, bufferViews, accessors);
+                    }
+                }
             }
-
+            
             if (e is ITessellate)
             {
                 var geo = (ITessellate)e;

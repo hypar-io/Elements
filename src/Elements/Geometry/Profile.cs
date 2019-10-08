@@ -1,3 +1,4 @@
+using Elements.Serialization.JSON;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,8 @@ namespace Elements.Geometry
         /// </summary>
         internal Profile(){}
 
+        internal Profile(Guid id, string name): base(id, name){}
+        
         /// <summary>
         /// Construct a profile.
         /// </summary>
@@ -174,15 +177,15 @@ namespace Elements.Geometry
         private Transform ComputeTransform()
         {
             var v = this.Perimeter.Vertices.ToList();
-            var x = (v[0] - v[1]).Normalized();
+            var x = (v[0] - v[1]).Unit();
             var i = 2;
-            var b = (v[i] - v[1]).Normalized();
+            var b = (v[i] - v[1]).Unit();
 
             // Solve for parallel vectors
             while(b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negated()))
             {
                 i++;
-                b = (v[i] - v[1]).Normalized();
+                b = (v[i] - v[1]).Unit();
             } 
             var z = x.Cross(b);
             return new Transform(v[0], x, z);

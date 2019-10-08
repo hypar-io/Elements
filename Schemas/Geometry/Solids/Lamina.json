@@ -1,0 +1,16 @@
+{
+    "$id": "https://hypar.io/schemas/elements/Geometry/Solids/Lamina.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Lamina",
+    "type": "object",
+    "allOf": [{"$ref": "SolidOperation.json"}],
+    "description": "A zero-thickness solid defined by a profile.",
+    "required": ["Perimeter"],
+    "properties": {
+        "Perimeter": {
+            "description": "The perimeter.",
+            "$ref": "../Polygon.json"
+        }
+    },
+    "additionalProperties": false
+}

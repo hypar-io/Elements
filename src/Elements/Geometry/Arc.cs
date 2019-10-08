@@ -5,18 +5,10 @@ using Newtonsoft.Json;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// An arc defined around a center between a start angle and an end angle.
+    /// An arc defined as a CCW rotation from the +X axis around a center between a start angle and an end angle.
     /// </summary>
     public partial class Arc : ICurve
     {
-        private Transform _transform;
-        
-        /// <summary>
-        /// The plane of the arc.
-        /// </summary>
-        /// <value></value>
-        public Plane Plane{get;}
-
         /// <summary>
         /// Calculate the length of the arc.
         /// </summary>
@@ -70,40 +62,7 @@ namespace Elements.Geometry
             this.EndAngle = endAngle;
             this.StartAngle = startAngle;
             this.Radius = radius;
-            this._transform = new Transform(center);
-            this.Plane = this._transform.XY();
-        }
-
-        /// <summary>
-        /// Create a plane.
-        /// </summary>
-        /// <param name="plane">The plane of the arc.</param>
-        /// <param name="radius">The radius of the arc.</param>
-        /// <param name="startAngle">The start angle of the arc in degrees.</param>
-        /// <param name="endAngle">The end angle of the arc in degrees.</param>
-        [JsonConstructor]
-        public Arc(Plane plane, double radius, double startAngle, double endAngle)
-        {
-            if (endAngle > 360.0 || startAngle > 360.00)
-            {
-                throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
-            }
-
-            if (endAngle == startAngle)
-            {
-                throw new ArgumentException($"The arc could not be created. The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
-            }
-
-            if (radius <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
-            }
-
-            this.EndAngle = endAngle;
-            this.StartAngle = startAngle;
-            this.Radius = radius;
-            this._transform = new Transform(plane.Origin, plane.Normal.Normalized());
-            this.Plane = plane;
+            this.Center = center;
         }
 
         /// <summary>
@@ -120,9 +79,9 @@ namespace Elements.Geometry
 
             var angle = this.StartAngle + (this.EndAngle - this.StartAngle) * u;
             var theta = DegToRad(angle);
-            var x = this.Plane.Origin.X + this.Radius * Math.Cos(theta);
-            var y = this.Plane.Origin.Y + this.Radius * Math.Sin(theta);
-            return this._transform.OfPoint(new Vector3(x, y));
+            var x = this.Center.X + this.Radius * Math.Cos(theta);
+            var y = this.Center.Y + this.Radius * Math.Sin(theta);
+            return new Vector3(x,y);
         }
 
         /// <summary>
@@ -132,10 +91,10 @@ namespace Elements.Geometry
         /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
         public override Transform TransformAt(double u)
         {
-            var o = PointAt(u);
-            var x = (o - this.Plane.Origin).Normalized();
-            var y = this.Plane.Normal;
-            return new Transform(o, x, x.Cross(y));
+            var p = PointAt(u);
+            var x = (p-this.Center).Unit();
+            var y = Vector3.ZAxis;
+            return new Transform(p, x, x.Cross(y));
         }
 
         /// <summary>
@@ -175,7 +134,7 @@ namespace Elements.Geometry
         /// </summary>
         public Arc Reversed()
         {
-            return new Arc(this.Plane, this.Radius, this.EndAngle, this.StartAngle);
+            return new Arc(this.Center, this.Radius, this.EndAngle, this.StartAngle);
         }
 
         private double DegToRad(double degrees)
@@ -190,8 +149,8 @@ namespace Elements.Geometry
         public override BBox3 Bounds()
         {
             var delta = new Vector3(this.Radius, this.Radius, this.Radius);
-            var min = new Vector3(this.Plane.Origin - delta);
-            var max = new Vector3(this.Plane.Origin + delta);
+            var min = new Vector3(this.Center - delta);
+            var max = new Vector3(this.Center + delta);
             return new BBox3(min, max);
         }
     }

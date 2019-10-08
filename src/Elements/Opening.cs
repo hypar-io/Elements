@@ -1,6 +1,6 @@
+using Elements.Interfaces;
 using System;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 
@@ -10,43 +10,28 @@ namespace Elements
     /// A rectangular opening in a wall or floor.
     /// </summary>
     [UserElement]
-    public class Opening : Element, IExtrude
+    public class Opening : Element, IGeometry
     {
-        Guid _profileId;
-
         /// <summary>
         /// The perimeter of the opening.
         /// </summary>
         /// <value>A polygon of Width and Height translated by X and Y.</value>
-        [JsonIgnore]
-        [ReferencedByProperty("ProfileId")]
-        public Profile Profile { get; internal set; }
-
-        /// <summary>
-        /// The profile id.
-        /// </summary>
-        public Guid ProfileId
-        {
-            get
-            {
-                return this.Profile != null ? this.Profile.Id : this._profileId;
-            }
-        }
+        public Profile Profile { get; private set; }
 
         /// <summary>
         /// The extrude direction of the opening.
         /// </summary>     
-        public Vector3 ExtrudeDirection => Vector3.ZAxis;
+        public Vector3 Direction => Vector3.ZAxis;
 
         /// <summary>
         /// The depth of the opening's extrusion.
         /// </summary>
-        public double ExtrudeDepth { get; }
+        public double Depth { get; }
 
         /// <summary>
-        /// Extrude to both sides?
+        /// The opening's geometry.
         /// </summary>
-        public bool BothSides => true;
+        public Geometry.Geometry Geometry { get; }
 
         /// <summary>
         /// Create a rectangular opening.
@@ -56,37 +41,60 @@ namespace Elements
         /// <param name="width">The width of the opening.</param>
         /// <param name="height">The height of the opening.</param>
         /// <param name="depth">The depth of the opening's extrusion.</param>
-        public Opening(double x, double y, double width, double height, double depth = 5.0)
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        public Opening(double x,
+                       double y,
+                       double width,
+                       double height,
+                       double depth = 5.0,
+                       Guid id = default(Guid),
+                       string name = null) : base(id, name)
         {
             this.Profile = new Profile(Polygon.Rectangle(width, height, new Vector3(x, y)));
-            this.ExtrudeDepth = depth;
+            this.Depth = depth;
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Depth, this.Direction));
         }
 
         /// <summary>
         /// Create a polygonal opening.
         /// </summary>
-        /// <param name="profile">A polygon representing the profile of the opening.</param>
+        /// <param name="perimeter">A polygon representing the perimeter of the opening.</param>
         /// <param name="x">The distance along the X axis of the transform of the host element to transform the profile.</param>
         /// <param name="y">The distance along the Y axis of the transform of the host element to transform the profile.</param>
         /// <param name="depth">The depth of the opening's extrusion.</param>
-        public Opening(Polygon profile, double x = 0.0, double y = 0.0, double depth = 5.0)
+        /// <param name="id">The id of the opening.</param>
+        /// <param name="name">The name of the opening.</param>
+        public Opening(Polygon perimeter,
+                       double x = 0.0,
+                       double y = 0.0,
+                       double depth = 5.0,
+                       Guid id = default(Guid),
+                       string name = null) : base(id, name)
         {
             var t = new Transform(x, y, 0.0);
-            this.ExtrudeDepth = depth;
-            this.Profile = t.OfProfile(new Profile(profile));
+            this.Depth = depth;
+            this.Profile = t.OfProfile(new Profile(perimeter));
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Depth, this.Direction));
         }
 
         /// <summary>
         /// Create an opening.
         /// </summary>
-        /// <param name="profile">A polygon representing the profile of the opening.</param>
+        /// <param name="perimeter">A polygon representing the perimeter of the opening.</param>
         /// <param name="depth">The depth of the opening's extrusion.</param>
         /// <param name="transform">An additional transform applied to the opening.</param>
-        public Opening(Polygon profile, double depth, Transform transform = null)
+        /// <param name="id">The id of the opening.</param>
+        /// <param name="name">The name of the opening.</param>
+        public Opening(Polygon perimeter,
+                       double depth,
+                       Transform transform = null,
+                       Guid id = default(Guid),
+                       string name = null) : base(id, name, transform)
         {
-            this.Profile = new Profile(profile);
-            this.Transform = transform;
-            this.ExtrudeDepth = depth;
+            this.Profile = new Profile(perimeter);
+            this.Depth = depth;
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Depth, this.Direction));
         }
 
         /// <summary>
@@ -95,36 +103,18 @@ namespace Elements
         /// <param name="profile">A polygon representing the profile of the opening.</param>
         /// <param name="extrudeDepth">The depth of the opening's extrusion.</param>
         /// <param name="transform">An additional transform applied to the opening.</param>
-        internal Opening(Profile profile, double extrudeDepth, Transform transform = null)
-        {
-            this.Profile = profile;
-            this.Transform = transform;
-            this.ExtrudeDepth = extrudeDepth;
-        }
-
+        /// <param name="id">The id of the opening.</param>
+        /// <param name="name">The name of the opening.</param>
         [JsonConstructor]
-        internal Opening(Guid profileId, double extrudeDepth, Transform transform = null)
-        {
-            this._profileId = profileId;
-            this.Transform = transform;
-            this.ExtrudeDepth = extrudeDepth;
-        }
-
-        /// <summary>
-        /// Get the updated solid representation of the opening.
-        /// </summary>
-        public Solid GetUpdatedSolid()
-        {
-            return Kernel.Instance.CreateExtrude(this);
-        }
-
-        /// <summary>
-        /// Set the profile.
-        /// </summary>
-        public void SetReference(Profile profile)
+        internal Opening(Profile profile,
+                         double extrudeDepth,
+                         Transform transform = null,
+                         Guid id = default(Guid),
+                         string name = null) : base(id, name, transform)
         {
             this.Profile = profile;
-            this._profileId = profile.Id;
+            this.Depth = extrudeDepth;
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Depth, this.Direction));
         }
     }
 }

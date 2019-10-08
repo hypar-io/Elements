@@ -35,5 +35,14 @@ namespace Elements.Geometry.Profiles
                 this.InnerDiam = innerDiam;
                 this.t = t;
             }
+        
+        [JsonConstructor]
+        internal HSSPipeProfile(Guid id, string name, double outerDiam, double innerDiam, double t) : 
+            base(id, Polygon.Circle(outerDiam), new Polygon[]{Polygon.Circle(innerDiam).Reversed()}, name)
+            {
+                this.OuterDiam = outerDiam;
+                this.InnerDiam = innerDiam;
+                this.t = t;
+            }
     }
 }

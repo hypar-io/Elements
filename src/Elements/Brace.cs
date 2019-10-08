@@ -1,7 +1,5 @@
 using System;
-using Elements.ElementTypes;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -15,16 +13,15 @@ namespace Elements
         /// Construct a Brace.
         /// </summary>
         /// <param name="curve">The brace's center line.</param>
-        /// <param name="elementType">The structural framing type of the brace.</param>
+        /// <param name="profile">The brace's profile.</param>
+        /// <param name="material">The brace's material.</param>
         /// <param name="startSetback">The setback of the brace's geometry at the start.</param>
         /// <param name="endSetback">The setback of the brace's geometry at the end.</param>
-        public Brace(Curve curve, StructuralFramingType elementType, 
-            double startSetback = 0.0, double endSetback = 0.0) 
-            : base(curve, elementType, startSetback, endSetback){}
-    
-        [JsonConstructor]
-        internal Brace(Curve curve, Guid elementTypeId, 
-            double startSetback = 0.0, double endSetback = 0.0) 
-            : base(curve, elementTypeId, startSetback, endSetback){}
+        /// <param name="transform">The brace's transform.</param>
+        /// <param name="id">The brace's id.</param>
+        /// <param name="name">The brace's name.</param>
+        public Brace(Curve curve, Profile profile, Material material,
+            double startSetback = 0.0, double endSetback = 0.0, Transform transform = null, Guid id = default(Guid), string name=null) 
+            : base(curve, profile, material, startSetback, endSetback, transform, id, name){}
     }
 }
