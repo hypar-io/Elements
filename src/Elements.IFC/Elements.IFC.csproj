@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Elements\elements.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hypar.IFC2X3" Version="0.1.4" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
