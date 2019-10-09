@@ -21,13 +21,6 @@ namespace Elements.Geometry
         public Polygon(IList<Vector3> vertices): base(vertices){}
 
         /// <summary>
-        /// Construct a Polygon from a collection of vertices.
-        /// </summary>
-        /// <param name="vertices">A collection of vertices.</param>
-        /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
-        public Polygon(Vector3[] vertices) : base(vertices){}
-
-        /// <summary>
         /// Implicitly convert a polygon to a profile.
         /// </summary>
         /// <param name="p">The polygon to convert.</param>
@@ -602,6 +595,18 @@ namespace Elements.Geometry
                 area -= this.Vertices[i].Y * this.Vertices[j].X;
             }
             return area/2.0;
+        }
+
+        /// <summary>
+        /// Transform this polygon in place.
+        /// </summary>
+        /// <param name="t">The transform.</param>
+        public void Transform(Transform t)
+        {
+            for(var i=0; i<this.Vertices.Count; i++)
+            {
+                this.Vertices[i] = t.OfPoint(this.Vertices[i]);
+            }
         }
     }
 

@@ -28,17 +28,12 @@ namespace Elements.Geometry.Profiles
         [JsonIgnore]
         public double J {get;internal set;}
 
-        public HSSPipeProfile(string name, double outerDiam, double innerDiam, double t) : 
-            base(Guid.NewGuid(), Polygon.Circle(outerDiam), new Polygon[]{Polygon.Circle(innerDiam).Reversed()}, name)
-            {
-                this.OuterDiam = outerDiam;
-                this.InnerDiam = innerDiam;
-                this.t = t;
-            }
-        
-        [JsonConstructor]
-        internal HSSPipeProfile(Guid id, string name, double outerDiam, double innerDiam, double t) : 
-            base(id, Polygon.Circle(outerDiam), new Polygon[]{Polygon.Circle(innerDiam).Reversed()}, name)
+        public HSSPipeProfile(string name,
+                              double outerDiam,
+                              double innerDiam,
+                              double t,
+                              Guid id = default(Guid)) : 
+            base(Polygon.Circle(outerDiam), new Polygon[]{Polygon.Circle(innerDiam).Reversed()}, id, name)
             {
                 this.OuterDiam = outerDiam;
                 this.InnerDiam = innerDiam;

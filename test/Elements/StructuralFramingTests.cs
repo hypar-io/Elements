@@ -68,7 +68,7 @@ namespace Elements.Tests
             {
                 var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
-                var beam = new Beam(line, profile);
+                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
@@ -90,7 +90,7 @@ namespace Elements.Tests
             {
                 var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
-                var beam = new Beam(line, profile);
+                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)

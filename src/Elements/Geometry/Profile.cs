@@ -49,22 +49,17 @@ namespace Elements.Geometry
     /// </summary>
     public partial class Profile : Identifiable
     {
-        /// <summary>
-        /// Internal constructor for default initialization.
-        /// </summary>
-        internal Profile(){}
-
         internal Profile(Guid id, string name): base(id, name){}
         
         /// <summary>
         /// Construct a profile.
         /// </summary>
-        /// <param name="id">The unique identifier of the profile.</param>
+        /// <param name="id">The id of the profile.</param>
         /// <param name="name">The name of the profile.</param>
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
         [JsonConstructor]
-        public Profile(Guid id, Polygon perimeter, Polygon[] voids, string name = null): base(id, name)
+        public Profile(Polygon perimeter, Polygon[] voids = null, Guid id = default(Guid), string name = null): base(id, name)
         {
             this.Perimeter = perimeter;
             this.Voids = voids;
@@ -78,23 +73,6 @@ namespace Elements.Geometry
                 this.Clip();
             }
         }
-        
-        /// <summary>
-        /// Construct a profile.
-        /// </summary>
-        /// <param name="name">The name of the profile.</param>
-        /// <param name="perimeter">The perimeter of the profile.</param>
-        /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
-        public Profile(Polygon perimeter, Polygon[] voids, string name = null):
-            this(Guid.NewGuid(), perimeter, voids, name){}
-
-        /// <summary>
-        /// Construct a profile.
-        /// </summary>
-        /// <param name="name">The name of the profile.</param>
-        /// <param name="perimeter">The perimeter of the profile</param>
-        public Profile(Polygon perimeter, string name = null): 
-            this(Guid.NewGuid(), perimeter, null, name){}
 
         /// <summary>
         /// Construct a profile.
@@ -102,8 +80,9 @@ namespace Elements.Geometry
         /// <param name="name">The name of the profile.</param>
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="singleVoid">A void in the profile.</param>
-        public Profile(Polygon perimeter, Polygon singleVoid, string name = null):
-            this(Guid.NewGuid(), perimeter, new[] { singleVoid }, name){}
+        /// <param name="id">The id of the profile.</param>
+        public Profile(Polygon perimeter, Polygon singleVoid, Guid id = default(Guid), string name = null):
+            this(perimeter, new[] { singleVoid }, id, name){}
 
         /// <summary>
         /// Get a new profile which is the reverse of this profile.
@@ -128,6 +107,24 @@ namespace Elements.Geometry
         public double Area()
         {
             return ClippedArea();
+        }
+
+        /// <summary>
+        /// Transform this profile in place.
+        /// </summary>
+        /// <param name="t">The transform.</param>
+        public void Transform(Transform t)
+        {
+            this.Perimeter.Transform(t);
+            if(this.Voids == null)
+            {
+                return;
+            }
+            
+            for(var i=0; i<this.Voids.Count; i++)
+            {
+                this.Voids[i].Transform(t);
+            }
         }
 
         /// <summary>
@@ -182,7 +179,7 @@ namespace Elements.Geometry
             var b = (v[i] - v[1]).Unit();
 
             // Solve for parallel vectors
-            while(b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negated()))
+            while(b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negate()))
             {
                 i++;
                 b = (v[i] - v[1]).Unit();

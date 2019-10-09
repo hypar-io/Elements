@@ -30,9 +30,8 @@ namespace Elements.Geometry.Solids
         public  double Height { get; internal set; }
     
         /// <summary>The direction in which to extrude.</summary>
-        [Newtonsoft.Json.JsonProperty("Direction", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 Direction { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("Direction", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 Direction { get; internal set; }
     
     
     }

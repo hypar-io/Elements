@@ -21,9 +21,8 @@ namespace Elements.Geometry
     public partial class Arc : Curve
     {
         /// <summary>The center of the arc.</summary>
-        [Newtonsoft.Json.JsonProperty("Center", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 Center { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("Center", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 Center { get; internal set; }
     
         /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
         [Newtonsoft.Json.JsonProperty("StartAngle", Required = Newtonsoft.Json.Required.Always)]

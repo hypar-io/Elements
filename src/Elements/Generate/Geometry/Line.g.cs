@@ -21,14 +21,12 @@ namespace Elements.Geometry
     public partial class Line : Curve
     {
         /// <summary>The start of the line.</summary>
-        [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 Start { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 Start { get; internal set; }
     
         /// <summary>The end of the line.</summary>
-        [Newtonsoft.Json.JsonProperty("End", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 End { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("End", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 End { get; internal set; }
     
     
     }

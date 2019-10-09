@@ -276,7 +276,7 @@ namespace Elements.Geometry
             // Create transforms at 'miter' planes.
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-            var x = (b - a).Unit().Average((c - a).Unit()).Negated();
+            var x = (b - a).Unit().Average((c - a).Unit()).Negate();
             var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
 
             return new Transform(this.Vertices[i], x, up.Cross(x));
@@ -302,7 +302,7 @@ namespace Elements.Geometry
                 c = this.Vertices[i + 1];
                 var v1 = (b - a).Unit();
                 var v2 = (c - a).Unit();
-                x = v1.Average(v2).Negated();
+                x = v1.Average(v2).Negate();
                 var up = v2.Cross(v1);
                 return new Transform(this.Vertices[i], x, up.Cross(x));
             }

@@ -78,23 +78,16 @@ namespace Elements.Geometry.Profiles
         [JsonIgnore]
         public double Qw {get;internal set;}
 
-        public WideFlangeProfile(string name, double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, 
-                                    VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
-                                    HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
-                                    double verticalOffset = 0.0, double horizontalOffset = 0.0) : base(name)
-        {
-            this.bf = bf;
-            this.d = d;
-            this.tf = tf;
-            this.tw = tw;
-            this.Perimeter = CreateProfile(bf, d, tf, tw, verticalAlignment, horizontalAlignment, verticalOffset, horizontalOffset);
-        }
-
         [JsonConstructor]
-        internal WideFlangeProfile(Guid id, string name, double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, 
-                                    VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
-                                    HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
-                                    double verticalOffset = 0.0, double horizontalOffset = 0.0) : base(id, name)
+        public WideFlangeProfile(string name,
+                                 double bf = 0.1,
+                                 double d = 0.05,
+                                 double tf = 0.005,
+                                 double tw = 0.005,
+                                 VerticalAlignment verticalAlignment = VerticalAlignment.Center,
+                                 HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center,
+                                 double verticalOffset = 0.0,
+                                 double horizontalOffset = 0.0, Guid id = default(Guid)) : base(id, name)
         {
             this.bf = bf;
             this.d = d;

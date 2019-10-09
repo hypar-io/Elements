@@ -21,24 +21,20 @@ namespace Elements.Geometry
     public partial class Transform 
     {
         /// <summary>The origin.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 Origin { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 Origin { get; internal set; }
     
         /// <summary>The X axis.</summary>
-        [Newtonsoft.Json.JsonProperty("XAxis", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 XAxis { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("XAxis", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 XAxis { get; internal set; }
     
         /// <summary>The Y axis.</summary>
-        [Newtonsoft.Json.JsonProperty("YAxis", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 YAxis { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("YAxis", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 YAxis { get; internal set; }
     
         /// <summary>The Z axis.</summary>
-        [Newtonsoft.Json.JsonProperty("ZAxis", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 ZAxis { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("ZAxis", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 ZAxis { get; internal set; }
     
     
     }

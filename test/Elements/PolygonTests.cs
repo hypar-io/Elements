@@ -1,5 +1,3 @@
-using Elements;
-using Elements.Geometry;
 using System;
 using System.Linq;
 using System.Collections.Generic;

@@ -11,32 +11,20 @@ namespace Elements.Tests
         public void FloorWithAddedOpenings()
         {
             this.Name = "FloorWithAddedOpenings";
+
             var p = Polygon.L(10, 20, 5);
-            var openings = new List<Opening>(){
-                new Opening(1, 1, 1, 1),
-                new Opening(3, 3, 1, 3),
-            };
             var floor1 = new Floor(p, 0.1, 0.5, material: new Material("green", Colors.Green, 0.0f, 0.0f));
+            var openings = new List<Opening>(){
+                new Opening(1, 1, 1, 1, 5, floor1.Transform),
+                new Opening(3, 3, 1, 3, 5, floor1.Transform),
+            };
 
-            var model = new Model();
-
-            Assert.Empty(floor1.Openings);
             Assert.Equal(0.5, floor1.Elevation);
             Assert.Equal(0.1, floor1.Thickness);
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
-
+            
             this.Model.AddElement(floor1);
-
-            List<Floor> updatedFloors = new List<Floor>(this.Model.AllEntitiesOfType<Floor>());
-
-            foreach (Floor floor in updatedFloors)
-            {
-                floor.Openings.AddRange(openings);
-            }
-
-            this.Model.UpdateElements(updatedFloors);
-
-            Assert.Equal(2, floor1.Openings.Count);
+            this.Model.AddElements(openings);
         }
 
         [Fact]
@@ -55,7 +43,7 @@ namespace Elements.Tests
             var p2 = Polygon.Rectangle(1, 1);
             var o1 = new Opening(p1, 1, 1);
             var o2 = new Opening(p2, 3, 3);
-            var floor = new Floor(Polygon.Rectangle(10, 10), 0.2, 0.0, null, new List<Opening>() { o1, o2 });
+            var floor = new Floor(Polygon.Rectangle(10, 10), 0.2, 0.0);
             Assert.Equal(100.0, floor.Area());
         }
     }

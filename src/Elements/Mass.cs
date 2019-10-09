@@ -53,7 +53,12 @@ namespace Elements
         /// <param name="transform">The mass' transform.</param>
         /// <param name="id">The mass' id.</param>
         /// <param name="name">The mass' name.</param>
-        public Mass(Profile profile, double height = 1.0, Material material = null, Transform transform = null, Guid id = default(Guid), string name=null): base(id, name, transform)
+        public Mass(Profile profile,
+                    double height = 1.0,
+                    Material material = null,
+                    Transform transform = null,
+                    Guid id = default(Guid),
+                    string name = null) : base(id, name, transform)
         {
             if (height <= 0)
             {

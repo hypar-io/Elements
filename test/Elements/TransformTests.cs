@@ -30,7 +30,7 @@ namespace Elements.Tests
         [Fact]
         public void Transform_OfPoint()
         {
-            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negated());
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
             var v = new Vector3(0.5,0.5,0.0);
             var vt = t.OfPoint(v);
             Assert.Equal(0.5, vt.X);
@@ -41,7 +41,7 @@ namespace Elements.Tests
         [Fact]
         public void Transform_Translate()
         {
-            var t = new Transform(new Vector3(5,0,0), Vector3.XAxis, Vector3.YAxis.Negated());
+            var t = new Transform(new Vector3(5,0,0), Vector3.XAxis, Vector3.YAxis.Negate());
             var v = new Vector3(0.5,0.5,0.0);
             var vt = t.OfPoint(v);
             Assert.Equal(5.5, vt.X);
@@ -54,6 +54,7 @@ namespace Elements.Tests
         {
             var t = new Transform(Vector3.Origin, Vector3.ZAxis);
             Assert.Equal(Vector3.XAxis, t.XAxis);
+            Assert.Equal(Vector3.YAxis, t.YAxis);
 
             t = new Transform(Vector3.Origin, Vector3.XAxis);
             Assert.Equal(Vector3.YAxis, t.XAxis);

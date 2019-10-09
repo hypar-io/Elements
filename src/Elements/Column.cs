@@ -36,7 +36,7 @@ namespace Elements
         /// <param name="name">The column's name.</param>
         public Column(Vector3 location, double height, Profile profile, Material material = null, 
             Transform transform = null, double startSetback = 0.0, double endSetback = 0.0, Guid id = default(Guid), string name = null) 
-            : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material, 
+            : base(new Line(new Vector3(location.X, location.Y, location.Z + height), location), profile, material, 
                 startSetback, endSetback, transform, id, name)
         {
             this.Location = location;

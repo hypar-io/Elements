@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Collections;
 using Newtonsoft.Json;
 using Elements.Serialization.JSON;
-using Elements.Geometry;
 
 namespace Elements
 {
@@ -21,7 +20,7 @@ namespace Elements
         private Dictionary<Guid, Identifiable> _entities = new Dictionary<Guid, Identifiable>();
 
         /// <summary>
-        /// Items provides a serializable wrapper around the
+        /// Entities provides a serializable wrapper around the
         /// internal entities collection.
         /// </summary>
         [JsonProperty]
@@ -60,40 +59,12 @@ namespace Elements
 
             if (!_entities.ContainsKey(element.Id))
             {
-                GetRootLevelElementData(element);
+                RecursiveExpandElementData(element);
                 _entities.Add(element.Id, element);
             }
             else
             {
                 throw new ArgumentException("An element with the same Id already exists in the Model.");
-            }
-        }
-
-        /// <summary>
-        /// Update an element existing in the model.
-        /// </summary>
-        /// <param name="element">The element to update in the model.</param>
-        /// <exception cref="System.ArgumentException">Thrown when no element 
-        /// with the same Id exists in the model.</exception>
-        public void UpdateElement(Element element)
-        {
-            if (element == null)
-            {
-                return;
-            }
-
-            if (_entities.ContainsKey(element.Id))
-            {
-                // remove the previous element
-                _entities.Remove(element.Id);
-                // Update the element itselft
-                _entities.Add(element.Id, element);
-                // Update the root elements
-                GetRootLevelElementData(element);
-            }
-            else
-            {
-                throw new ArgumentException("No element with this Id exists in the Model.");
             }
         }
 
@@ -106,18 +77,6 @@ namespace Elements
             foreach (var e in elements)
             {
                 AddElement(e);
-            }
-        }
-
-        /// <summary>
-        /// Update a collection of elements in the model.
-        /// </summary>
-        /// <param name="elements">The elements to be updated in the model.</param>
-        public void UpdateElements(IEnumerable<Element> elements)
-        {
-            foreach (var e in elements)
-            {
-                UpdateElement(e);
             }
         }
 
@@ -189,7 +148,7 @@ namespace Elements
             this.Origin = origin;
         }
 
-        private void GetRootLevelElementData(object element)
+        private void RecursiveExpandElementData(object element)
         {
             var props = element.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach(var p in props)
@@ -198,9 +157,15 @@ namespace Elements
                 if (typeof(Identifiable).IsAssignableFrom(p.PropertyType))
                 {
                     var ident =(Identifiable)pValue;
-                    Add(ident.Id, ident);
+                    if(this.ContainsKey(ident.Id))
+                    {
+                        this[ident.Id] = ident;
+                    }
+                    else
+                    {
+                        Add(ident.Id, ident);
+                    }
                 }
-                // GetRootLevelElementData(pValue);
             }
         }
 

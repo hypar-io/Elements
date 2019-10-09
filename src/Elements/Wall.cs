@@ -72,31 +72,6 @@ namespace Elements
         /// <returns></returns>
         protected Wall(Guid id, string name, Transform transform) : base(id, name, transform){}
 
-        /*
-        /// <summary>
-        /// Construct a wall by extruding a profile.
-        /// </summary>
-        /// <param name="profile">The plan profile of the wall.</param>
-        /// <param name="height">The height of the wall.</param>
-        /// <param name="material">The material of the wall.</param>
-        /// <param name="transform">An option transform for the wall.</param>
-        public Wall(Polygon profile, double height, Material material = null, Transform transform = null)
-        {
-            if (height <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
-            }
-
-            if (transform != null)
-            {
-                this.Transform = transform;
-            }
-            this.Profile = new Profile(profile);
-            this.Height = height;
-            this.Material = material != null ? material : BuiltInMaterials.Concrete;
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, height, Vector3.ZAxis));
-        }*/
-
         /// <summary>
         /// Construct a wall from geometry.
         /// </summary>

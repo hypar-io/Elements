@@ -173,7 +173,7 @@ namespace Elements.Geometry.Solids
             Face fStart = null;
             if(bothSides)
             {
-                var t = new Transform(direction.Negated()* (distance/2));
+                var t = new Transform(direction.Negate()* (distance/2));
                 if(holes != null)
                 {
                     fStart = solid.AddFace(t.OfPolygon(perimeter.Reversed()), t.OfPolygons(holes.Reversed()));

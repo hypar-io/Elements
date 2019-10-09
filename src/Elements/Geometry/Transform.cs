@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A coordinate system defined by an origin, x, y, and z axes.
+    /// A right-handed coordinate system defined by an origin, x, y, and z axes.
     /// </summary>
     public partial class Transform
     {
@@ -17,18 +17,15 @@ namespace Elements.Geometry
         public Transform()
         {
             this._matrix = new Matrix();
-            SetComponentsFromMatrix(this._matrix);
+            SetComponentsFromMatrix();
         }
         
         /// <summary>
         /// Create a transform by copying another transform.
         /// </summary>
         /// <param name="t">The transform to copy.</param>
-        public Transform(Transform t)
-        {
-            this._matrix = new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin));
-            SetComponentsFromMatrix(this._matrix);
-        }
+        public Transform(Transform t): 
+            this(new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin))){}
 
         /// <summary>
         /// Create a transform with a translation.
@@ -38,7 +35,7 @@ namespace Elements.Geometry
         {
             this._matrix = new Matrix();
             this._matrix.SetupTranslation(origin);
-            SetComponentsFromMatrix(this._matrix);
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -51,7 +48,7 @@ namespace Elements.Geometry
         {
             this._matrix = new Matrix();
             this._matrix.SetupTranslation(new Vector3(x, y, z));
-            SetComponentsFromMatrix(this._matrix);
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -59,25 +56,23 @@ namespace Elements.Geometry
         /// along up.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
-        /// <param name="up">The vector which will define the Z axis of the transform.</param>
-        public Transform(Vector3 origin, Vector3 up)
+        /// <param name="z">The vector which will define the Z axis of the transform.</param>
+        public Transform(Vector3 origin, Vector3 z)
         {
-            Vector3 test;
-            if(up.IsAlmostEqualTo(Vector3.ZAxis))
-            {
-                test = Vector3.XAxis;
-            }
-            else
+            Vector3 x = Vector3.XAxis;
+            Vector3 y = Vector3.YAxis;
+
+            if(!z.IsParallelTo(Vector3.ZAxis))
             {   
                 // Project up onto the ortho plane
-                var p = new Plane(origin, up);
-                test = Vector3.ZAxis.Project(p);
+                var p = new Plane(origin, z);
+                var test = Vector3.ZAxis.Project(p);
+                x = test.Cross(z);
+                y = x.Cross(z); 
             }
             
-            var x = up.Cross(test);
-            var y = x.Cross(up); 
-            this._matrix = new Matrix(x, y, up, origin);
-            SetComponentsFromMatrix(this._matrix);
+            this._matrix = new Matrix(x, y, z, origin);
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -92,7 +87,7 @@ namespace Elements.Geometry
             var z = zAxis.Unit();
             var y = z.Cross(x).Unit();
             this._matrix = new Matrix(x, y, z, origin);
-            SetComponentsFromMatrix(this._matrix);
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -103,7 +98,7 @@ namespace Elements.Geometry
         public Transform(Matrix matrix)
         {
             this._matrix = matrix;
-            SetComponentsFromMatrix(this._matrix);
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -117,7 +112,7 @@ namespace Elements.Geometry
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)
         {
             this._matrix = new Matrix(xAxis, yAxis, zAxis, origin);
-            SetComponentsFromMatrix(this._matrix);
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -127,13 +122,12 @@ namespace Elements.Geometry
         /// generated though, we only have {get;set;}, so this method is used
         /// after every matrix construction to set the components explicitly.
         /// </summary>
-        /// <param name="m"></param>
-        private void SetComponentsFromMatrix(Matrix m)
+        private void SetComponentsFromMatrix()
         {
-            this.Origin = m.Translation;
-            this.XAxis = m.XAxis;
-            this.YAxis = m.YAxis;
-            this.ZAxis = m.ZAxis;
+            this.Origin = this._matrix.Translation;
+            this.XAxis = this._matrix.XAxis;
+            this.YAxis = this._matrix.YAxis;
+            this.ZAxis = this._matrix.ZAxis;
         }
 
         /// <summary>
@@ -248,6 +242,7 @@ namespace Elements.Geometry
         public void Concatenate(Transform transform)
         {
             this._matrix = this._matrix * transform._matrix;
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -256,6 +251,7 @@ namespace Elements.Geometry
         public void Invert()
         {
             this._matrix = this._matrix.Inverse();
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -267,6 +263,7 @@ namespace Elements.Geometry
             var m = new Matrix();
             m.SetupTranslation(translation);
             this._matrix = this._matrix * m;
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -279,6 +276,7 @@ namespace Elements.Geometry
             var m = new Matrix();
             m.SetupRotate(axis, angle * (Math.PI / 180.0));
             this._matrix = this._matrix * m;
+            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -290,6 +288,7 @@ namespace Elements.Geometry
             var m = new Matrix();
             m.SetupScale(amount);
             this._matrix = this._matrix * m;
+            SetComponentsFromMatrix();
         }
 
         /// <summary>

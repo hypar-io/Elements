@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -15,21 +13,10 @@ namespace Elements
     [UserElement]
     public class StandardWall : Wall
     {
-        private List<Opening> _openings = new List<Opening>();
-
         /// <summary>
         /// The center line of the wall.
         /// </summary>
         public Line CenterLine { get; }
-
-        /// <summary>
-        /// An array of openings in the wall.
-        /// </summary>
-        public List<Opening> Openings
-        {
-            get{return _openings;}
-            protected set{_openings = value;}
-        }
 
         /// <summary>
         /// The thickness of the wall.
@@ -42,7 +29,7 @@ namespace Elements
         /// <param name="centerLine">The center line of the wall.</param>
         /// <param name="thickness">The thickness of the wall.</param>
         /// <param name="height">The height of the wall.</param>
-        /// <param name="openings">A collection of Openings in the wall.</param>
+        /// <param name="material">The wall's material.</param>
         /// <param name="transform">The transform of the wall.
         /// This transform will be concatenated to the transform created to describe the wall in 2D.</param>
         /// <param name="id">The id of the wall.</param>
@@ -52,7 +39,7 @@ namespace Elements
         public StandardWall(Line centerLine,
                             double thickness,
                             double height,
-                            List<Opening> openings = null,
+                            Material material = null,
                             Transform transform = null,
                             Guid id = default(Guid),
                             string name = null) : base(id, name, transform)
@@ -67,13 +54,14 @@ namespace Elements
                 throw new ArgumentException("The wall could not be created. The Z component of the start and end points of the wall's center line must be the same.");
             }
 
+            if (thickness <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The provided thickness ({thickness}) was less than or equal to zero.");
+            }
+
             this.CenterLine = centerLine;
             this.Height = height;
-            if(openings != null)
-            {
-                this._openings = openings;
-            }
-            
+
             // Construct a transform whose X axis is the centerline of the wall.
             // The wall is described as if it's lying flat in the XY plane of that Transform.
             var d = centerLine.Direction();
@@ -86,6 +74,7 @@ namespace Elements
             }
             this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
             this.Thickness = thickness;
+            this.Material = material != null ? material : BuiltInMaterials.Concrete;
             this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis));
         }
     }

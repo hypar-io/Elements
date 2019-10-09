@@ -37,7 +37,7 @@ namespace Elements.Tests
             var b = Vector3.XAxis;
             Assert.True(a.IsParallelTo(b));
 
-            var c = a.Negated();
+            var c = a.Negate();
             Assert.True(a.IsParallelTo(c));
         }
 

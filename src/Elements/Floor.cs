@@ -1,8 +1,8 @@
 using Elements.Geometry;
 using Elements.Interfaces;
 using System;
-using System.Collections.Generic;
 using Elements.Geometry.Solids;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -15,8 +15,6 @@ namespace Elements
     [UserElement]
     public class Floor : Element, IMaterial, IGeometry
     {
-        private List<Opening> _openings = new List<Opening>();
-
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
@@ -38,15 +36,6 @@ namespace Elements
         public Elements.Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
 
         /// <summary>
-        /// The openings in the floor.
-        /// </summary>
-        public List<Opening> Openings
-        {
-            get{return _openings;}
-            set{_openings = value;}
-        }
-
-        /// <summary>
         /// The floor's material.
         /// </summary>
         public Material Material{ get; private set; }
@@ -54,48 +43,56 @@ namespace Elements
         /// <summary>
         /// Create a floor.
         /// </summary>
-        /// <param name="perimeter">The profile of the floor.</param>
+        /// <param name="profile">The perimeter of the floor.</param>
         /// <param name="thickness">The thickness of the floor.</param>
         /// <param name="elevation">The elevation of the top of the floor.</param>
         /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
-        /// <param name="openings">An array of openings in the floor.</param>
         /// <param name="material">The floor's material.</param>
         /// <param name="id">The floor's id.</param>
         /// <param name="name">The floor's name.</param>
-        public Floor(Polygon perimeter, double thickness, double elevation = 0.0, Transform transform = null, 
-            List<Opening> openings = null, Material material = null, Guid id = default(Guid), string name = null): base(id, name, transform)
+        public Floor(Polygon profile,
+                     double thickness,
+                     double elevation = 0.0,
+                     Transform transform = null,
+                     Material material = null,
+                     Guid id = default(Guid),
+                     string name = null) : base(id, name, transform)
         {
-            SetProperties(new Profile(perimeter), openings, elevation, thickness, material, transform);
+            SetProperties(new Profile(profile), elevation, thickness, material, transform);
         }
 
-        /* 
         /// <summary>
         /// Create a floor.
         /// </summary>
-        /// <param name="profile">The profile of the floor.</param>
-        /// <param name="start">A tranform used to pre-transform the profile and direction vector before sweeping the geometry.</param>
-        /// <param name="direction">The direction of the floor's sweep.</param>
+        /// <param name="profile">The perimeter of the floor.</param>
         /// <param name="thickness">The thickness of the floor.</param>
-        /// <param name="elevation">The elevation of the floor.</param>
-        /// <param name="transform">The floor's transform. If set, this will override the elevation.</param>
+        /// <param name="elevation">The elevation of the top of the floor.</param>
+        /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
         /// <param name="material">The floor's material.</param>
-        public Floor(Profile profile, double thickness, Transform start, Vector3 direction, double elevation = 0.0, Transform transform = null, Material material = null)
+        /// <param name="id">The floor's id.</param>
+        /// <param name="name">The floor's name.</param>
+        [JsonConstructor]
+        public Floor(Profile profile,
+                     double thickness,
+                     double elevation = 0.0,
+                     Transform transform = null,
+                     Material material = null,
+                     Guid id = default(Guid),
+                     string name = null) : base(id, name, transform)
         {
-            this.Elevation = elevation;
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Profile = start.OfProfile(profile);
-            this.Material = material != null ? material : BuiltInMaterials.Concrete;
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, start.OfVector(direction)));
-        }*/
+            SetProperties(profile, elevation, thickness, material, transform);
+        }
 
-        private void SetProperties(Profile profile, List<Opening> openings, double elevation, double thickness, Material material, Transform transform)
+        private void SetProperties(Profile profile, double elevation, double thickness, Material material, Transform transform)
         {
             this.Profile = profile;
-            if(openings != null)
-            {
-                this._openings = openings;
-            }
             this.Elevation = elevation;
+
+            if(thickness <= 0.0) 
+            {
+                throw new ArgumentOutOfRangeException($"The floor could not be created. The provided thickness ({thickness}) was less than or equal to zero.");
+            }
+
             this.Thickness = thickness;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Material = material != null ? material : BuiltInMaterials.Concrete;

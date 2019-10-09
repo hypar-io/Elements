@@ -20,12 +20,16 @@ namespace Elements.Serialization.JSON
         private Dictionary<string, Type> _typeCache;
 
         [System.ThreadStatic]
-        private static Dictionary<Guid, Identifiable> _identifiables = new Dictionary<Guid, Identifiable>();
+        private static Dictionary<Guid, Identifiable> _identifiables;   // = new Dictionary<Guid, Identifiable>();
         
         public static Dictionary<Guid, Identifiable> Identifiables
         {
             get
             {
+                if(_identifiables == null)
+                {
+                    _identifiables = new Dictionary<Guid, Identifiable>();
+                }
                 return _identifiables;
             }
         }

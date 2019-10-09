@@ -12,6 +12,7 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.Element", typeof(Elements.Element))]
     [JsonInheritanceAttribute("Elements.Material", typeof(Elements.Material))]
     [JsonInheritanceAttribute("Elements.Geometry.Profile", typeof(Elements.Geometry.Profile))]
+    [JsonInheritanceAttribute("Elements.Opening", typeof(Elements.Opening))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.WideFlangeProfile", typeof(Elements.Geometry.Profiles.WideFlangeProfile))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.HSSPipeProfile", typeof(Elements.Geometry.Profiles.HSSPipeProfile))]
     public abstract partial class Identifiable

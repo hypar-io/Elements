@@ -21,14 +21,12 @@ namespace Elements.Geometry
     public partial class Plane 
     {
         /// <summary>The origin of the plane.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 Origin { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 Origin { get; internal set; }
     
         /// <summary>The normal of the plane.</summary>
-        [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public  Vector3 Normal { get; internal set; } = new Vector3();
+        [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Vector3 Normal { get; internal set; }
     
     
     }

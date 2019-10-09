@@ -20,7 +20,7 @@ namespace Elements.Geometry
         private static Vector3 _origin = new Vector3();
 
         /// <summary>
-        /// Construct a vector at the origin.
+        /// Create a vector at the origin.
         /// </summary>
         /// <returns></returns>
         public static Vector3 Origin
@@ -52,7 +52,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector along the X axis.
+        /// Create a vector along the X axis.
         /// </summary>
         public static Vector3 XAxis
         {
@@ -60,7 +60,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector along the Y axis.
+        /// Create a vector along the Y axis.
         /// </summary>
         public static Vector3 YAxis
         {
@@ -68,16 +68,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector along the Z axis.
+        /// Create a vector along the Z axis.
         /// </summary>
-        /// <returns></returns>
         public static Vector3 ZAxis
         {
             get { return _zAxis; }
         }
 
         /// <summary>
-        /// Construct vectors at n equal spaces along the provided line.
+        /// Create vectors at n equal spaces along the provided line.
         /// </summary>
         /// <param name="line">The line.</param>
         /// <param name="n">The number of samples along the line.</param>
@@ -101,7 +100,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a default vector at the origin.
+        /// Create a default vector at the origin.
         /// </summary>
         public Vector3()
         {
@@ -111,7 +110,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Vector3 by copying the components of another Vector3.
+        /// Create a Vector3 by copying the components of another Vector3.
         /// </summary>
         /// <param name="v">The Vector3 to copy.</param>
         public Vector3(Vector3 v)
@@ -122,7 +121,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector from x, y, and z coordinates.
+        /// Create a vector from x, y, and z coordinates.
         /// </summary>
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">The y coordinate of the vector.</param>
@@ -147,7 +146,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector from x, and y coordinates.
+        /// Create a vector from x, and y coordinates.
         /// </summary>
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">Thy y coordinate of the vector.</param>
@@ -332,7 +331,7 @@ namespace Elements.Geometry
         /// Construct a new vector which is the inverse of this vector.
         /// </summary>
         /// <returns>A new vector which is the inverse of this vector.</returns>
-        public Vector3 Negated()
+        public Vector3 Negate()
         {
             return new Vector3(-X, -Y, -Z);
         }
