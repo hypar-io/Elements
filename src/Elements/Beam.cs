@@ -1,6 +1,5 @@
 using System;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -21,11 +20,19 @@ namespace Elements
         /// <param name="material">The beam's material.</param>
         /// <param name="startSetback">The setback of the beam's geometry at the start.</param>
         /// <param name="endSetback">The setback of the beam's geometry at the end.</param>
+        /// <param name="rotation">An optional rotation of the beam's cross section around it's axis.</param>
         /// <param name="transform">The beam's transform.</param>
         /// <param name="id">The id of the transform.</param>
         /// <param name="name">The name of the transform.</param>
-        public Beam(Curve curve, Profile profile, Material material = null, 
-            double startSetback = 0.0, double endSetback = 0.0, Transform transform = null, Guid id=default(Guid), string name=null) 
-            : base(curve, profile, material, startSetback, endSetback, transform, id, name) { }
+        public Beam(Curve curve,
+                    Profile profile,
+                    Material material = null,
+                    double startSetback = 0.0,
+                    double endSetback = 0.0,
+                    double rotation = 0.0,
+                    Transform transform = null,
+                    Guid id = default(Guid),
+                    string name = null) 
+            : base(curve, profile, material, startSetback, endSetback, rotation, transform, id, name) { }
     }
 }

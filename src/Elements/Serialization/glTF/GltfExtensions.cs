@@ -20,6 +20,14 @@ namespace Elements.Serialization.glTF
     /// </summary>
     public static class GltfExtensions
     {
+        private static int _currentId = -1;
+
+        private static int GetNextId()
+        {
+            _currentId ++;
+            return _currentId;
+        }
+
         private const string emptyGltf = @"{
     ""asset"": {""version"": ""2.0""},
     ""nodes"": [{""name"": ""empty""}],
@@ -493,7 +501,7 @@ namespace Elements.Serialization.glTF
 
             // Lines are stored in a list of lists
             // according to the max available index size of ushort.
-            var lines = new List<List<Vector3>>(){new List<Vector3>()};
+            // var lines = new List<IList<Vector3>>(){new List<Vector3>()};
             
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
@@ -502,19 +510,20 @@ namespace Elements.Serialization.glTF
             for(var i=0;i<elements.Length;i++)
             {
                 var e = elements[i];
-                GetRenderDataForElement(e, gltf, materials, lines, buffer, bufferViews, accessors);
+                GetRenderDataForElement(e, gltf, materials, buffer, bufferViews, accessors);
             }
 
-            if (lines.Count > 0)
-            {
-                foreach(var lineSet in lines)
-                {
-                    if(lineSet.Count > 0)
-                    {
-                        AddLines(100000, lineSet.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors);
-                    }
-                }
-            }
+            // if (lines.Count > 0)
+            // {
+            //     foreach(var lineSet in lines)
+            //     {
+            //         if(lineSet.Count > 0)
+            //         {
+            //             AddLines(_lineCount, lineSet, gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors);
+            //             _lineCount++;
+            //         }
+            //     }
+            // }
 
             var buff = new glTFLoader.Schema.Buffer();
             buff.ByteLength = buffer.Count();
@@ -526,7 +535,7 @@ namespace Elements.Serialization.glTF
         }
 
         private static void GetRenderDataForElement(Element e, Gltf gltf, 
-            Dictionary<string, int> materials, List<List<Vector3>> lines, List<byte> buffer, List<BufferView> bufferViews , List<Accessor> accessors)
+            Dictionary<string, int> materials, List<byte> buffer, List<BufferView> bufferViews , List<Accessor> accessors)
         {
             var materialName = BuiltInMaterials.Default.Name;
 
@@ -549,6 +558,18 @@ namespace Elements.Serialization.glTF
                             ref materials, ref buffer, bufferViews, accessors);
                     }
                 }
+            }
+
+            if (e is ModelCurve)
+            {
+                var mc = (ModelCurve)e;
+                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materials[mc.Material.Name], buffer, bufferViews, accessors, mc.Transform);
+            }
+
+            if (e is ModelPoints)
+            {
+                var mp = (ModelPoints)e;
+                AddPoints(GetNextId(), mp.Locations, gltf, materials[mp.Material.Name], buffer, bufferViews, accessors, mp.Transform );
             }
             
             if (e is ITessellate)
@@ -598,17 +619,18 @@ namespace Elements.Serialization.glTF
                                 imin, imax, materials[materialName], cmin, cmax, null, t);
         }
 
-        private static void AddLines(long id, Vector3[] vertices, Gltf gltf, 
+        private static void AddLines(long id, IList<Vector3> vertices, Gltf gltf, 
             int material, List<byte> buffer, List<BufferView> bufferViews, List<Accessor> accessors, Transform t = null)
         {
             var floatSize = sizeof(float);
             var ushortSize = sizeof(ushort);
-            var vBuff = new byte[vertices.Length * 3 * floatSize];
-            var indices = new byte[vertices.Length / 2 *  2 * ushortSize];
+            var vBuff = new byte[vertices.Count * 3 * floatSize];
+            // var indices = new byte[vertices.Count / 2 *  2 * ushortSize];
+            var indices = new byte[vertices.Count *  2 * ushortSize];
 
             var vi = 0;
             var ii = 0;
-            for(var i=0; i < vertices.Length; i++)
+            for(var i=0; i < vertices.Count; i++)
             {
                 var v = vertices[i];
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.X), 0, vBuff, vi, floatSize);
@@ -617,7 +639,8 @@ namespace Elements.Serialization.glTF
                 vi += 3 * floatSize;
 
                 // On every even index, write a line segment.
-                if(i % 2 == 0 && i < vertices.Length - 1)
+                // if(i % 2 == 0 && i < vertices.Count - 1)
+                if(i < vertices.Count - 1)
                 {
                     System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)i), 0, indices, ii, ushortSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)(i+1)), 0, indices, ii + ushortSize, ushortSize);
@@ -627,12 +650,45 @@ namespace Elements.Serialization.glTF
 
             var bbox = new BBox3(vertices);
             gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff.ToArray(), indices.ToArray(), bbox.Min.ToArray(),
-                            bbox.Max.ToArray(), 0, (ushort)(vertices.Length - 1), material, MeshPrimitive.ModeEnum.LINES, t);
+                            bbox.Max.ToArray(), 0, (ushort)(vertices.Count - 1), material, MeshPrimitive.ModeEnum.LINES, t);
         }
 
-        // private static void AddArrow(long id, Vector3 origin, Vector3 direction, 
-        //     Gltf gltf, int material, Transform t, List<byte> buffer, 
-        //     List<BufferView> bufferViews, List<Accessor> accessors)
+        private static void AddPoints(long id, IList<Vector3> vertices, Gltf gltf, 
+            int material, List<byte> buffer, List<BufferView> bufferViews, List<Accessor> accessors, Transform t = null)
+        {
+            var floatSize = sizeof(float);
+            var ushortSize = sizeof(ushort);
+            var vBuff = new byte[vertices.Count * 3 * floatSize];
+            var indices = new byte[vertices.Count * ushortSize];
+
+            var vi = 0;
+            var ii = 0;
+            for(var i=0; i < vertices.Count; i++)
+            {
+                var v = vertices[i];
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.X), 0, vBuff, vi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Y), 0, vBuff, vi + floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Z), 0, vBuff, vi +  2 * floatSize, floatSize);
+                vi += 3 * floatSize;
+
+                System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)i), 0, indices, ii, ushortSize);
+                ii += ushortSize;
+            }
+
+            var bbox = new BBox3(vertices);
+            gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff.ToArray(), indices.ToArray(), bbox.Min.ToArray(),
+                            bbox.Max.ToArray(), 0, (ushort)(vertices.Count - 1), material, MeshPrimitive.ModeEnum.POINTS, t);
+        }
+
+        // private static void AddArrow(long id,
+        //                              Vector3 origin,
+        //                              Vector3 direction,
+        //                              Gltf gltf,
+        //                              int material,
+        //                              Transform t,
+        //                              List<byte> buffer,
+        //                              List<BufferView> bufferViews,
+        //                              List<Accessor> accessors)
         // {
         //     var scale = 0.5;
         //     var end = origin + direction * scale;

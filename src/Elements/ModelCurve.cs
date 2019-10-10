@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Interfaces;
 
@@ -36,6 +37,27 @@ namespace Elements
         {
             this.Curve = curve;
             this.Material = material != null ? material : BuiltInMaterials.Edges;
+        }
+    }
+    
+    /// <summary>
+    /// Extension methods for model curves.
+    /// </summary>
+    public static class ModelCurveExtensions
+    {
+        /// <summary>
+        /// Convert a transform to a set of model curves.
+        /// </summary>
+        /// <param name="t">The transform to convert.</param>
+        /// <param name="context">An optional transform in which these curves should be drawn.</param>
+        public static IList<ModelCurve> ToModelCurves(this Transform t, Transform context = null)
+        {
+            var mc = new List<ModelCurve>();
+            var x = new ModelCurve(new Line(t.Origin, t.XAxis, 1.0), BuiltInMaterials.XAxis, context);
+            var y = new ModelCurve(new Line(t.Origin, t.YAxis, 1.0), BuiltInMaterials.YAxis, context);
+            var z = new ModelCurve(new Line(t.Origin, t.ZAxis, 1.0), BuiltInMaterials.ZAxis, context);
+            mc.AddRange(new[]{x,y,z});
+            return mc;
         }
     }
 }

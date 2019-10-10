@@ -32,12 +32,21 @@ namespace Elements
         /// <param name="transform">The column's transform.</param>
         /// <param name="startSetback">The setback of the column's extrusion from the base of the column.</param>
         /// <param name="endSetback">The setback of the column's extrusion from the top of the column.</param>
+        /// <param name="rotation">An optional rotation of the column's profile around its axis.</param>
         /// <param name="id">The column's id.</param>
         /// <param name="name">The column's name.</param>
-        public Column(Vector3 location, double height, Profile profile, Material material = null, 
-            Transform transform = null, double startSetback = 0.0, double endSetback = 0.0, Guid id = default(Guid), string name = null) 
+        public Column(Vector3 location,
+                      double height,
+                      Profile profile,
+                      Material material = null,
+                      Transform transform = null,
+                      double startSetback = 0.0,
+                      double endSetback = 0.0,
+                      double rotation = 0.0,
+                      Guid id = default(Guid),
+                      string name = null) 
             : base(new Line(new Vector3(location.X, location.Y, location.Z + height), location), profile, material, 
-                startSetback, endSetback, transform, id, name)
+                startSetback, endSetback, rotation, transform, id, name)
         {
             this.Location = location;
             this.Height = height;

@@ -165,8 +165,9 @@ namespace Elements.Geometry
         /// Get the Transform at the specified parameter along the Polygon.
         /// </summary>
         /// <param name="u">The parameter on the Polygon between 0.0 and 1.0.</param>
+        /// <param name="rotation">An optional rotation in degrees of the transform around its z axis.</param>
         /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
-        public override Transform TransformAt(double u)
+        public override Transform TransformAt(double u, double rotation = 0.0)
         {
             if (u < 0.0 || u > 1.0)
             {
@@ -195,11 +196,11 @@ namespace Elements.Geometry
 
                 if (idx == 0 || idx == this.Vertices.Count - 1)
                 {
-                    return CreateOthogonalTransform(idx, a);
+                    return CreateOthogonalTransform(idx, a, rotation);
                 }
                 else
                 {
-                    return CreateMiterTransform(idx, a);
+                    return CreateMiterTransform(idx, a, rotation);
                 }
             }
             else
@@ -220,7 +221,7 @@ namespace Elements.Geometry
                     totalLength += currLength;
                 }
             }
-            return new Transform(o, x, up);
+            return new Transform(o, x, up, rotation);
         }
 
         /// <summary>
@@ -228,10 +229,11 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
+        /// <param name="rotation">An optional rotation in degrees of all frames around their z axes.</param>
         /// <returns></returns>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
         {
-            return FramesInternal(startSetback, endSetback, false);
+            return FramesInternal(startSetback, endSetback, false, rotation);
         }
 
         /// <summary>
@@ -251,7 +253,7 @@ namespace Elements.Geometry
             return new Plane(this.Vertices[0], this.Vertices[1], this.Vertices[2]);
         }
 
-        internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)
+        internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false, double rotation = 0.0)
         {
             // Create an array of transforms with the same
             // number of items as the vertices.
@@ -261,17 +263,17 @@ namespace Elements.Geometry
                 var a = this.Vertices[i];
                 if (closed)
                 {
-                    result[i] = CreateMiterTransform(i, a);
+                    result[i] = CreateMiterTransform(i, a, rotation);
                 }
                 else
                 {
-                    result[i] = CreateOthogonalTransform(i, a);
+                    result[i] = CreateOthogonalTransform(i, a, rotation);
                 }
             }
             return result;
         }
 
-        private Transform CreateMiterTransform(int i, Vector3 a)
+        private Transform CreateMiterTransform(int i, Vector3 a, double rotation)
         {
             // Create transforms at 'miter' planes.
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
@@ -279,22 +281,22 @@ namespace Elements.Geometry
             var x = (b - a).Unit().Average((c - a).Unit()).Negate();
             var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
 
-            return new Transform(this.Vertices[i], x, up.Cross(x));
+            return new Transform(this.Vertices[i], x, x.Cross(up), rotation);
         }
 
-        private Transform CreateOthogonalTransform(int i, Vector3 a)
+        private Transform CreateOthogonalTransform(int i, Vector3 a, double rotation)
         {
             Vector3 b, x, c;
 
             if (i == 0)
             {
                 b = this.Vertices[i + 1];
-                return new Transform(a, (b-a).Unit());
+                return new Transform(a, (b-a).Unit(), rotation);
             }
             else if (i == this.Vertices.Count - 1)
             {
                 b = this.Vertices[i - 1];
-                return new Transform(a, (a-b).Unit());
+                return new Transform(a, (a-b).Unit(), rotation);
             }
             else
             {
@@ -304,8 +306,16 @@ namespace Elements.Geometry
                 var v2 = (c - a).Unit();
                 x = v1.Average(v2).Negate();
                 var up = v2.Cross(v1);
-                return new Transform(this.Vertices[i], x, up.Cross(x));
+                return new Transform(this.Vertices[i], x, up.Cross(x), rotation);
             }
+        }
+
+        /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            return this.Vertices;
         }
     }
 }

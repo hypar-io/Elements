@@ -31,10 +31,13 @@ namespace Elements.Geometry
         /// Create a transform with a translation.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
-        public Transform(Vector3 origin)
+        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
+        public Transform(Vector3 origin, double rotation = 0.0)
         {
             this._matrix = new Matrix();
             this._matrix.SetupTranslation(origin);
+            ApplyRotationAndTranslation(rotation, this._matrix.ZAxis, Vector3.Origin);
+            
             SetComponentsFromMatrix();
         }
 
@@ -44,10 +47,13 @@ namespace Elements.Geometry
         /// <param name="x">The X component of translation.</param>
         /// <param name="y">The Y component of translation.</param>
         /// <param name="z">The Z component of translation.</param>
-        public Transform(double x, double y, double z)
+        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
+        public Transform(double x, double y, double z, double rotation = 0.0)
         {
             this._matrix = new Matrix();
             this._matrix.SetupTranslation(new Vector3(x, y, z));
+            ApplyRotationAndTranslation(rotation, this._matrix.ZAxis, Vector3.Origin);
+            
             SetComponentsFromMatrix();
         }
 
@@ -57,7 +63,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
         /// <param name="z">The vector which will define the Z axis of the transform.</param>
-        public Transform(Vector3 origin, Vector3 z)
+        /// <param name="rotation">An optional rotation around the z axis.</param>
+        public Transform(Vector3 origin, Vector3 z, double rotation = 0.0)
         {
             Vector3 x = Vector3.XAxis;
             Vector3 y = Vector3.YAxis;
@@ -68,11 +75,23 @@ namespace Elements.Geometry
                 var p = new Plane(origin, z);
                 var test = Vector3.ZAxis.Project(p);
                 x = test.Cross(z);
-                y = x.Cross(z); 
+                y = x.Cross(z.Negate()); 
             }
             
-            this._matrix = new Matrix(x, y, z, origin);
+            this._matrix = new Matrix(x, y, z, Vector3.Origin);
+            ApplyRotationAndTranslation(rotation, z, origin);
+
             SetComponentsFromMatrix();
+        }
+
+        private void ApplyRotationAndTranslation(double rotation, Vector3 axis, Vector3 translation)
+        {
+            if(rotation != 0.0)
+            {
+                this.Rotate(axis, rotation);
+            }
+            // Apply translation after rotation.
+            this.Move(translation);
         }
 
         /// <summary>
@@ -81,12 +100,15 @@ namespace Elements.Geometry
         /// <param name="origin">The origin of the transform.</param>
         /// <param name="xAxis">The X axis of the transform.</param>
         /// <param name="zAxis">The Z axis of the transform.</param>
-        public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis)
+        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
+        public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis, double rotation = 0.0)
         {
             var x = xAxis.Unit();
             var z = zAxis.Unit();
             var y = z.Cross(x).Unit();
-            this._matrix = new Matrix(x, y, z, origin);
+            this._matrix = new Matrix(x, y, z, Vector3.Origin);
+            ApplyRotationAndTranslation(rotation, z, origin);
+
             SetComponentsFromMatrix();
         }
 

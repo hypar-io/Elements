@@ -538,10 +538,11 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
+        /// <param name="rotation">An optional rotation in degrees of all frames around their z axes.</param>
         /// <returns></returns>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
         {
-            return FramesInternal(startSetback, endSetback, true);
+            return FramesInternal(startSetback, endSetback, true, rotation);
         }
 
         /// <summary>
@@ -607,6 +608,16 @@ namespace Elements.Geometry
             {
                 this.Vertices[i] = t.OfPoint(this.Vertices[i]);
             }
+        }
+
+        /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            var verts = new List<Vector3>(this.Vertices);
+            verts.Add(this.Start);
+            return verts;
         }
     }
 

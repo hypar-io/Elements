@@ -21,16 +21,18 @@ namespace Elements.Geometry.Interfaces
         /// Get the frame from the curve at parameter u.
         /// </summary>
         /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <param name="rotation">An optional rotation of the transform around its z axis.</param>
         /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
-        Transform TransformAt(double u);
+        Transform TransformAt(double u, double rotation = 0.0);
 
         /// <summary>
         /// Get a collection of Transforms which represent frames along this ICurve.
         /// </summary>
         /// <param name="startSetback">The offset from the start of the ICurve.</param>
         /// <param name="endSetback">The offset from the end of the ICurve.</param>
+        /// <param name="rotation">An optional rotation of all frames around their z axes.</param>
         /// <returns>A collection of Transforms.</returns>
-        Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0);
+        Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0, double rotation = 0.0);
 
         /// <summary>
         /// Get the bounding box of this curve.

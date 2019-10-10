@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
@@ -50,10 +51,11 @@ namespace Elements.Geometry
         /// positive Z axis points along the curve.
         /// </summary>
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
+        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         /// <returns>A transform.</returns>
-        public override Transform TransformAt(double u)
+        public override Transform TransformAt(double u, double rotation = 0.0)
         {
-            return new Transform(PointAt(u), (this.End-this.Start).Unit());
+            return new Transform(PointAt(u), (this.Start-this.End).Unit(), rotation);
         }
 
         /// <summary>
@@ -137,11 +139,12 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback">The offset from the start of the line.</param>
         /// <param name="endSetback">The offset from the end of the line.</param>
+        /// <param name="rotation">An optional rotation in degrees around all the frames' z axes.</param>
         /// <returns>A collection of transforms.</returns>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
         {
             var l = this.Length();
-            return new Transform[] { TransformAt(0.0 + startSetback / l), TransformAt(1.0 - endSetback / l) };
+            return new Transform[] { TransformAt(0.0 + startSetback / l, rotation), TransformAt(1.0 - endSetback / l, rotation) };
         }
 
         /// <summary>
@@ -186,6 +189,14 @@ namespace Elements.Geometry
         public Vector3 Direction()
         {
             return (this.End - this.Start).Unit();
+        }
+
+        /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            return new []{this.Start, this.End};
         }
     }
 }

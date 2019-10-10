@@ -48,16 +48,30 @@ namespace Elements
         /// <param name="material">The structural framing's material.</param>
         /// <param name="startSetback">The setback of the beam's extrusion at its start.</param>
         /// <param name="endSetback">The setback of the beam's extrusion at its end.</param>
+        /// <param name="rotation">An optional rotation in degrees of the transform around its z axis.</param>
         /// <param name="transform">The element's Transform.</param>
         /// <param name="id">The structural framing's id.</param>
         /// <param name="name">The structural framing's name.</param>
-        public StructuralFraming(Curve curve, Profile profile, Material material = null, 
-            double startSetback = 0.0, double endSetback = 0.0, Transform transform = null, Guid id=default(Guid), string name=null): base(id, name, transform)
+        public StructuralFraming(Curve curve,
+                                 Profile profile,
+                                 Material material = null,
+                                 double startSetback = 0.0,
+                                 double endSetback = 0.0,
+                                 double rotation = 0.0,
+                                 Transform transform = null,
+                                 Guid id = default(Guid),
+                                 string name = null) : base(id, name, transform)
         {
-            SetProperties(curve, profile, material, transform, startSetback, endSetback);
+            SetProperties(curve, profile, material, transform, startSetback, endSetback, rotation);
         }
 
-        private void SetProperties(Curve curve, Profile profile, Material material, Transform transform, double startSetback, double endSetback)
+        private void SetProperties(Curve curve,
+                                   Profile profile,
+                                   Material material,
+                                   Transform transform,
+                                   double startSetback,
+                                   double endSetback,
+                                   double rotation)
         {
             this.Curve = curve;
             var l = this.Curve.Length();
@@ -69,7 +83,7 @@ namespace Elements
             this.EndSetback = endSetback;
             this.Profile = profile;
             this.Material = material != null ? material : BuiltInMaterials.Steel;
-            this.Geometry.SolidOperations.Add(new Sweep(this.Profile, this.Curve));
+            this.Geometry.SolidOperations.Add(new Sweep(this.Profile, this.Curve, this.StartSetback, this.EndSetback, rotation));
         }
 
         /// <summary>

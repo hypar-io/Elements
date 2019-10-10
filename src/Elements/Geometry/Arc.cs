@@ -1,6 +1,7 @@
 using Elements.Geometry.Interfaces;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
@@ -88,13 +89,14 @@ namespace Elements.Geometry
         /// Return transform on the arc at parameter u.
         /// </summary>
         /// <param name="u">A parameter between 0.0 and 1.0 on the arc.</param>
+        /// <param name="rotation">An optional rotation of the transform around its Z axis.</param>
         /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
-        public override Transform TransformAt(double u)
+        public override Transform TransformAt(double u, double rotation = 0.0)
         {
             var p = PointAt(u);
             var x = (p-this.Center).Unit();
             var y = Vector3.ZAxis;
-            return new Transform(p, x, x.Cross(y));
+            return new Transform(p, x, x.Cross(y), rotation);
         }
 
         /// <summary>
@@ -102,8 +104,9 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback">The offset from the start of the arc.</param>
         /// <param name="endSetback">The offset from the end of the arc.</param>
+        /// <param name="rotation">An optional rotation for all frames around their Z axes.</param>
         /// <returns>A collection of transforms.</returns>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
         {
             var div = 10;
             var l = this.Length();
@@ -114,15 +117,15 @@ namespace Elements.Geometry
                 Transform t;
                 if (i == 0)
                 {
-                    t = TransformAt(0.0 + startSetback);
+                    t = TransformAt(0.0 + startSetback, rotation);
                 }
                 else if (i == div)
                 {
-                    t = TransformAt(1.0 - endSetback);
+                    t = TransformAt(1.0 - endSetback, rotation);
                 }
                 else
                 {
-                    t = TransformAt(startSetback + i * step);
+                    t = TransformAt(startSetback + i * step, rotation);
                 }
                 result[i] = t;
             }
@@ -152,6 +155,21 @@ namespace Elements.Geometry
             var min = new Vector3(this.Center - delta);
             var max = new Vector3(this.Center + delta);
             return new BBox3(min, max);
+        }
+
+        /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            var div = 10;
+            var vertices = new Vector3[div];
+            for (var i = 0; i < div; i++)
+            {
+                var t = i * (1.0/div);
+                vertices[i] = PointAt(t);
+            }
+            return vertices;
         }
     }
 }
