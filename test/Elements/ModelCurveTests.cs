@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Elements.Geometry;
 using Xunit;
 
@@ -18,14 +19,39 @@ namespace Elements.Tests
             var plineModelCurve = new ModelCurve(pline, new Material("Purple", Colors.Purple), new Transform(10, 0, 0));
             
             this.Model.AddElements(new[]{lineModelCurve, arcModelCurve, plineModelCurve});
+        }
+
+        [Fact]
+        public void OffsetModelCurves()
+        {
+            this.Name = "OffsetModelCurves";
+
+            var pline = Polygon.L(2, 2, 0.5);
+            var mcs = new List<ModelCurve>();
+            var m = new Material("Purple", Colors.Blue);
+            var plineModelCurve = new ModelCurve(pline, m);
+            mcs.Add(plineModelCurve);
+            for(var i=0; i<100; i++)
+            {
+                pline = pline.Offset(1.0)[0];
+                plineModelCurve = new ModelCurve(pline, m);
+                mcs.Add(plineModelCurve);
+            }
+            this.Model.AddElements(mcs);
+        }
+
+        [Fact]
+        public void ModelPoints()
+        {
+            this.Name = "ModelPoints";
 
             var ptMaterial = new Material("Points", Colors.Blue);
             var modelPoints = new ModelPoints(ptMaterial);
-            for(var x=0; x<20; x++)
+            for(var x=0; x<50; x++)
             {
-                for(var y=0; y<20; y++)
+                for(var y=0; y<50; y++)
                 {
-                    for(var z=0; z<20; z++)
+                    for(var z=0; z<50; z++)
                     {
                         modelPoints.Locations.Add(new Vector3(x,y,z));
                     }
