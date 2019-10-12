@@ -26,18 +26,42 @@ namespace Elements.Tests
         {
             this.Name = "OffsetModelCurves";
 
-            var pline = Polygon.L(2, 2, 0.5);
+            var pline = new Polygon(new []{
+                new Vector3(0, 0),
+                new Vector3(20, -10),
+                new Vector3(25, 5),
+                new Vector3(15, 3),
+                new Vector3(20, 20),
+                new Vector3(5, 19),
+                new Vector3(0, 15)
+            });
             var mcs = new List<ModelCurve>();
             var m = new Material("Purple", Colors.Blue);
             var plineModelCurve = new ModelCurve(pline, m);
             mcs.Add(plineModelCurve);
+            var distance = -0.2;
             for(var i=0; i<100; i++)
             {
-                pline = pline.Offset(1.0)[0];
-                plineModelCurve = new ModelCurve(pline, m);
-                mcs.Add(plineModelCurve);
+                mcs.AddRange(OffsetPolygon(distance, pline, m));
             }
             this.Model.AddElements(mcs);
+        }
+
+        private IList<ModelCurve>OffsetPolygon(double distance, Polygon p, Material m)
+        {
+            var mcs = new List<ModelCurve>();
+            var offset = p.Offset(distance);
+            if(offset == null || offset.Length == 0)
+            {
+                return mcs;
+            }
+            foreach(var pin in offset)
+            {
+                var mc = new ModelCurve(p, m);
+                mcs.Add(mc);
+                mcs.AddRange(OffsetPolygon(distance, pin, m));
+            }
+            return mcs;
         }
 
         [Fact]
