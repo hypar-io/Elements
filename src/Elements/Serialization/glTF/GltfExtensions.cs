@@ -498,10 +498,6 @@ namespace Elements.Serialization.glTF
             materialsToAdd.Add(BuiltInMaterials.EdgesHighlighted);
             
             var materials = gltf.AddMaterials(materialsToAdd);
-
-            // Lines are stored in a list of lists
-            // according to the max available index size of ushort.
-            // var lines = new List<IList<Vector3>>(){new List<Vector3>()};
             
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
@@ -512,18 +508,6 @@ namespace Elements.Serialization.glTF
                 var e = elements[i];
                 GetRenderDataForElement(e, gltf, materials, buffer, bufferViews, accessors);
             }
-
-            // if (lines.Count > 0)
-            // {
-            //     foreach(var lineSet in lines)
-            //     {
-            //         if(lineSet.Count > 0)
-            //         {
-            //             AddLines(_lineCount, lineSet, gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors);
-            //             _lineCount++;
-            //         }
-            //     }
-            // }
 
             var buff = new glTFLoader.Schema.Buffer();
             buff.ByteLength = buffer.Count();
@@ -544,10 +528,10 @@ namespace Elements.Serialization.glTF
                 // Get the material from the framing type's material.
                 materialName = ((IMaterial)e).Material.Name;
             }
-
+            
             if (e is IGeometry)
             {
-                // Element already has a solid representation.
+                // Element has a solid representation.
                 var geo = e as IGeometry;
                 foreach(var solidOp in geo.Geometry.SolidOperations)
                 {
