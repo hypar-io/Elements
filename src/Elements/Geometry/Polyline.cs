@@ -291,12 +291,12 @@ namespace Elements.Geometry
             if (i == 0)
             {
                 b = this.Vertices[i + 1];
-                return new Transform(a, (b-a).Unit(), rotation);
+                return new Transform(a, (a-b).Unit(), rotation);
             }
             else if (i == this.Vertices.Count - 1)
             {
                 b = this.Vertices[i - 1];
-                return new Transform(a, (a-b).Unit(), rotation);
+                return new Transform(a, (b-a).Unit(), rotation);
             }
             else
             {
