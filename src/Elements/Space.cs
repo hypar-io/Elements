@@ -2,6 +2,7 @@ using Elements.Geometry;
 using Elements.Interfaces;
 using System;
 using Elements.Geometry.Solids;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -45,6 +46,7 @@ namespace Elements
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
+        [JsonConstructor]
         public Space(Profile profile,
                      double height,
                      double elevation = 0.0,
@@ -78,7 +80,7 @@ namespace Elements
         /// <param name="material">The space's material.</param>
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
-        internal Space(Solid geometry,
+        public Space(Solid geometry,
                        Transform transform = null,
                        Material material = null,
                        Guid id = default(Guid),
