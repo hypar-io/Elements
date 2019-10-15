@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Elements.Serialization.JSON;
 
 namespace Elements.Geometry.Solids
@@ -22,7 +23,7 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Get the updated solid for this operation.
         /// </summary>
-        internal virtual Solid GetUpdatedSolid()
+        internal virtual Solid GetUpdatedSolid(IEnumerable<SolidOperation> voidOperations)
         {
             // Override in derived classes.
             return null;

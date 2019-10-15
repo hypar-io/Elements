@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Elements.Geometry.Solids
 {
     public partial class Lamina
@@ -15,7 +17,7 @@ namespace Elements.Geometry.Solids
         /// Get the updated solid representation of the frame.
         /// </summary>
         /// <returns></returns>
-        internal override Solid GetUpdatedSolid()
+        internal override Solid GetUpdatedSolid(IEnumerable<SolidOperation> voidOps)
         {
             return Kernel.Instance.CreateLamina(this.Perimeter);
         }

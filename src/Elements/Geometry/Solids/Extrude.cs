@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Elements.Geometry.Solids
 {
     /// <summary>
@@ -22,9 +25,19 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Get the updated solid representation of the frame.
         /// </summary>
-        /// <returns></returns>
-        internal override Solid GetUpdatedSolid()
+        internal override Solid GetUpdatedSolid(IEnumerable<SolidOperation> voidOps)
         {
+            if(voidOps != null)
+            {
+                // Find all the void ops which lie in the same plane as the profile
+                var holes = voidOps.Where(op=>op is Extrude && op.IsVoid == true).Cast<Extrude>().Where(ex=>ex.Direction.IsAlmostEqualTo(this.Direction));
+                if(holes.Any())
+                {
+                    var holeProfiles = holes.Select(ex=>ex.Profile);
+                    this.Profile.Clip(holeProfiles);
+                }
+            }
+            
             return Kernel.Instance.CreateExtrude(this.Profile, this.Height, this.Direction);
         }
     }

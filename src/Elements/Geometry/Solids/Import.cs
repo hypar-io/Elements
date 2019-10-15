@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Elements.Geometry.Solids
 {
     internal class Import : SolidOperation
@@ -15,7 +17,7 @@ namespace Elements.Geometry.Solids
             this.IsVoid = isVoid;
         }
 
-        internal override Solid GetUpdatedSolid()
+        internal override Solid GetUpdatedSolid(IEnumerable<SolidOperation> voidOps)
         {
             return this._solid;
         }

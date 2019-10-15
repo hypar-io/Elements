@@ -502,11 +502,12 @@ namespace Elements.Serialization.glTF
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
 
-            var elements = model.AllEntitiesOfType<Element>().ToArray();
-            for(var i=0;i<elements.Length;i++)
+            var elements = model.AllEntitiesOfType<Element>().Where(t=>t.GetType() != typeof(Opening));
+            var voidOps = model.AllEntitiesOfType<Opening>().SelectMany(s=>s.Geometry.SolidOperations);
+
+            foreach(var e in elements)
             {
-                var e = elements[i];
-                GetRenderDataForElement(e, gltf, materials, buffer, bufferViews, accessors);
+                GetRenderDataForElement(e, voidOps, gltf, materials, buffer, bufferViews, accessors);
             }
 
             var buff = new glTFLoader.Schema.Buffer();
@@ -518,8 +519,13 @@ namespace Elements.Serialization.glTF
             return gltf;
         }
 
-        private static void GetRenderDataForElement(Element e, Gltf gltf, 
-            Dictionary<string, int> materials, List<byte> buffer, List<BufferView> bufferViews , List<Accessor> accessors)
+        private static void GetRenderDataForElement(Element e,
+                                                    IEnumerable<SolidOperation> voidOps,
+                                                    Gltf gltf,
+                                                    Dictionary<string, int> materials,
+                                                    List<byte> buffer,
+                                                    List<BufferView> bufferViews,
+                                                    List<Accessor> accessors)
         {
             var materialName = BuiltInMaterials.Default.Name;
 
@@ -535,7 +541,7 @@ namespace Elements.Serialization.glTF
                 var geo = e as IGeometry;
                 foreach(var solidOp in geo.Geometry.SolidOperations)
                 {
-                    var solid = solidOp.GetUpdatedSolid();
+                    var solid = solidOp.GetUpdatedSolid(voidOps);
                     if(solid != null)
                     {
                         ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
