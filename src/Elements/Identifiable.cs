@@ -19,7 +19,7 @@ namespace Elements
     {
         public Identifiable(Guid id=default(Guid), string name=null)
         {
-            this.Id = id == Guid.Empty ? Guid.NewGuid() : id;
+            this.Id = id == default(Guid) ? Guid.NewGuid() : id;
             this.Name = name;
         }
     }
