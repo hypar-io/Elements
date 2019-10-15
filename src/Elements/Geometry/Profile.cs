@@ -135,13 +135,17 @@ namespace Elements.Geometry
         /// <summary>
         ///  Conduct a clip operation on this profile.
         /// </summary>
-        private void Clip()
+        internal void Clip(IEnumerable<Profile> additionalHoles = null)
         {
             var clipper = new ClipperLib.Clipper();
             clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
             if (this.Voids != null)
             {
                 clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            }
+            if(additionalHoles != null)
+            {
+                clipper.AddPaths(additionalHoles.Select(h=>h.Perimeter.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             }
             var solution = new List<List<ClipperLib.IntPoint>>();
             var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
