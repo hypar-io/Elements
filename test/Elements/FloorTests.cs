@@ -14,16 +14,17 @@ namespace Elements.Tests
 
             var p = Polygon.L(10, 20, 5);
             var floor1 = new Floor(p, 0.1, 0.5, material: new Material("green", Colors.Green, 0.0f, 0.0f));
+            var floor2 = new Floor(p, 0.1, 2.0, material: new Material("blue", Colors.Blue, 0.0f, 0.0f));
             var openings = new List<Opening>(){
-                new Opening(1, 1, 1, 1, 5, floor1.Transform),
-                new Opening(3, 3, 1, 3, 5, floor1.Transform),
+                new Opening(1, 1, 1, 1, floor1.Transform),
+                new Opening(3, 3, 1, 3, floor1.Transform),
             };
 
             Assert.Equal(0.5, floor1.Elevation);
             Assert.Equal(0.1, floor1.Thickness);
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
             
-            this.Model.AddElement(floor1);
+            this.Model.AddElements(new[]{floor1, floor2});
             this.Model.AddElements(openings);
         }
 

@@ -26,7 +26,7 @@ namespace Elements.Tests
             var l = 1.0;
             var dim = 100;
 
-            var profile = new Profile(Polygon.Rectangle(w,l, new Vector3(w, l)));
+            var profile = new Profile(Polygon.Rectangle(w,l));
 
             // Create 3600 masses.
             for(var i=0; i<dim;i++)

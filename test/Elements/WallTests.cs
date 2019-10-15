@@ -16,9 +16,9 @@ namespace Elements.Tests
            
             var w = new StandardWall(l, 0.1, 3.0, null);
             var openings = new List<Opening>(){
-                new Opening(1.0, 2.0, 1.0, 1.0, 5, w.Transform),
-                new Opening(3.0, 1.0, 1.0, 2.0, 5, w.Transform),
-                new Opening(Polygon.Ngon(3, 2.0), 8,2, 5, w.Transform)
+                new Opening(1.0, 2.0, 1.0, 1.0, w.Transform),
+                new Opening(3.0, 1.0, 1.0, 2.0, w.Transform),
+                new Opening(Polygon.Ngon(3, 2.0), 8,2, w.Transform)
             };
 
             this.Model.AddElement(w);
