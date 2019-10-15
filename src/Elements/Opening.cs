@@ -8,7 +8,7 @@ namespace Elements
 {
     /// <summary>
     /// A polygonal opening.
-    /// The opening extends to 'depth' in the z direction of the supplied transform.
+    /// Openings have a local placement defined by the x and y coordinates as well as a transform. 
     /// </summary>
     [UserElement]
     public class Opening : Element, IGeometry, IMaterial
@@ -17,11 +17,6 @@ namespace Elements
         /// The profile of the opening.
         /// </summary>
         public Profile Profile { get; private set; }
-
-        /// <summary>
-        /// The depth of the opening's extrusion.
-        /// </summary>
-        public double Depth { get; }
 
         /// <summary>
         /// The opening's geometry.
@@ -36,11 +31,10 @@ namespace Elements
         /// <summary>
         /// Create a rectangular opening.
         /// </summary>
-        /// <param name="x">The distance along the X axis of the transform of the host element to the center of the opening.</param>
-        /// <param name="y">The distance along the Y axis of the transform of the host element to the center of the opening.</param>
+        /// <param name="x">The distance along the x axis to the center of the opening.</param>
+        /// <param name="y">The distance along the y axis to the center of the opening.</param>
         /// <param name="width">The width of the opening.</param>
         /// <param name="height">The height of the opening.</param>
-        /// <param name="depth">The depth of the opening's extrusion.</param>
         /// <param name="transform">The opening's transform.</param>
         /// <param name="id">The id of the opening..</param>
         /// <param name="name">The name of the opening.</param>
@@ -48,40 +42,41 @@ namespace Elements
                        double y,
                        double width,
                        double height,
-                       double depth = 5.0,
                        Transform transform = null,
                        Guid id = default(Guid),
-                       string name = null) : base(id, name, transform)
+                       string name = null) : base(id, name)
         {
-            this.Profile = new Profile(Polygon.Rectangle(width, height, new Vector3(x, y)));
-            this.Profile.Transform(this.Transform);
-            this.Depth = depth;
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Depth, this.Transform.ZAxis, true));
+            this.Profile = new Profile(Polygon.Rectangle(width, height));
+            this.Transform = transform != null ? transform : new Transform();
+            this.Profile.Transform(new Transform(new Vector3(x, y)));
+
+            // TODO(Ian): Give this a proper depth when booleans are supported.
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, Vector3.ZAxis, true));
         }
 
         /// <summary>
         /// Create a polygonal opening.
         /// </summary>
         /// <param name="perimeter">A polygon representing the perimeter of the opening.</param>
-        /// <param name="x">The distance along the X axis of the transform of the host element to transform the profile.</param>
-        /// <param name="y">The distance along the Y axis of the transform of the host element to transform the profile.</param>
-        /// <param name="depth">The depth of the opening's extrusion.</param>
+        /// <param name="x">The distance along the x to transform the profile.</param>
+        /// <param name="y">The distance along the y to transform the profile.</param>
         /// <param name="transform">The opening's transform.</param>
         /// <param name="id">The id of the opening.</param>
         /// <param name="name">The name of the opening.</param>
         public Opening(Polygon perimeter,
                        double x = 0.0,
                        double y = 0.0,
-                       double depth = 5.0,
                        Transform transform = null,
                        Guid id = default(Guid),
-                       string name = null) : base(id, name, transform)
+                       string name = null) : base(id, name)
         {
-            this.Transform = new Transform(x,y,0);
-            this.Depth = depth;
+            this.Transform = transform != null ? transform : new Transform();
+            this.Transform.Move(new Vector3(x, y));
             this.Profile = perimeter;
-            this.Profile.Transform(this.Transform);
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Depth, this.Transform.ZAxis, true));
+            this.Profile.Transform(new Transform(new Vector3(x, y)));
+
+            // TODO(Ian): Give this a proper depth when booleans are supported.
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, Vector3.ZAxis, true));
         }
 
         /// <summary>
@@ -100,8 +95,9 @@ namespace Elements
                        string name = null) : base(id, name, transform)
         {
             this.Profile = this.Profile; // Don't re-transform the profile.
-            this.Depth = depth;
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Depth, this.Transform.ZAxis, true));
+
+            // TODO(Ian): Give this a proper depth when booleans are supported.
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, true));
         }
     }
 }
