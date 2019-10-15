@@ -94,7 +94,8 @@ namespace Elements
             }
 
             this.Thickness = thickness;
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
+            this.Transform = transform != null ? new Transform(transform) : new Transform();
+            this.Transform.Move(new Vector3(0, 0, elevation));
             this.Material = material != null ? material : BuiltInMaterials.Concrete;
             this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis));
         }
