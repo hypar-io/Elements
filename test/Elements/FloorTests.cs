@@ -14,7 +14,10 @@ namespace Elements.Tests
 
             var p = Polygon.L(10, 20, 5);
             var floor1 = new Floor(p, 0.1, 0.5, material: new Material("green", Colors.Green, 0.0f, 0.0f));
-            var floor2 = new Floor(p, 0.1, 2.0, material: new Material("blue", Colors.Blue, 0.0f, 0.0f));
+
+            var transRotate = new Transform();
+            transRotate.Rotate(Vector3.ZAxis, 20.0);
+            var floor2 = new Floor(p, 0.1, 2.0, transRotate, material: new Material("blue", Colors.Blue, 0.0f, 0.0f));
             var openings = new List<Opening>(){
                 new Opening(1, 1, 1, 1, floor1.Transform),
                 new Opening(3, 3, 1, 3, floor1.Transform),

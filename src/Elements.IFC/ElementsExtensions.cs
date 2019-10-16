@@ -1,16 +1,136 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elements.ElementTypes;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using IFC;
 
 namespace Elements.IFC
 {
-    public static partial class IFCExtensions
+    /// <summary>
+    /// Extension methods for converting elements to IFC entities.
+    /// </summary>
+    public static class ElementsExtensions
     {
+        public static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc)
+        {
+            var products = new List<IfcProduct>();
+
+            IfcProductDefinitionShape shape = null;
+            var localPlacement = e.Transform.ToIfcLocalPlacement(doc);
+            IfcGeometricRepresentationItem geom = null;
+
+            if(e is IGeometry)
+            {
+                var geo = (IGeometry)e;
+                foreach(var op in geo.Geometry.SolidOperations)
+                {
+                    if(op is Sweep)
+                    {
+                        var sweep = (Sweep)op;
+                        geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, doc);
+                    }
+                    else if(op is Extrude)
+                    {
+                        var extrude = (Extrude)op;
+                        geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, doc);
+                    }
+                    else if(op is Lamina)
+                    {
+                        var lamina = (Lamina)op;
+                        geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, doc);
+                    }
+                    else
+                    {
+                        throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
+                    }
+                }
+            }
+            
+            shape = ToIfcProductDefinitionShape(geom, context, doc);
+
+            doc.AddEntity(shape);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(geom);
+
+            var product = ConvertElementToIfcProduct(e, localPlacement, shape);
+            products.Add(product);
+            doc.AddEntity(product);
+
+            // If the element has openings,
+            // Make opening relationships in
+            // the IfcElement.
+            // if(e is IHasOpenings)
+            // {
+            //     var openings = (IHasOpenings)e;
+            //     if(openings.Openings.Count > 0)
+            //     {
+            //         foreach(var o in openings.Openings)
+            //         {
+            //             var element = (IfcElement)product;
+            //             var opening = o.ToIfcOpeningElement(context, doc, localPlacement);
+            //             var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
+            //             element.HasOpenings.Add(voidRel);
+            //             doc.AddEntity(opening);
+            //             doc.AddEntity(voidRel);
+            //         }
+            //     }
+            // }
+
+            IfcStyledItem style = null;
+
+            if(e is IMaterial)
+            {
+                var m = (IMaterial)e;
+                style = m.Material.ToIfcStyledItem(geom, doc);
+            }
+            
+            // Associate the style with the element
+            style.Item = geom;
+
+            geom.StyledByItem = new List<IfcStyledItem>{style};
+            doc.AddEntity(style);
+
+            return products;
+        }
+
+        internal static IfcLocalPlacement ToIfcLocalPlacement(this Transform transform, Document doc, IfcObjectPlacement parent = null)
+        {
+            var placement = transform.ToIfcAxis2Placement3D(doc);
+            var localPlacement = new IfcLocalPlacement(new IfcAxis2Placement(placement));
+            if(parent != null)
+            {
+                localPlacement.PlacementRelTo = parent;
+            }
+            
+            doc.AddEntity(placement);
+            return localPlacement;
+        }
+
+        internal static IfcExtrudedAreaSolid ToIfcExtrudedAreaSolid(this Extrude extrude, Transform transform, Document doc)
+        {
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
+
+            double extrudeDepth = 0.0;
+            IfcArbitraryClosedProfileDef extrudeProfile = null;
+            IfcDirection extrudeDirection = null;
+
+            extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            extrudeDirection = extrude.Direction.ToIfcDirection();
+            extrudeDepth = extrude.Height;
+
+            var solid = new IfcExtrudedAreaSolid(extrudeProfile, position, 
+                extrudeDirection, new IfcPositiveLengthMeasure(extrude.Height));
+            doc.AddEntity(extrudeProfile);
+            doc.AddEntity(extrudeDirection);
+            doc.AddEntity(position);
+            doc.AddEntity(solid);
+
+            return solid;
+        }
+
         private static IfcCurve ToIfcCurve(this ICurve curve, Document doc)
         {
             if (curve is Line)
@@ -88,29 +208,7 @@ namespace Elements.IFC
             return null;
         }
 
-        private static IfcExtrudedAreaSolid ToIfcExtrudedAreaSolid(this IExtrude extrude, Transform transform, Document doc)
-        {
-            var position = new Transform().ToIfcAxis2Placement3D(doc);
-
-            double extrudeDepth = 0.0;
-            IfcArbitraryClosedProfileDef extrudeProfile = null;
-            IfcDirection extrudeDirection = null;
-
-            extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-            extrudeDirection = extrude.ExtrudeDirection.ToIfcDirection();
-            extrudeDepth = extrude.ExtrudeDepth;
-
-            var solid = new IfcExtrudedAreaSolid(extrudeProfile, position, 
-                extrudeDirection, new IfcPositiveLengthMeasure(extrude.ExtrudeDepth));
-            doc.AddEntity(extrudeProfile);
-            doc.AddEntity(extrudeDirection);
-            doc.AddEntity(position);
-            doc.AddEntity(solid);
-
-            return solid;
-        }
-
-        private static IfcSurfaceCurveSweptAreaSolid ToIfcSurfaceCurveSweptAreaSolid(this ISweepAlongCurve sweep, Transform transform, Document doc)
+        private static IfcSurfaceCurveSweptAreaSolid ToIfcSurfaceCurveSweptAreaSolid(this Sweep sweep, Transform transform, Document doc)
         {
             var position = transform.ToIfcAxis2Placement3D(doc);
             var sweptArea = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
@@ -135,7 +233,7 @@ namespace Elements.IFC
             return solid;
         }
 
-        private static IfcShellBasedSurfaceModel ToIfcShellBasedSurfaceModel(this ILamina lamina, Transform transform, Document doc)
+        private static IfcShellBasedSurfaceModel ToIfcShellBasedSurfaceModel(this Lamina lamina, Transform transform, Document doc)
         {
             var position = transform.ToIfcAxis2Placement3D(doc);
 
@@ -181,7 +279,7 @@ namespace Elements.IFC
             }
             else if(curve is Arc)
             {
-                return ((Arc)curve).Plane;
+                return ((Arc)curve).Plane();
             }
             else if(curve is Polyline)
             {
@@ -360,7 +458,8 @@ namespace Elements.IFC
 
         private static IfcTrimmedCurve ToIfcTrimmedCurve(this Arc arc, Document doc)
         {
-            var t = new Transform(arc.Plane.Origin, arc.Plane.Normal);
+            var p = arc.Plane();
+            var t = new Transform(p.Origin, p.Normal);
             var placement = t.ToIfcAxis2Placement3D(doc);
             var ifcCircle = new IfcCircle(new IfcAxis2Placement(placement), new IfcPositiveLengthMeasure(arc.Radius));
             var start = arc.PointAt(0.0).ToIfcCartesianPoint();
@@ -384,19 +483,6 @@ namespace Elements.IFC
             var vector = new IfcVector(dir, new IfcLengthMeasure(0));
             doc.AddEntity(dir);
             return vector;
-        }
-
-        private static IfcLocalPlacement ToIfcLocalPlacement(this Transform transform, Document doc, IfcObjectPlacement parent = null)
-        {
-            var placement = transform.ToIfcAxis2Placement3D(doc);
-            var localPlacement = new IfcLocalPlacement(new IfcAxis2Placement(placement));
-            if(parent != null)
-            {
-                localPlacement.PlacementRelTo = parent;
-            }
-            
-            doc.AddEntity(placement);
-            return localPlacement;
         }
 
         private static IfcAxis2Placement3D ToIfcAxis2Placement3D(this Transform transform, Document doc)
@@ -465,96 +551,6 @@ namespace Elements.IFC
             doc.AddEntity(assign);
 
             return styledByItem;
-        }
-
-        private static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc)
-        {
-            var products = new List<IfcProduct>();
-
-            IfcProductDefinitionShape shape = null;
-            var localPlacement = e.Transform.ToIfcLocalPlacement(doc);
-            IfcGeometricRepresentationItem geom = null;
-
-            if(e is ISweepAlongCurve)
-            {
-                var sweep = (ISweepAlongCurve)e;
-                geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, doc);
-            }
-            else if(e is IExtrude)
-            {
-                var extrude = (IExtrude)e;
-                geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, doc);
-            }
-            else if(e is ILamina)
-            {
-                var lamina = (ILamina)e;
-                geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, doc);
-            }
-            else
-            {
-                throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
-            }
-            
-            shape = ToIfcProductDefinitionShape(geom, context, doc);
-
-            doc.AddEntity(shape);
-            doc.AddEntity(localPlacement);
-            doc.AddEntity(geom);
-
-            var product = ConvertElementToIfcProduct(e, localPlacement, shape);
-            products.Add(product);
-            doc.AddEntity(product);
-
-            // If the element has openings,
-            // Make opening relationships in
-            // the IfcElement.
-            if(e is IHasOpenings)
-            {
-                var openings = (IHasOpenings)e;
-                if(openings.Openings.Count > 0)
-                {
-                    foreach(var o in openings.Openings)
-                    {
-                        var element = (IfcElement)product;
-                        var opening = o.ToIfcOpeningElement(context, doc, localPlacement);
-                        var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
-                        element.HasOpenings.Add(voidRel);
-                        doc.AddEntity(opening);
-                        doc.AddEntity(voidRel);
-                    }
-                }
-            }
-
-            IfcStyledItem style = null;
-
-            if(e is IMaterial)
-            {
-                var m = (IMaterial)e;
-                style = m.Material.ToIfcStyledItem(geom, doc);
-            }
-            if(e is IElementType<StructuralFramingType>)
-            {
-                var m = (IElementType<StructuralFramingType>)e;
-                style = m.ElementType.Material.ToIfcStyledItem(geom, doc);
-            }
-            else if(e is IElementType<WallType>)
-            {
-                var m = (IElementType<WallType>)e;
-                style = m.ElementType.MaterialLayers[0].Material.ToIfcStyledItem(geom, doc);
-            }
-            else if(e is IElementType<FloorType>)
-            {
-                var m = (IElementType<FloorType>)e;
-                style = m.ElementType.MaterialLayers[0].Material.ToIfcStyledItem(geom, doc);
-            }
-            
-            // Associate the style with the element
-            style.Item = geom;
-
-            geom.StyledByItem = new List<IfcStyledItem>{style};
-            doc.AddEntity(style);
-
-            return products;
         }
     }
 }

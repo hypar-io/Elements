@@ -20,7 +20,11 @@ namespace Elements.Geometry.Solids
         /// </summary>
         public Loop Loop{get; internal set;}
 
-        internal HalfEdge(Vertex v)
+        /// <summary>
+        /// Create a half edge.
+        /// </summary>
+        /// <param name="v"></param>
+        public HalfEdge(Vertex v)
         {
             this.Vertex = v;
             v.HalfEdge = this;

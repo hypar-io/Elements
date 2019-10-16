@@ -158,6 +158,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Compute the plane of the arc.
+        /// </summary>
+        /// <returns>The plane in which the arc lies.</returns>
+        public Plane Plane()
+        {
+            return new Plane(this.PointAt(0.0), this.PointAt(1.0), this.Center);
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
