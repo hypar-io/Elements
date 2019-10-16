@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Elements\elements.csproj" />
+    <ProjectReference Include="..\..\src\Elements\Elements.csproj" />
   </ItemGroup>
 
   <ItemGroup>
