@@ -3,9 +3,10 @@
 ## 0.4.0
 ### Changed
 - All element types are partial classes with one part of the class generated from its JSON schema.
-- `Polygons.Rectangle` constructor no longer takes an origin.
+- `Polygon.Rectangle` constructor no longer takes an origin.
 - `Polygon.Clip` now takes an optional additional set of holes.
 - `Wall` and `Floor` constructors no longer take collections of `Opening`s.
+- `Vector3.Normalized()` to `Vector3.Unit()`.
 
 ### Added
 - `Identifiable`
