@@ -52,16 +52,6 @@ namespace Elements.Geometry
             this.Vertices = vertices;
         }
 
-        /// <summary>
-        /// Construct a polyline from a collection of vertices.
-        /// </summary>
-        /// <param name="vertices">A CCW wound set of vertices.</param>
-        public Polyline(Vector3[] vertices)
-        {
-            CheckCoincidenceAndThrow(vertices);
-            this.Vertices = vertices;
-        }
-
         private void CheckCoincidenceAndThrow(IList<Vector3> vertices)
         {
             for (var i = 0; i < vertices.Count; i++)
