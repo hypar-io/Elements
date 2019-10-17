@@ -12,7 +12,7 @@ namespace Elements.Geometry
         /// <summary>
         /// A tolerance for comparison operations.
         /// </summary>
-        public static double Tolerance = 0.000000001;
+        public static double Tolerance = 1e-9;
 
         private static Vector3 _xAxis = new Vector3(1, 0, 0);
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
