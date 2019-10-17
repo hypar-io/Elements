@@ -1,13 +1,15 @@
+using Elements;
 using Elements.Geometry;
+using Elements.Serialization.IFC;
+using Elements.Tests;
 using System;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
-using Elements.ElementTypes;
 
-namespace Elements.Tests
+namespace Elements.IFC.Tests
 {
     public class IfcTests : ModelTest
     {
@@ -49,9 +51,8 @@ namespace Elements.Tests
             this.Name = "IfcWall";
             var line = new Line(Vector3.Origin, new Vector3(10,10,0));
             var line1 = new Line(new Vector3(10,10,0), new Vector3(10,15,0));
-            var wallType = new WallType("test", 0.2);
-            var wall = new StandardWall(line, wallType, 3);
-            var wall1 = new StandardWall(line1, wallType, 2);
+            var wall = new StandardWall(line, 0.2, 3);
+            var wall1 = new StandardWall(line1, 0.2, 2);
             this.Model.AddElement(wall);
             this.Model.AddElement(wall1);
         }
@@ -61,9 +62,8 @@ namespace Elements.Tests
         {
             this.Name = "IfcWallPlan";
             var planShape = Polygon.L(2,2,0.15);
-            var wallType = new WallType("Thick Wall", BuiltInMaterials.Concrete);
-            var wall1 = new Wall(planShape, wallType, 3.0);
-            var wall2 = new Wall(planShape, wallType, 3.0, new Transform(0,0,3));
+            var wall1 = new Wall(planShape, 3.0);
+            var wall2 = new Wall(planShape, 3.0, BuiltInMaterials.Concrete, new Transform(0,0,3));
             this.Model.AddElement(wall1);
             this.Model.AddElement(wall2);
         }
@@ -76,8 +76,7 @@ namespace Elements.Tests
             var m1 = new Material("red", Colors.Red, 0f, 0f);
             var m2 = new Material("green", Colors.Green, 0f, 0f);
 
-            var t1 = new StructuralFramingType("W16x31", WideFlangeProfileServer.Instance.GetProfileByName("W16x31"), m1);
-            var t2 = new StructuralFramingType("W16x31", WideFlangeProfileServer.Instance.GetProfileByName("W16x31"), m2);
+            var prof = WideFlangeProfileServer.Instance.GetProfileByName("W16x31");
             for(var j=0; j<pts.Count; j++)
             {
                 var colA = pts[j];
@@ -95,7 +94,7 @@ namespace Elements.Tests
                     {
                         b = colA[i+1];
                         var line1 = new Line(a,b);
-                        var beam1 = new Beam(line1, t1);
+                        var beam1 = new Beam(line1, prof, m1);
                         this.Model.AddElement(beam1);
                     }
 
@@ -103,7 +102,7 @@ namespace Elements.Tests
                     {
                         var c = colB[i];
                         var line2 = new Line(a,c);
-                        var beam2 = new Beam(line2, t2);
+                        var beam2 = new Beam(line2, prof, m2);
                         this.Model.AddElement(beam2);
                     }
                 }

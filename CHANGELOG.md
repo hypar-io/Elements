@@ -1,5 +1,34 @@
 # Changelog
-## [0.3.8]
+
+## 0.4.0
+### Changed
+- All element types are partial classes with one part of the class generated from its JSON schema.
+- `Polygons.Rectangle` constructor no longer takes an origin.
+- `Polygon.Clip` now takes an optional additional set of holes.
+- `Wall` and `Floor` constructors no longer take collections of `Opening`s.
+
+### Added
+- `Identifiable`
+- `ModelCurve`
+- `ModelPoint`
+- `Elements.IFC` project.
+- `Elements.IFC.Tests` project.
+- `Elements.Generate` project.
+- `/Schemas` directory.
+- Optional `rotation` on `StructuralFraming` constructors.
+- `Model` now implements `IDictionary<Guid,Identifiable>`.
+
+### Removed
+- The empty Dynamo project.
+- `Transform` constructor taking `start` and `end` parameters. The `Transform` constructor which takes an X and a Z axis should now be used.
+
+### Fixed
+- Transforms are now consistently right-handed.
+- Transforms on curves are now consistently oriented with the +X axis oriented to the "right".
+- Built in materials for displaying transforms are now red, green, and blue. Previously they were all red.
+- All classes deriving from `Element` now pass their `id`, `transform`, and `name` to the base constructor.
+
+## 0.3.8
 ### Changed
 - Elements representing building components now return positive areas.
 - Added Area property to:
@@ -15,7 +44,8 @@ Added positive area calculation to:
 - StructuralFraming
 - Beam.Volume() throws an InvalidOperationException for non-linear beams.
 - Added TODO to support Volume() for all beam curves.
-## [0.3.6]
+
+## 0.3.6
 ### Changed
 - Edges are no longer written to the glTF file.
 - Large performance improvements made to glTF writing using `Buffer.BlockCopy` and writing buffers directly from tesselation to glTF buffer. 
@@ -23,7 +53,7 @@ Added positive area calculation to:
 ### Fixed
 - Fix #177.
 
-## [0.3.4]
+## 0.3.4
 ### Changed
 - Numerous comments were updated for clarity.
 - Numerous styling changes were made to the documentation to align with the Hypar brand.
@@ -31,12 +61,12 @@ Added positive area calculation to:
 ### Fixed
 - Fixed an error where vertex colors were not correctly encoded in the glTF.
 
-## [0.3.3]
+## 0.3.3
 ### Fixed
 - Fix #173.
 - Fix #7.
 
-## [0.3.0]
+## 0.3.0
 ### Changed
 - `Element.Id` is now a `Guid`.
 
@@ -47,14 +77,14 @@ Added positive area calculation to:
 - Fix #144.
 - Fix #142.
 
-## [0.2.17]
+## 0.2.17
 ### Added
 - The `Kernel` singleton has been added to contain all geometry methods for creating solids.
 
 ### Fixed
 - Fixed an error where, when writing edges to gltf, ushort would be overflowed and wrap back to 0 causing a loop not to terminate. 
 
-## [0.2.16]
+## 0.2.16
 ### Added
 - Materials are now serialized to IFC using `IfcStyledItem`.
 
@@ -62,33 +92,33 @@ Added positive area calculation to:
 - Fixed an error where we returned directly after processing child Elements of an `IAggregateElements`, before we could process the parent element.
 - Fixed writing of gltf files so that the `.bin` file is located adjacent to the `.gltf`.
 
-## [0.2.15]
+## 0.2.15
 ### Added
 - `Space` elements are now serialized to IFC as `IfcSpace`.
 
-## [0.2.5]
+## 0.2.5
 ### Changed
 - `IHasOpenings.Openings[]` is now `IHasOpenings.List<Opening>[]`.
 
 ### Fixed
 - `Opening` elements are now serialized to IFC as `IfcOpeningElement`.
 
-## [0.2.4.4]
+## 0.2.4.4
 ### Changed
 - `Solid.Slice()` has been made internal. It's not yet ready for consumers. See [#103](https://github.com/hypar-io/elements/issues/103)
 
-## [0.2.4.3]
+## 0.2.4.3
 ### Fixed
 - Spaces are now correctly colored. See [#134](https://github.com/hypar-io/elements/issues/134).
 
-## [0.2.4.2]
+## 0.2.4.2
 ### Added
 - Added `ToIfcWall()` extension method to save a `Wall` to an `IfcWall`.
 ### Fixed
 - `Space.Profile` is set in the constructor when a `Space` is constructed with a profile. [#132](https://github.com/hypar-io/elements/pull/132)
 - Sub-elements of `IAggregateElements` are now added to the `Model`. [#137](https://github.com/hypar-io/elements/pull/137)
 
-## [0.2.4.1]
+## 0.2.4.1
 ### Added
 - Added `StandardWall`, for walls defined along a curve. `Wall` continues to be for walls defined by a planar profile extruded to a height.
 - Added `Polygon.L`.
@@ -98,7 +128,7 @@ Added positive area calculation to:
 - `IAggregateElement` is now `IAggregateElements`.
 - `Panel` now takes `Polygon` instead of `Vector3[]`.
 
-## [0.2.4]
+## 0.2.4
 ### Changed
 - `IGeometry3D` is now `ISolid`.
 - `ISolid` (formerly `IGeometry3D`) now contains one solid, not an array of solids.
@@ -106,7 +136,7 @@ Added positive area calculation to:
 ### Removed
 - `Solid.Material`. Elements are now expected to implement the `IMaterial` interface or have an `IElementType<T>` which specifies a material.
 
-## [0.2.3]
+## 0.2.3
 ### Added
 - `MaterialLayer`
 - `StructuralFramingType` - `StructuralFramingType` combines a `Profile` and a `Material` to define a type for framing elements.
@@ -119,7 +149,7 @@ Added positive area calculation to:
 - Many expensive properties were converted to methods.
 - A constructor has been added to `WallType` that takes a collection of `MaterialLayer`.
 
-## [0.2.2]
+## 0.2.2
 ### Added
 - `Matrix.Determinant()`
 - `Matrix.Inverse()`
@@ -136,7 +166,7 @@ Added positive area calculation to:
 - `Line.Thicken()` now throws an exception when the line does not have the same elevation for both end points.
 - `Model.SaveGlb()` is now `Model.ToGlTF()`.
 
-## [0.2.1]
+## 0.2.1
 ### Added
 - The `Topography` class has been added.
 - `Transform.OfPoint(Vector3 vector)` has been added to transform a vector as a point with translation. This was previously `Transform.OfVector(Vector3 vector)`. All sites previously using `OfVector(...)` are now using `OfPoint(...)`.
@@ -149,7 +179,7 @@ Added positive area calculation to:
 - Attempting to construct a `Vector3` with NaN or Infinite arguments will throw an `ArgumentOutOfRangeException`.
 
 
-## [0.2.0]
+## 0.2.0
 ### Added
 - IFC implementation has begun with `Model.FromIFC(...)`. Support includes reading of Walls, Slabs, Spaces, Beams, and Columns. Brep booleans required for Wall and Slab openings are not yet supported and are instead converted to Polygon openings in Wall and Floor profiles.
 - The `Elements.Geometry.Profiles` namespace has been added. All profile servers can now be found here.

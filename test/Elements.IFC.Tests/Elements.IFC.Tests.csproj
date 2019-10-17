@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\src\Elements.IFC\Elements.IFC.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Elements.Tests\Elements.Tests.csproj" />
+  </ItemGroup>
+
 </Project>

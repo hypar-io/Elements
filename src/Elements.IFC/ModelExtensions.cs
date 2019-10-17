@@ -19,7 +19,7 @@ namespace Elements.Serialization.IFC
         /// <param name="path">The path to an IFC STEP file.</param>
         /// <param name="idsToConvert">An array of element ids to convert.</param>
         /// <returns>A model.</returns>
-        public static Model FromIFC(string path, IList<string> idsToConvert = null)
+        public static Model FromIFC(this Model model, string path, IList<string> idsToConvert = null)
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
@@ -73,7 +73,6 @@ namespace Elements.Serialization.IFC
             var beams = ifcBeams.Select(b => b.ToBeam());
             var columns = ifcColumns.Select(c => c.ToColumn());
 
-            var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);
             model.AddElements(walls);
