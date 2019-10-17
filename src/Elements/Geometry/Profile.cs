@@ -1,4 +1,3 @@
-using Elements.Serialization.JSON;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,44 +5,6 @@ using System.Linq;
 
 namespace Elements.Geometry
 {
-    /// <summary>
-    /// The vertical alignment of a profile.
-    /// </summary>
-    public enum VerticalAlignment
-    {
-        /// <summary>
-        /// Align the profile along its top.
-        /// </summary>
-        Top,
-        /// <summary>
-        /// Align the profile along its center.
-        /// </summary>
-        Center,
-        /// <summary>
-        /// Align the profile along its bottom.
-        /// </summary>
-        Bottom
-    }
-
-    /// <summary>
-    /// The horizontal alignment of a profile.
-    /// </summary>
-    public enum HorizontalAlignment
-    {
-        /// <summary>
-        /// Align the profile along its left edge.
-        /// </summary>
-        Left,
-        /// <summary>
-        /// Align the profile along its center.
-        /// </summary>
-        Center,
-        /// <summary>
-        /// Align the profile along its right edge.
-        /// </summary>
-        Right
-    }
-
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
@@ -59,7 +20,7 @@ namespace Elements.Geometry
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
         [JsonConstructor]
-        public Profile(Polygon perimeter, Polygon[] voids = null, Guid id = default(Guid), string name = null): base(id, name)
+        public Profile(Polygon perimeter, IList<Polygon> voids = null, Guid id = default(Guid), string name = null): base(id, name)
         {
             this.Perimeter = perimeter;
             this.Voids = voids;

@@ -5,6 +5,44 @@ using Newtonsoft.Json;
 
 namespace Elements.Geometry.Profiles
 {
+    /// <summary>
+    /// The vertical alignment of a profile.
+    /// </summary>
+    public enum VerticalAlignment
+    {
+        /// <summary>
+        /// Align the profile along its top.
+        /// </summary>
+        Top,
+        /// <summary>
+        /// Align the profile along its center.
+        /// </summary>
+        Center,
+        /// <summary>
+        /// Align the profile along its bottom.
+        /// </summary>
+        Bottom
+    }
+
+    /// <summary>
+    /// The horizontal alignment of a profile.
+    /// </summary>
+    public enum HorizontalAlignment
+    {
+        /// <summary>
+        /// Align the profile along its left edge.
+        /// </summary>
+        Left,
+        /// <summary>
+        /// Align the profile along its center.
+        /// </summary>
+        Center,
+        /// <summary>
+        /// Align the profile along its right edge.
+        /// </summary>
+        Right
+    }
+
     public class WideFlangeProfile : Profile
     {
         [JsonIgnore]
