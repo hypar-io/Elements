@@ -47,7 +47,7 @@ namespace Elements.Tests
             this.GenerateJson = true;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if(this._model.Any())
             {

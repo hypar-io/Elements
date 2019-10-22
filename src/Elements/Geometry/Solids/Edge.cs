@@ -45,5 +45,18 @@ namespace Elements.Geometry.Solids
         {
             this.Id = id;
         }
+
+        internal void Reverse()
+        {   
+            // Reverse the half edges.
+            Left.Vertex = Right.Vertex;
+            Right.Vertex = Left.Vertex;
+            var left = Left;
+            var right = Right;
+
+            //Flip the edge
+            Left = right;
+            Right = left;
+        }
     }
 }

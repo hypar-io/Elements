@@ -28,7 +28,7 @@ namespace Elements.IFC
             {
                 var solidTransform = solid.Position.ToTransform();
 
-                var c = solid.SweptArea.ToICurve();
+                var c = solid.SweptArea.ToCurve();
                 if(c is Polygon)
                 {
                     var cl = new Line(Vector3.Origin, 
@@ -53,7 +53,7 @@ namespace Elements.IFC
             if(solid != null)
             {
                 var solidTransform = solid.Position.ToTransform();
-                var c = solid.SweptArea.ToICurve();
+                var c = solid.SweptArea.ToCurve();
                 var result = new Column(solidTransform.Origin, (IfcLengthMeasure)solid.Depth, new Profile((Polygon)c), BuiltInMaterials.Steel, elementTransform, 0.0, 0.0, 0.0, Guid.NewGuid(), column.Name);
                 return result;
             }
@@ -112,6 +112,7 @@ namespace Elements.IFC
         {
             var transform = new Transform();
             transform.Concatenate(slab.ObjectPlacement.ToTransform());
+            // Console.WriteLine($"IfcSlab transform:\n{transform}\n");
 
             // Check if the slab is contained in a building storey
             foreach (var cis in slab.ContainedInStructure)
@@ -129,14 +130,16 @@ namespace Elements.IFC
             if (solid == null)
             {
                 return null;
-                // throw new Exception("No IfcExtrudedAreaSolid could be found in the provided IfcSlab.");
             }
 
-            var outline = (Polygon)solid.SweptArea.ToICurve();
+            var outline = (Polygon)solid.SweptArea.ToCurve();
             var solidTransform = solid.Position.ToTransform();
+            // Console.WriteLine($"Solid transform:\n{solidTransform.ToString()}\n");
+
+            solidTransform.Concatenate(transform);
             var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0, 
-                transform, new Material("slab",Colors.Green), Guid.NewGuid(), slab.Name);
-            
+                solidTransform, BuiltInMaterials.Concrete);
+            // Console.WriteLine($"Elements Floor Transform:\n{floor.Transform}\n");
             return floor;
         }
     
@@ -179,7 +182,7 @@ namespace Elements.IFC
 
             if(solid != null)
             {
-                var c = solid.SweptArea.ToICurve();
+                var c = solid.SweptArea.ToCurve();
                 if(c is Polygon)
                 {
                     transform.Concatenate(solid.Position.ToTransform());
@@ -321,7 +324,9 @@ namespace Elements.IFC
             {
                 var solidTransform = s.Position.ToTransform();
                 solidTransform.Concatenate(openingTransform);
-                var profile = (Polygon)s.SweptArea.ToICurve();
+                var profile = (Polygon)s.SweptArea.ToCurve();
+                Console.WriteLine($"Opening profile:\n{profile.ToString()}\n");
+                
                 var newOpening = new Opening(profile, (IfcLengthMeasure)s.Depth, solidTransform, Guid.NewGuid(), opening.Name != null ? opening.Name : null);
                 return newOpening;
             }
@@ -435,7 +440,7 @@ namespace Elements.IFC
             return ifcOpening;
         }
 
-        private static ICurve ToICurve(this IfcProfileDef profile)
+        private static ICurve ToCurve(this IfcProfileDef profile)
         {
             if(profile is IfcCircleProfileDef)
             {
@@ -445,17 +450,17 @@ namespace Elements.IFC
             else if(profile is IfcParameterizedProfileDef)
             {
                 var ipd = (IfcParameterizedProfileDef)profile;
-                return ipd.ToICurve();
+                return ipd.ToCurve();
             }
             else if(profile is IfcArbitraryOpenProfileDef)
             {
                 var aopd = (IfcArbitraryOpenProfileDef)profile;
-                return aopd.ToICurve();
+                return aopd.ToCurve();
             }
             else if(profile is IfcArbitraryClosedProfileDef)
             {
                 var acpd = (IfcArbitraryClosedProfileDef)profile;
-                return acpd.ToICurve();
+                return acpd.ToCurve();
             }
             else if(profile is IfcCompositeProfileDef)
             {
@@ -468,7 +473,7 @@ namespace Elements.IFC
             return null;
         }
 
-        private static ICurve ToICurve(this IfcParameterizedProfileDef profile)
+        private static ICurve ToCurve(this IfcParameterizedProfileDef profile)
         {
             if(profile is IfcRectangleProfileDef)
             {
@@ -488,17 +493,17 @@ namespace Elements.IFC
             }
         }
 
-        private static ICurve ToICurve(this IfcArbitraryOpenProfileDef profile)
+        private static ICurve ToCurve(this IfcArbitraryOpenProfileDef profile)
         {
-            return profile.Curve.ToICurve(false);
+            return profile.Curve.ToCurve(false);
         }
 
-        private static ICurve ToICurve(this IfcArbitraryClosedProfileDef profile)
+        private static ICurve ToCurve(this IfcArbitraryClosedProfileDef profile)
         {
-            return profile.OuterCurve.ToICurve(true);
+            return profile.OuterCurve.ToCurve(true);
         }
 
-        private static ICurve ToICurve(this IfcCurve curve, bool closed)
+        private static ICurve ToCurve(this IfcCurve curve, bool closed)
         {
             if(curve is IfcBoundedCurve)
             {
@@ -599,15 +604,13 @@ namespace Elements.IFC
             }
             return true;
         }
-
         private static Transform ToTransform(this IfcAxis2Placement3D cs)
         {
-            var d = cs.RefDirection != null ? cs.RefDirection.ToVector3() : Vector3.XAxis;
+            var x = cs.RefDirection != null ? cs.RefDirection.ToVector3() : Vector3.XAxis;
             var z = cs.Axis != null ? cs.Axis.ToVector3() : Vector3.ZAxis;
-            var y = z.Cross(d);
-            var x = y.Cross(z);
+            var y = z.Cross(x);
             var o = cs.Location.ToVector3();
-            var t = new Transform(new Matrix(x, y, z, o));
+            var t = new Transform(o, x, y, z);
             return t;
         }
 

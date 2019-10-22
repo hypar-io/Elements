@@ -18,6 +18,8 @@
 - `/Schemas` directory.
 - Optional `rotation` on `StructuralFraming` constructors.
 - `Model` now implements `IDictionary<Guid,Identifiable>`.
+- `double Vector3.CCW(Vector3 a, Vector3 b, Vector3 c)`
+- `bool Line.Intersects(Line l)`
 
 ### Removed
 - The empty Dynamo project.

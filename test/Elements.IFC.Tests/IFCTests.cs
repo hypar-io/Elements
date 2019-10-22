@@ -1,7 +1,6 @@
-using Elements;
 using Elements.Geometry;
 using Elements.Serialization.IFC;
-using Elements.Tests;
+using Elements.Serialization.glTF;
 using System;
 using System.IO;
 using Xunit;
@@ -11,8 +10,10 @@ using Elements.Geometry.Profiles;
 
 namespace Elements.IFC.Tests
 {
-    public class IfcTests : ModelTest
+    public class IfcTests
     {
+        private const string basePath = "models";
+
         private readonly ITestOutputHelper output;
 
         public IfcTests(ITestOutputHelper output)
@@ -29,8 +30,8 @@ namespace Elements.IFC.Tests
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void IFC4(string name, string ifcPath)
         {
-            this.Name = name;
-            this.Model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
+            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
+            model.ToGlTF(ConstructGlbPath(name));
         }
 
         [Theory]
@@ -41,37 +42,59 @@ namespace Elements.IFC.Tests
         // [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
         public void IFC2X3(string name, string ifcPath, string[] idsToConvert = null)
         {
-            this.Name = name;
-            this.Model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), idsToConvert);
+            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), idsToConvert);
+            model.ToGlTF(ConstructGlbPath(name));
         }
 
         [Fact]
         public void Wall()
         {
-            this.Name = "IfcWall";
             var line = new Line(Vector3.Origin, new Vector3(10,10,0));
             var line1 = new Line(new Vector3(10,10,0), new Vector3(10,15,0));
             var wall = new StandardWall(line, 0.2, 3);
             var wall1 = new StandardWall(line1, 0.2, 2);
-            this.Model.AddElement(wall);
-            this.Model.AddElement(wall1);
+            var model = new Model();
+            model.AddElement(wall);
+            model.AddElement(wall1);
+            model.ToIFC(ConstructIfcPath("IfcWall"));
         }
 
         [Fact]
         public void PlanWall()
         {
-            this.Name = "IfcWallPlan";
             var planShape = Polygon.L(2,2,0.15);
             var wall1 = new Wall(planShape, 3.0);
             var wall2 = new Wall(planShape, 3.0, BuiltInMaterials.Concrete, new Transform(0,0,3));
-            this.Model.AddElement(wall1);
-            this.Model.AddElement(wall2);
+            var model = new Model();
+            model.AddElement(wall1);
+            model.AddElement(wall2);
+            model.ToIFC(ConstructIfcPath("IfcWallPlan"));
+        }
+
+        [Fact]
+        public void Floor()
+        {
+            var planShape = Polygon.L(2,4,0.1);
+            var floor = new Floor(planShape, 0.1, 0.0);
+            var floor1 = new Floor(planShape, 0.1, 2);
+            var model = new Model();
+            model.AddElement(floor);
+            model.AddElement(floor1);
+            var ifcPath =ConstructIfcPath("IfcFloor");
+            model.ToIFC(ifcPath);
+            model.ToGlTF(ConstructGlbPath("IfcFloor"));
+
+            var newModel = IFCModelExtensions.FromIFC(ifcPath);
+            // We expect two floors, one material, and one profile.
+            Assert.Equal(4, newModel.Values.Count);
+            newModel.ToGlTF(ConstructGlbPath("IfcFloor2"));
         }
 
         [Fact]
         public void Beams()
         {
-            this.Name = "IfcBeams";
+            var model = new Model();
+
             var pts = Hypar(5.0, 5.0);
             var m1 = new Material("red", Colors.Red, 0f, 0f);
             var m2 = new Material("green", Colors.Green, 0f, 0f);
@@ -95,7 +118,7 @@ namespace Elements.IFC.Tests
                         b = colA[i+1];
                         var line1 = new Line(a,b);
                         var beam1 = new Beam(line1, prof, m1);
-                        this.Model.AddElement(beam1);
+                        model.AddElement(beam1);
                     }
 
                     if(colB != null)
@@ -103,10 +126,11 @@ namespace Elements.IFC.Tests
                         var c = colB[i];
                         var line2 = new Line(a,c);
                         var beam2 = new Beam(line2, prof, m2);
-                        this.Model.AddElement(beam2);
+                        model.AddElement(beam2);
                     }
                 }
-            } 
+            }
+            model.ToIFC(ConstructIfcPath("IfcBeams"));
         }
 
         private List<List<Vector3>> Hypar(double a, double b)
@@ -124,6 +148,16 @@ namespace Elements.IFC.Tests
             }
 
             return result;
+        }
+    
+        private string ConstructIfcPath(string modelName)
+        {
+            return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, basePath, $"{modelName}.ifc"));
+        }
+
+        private string ConstructGlbPath(string modelName)
+        {
+            return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, basePath, $"{modelName}.glb"));
         }
     }
 }

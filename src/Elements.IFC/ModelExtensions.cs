@@ -11,7 +11,7 @@ namespace Elements.Serialization.IFC
     /// <summary>
     /// Extension methods for writing elements to and from IFC.
     /// </summary>
-    public static class ModelExtensions
+    public static class IFCModelExtensions
     {
         /// <summary>
         /// Load a model from IFC.
@@ -19,7 +19,7 @@ namespace Elements.Serialization.IFC
         /// <param name="path">The path to an IFC STEP file.</param>
         /// <param name="idsToConvert">An array of element ids to convert.</param>
         /// <returns>A model.</returns>
-        public static Model FromIFC(this Model model, string path, IList<string> idsToConvert = null)
+        public static Model FromIFC(string path, IList<string> idsToConvert = null)
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
@@ -61,7 +61,6 @@ namespace Elements.Serialization.IFC
             foreach (var v in ifcVoids)
             {
                 var element = v.RelatingBuildingElement;
-                // var elementTransform = element.ObjectPlacement.ToTransform();
                 var o = ((IfcOpeningElement)v.RelatedOpeningElement).ToOpening();
                 openings.Add(o);
             }
@@ -73,15 +72,16 @@ namespace Elements.Serialization.IFC
             var beams = ifcBeams.Select(b => b.ToBeam());
             var columns = ifcColumns.Select(c => c.ToColumn());
 
+            var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);
             model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
-            // if (openings.Any())
-            // {
-            //     model.AddElements(openings);
-            // }
+            if (openings.Any())
+            {
+                model.AddElements(openings);
+            }
 
             return model;
         }
@@ -122,11 +122,13 @@ namespace Elements.Serialization.IFC
             var products = new List<IfcProduct>();
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
             
+            var styles = new Dictionary<string, IfcSurfaceStyle>();
+
             foreach(var e in model.AllEntitiesOfType<Element>())
             {
                 try
                 {
-                    products.AddRange(e.ToIfcProducts(context, ifc));
+                    products.AddRange(e.ToIfcProducts(context, ifc, styles));
                 }
                 catch(Exception ex)
                 {

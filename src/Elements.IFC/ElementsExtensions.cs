@@ -14,7 +14,7 @@ namespace Elements.IFC
     /// </summary>
     public static class ElementsExtensions
     {
-        public static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc)
+        public static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc, Dictionary<string, IfcSurfaceStyle> styles)
         {
             var products = new List<IfcProduct>();
 
@@ -79,19 +79,23 @@ namespace Elements.IFC
             //     }
             // }
 
-            IfcStyledItem style = null;
-
             if(e is IMaterial)
             {
                 var m = (IMaterial)e;
-                style = m.Material.ToIfcStyledItem(geom, doc);
+                IfcSurfaceStyle style = null;
+                if(styles.ContainsKey(m.Material.Name))
+                {
+                    style = styles[m.Material.Name];
+                }
+                else
+                {
+                    style = m.Material.ToIfcSurfaceStyle(doc);
+                    styles.Add(m.Material.Name, style);
+                }
+                var styledItem = CreateIfcStyledItem(geom, style, doc);
+                geom.StyledByItem = new List<IfcStyledItem>{styledItem};
+                doc.AddEntity(styledItem);
             }
-            
-            // Associate the style with the element
-            style.Item = geom;
-
-            geom.StyledByItem = new List<IfcStyledItem>{style};
-            doc.AddEntity(style);
 
             return products;
         }
@@ -519,7 +523,7 @@ namespace Elements.IFC
             return ifcPlane;
         }
     
-        private static IfcColourRgb ToIfcColourRgb(this Color color, Document doc)
+        private static IfcColourRgb ToIfcColourRgb(this Color color)
         {
             var red = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Red));
             var green = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Green));
@@ -530,27 +534,29 @@ namespace Elements.IFC
             return ifcColor;
         }
 
-        private static IfcStyledItem ToIfcStyledItem(this Material material, IfcRepresentationItem shape, Document doc)
+        private static IfcSurfaceStyle ToIfcSurfaceStyle(this Material material, Document doc)
         {
-            var color = material.Color.ToIfcColourRgb(doc);
+            var color = material.Color.ToIfcColourRgb();
             var shading = new IfcSurfaceStyleShading(color);
 
             var styles = new List<IfcSurfaceStyleElementSelect>{};
             styles.Add(new IfcSurfaceStyleElementSelect(shading));
             var surfaceStyle = new IfcSurfaceStyle(material.Name, IfcSurfaceSide.POSITIVE, styles);
-            var styleSelect = new IfcPresentationStyleSelect(surfaceStyle);
-            var assign = new IfcPresentationStyleAssignment(new List<IfcPresentationStyleSelect>{styleSelect});
-            var assignments = new List<IfcPresentationStyleAssignment>();
-            assignments.Add(assign);
-            var styledByItem = new IfcStyledItem(shape, assignments, material.Name);
-            
             doc.AddEntity(color);
             doc.AddEntity(shading);
             doc.AddEntity(surfaceStyle);
-            doc.AddEntity(styleSelect);
-            doc.AddEntity(assign);
+            return surfaceStyle;
+        }
 
-            return styledByItem;
+        private static IfcStyledItem CreateIfcStyledItem(IfcRepresentationItem shape, IfcSurfaceStyle style, Document doc)
+        {
+            var styleSelect = new IfcPresentationStyleSelect(style);
+            var assign = new IfcPresentationStyleAssignment(new List<IfcPresentationStyleSelect>{styleSelect});
+            var assignments = new List<IfcPresentationStyleAssignment>();
+            assignments.Add(assign);
+            var styledItem = new IfcStyledItem(shape, assignments, null);
+            doc.AddEntity(assign);
+            return styledItem;
         }
     }
 }

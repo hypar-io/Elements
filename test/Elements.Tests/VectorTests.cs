@@ -89,5 +89,17 @@ namespace Elements.Tests
             var h = new Vector3(1,0,1);
             Assert.True(new[]{e,f,g,h}.AreCoplanar());
         }
+
+        [Fact]
+        public void CCW()
+        {
+            var a = new Vector3();
+            var b = new Vector3(5,0);
+            var c = new Vector3(5,5);
+            var d = new Vector3(10,0);
+            Assert.True(Vector3.CCW(a,b,c) > 0);
+            Assert.True(Vector3.CCW(c,b,a) < 0);
+            Assert.True(Vector3.CCW(a,b,d) == 0);
+        }
     }
 }

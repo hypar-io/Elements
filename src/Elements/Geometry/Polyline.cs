@@ -48,8 +48,8 @@ namespace Elements.Geometry
         [JsonConstructor]
         public Polyline(IList<Vector3> vertices)
         {
-            CheckCoincidenceAndThrow(vertices);
             this.Vertices = vertices;
+            CheckSelfIntersectionAndThrow(this.Segments());
         }
 
         private void CheckCoincidenceAndThrow(IList<Vector3> vertices)
@@ -65,6 +65,26 @@ namespace Elements.Geometry
                     if (vertices[i].IsAlmostEqualTo(vertices[j]))
                     {
                         throw new ArgumentException($"The polyline could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
+                    }
+                }
+            }
+        }
+
+        private void CheckSelfIntersectionAndThrow(IList<Line> segments)
+        {
+            for(var i=0; i<segments.Count; i++)
+            {
+                for(var j=0; j<segments.Count; j++)
+                {
+                    if(i == j)
+                    {
+                        // Don't check against itself.
+                        continue;
+                    }
+
+                    if (segments[i].Intersects(segments[j]))
+                    {
+                        throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
                     }
                 }
             }

@@ -57,5 +57,17 @@ namespace Elements.Geometry.Tests
             var x = line.Intersect(plane);
             Assert.Null(x);
         }
+
+        [Fact]
+        public void IntersectsQuick()
+        {
+            var l1 = new Line(Vector3.Origin, new Vector3(5,0,0));
+            var l2 = new Line(new Vector3(2.5, -2.5, 0), new Vector3(2.5,2.5,0));
+            var l3 = new Line(new Vector3(0,-1,0), new Vector3(5,-1,0));
+            var l4 = new Line(new Vector3(5,0,0), new Vector3(10,0,0));
+            Assert.True(l1.Intersects(l2));     // Intersecting.
+            Assert.False(l1.Intersects(l3));    // Not intersecting.
+            Assert.False(l1.Intersects(l4));    // Coincident.
+        }
     }
 }

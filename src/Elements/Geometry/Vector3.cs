@@ -461,6 +461,18 @@ namespace Elements.Geometry
         {
             return Double.IsNaN(this.X) || Double.IsNaN(this.Y) || Double.IsNaN(this.Z);
         }
+
+        /// <summary>
+        /// Check whether three points are wound CCW.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are colinear.</returns>
+        public static double CCW(Vector3 a, Vector3 b, Vector3 c)
+        {
+            return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
+        }
     }
 
     /// <summary>
