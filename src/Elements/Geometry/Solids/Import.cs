@@ -17,7 +17,7 @@ namespace Elements.Geometry.Solids
             this.IsVoid = isVoid;
         }
 
-        internal override Solid GetUpdatedSolid(IEnumerable<SolidOperation> voidOps)
+        internal override Solid GetSolid()
         {
             return this._solid;
         }

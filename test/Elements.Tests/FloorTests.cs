@@ -28,7 +28,6 @@ namespace Elements.Tests
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
             
             this.Model.AddElements(new[]{floor1, floor2});
-            this.Model.AddElements(openings);
         }
 
         [Fact]

@@ -11,7 +11,7 @@ namespace Elements
     /// Openings have a local placement defined by the x and y coordinates as well as a transform. 
     /// </summary>
     [UserElement]
-    public class Opening : Element, IGeometry, IMaterial
+    public class Opening : Element, IGeometry
     {
         /// <summary>
         /// The profile of the opening.
@@ -22,11 +22,6 @@ namespace Elements
         /// The opening's geometry.
         /// </summary>
         public Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
-
-        /// <summary>
-        /// The default void material.
-        /// </summary>
-        public Material Material => BuiltInMaterials.Void;
 
         /// <summary>
         /// Create a rectangular opening.
@@ -98,6 +93,14 @@ namespace Elements
 
             // TODO(Ian): Give this a proper depth when booleans are supported.
             this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, true));
+        }
+
+        /// <summary>
+        /// Update solid operations.
+        /// </summary>
+        public void UpdateSolidOperations()
+        {
+            return;
         }
     }
 }

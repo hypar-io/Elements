@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Interfaces;
 
 namespace Elements
 {
@@ -11,7 +14,7 @@ namespace Elements
     /// <code source="../../test/Examples/WallExample.cs"/>
     /// </example>
     [UserElement]
-    public class StandardWall : Wall
+    public class StandardWall : Wall, IHasOpenings
     {
         /// <summary>
         /// The center line of the wall.
@@ -23,6 +26,11 @@ namespace Elements
         /// </summary>
         public double Thickness { get; protected set;}
 
+        /// <summary>
+        /// A collection of openings in the floor.
+        /// </summary>
+        public List<Opening> Openings{ get; } = new List<Opening>();
+        
         /// <summary>
         /// Construct a wall along a line.
         /// </summary>
@@ -75,6 +83,27 @@ namespace Elements
             this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
             this.Thickness = thickness;
             this.Material = material != null ? material : BuiltInMaterials.Concrete;
+        }
+
+        /// <summary>
+        /// Update solid operations.
+        /// </summary>
+        public override void UpdateSolidOperations()
+        {
+            if(this.Openings.Count > 0)
+            {
+                // Find all the void ops which point in the same direction.
+                var holes = this.Openings.SelectMany(o=>o.Geometry.SolidOperations.
+                                                        Where(op=>op is Extrude && op.IsVoid == true).
+                                                        Cast<Extrude>().
+                                                        Where(ex=>ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
+                if(holes.Any())
+                {
+                    var holeProfiles = holes.Select(ex=>ex.Profile);
+                    this.Profile.Clip(holeProfiles);
+                }
+            }
+            this.Geometry.SolidOperations.Clear();
             this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis));
         }
     }

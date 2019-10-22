@@ -35,11 +35,11 @@ namespace Elements.IFC.Tests
         }
 
         [Theory]
-        // [InlineData("example_1", "../../../models/IFC2X3/example_1.ifc")]
+        [InlineData("example_1", "../../../models/IFC2X3/example_1.ifc")]
         // TODO: Reenable when IfcCompositeCurve is supported.
         // [InlineData("example_2", "../../../models/IFC2X3/example_2.ifc")]
         [InlineData("example_3", "../../../models/IFC2X3/example_3.ifc")]// new []{"0bKcgqsaHFN9FTVipKV_Ue","3Lkqsa9JzD0BBXIMnx2zgD"})]
-        // [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
+        [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
         public void IFC2X3(string name, string ifcPath, string[] idsToConvert = null)
         {
             var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), idsToConvert);
@@ -74,19 +74,25 @@ namespace Elements.IFC.Tests
         [Fact]
         public void Floor()
         {
-            var planShape = Polygon.L(2,4,0.1);
+            var planShape = Polygon.L(2,4,1.5);
             var floor = new Floor(planShape, 0.1, 0.0);
             var floor1 = new Floor(planShape, 0.1, 2);
+            var o = new Opening(0.5, 0.5, 0.5, 0.5);
+            floor.Openings.Add(o);
+
             var model = new Model();
             model.AddElement(floor);
             model.AddElement(floor1);
+
             var ifcPath =ConstructIfcPath("IfcFloor");
             model.ToIFC(ifcPath);
             model.ToGlTF(ConstructGlbPath("IfcFloor"));
 
             var newModel = IFCModelExtensions.FromIFC(ifcPath);
             // We expect two floors, one material, and one profile.
-            Assert.Equal(4, newModel.Values.Count);
+            // TODO(Ian): Update this when we're not duplicating profiles
+            // in the output IFC.
+            Assert.Equal(7, newModel.Values.Count);
             newModel.ToGlTF(ConstructGlbPath("IfcFloor2"));
         }
 

@@ -65,5 +65,13 @@ namespace Elements
         {
             return this.Perimeter.Plane().Normal;
         }
+
+        /// <summary>
+        /// Update solid operations.
+        /// </summary>
+        public void UpdateSolidOperations()
+        {
+            return;
+        }
     }
 }

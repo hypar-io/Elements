@@ -49,10 +49,13 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> vertices)
         {
             this.Vertices = vertices;
-            CheckSelfIntersectionAndThrow(this.Segments());
         }
 
-        private void CheckCoincidenceAndThrow(IList<Vector3> vertices)
+        /// <summary>
+        /// Check for coincident vertices in the supplied vertex collection.
+        /// </summary>
+        /// <param name="vertices"></param>
+        protected void CheckCoincidenceAndThrow(IList<Vector3> vertices)
         {
             for (var i = 0; i < vertices.Count; i++)
             {
@@ -70,7 +73,11 @@ namespace Elements.Geometry
             }
         }
 
-        private void CheckSelfIntersectionAndThrow(IList<Line> segments)
+        /// <summary>
+        /// Check for self-intersection in the supplied line segment collection.
+        /// </summary>
+        /// <param name="segments"></param>
+        protected void CheckSelfIntersectionAndThrow(IList<Line> segments)
         {
             for(var i=0; i<segments.Count; i++)
             {

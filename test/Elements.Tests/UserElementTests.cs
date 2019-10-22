@@ -35,6 +35,11 @@ namespace Elements.Tests
             this.Geometry.SolidOperations.Add(new Sweep(this.Profile, x));
             this.Geometry.SolidOperations.Add(new Sweep(this.Profile, y));
         }
+
+        public void UpdateSolidOperations()
+        {
+            return;
+        }
     }
 
     public class UserElementTests : ModelTest

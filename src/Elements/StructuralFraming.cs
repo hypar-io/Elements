@@ -106,5 +106,13 @@ namespace Elements
         {
             return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
         }
+
+        /// <summary>
+        /// Update solid operations.
+        /// </summary>
+        public void UpdateSolidOperations()
+        {
+            return;
+        }
     }
 }

@@ -20,9 +20,9 @@ namespace Elements.Tests
                 new Opening(3.0, 1.0, 1.0, 2.0, w.Transform),
                 new Opening(Polygon.Ngon(3, 2.0), 8,2, w.Transform)
             };
+            w.Openings.AddRange(openings);
 
             this.Model.AddElement(w);
-            this.Model.AddElements(openings);
         }
 
         [Fact]

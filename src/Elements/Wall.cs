@@ -90,5 +90,13 @@ namespace Elements
             }
             this.Geometry.SolidOperations.Add(new Import(geometry));
         }
+
+        /// <summary>
+        /// Update solid operations.
+        /// </summary>
+        public virtual void UpdateSolidOperations()
+        {
+            return;
+        }
     }
 }

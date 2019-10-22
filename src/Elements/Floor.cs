@@ -3,6 +3,8 @@ using Elements.Interfaces;
 using System;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements
 {
@@ -13,7 +15,7 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Examples/FloorExample.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Floor : Element, IMaterial, IGeometry
+    public class Floor : Element, IMaterial, IGeometry, IHasOpenings
     {
         /// <summary>
         /// The elevation from which the floor is extruded.
@@ -39,6 +41,11 @@ namespace Elements
         /// The floor's material.
         /// </summary>
         public Material Material{ get; private set; }
+        
+        /// <summary>
+        /// A collection of openings in the floor.
+        /// </summary>
+        public List<Opening> Openings{ get; } = new List<Opening>();
 
         /// <summary>
         /// Create a floor.
@@ -101,7 +108,6 @@ namespace Elements
                 this.Transform.Move(new Vector3(0,0,elevation));
             }
             this.Material = material != null ? material : BuiltInMaterials.Concrete;
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis));
         }
 
         /// <summary>
@@ -128,6 +134,28 @@ namespace Elements
         public double Volume()
         {
             return Math.Abs(this.Profile.Area()) * this.Thickness;
+        }
+
+        /// <summary>
+        /// Update solid operations.
+        /// </summary>
+        public void UpdateSolidOperations()
+        {
+            if(this.Openings.Count > 0)
+            {
+                // Find all the void ops which point in the same direction.
+                var holes = this.Openings.SelectMany(o=>o.Geometry.SolidOperations.
+                                                        Where(op=>op is Extrude && op.IsVoid == true).
+                                                        Cast<Extrude>().
+                                                        Where(ex=>ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
+                if(holes.Any())
+                {
+                    var holeProfiles = holes.Select(ex=>ex.Profile);
+                    this.Profile.Clip(holeProfiles);
+                }
+            }
+            this.Geometry.SolidOperations.Clear();
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis));
         }
     }
 }

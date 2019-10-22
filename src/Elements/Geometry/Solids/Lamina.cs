@@ -17,7 +17,7 @@ namespace Elements.Geometry.Solids
         /// Get the updated solid representation of the frame.
         /// </summary>
         /// <returns></returns>
-        internal override Solid GetUpdatedSolid(IEnumerable<SolidOperation> voidOps)
+        internal override Solid GetSolid()
         {
             return Kernel.Instance.CreateLamina(this.Perimeter);
         }

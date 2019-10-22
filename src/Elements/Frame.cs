@@ -54,5 +54,13 @@ namespace Elements
             this.Material = material != null ? material : BuiltInMaterials.Default;
             this.Geometry.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0));
         }
+
+        /// <summary>
+        /// Update solid operations.
+        /// </summary>
+        public void UpdateSolidOperations()
+        {
+            return;
+        }
     }
 }

@@ -33,7 +33,15 @@ namespace Elements.IFC
                 {
                     var cl = new Line(Vector3.Origin, 
                         solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
-                    var result = new Beam(solidTransform.OfLine(cl), new Profile((Polygon)c), BuiltInMaterials.Steel, 0.0, 0.0, 0.0, elementTransform, Guid.NewGuid(), beam.Name);
+                    var result = new Beam(solidTransform.OfLine(cl),
+                                          new Profile((Polygon)c),
+                                          BuiltInMaterials.Steel,
+                                          0.0,
+                                          0.0,
+                                          0.0,
+                                          elementTransform,
+                                          IfcGuid.FromIfcGUID(beam.GlobalId),
+                                          beam.Name);
                     return result; 
                 }
             }
@@ -54,7 +62,7 @@ namespace Elements.IFC
             {
                 var solidTransform = solid.Position.ToTransform();
                 var c = solid.SweptArea.ToCurve();
-                var result = new Column(solidTransform.Origin, (IfcLengthMeasure)solid.Depth, new Profile((Polygon)c), BuiltInMaterials.Steel, elementTransform, 0.0, 0.0, 0.0, Guid.NewGuid(), column.Name);
+                var result = new Column(solidTransform.Origin, (IfcLengthMeasure)solid.Depth, new Profile((Polygon)c), BuiltInMaterials.Steel, elementTransform, 0.0, 0.0, 0.0, IfcGuid.FromIfcGUID(column.GlobalId), column.Name);
                 return result;
             }
             return null;
@@ -82,7 +90,7 @@ namespace Elements.IFC
                 transform.Concatenate(solid.Position.ToTransform());
                 var pline = (IfcPolyline)profileDef.OuterCurve;
                 var outline = pline.ToPolygon(true);
-                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0.0, material, transform, Guid.NewGuid(), space.Name);
+                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0.0, material, transform, IfcGuid.FromIfcGUID(space.GlobalId), space.Name);
                 return result;
             }
             else if (foundSolid.GetType() == typeof(IfcFacetedBrep))
@@ -138,8 +146,11 @@ namespace Elements.IFC
 
             solidTransform.Concatenate(transform);
             var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0, 
-                solidTransform, BuiltInMaterials.Concrete);
+                solidTransform, BuiltInMaterials.Concrete, IfcGuid.FromIfcGUID(slab.GlobalId));
             // Console.WriteLine($"Elements Floor Transform:\n{floor.Transform}\n");
+
+            floor.Openings.AddRange(openings.Select(o=>o.ToOpening()));
+
             return floor;
         }
     
@@ -186,8 +197,12 @@ namespace Elements.IFC
                 if(c is Polygon)
                 {
                     transform.Concatenate(solid.Position.ToTransform());
-                    var result = new Wall((Polygon)c, (IfcLengthMeasure)solid.Depth, null, transform, Guid.NewGuid(), wall.Name);
-
+                    var result = new Wall((Polygon)c,
+                                          (IfcLengthMeasure)solid.Depth,
+                                          null,
+                                          transform,
+                                          IfcGuid.FromIfcGUID(wall.GlobalId),
+                                          wall.Name);
                     return result;
                 }
             }
@@ -325,9 +340,12 @@ namespace Elements.IFC
                 var solidTransform = s.Position.ToTransform();
                 solidTransform.Concatenate(openingTransform);
                 var profile = (Polygon)s.SweptArea.ToCurve();
-                Console.WriteLine($"Opening profile:\n{profile.ToString()}\n");
+                // Console.WriteLine($"Opening profile:\n{profile.ToString()}\n");
                 
-                var newOpening = new Opening(profile, (IfcLengthMeasure)s.Depth, solidTransform, Guid.NewGuid(), opening.Name != null ? opening.Name : null);
+                var newOpening = new Opening(profile,
+                                             (IfcLengthMeasure)s.Depth,
+                                             solidTransform,
+                                             IfcGuid.FromIfcGUID(opening.GlobalId));
                 return newOpening;
             }
             return null;
@@ -406,39 +424,39 @@ namespace Elements.IFC
             return null;
         }
 
-        private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc, IfcObjectPlacement parent)
-        {
-            // var sweptArea = opening.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-            // We use the Z extrude direction because the direction is 
-            // relative to the local placement, which is a transform at the
-            // beam's end with the Z axis pointing along the direction.
+        // private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc, IfcObjectPlacement parent)
+        // {
+        //     // var sweptArea = opening.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+        //     // We use the Z extrude direction because the direction is 
+        //     // relative to the local placement, which is a transform at the
+        //     // beam's end with the Z axis pointing along the direction.
             
-            // var extrudeDirection = opening.ExtrudeDirection.ToIfcDirection();
-            // var position = new Transform().ToIfcAxis2Placement3D(doc);
-            // var solid = new IfcExtrudedAreaSolid(sweptArea, position, 
-            //     extrudeDirection, new IfcPositiveLengthMeasure(opening.ExtrudeDepth));
+        //     // var extrudeDirection = opening.ExtrudeDirection.ToIfcDirection();
+        //     // var position = new Transform().ToIfcAxis2Placement3D(doc);
+        //     // var solid = new IfcExtrudedAreaSolid(sweptArea, position, 
+        //     //     extrudeDirection, new IfcPositiveLengthMeasure(opening.ExtrudeDepth));
 
-            var extrude= (Extrude)opening.Geometry.SolidOperations[0];
-            var solid = extrude.ToIfcExtrudedAreaSolid(new Transform(), doc);
-            var localPlacement = new Transform().ToIfcLocalPlacement(doc, parent);
+        //     var extrude= (Extrude)opening.Geometry.SolidOperations[0];
+        //     var solid = extrude.ToIfcExtrudedAreaSolid(new Transform(), doc);
+        //     var localPlacement = new Transform().ToIfcLocalPlacement(doc, parent);
 
-            var shape = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{solid});
-            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{shape});
+        //     var shape = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{solid});
+        //     var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{shape});
 
-            var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, null, localPlacement, productRep, null);
+        //     var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(opening.Id), null, null, null, null, localPlacement, productRep, null);
             
-            // doc.AddEntity(sweptArea);
-            // doc.AddEntity(extrudeDirection);
-            // doc.AddEntity(position);
-            // doc.AddEntity(repItem);
+        //     // doc.AddEntity(sweptArea);
+        //     // doc.AddEntity(extrudeDirection);
+        //     // doc.AddEntity(position);
+        //     // doc.AddEntity(repItem);
 
-            doc.AddEntity(solid);
-            doc.AddEntity(localPlacement);
-            doc.AddEntity(shape);
-            doc.AddEntity(productRep);
+        //     doc.AddEntity(solid);
+        //     doc.AddEntity(localPlacement);
+        //     doc.AddEntity(shape);
+        //     doc.AddEntity(productRep);
 
-            return ifcOpening;
-        }
+        //     return ifcOpening;
+        // }
 
         private static ICurve ToCurve(this IfcProfileDef profile)
         {

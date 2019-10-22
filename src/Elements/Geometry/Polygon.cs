@@ -18,7 +18,10 @@ namespace Elements.Geometry
         /// <param name="vertices">A collection of vertices.</param>
         /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
         [JsonConstructor]
-        public Polygon(IList<Vector3> vertices): base(vertices){}
+        public Polygon(IList<Vector3> vertices): base(vertices)
+        {
+            CheckSelfIntersectionAndThrow(this.Segments());
+        }
 
         /// <summary>
         /// Implicitly convert a polygon to a profile.

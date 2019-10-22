@@ -46,26 +46,25 @@ namespace Elements
 
         /// <summary>
         /// Add an element to the model.
+        /// Each property of the element which implements IIdentifiable
+        /// will be added to the entities collection before the element itself.
+        /// This enables serializers to reference Identifiables by id.
+        /// Properties which are IList of Element will have each of their items
+        /// added to the entities collection as well.  
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
         /// <exception cref="System.ArgumentException">Thrown when an element 
         /// with the same Id already exists in the model.</exception>
         public void AddElement(Element element)
         {
-            if (element == null)
+            if (element == null || 
+                _entities.ContainsKey(element.Id))
             {
                 return;
             }
 
-            if (!_entities.ContainsKey(element.Id))
-            {
-                RecursiveExpandElementData(element);
-                _entities.Add(element.Id, element);
-            }
-            else
-            {
-                throw new ArgumentException("An element with the same Id already exists in the Model.");
-            }
+            RecursiveExpandElementData(element);
+            _entities.Add(element.Id, element);
         }
 
         /// <summary>
@@ -164,6 +163,19 @@ namespace Elements
                     else
                     {
                         Add(ident.Id, ident);
+                    }
+                }
+                else if(p.PropertyType.IsGenericType && 
+                        p.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    var listType = p.PropertyType.GetGenericArguments()[0];
+                    if(typeof(Element).IsAssignableFrom(listType))
+                    {
+                        var list = (IList)pValue;
+                        foreach(Element e in list)
+                        {
+                            AddElement(e);
+                        }
                     }
                 }
             }

@@ -503,11 +503,10 @@ namespace Elements.Serialization.glTF
             var accessors = new List<Accessor>();
 
             var elements = model.AllEntitiesOfType<Element>().Where(t=>t.GetType() != typeof(Opening));
-            var voidOps = model.AllEntitiesOfType<Opening>().SelectMany(s=>s.Geometry.SolidOperations);
 
             foreach(var e in elements)
             {
-                GetRenderDataForElement(e, voidOps, gltf, materials, buffer, bufferViews, accessors);
+                GetRenderDataForElement(e, gltf, materials, buffer, bufferViews, accessors);
             }
 
             var buff = new glTFLoader.Schema.Buffer();
@@ -520,7 +519,6 @@ namespace Elements.Serialization.glTF
         }
 
         private static void GetRenderDataForElement(Element e,
-                                                    IEnumerable<SolidOperation> voidOps,
                                                     Gltf gltf,
                                                     Dictionary<string, int> materials,
                                                     List<byte> buffer,
@@ -539,9 +537,10 @@ namespace Elements.Serialization.glTF
             {
                 // Element has a solid representation.
                 var geo = e as IGeometry;
+                geo.UpdateSolidOperations();
                 foreach(var solidOp in geo.Geometry.SolidOperations)
                 {
-                    var solid = solidOp.GetUpdatedSolid(voidOps);
+                    var solid = solidOp.GetSolid();
                     if(solid != null)
                     {
                         ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 

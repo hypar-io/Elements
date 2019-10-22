@@ -57,14 +57,6 @@ namespace Elements.Serialization.IFC
                 ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
             }
 
-            var openings = new List<Opening>();
-            foreach (var v in ifcVoids)
-            {
-                var element = v.RelatingBuildingElement;
-                var o = ((IfcOpeningElement)v.RelatedOpeningElement).ToOpening();
-                openings.Add(o);
-            }
-
             var slabs = ifcSlabs.Select(s => s.ToFloor(ifcVoids.Where(v=>v.RelatingBuildingElement == s).Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
             var spaces = ifcSpaces.Select(sp => sp.ToSpace());
             var walls = ifcWalls.Select(w => w.ToWall(
@@ -78,10 +70,6 @@ namespace Elements.Serialization.IFC
             model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
-            if (openings.Any())
-            {
-                model.AddElements(openings);
-            }
 
             return model;
         }

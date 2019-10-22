@@ -25,6 +25,7 @@ namespace Elements.IFC
             if(e is IGeometry)
             {
                 var geo = (IGeometry)e;
+                geo.UpdateSolidOperations();
                 foreach(var op in geo.Geometry.SolidOperations)
                 {
                     if(op is Sweep)
@@ -59,25 +60,24 @@ namespace Elements.IFC
             products.Add(product);
             doc.AddEntity(product);
 
-            // If the element has openings,
-            // Make opening relationships in
+            // If the element has openings, make opening relationships in
             // the IfcElement.
-            // if(e is IHasOpenings)
-            // {
-            //     var openings = (IHasOpenings)e;
-            //     if(openings.Openings.Count > 0)
-            //     {
-            //         foreach(var o in openings.Openings)
-            //         {
-            //             var element = (IfcElement)product;
-            //             var opening = o.ToIfcOpeningElement(context, doc, localPlacement);
-            //             var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
-            //             element.HasOpenings.Add(voidRel);
-            //             doc.AddEntity(opening);
-            //             doc.AddEntity(voidRel);
-            //         }
-            //     }
-            // }
+            if(e is IHasOpenings)
+            {
+                var openings = (IHasOpenings)e;
+                if(openings.Openings.Count > 0)
+                {
+                    foreach(var o in openings.Openings)
+                    {
+                        var element = (IfcElement)product;
+                        var opening = o.ToIfcOpeningElement(context, doc, localPlacement);
+                        var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
+                        element.HasOpenings.Add(voidRel);
+                        doc.AddEntity(opening);
+                        doc.AddEntity(voidRel);
+                    }
+                }
+            }
 
             if(e is IMaterial)
             {
@@ -98,6 +98,24 @@ namespace Elements.IFC
             }
 
             return products;
+        }
+
+        private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc, IfcObjectPlacement parent)
+        {
+            var solid = ((Extrude)opening.Geometry.SolidOperations[0]).ToIfcExtrudedAreaSolid(new Transform(), doc);
+            var localPlacement = new Transform().ToIfcLocalPlacement(doc, parent);
+
+            var shape = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{solid});
+            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{shape});
+
+            var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(opening.Id), null, null, null, null, localPlacement, productRep, null);
+            
+            doc.AddEntity(solid);
+            doc.AddEntity(localPlacement);
+            doc.AddEntity(shape);
+            doc.AddEntity(productRep);
+
+            return ifcOpening;
         }
 
         internal static IfcLocalPlacement ToIfcLocalPlacement(this Transform transform, Document doc, IfcObjectPlacement parent = null)
@@ -313,7 +331,7 @@ namespace Elements.IFC
         private static IfcSlab ToIfc(this Floor floor, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var slab = new IfcSlab(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, 
+            var slab = new IfcSlab(IfcGuid.ToIfcGuid(floor.Id), null, null, null, 
                 null, localPlacement, shape, null, IfcSlabTypeEnum.FLOOR);
             return slab;
         }
@@ -325,7 +343,7 @@ namespace Elements.IFC
         private static IfcSpace ToIfc(this Space space, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcSpace = new IfcSpace(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, null, null, 
+            var ifcSpace = new IfcSpace(IfcGuid.ToIfcGuid(space.Id), null, null, null, 
                 null, localPlacement, shape, null, IfcElementCompositionEnum.ELEMENT, IfcInternalOrExternalEnum.NOTDEFINED, 
                 new IfcLengthMeasure(space.Transform.Origin.Z));
             return ifcSpace;
@@ -334,7 +352,7 @@ namespace Elements.IFC
         private static IfcProduct ToIfc(this StandardWall wall, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcWall = new IfcWallStandardCase(IfcGuid.ToIfcGuid(Guid.NewGuid()), 
+            var ifcWall = new IfcWallStandardCase(IfcGuid.ToIfcGuid(wall.Id), 
                 null, wall.Name, null, null, localPlacement, shape, null);
             return ifcWall;
         }
@@ -342,7 +360,7 @@ namespace Elements.IFC
         private static IfcWall ToIfc(this Wall wall, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcWall = new IfcWall(IfcGuid.ToIfcGuid(Guid.NewGuid()), 
+            var ifcWall = new IfcWall(IfcGuid.ToIfcGuid(wall.Id), 
                 null, wall.Name, null, null, localPlacement, shape, null);
             return ifcWall;
         }
@@ -350,7 +368,7 @@ namespace Elements.IFC
         private static IfcBeam ToIfc(this Beam beam, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, 
+            var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(beam.Id), null, 
                 null, null, null, localPlacement, shape, null);
             return ifcBeam;
         }
@@ -358,7 +376,7 @@ namespace Elements.IFC
         private static IfcColumn ToIfc(this Column column,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcColumn = new IfcColumn(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
+            var ifcColumn = new IfcColumn(IfcGuid.ToIfcGuid(column.Id), null,
                 null, null, null, localPlacement, shape, null);
             return ifcColumn;
         }
@@ -366,7 +384,7 @@ namespace Elements.IFC
         private static IfcMember ToIfc(this Brace column,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var member = new IfcMember(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
+            var member = new IfcMember(IfcGuid.ToIfcGuid(column.Id), null,
                 null, null, null, localPlacement, shape, null);
             return member;
         }
@@ -374,7 +392,7 @@ namespace Elements.IFC
         private static IfcPlate ToIfc(this Panel panel,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var plate = new IfcPlate(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
+            var plate = new IfcPlate(IfcGuid.ToIfcGuid(panel.Id), null,
                 null, null, null, localPlacement, shape, null);
             return plate;
         }
@@ -382,7 +400,7 @@ namespace Elements.IFC
         private static IfcBuildingElementProxy ToIfc(this Mass mass, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(Guid.NewGuid()), null,
+            var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(mass.Id), null,
                 null, null, null, localPlacement, shape, null, IfcElementCompositionEnum.ELEMENT);
             return proxy;
         }

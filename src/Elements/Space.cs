@@ -118,5 +118,13 @@ namespace Elements
         {
             return Math.Abs(Profile.Area()) * this.Height;
         }
+
+        /// <summary>
+        /// Update solid operations.
+        /// </summary>
+        public void UpdateSolidOperations()
+        {
+            return;
+        }
     }
 }
