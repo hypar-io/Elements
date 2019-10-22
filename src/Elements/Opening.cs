@@ -94,7 +94,7 @@ namespace Elements
                        Guid id = default(Guid),
                        string name = null) : base(id, name, transform)
         {
-            this.Profile = this.Profile; // Don't re-transform the profile.
+            this.Profile = profile; // Don't re-transform the profile.
 
             // TODO(Ian): Give this a proper depth when booleans are supported.
             this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, true));
