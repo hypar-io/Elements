@@ -168,6 +168,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Does this line intersect the provided line?
+        /// </summary>
+        /// <param name="l"></param>
+        /// <returns>Return true if the lines intersect, 
+        /// false if the lines have coincident vertices or do not intersect.</returns>
+        public bool Intersects(Line l)
+        {
+            if (Vector3.CCW(this.Start, this.End, l.Start) * Vector3.CCW(this.Start, this.End, l.End) >= 0) return false;
+            if (Vector3.CCW(l.Start, l.End, this.Start) * Vector3.CCW(l.Start, l.End, this.End) >= 0) return false;
+            return true;
+        }
+
+        /// <summary>
         /// Get the bounding box for this line.
         /// </summary>
         /// <returns>A bounding box for this line.</returns>
