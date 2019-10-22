@@ -45,7 +45,8 @@ namespace Elements
         /// </summary>
         /// <param name="profile">The perimeter of the floor.</param>
         /// <param name="thickness">The thickness of the floor.</param>
-        /// <param name="elevation">The elevation of the top of the floor.</param>
+        /// <param name="elevation">The elevation of the top of the floor.
+        /// If a transform has been provided, this elevation will be added to the origin of that transform.</param>
         /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
         /// <param name="material">The floor's material.</param>
         /// <param name="id">The floor's id.</param>
@@ -66,7 +67,8 @@ namespace Elements
         /// </summary>
         /// <param name="profile">The perimeter of the floor.</param>
         /// <param name="thickness">The thickness of the floor.</param>
-        /// <param name="elevation">The elevation of the top of the floor.</param>
+        /// <param name="elevation">The elevation of the top of the floor.
+        /// If a transform has been provided, this elevation will be added to the origin of that transform.</param>
         /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
         /// <param name="material">The floor's material.</param>
         /// <param name="id">The floor's id.</param>
@@ -94,8 +96,10 @@ namespace Elements
             }
 
             this.Thickness = thickness;
-            this.Transform = transform != null ? new Transform(transform) : new Transform();
-            this.Transform.Move(new Vector3(0, 0, elevation));
+            if(elevation != 0.0)
+            {
+                this.Transform.Move(new Vector3(0,0,elevation));
+            }
             this.Material = material != null ? material : BuiltInMaterials.Concrete;
             this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis));
         }
