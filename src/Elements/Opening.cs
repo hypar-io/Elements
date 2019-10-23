@@ -92,7 +92,7 @@ namespace Elements
         public void UpdateSolidOperations()
         {
             // TODO(Ian): Give this a proper depth when booleans are supported.
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, true));
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, 0.0, true));
         }
     }
 }
