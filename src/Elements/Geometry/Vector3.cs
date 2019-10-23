@@ -178,8 +178,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Return a new vector which is the unitized version of this vector.
         /// </summary>
-        /// <returns></returns>
-        public Vector3 Unit()
+        public Vector3 Normalized()
         {
             var length = Length();
             return new Vector3(X / length, Y / length, Z / length);
@@ -413,7 +412,7 @@ namespace Elements.Geometry
         /// <returns>A point on the plane.</returns>
         public Vector3 ProjectAlong(Vector3 v, Plane p)
         {
-            var x = ((p.Origin - this).Dot(p.Normal)) / p.Normal.Dot(v.Unit());
+            var x = ((p.Origin - this).Dot(p.Normal)) / p.Normal.Dot(v.Normalized());
             return this + x * v;
         }
 
@@ -463,7 +462,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Check whether three points are wound CCW.
+        /// Check whether three points are wound CCW in two dimensions.
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
@@ -508,6 +507,43 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Compute a transform with the origin at points[0], with
+        /// an X axis along points[1]->points[0], and a normal
+        /// computed using the vectors points[2]->points[1] and 
+        /// points[1]->points[0].
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static Transform ToTransform(this IList<Vector3> points)
+        {
+            var a = new Vector3(points[1].X - points[0].X,
+                                points[1].Y - points[0].Y,
+                                points[1].Z - points[0].Z).Normalized();
+
+            // We need to search for a second vector that is not colinear 
+            // with the first. If all the vectors are tried, and one isn't
+            // found that's not parallel to the first, you'll 
+            // get a zero-length normal.
+            Vector3 b = null;
+            for(var i=2; i<points.Count; i++)
+            {
+                b = new Vector3(points[i].X - points[1].X,
+                            points[i].Y - points[1].Y,
+                            points[i].Z - points[1].Z).Normalized();
+                var dot = b.Dot(a);
+                if(dot > -1 && dot < 1)
+                {
+                    // Console.WriteLine("Found valid second vector.");
+                    break;
+                }
+            }
+
+            var n = b.Cross(a);
+            var t = new Transform(points[0], a, n);
+            return t;
+        }
+
+        /// <summary>
         /// Find the average of a collection of Vector3.
         /// </summary>
         /// <param name="points">The Vector3 collection to average.</param>
@@ -537,7 +573,7 @@ namespace Elements.Geometry
             for (var i = 0; i < shrink.Length; i++)
             {
                 var p = points[i];
-                shrink[i] = p + (avg - p).Unit() * distance;
+                shrink[i] = p + (avg - p).Normalized() * distance;
             }
             return shrink;
         }

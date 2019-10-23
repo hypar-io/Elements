@@ -6,7 +6,6 @@
 - `Polygon.Rectangle` constructor no longer takes an origin.
 - `Polygon.Clip` now takes an optional additional set of holes.
 - `Wall` and `Floor` constructors no longer take collections of `Opening`s.
-- `Vector3.Normalized()` to `Vector3.Unit()`.
 
 ### Added
 - `Identifiable`
