@@ -65,9 +65,9 @@ namespace Elements.Geometry.Tests
             var l2 = new Line(new Vector3(2.5, -2.5, 0), new Vector3(2.5,2.5,0));
             var l3 = new Line(new Vector3(0,-1,0), new Vector3(5,-1,0));
             var l4 = new Line(new Vector3(5,0,0), new Vector3(10,0,0));
-            Assert.True(l1.Intersects(l2));     // Intersecting.
-            Assert.False(l1.Intersects(l3));    // Not intersecting.
-            Assert.False(l1.Intersects(l4));    // Coincident.
+            Assert.True(l1.Intersects2D(l2));     // Intersecting.
+            Assert.False(l1.Intersects2D(l3));    // Not intersecting.
+            Assert.False(l1.Intersects2D(l4));    // Coincident.
         }
     }
 }

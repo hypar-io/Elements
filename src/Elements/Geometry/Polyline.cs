@@ -111,7 +111,7 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (segmentsTrans[i].Intersects(segmentsTrans[j]))
+                    if (segmentsTrans[i].Intersects2D(segmentsTrans[j]))
                     {
                         throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
                     }
