@@ -44,7 +44,7 @@ namespace Elements.Tests
         {
             this._model = new Model();
             this.GenerateGlb = true;
-            this.GenerateIfc = false;
+            this.GenerateIfc = true;
             this.GenerateJson = true;
 
             if(!Directory.Exists("models"))
@@ -85,6 +85,7 @@ namespace Elements.Tests
                 if(this.GenerateIfc)
                 {
                     var ifcPath = $"models/{this._name}.ifc";
+                    this._model.ToIFC(ifcPath);
                 }
             }
         }

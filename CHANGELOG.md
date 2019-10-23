@@ -14,10 +14,8 @@
 
 ### Added
 - `Identifiable`
-- `ModelCurve`
-- `ModelPoint`
-- `Elements.IFC` project.
-- `Elements.IFC.Tests` project.
+- `ModelCurve` - Draw curves in 3D.
+- `ModelPoints` - Draw collections of points in 3D.
 - `Elements.Generate` project.
 - `/Schemas` directory.
 - Optional `rotation` on `StructuralFraming` constructors.

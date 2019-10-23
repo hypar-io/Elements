@@ -111,7 +111,12 @@ namespace Elements.Serialization.IFC
             
             var styles = new Dictionary<string, IfcSurfaceStyle>();
 
-            foreach(var e in model.AllEntitiesOfType<Element>())
+            foreach(var e in model.AllEntitiesOfType<Element>().Where(e=>{
+                var t = e.GetType(); 
+                return t != typeof(ModelCurve) && 
+                        t != typeof(ModelPoints) && 
+                        t != typeof(Topography);
+                }))
             {
                 try
                 {
