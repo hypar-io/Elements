@@ -44,9 +44,6 @@ namespace Elements
             this.Profile = new Profile(Polygon.Rectangle(width, height));
             this.Transform = transform != null ? transform : new Transform();
             this.Profile.Transform(new Transform(new Vector3(x, y)));
-
-            // TODO(Ian): Give this a proper depth when booleans are supported.
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, Vector3.ZAxis, true));
         }
 
         /// <summary>
@@ -69,9 +66,6 @@ namespace Elements
             this.Transform.Move(new Vector3(x, y));
             this.Profile = perimeter;
             this.Profile.Transform(new Transform(new Vector3(x, y)));
-
-            // TODO(Ian): Give this a proper depth when booleans are supported.
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, Vector3.ZAxis, true));
         }
 
         /// <summary>
@@ -90,9 +84,6 @@ namespace Elements
                        string name = null) : base(id, name, transform)
         {
             this.Profile = profile; // Don't re-transform the profile.
-
-            // TODO(Ian): Give this a proper depth when booleans are supported.
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, true));
         }
 
         /// <summary>
@@ -100,7 +91,8 @@ namespace Elements
         /// </summary>
         public void UpdateSolidOperations()
         {
-            return;
+            // TODO(Ian): Give this a proper depth when booleans are supported.
+            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, true));
         }
     }
 }
