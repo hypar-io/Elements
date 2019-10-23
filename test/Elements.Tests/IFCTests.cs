@@ -30,7 +30,7 @@ namespace Elements.IFC.Tests
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void IFC4(string name, string ifcPath)
         {
-            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
+            var model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
             model.ToGlTF(ConstructGlbPath(name));
         }
 
@@ -42,7 +42,7 @@ namespace Elements.IFC.Tests
         [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
         public void IFC2X3(string name, string ifcPath, string[] idsToConvert = null)
         {
-            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), idsToConvert);
+            var model = Model.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), idsToConvert);
             model.ToGlTF(ConstructGlbPath(name));
         }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Elements.Geometry;
 using Newtonsoft.Json;
@@ -60,15 +59,7 @@ namespace Elements.Tests
                 return Colors.Red;
             };
 
-            var sw = new Stopwatch();
-            sw.Start();
-
             var topo = new Topography(Vector3.Origin, d, d, elevations, w, colorizer);
-
-            sw.Stop();
-            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms to create topography.");
-            sw.Reset();
-
             this.Model.AddElement(topo);
         }
     }

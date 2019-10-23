@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Collections;
 using Newtonsoft.Json;
 using Elements.Serialization.JSON;
+using Elements.Serialization.IFC;
 
 namespace Elements
 {
@@ -139,6 +140,25 @@ namespace Elements
             var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(data);
             JsonInheritanceConverter.Identifiables.Clear();
             return model;
+        }
+
+        /// <summary>
+        /// Serialize the model to IFC.
+        /// </summary>
+        /// <param name="path">The output path for the IFC file.</param>
+        public void ToIFC(string path)
+        {
+            IFCModelExtensions.ToIFC(this, path);
+        }
+
+        /// <summary>
+        /// Deserialize a model from IFC.
+        /// </summary>
+        /// <param name="path">The path to the IFC file.</param>
+        /// <param name="idsToConvert">An optional collection of IFC identifiers to convert.</param>
+        public static Model FromIFC(string path, string[] idsToConvert = null)
+        {
+            return IFCModelExtensions.FromIFC(path, idsToConvert);
         }
 
         internal Model(Dictionary<Guid, Identifiable> entities, Position origin)

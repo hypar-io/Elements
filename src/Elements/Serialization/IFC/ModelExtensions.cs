@@ -1,4 +1,3 @@
-using Elements.IFC;
 using IFC;
 using STEP;
 using System;
@@ -19,7 +18,7 @@ namespace Elements.Serialization.IFC
         /// <param name="path">The path to an IFC STEP file.</param>
         /// <param name="idsToConvert">An array of element ids to convert.</param>
         /// <returns>A model.</returns>
-        public static Model FromIFC(string path, IList<string> idsToConvert = null)
+        internal static Model FromIFC(string path, IList<string> idsToConvert = null)
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
@@ -79,7 +78,7 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="model"></param>
         /// <param name="path">The path to the generated IFC STEP file.</param>
-        public static void ToIFC(this Model model, string path)
+        internal static void ToIFC(Model model, string path)
         {
             var ifc = new Document("Elements", "Elements", Environment.UserName, 
                                     null, null, null, "Elements", null, null,

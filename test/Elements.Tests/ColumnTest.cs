@@ -5,7 +5,7 @@ using Xunit;
 namespace Elements.Tests
 {
     public class ColumnTest : ModelTest
-    {
+    {        
         [Fact]
         public void Column()
         {

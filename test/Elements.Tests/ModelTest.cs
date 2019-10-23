@@ -4,6 +4,7 @@ using Elements.Geometry;
 using System.Linq;
 using System.Diagnostics;
 using Elements.Serialization.glTF;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
@@ -45,37 +46,29 @@ namespace Elements.Tests
             this.GenerateGlb = true;
             this.GenerateIfc = false;
             this.GenerateJson = true;
+
+            if(!Directory.Exists("models"))
+            {
+                Directory.Delete("models");
+            }
+            Directory.CreateDirectory("models");
         }
 
         public virtual void Dispose()
         {
             if(this._model.Any())
             {
-                if(!Directory.Exists("models"))
-                {
-                    Directory.CreateDirectory("models");
-                }
-                var sw = new Stopwatch();
-                sw.Start();
-
                 if(this.GenerateGlb)
                 {
-                    // Write the model as a glb
                     var modelPath = $"models/{this._name}.glb";
-                    this._model.ToGlTF($"models/{this._name}.glb");
-                    sw.Stop();
-                    Console.WriteLine($"Saved {this._name} to glb: {modelPath}.({sw.Elapsed})");
+                    this._model.ToGlTF(modelPath);
                 }
 
                 if(this.GenerateJson)
                 {
-                    // Write the model as json
                     var jsonPath = $"models/{this._name}.json";
-                    Console.WriteLine($"Serializing {this._name} to JSON: {jsonPath}");
                     File.WriteAllText(jsonPath, this._model.ToJson());
 
-                    // Try deserializing JSON
-                    Console.WriteLine($"Deserializing {this._name} from JSON.");
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
 
                     var elements = this._model.AllEntitiesOfType<Element>();
@@ -87,6 +80,11 @@ namespace Elements.Tests
                             throw new Exception($"{this.Name}: An element with the id {e.Id}, could not be found in the new model.");
                         }
                     }
+                }
+
+                if(this.GenerateIfc)
+                {
+                    var ifcPath = $"models/{this._name}.ifc";
                 }
             }
         }

@@ -7,14 +7,14 @@ using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using IFC;
 
-namespace Elements.IFC
+namespace Elements.Serialization.IFC
 {
     /// <summary>
     /// Extension methods for converting elements to IFC entities.
     /// </summary>
     public static class ElementsExtensions
     {
-        public static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc, Dictionary<string, IfcSurfaceStyle> styles)
+        internal static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc, Dictionary<string, IfcSurfaceStyle> styles)
         {
             var products = new List<IfcProduct>();
 

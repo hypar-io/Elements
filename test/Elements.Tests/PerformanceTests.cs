@@ -1,18 +1,12 @@
+using System;
 using System.Diagnostics;
 using Elements.Geometry;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
     public class PerformanceTests : ModelTest
     {
-        private ITestOutputHelper _helper;
-        public PerformanceTests(ITestOutputHelper helper)
-        {
-            this._helper = helper;
-        }
-        
         [Fact(Skip="Performance")]
         public void GlTFWriteTest()
         {
@@ -40,8 +34,7 @@ namespace Elements.Tests
             }
 
             sw.Stop();
-            _helper.WriteLine($"{sw.Elapsed} for creating {dim*dim} masses.");
-
+            Console.WriteLine($"{sw.Elapsed} for creating {dim*dim} masses.");
         }
     }
 }

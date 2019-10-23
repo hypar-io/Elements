@@ -6,7 +6,7 @@ using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using IFC;
 
-namespace Elements.IFC
+namespace Elements.Serialization.IFC
 {
     /// <summary>
     /// Extension methods for converting IFC entities to elements.
@@ -154,7 +154,7 @@ namespace Elements.IFC
             return floor;
         }
     
-        public static Wall ToWall(this IfcWallStandardCase wall, 
+        internal static Wall ToWall(this IfcWallStandardCase wall, 
             IEnumerable<IfcOpeningElement> openings)
         {
             var transform = new Transform();
@@ -331,7 +331,7 @@ namespace Elements.IFC
         //     return BuiltInMaterials.Default;
         // }
         
-        public static Opening ToOpening(this IfcOpeningElement opening)
+        internal static Opening ToOpening(this IfcOpeningElement opening)
         {
             var openingTransform = opening.ObjectPlacement.ToTransform();
             var s = opening.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
