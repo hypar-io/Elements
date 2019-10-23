@@ -74,7 +74,7 @@ namespace Elements.Serialization.IFC
                         var element = (IfcElement)product;
                         // TODO: Find the opening that we've already created that relates here
                         var opening = ifcOpenings.First(ifcO=>ifcO.GlobalId == IfcGuid.ToIfcGuid(o.Id));
-                        var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
+                        var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), element, opening);
                         element.HasOpenings.Add(voidRel);
                         doc.AddEntity(voidRel);
                     }
@@ -111,7 +111,8 @@ namespace Elements.Serialization.IFC
                                                    null,
                                                    localPlacement,
                                                    shape,
-                                                   null);
+                                                   null,
+                                                   IfcOpeningElementTypeEnum.OPENING);
             return ifcOpening;
         }
 
@@ -130,18 +131,15 @@ namespace Elements.Serialization.IFC
 
         internal static IfcExtrudedAreaSolid ToIfcExtrudedAreaSolid(this Extrude extrude, Transform transform, Document doc)
         {
-            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            var position = transform.ToIfcAxis2Placement3D(doc);
 
-            double extrudeDepth = 0.0;
-            IfcArbitraryClosedProfileDef extrudeProfile = null;
-            IfcDirection extrudeDirection = null;
-
-            extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-            extrudeDirection = extrude.Direction.ToIfcDirection();
-            extrudeDepth = extrude.Height;
+            var extrudeDepth = extrude.Height;
+            var extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();;
 
             var solid = new IfcExtrudedAreaSolid(extrudeProfile, position, 
                 extrudeDirection, new IfcPositiveLengthMeasure(extrude.Height));
+
             doc.AddEntity(extrudeProfile);
             doc.AddEntity(extrudeDirection);
             doc.AddEntity(position);
@@ -344,25 +342,47 @@ namespace Elements.Serialization.IFC
         private static IfcSpace ToIfc(this Space space, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcSpace = new IfcSpace(IfcGuid.ToIfcGuid(space.Id), null, null, null, 
-                null, localPlacement, shape, null, IfcElementCompositionEnum.ELEMENT, IfcInternalOrExternalEnum.NOTDEFINED, 
-                new IfcLengthMeasure(space.Transform.Origin.Z));
+            var ifcSpace = new IfcSpace(IfcGuid.ToIfcGuid(space.Id),
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        localPlacement,
+                                        shape,
+                                        null,
+                                        IfcElementCompositionEnum.ELEMENT,
+                                        IfcSpaceTypeEnum.NOTDEFINED,
+                                        new IfcLengthMeasure(space.Transform.Origin.Z));
             return ifcSpace;
         }
 
         private static IfcProduct ToIfc(this StandardWall wall, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcWall = new IfcWallStandardCase(IfcGuid.ToIfcGuid(wall.Id), 
-                null, wall.Name, null, null, localPlacement, shape, null);
+            var ifcWall = new IfcWallStandardCase(IfcGuid.ToIfcGuid(wall.Id),
+                                                  null,
+                                                  wall.Name,
+                                                  null,
+                                                  null,
+                                                  localPlacement,
+                                                  shape,
+                                                  null,
+                                                  IfcWallTypeEnum.NOTDEFINED);
             return ifcWall;
         }
 
         private static IfcWall ToIfc(this Wall wall, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcWall = new IfcWall(IfcGuid.ToIfcGuid(wall.Id), 
-                null, wall.Name, null, null, localPlacement, shape, null);
+            var ifcWall = new IfcWall(IfcGuid.ToIfcGuid(wall.Id),
+                                      null,
+                                      wall.Name,
+                                      null,
+                                      null,
+                                      localPlacement,
+                                      shape,
+                                      null,
+                                      IfcWallTypeEnum.NOTDEFINED);
             return ifcWall;
         }
 
@@ -370,7 +390,7 @@ namespace Elements.Serialization.IFC
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(beam.Id), null, 
-                null, null, null, localPlacement, shape, null);
+                null, null, null, localPlacement, shape, null, IfcBeamTypeEnum.BEAM);
             return ifcBeam;
         }
 
@@ -378,7 +398,7 @@ namespace Elements.Serialization.IFC
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             var ifcColumn = new IfcColumn(IfcGuid.ToIfcGuid(column.Id), null,
-                null, null, null, localPlacement, shape, null);
+                null, null, null, localPlacement, shape, null, IfcColumnTypeEnum.COLUMN);
             return ifcColumn;
         }
 
@@ -386,7 +406,7 @@ namespace Elements.Serialization.IFC
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             var member = new IfcMember(IfcGuid.ToIfcGuid(column.Id), null,
-                null, null, null, localPlacement, shape, null);
+                null, null, null, localPlacement, shape, null, IfcMemberTypeEnum.NOTDEFINED);
             return member;
         }
 
@@ -394,7 +414,7 @@ namespace Elements.Serialization.IFC
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             var plate = new IfcPlate(IfcGuid.ToIfcGuid(panel.Id), null,
-                null, null, null, localPlacement, shape, null);
+                null, null, null, localPlacement, shape, null, IfcPlateTypeEnum.NOTDEFINED);
             return plate;
         }
 
@@ -402,7 +422,7 @@ namespace Elements.Serialization.IFC
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(mass.Id), null,
-                null, null, null, localPlacement, shape, null, IfcElementCompositionEnum.ELEMENT);
+                null, null, null, localPlacement, shape, null,IfcBuildingElementProxyTypeEnum.ELEMENT);
             return proxy;
         }
 
@@ -523,7 +543,7 @@ namespace Elements.Serialization.IFC
         
         private static IfcDirection ToIfcDirection(this Vector3 direction)
         {
-            return new IfcDirection(new List<double>{direction.X, direction.Y, direction.Z});
+            return new IfcDirection(new List<IfcReal>{new IfcReal(direction.X), new IfcReal(direction.Y), new IfcReal(direction.Z)});
         }
 
         private static IfcCartesianPoint ToIfcCartesianPoint(this Vector3 point)
@@ -570,11 +590,11 @@ namespace Elements.Serialization.IFC
         private static IfcStyledItem CreateIfcStyledItem(IfcRepresentationItem shape, IfcSurfaceStyle style, Document doc)
         {
             var styleSelect = new IfcPresentationStyleSelect(style);
-            var assign = new IfcPresentationStyleAssignment(new List<IfcPresentationStyleSelect>{styleSelect});
-            var assignments = new List<IfcPresentationStyleAssignment>();
+            var assign = new IfcStyleAssignmentSelect(style);
+            var assignments = new List<IfcStyleAssignmentSelect>();
             assignments.Add(assign);
             var styledItem = new IfcStyledItem(shape, assignments, null);
-            doc.AddEntity(assign);
+            // doc.AddEntity(assign);
             return styledItem;
         }
     }

@@ -10,6 +10,8 @@ namespace Elements
     /// </summary>
     public abstract class StructuralFraming : Element, IMaterial, IGeometry
     {
+        private double _rotation = 0.0;
+
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
@@ -83,7 +85,7 @@ namespace Elements
             this.EndSetback = endSetback;
             this.Profile = profile;
             this.Material = material != null ? material : BuiltInMaterials.Steel;
-            this.Geometry.SolidOperations.Add(new Sweep(this.Profile, this.Curve, this.StartSetback, this.EndSetback, rotation));
+            this._rotation = rotation;
         }
 
         /// <summary>
@@ -112,7 +114,34 @@ namespace Elements
         /// </summary>
         public void UpdateSolidOperations()
         {
-            return;
+            var ct = this.Curve.GetType();
+            if(ct == typeof(Line))
+            {
+                var l = (Line)this.Curve;
+                this.Geometry.SolidOperations.Add(new Extrude(this.Profile, l.Length(), this._rotation));
+            }
+            else if(ct == typeof(Arc))
+            {
+                var arc = (Arc)this.Curve;
+                var seg = 5;
+                var div = 1.0/seg;
+                for(var i=0; i<seg-1; i++)
+                {
+                    var a = arc.PointAt(i * div);
+                    var b = arc.PointAt((i+1) * div);
+                    var d = (b-a).Normalized();
+                    var l = a.DistanceTo(b);
+                    this.Geometry.SolidOperations.Add(new Extrude(this.Profile, l, this._rotation));
+                }
+            }
+            else if(typeof(Polyline).IsAssignableFrom(ct))
+            {
+                var p = (Polyline)this.Curve;
+                foreach(var s in p.Segments())
+                {
+                    this.Geometry.SolidOperations.Add(new Extrude(this.Profile, s.Length(), this._rotation));
+                }
+            }
         }
     }
 }

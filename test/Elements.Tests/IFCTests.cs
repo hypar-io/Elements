@@ -21,7 +21,7 @@ namespace Elements.IFC.Tests
             this.output = output;
         }
 
-        [Theory(Skip="IFC4")]
+        [Theory]
         // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
         // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
@@ -34,7 +34,7 @@ namespace Elements.IFC.Tests
             model.ToGlTF(ConstructGlbPath(name));
         }
 
-        [Theory]
+        [Theory(Skip="IFC2X3")]
         [InlineData("example_1", "../../../models/IFC2X3/example_1.ifc")]
         // TODO: Reenable when IfcCompositeCurve is supported.
         // [InlineData("example_2", "../../../models/IFC2X3/example_2.ifc")]

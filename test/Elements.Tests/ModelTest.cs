@@ -2,9 +2,7 @@ using System;
 using System.IO;
 using Elements.Geometry;
 using System.Linq;
-using System.Diagnostics;
 using Elements.Serialization.glTF;
-using Xunit.Abstractions;
 
 namespace Elements.Tests
 {

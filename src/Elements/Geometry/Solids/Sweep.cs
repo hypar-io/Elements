@@ -11,7 +11,7 @@ namespace Elements.Geometry.Solids
         /// <param name="curve">The curve along which to sweep.</param>
         /// <param name="startSetback">The amount to set back from the start of the curve.</param>
         /// <param name="endSetback">The amount to set back from the end of the curve.</param>
-        /// <param name="rotation">An optional rotation in degrees of the profile around the curve. </param>
+        /// <param name="rotation">An optional rotation in degrees of the profile around the curve.</param>
         /// <param name="isVoid">Is the sweep a void?</param>
         public Sweep(Profile profile,
                      Curve curve,
