@@ -13,7 +13,7 @@ namespace Elements.Tests
             this._helper = helper;
         }
         
-        [Fact]
+        [Fact(Skip="Performance")]
         public void GlTFWriteTest()
         {
             this.Name = "Performance_Edges";
