@@ -60,6 +60,8 @@ namespace Elements.IFC
             products.Add(product);
             doc.AddEntity(product);
 
+            var ifcOpenings = doc.AllEntities.Where(ent=>ent.GetType() == typeof(IfcOpeningElement)).Cast<IfcOpeningElement>();
+
             // If the element has openings, make opening relationships in
             // the IfcElement.
             if(e is IHasOpenings)
@@ -70,10 +72,10 @@ namespace Elements.IFC
                     foreach(var o in openings.Openings)
                     {
                         var element = (IfcElement)product;
-                        var opening = o.ToIfcOpeningElement(context, doc, localPlacement);
+                        // TODO: Find the opening that we've already created that relates here
+                        var opening = ifcOpenings.First(ifcO=>ifcO.GlobalId == IfcGuid.ToIfcGuid(o.Id));
                         var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), null, element, opening);
                         element.HasOpenings.Add(voidRel);
-                        doc.AddEntity(opening);
                         doc.AddEntity(voidRel);
                     }
                 }
@@ -100,21 +102,16 @@ namespace Elements.IFC
             return products;
         }
 
-        private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc, IfcObjectPlacement parent)
+        private static IfcOpeningElement ToIfc(this Opening opening, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var solid = ((Extrude)opening.Geometry.SolidOperations[0]).ToIfcExtrudedAreaSolid(new Transform(), doc);
-            var localPlacement = new Transform().ToIfcLocalPlacement(doc, parent);
-
-            var shape = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{solid});
-            var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{shape});
-
-            var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(opening.Id), null, null, null, null, localPlacement, productRep, null);
-            
-            doc.AddEntity(solid);
-            doc.AddEntity(localPlacement);
-            doc.AddEntity(shape);
-            doc.AddEntity(productRep);
-
+            var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(opening.Id),
+                                                   null,
+                                                   null,
+                                                   null,
+                                                   null,
+                                                   localPlacement,
+                                                   shape,
+                                                   null);
             return ifcOpening;
         }
 
@@ -219,6 +216,10 @@ namespace Elements.IFC
                 else if (element is Mass)
                 {
                     e = ((Mass)element).ToIfc(localPlacement, shape);
+                }
+                else if (element is Opening)
+                {
+                    e = ((Opening)element).ToIfc(localPlacement, shape);
                 }
                 return e;
             }

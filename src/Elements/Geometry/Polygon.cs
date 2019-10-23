@@ -1,5 +1,6 @@
 using ClipperLib;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +21,16 @@ namespace Elements.Geometry
         [JsonConstructor]
         public Polygon(IList<Vector3> vertices): base(vertices)
         {
-            CheckSelfIntersectionAndThrow(this.Segments());
+            if(!vertices.AreCoplanar())
+            {
+                throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
+            }
+
+            var segments = this.Segments();
+            CheckSegmentLengthAndThrow(segments);
+
+            var t = vertices.ToTransform();
+            CheckSelfIntersectionAndThrow(t, segments);
         }
 
         /// <summary>

@@ -19,9 +19,11 @@ namespace Elements.Tests
             transRotate.Rotate(Vector3.ZAxis, 20.0);
             var floor2 = new Floor(p, 0.1, 2.0, transRotate, material: new Material("blue", Colors.Blue, 0.0f, 0.0f));
             var openings = new List<Opening>(){
-                new Opening(1, 1, 1, 1, floor1.Transform),
-                new Opening(3, 3, 1, 3, floor1.Transform),
+                new Opening(1, 1, 1, 1),
+                new Opening(3, 3, 1, 3),
             };
+            floor1.Openings.AddRange(openings);
+            floor2.Openings.AddRange(openings);
 
             Assert.Equal(0.5, floor1.Elevation);
             Assert.Equal(0.1, floor1.Thickness);

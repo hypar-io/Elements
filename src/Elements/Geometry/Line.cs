@@ -43,7 +43,7 @@ namespace Elements.Geometry
         public Line(Vector3 start, Vector3 direction, double length)
         {
             this.Start = start;
-            this.End = start + direction.Unit()*length;
+            this.End = start + direction.Normalized()*length;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u, double rotation = 0.0)
         {
-            return new Transform(PointAt(u), (this.Start-this.End).Unit(), rotation);
+            return new Transform(PointAt(u), (this.Start-this.End).Normalized(), rotation);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this line intersect the provided line?
+        /// Does this line intersect the provided line in 2D?
         /// </summary>
         /// <param name="l"></param>
         /// <returns>Return true if the lines intersect, 
@@ -201,7 +201,7 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Direction()
         {
-            return (this.End - this.Start).Unit();
+            return (this.End - this.Start).Normalized();
         }
 
         /// <summary>

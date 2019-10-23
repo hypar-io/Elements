@@ -33,9 +33,9 @@ namespace Elements.Geometry
 
             // Bend the normals for the associated vertices.
             var p1 = new Plane(a.Position, b.Position, c.Position);
-            a.Normal = ((a.Normal + p1.Normal) / 2.0).Unit();
-            b.Normal = ((b.Normal + p1.Normal) / 2.0).Unit();
-            c.Normal = ((c.Normal + p1.Normal) / 2.0).Unit();
+            a.Normal = ((a.Normal + p1.Normal) / 2.0).Normalized();
+            b.Normal = ((b.Normal + p1.Normal) / 2.0).Normalized();
+            c.Normal = ((c.Normal + p1.Normal) / 2.0).Normalized();
 
             this.Normal = p1.Normal;
         }
@@ -51,9 +51,9 @@ namespace Elements.Geometry
 
             // Bend the normals for the associated vertices.
             var p1 = new Plane(a.Position, b.Position, c.Position);
-            a.Normal = ((a.Normal + p1.Normal) / 2.0).Unit();
-            b.Normal = ((b.Normal + p1.Normal) / 2.0).Unit();
-            c.Normal = ((c.Normal + p1.Normal) / 2.0).Unit();
+            a.Normal = ((a.Normal + p1.Normal) / 2.0).Normalized();
+            b.Normal = ((b.Normal + p1.Normal) / 2.0).Normalized();
+            c.Normal = ((c.Normal + p1.Normal) / 2.0).Normalized();
 
             this.Normal = p1.Normal;
         }
@@ -280,7 +280,7 @@ Triangles:{_triangles.Count}";
             // Calculate the face normal
             var v1 = b.Position - a.Position;
             var v2 = c.Position - a.Position;
-            var n = v1.Cross(v2).Unit();
+            var n = v1.Cross(v2).Normalized();
             if (Double.IsNaN(n.X) || Double.IsNaN(n.Y) || Double.IsNaN(n.Z))
             {
                 Debug.WriteLine("Degenerate triangle found.");

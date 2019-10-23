@@ -74,14 +74,36 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Check if any of the polygon segments have zero length.
+        /// </summary>
+        protected void CheckSegmentLengthAndThrow(IList<Line> segments)
+        {
+            foreach(var s in segments)
+            {
+                if(s.Length() == 0)
+                {
+                    throw new ArgumentException("A segment fo the polyline has zero length.");
+                }
+            }
+        }
+
+        /// <summary>
         /// Check for self-intersection in the supplied line segment collection.
         /// </summary>
+        /// <param name="t">The transform representing the plane of the polygon.</param>
         /// <param name="segments"></param>
-        protected void CheckSelfIntersectionAndThrow(IList<Line> segments)
+        protected void CheckSelfIntersectionAndThrow(Transform t, IList<Line> segments)
         {
-            for(var i=0; i<segments.Count; i++)
+            var segmentsTrans = new List<Line>();
+
+            foreach(var l in segments)
             {
-                for(var j=0; j<segments.Count; j++)
+                segmentsTrans.Add(t.OfLine(l));
+            };
+
+            for(var i=0; i<segmentsTrans.Count; i++)
+            {
+                for(var j=0; j<segmentsTrans.Count; j++)
                 {
                     if(i == j)
                     {
@@ -89,7 +111,7 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (segments[i].Intersects(segments[j]))
+                    if (segmentsTrans[i].Intersects(segmentsTrans[j]))
                     {
                         throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
                     }
@@ -295,7 +317,7 @@ namespace Elements.Geometry
             // Create transforms at 'miter' planes.
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-            var x = (b - a).Unit().Average((c - a).Unit()).Negate();
+            var x = (b - a).Normalized().Average((c - a).Normalized()).Negate();
             var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
 
             return new Transform(this.Vertices[i], x, x.Cross(up), rotation);
@@ -308,19 +330,19 @@ namespace Elements.Geometry
             if (i == 0)
             {
                 b = this.Vertices[i + 1];
-                return new Transform(a, (a-b).Unit(), rotation);
+                return new Transform(a, (a-b).Normalized(), rotation);
             }
             else if (i == this.Vertices.Count - 1)
             {
                 b = this.Vertices[i - 1];
-                return new Transform(a, (b-a).Unit(), rotation);
+                return new Transform(a, (b-a).Normalized(), rotation);
             }
             else
             {
                 b = this.Vertices[i - 1];
                 c = this.Vertices[i + 1];
-                var v1 = (b - a).Unit();
-                var v2 = (c - a).Unit();
+                var v1 = (b - a).Normalized();
+                var v2 = (c - a).Normalized();
                 x = v1.Average(v2).Negate();
                 var up = v2.Cross(v1);
                 return new Transform(this.Vertices[i], x, up.Cross(x), rotation);

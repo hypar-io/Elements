@@ -601,7 +601,6 @@ namespace Elements.Geometry.Tests
         public void SameVertices_ThrowsException()
         {
             var a = new Vector3();
-            var b = new Vector3(0.000001,0,0);
             Assert.Throws<ArgumentException>(()=>new Polygon(new[]{a,a,a}));
         }
 
@@ -643,6 +642,16 @@ namespace Elements.Geometry.Tests
             var dot = n1.Dot(n2);
             _output.WriteLine(dot.ToString());
             Assert.Equal(-1.0, dot, 5);
+        }
+
+        [Fact]
+        public void Planar()
+        {
+            var a = Vector3.Origin;
+            var b = new Vector3(5,0,0);
+            var c = new Vector3(5,0,5);
+            var p = new Polygon(new[]{a,b,c});
+        
         }
     }
 }

@@ -453,7 +453,7 @@ namespace Elements.Geometry.Solids
                 var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
                 var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
                 var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
-                var n = (b-a).Cross(c-a).Unit();
+                var n = (b-a).Cross(c-a).Normalized();
 
                 for (var j = 0; j < tess.Vertices.Length; j++)
                 {
@@ -582,7 +582,7 @@ namespace Elements.Geometry.Solids
         {
             for (var i = 0; i < transforms.Length - 1; i++)
             {
-                var v = (transforms[i + 1].Origin - transforms[i].Origin).Unit();
+                var v = (transforms[i + 1].Origin - transforms[i].Origin).Normalized();
                 openEdge = SweepEdgesBetweenPlanes(openEdge, v, transforms[i + 1].XY());
             }
             return openEdge;
@@ -661,7 +661,7 @@ namespace Elements.Geometry.Solids
         {
             // Transform the polygon to the mid plane between two transforms.
             var mid = new Line(start.Origin, end.Origin).TransformAt(0.5, rotation).OfPolygon(p);
-            var v = (end.Origin - start.Origin).Unit();
+            var v = (end.Origin - start.Origin).Normalized();
             var startP = mid.ProjectAlong(v, start);
             var endP = mid.ProjectAlong(v, end);
 

@@ -94,7 +94,7 @@ namespace Elements.Geometry
         public override Transform TransformAt(double u, double rotation = 0.0)
         {
             var p = PointAt(u);
-            var x = (p-this.Center).Unit();
+            var x = (p-this.Center).Normalized();
             var y = Vector3.ZAxis;
             return new Transform(p, x, x.Cross(y), rotation);
         }

@@ -103,9 +103,9 @@ namespace Elements.Geometry
         /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis, double rotation = 0.0)
         {
-            var x = xAxis.Unit();
-            var z = zAxis.Unit();
-            var y = z.Cross(x).Unit();
+            var x = xAxis.Normalized();
+            var z = zAxis.Normalized();
+            var y = z.Cross(x).Normalized();
             this._matrix = new Matrix(x, y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
 
