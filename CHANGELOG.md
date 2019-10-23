@@ -6,6 +6,11 @@
 - `Polygon.Rectangle` constructor no longer takes an origin.
 - `Polygon.Clip` now takes an optional additional set of holes.
 - `Wall` and `Floor` constructors no longer take collections of `Opening`s.
+  - Openings can be added using `wall.Openings.Add(...)`.
+- `Polygon` now has more robust checks during construction.
+  - All vertices must be coplanar.
+  - Zero length segments are not allowed.
+  - Self-intersecting segments are not allowed.
 
 ### Added
 - `Identifiable`
@@ -26,7 +31,7 @@
 
 ### Fixed
 - Transforms are now consistently right-handed.
-- Transforms on curves are now consistently oriented with the +X axis oriented to the "right".
+- Transforms on curves are now consistently oriented with the +X axis oriented to the "right" and the +Z axis oriented along the inverse of the tangent of the curve.
 - Built in materials for displaying transforms are now red, green, and blue. Previously they were all red.
 - All classes deriving from `Element` now pass their `id`, `transform`, and `name` to the base constructor.
 
