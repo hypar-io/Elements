@@ -114,7 +114,16 @@ namespace Elements
         /// </summary>
         public void UpdateSolidOperations()
         {
+            if(this.Geometry.SolidOperations.Count > 0)
+            {
+                return;
+            }
+            
             this.Geometry.SolidOperations.Add(new Sweep(this.Profile, this.Curve, this.StartSetback, this.EndSetback, this._rotation));
+
+            // TODO(Ian): Remove this code if we are able to make sweeps work
+            // for all curves. Otherwise, we will need to use this code to 
+            // segment curves.
 
             // var ct = this.Curve.GetType();
             // if(ct == typeof(Line))

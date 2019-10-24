@@ -17,13 +17,13 @@ namespace Elements.Tests.Examples
             // <example>
             // Create some openings.
             var openings = new List<Opening>(){
-                new Opening(1.0, 2.0, 1.0, 1.0, wall.Transform),
-                new Opening(3.0, 1.0, 1.0, 2.0, wall.Transform)
+                new Opening(1.0, 2.0, 1.0, 1.0),
+                new Opening(3.0, 1.0, 1.0, 2.0)
             };
+            wall.Openings.AddRange(openings);
             // </example>
 
             this.Model.AddElement(wall);
-            this.Model.AddElements(openings);
         }
     }
 }

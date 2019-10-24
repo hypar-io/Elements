@@ -92,6 +92,8 @@ namespace Elements
         {
             if(this.Openings.Count > 0)
             {
+                this.Openings.ForEach(o=>o.UpdateSolidOperations());
+                
                 // Find all the void ops which point in the same direction.
                 var holes = this.Openings.SelectMany(o=>o.Geometry.SolidOperations.
                                                         Where(op=>op is Extrude && op.IsVoid == true).

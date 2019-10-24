@@ -30,19 +30,16 @@ namespace Elements
         /// <param name="y">The distance along the y axis to the center of the opening.</param>
         /// <param name="width">The width of the opening.</param>
         /// <param name="height">The height of the opening.</param>
-        /// <param name="transform">The opening's transform.</param>
         /// <param name="id">The id of the opening..</param>
         /// <param name="name">The name of the opening.</param>
         public Opening(double x,
                        double y,
                        double width,
                        double height,
-                       Transform transform = null,
                        Guid id = default(Guid),
                        string name = null) : base(id, name)
         {
             this.Profile = new Profile(Polygon.Rectangle(width, height));
-            this.Transform = transform != null ? transform : new Transform();
             this.Profile.Transform(new Transform(new Vector3(x, y)));
         }
 
@@ -52,18 +49,14 @@ namespace Elements
         /// <param name="perimeter">A polygon representing the perimeter of the opening.</param>
         /// <param name="x">The distance along the x to transform the profile.</param>
         /// <param name="y">The distance along the y to transform the profile.</param>
-        /// <param name="transform">The opening's transform.</param>
         /// <param name="id">The id of the opening.</param>
         /// <param name="name">The name of the opening.</param>
         public Opening(Polygon perimeter,
                        double x = 0.0,
                        double y = 0.0,
-                       Transform transform = null,
                        Guid id = default(Guid),
                        string name = null) : base(id, name)
         {
-            this.Transform = transform != null ? transform : new Transform();
-            this.Transform.Move(new Vector3(x, y));
             this.Profile = perimeter;
             this.Profile.Transform(new Transform(new Vector3(x, y)));
         }
@@ -87,10 +80,16 @@ namespace Elements
         }
 
         /// <summary>
-        /// Update solid operations.
+        /// Call this method before operations on geometry to ensure that
+        /// geometric operations have been updated.
         /// </summary>
         public void UpdateSolidOperations()
         {
+            if(this.Geometry.SolidOperations.Count > 0)
+            {
+                return;
+            }
+            
             // TODO(Ian): Give this a proper depth when booleans are supported.
             this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, 0.0, true));
         }

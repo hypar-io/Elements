@@ -29,7 +29,6 @@ namespace Elements.Tests.Examples
 
             this.Model.AddElement(floor1);
             this.Model.AddElement(floor2);
-            this.Model.AddElements(openings);
         }
     }
 }
