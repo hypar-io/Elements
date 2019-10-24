@@ -19,13 +19,28 @@ namespace Elements.Generate
             // By passing a set of excluded types, we can tell the code 
             // generator not to generate inline type definitions if types
             // reference those types.
-            var excludedTypes = new string[]{"Vector3", "Line", "Plane", "Polyline", 
-                    "Polygon", "Profile", "Curve", "Solid", 
-                    "Color", "Property", "Transform", "Element", "Material",
-                    "Position", "Elements", "GeometricElement", "Geometry",
-                    "Identifiable", "SolidOperation", "Representation"};
+            var excludedTypes = new string[]{
+                    "Vector3", 
+                    "Line", 
+                    "Plane", 
+                    "Polyline", 
+                    "Polygon", 
+                    "Profile", 
+                    "Curve", 
+                    "Solid", 
+                    "Color", 
+                    "Property", 
+                    "Transform", 
+                    "Element", 
+                    "Material",
+                    "Elements", 
+                    "GeometricElement", 
+                    "Geometry",
+                    "Identifiable", 
+                    "SolidOperation", 
+                    "Representation"};
 
-            await WriteTypesFromUrls(outRoot, excludedTypes);
+            await WriteTypesFromUrls(outRoot, null);
         }
 
         private static async Task WriteTypesFromUrls(string outRoot, string[] excludedTypes = null)
@@ -57,7 +72,11 @@ namespace Elements.Generate
             foreach(var url in urls)
             {
                 var split = url.Split("/", StringSplitOptions.RemoveEmptyEntries).Skip(3);
-                var ns = $"Elements.{string.Join('.', split.SkipLast(1))}";
+                var ns = "Elements";
+                if(split.Count() > 1)
+                {
+                    ns += "." + string.Join('.', split.SkipLast(1));
+                }
                 var outDir = Path.Combine(outRoot, string.Join('/', split.SkipLast(1)).TrimEnd('.'));
                 if(!Directory.Exists(outDir))
                 {
