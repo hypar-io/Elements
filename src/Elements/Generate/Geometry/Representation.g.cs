@@ -16,9 +16,9 @@ namespace Elements.Geometry
     using System.Collections.Generic;
     using System.Linq;
     
-    /// <summary>An array of 3D representations.</summary>
+    /// <summary>The representation of an element.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Geometry 
+    public partial class Representation 
     {
         /// <summary>A collection of solid operations.</summary>
         [Newtonsoft.Json.JsonProperty("SolidOperations", Required = Newtonsoft.Json.Required.Always)]

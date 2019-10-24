@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 
@@ -13,7 +12,7 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Examples/WallExample.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Wall : Element, IGeometry, IMaterial
+    public class Wall : GeometricElement
     {
         /// <summary>
         /// The height of the wall.
@@ -21,19 +20,9 @@ namespace Elements
         public double Height { get; protected set; }
 
         /// <summary>
-        /// The wall's geometry.
-        /// </summary>
-        public Elements.Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
-
-        /// <summary>
         /// The profile of the wall.
         /// </summary>
         public Profile Profile { get; protected set; }
-
-        /// <summary>
-        /// The material of the wall.
-        /// </summary>
-        public Material Material { get; protected set; }
 
         /// <summary>
         /// Construct a wall by extruding a profile.
@@ -50,7 +39,7 @@ namespace Elements
                       Material material = null,
                       Transform transform = null,
                       Guid id = default(Guid),
-                      string name = null) : base(id, name, transform)
+                      string name = null) : base(material, transform, id, name)
         {
             if (height <= 0.0)
             {
@@ -59,8 +48,8 @@ namespace Elements
 
             this.Profile = profile;
             this.Height = height;
-            this.Material = material != null ? material : BuiltInMaterials.Concrete;
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis));
+            this.Material = material ?? BuiltInMaterials.Concrete;
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis));
         }
 
         /// <summary>
@@ -70,7 +59,7 @@ namespace Elements
         /// <param name="name"></param>
         /// <param name="transform"></param>
         /// <returns></returns>
-        protected Wall(Guid id, string name, Transform transform) : base(id, name, transform){}
+        protected Wall(Guid id, string name, Transform transform) : base(BuiltInMaterials.Concrete, transform, id, name){}
 
         /// <summary>
         /// Construct a wall from geometry.
@@ -88,13 +77,13 @@ namespace Elements
             {
                 this.Transform = transform;
             }
-            this.Geometry.SolidOperations.Add(new Import(geometry));
+            this.Representation.SolidOperations.Add(new Import(geometry));
         }
 
         /// <summary>
-        /// Update solid operations.
+        /// Update the representations.
         /// </summary>
-        public virtual void UpdateSolidOperations()
+        public override void UpdateRepresentations()
         {
             return;
         }

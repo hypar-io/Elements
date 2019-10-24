@@ -1,14 +1,13 @@
 using System;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 
 namespace Elements
 {
     /// <summary>
     /// A structural element with a profile swept along a curve.
     /// </summary>
-    public abstract class StructuralFraming : Element, IMaterial, IGeometry
+    public abstract class StructuralFraming : GeometricElement
     {
         private double _rotation = 0.0;
 
@@ -28,19 +27,9 @@ namespace Elements
         public double EndSetback { get; private set; }
 
         /// <summary>
-        /// The structural framing's material.
-        /// </summary>
-        public Material Material { get; private set; }
-
-        /// <summary>
         /// The structural framing's profile.
         /// </summary>
         public Profile Profile { get; set; }
-
-        /// <summary>
-        /// The structural framing's geometry.
-        /// </summary>
-        public Elements.Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
 
         /// <summary>
         /// Construct a beam.
@@ -62,7 +51,7 @@ namespace Elements
                                  double rotation = 0.0,
                                  Transform transform = null,
                                  Guid id = default(Guid),
-                                 string name = null) : base(id, name, transform)
+                                 string name = null) : base(material, transform, id, name)
         {
             SetProperties(curve, profile, material, transform, startSetback, endSetback, rotation);
         }
@@ -110,16 +99,16 @@ namespace Elements
         }
 
         /// <summary>
-        /// Update solid operations.
+        /// Update the representations.
         /// </summary>
-        public void UpdateSolidOperations()
+        public override void UpdateRepresentations()
         {
-            if(this.Geometry.SolidOperations.Count > 0)
+            if(this.Representation.SolidOperations.Count > 0)
             {
                 return;
             }
-            
-            this.Geometry.SolidOperations.Add(new Sweep(this.Profile, this.Curve, this.StartSetback, this.EndSetback, this._rotation));
+
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, this.StartSetback, this.EndSetback, this._rotation));
 
             // TODO(Ian): Remove this code if we are able to make sweeps work
             // for all curves. Otherwise, we will need to use this code to 

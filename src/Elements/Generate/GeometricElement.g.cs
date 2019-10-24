@@ -16,11 +16,25 @@ namespace Elements
     using System.Collections.Generic;
     using System.Linq;
     
-    /// <summary>The base type for all elements.</summary>
+    /// <summary>An element with a geometric representation.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class Element : Identifiable
+    public partial class GeometricElement : Element
     {
+        /// <summary>The element's transform.</summary>
+        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public  Transform Transform { get; internal set; } = new Transform();
+    
+        /// <summary>The element's material.</summary>
+        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
+        public  Material Material { get; internal set; }
+    
+        /// <summary>The element's representation.</summary>
+        [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public  Representation Representation { get; internal set; } = new Representation();
+    
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
         [Newtonsoft.Json.JsonExtensionData]

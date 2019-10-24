@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Elements.Interfaces;
 
 namespace Elements
 {
@@ -9,17 +8,12 @@ namespace Elements
     /// A curve which is visible in 3D.
     /// </summary>
     [UserElement]
-    public class ModelCurve: Element, IMaterial
+    public class ModelCurve: GeometricElement
     {   
         /// <summary>
         /// The curve.
         /// </summary>
         public Curve Curve { get; private set;}
-
-        /// <summary>
-        /// The model curve's material.
-        /// </summary>
-        public Material Material { get; private set; }
 
         /// <summary>
         /// Create a model curve.
@@ -33,10 +27,18 @@ namespace Elements
                           Material material = null,
                           Transform transform = null,
                           Guid id = default(Guid),
-                          string name = null) : base(id, name, transform)
+                          string name = null) : base(material, transform, id, name)
         {
             this.Curve = curve;
             this.Material = material != null ? material : BuiltInMaterials.Edges;
+        }
+
+        /// <summary>
+        /// Update the representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            return;
         }
     }
     

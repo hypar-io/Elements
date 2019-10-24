@@ -1,7 +1,6 @@
 using System;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -12,17 +11,12 @@ namespace Elements
     /// The direction of the opening corresponds to the +Z axis of the transform.
     /// </summary>
     [UserElement]
-    public class Opening : Element, IGeometry
+    public class Opening : GeometricElement
     {
         /// <summary>
         /// The profile of the opening.
         /// </summary>
         public Profile Profile { get; private set; }
-
-        /// <summary>
-        /// The opening's geometry.
-        /// </summary>
-        public Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
 
         /// <summary>
         /// Create a rectangular opening.
@@ -40,7 +34,7 @@ namespace Elements
                        double height,
                        Transform transform = null,
                        Guid id = default(Guid),
-                       string name = null) : base(id, name, transform)
+                       string name = null) : base(BuiltInMaterials.Void, transform, id, name)
         {
             this.Profile = new Profile(Polygon.Rectangle(width, height));
             this.Profile.Transform(new Transform(new Vector3(x, y)));
@@ -60,7 +54,7 @@ namespace Elements
                        double y = 0.0,
                        Transform transform = null,
                        Guid id = default(Guid),
-                       string name = null) : base(id, name, transform)
+                       string name = null) : base(BuiltInMaterials.Void, transform, id, name)
         {
             this.Profile = perimeter;
             this.Profile.Transform(new Transform(new Vector3(x, y)));
@@ -79,7 +73,7 @@ namespace Elements
                        double depth,
                        Transform transform = null,
                        Guid id = default(Guid),
-                       string name = null) : base(id, name, transform)
+                       string name = null) : base(BuiltInMaterials.Void, transform, id, name)
         {
             this.Profile = profile; // Don't re-transform the profile.
         }
@@ -88,15 +82,15 @@ namespace Elements
         /// Call this method before operations on geometry to ensure that
         /// geometric operations have been updated.
         /// </summary>
-        public void UpdateSolidOperations()
+        public override void UpdateRepresentations()
         {
-            if(this.Geometry.SolidOperations.Count > 0)
+            if(this.Representation.SolidOperations.Count > 0)
             {
                 return;
             }
 
             // TODO(Ian): Give this a proper depth when booleans are supported.
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, 0.0, true));
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, 0.0, true));
         }
     }
 }

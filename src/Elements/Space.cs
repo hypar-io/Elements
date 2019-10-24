@@ -1,5 +1,4 @@
 using Elements.Geometry;
-using Elements.Interfaces;
 using System;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
@@ -13,7 +12,7 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Examples/SpaceExample.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Space : Element, IGeometry, IMaterial
+    public class Space : GeometricElement
     {
         /// <summary>
         /// The profile of the space.
@@ -21,19 +20,9 @@ namespace Elements
         public Profile Profile { get; private set; }
 
         /// <summary>
-        /// The space's material.
-        /// </summary>
-        public Material Material { get; private set; }
-
-        /// <summary>
         /// The space's height.
         /// </summary>
         public double Height { get; private set; }
-
-        /// <summary>
-        /// The space's geometry.
-        /// </summary>
-        public Elements.Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
 
         /// <summary>
         /// Construct a space.
@@ -53,7 +42,7 @@ namespace Elements
                      Material material = null,
                      Transform transform = null,
                      Guid id = default(Guid),
-                     string name = null) : base(id, name, transform)
+                     string name = null) : base(material, transform, id, name)
         {
             SetProperties(height, profile, transform, material, elevation);
         }
@@ -69,7 +58,7 @@ namespace Elements
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Material = material == null ? BuiltInMaterials.Mass : material;
             this.Height = height;
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Height));
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height));
         }
 
         /// <summary>
@@ -84,7 +73,7 @@ namespace Elements
                        Transform transform = null,
                        Material material = null,
                        Guid id = default(Guid),
-                       string name = null) : base(id, name, transform)
+                       string name = null) : base(material, transform, id, name)
         {
             if (geometry == null)
             {
@@ -92,7 +81,7 @@ namespace Elements
             }
             this.Transform = transform;
             this.Material = material == null ? BuiltInMaterials.Default : material;
-            this.Geometry.SolidOperations.Add(new Import(geometry));
+            this.Representation.SolidOperations.Add(new Import(geometry));
 
             // TODO(Ian): When receiving a Space as a solid, as we do with IFC,
             // we won't have a profile. This will cause problems with JSON 
@@ -124,9 +113,9 @@ namespace Elements
         }
 
         /// <summary>
-        /// Update solid operations.
+        /// Update the representations.
         /// </summary>
-        public void UpdateSolidOperations()
+        public override void UpdateRepresentations()
         {
             return;
         }

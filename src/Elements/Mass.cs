@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 
@@ -13,7 +12,7 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Examples/MassExample.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Mass : Element, IGeometry, IMaterial
+    public class Mass : GeometricElement
     {
         /// <summary>
         /// The profile of the mass.
@@ -35,16 +34,6 @@ namespace Elements
         }
 
         /// <summary>
-        /// The mass' geometry.
-        /// </summary>
-        public Elements.Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
-
-        /// <summary>
-        /// The mass' material.
-        /// </summary>
-        public Material Material { get; private set; }
-
-        /// <summary>
         /// Construct a Mass.
         /// </summary>
         /// <param name="profile">The profile of the mass.</param>
@@ -58,7 +47,7 @@ namespace Elements
                     Material material = null,
                     Transform transform = null,
                     Guid id = default(Guid),
-                    string name = null) : base(id, name, transform)
+                    string name = null) : base(material, transform, id, name)
         {
             if (height <= 0)
             {
@@ -66,8 +55,8 @@ namespace Elements
             }
             this.Profile = profile;
             this.Height = height;
-            this.Material = material == null ? BuiltInMaterials.Mass : material;
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Height));
+            this.Material = material ?? BuiltInMaterials.Mass;
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height));
         }
 
         /// <summary>
@@ -87,9 +76,9 @@ namespace Elements
         }
 
         /// <summary>
-        /// Update solid operations.
+        /// Update the representations.
         /// </summary>
-        public void UpdateSolidOperations()
+        public override void UpdateRepresentations()
         {
             return;
         }

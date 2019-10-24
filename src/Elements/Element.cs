@@ -1,6 +1,6 @@
+using Elements.Serialization.JSON;
 using Newtonsoft.Json;
 using System;
-using Elements.Geometry;
 
 namespace Elements
 {
@@ -13,6 +13,7 @@ namespace Elements
     /// <summary>
     /// Base class for all Elements.
     /// </summary>
+    [JsonInheritanceAttribute("Elements.GeometricElement", typeof(GeometricElement))]
     public abstract partial class Element : Identifiable
     {
         /// <summary>
@@ -20,11 +21,7 @@ namespace Elements
         /// </summary>
         /// <param name="id">The unique identifer of the element.</param>
         /// <param name="name">The name of the element.</param>
-        /// <param name="transform">The element's transform.</param>
         [JsonConstructor]
-        public Element(Guid id = default(Guid), string name=null, Transform transform = null): base(id, name)
-        {
-            this.Transform = transform == null ? new Transform() : transform;
-        }
+        public Element(Guid id = default(Guid), string name=null): base(id, name){}
     }
 }

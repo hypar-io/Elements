@@ -9,7 +9,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using Elements.Geometry.Solids;
 using Elements.Geometry.Interfaces;
-using Elements.Interfaces;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -491,18 +490,12 @@ namespace Elements.Serialization.glTF
             gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
 
             var materialsToAdd = model.AllEntitiesOfType<Material>().ToList();
-            materialsToAdd.Add(BuiltInMaterials.XAxis);
-            materialsToAdd.Add(BuiltInMaterials.YAxis);
-            materialsToAdd.Add(BuiltInMaterials.ZAxis);
-            materialsToAdd.Add(BuiltInMaterials.Edges);
-            materialsToAdd.Add(BuiltInMaterials.EdgesHighlighted);
-            
             var materials = gltf.AddMaterials(materialsToAdd);
-            
+
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
 
-            var elements = model.AllEntitiesOfType<Element>().Where(t=>t.GetType() != typeof(Opening));
+            var elements = model.AllEntitiesOfType<GeometricElement>().Where(t=>t.GetType() != typeof(Opening));
 
             foreach(var e in elements)
             {
@@ -518,7 +511,7 @@ namespace Elements.Serialization.glTF
             return gltf;
         }
 
-        private static void GetRenderDataForElement(Element e,
+        private static void GetRenderDataForElement(GeometricElement e,
                                                     Gltf gltf,
                                                     Dictionary<string, int> materials,
                                                     List<byte> buffer,
@@ -527,25 +520,16 @@ namespace Elements.Serialization.glTF
         {
             var materialName = BuiltInMaterials.Default.Name;
 
-            if(e is IMaterial)
+            materialName = e.Material.Name;
+
+            e.UpdateRepresentations();
+            foreach(var solidOp in e.Representation.SolidOperations)
             {
-                // Get the material from the framing type's material.
-                materialName = ((IMaterial)e).Material.Name;
-            }
-            
-            if (e is IGeometry)
-            {
-                // Element has a solid representation.
-                var geo = e as IGeometry;
-                geo.UpdateSolidOperations();
-                foreach(var solidOp in geo.Geometry.SolidOperations)
+                var solid = solidOp.GetSolid();
+                if(solid != null)
                 {
-                    var solid = solidOp.GetSolid();
-                    if(solid != null)
-                    {
-                        ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
-                            ref materials, ref buffer, bufferViews, accessors);
-                    }
+                    ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
+                        ref materials, ref buffer, bufferViews, accessors);
                 }
             }
 
@@ -580,9 +564,11 @@ namespace Elements.Serialization.glTF
                                 out vmax, out vmin, out nmin, out nmax, out cmin,
                                 out cmax, out imin, out imax);
 
+                // TODO(Ian): Remove this cast to GeometricElement when we
+                // consolidate mesh under geometric representations.
                 gltf.AddTriangleMesh(e.Id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
                                         indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, materials[materialName], cmin, cmax, null, e.Transform);
+                                        imin, imax, materials[materialName], cmin, cmax, null, ((GeometricElement)e).Transform);
             }
         }
 

@@ -14,46 +14,42 @@ namespace Elements.Serialization.IFC
     /// </summary>
     public static class ElementsExtensions
     {
-        internal static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc, Dictionary<string, IfcSurfaceStyle> styles)
+        internal static List<IfcProduct> ToIfcProducts(this GeometricElement e, IfcRepresentationContext context, Document doc, Dictionary<string, IfcSurfaceStyle> styles)
         {
             var products = new List<IfcProduct>();
 
             IfcProductDefinitionShape shape = null;
             var localPlacement = e.Transform.ToIfcLocalPlacement(doc);
             
-
             var geoms = new List<IfcRepresentationItem>();
-            if(e is IGeometry)
+
+            e.UpdateRepresentations();
+            
+            foreach(var op in e.Representation.SolidOperations)
             {
-                var geo = (IGeometry)e;
-                geo.UpdateSolidOperations();
-                
-                foreach(var op in geo.Geometry.SolidOperations)
+                IfcGeometricRepresentationItem geom = null;
+                if(op is Sweep)
                 {
-                    IfcGeometricRepresentationItem geom = null;
-                    if(op is Sweep)
-                    {
-                        var sweep = (Sweep)op;
-                        geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, doc);
-                        // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(e.Transform, doc);
-                    }
-                    else if(op is Extrude)
-                    {
-                        var extrude = (Extrude)op;
-                        geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, doc);
-                    }
-                    else if(op is Lamina)
-                    {
-                        var lamina = (Lamina)op;
-                        geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, doc);
-                    }
-                    else
-                    {
-                        throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
-                    }
-                    doc.AddEntity(geom);
-                    geoms.Add(geom);
+                    var sweep = (Sweep)op;
+                    geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, doc);
+                    // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(e.Transform, doc);
                 }
+                else if(op is Extrude)
+                {
+                    var extrude = (Extrude)op;
+                    geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, doc);
+                }
+                else if(op is Lamina)
+                {
+                    var lamina = (Lamina)op;
+                    geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, doc);
+                }
+                else
+                {
+                    throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
+                }
+                doc.AddEntity(geom);
+                geoms.Add(geom);
             }
             
             shape = ToIfcProductDefinitionShape(geoms, context, doc);
@@ -86,25 +82,21 @@ namespace Elements.Serialization.IFC
                 }
             }
 
-            if(e is IMaterial)
+            IfcSurfaceStyle style = null;
+            if(styles.ContainsKey(e.Material.Name))
             {
-                var m = (IMaterial)e;
-                IfcSurfaceStyle style = null;
-                if(styles.ContainsKey(m.Material.Name))
-                {
-                    style = styles[m.Material.Name];
-                }
-                else
-                {
-                    style = m.Material.ToIfcSurfaceStyle(doc);
-                    styles.Add(m.Material.Name, style);
-                }
-                foreach(var geom in geoms)
-                {
-                    var styledItem = CreateIfcStyledItem(geom, style, doc);
-                    geom.StyledByItem = new List<IfcStyledItem>{styledItem};
-                    doc.AddEntity(styledItem);
-                }
+                style = styles[e.Material.Name];
+            }
+            else
+            {
+                style = e.Material.ToIfcSurfaceStyle(doc);
+                styles.Add(e.Material.Name, style);
+            }
+            foreach(var geom in geoms)
+            {
+                var styledItem = CreateIfcStyledItem(geom, style, doc);
+                geom.StyledByItem = new List<IfcStyledItem>{styledItem};
+                doc.AddEntity(styledItem);
             }
 
             return products;

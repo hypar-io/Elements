@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Elements.Properties;
 using System;
 using System.Linq;
@@ -9,7 +8,7 @@ using Xunit;
 namespace Elements.Tests
 {
     [UserElement]
-    public class TestUserElement : Element, IMaterial, IGeometry
+    public class TestUserElement : GeometricElement
     {
         public Line CenterLine { get; set; }
         public Profile Profile { get; set; }
@@ -19,11 +18,11 @@ namespace Elements.Tests
         /// </summary>
         public NumericProperty Length => new NumericProperty(this.CenterLine.Length(), NumericPropertyUnitType.Length);
 
-        public Geometry.Geometry Geometry {get;} = new Geometry.Geometry();
-
-        public Material Material => BuiltInMaterials.Wood;
-
-        public TestUserElement(Line centerLine, Profile profile, Material material = null, Guid id = default(Guid), string name = null): base(id, name)
+        public TestUserElement(Line centerLine,
+                               Profile profile,
+                               Material material = null,
+                               Guid id = default(Guid),
+                               string name = null) : base(material, null, id, name)
         {
             this.CenterLine = centerLine;
             this.Profile = profile;
@@ -31,12 +30,15 @@ namespace Elements.Tests
             var t = this.CenterLine.TransformAt(0);
             var x = new Line(t.Origin, t.XAxis * this.CenterLine.Length());
             var y = new Line(t.Origin, t.YAxis * this.CenterLine.Length());
-            this.Geometry.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine));
-            this.Geometry.SolidOperations.Add(new Sweep(this.Profile, x));
-            this.Geometry.SolidOperations.Add(new Sweep(this.Profile, y));
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine));
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, x));
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, y));
         }
 
-        public void UpdateSolidOperations()
+        /// <summary>
+        /// Update the representations.
+        /// </summary>
+        public override void UpdateRepresentations()
         {
             return;
         }

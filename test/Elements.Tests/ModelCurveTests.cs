@@ -69,13 +69,12 @@ namespace Elements.Tests
         {
             this.Name = "ModelPoints";
 
-            var ptMaterial = new Material("Points", Colors.Blue);
-            var modelPoints = new ModelPoints(ptMaterial);
-            for(var x=0; x<50; x++)
+            var modelPoints = new ModelPoints();
+            for(var x=0; x<25; x++)
             {
-                for(var y=0; y<50; y++)
+                for(var y=0; y<25; y++)
                 {
-                    for(var z=0; z<50; z++)
+                    for(var z=0; z<25; z++)
                     {
                         modelPoints.Locations.Add(new Vector3(x,y,z));
                     }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -10,17 +9,12 @@ namespace Elements
     /// A collection of points which are visible in 3D.
     /// </summary>
     [UserElement]
-    public class ModelPoints: Element, IMaterial
+    public class ModelPoints: GeometricElement
     {   
         /// <summary>
         /// The locations of the points.
         /// </summary>
         public IList<Vector3> Locations { get; private set;}
-
-        /// <summary>
-        /// The point's material.
-        /// </summary>
-        public Material Material { get; private set; }
 
         /// <summary>
         /// Create a collection of points.
@@ -35,10 +29,10 @@ namespace Elements
                           Material material = null,
                           Transform transform = null,
                           Guid id = default(Guid),
-                          string name = null) : base(id, name, transform)
+                          string name = null) : base(material, transform, id, name)
         {
             this.Locations = Locations;
-            this.Material = material != null ? material : BuiltInMaterials.Edges;
+            this.Material = material ?? BuiltInMaterials.Points;
         }
 
         /// <summary>
@@ -51,10 +45,18 @@ namespace Elements
         public ModelPoints(Material material = null,
                           Transform transform = null,
                           Guid id = default(Guid),
-                          string name = null) : base(id, name, transform)
+                          string name = null) : base(material, transform, id, name)
         {
             this.Locations = new List<Vector3>();
-            this.Material = material != null ? material : BuiltInMaterials.Edges;
+            this.Material = material ?? BuiltInMaterials.Points;
+        }
+
+        /// <summary>
+        /// Update the geometry.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            return;
         }
     }
 }

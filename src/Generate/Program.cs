@@ -20,11 +20,10 @@ namespace Elements.Generate
             // generator not to generate inline type definitions if types
             // reference those types.
             var excludedTypes = new string[]{"Vector3", "Line", "Plane", "Polyline", 
-                    "Polygon", "Profile", "Component", "Curve", "Solid", 
+                    "Polygon", "Profile", "Curve", "Solid", 
                     "Color", "Property", "Transform", "Element", "Material",
-                    "Position", "ElementType", "FloorType", "WallType", 
-                    "StructuralFramingType", "MaterialLayer", "Elements", 
-                    "Identifiable", "SolidOperation"};
+                    "Position", "Elements", "GeometricElement", "Geometry",
+                    "Identifiable", "SolidOperation", "Representation"};
 
             var di = new DirectoryInfo(schemaRoot);
             foreach(var fi in di.EnumerateFiles("*.json", SearchOption.AllDirectories))

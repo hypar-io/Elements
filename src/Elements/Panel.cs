@@ -1,5 +1,4 @@
 using Elements.Geometry;
-using Elements.Interfaces;
 using Elements.Geometry.Solids;
 using System;
 
@@ -12,22 +11,12 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Examples/PanelExample.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Panel : Element, IGeometry, IMaterial
+    public class Panel : GeometricElement
     {
         /// <summary>
         /// The perimeter of the panel.
         /// </summary>
         public Polygon Perimeter { get; }
-
-        /// <summary>
-        /// The panel's material.
-        /// </summary>
-        public Material Material { get; private set; }
-
-        /// <summary>
-        /// The panel's geometry.
-        /// </summary>
-        public Elements.Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
 
         /// <summary>
         /// Create a panel.
@@ -42,11 +31,10 @@ namespace Elements
                      Material material = null,
                      Transform transform = null,
                      Guid id = default(Guid),
-                     string name = null) : base(id, name, transform)
+                     string name = null) : base(material, transform, id, name)
         {
             this.Perimeter = perimeter;
-            this.Material = material == null ? BuiltInMaterials.Default : material;
-            this.Geometry.SolidOperations.Add(new Lamina(this.Perimeter));
+            this.Representation.SolidOperations.Add(new Lamina(this.Perimeter));
         }
 
         /// <summary>
@@ -67,9 +55,9 @@ namespace Elements
         }
 
         /// <summary>
-        /// Update solid operations.
+        /// Update the representations.
         /// </summary>
-        public void UpdateSolidOperations()
+        public override void UpdateRepresentations()
         {
             return;
         }

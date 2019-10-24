@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 
@@ -16,7 +15,7 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Examples/TopographyExample.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Topography : Element, ITessellate, IMaterial
+    public class Topography : GeometricElement, ITessellate
     {
         private Func<Triangle, Color> _colorizer;
 
@@ -42,11 +41,6 @@ namespace Elements
         /// The minimum elevation of the topography.
         /// </summary>
         public double MinElevation => _minElevation;
-
-        /// <summary>
-        /// The material of the topography.
-        /// </summary>
-        public Material Material { get; private set; }
 
         /// <summary>
         /// The material id of the topography.
@@ -351,6 +345,14 @@ namespace Elements
             }
 
             return output;
+        }
+
+        /// <summary>
+        /// Update the representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            return;
         }
     }
 

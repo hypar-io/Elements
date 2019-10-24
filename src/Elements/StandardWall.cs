@@ -88,14 +88,14 @@ namespace Elements
         /// <summary>
         /// Update solid operations.
         /// </summary>
-        public override void UpdateSolidOperations()
+        public override void UpdateRepresentations()
         {
             if(this.Openings.Count > 0)
             {
-                this.Openings.ForEach(o=>o.UpdateSolidOperations());
+                this.Openings.ForEach(o=>o.UpdateRepresentations());
                 
                 // Find all the void ops which point in the same direction.
-                var holes = this.Openings.SelectMany(o=>o.Geometry.SolidOperations.
+                var holes = this.Openings.SelectMany(o=>o.Representation.SolidOperations.
                                                         Where(op=>op is Extrude && op.IsVoid == true).
                                                         Cast<Extrude>().
                                                         Where(ex=>ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
@@ -105,8 +105,8 @@ namespace Elements
                     this.Profile.Clip(holeProfiles);
                 }
             }
-            this.Geometry.SolidOperations.Clear();
-            this.Geometry.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis));
+            this.Representation.SolidOperations.Clear();
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis));
         }
     }
 }

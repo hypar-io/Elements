@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using System;
 
 namespace Elements
@@ -9,7 +8,7 @@ namespace Elements
     /// An element defined by a perimeter and a cross section swept along that perimeter.
     /// </summary>
     [UserElement]
-    public class Frame : Element, IGeometry, IMaterial
+    public class Frame : GeometricElement
     {
         /// <summary>
         /// The frame's profile.
@@ -17,19 +16,9 @@ namespace Elements
         public Profile Profile { get; private set; }
 
         /// <summary>
-        /// The frame's material.
-        /// </summary>
-        public Material Material { get; private set; }
-
-        /// <summary>
         /// The perimeter of the frame.
         /// </summary>
         public Curve Curve { get; private set; }
-
-        /// <summary>
-        /// The frame's geometry.
-        /// </summary>
-        public Elements.Geometry.Geometry Geometry { get; } = new Geometry.Geometry();
 
         /// <summary>
         /// Create a frame.
@@ -41,24 +30,28 @@ namespace Elements
         /// <param name="transform">The frame's transform.</param>
         /// <param name="id">The id of the frame.</param>
         /// <param name="name">The name of the frame.</param>
-        public Frame(Polygon curve, Profile profile, double offset = 0.0, 
-            Material material = null, Transform transform = null, Guid id = default(Guid), string name = null): base(id, name, transform)
+        public Frame(Polygon curve,
+                     Profile profile,
+                     double offset = 0.0,
+                     Material material = null,
+                     Transform transform = null,
+                     Guid id = default(Guid),
+                     string name = null) : base(material, transform, id, name)
         {
-            SetProperties(curve, profile, transform, material, offset);
+            SetProperties(curve, profile, transform, offset);
         }
 
-        private void SetProperties(Polygon curve, Profile profile, Transform transform, Material material, double offset)
+        private void SetProperties(Polygon curve, Profile profile, Transform transform, double offset)
         {
             this.Curve = curve.Offset(-offset)[0];
             this.Profile = profile;
-            this.Material = material != null ? material : BuiltInMaterials.Default;
-            this.Geometry.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0));
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0));
         }
 
         /// <summary>
-        /// Update solid operations.
+        /// Update the representations.
         /// </summary>
-        public void UpdateSolidOperations()
+        public override void UpdateRepresentations()
         {
             return;
         }
