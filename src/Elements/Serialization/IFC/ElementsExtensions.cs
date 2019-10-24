@@ -32,6 +32,7 @@ namespace Elements.Serialization.IFC
                     {
                         var sweep = (Sweep)op;
                         geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, doc);
+                        // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(e.Transform, doc);
                     }
                     else if(op is Extrude)
                     {
@@ -148,7 +149,7 @@ namespace Elements.Serialization.IFC
             return solid;
         }
 
-        private static IfcCurve ToIfcCurve(this ICurve curve, Document doc)
+        private static IfcBoundedCurve ToIfcCurve(this ICurve curve, Document doc)
         {
             if (curve is Line)
             {
@@ -229,17 +230,40 @@ namespace Elements.Serialization.IFC
             return null;
         }
 
-        private static IfcSurfaceCurveSweptAreaSolid ToIfcSurfaceCurveSweptAreaSolid(this Sweep sweep, Transform transform, Document doc)
+        private static IfcFixedReferenceSweptAreaSolid ToIfcFixedReferenceSweptAreaSolid(this Sweep sweep, Transform transform, Document doc)
         {
             var position = transform.ToIfcAxis2Placement3D(doc);
             var sweptArea = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
             var directrix = sweep.Curve.ToIfcCurve(doc);
-            
-            var extrudeDir = Vector3.ZAxis.ToIfcDirection();
-            var profile = new IfcArbitraryClosedProfileDef(IfcProfileTypeEnum.CURVE, directrix);
-            var surface = new IfcSurfaceOfLinearExtrusion(profile, position, extrudeDir, new IfcPositiveLengthMeasure(1.0));
+            var refDir = sweep.Curve.TransformAt(0.0).XAxis.ToIfcDirection();
+            var solid = new IfcFixedReferenceSweptAreaSolid(sweptArea, position, directrix, 0, 1, refDir);
 
-            var solid = new IfcSurfaceCurveSweptAreaSolid(sweptArea, position, directrix, sweep.StartSetback, sweep.EndSetback, surface);
+            doc.AddEntity(refDir);
+            doc.AddEntity(position);
+            doc.AddEntity(sweptArea);
+            doc.AddEntity(directrix);
+
+            doc.AddEntity(solid);
+            return solid;
+        }
+
+        private static IfcSurfaceCurveSweptAreaSolid ToIfcSurfaceCurveSweptAreaSolid(this Sweep sweep, Transform transform, Document doc)
+        {
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            var sweptArea = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+            var directrix = sweep.Curve.ToIfcCurve(doc);
+            var profile = new IfcArbitraryOpenProfileDef(IfcProfileTypeEnum.CURVE, directrix);
+
+            var extrudeDir = Vector3.ZAxis.ToIfcDirection();
+            var extrudeSurfPosition = new Transform(0,0,-100).ToIfcAxis2Placement3D(doc);
+            doc.AddEntity(extrudeSurfPosition);
+
+            var surface = new IfcSurfaceOfLinearExtrusion(profile, position, extrudeDir, 100);
+
+            // You must use the version of this constructor that has position, startParam,
+            // and endParam. If you don't, ArchiCAD (and possibly others) will call
+            // the geometry invalid.
+            var solid = new IfcSurfaceCurveSweptAreaSolid(sweptArea, position, directrix, 0, 1, surface);
             
             doc.AddEntity(position);
             doc.AddEntity(sweptArea);
@@ -501,19 +525,13 @@ namespace Elements.Serialization.IFC
 
         private static IfcTrimmedCurve ToIfcTrimmedCurve(this Arc arc, Document doc)
         {
-            var p = arc.Plane();
-            var t = new Transform(p.Origin, p.Normal);
-            var placement = t.ToIfcAxis2Placement3D(doc);
+            var placement = new Transform().ToIfcAxis2Placement3D(doc);
             var ifcCircle = new IfcCircle(new IfcAxis2Placement(placement), new IfcPositiveLengthMeasure(arc.Radius));
-            var start = arc.PointAt(0.0).ToIfcCartesianPoint();
-            var end = arc.PointAt(1.0).ToIfcCartesianPoint();
-            var trim1 = new IfcTrimmingSelect(start);
-            var trim2 = new IfcTrimmingSelect(end);
+            var trim1 = new IfcTrimmingSelect(arc.StartAngle);
+            var trim2 = new IfcTrimmingSelect(arc.EndAngle);
             var tc = new IfcTrimmedCurve(ifcCircle, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, 
-                true, IfcTrimmingPreference.CARTESIAN);
-            
-            doc.AddEntity(start);
-            doc.AddEntity(end);
+                true, IfcTrimmingPreference.PARAMETER);
+
             doc.AddEntity(placement);
             doc.AddEntity(ifcCircle);
 
