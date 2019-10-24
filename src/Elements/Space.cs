@@ -44,10 +44,10 @@ namespace Elements
                      Guid id = default(Guid),
                      string name = null) : base(material, transform, id, name)
         {
-            SetProperties(height, profile, transform, material, elevation);
+            SetProperties(height, profile, transform, elevation);
         }
 
-        private void SetProperties(double height, Profile profile, Transform transform, Material material, double elevation)
+        private void SetProperties(double height, Profile profile, Transform transform, double elevation)
         {
             if (height <= 0.0)
             {
@@ -56,7 +56,6 @@ namespace Elements
 
             this.Profile = profile;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Material = material == null ? BuiltInMaterials.Mass : material;
             this.Height = height;
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height));
         }
@@ -80,7 +79,6 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("You must supply one IBRep to construct a Space.");
             }
             this.Transform = transform;
-            this.Material = material == null ? BuiltInMaterials.Default : material;
             this.Representation.SolidOperations.Add(new Import(geometry));
 
             // TODO(Ian): When receiving a Space as a solid, as we do with IFC,
