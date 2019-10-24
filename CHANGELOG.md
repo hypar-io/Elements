@@ -25,6 +25,8 @@
 
 ### Removed
 - The empty Dynamo project.
+- `ElementType`, `WallType`, `FloorType`, `StructuralFramingType`
+- `MaterialLayer`
 - `Transform` constructor taking `start` and `end` parameters. The `Transform` constructor which takes an X and a Z axis should now be used.
 
 ### Fixed
