@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/schemas/elements/Geometry/Solids/Extrude.json",
+    "$id": "https://hypar.io/schemas/Geometry/Solids/Extrude.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Extrude",
     "type": "object",

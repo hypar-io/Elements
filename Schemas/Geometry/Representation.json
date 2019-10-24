@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/schemas/elements/Representation.json",
+    "$id": "https://hypar.io/schemas/Representation.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "The representation of an element.",
     "title": "Representation",

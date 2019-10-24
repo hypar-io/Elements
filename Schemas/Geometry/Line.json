@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/schemas/elements/Geometry/Line.json",
+    "$id": "https://hypar.io/schemas/Geometry/Line.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Line",
     "type": ["object","null"],

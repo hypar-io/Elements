@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/schemas/elements/GeometricElement.json",
+    "$id": "https://hypar.io/schemas/GeometricElement.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "An element with a geometric representation.",
     "title": "GeometricElement",
