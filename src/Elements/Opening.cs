@@ -8,7 +8,8 @@ namespace Elements
 {
     /// <summary>
     /// A polygonal opening.
-    /// Openings have a local placement defined by the x and y coordinates as well as a transform. 
+    /// An opening's placement is defined by the x and y coordinates.
+    /// The direction of the opening corresponds to the +Z axis of the transform.
     /// </summary>
     [UserElement]
     public class Opening : Element, IGeometry
