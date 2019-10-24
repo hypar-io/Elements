@@ -20,14 +20,17 @@ namespace Elements.Serialization.IFC
 
             IfcProductDefinitionShape shape = null;
             var localPlacement = e.Transform.ToIfcLocalPlacement(doc);
-            IfcGeometricRepresentationItem geom = null;
+            
 
+            var geoms = new List<IfcRepresentationItem>();
             if(e is IGeometry)
             {
                 var geo = (IGeometry)e;
                 geo.UpdateSolidOperations();
+                
                 foreach(var op in geo.Geometry.SolidOperations)
                 {
+                    IfcGeometricRepresentationItem geom = null;
                     if(op is Sweep)
                     {
                         var sweep = (Sweep)op;
@@ -48,14 +51,15 @@ namespace Elements.Serialization.IFC
                     {
                         throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
                     }
+                    doc.AddEntity(geom);
+                    geoms.Add(geom);
                 }
             }
             
-            shape = ToIfcProductDefinitionShape(geom, context, doc);
+            shape = ToIfcProductDefinitionShape(geoms, context, doc);
 
             doc.AddEntity(shape);
             doc.AddEntity(localPlacement);
-            doc.AddEntity(geom);
 
             var product = ConvertElementToIfcProduct(e, localPlacement, shape);
             products.Add(product);
@@ -95,9 +99,12 @@ namespace Elements.Serialization.IFC
                     style = m.Material.ToIfcSurfaceStyle(doc);
                     styles.Add(m.Material.Name, style);
                 }
-                var styledItem = CreateIfcStyledItem(geom, style, doc);
-                geom.StyledByItem = new List<IfcStyledItem>{styledItem};
-                doc.AddEntity(styledItem);
+                foreach(var geom in geoms)
+                {
+                    var styledItem = CreateIfcStyledItem(geom, style, doc);
+                    geom.StyledByItem = new List<IfcStyledItem>{styledItem};
+                    doc.AddEntity(styledItem);
+                }
             }
 
             return products;
@@ -220,6 +227,10 @@ namespace Elements.Serialization.IFC
                 {
                     e = ((Opening)element).ToIfc(localPlacement, shape);
                 }
+                else
+                {
+                    e = element.ToIfc(localPlacement, shape);
+                }
                 return e;
             }
             catch(Exception ex)
@@ -340,10 +351,9 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static IfcProductDefinitionShape ToIfcProductDefinitionShape(this IfcGeometricRepresentationItem geom, IfcRepresentationContext context, Document doc)
+        private static IfcProductDefinitionShape ToIfcProductDefinitionShape(this List<IfcRepresentationItem> geoms, IfcRepresentationContext context, Document doc)
         {
-            var rep = new IfcShapeRepresentation(context, "Body", "SweptSolid", 
-                new List<IfcRepresentationItem>{geom});
+            var rep = new IfcShapeRepresentation(context, "Body", "Solids", geoms);
             var shape = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
 
             doc.AddEntity(rep);
@@ -351,6 +361,19 @@ namespace Elements.Serialization.IFC
             return shape;
         }
 
+        private static IfcBuildingElementProxy ToIfc(this Element element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        {
+            var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(element.Id),
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    localPlacement,
+                                                    shape,
+                                                    null,
+                                                    IfcBuildingElementProxyTypeEnum.ELEMENT);
+            return proxy;
+        }
         private static IfcSlab ToIfc(this Floor floor, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
@@ -612,7 +635,6 @@ namespace Elements.Serialization.IFC
             var assignments = new List<IfcStyleAssignmentSelect>();
             assignments.Add(assign);
             var styledItem = new IfcStyledItem(shape, assignments, null);
-            // doc.AddEntity(assign);
             return styledItem;
         }
     }
