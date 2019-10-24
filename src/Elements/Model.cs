@@ -173,6 +173,11 @@ namespace Elements
             foreach(var p in props)
             {
                 var pValue = p.GetValue(element);
+                if(pValue == null)
+                {
+                    continue;
+                }
+                
                 if (typeof(Identifiable).IsAssignableFrom(p.PropertyType))
                 {
                     var ident =(Identifiable)pValue;

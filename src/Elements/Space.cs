@@ -93,6 +93,10 @@ namespace Elements
             this.Transform = transform;
             this.Material = material == null ? BuiltInMaterials.Default : material;
             this.Geometry.SolidOperations.Add(new Import(geometry));
+
+            // TODO(Ian): When receiving a Space as a solid, as we do with IFC,
+            // we won't have a profile. This will cause problems with JSON 
+            // serialization later.
         }
 
         /// <summary>
