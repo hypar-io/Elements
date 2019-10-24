@@ -57,8 +57,8 @@ namespace Elements.Generate
             foreach(var url in urls)
             {
                 var split = url.Split("/", StringSplitOptions.RemoveEmptyEntries).Skip(3);
-                var ns = $"Elements.{string.Join('.', split)}";
-                var outDir = Path.Combine(outRoot, string.Join('/', split.SkipLast(1)));
+                var ns = $"Elements.{string.Join('.', split.SkipLast(1))}";
+                var outDir = Path.Combine(outRoot, string.Join('/', split.SkipLast(1)).TrimEnd('.'));
                 if(!Directory.Exists(outDir))
                 {
                     Directory.CreateDirectory(outDir);
