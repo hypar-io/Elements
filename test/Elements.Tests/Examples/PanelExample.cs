@@ -20,8 +20,6 @@ namespace Elements.Tests
             var panel = new Panel(new Polygon(new []{a,b,c,d}), BuiltInMaterials.Glass);
             // </example>
             
-            Assert.Equal(BuiltInMaterials.Glass, panel.Material);
-            
             this.Model.AddElement(panel);
         }
     }

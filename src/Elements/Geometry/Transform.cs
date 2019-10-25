@@ -7,6 +7,9 @@ namespace Elements.Geometry
     /// <summary>
     /// A right-handed coordinate system defined by an origin, x, y, and z axes.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/TransformExample.cs?name=example)]
+    /// </example>
     public partial class Transform
     {
         private Matrix _matrix;

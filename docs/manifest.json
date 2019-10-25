@@ -47,6 +47,17 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/Elements_Geometry_Transform.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Geometry_Transform.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/Elements_Mass.glb",
       "output": {
         "resource": {
@@ -106,6 +117,17 @@
       "output": {
         "resource": {
           "relative_path": "models/Elements_Topography.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/Elements_Transform.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Transform.glb"
         }
       },
       "is_incremental": false,
@@ -863,7 +885,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Transform.html",
-          "hash": "Danb79y1ZwitaZLNjx3ecg=="
+          "hash": "5PHX9HJwOaUQM+tkRkOycg=="
         }
       },
       "is_incremental": false,
@@ -1991,6 +2013,11 @@
         "incrementalPhase": "build"
       },
       "processors": {
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
@@ -2002,11 +2029,6 @@
         },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
-          "incrementalPhase": "build"
-        },
-        "ResourceDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }
