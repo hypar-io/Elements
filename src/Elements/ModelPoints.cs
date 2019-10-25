@@ -8,6 +8,9 @@ namespace Elements
     /// <summary>
     /// A collection of points which are visible in 3D.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/ModelPointsExample.cs?name=example)]
+    /// </example>
     [UserElement]
     public class ModelPoints: GeometricElement
     {   

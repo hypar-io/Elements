@@ -7,6 +7,9 @@ namespace Elements
     /// <summary>
     /// A curve which is visible in 3D.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/ModelCurveExample.cs?name=example)]
+    /// </example>
     [UserElement]
     public class ModelCurve: GeometricElement
     {   

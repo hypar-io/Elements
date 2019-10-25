@@ -58,6 +58,28 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/Elements_ModelCurve.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_ModelCurve.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/Elements_ModelPoints.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_ModelPoints.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/Elements_Panel.glb",
       "output": {
         "resource": {
@@ -193,7 +215,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Floor.html",
-          "hash": "hOcjJWEQAs14R7sRIFpFxg=="
+          "hash": "7Ha+HGo97Shs3Voq9K6sVQ=="
         }
       },
       "is_incremental": false,
@@ -985,7 +1007,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ModelCurve.html",
-          "hash": "J/zQglE4/leerWRN1NyqWg=="
+          "hash": "nuORN5my07oHc/Nx80VOKQ=="
         }
       },
       "is_incremental": false,
@@ -1009,7 +1031,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ModelPoints.html",
-          "hash": "NBa1VdZ9LJ58Wd4XqfmDUQ=="
+          "hash": "hcGnE6zlc0iJakgcCAeoJA=="
         }
       },
       "is_incremental": false,
@@ -1969,6 +1991,11 @@
         "incrementalPhase": "build"
       },
       "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build"
@@ -1980,11 +2007,6 @@
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build"
-        },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }
