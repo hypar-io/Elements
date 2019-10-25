@@ -1,10 +1,10 @@
 {
-    "$id": "https://hypar.io/Schemas/Element.json",
+    "id": "https://hypar.io/Schemas/Element.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "The base type for all elements.",
     "title": "Element",
     "type": ["object", "null"],
-    "allOf": [{"$ref": "Identifiable.json"}],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Identifiable.json"}],
     "required": ["Id","Name","Transform","discriminator"],
     "discriminator": "discriminator",
     "properties": {

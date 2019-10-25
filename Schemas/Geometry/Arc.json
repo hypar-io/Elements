@@ -1,10 +1,10 @@
 {
-    "$id": "https://hypar.io/Schemas/Geometry/Line.json",
+    "id": "https://hypar.io/Schemas/Geometry/Line.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Arc",
     "type": ["object","null"],
     "description": "A linear curve between two points.",
-    "allOf": [{"$ref": "Curve.json"}],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Curve.json"}],
     "required": ["Center", "Radius", "StartAngle", "EndAngle"],
     "properties": {
         "Center": {

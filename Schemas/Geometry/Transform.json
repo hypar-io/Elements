@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/Schemas/Geometry/Transform.json",
+    "id": "https://hypar.io/Schemas/Geometry/Transform.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Transform",
     "type": "object",
@@ -8,19 +8,19 @@
     "properties": {
         "Origin": {
             "description": "The origin.",
-            "$ref": "Vector3.json"
+            "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
         },
         "XAxis": {
             "description": "The X axis.",
-            "$ref": "Vector3.json"
+            "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
         },
         "YAxis": {
             "description": "The Y axis.",
-            "$ref": "Vector3.json"
+            "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
         },
         "ZAxis": {
             "description": "The Z axis.",
-            "$ref": "Vector3.json"
+            "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
         }
     },
     "additionalProperties": false
