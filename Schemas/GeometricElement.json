@@ -14,7 +14,7 @@
         },
         "Material": {
             "description": "The element's material.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Material.json"
+            "$ref": "https://hypar.io/Schemas/Material.json"
         },
         "Representation": {
             "description": "The element's representation.",
