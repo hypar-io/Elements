@@ -57,7 +57,7 @@
         ]
       },
       {
-        "src": "../test/bin/debug/netcoreapp2.0/models/",
+        "src": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/",
         "files": [
           "Elements_**.glb"
         ],

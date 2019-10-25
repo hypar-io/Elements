@@ -126,7 +126,7 @@ namespace Elements.Geometry
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">The y coordinate of the vector.</param>
         /// <param name="z">The z coordinate of the vector.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if any components of the vector are NaN or Infinity.</exception>
+        /// <exception>Thrown if any components of the vector are NaN or Infinity.</exception>
         [JsonConstructor]
         public Vector3(double x, double y, double z)
         {
@@ -150,7 +150,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">Thy y coordinate of the vector.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if any components of the vector are NaN or Infinity.</exception>
+        /// <exception>Thrown if any components of the vector are NaN or Infinity.</exception>
         public Vector3(double x, double y)
         {
             if(Double.IsNaN(x) || Double.IsNaN(y))

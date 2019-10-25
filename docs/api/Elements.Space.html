@@ -205,139 +205,54 @@ var a = new Vector3();
 var b = new Vector3(30, 10);
 var c = new Vector3(20, 50);
 var d = new Vector3(-10, 5);
-var profile = new Polygon(new[]{a,b,c,d});
+var profile = new Profile(new Polygon(new[]{a,b,c,d}));
 var space = new Space(profile, 10, 0);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
-    <div class="level2"><span class="xref">Space</span></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><a class="xref" href="Elements.Element.html">Element</a></div>
+    <div class="level3"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
+    <div class="level4"><span class="xref">Space</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Type">Element.Type</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Properties">Element.Properties</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Transform">Element.Transform</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_">Element.AddProperty(String, IProperty)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_RemoveProperty_System_String_">Element.RemoveProperty(String)</a>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Space_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Space : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IExtrude, IProfile, ISolid, IMaterial</code></pre>
+    <pre><code class="lang-csharp hljs">public class Space : GeometricElement</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Space__ctor_" data-uid="Elements.Space.#ctor*"></a>
-  <h4 id="Elements_Space__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_" data-uid="Elements.Space.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform)">Space(Polygon, Double, Double, Material, Transform)</h4>
-  <div class="markdown level1 summary"><p>Construct a Space.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Space(Polygon profile, double height, double elevation = 0, Material material = null, Transform transform = null)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td><span class="parametername">profile</span></td>
-        <td><p>The profile of the space.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">height</span></td>
-        <td><p>The height of the space above the lower elevation.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">elevation</span></td>
-        <td><p>The elevation of the space.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Material.html">Material</a></td>
-        <td><span class="parametername">material</span></td>
-        <td><p>The space's material.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">transform</span></td>
-        <td><p>The space's transform.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Space__ctor_" data-uid="Elements.Space.#ctor*"></a>
-  <h4 id="Elements_Space__ctor_Elements_Geometry_Profile_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_" data-uid="Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform)">Space(Profile, Double, Double, Material, Transform)</h4>
+  <h4 id="Elements_Space__ctor_Elements_Geometry_Profile_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Guid_System_String_" data-uid="Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Guid,System.String)">Space(Profile, Double, Double, Material, Transform, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a space.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Space(Profile profile, double height, double elevation = 0, Material material = null, Transform transform = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Space(Profile profile, double height, double elevation = 0, Material material = null, Transform transform = null, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -379,123 +294,73 @@ public Space(Profile profile, double height, double elevation = 0, Material mate
         <td><p>The space's transform.</p>
 </td>
       </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
       <tr>
-        <th>Type</th>
-        <th>Condition</th>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The id of the space.</p>
+</td>
       </tr>
-    </thead>
-    <tbody>
       <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the height is less than or equal to 0.0.</p>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the space.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
-  <a id="Elements_Space_BothSides_" data-uid="Elements.Space.BothSides*"></a>
-  <h4 id="Elements_Space_BothSides" data-uid="Elements.Space.BothSides">BothSides</h4>
-  <div class="markdown level1 summary"><p>Should the space extrude to both sides of the profile?</p>
+  <a id="Elements_Space__ctor_" data-uid="Elements.Space.#ctor*"></a>
+  <h4 id="Elements_Space__ctor_Elements_Geometry_Solids_Solid_Elements_Geometry_Transform_Elements_Material_Guid_System_String_" data-uid="Elements.Space.#ctor(Elements.Geometry.Solids.Solid,Elements.Geometry.Transform,Elements.Material,Guid,System.String)">Space(Solid, Transform, Material, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a space from a solid.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool BothSides { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Space(Solid geometry, Transform transform = null, Material material = null, Guid id = null, string name = null)</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Space_ExtrudeDepth_" data-uid="Elements.Space.ExtrudeDepth*"></a>
-  <h4 id="Elements_Space_ExtrudeDepth" data-uid="Elements.Space.ExtrudeDepth">ExtrudeDepth</h4>
-  <div class="markdown level1 summary"><p>The extrude height of the space.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double ExtrudeDepth { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Space_ExtrudeDirection_" data-uid="Elements.Space.ExtrudeDirection*"></a>
-  <h4 id="Elements_Space_ExtrudeDirection" data-uid="Elements.Space.ExtrudeDirection">ExtrudeDirection</h4>
-  <div class="markdown level1 summary"><p>The extrude direction of the space.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 ExtrudeDirection { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Space_Geometry_" data-uid="Elements.Space.Geometry*"></a>
-  <h4 id="Elements_Space_Geometry" data-uid="Elements.Space.Geometry">Geometry</h4>
-  <div class="markdown level1 summary"><p>The space's geometry.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Solid Geometry { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
-        <td></td>
+        <td><span class="parametername">geometry</span></td>
+        <td><p>The solid which will be used to define the space.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform of the space.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The space's material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The id of the space.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the space.</p>
+</td>
       </tr>
     </tbody>
   </table>
+  <h3 id="properties">Properties
+  </h3>
   <a id="Elements_Space_Height_" data-uid="Elements.Space.Height*"></a>
   <h4 id="Elements_Space_Height" data-uid="Elements.Space.Height">Height</h4>
   <div class="markdown level1 summary"><p>The space's height.</p>
@@ -516,30 +381,6 @@ public Solid Geometry { get; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Space_Material_" data-uid="Elements.Space.Material*"></a>
-  <h4 id="Elements_Space_Material" data-uid="Elements.Space.Material">Material</h4>
-  <div class="markdown level1 summary"><p>The space's material.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material Material { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Material.html">Material</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -594,30 +435,6 @@ public Solid Geometry { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Space_GetUpdatedSolid_" data-uid="Elements.Space.GetUpdatedSolid*"></a>
-  <h4 id="Elements_Space_GetUpdatedSolid" data-uid="Elements.Space.GetUpdatedSolid">GetUpdatedSolid()</h4>
-  <div class="markdown level1 summary"><p>Get the updated solid representation of the space.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Solid GetUpdatedSolid()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Space_ProfileTransformed_" data-uid="Elements.Space.ProfileTransformed*"></a>
   <h4 id="Elements_Space_ProfileTransformed" data-uid="Elements.Space.ProfileTransformed">ProfileTransformed()</h4>
   <div class="markdown level1 summary"><p>Get the profile of the space transformed by the space's transform.</p>
@@ -642,6 +459,17 @@ public Solid Geometry { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Space_UpdateRepresentations_" data-uid="Elements.Space.UpdateRepresentations*"></a>
+  <h4 id="Elements_Space_UpdateRepresentations" data-uid="Elements.Space.UpdateRepresentations">UpdateRepresentations()</h4>
+  <div class="markdown level1 summary"><p>Update the representations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
   <a id="Elements_Space_Volume_" data-uid="Elements.Space.Volume*"></a>
   <h4 id="Elements_Space_Volume" data-uid="Elements.Space.Volume">Volume()</h4>
   <div class="markdown level1 summary"><p>The spaces's volume.</p>
@@ -666,31 +494,6 @@ public Solid Geometry { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a>
-  </div>
 </article>
           </div>
           

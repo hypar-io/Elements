@@ -54,7 +54,7 @@ namespace Elements
         /// added to the entities collection as well.  
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
-        /// <exception cref="System.ArgumentException">Thrown when an element 
+        /// <exception>Thrown when an element 
         /// with the same Id already exists in the model.</exception>
         public void AddElement(Element element)
         {

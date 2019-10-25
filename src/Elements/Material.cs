@@ -33,8 +33,8 @@ namespace Elements
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
         /// <param name="doubleSided">Is the material double sided?</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is less than 0.0.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is greater than 1.0.</exception>
+        /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
+        /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
         [JsonConstructor]
         public Material(Guid id, string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, bool doubleSided = false): base(id, name)
         {
@@ -62,8 +62,8 @@ namespace Elements
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
         /// <param name="doubleSided">Is the material double sided?</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is less than 0.0.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the specular or glossiness value is greater than 1.0.</exception>
+        /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
+        /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
         public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, bool doubleSided = false): 
             this(Guid.NewGuid(), name, color, specularFactor, glossinessFactor, doubleSided){}
 

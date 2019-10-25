@@ -84,32 +84,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Matrix</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Matrix_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Matrix</code></pre>
+    <pre><code class="lang-csharp hljs">public class Matrix : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -129,8 +108,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)</code></pre>
+    <pre><code class="lang-csharp hljs">public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -379,22 +357,6 @@ public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)<
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Exception</span></td>
-        <td><p>Thrown when provided Plane's normal is not unit length.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Matrix_SetupRotate_" data-uid="Elements.Geometry.Matrix.SetupRotate*"></a>
   <h4 id="Elements_Geometry_Matrix_SetupRotate_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Matrix.SetupRotate(Elements.Geometry.Vector3,System.Double)">SetupRotate(Vector3, Double)</h4>
   <div class="markdown level1 summary"><p>Setup the matrix to perform rotation.</p>
@@ -457,22 +419,6 @@ public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)<
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">theta</span></td>
         <td><p>The angle of rotation in radians.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentException</span></td>
-        <td><p>Thrown when the provided axis is not 1-3.</p>
 </td>
       </tr>
     </tbody>
@@ -555,8 +501,6 @@ public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)<
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
   <a id="Elements_Geometry_Matrix_Transpose_" data-uid="Elements.Geometry.Matrix.Transpose*"></a>
   <h4 id="Elements_Geometry_Matrix_Transpose" data-uid="Elements.Geometry.Matrix.Transpose">Transpose()</h4>
   <div class="markdown level1 summary"><p>Transpose the matrix.</p>

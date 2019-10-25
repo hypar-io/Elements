@@ -84,40 +84,16 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">FeatureCollection</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.GeoJSON.html">Elements.GeoJSON</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_GeoJSON_FeatureCollection_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class FeatureCollection</code></pre>
+    <pre><code class="lang-csharp hljs">public class FeatureCollection : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_GeoJSON_FeatureCollection__ctor_" data-uid="Elements.GeoJSON.FeatureCollection.#ctor*"></a>
-  <h4 id="Elements_GeoJSON_FeatureCollection__ctor_System_Collections_Generic_IEnumerable_Elements_GeoJSON_Feature__" data-uid="Elements.GeoJSON.FeatureCollection.#ctor(System.Collections.Generic.IEnumerable{Elements.GeoJSON.Feature})">FeatureCollection(IEnumerable&lt;Feature&gt;)</h4>
+  <h4 id="Elements_GeoJSON_FeatureCollection__ctor_IEnumerable_Elements_GeoJSON_Feature__" data-uid="Elements.GeoJSON.FeatureCollection.#ctor(IEnumerable{Elements.GeoJSON.Feature})">FeatureCollection(IEnumerable&lt;Feature&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a feature collection.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -136,7 +112,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.GeoJSON.Feature.html">Feature</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.GeoJSON.Feature.html">Feature</a>&gt;</td>
         <td><span class="parametername">features</span></td>
         <td><p>A collection of features.</p>
 </td>
@@ -152,8 +128,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;features&quot;)]
-public IEnumerable&lt;Feature&gt; Features { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;Feature&gt; Features { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -165,7 +140,7 @@ public IEnumerable&lt;Feature&gt; Features { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.GeoJSON.Feature.html">Feature</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.GeoJSON.Feature.html">Feature</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -177,8 +152,7 @@ public IEnumerable&lt;Feature&gt; Features { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;type&quot;)]
-public string Type { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Type { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

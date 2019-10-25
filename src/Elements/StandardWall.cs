@@ -11,7 +11,7 @@ namespace Elements
     /// A wall defined by a planar curve, a height, and a thickness.
     /// </summary>
     /// <example>
-    /// <code source="../../test/Examples/WallExample.cs"/>
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/WallExample.cs?name=example)]
     /// </example>
     [UserElement]
     public class StandardWall : Wall, IHasOpenings
@@ -42,8 +42,8 @@ namespace Elements
         /// This transform will be concatenated to the transform created to describe the wall in 2D.</param>
         /// <param name="id">The id of the wall.</param>
         /// <param name="name">The name of the wall.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height of the wall is less than or equal to zero.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the Z components of wall's start and end points are not the same.</exception>
+        /// <exception>Thrown when the height of the wall is less than or equal to zero.</exception>
+        /// <exception>Thrown when the Z components of wall's start and end points are not the same.</exception>
         public StandardWall(Line centerLine,
                             double thickness,
                             double height,

@@ -200,8 +200,10 @@
   
     animate();
   </script><h5 id="Elements_Floor_examples"><strong>Examples</strong></h5>
-  <pre><code class="lang-csharp" name="Main">// Create a floor type.
-var floorType = new FloorType(&quot;test&quot;, new List&lt;MaterialLayer&gt; { new MaterialLayer(BuiltInMaterials.Concrete, 0.1) });
+  <pre><code class="lang-csharp" name="Main">// Create two floors.
+var p = Polygon.L(10, 20, 5);
+var floor1 = new Floor(p, 0.1, 0);
+var floor2 = new Floor(p, 0.1, 3);
 
 // Create some openings.
 var openings = new List&lt;Opening&gt;(){
@@ -209,90 +211,57 @@ var openings = new List&lt;Opening&gt;(){
     new Opening(3, 3, 1, 3),
 };
 
-// Create two floors.
-var p = Polygon.L(10, 20, 5);
-var floor1 = new Floor(p, floorType, 0, null, openings);
-var floor2 = new Floor(p, floorType, 3, null, openings);
+floor1.Openings.AddRange(openings);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
-    <div class="level2"><span class="xref">Floor</span></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><a class="xref" href="Elements.Element.html">Element</a></div>
+    <div class="level3"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
+    <div class="level4"><span class="xref">Floor</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType</a>&lt;<a class="xref" href="Elements.FloorType.html">FloorType</a>&gt;</div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
     <div><a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Type">Element.Type</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Properties">Element.Properties</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Transform">Element.Transform</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_">Element.AddProperty(String, IProperty)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_RemoveProperty_System_String_">Element.RemoveProperty(String)</a>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Floor_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Floor : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType&lt;FloorType&gt;, IExtrude, IProfile, ISolid, IHasOpenings</code></pre>
+    <pre><code class="lang-csharp hljs">public class Floor : GeometricElement, IHasOpenings</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Floor__ctor_" data-uid="Elements.Floor.#ctor*"></a>
-  <h4 id="Elements_Floor__ctor_Elements_Geometry_Polygon_Elements_FloorType_System_Double_Elements_Geometry_Transform_System_Collections_Generic_List_Elements_Opening__" data-uid="Elements.Floor.#ctor(Elements.Geometry.Polygon,Elements.FloorType,System.Double,Elements.Geometry.Transform,System.Collections.Generic.List{Elements.Opening})">Floor(Polygon, FloorType, Double, Transform, List&lt;Opening&gt;)</h4>
+  <h4 id="Elements_Floor__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_Elements_Material_Guid_System_String_" data-uid="Elements.Floor.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Material,Guid,System.String)">Floor(Polygon, Double, Double, Transform, Material, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a floor.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Floor(Polygon profile, FloorType elementType, double elevation = 0, Transform transform = null, List&lt;Opening&gt; openings = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Floor(Polygon profile, double thickness, double elevation = 0, Transform transform = null, Material material = null, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -307,19 +276,20 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">profile</span></td>
-        <td><p>The profile of the floor.</p>
+        <td><p>The perimeter of the floor.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.FloorType.html">FloorType</a></td>
-        <td><span class="parametername">elementType</span></td>
-        <td><p>The floor type of the floor.</p>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">thickness</span></td>
+        <td><p>The thickness of the floor.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">elevation</span></td>
-        <td><p>The elevation of the top of the floor.</p>
+        <td><p>The elevation of the top of the floor.
+If a transform has been provided, this elevation will be added to the origin of that transform.</p>
 </td>
       </tr>
       <tr>
@@ -329,21 +299,33 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
-        <td><span class="parametername">openings</span></td>
-        <td><p>An array of openings in the floor.</p>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The floor's material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The floor's id.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The floor's name.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Floor__ctor_" data-uid="Elements.Floor.#ctor*"></a>
-  <h4 id="Elements_Floor__ctor_Elements_Geometry_Profile_Elements_Geometry_Transform_Elements_Geometry_Vector3_Elements_FloorType_System_Double_Elements_Geometry_Transform_" data-uid="Elements.Floor.#ctor(Elements.Geometry.Profile,Elements.Geometry.Transform,Elements.Geometry.Vector3,Elements.FloorType,System.Double,Elements.Geometry.Transform)">Floor(Profile, Transform, Vector3, FloorType, Double, Transform)</h4>
+  <h4 id="Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_System_Double_Elements_Geometry_Transform_Elements_Material_Guid_System_String_" data-uid="Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,System.Double,Elements.Geometry.Transform,Elements.Material,Guid,System.String)">Floor(Profile, Double, Double, Transform, Material, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a floor.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Floor(Profile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0, Transform transform = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Floor(Profile profile, double thickness, double elevation = 0, Transform transform = null, Material material = null, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -358,91 +340,50 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
       <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
         <td><span class="parametername">profile</span></td>
-        <td><p>The profile of the floor.</p>
+        <td><p>The perimeter of the floor.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">start</span></td>
-        <td><p>A tranform used to pre-transform the profile and direction vector before sweeping the geometry.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">direction</span></td>
-        <td><p>The direction of the floor's sweep.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.FloorType.html">FloorType</a></td>
-        <td><span class="parametername">elementType</span></td>
-        <td><p>The floor type of the floor.</p>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">thickness</span></td>
+        <td><p>The thickness of the floor.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">elevation</span></td>
-        <td><p>The elevation of the floor.</p>
+        <td><p>The elevation of the top of the floor.
+If a transform has been provided, this elevation will be added to the origin of that transform.</p>
 </td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td><span class="parametername">transform</span></td>
-        <td><p>The floor's transform. If set, this will override the elevation.</p>
+        <td><p>The floor's transform. If set, this will override the floor's elevation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The floor's material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The floor's id.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The floor's name.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Floor_BothSides_" data-uid="Elements.Floor.BothSides*"></a>
-  <h4 id="Elements_Floor_BothSides" data-uid="Elements.Floor.BothSides">BothSides</h4>
-  <div class="markdown level1 summary"><p>Extrude to both sides?</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool BothSides { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Floor_ElementType_" data-uid="Elements.Floor.ElementType*"></a>
-  <h4 id="Elements_Floor_ElementType" data-uid="Elements.Floor.ElementType">ElementType</h4>
-  <div class="markdown level1 summary"><p>The floor type of the floor.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FloorType ElementType { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.FloorType.html">FloorType</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Floor_Elevation_" data-uid="Elements.Floor.Elevation*"></a>
   <h4 id="Elements_Floor_Elevation" data-uid="Elements.Floor.Elevation">Elevation</h4>
   <div class="markdown level1 summary"><p>The elevation from which the floor is extruded.</p>
@@ -467,86 +408,14 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Floor_ExtrudeDepth_" data-uid="Elements.Floor.ExtrudeDepth*"></a>
-  <h4 id="Elements_Floor_ExtrudeDepth" data-uid="Elements.Floor.ExtrudeDepth">ExtrudeDepth</h4>
-  <div class="markdown level1 summary"><p>The extrude depth of the floor.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double ExtrudeDepth { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Floor_ExtrudeDirection_" data-uid="Elements.Floor.ExtrudeDirection*"></a>
-  <h4 id="Elements_Floor_ExtrudeDirection" data-uid="Elements.Floor.ExtrudeDirection">ExtrudeDirection</h4>
-  <div class="markdown level1 summary"><p>The extrude direction of the floor.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 ExtrudeDirection { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Floor_Geometry_" data-uid="Elements.Floor.Geometry*"></a>
-  <h4 id="Elements_Floor_Geometry" data-uid="Elements.Floor.Geometry">Geometry</h4>
-  <div class="markdown level1 summary"><p>The floor's geometry.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Solid Geometry { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Floor_Openings_" data-uid="Elements.Floor.Openings*"></a>
   <h4 id="Elements_Floor_Openings" data-uid="Elements.Floor.Openings">Openings</h4>
-  <div class="markdown level1 summary"><p>The openings in the floor.</p>
+  <div class="markdown level1 summary"><p>A collection of openings in the floor.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;Opening&gt; Openings { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;Opening&gt; Openings { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -558,7 +427,7 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -583,6 +452,30 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Floor_Thickness_" data-uid="Elements.Floor.Thickness*"></a>
+  <h4 id="Elements_Floor_Thickness" data-uid="Elements.Floor.Thickness">Thickness</h4>
+  <div class="markdown level1 summary"><p>The thickness of the floor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Thickness { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -614,30 +507,6 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Floor_GetUpdatedSolid_" data-uid="Elements.Floor.GetUpdatedSolid*"></a>
-  <h4 id="Elements_Floor_GetUpdatedSolid" data-uid="Elements.Floor.GetUpdatedSolid">GetUpdatedSolid()</h4>
-  <div class="markdown level1 summary"><p>Get the updated solid representation of the floor.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Solid GetUpdatedSolid()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Floor_ProfileTransformed_" data-uid="Elements.Floor.ProfileTransformed*"></a>
   <h4 id="Elements_Floor_ProfileTransformed" data-uid="Elements.Floor.ProfileTransformed">ProfileTransformed()</h4>
   <div class="markdown level1 summary"><p>Get the profile of the floor transformed by the floor's transform.</p>
@@ -662,30 +531,17 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Floor_Thickness_" data-uid="Elements.Floor.Thickness*"></a>
-  <h4 id="Elements_Floor_Thickness" data-uid="Elements.Floor.Thickness">Thickness()</h4>
-  <div class="markdown level1 summary"><p>Calculate thickness of the floor's extrusion.</p>
+  <a id="Elements_Floor_UpdateRepresentations_" data-uid="Elements.Floor.UpdateRepresentations*"></a>
+  <h4 id="Elements_Floor_UpdateRepresentations" data-uid="Elements.Floor.UpdateRepresentations">UpdateRepresentations()</h4>
+  <div class="markdown level1 summary"><p>Update the representations.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Thickness()</code></pre>
+    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
   <a id="Elements_Floor_Volume_" data-uid="Elements.Floor.Volume*"></a>
   <h4 id="Elements_Floor_Volume" data-uid="Elements.Floor.Volume">Volume()</h4>
   <div class="markdown level1 summary"><p>The area of the floor.</p>
@@ -712,30 +568,6 @@ var floor2 = new Floor(p, floorType, 3, null, openings);
     </tbody>
   </table>
   <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType&lt;TElementType&gt;</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
-  </div>
   <div>
       <a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
   </div>

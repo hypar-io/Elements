@@ -28,7 +28,7 @@ namespace Elements.Geometry
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="c"></param>
-        /// <exception cref="System.ArgumentNullException">Thrown when any of a, b, or c are null.</exception>
+        /// <exception>Thrown when any of a, b, or c are null.</exception>
         public Plane(Vector3 a, Vector3 b, Vector3 c)
         {
             if(a == null || b == null || c == null)
@@ -48,8 +48,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="origin">The origin of the plane.</param>
         /// <param name="points">An array of vectors to be used to determine the normal of the plane.</param>
-        /// <exception cref="System.ArgumentException">Thrown when less than three points are provided.</exception>
-        /// <exception cref="System.ArgumentException">Thrown when coincident points are provided.</exception>
+        /// <exception>Thrown when less than three points are provided.</exception>
+        /// <exception>Thrown when coincident points are provided.</exception>
         public Plane(Vector3 origin, IList<Vector3> points)
         {
             if(points.Count < 3)

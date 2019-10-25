@@ -76,7 +76,7 @@
   
   <h1 id="Elements_Geometry_Transform" data-uid="Elements.Geometry.Transform" class="text-break">Class Transform
   </h1>
-  <div class="markdown level0 summary"><p>A coordinate system defined by an origin, x, y, and z axes.</p>
+  <div class="markdown level0 summary"><p>A transform.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -84,32 +84,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Transform</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Transform_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Transform</code></pre>
+    <pre><code class="lang-csharp hljs">public class Transform : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -129,8 +108,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Transform(Matrix matrix)</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform(Matrix matrix)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -178,40 +156,13 @@ public Transform(Matrix matrix)</code></pre>
     </tbody>
   </table>
   <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
-  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Vector3)">Transform(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Create a transform with a translation.</p>
+  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Transform(Vector3, Vector3, Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Create a transform by origin, X, Y, and Z axes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform(Vector3 origin)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">origin</span></td>
-        <td><p>The origin of the transform.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
-  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Transform(Vector3, Vector3)</h4>
-  <div class="markdown level1 summary"><p>Create a transform centered at origin and an up vector.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform(Vector3 origin, Vector3 up)</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -231,20 +182,32 @@ public Transform(Matrix matrix)</code></pre>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">up</span></td>
-        <td><p>The vector which will define the Z axis of the transform.</p>
+        <td><span class="parametername">xAxis</span></td>
+        <td><p>The X axis of the transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">yAxis</span></td>
+        <td><p>The Y axis of the transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">zAxis</span></td>
+        <td><p>The Z axis of the transform.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
-  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Transform(Vector3, Vector3, Vector3)</h4>
-  <div class="markdown level1 summary"><p>Create a transform by origin and axes.</p>
+  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double)">Transform(Vector3, Vector3, Vector3, Double)</h4>
+  <div class="markdown level1 summary"><p>Create a transform by origin and X and Z axes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis)</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -274,16 +237,95 @@ public Transform(Matrix matrix)</code></pre>
         <td><p>The Z axis of the transform.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation in degrees around the transform's z axis.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
-  <h4 id="Elements_Geometry_Transform__ctor_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Transform.#ctor(System.Double,System.Double,System.Double)">Transform(Double, Double, Double)</h4>
+  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double)">Transform(Vector3, Vector3, Double)</h4>
+  <div class="markdown level1 summary"><p>Create a transform centered at origin with its Z axis pointing
+along up.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform(Vector3 origin, Vector3 z, double rotation = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">origin</span></td>
+        <td><p>The origin of the transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">z</span></td>
+        <td><p>The vector which will define the Z axis of the transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation around the z axis.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
+  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Vector3,System.Double)">Transform(Vector3, Double)</h4>
   <div class="markdown level1 summary"><p>Create a transform with a translation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform(Vector3 origin, double rotation = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">origin</span></td>
+        <td><p>The origin of the transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation in degrees around the transform's z axis.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
+  <h4 id="Elements_Geometry_Transform__ctor_System_Double_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Transform.#ctor(System.Double,System.Double,System.Double,System.Double)">Transform(Double, Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Create a transform with a translation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform(double x, double y, double z, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -313,34 +355,16 @@ public Transform(Matrix matrix)</code></pre>
         <td><p>The Z component of translation.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation in degrees around the transform's z axis.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Geometry_Transform_Matrix_" data-uid="Elements.Geometry.Transform.Matrix*"></a>
-  <h4 id="Elements_Geometry_Transform_Matrix" data-uid="Elements.Geometry.Transform.Matrix">Matrix</h4>
-  <div class="markdown level1 summary"><p>The transform's matrix.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Matrix Matrix { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Matrix.html">Matrix</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Transform_Origin_" data-uid="Elements.Geometry.Transform.Origin*"></a>
   <h4 id="Elements_Geometry_Transform_Origin" data-uid="Elements.Geometry.Transform.Origin">Origin</h4>
   <div class="markdown level1 summary"><p>The origin.</p>
@@ -348,8 +372,7 @@ public Transform(Matrix matrix)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Origin { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Origin { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -373,8 +396,7 @@ public Vector3 Origin { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 XAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 XAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -398,8 +420,7 @@ public Vector3 XAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 YAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 YAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -423,8 +444,7 @@ public Vector3 YAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 ZAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 ZAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -678,13 +698,13 @@ public Vector3 ZAxis { get; }</code></pre>
     </tbody>
   </table>
   <a id="Elements_Geometry_Transform_OfPolygons_" data-uid="Elements.Geometry.Transform.OfPolygons*"></a>
-  <h4 id="Elements_Geometry_Transform_OfPolygons_Elements_Geometry_Polygon___" data-uid="Elements.Geometry.Transform.OfPolygons(Elements.Geometry.Polygon[])">OfPolygons(Polygon[])</h4>
+  <h4 id="Elements_Geometry_Transform_OfPolygons_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Transform.OfPolygons(IList{Elements.Geometry.Polygon})">OfPolygons(IList&lt;Polygon&gt;)</h4>
   <div class="markdown level1 summary"><p>Transform the specified polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon[] OfPolygons(Polygon[] polygons)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon[] OfPolygons(IList&lt;Polygon&gt; polygons)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -697,7 +717,7 @@ public Vector3 ZAxis { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>[]</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">polygons</span></td>
         <td><p>The polygons to transform.</p>
 </td>
@@ -891,8 +911,6 @@ public Vector3 ZAxis { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
   <a id="Elements_Geometry_Transform_XY_" data-uid="Elements.Geometry.Transform.XY*"></a>
   <h4 id="Elements_Geometry_Transform_XY" data-uid="Elements.Geometry.Transform.XY">XY()</h4>
   <div class="markdown level1 summary"><p>Calculate XY plane of the transform.</p>
@@ -965,6 +983,10 @@ public Vector3 ZAxis { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_Transform_Elements_Geometry_Transform_">ModelCurveExtensions.ToModelCurves(Transform, Transform)</a>
+  </div>
 </article>
           </div>
           

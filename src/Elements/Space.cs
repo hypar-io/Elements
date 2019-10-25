@@ -9,7 +9,7 @@ namespace Elements
     /// An extruded region of occupiable space.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Examples/SpaceExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/SpaceExample.cs?name=example)]
     /// </example>
     [UserElement]
     public class Space : GeometricElement
@@ -34,7 +34,7 @@ namespace Elements
         /// <param name="transform">The space's transform.</param>
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the height is less than or equal to 0.0.</exception>
+        /// <exception>Thrown when the height is less than or equal to 0.0.</exception>
         [JsonConstructor]
         public Space(Profile profile,
                      double height,

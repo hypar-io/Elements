@@ -8,7 +8,7 @@ namespace Elements
     /// A zero-thickness planar element defined by a perimeter.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Examples/PanelExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/PanelExample.cs?name=example)]
     /// </example>
     [UserElement]
     public class Panel : GeometricElement
@@ -26,7 +26,7 @@ namespace Elements
         /// <param name="transform">The panel's transform.</param>
         /// <param name="id">The id of the panel.</param>
         /// <param name="name">The name of the panel.</param>
-        /// <exception cref="System.ArgumentException">Thrown when the provided perimeter points are not coplanar.</exception>
+        /// <exception>Thrown when the provided perimeter points are not coplanar.</exception>
         public Panel(Polygon perimeter,
                      Material material = null,
                      Transform transform = null,

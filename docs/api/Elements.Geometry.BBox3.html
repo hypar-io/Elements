@@ -84,35 +84,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">BBox3</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_BBox3_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class BBox3</code></pre>
+    <pre><code class="lang-csharp hljs">public class BBox3 : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -177,34 +153,7 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
-  <h4 id="Elements_Geometry_BBox3__ctor_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3[])">BBox3(Vector3[])</h4>
-  <div class="markdown level1 summary"><p>Construct a bounding box from an array of points.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BBox3(Vector3[] points)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
-        <td><span class="parametername">points</span></td>
-        <td><p>The points which are contained within the bounding box.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
-  <h4 id="Elements_Geometry_BBox3__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})">BBox3(IList&lt;Polygon&gt;)</h4>
+  <h4 id="Elements_Geometry_BBox3__ctor_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.BBox3.#ctor(IList{Elements.Geometry.Polygon})">BBox3(IList&lt;Polygon&gt;)</h4>
   <div class="markdown level1 summary"><p>Create a bounding box for a collection of polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -223,9 +172,36 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">polygons</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
+  <h4 id="Elements_Geometry_BBox3__ctor_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.BBox3.#ctor(IList{Elements.Geometry.Vector3})">BBox3(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Construct a bounding box from an array of points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BBox3(IList&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points which are contained within the bounding box.</p>
+</td>
       </tr>
     </tbody>
   </table>

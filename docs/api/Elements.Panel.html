@@ -211,81 +211,48 @@ var panel = new Panel(new Polygon(new []{a,b,c,d}), BuiltInMaterials.Glass);
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
-    <div class="level2"><span class="xref">Panel</span></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ILamina.html">ILamina</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><a class="xref" href="Elements.Element.html">Element</a></div>
+    <div class="level3"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
+    <div class="level4"><span class="xref">Panel</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Type">Element.Type</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Properties">Element.Properties</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Transform">Element.Transform</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_">Element.AddProperty(String, IProperty)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_RemoveProperty_System_String_">Element.RemoveProperty(String)</a>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Panel_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Panel : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IMaterial, ILamina, ISolid</code></pre>
+    <pre><code class="lang-csharp hljs">public class Panel : GeometricElement</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Panel__ctor_" data-uid="Elements.Panel.#ctor*"></a>
-  <h4 id="Elements_Panel__ctor_Elements_Geometry_Polygon_Elements_Material_Elements_Geometry_Transform_" data-uid="Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform)">Panel(Polygon, Material, Transform)</h4>
+  <h4 id="Elements_Panel__ctor_Elements_Geometry_Polygon_Elements_Material_Elements_Geometry_Transform_Guid_System_String_" data-uid="Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Guid,System.String)">Panel(Polygon, Material, Transform, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a panel.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Panel(Polygon perimeter, Material material = null, Transform transform = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Panel(Polygon perimeter, Material material = null, Transform transform = null, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -315,50 +282,22 @@ public Panel(Polygon perimeter, Material material = null, Transform transform = 
         <td><p>The panel's transform.</p>
 </td>
       </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
       <tr>
-        <th>Type</th>
-        <th>Condition</th>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The id of the panel.</p>
+</td>
       </tr>
-    </thead>
-    <tbody>
       <tr>
-        <td><span class="xref">System.ArgumentException</span></td>
-        <td><p>Thrown when the provided perimeter points are not coplanar.</p>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the panel.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Panel_Material_" data-uid="Elements.Panel.Material*"></a>
-  <h4 id="Elements_Panel_Material" data-uid="Elements.Panel.Material">Material</h4>
-  <div class="markdown level1 summary"><p>The panel's material.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material Material { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Material.html">Material</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Panel_Perimeter_" data-uid="Elements.Panel.Perimeter*"></a>
   <h4 id="Elements_Panel_Perimeter" data-uid="Elements.Panel.Perimeter">Perimeter</h4>
   <div class="markdown level1 summary"><p>The perimeter of the panel.</p>
@@ -409,30 +348,6 @@ public Panel(Polygon perimeter, Material material = null, Transform transform = 
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Panel_GetUpdatedSolid_" data-uid="Elements.Panel.GetUpdatedSolid*"></a>
-  <h4 id="Elements_Panel_GetUpdatedSolid" data-uid="Elements.Panel.GetUpdatedSolid">GetUpdatedSolid()</h4>
-  <div class="markdown level1 summary"><p>Get the updated solid representation of the panel.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Solid GetUpdatedSolid()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Panel_Normal_" data-uid="Elements.Panel.Normal*"></a>
   <h4 id="Elements_Panel_Normal" data-uid="Elements.Panel.Normal">Normal()</h4>
   <div class="markdown level1 summary"><p>The normal of the panel, defined using the first 3 vertices in the location.</p>
@@ -458,28 +373,17 @@ public Panel(Polygon perimeter, Material material = null, Transform transform = 
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
+  <a id="Elements_Panel_UpdateRepresentations_" data-uid="Elements.Panel.UpdateRepresentations*"></a>
+  <h4 id="Elements_Panel_UpdateRepresentations" data-uid="Elements.Panel.UpdateRepresentations">UpdateRepresentations()</h4>
+  <div class="markdown level1 summary"><p>Update the representations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
   </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ILamina.html">ILamina</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
-  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
 </article>
           </div>
           

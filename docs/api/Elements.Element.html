@@ -82,76 +82,35 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Element</span></div>
-      <div class="level2"><a class="xref" href="Elements.ElementOfType-1.html">ElementOfType&lt;TElementType&gt;</a></div>
-      <div class="level2"><a class="xref" href="Elements.Floor.html">Floor</a></div>
-      <div class="level2"><a class="xref" href="Elements.Frame.html">Frame</a></div>
-      <div class="level2"><a class="xref" href="Elements.Mass.html">Mass</a></div>
-      <div class="level2"><a class="xref" href="Elements.Opening.html">Opening</a></div>
-      <div class="level2"><a class="xref" href="Elements.Panel.html">Panel</a></div>
-      <div class="level2"><a class="xref" href="Elements.Space.html">Space</a></div>
-      <div class="level2"><a class="xref" href="Elements.StructuralFraming.html">StructuralFraming</a></div>
-      <div class="level2"><a class="xref" href="Elements.Topography.html">Topography</a></div>
-      <div class="level2"><a class="xref" href="Elements.Truss.html">Truss</a></div>
-      <div class="level2"><a class="xref" href="Elements.Wall.html">Wall</a></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><span class="xref">Element</span></div>
+      <div class="level3"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Element_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class Element : IElement, IIdentifiable, ITransformable, IPropertySet</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class Element : Identifiable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Element__ctor_" data-uid="Elements.Element.#ctor*"></a>
-  <h4 id="Elements_Element__ctor" data-uid="Elements.Element.#ctor">Element()</h4>
+  <h4 id="Elements_Element__ctor_Guid_System_String_" data-uid="Elements.Element.#ctor(Guid,System.String)">Element(Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct an element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Element()</code></pre>
-  </div>
-  <a id="Elements_Element__ctor_" data-uid="Elements.Element.#ctor*"></a>
-  <h4 id="Elements_Element__ctor_System_Guid_" data-uid="Elements.Element.#ctor(System.Guid)">Element(Guid)</h4>
-  <div class="markdown level1 summary"><p>Construct an element.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Element(Guid id)</code></pre>
+    <pre><code class="lang-csharp hljs">public Element(Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -164,24 +123,28 @@ public Element(Guid id)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The unique identifer of the element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the element.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Element_Id_" data-uid="Elements.Element.Id*"></a>
-  <h4 id="Elements_Element_Id" data-uid="Elements.Element.Id">Id</h4>
-  <div class="markdown level1 summary"><p>The unique identifier of the element.</p>
-</div>
+  <a id="Elements_Element_AdditionalProperties_" data-uid="Elements.Element.AdditionalProperties*"></a>
+  <h4 id="Elements_Element_AdditionalProperties" data-uid="Elements.Element.AdditionalProperties">AdditionalProperties</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(Order = -101)]
-public Guid Id { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Collections.Generic.IDictionary&lt;string, object&gt; AdditionalProperties { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -193,218 +156,11 @@ public Guid Id { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Element_Name_" data-uid="Elements.Element.Name*"></a>
-  <h4 id="Elements_Element_Name" data-uid="Elements.Element.Name">Name</h4>
-  <div class="markdown level1 summary"><p>The element's name.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Name { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Element_Properties_" data-uid="Elements.Element.Properties*"></a>
-  <h4 id="Elements_Element_Properties" data-uid="Elements.Element.Properties">Properties</h4>
-  <div class="markdown level1 summary"><p>A map of properties for the element.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-[JsonConverter(typeof(PropertyDictionaryConverter))]
-public Dictionary&lt;string, IProperty&gt; Properties { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Elements.Interfaces.IProperty.html">IProperty</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Element_Transform_" data-uid="Elements.Element.Transform*"></a>
-  <h4 id="Elements_Element_Transform" data-uid="Elements.Element.Transform">Transform</h4>
-  <div class="markdown level1 summary"><p>The element's transform.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform Transform { get; protected set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Element_Type_" data-uid="Elements.Element.Type*"></a>
-  <h4 id="Elements_Element_Type" data-uid="Elements.Element.Type">Type</h4>
-  <div class="markdown level1 summary"><p>The type of the element.
-Used during deserialization to disambiguate derived types.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(Order = -100)]
-public string Type { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  <a id="Elements_Element_AddProperty_" data-uid="Elements.Element.AddProperty*"></a>
-  <h4 id="Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_" data-uid="Elements.Element.AddProperty(System.String,Elements.Interfaces.IProperty)">AddProperty(String, IProperty)</h4>
-  <div class="markdown level1 summary"><p>Add a Property to the Element.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddProperty(string name, IProperty property)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">name</span></td>
-        <td><p>The name of the parameter.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Interfaces.IProperty.html">IProperty</a></td>
-        <td><span class="parametername">property</span></td>
-        <td><p>The parameter to add.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Exception</span></td>
-        <td><p>Thrown when an parameter with the same name already exists.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Element_RemoveProperty_" data-uid="Elements.Element.RemoveProperty*"></a>
-  <h4 id="Elements_Element_RemoveProperty_System_String_" data-uid="Elements.Element.RemoveProperty(System.String)">RemoveProperty(String)</h4>
-  <div class="markdown level1 summary"><p>Remove a Property from the Properties map.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void RemoveProperty(string name)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">name</span></td>
-        <td><p>The name of the parameter to remove.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Exception</span></td>
-        <td><p>Thrown when the specified parameter cannot be found.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
-  </div>
 </article>
           </div>
           

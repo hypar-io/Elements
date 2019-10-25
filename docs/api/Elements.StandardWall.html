@@ -200,55 +200,24 @@
   
     animate();
   </script><h5 id="Elements_StandardWall_examples"><strong>Examples</strong></h5>
-  <pre><code source="../../test/Examples/WallExample.cs">using System.Collections.Generic;
-using Elements.Geometry;
-using Xunit;
-
-namespace Elements.Tests.Examples
-{
-public class WallExample : ModelTest
-{
-    [Fact]
-    public void Example()
-    {
-        this.Name = &quot;Elements_Wall&quot;;
-
-        // &lt;example>
-        // Create a wall type.
-        var wallType = new WallType(&quot;test&quot;, new List&lt;MaterialLayer> { new MaterialLayer(BuiltInMaterials.Concrete, 0.1) });
-
-        // Create some openings.
-        var openings = new List&lt;Opening>(){
-            new Opening(1.0, 2.0, 1.0, 1.0),
-            new Opening(3.0, 1.0, 1.0, 2.0)
-        };
-
-        var line = new Line(new Vector3(0, 0, 0), new Vector3(10, 10, 0));
-        var wall = new StandardWall(line, wallType, 3.0, openings);
-        // &lt;/example>
-
-        this.Model.AddElement(wall);
-    }
-}
-}</code></pre>
-
+  <pre><code class="lang-csharp" name="Main">// Create some openings.
+var openings = new List&lt;Opening&gt;(){
+    new Opening(1.0, 2.0, 1.0, 1.0),
+    new Opening(3.0, 1.0, 1.0, 2.0)
+};
+wall.Openings.AddRange(openings);
+</code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
-    <div class="level2"><a class="xref" href="Elements.Wall.html">Wall</a></div>
-    <div class="level3"><span class="xref">StandardWall</span></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><a class="xref" href="Elements.Element.html">Element</a></div>
+    <div class="level3"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
+    <div class="level4"><a class="xref" href="Elements.Wall.html">Wall</a></div>
+    <div class="level5"><span class="xref">StandardWall</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType</a>&lt;<a class="xref" href="Elements.WallType.html">WallType</a>&gt;</div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
     <div><a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
   </div>
   <div class="inheritedMembers">
@@ -257,85 +226,43 @@ public class WallExample : ModelTest
       <a class="xref" href="Elements.Wall.html#Elements_Wall_Height">Wall.Height</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Wall.html#Elements_Wall_ElementType">Wall.ElementType</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Wall.html#Elements_Wall_Geometry">Wall.Geometry</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Wall.html#Elements_Wall_ExtrudeDirection">Wall.ExtrudeDirection</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Wall.html#Elements_Wall_ExtrudeDepth">Wall.ExtrudeDepth</a>
-    </div>
-    <div>
       <a class="xref" href="Elements.Wall.html#Elements_Wall_Profile">Wall.Profile</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Wall.html#Elements_Wall_Thickness">Wall.Thickness()</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Wall.html#Elements_Wall_GetUpdatedSolid">Wall.GetUpdatedSolid()</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Type">Element.Type</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Properties">Element.Properties</a>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Transform">Element.Transform</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_">Element.AddProperty(String, IProperty)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_RemoveProperty_System_String_">Element.RemoveProperty(String)</a>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_StandardWall_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class StandardWall : Wall, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType&lt;WallType&gt;, IExtrude, IProfile, ISolid, IHasOpenings</code></pre>
+    <pre><code class="lang-csharp hljs">public class StandardWall : Wall, IHasOpenings</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_StandardWall__ctor_" data-uid="Elements.StandardWall.#ctor*"></a>
-  <h4 id="Elements_StandardWall__ctor_Elements_Geometry_Line_Elements_WallType_System_Double_System_Collections_Generic_List_Elements_Opening__Elements_Geometry_Transform_" data-uid="Elements.StandardWall.#ctor(Elements.Geometry.Line,Elements.WallType,System.Double,System.Collections.Generic.List{Elements.Opening},Elements.Geometry.Transform)">StandardWall(Line, WallType, Double, List&lt;Opening&gt;, Transform)</h4>
+  <h4 id="Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Guid_System_String_" data-uid="Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Guid,System.String)">StandardWall(Line, Double, Double, Material, Transform, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a wall along a line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public StandardWall(Line centerLine, WallType elementType, double height, List&lt;Opening&gt; openings = null, Transform transform = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public StandardWall(Line centerLine, double thickness, double height, Material material = null, Transform transform = null, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -354,9 +281,9 @@ public class WallExample : ModelTest
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.WallType.html">WallType</a></td>
-        <td><span class="parametername">elementType</span></td>
-        <td><p>The wall type of the wall.</p>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">thickness</span></td>
+        <td><p>The thickness of the wall.</p>
 </td>
       </tr>
       <tr>
@@ -366,9 +293,9 @@ public class WallExample : ModelTest
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
-        <td><span class="parametername">openings</span></td>
-        <td><p>A collection of Openings in the wall.</p>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The wall's material.</p>
 </td>
       </tr>
       <tr>
@@ -378,57 +305,22 @@ public class WallExample : ModelTest
 This transform will be concatenated to the transform created to describe the wall in 2D.</p>
 </td>
       </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
       <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the height of the wall is less than or equal to zero.</p>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The id of the wall.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the Z components of wall's start and end points are not the same.</p>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the wall.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_StandardWall_BothSides_" data-uid="Elements.StandardWall.BothSides*"></a>
-  <h4 id="Elements_StandardWall_BothSides" data-uid="Elements.StandardWall.BothSides">BothSides</h4>
-  <div class="markdown level1 summary"><p>Extrude to both sides?</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool BothSides { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Wall.html#Elements_Wall_BothSides">Wall.BothSides</a></div>
   <a id="Elements_StandardWall_CenterLine_" data-uid="Elements.StandardWall.CenterLine*"></a>
   <h4 id="Elements_StandardWall_CenterLine" data-uid="Elements.StandardWall.CenterLine">CenterLine</h4>
   <div class="markdown level1 summary"><p>The center line of the wall.</p>
@@ -455,12 +347,12 @@ This transform will be concatenated to the transform created to describe the wal
   </table>
   <a id="Elements_StandardWall_Openings_" data-uid="Elements.StandardWall.Openings*"></a>
   <h4 id="Elements_StandardWall_Openings" data-uid="Elements.StandardWall.Openings">Openings</h4>
-  <div class="markdown level1 summary"><p>An array of openings in the wall.</p>
+  <div class="markdown level1 summary"><p>A collection of openings in the floor.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;Opening&gt; Openings { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;Opening&gt; Openings { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -472,36 +364,49 @@ This transform will be concatenated to the transform created to describe the wal
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_StandardWall_Thickness_" data-uid="Elements.StandardWall.Thickness*"></a>
+  <h4 id="Elements_StandardWall_Thickness" data-uid="Elements.StandardWall.Thickness">Thickness</h4>
+  <div class="markdown level1 summary"><p>The thickness of the wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Thickness { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_StandardWall_UpdateRepresentations_" data-uid="Elements.StandardWall.UpdateRepresentations*"></a>
+  <h4 id="Elements_StandardWall_UpdateRepresentations" data-uid="Elements.StandardWall.UpdateRepresentations">UpdateRepresentations()</h4>
+  <div class="markdown level1 summary"><p>Update solid operations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Wall.html#Elements_Wall_UpdateRepresentations">Wall.UpdateRepresentations()</a></div>
   <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType&lt;TElementType&gt;</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
-  </div>
   <div>
       <a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
   </div>

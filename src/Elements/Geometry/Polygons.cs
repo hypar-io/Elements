@@ -62,8 +62,8 @@ namespace Elements.Geometry
         /// <param name="sides">The number of side of the Polygon.</param>
         /// <param name="radius">The radius of the circle in which the Ngon is inscribed.</param>
         /// <returns>A Polygon with the specified number of sides.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the radius is less than or equal to zero.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the number of sides is less than 3.</exception>
+        /// <exception>Thrown when the radius is less than or equal to zero.</exception>
+        /// <exception>Thrown when the number of sides is less than 3.</exception>
         public static Polygon Ngon(int sides, double radius = 0.5)
         {
             if (radius <= 0.0)

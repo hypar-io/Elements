@@ -124,7 +124,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="axis">The axis of rotation. 1-x, 2-y, 3-z</param>
         /// <param name="theta">The angle of rotation in radians.</param>
-        /// <exception cref="System.ArgumentException">Thrown when the provided axis is not 1-3.</exception>
+        /// <exception>Thrown when the provided axis is not 1-3.</exception>
         public void SetupRotate(int axis, double theta)
         {
             double s = Math.Sin(theta);
@@ -205,7 +205,7 @@ namespace Elements.Geometry
         /// Setup the matrix to project.
         /// </summary>
         /// <param name="p">The plane on which to project.</param>
-        /// <exception cref="System.Exception">Thrown when provided Plane's normal is not unit length.</exception>
+        /// <exception>Thrown when provided Plane's normal is not unit length.</exception>
         public void SetupProject(Plane p)
         {   
             var n = p.Normal;

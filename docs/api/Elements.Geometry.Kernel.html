@@ -83,35 +83,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Kernel</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Kernel_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Kernel</code></pre>
+    <pre><code class="lang-csharp hljs">public class Kernel : object</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -142,13 +118,13 @@
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Geometry_Kernel_CreateExtrude_" data-uid="Elements.Geometry.Kernel.CreateExtrude*"></a>
-  <h4 id="Elements_Geometry_Kernel_CreateExtrude_Elements_Geometry_Interfaces_IExtrude_" data-uid="Elements.Geometry.Kernel.CreateExtrude(Elements.Geometry.Interfaces.IExtrude)">CreateExtrude(IExtrude)</h4>
+  <h4 id="Elements_Geometry_Kernel_CreateExtrude_Elements_Geometry_Profile_System_Double_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Kernel.CreateExtrude(Elements.Geometry.Profile,System.Double,Elements.Geometry.Vector3,System.Double)">CreateExtrude(Profile, Double, Vector3, Double)</h4>
   <div class="markdown level1 summary"><p>Create an extrude.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Solid CreateExtrude(IExtrude extrude)</code></pre>
+    <pre><code class="lang-csharp hljs">public Solid CreateExtrude(Profile profile, double depth, Vector3 direction, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -161,10 +137,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Interfaces.IExtrude.html">IExtrude</a></td>
-        <td><span class="parametername">extrude</span></td>
-        <td><p>The IExtrude object.</p>
-</td>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">depth</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">direction</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -185,13 +175,13 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Kernel_CreateLamina_" data-uid="Elements.Geometry.Kernel.CreateLamina*"></a>
-  <h4 id="Elements_Geometry_Kernel_CreateLamina_Elements_Geometry_Interfaces_ILamina_" data-uid="Elements.Geometry.Kernel.CreateLamina(Elements.Geometry.Interfaces.ILamina)">CreateLamina(ILamina)</h4>
+  <h4 id="Elements_Geometry_Kernel_CreateLamina_Elements_Geometry_Polygon_" data-uid="Elements.Geometry.Kernel.CreateLamina(Elements.Geometry.Polygon)">CreateLamina(Polygon)</h4>
   <div class="markdown level1 summary"><p>Create a lamina.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Solid CreateLamina(ILamina lamina)</code></pre>
+    <pre><code class="lang-csharp hljs">public Solid CreateLamina(Polygon perimeter)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -204,10 +194,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Interfaces.ILamina.html">ILamina</a></td>
-        <td><span class="parametername">lamina</span></td>
-        <td><p>The ILamina object.</p>
-</td>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -228,13 +217,13 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Kernel_CreateSweepAlongCurve_" data-uid="Elements.Geometry.Kernel.CreateSweepAlongCurve*"></a>
-  <h4 id="Elements_Geometry_Kernel_CreateSweepAlongCurve_Elements_Geometry_Interfaces_ISweepAlongCurve_" data-uid="Elements.Geometry.Kernel.CreateSweepAlongCurve(Elements.Geometry.Interfaces.ISweepAlongCurve)">CreateSweepAlongCurve(ISweepAlongCurve)</h4>
+  <h4 id="Elements_Geometry_Kernel_CreateSweepAlongCurve_Elements_Geometry_Profile_Elements_Geometry_Curve_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Kernel.CreateSweepAlongCurve(Elements.Geometry.Profile,Elements.Geometry.Curve,System.Double,System.Double,System.Double)">CreateSweepAlongCurve(Profile, Curve, Double, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Create a sweep along a curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Solid CreateSweepAlongCurve(ISweepAlongCurve sweep)</code></pre>
+    <pre><code class="lang-csharp hljs">public Solid CreateSweepAlongCurve(Profile profile, Curve curve, double startSetback, double endSetback, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -247,10 +236,29 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Interfaces.ISweepAlongCurve.html">ISweepAlongCurve</a></td>
-        <td><span class="parametername">sweep</span></td>
-        <td><p>The ISweepAlongCurve object.</p>
-</td>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">curve</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startSetback</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endSetback</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

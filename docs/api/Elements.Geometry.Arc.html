@@ -76,96 +76,27 @@
   
   <h1 id="Elements_Geometry_Arc" data-uid="Elements.Geometry.Arc" class="text-break">Class Arc
   </h1>
-  <div class="markdown level0 summary"><p>An arc defined around a center between a start angle and an end angle.</p>
+  <div class="markdown level0 summary"><p>A linear curve between two points.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Arc</span></div>
+    <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
+    <div class="level2"><span class="xref">Arc</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Arc_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Arc : ICurve</code></pre>
+    <pre><code class="lang-csharp hljs">public class Arc : Curve, ICurve</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
-  <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
-  <h4 id="Elements_Geometry_Arc__ctor_Elements_Geometry_Plane_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(Elements.Geometry.Plane,System.Double,System.Double,System.Double)">Arc(Plane, Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Create a plane.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Arc(Plane plane, double radius, double startAngle, double endAngle)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
-        <td><span class="parametername">plane</span></td>
-        <td><p>The plane of the arc.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">radius</span></td>
-        <td><p>The radius of the arc.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">startAngle</span></td>
-        <td><p>The start angle of the arc in degrees.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">endAngle</span></td>
-        <td><p>The end angle of the arc in degrees.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
   <h4 id="Elements_Geometry_Arc__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)">Arc(Vector3, Double, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Create a plane.</p>
@@ -213,6 +144,30 @@ public Arc(Plane plane, double radius, double startAngle, double endAngle)</code
   </table>
   <h3 id="properties">Properties
   </h3>
+  <a id="Elements_Geometry_Arc_Center_" data-uid="Elements.Geometry.Arc.Center*"></a>
+  <h4 id="Elements_Geometry_Arc_Center" data-uid="Elements.Geometry.Arc.Center">Center</h4>
+  <div class="markdown level1 summary"><p>The center of the arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 Center { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Arc_End_" data-uid="Elements.Geometry.Arc.End*"></a>
   <h4 id="Elements_Geometry_Arc_End" data-uid="Elements.Geometry.Arc.End">End</h4>
   <div class="markdown level1 summary"><p>The end point of the arc.</p>
@@ -220,8 +175,7 @@ public Arc(Plane plane, double radius, double startAngle, double endAngle)</code
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -262,33 +216,9 @@ public Vector3 End { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Arc_Plane_" data-uid="Elements.Geometry.Arc.Plane*"></a>
-  <h4 id="Elements_Geometry_Arc_Plane" data-uid="Elements.Geometry.Arc.Plane">Plane</h4>
-  <div class="markdown level1 summary"><p>The plane of the arc.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Plane Plane { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Arc_Radius_" data-uid="Elements.Geometry.Arc.Radius*"></a>
   <h4 id="Elements_Geometry_Arc_Radius" data-uid="Elements.Geometry.Arc.Radius">Radius</h4>
-  <div class="markdown level1 summary"><p>The radius of the Arc.</p>
+  <div class="markdown level1 summary"><p>The radius of the arc.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -317,8 +247,7 @@ public Vector3 End { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -359,32 +288,6 @@ public Vector3 Start { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Arc_Type_" data-uid="Elements.Geometry.Arc.Type*"></a>
-  <h4 id="Elements_Geometry_Arc_Type" data-uid="Elements.Geometry.Arc.Type">Type</h4>
-  <div class="markdown level1 summary"><p>The type of the curve.
-Used during deserialization to disambiguate derived types.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(Order = -100)]
-public string Type { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Geometry_Arc_Bounds_" data-uid="Elements.Geometry.Arc.Bounds*"></a>
@@ -394,7 +297,7 @@ public string Type { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BBox3 Bounds()</code></pre>
+    <pre><code class="lang-csharp hljs">public override BBox3 Bounds()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -412,14 +315,16 @@ public string Type { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
   <a id="Elements_Geometry_Arc_Frames_" data-uid="Elements.Geometry.Arc.Frames*"></a>
-  <h4 id="Elements_Geometry_Arc_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
+  <h4 id="Elements_Geometry_Arc_Frames_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.Frames(System.Double,System.Double,System.Double)">Frames(Double, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Get a collection of transforms which represent frames along the arc.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform[] Frames(double startSetback, double endSetback)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -443,6 +348,12 @@ public string Type { get; }</code></pre>
         <td><p>The offset from the end of the arc.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation for all frames around their Z axes.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -461,6 +372,8 @@ public string Type { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_System_Double_">Curve.Frames(Double, Double, Double)</a></div>
   <a id="Elements_Geometry_Arc_Length_" data-uid="Elements.Geometry.Arc.Length*"></a>
   <h4 id="Elements_Geometry_Arc_Length" data-uid="Elements.Geometry.Arc.Length">Length()</h4>
   <div class="markdown level1 summary"><p>Calculate the length of the arc.</p>
@@ -468,7 +381,7 @@ public string Type { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Length()</code></pre>
+    <pre><code class="lang-csharp hljs">public override double Length()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -485,6 +398,33 @@ public string Type { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <a id="Elements_Geometry_Arc_Plane_" data-uid="Elements.Geometry.Arc.Plane*"></a>
+  <h4 id="Elements_Geometry_Arc_Plane" data-uid="Elements.Geometry.Arc.Plane">Plane()</h4>
+  <div class="markdown level1 summary"><p>Compute the plane of the arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Plane Plane()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><p>The plane in which the arc lies.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Arc_PointAt_" data-uid="Elements.Geometry.Arc.PointAt*"></a>
   <h4 id="Elements_Geometry_Arc_PointAt_System_Double_" data-uid="Elements.Geometry.Arc.PointAt(System.Double)">PointAt(Double)</h4>
   <div class="markdown level1 summary"><p>Return the point at parameter u on the arc.</p>
@@ -492,7 +432,7 @@ public string Type { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 PointAt(double u)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Vector3 PointAt(double u)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -528,6 +468,8 @@ public string Type { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
   <a id="Elements_Geometry_Arc_Reversed_" data-uid="Elements.Geometry.Arc.Reversed*"></a>
   <h4 id="Elements_Geometry_Arc_Reversed" data-uid="Elements.Geometry.Arc.Reversed">Reversed()</h4>
   <div class="markdown level1 summary"><p>Get an arc which is the reverse of this Arc.</p>
@@ -535,7 +477,7 @@ public string Type { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ICurve Reversed()</code></pre>
+    <pre><code class="lang-csharp hljs">public Arc Reversed()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -547,19 +489,19 @@ public string Type { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></td>
+        <td><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Arc_TransformAt_" data-uid="Elements.Geometry.Arc.TransformAt*"></a>
-  <h4 id="Elements_Geometry_Arc_TransformAt_System_Double_" data-uid="Elements.Geometry.Arc.TransformAt(System.Double)">TransformAt(Double)</h4>
+  <h4 id="Elements_Geometry_Arc_TransformAt_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.TransformAt(System.Double,System.Double)">TransformAt(Double, Double)</h4>
   <div class="markdown level1 summary"><p>Return transform on the arc at parameter u.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform TransformAt(double u)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -575,6 +517,12 @@ public string Type { get; }</code></pre>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
         <td><p>A parameter between 0.0 and 1.0 on the arc.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation of the transform around its Z axis.</p>
 </td>
       </tr>
     </tbody>
@@ -595,6 +543,8 @@ public string Type { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_System_Double_">Curve.TransformAt(Double, Double)</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
