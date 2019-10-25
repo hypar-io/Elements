@@ -4,25 +4,25 @@
 // </auto-generated>
 //----------------------
 
+using Elements.GeoJSON;
+using Elements.Geometry;
+using Elements.Geometry.Solids;
+using Elements.Properties;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Elements.Geometry.Solids
 {
     #pragma warning disable // Disable all warnings
 
-    using Elements.GeoJSON;
-    using Elements.Geometry;
-    using Elements.Geometry.Solids;
-    using Elements.Properties;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    
     /// <summary>A zero-thickness solid defined by a profile.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class Lamina : SolidOperation
     {
         /// <summary>The perimeter.</summary>
         [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
-        public  Elements.Geometry.Polygon Perimeter { get; internal set; }
+        public  Polygon Perimeter { get; internal set; }
     
     
     }

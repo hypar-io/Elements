@@ -4,18 +4,18 @@
 // </auto-generated>
 //----------------------
 
+using Elements.GeoJSON;
+using Elements.Geometry;
+using Elements.Geometry.Solids;
+using Elements.Properties;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
-    using Elements.GeoJSON;
-    using Elements.Geometry;
-    using Elements.Geometry.Solids;
-    using Elements.Properties;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    
     /// <summary>A profile comprised of an external boundary and one or several holes.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class Profile : Identifiable
