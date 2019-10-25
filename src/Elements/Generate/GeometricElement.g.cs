@@ -19,7 +19,7 @@ namespace Elements
     /// <summary>An element with a geometric representation.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class GeometricElement : Element
+    public partial class GeometricElement : Identifiable
     {
         /// <summary>The element's transform.</summary>
         [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.Always)]

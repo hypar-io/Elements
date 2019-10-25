@@ -69,10 +69,10 @@ namespace Elements.Tests
 
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
 
-                    var elements = this._model.AllEntitiesOfType<Element>();
+                    var elements = this._model.AllEntitiesOfType<Identifiable>();
                     foreach(var e in elements)
                     {
-                        var newEl = newModel.GetEntityOfType<Element>(e.Id);
+                        var newEl = newModel.GetEntityOfType<Identifiable>(e.Id);
                         if(newEl == null)
                         {
                             throw new Exception($"{this.Name}: An element with the id {e.Id}, could not be found in the new model.");

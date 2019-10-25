@@ -5,7 +5,7 @@
     "title": "GeometricElement",
     "x-namespace": "Elements",
     "type": ["object", "null"],
-    "allOf": [{"$ref": "https://hypar.io/Schemas/Element.json"}],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Identifiable.json"}],
     "required": ["Transform","Material","Representation","discriminator"],
     "discriminator": "discriminator",
     "properties": {

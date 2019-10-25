@@ -9,7 +9,6 @@ namespace Elements
     /// An object which is identified 
     /// with a unique identifier and a name.
     /// </summary>
-    [JsonInheritanceAttribute("Elements.Element", typeof(Elements.Element))]
     [JsonInheritanceAttribute("Elements.Material", typeof(Elements.Material))]
     [JsonInheritanceAttribute("Elements.Geometry.Profile", typeof(Elements.Geometry.Profile))]
     [JsonInheritanceAttribute("Elements.Opening", typeof(Elements.Opening))]

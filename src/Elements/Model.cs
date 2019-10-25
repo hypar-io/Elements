@@ -56,7 +56,7 @@ namespace Elements
         /// <param name="element">The element to add to the model.</param>
         /// <exception>Thrown when an element 
         /// with the same Id already exists in the model.</exception>
-        public void AddElement(Element element)
+        public void AddElement(Identifiable element)
         {
             if (element == null || 
                 _entities.ContainsKey(element.Id))
@@ -72,7 +72,7 @@ namespace Elements
         /// Add a collection of elements to the model.
         /// </summary>
         /// <param name="elements">The elements to add to the model.</param>
-        public void AddElements(IEnumerable<Element> elements)
+        public void AddElements(IEnumerable<Identifiable> elements)
         {
             foreach (var e in elements)
             {
@@ -104,7 +104,7 @@ namespace Elements
         public T GetEntityByName<T>(string name) where T: Identifiable
         {
             var found = _entities.FirstOrDefault(e => e.Value.Name == name);
-            if (found.Equals(new KeyValuePair<long, Element>()))
+            if (found.Equals(new KeyValuePair<long, Identifiable>()))
             {
                 return null;
             }
@@ -194,10 +194,10 @@ namespace Elements
                         p.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     var listType = p.PropertyType.GetGenericArguments()[0];
-                    if(typeof(Element).IsAssignableFrom(listType))
+                    if(typeof(Identifiable).IsAssignableFrom(listType))
                     {
                         var list = (IList)pValue;
-                        foreach(Element e in list)
+                        foreach(Identifiable e in list)
                         {
                             AddElement(e);
                         }

@@ -174,7 +174,7 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static IfcProduct ConvertElementToIfcProduct(Element element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        private static IfcProduct ConvertElementToIfcProduct(GeometricElement element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             try
             {
@@ -353,7 +353,7 @@ namespace Elements.Serialization.IFC
             return shape;
         }
 
-        private static IfcBuildingElementProxy ToIfc(this Element element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        private static IfcBuildingElementProxy ToIfc(this GeometricElement element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(element.Id),
                                                     null,
