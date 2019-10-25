@@ -5,9 +5,25 @@ using System.Threading.Tasks;
 using NJsonSchema;
 using NJsonSchema.CodeGeneration.CSharp;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Elements.Generate
 {
+    class ElementsTypeNameGenerator : ITypeNameGenerator
+    {
+        // TODO(Ian): This type name generator is only required because njsonschema
+        // calls dependencies 'Json2', 'Json3', etc. We use their title to label
+        // them and then they get excluded by that title. This is fragile because
+        // if a user gives their schema a title that is different than its id, 
+        // this will break. We need to figure out why njson schema has this bizarre
+        // behavior.
+        public string Generate(JsonSchema schema, string typeNameHint, IEnumerable<string> reservedTypeNames)
+        {
+            Console.WriteLine(schema.Title);
+            return schema.Title;
+        }
+    }
+
     class Program
     {
         static async Task Main(string[] args)
@@ -16,34 +32,10 @@ namespace Elements.Generate
             var schemaRoot = Path.GetFullPath(Path.Combine(asmDir, "../../../../../Schemas"));
             var outRoot = Path.GetFullPath(Path.Combine(asmDir, "../../../../Elements/Generate"));
 
-            // By passing a set of excluded types, we can tell the code 
-            // generator not to generate inline type definitions if types
-            // reference those types.
-            var excludedTypes = new string[]{
-                    "Vector3", 
-                    "Line", 
-                    "Plane", 
-                    "Polyline", 
-                    "Polygon", 
-                    "Profile", 
-                    "Curve", 
-                    "Solid", 
-                    "Color", 
-                    "Property", 
-                    "Transform", 
-                    "Element", 
-                    "Material",
-                    "Elements", 
-                    "GeometricElement", 
-                    "Geometry",
-                    "Identifiable", 
-                    "SolidOperation", 
-                    "Representation"};
-
-            await WriteTypesFromUrls(outRoot, null);
+            await WriteTypesFromUrls(outRoot);
         }
 
-        private static async Task WriteTypesFromUrls(string outRoot, string[] excludedTypes = null)
+        private static async Task WriteTypesFromUrls(string outRoot)
         {
             var urls = new string[]{
                 "https://hypar.io/Schemas/GeoJSON/Position.json",
@@ -69,6 +61,9 @@ namespace Elements.Generate
                 "https://hypar.io/Schemas/Material.json",
                 "https://hypar.io/Schemas/Model.json"
             };
+
+            var typeNames = urls.Select(u=>u.Split("/", StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToList();
+
             foreach(var url in urls)
             {
                 var split = url.Split("/", StringSplitOptions.RemoveEmptyEntries).Skip(3);
@@ -83,7 +78,13 @@ namespace Elements.Generate
                     Directory.CreateDirectory(outDir);
                 }
                 var outPath = Path.Combine(outDir, split.Last().Replace(".json",".g.cs"));
-                await WriteTypesFromSchemasOnline(url, outPath, ns, excludedTypes);
+
+                var thisTypeName = split.Last().Replace(".json","");
+                var localExcludes = typeNames.Where(n=>n != thisTypeName).ToArray();
+
+                // Exclude all types that aren't this type so that we only 
+                // get one type declaration per file.
+                await WriteTypesFromSchemasOnline(url, outPath, ns, localExcludes);
             }
         }
 
@@ -119,7 +120,8 @@ namespace Elements.Generate
                 ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes,
                 TemplateDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../Templates"),
                 GenerateJsonMethods = false,
-                ClassStyle = CSharpClassStyle.Poco
+                ClassStyle = CSharpClassStyle.Poco,
+                TypeNameGenerator = new ElementsTypeNameGenerator()
             });
             var file = generator.GenerateFile();
             File.WriteAllText(outPath, file);
