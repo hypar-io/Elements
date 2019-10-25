@@ -3,6 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "A position.",
     "title": "Position",
+    "x-namespace": "Elements.GeoJSON",
     "type": ["object","null"],
     "required": ["latitude","longitude"],
     "properties": {

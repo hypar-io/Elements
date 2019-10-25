@@ -2,6 +2,7 @@
     "$id": "https://hypar.io/Schemas/Geometry/Solids/Sweep.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Sweep",
+    "x-namespace": "Elements.Geometry.Solids",
     "type": "object",
     "description": "A sweep of a profile along a curve.",
     "required": ["Profile", "Curve","StartSetback","EndSetback"],

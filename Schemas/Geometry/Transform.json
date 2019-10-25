@@ -2,6 +2,7 @@
     "$id": "https://hypar.io/Schemas/Geometry/Transform.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Transform",
+    "x-namespace": "Elements.Geometry",
     "type": "object",
     "description": "A transform.",
     "required": ["Origin", "XAxis", "YAxis", "ZAxis"],

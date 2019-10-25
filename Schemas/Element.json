@@ -3,6 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "The base type for all elements.",
     "title": "Element",
+    "x-namespace": "Elements",
     "type": ["object", "null"],
     "allOf": [{"$ref": "https://hypar.io/Schemas/Identifiable.json"}],
     "required": ["Id","Name","Transform","discriminator"],

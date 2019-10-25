@@ -3,6 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "The representation of an element.",
     "title": "Representation",
+    "x-namespace": "Elements.Geometry",
     "type": "object",
     "required": ["SolidOperations"],
     "properties": {
