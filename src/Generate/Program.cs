@@ -16,11 +16,19 @@ namespace Elements.Generate
         // them and then they get excluded by that title. This is fragile because
         // if a user gives their schema a title that is different than its id, 
         // this will break. We need to figure out why njson schema has this bizarre
-        // behavior.
+        // behavior. This behavior does not exist when the schemas are loaded
+        // from disk, only when they are referenced by urls.
         public string Generate(JsonSchema schema, string typeNameHint, IEnumerable<string> reservedTypeNames)
         {
-            Console.WriteLine(schema.Title);
-            return schema.Title;
+            // Console.WriteLine(typeNameHint + ":" + schema.InheritedSchema ?? "none");
+            if(schema.IsEnumeration)
+            {
+                return typeNameHint;
+            }
+            else
+            {
+                return schema.Title;
+            }
         }
     }
 
