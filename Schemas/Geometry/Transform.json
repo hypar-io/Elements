@@ -4,7 +4,7 @@
     "title": "Transform",
     "x-namespace": "Elements.Geometry",
     "type": "object",
-    "description": "A transform.",
+    "description": "A right-handed coordinate system with +Z up.",
     "required": ["Origin", "XAxis", "YAxis", "ZAxis"],
     "properties": {
         "Origin": {

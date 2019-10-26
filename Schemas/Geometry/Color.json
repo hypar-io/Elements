@@ -4,7 +4,7 @@
     "title": "Color",
     "x-namespace": "Elements.Geometry",
     "type": ["object","null"],
-    "description": "An RGBA color.",
+    "description": "A color with red, green, blue, and alpha components.",
     "required": ["Red", "Green", "Blue", "Alpha"],
     "properties": {
         "Red": {
@@ -15,21 +15,21 @@
             "format": "float"
         },
         "Green": {
-            "description": "The green component of the color between 0.0 and 1.0..",
+            "description": "The green component of the color between 0.0 and 1.0.",
             "type": "number",
             "minimum": 0.0,
             "maximum": 1.0,
             "format": "float"
         },
         "Blue": {
-            "description": "The blue component of the color between 0.0 and 1.0..",
+            "description": "The blue component of the color between 0.0 and 1.0.",
             "type": "number",
             "minimum": 0.0,
             "maximum": 1.0,
             "format": "float"
         },
         "Alpha": {
-            "description": "The alpha component of the color between 0.0 and 1.0..",
+            "description": "The alpha component of the color between 0.0 and 1.0.",
             "type": "number",
             "minimum": 0.0,
             "maximum": 1.0,

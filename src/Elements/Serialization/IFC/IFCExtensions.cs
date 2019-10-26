@@ -11,7 +11,7 @@ namespace Elements.Serialization.IFC
     /// <summary>
     /// Extension methods for converting IFC entities to elements.
     /// </summary>
-    public static class IFCExtensions
+    internal static class IFCExtensions
     {
         internal static Beam ToBeam(this IfcBeam beam)
         {

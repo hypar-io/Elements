@@ -10,7 +10,7 @@ namespace Elements.Serialization.IFC
     /// <summary>
     /// Extension methods for writing elements to and from IFC.
     /// </summary>
-    public static class IFCModelExtensions
+    internal static class IFCModelExtensions
     {
         /// <summary>
         /// Load a model from IFC.

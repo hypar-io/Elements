@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Elements.Geometry.Profiles
 {
     /// <summary>
-    /// Base class for types which serve Profiles.
+    /// Base class for all types which serve profiles.
     /// </summary>
     public abstract class ProfileServer
     {

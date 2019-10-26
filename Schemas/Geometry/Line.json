@@ -4,7 +4,7 @@
     "title": "Line",
     "x-namespace": "Elements.Geometry",
     "type": ["object","null"],
-    "description": "A linear curve between two points.",
+    "description": "A line between two points. The line is parameterized from 0.0(start) to 1.0(end)",
     "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Curve.json"}],
     "required": ["Start", "End"],
     "properties": {

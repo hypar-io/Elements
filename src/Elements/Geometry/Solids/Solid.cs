@@ -15,7 +15,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid : ITessellate
+    internal class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;

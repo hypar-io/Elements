@@ -12,7 +12,7 @@ namespace Elements.Serialization.IFC
     /// <summary>
     /// Extension methods for converting elements to IFC entities.
     /// </summary>
-    public static class ElementsExtensions
+    internal static class ElementsExtensions
     {
         internal static List<IfcProduct> ToIfcProducts(this GeometricElement e, IfcRepresentationContext context, Document doc, Dictionary<string, IfcSurfaceStyle> styles)
         {

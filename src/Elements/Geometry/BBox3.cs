@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// An axis-alignment bounding box.
+    /// An axis-aligned bounding box.
     /// </summary>
     public class BBox3
     {

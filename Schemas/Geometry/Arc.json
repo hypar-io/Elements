@@ -4,7 +4,7 @@
     "title": "Arc",
     "x-namespace": "Elements.Geometry",
     "type": ["object","null"],
-    "description": "A linear curve between two points.",
+    "description": "An arc defined by a CCW rotation around a center between a start angle and an end angle.",
     "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Curve.json"}],
     "required": ["Center", "Radius", "StartAngle", "EndAngle"],
     "properties": {

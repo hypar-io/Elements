@@ -3,9 +3,9 @@ using Elements.Geometry.Solids;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// 
+    /// The geometry kernel.
     /// </summary>
-    public class Kernel
+    internal class Kernel
     {
         private static Kernel _instance;
 

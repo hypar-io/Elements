@@ -120,7 +120,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="matrix">The transform's Matrix.</param>
         
-        public Transform(Matrix matrix)
+        internal Transform(Matrix matrix)
         {
             this._matrix = matrix;
             SetComponentsFromMatrix();

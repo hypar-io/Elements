@@ -68,7 +68,7 @@ namespace Elements
         /// <param name="material">The space's material.</param>
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
-        public Space(Solid geometry,
+        internal Space(Solid geometry,
                        Transform transform = null,
                        Material material = null,
                        Guid id = default(Guid),

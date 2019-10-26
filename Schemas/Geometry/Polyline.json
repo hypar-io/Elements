@@ -4,7 +4,7 @@
     "title": "Polyline",
     "x-namespace": "Elements.Geometry",
     "type": ["object","null"],
-    "description": "A coplanar continuous set of lines.",
+    "description": "A planar continuous set of lines.",
     "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Curve.json"}],
     "required": ["Vertices"],
     "properties": {

@@ -6,7 +6,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A Solid Face.
     /// </summary>
-    public class Face
+    internal class Face
     {
         /// <summary>
         /// The Id of the Face.

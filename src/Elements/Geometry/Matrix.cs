@@ -6,7 +6,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A column-ordered 4x4 matrix.
     /// </summary>
-    public class Matrix
+    internal class Matrix
     {
         double m11 = 0.0;
         double m21 = 0.0;

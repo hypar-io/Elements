@@ -5,7 +5,7 @@
     "x-namespace": "Elements.Geometry",
     "type": ["object","null"],
     "discriminator": "discriminator",
-    "description": "A curve.",
+    "description": "The abstract base class for all curves.",
     "required": ["discriminator"],
     "properties": {
         "discriminator": {

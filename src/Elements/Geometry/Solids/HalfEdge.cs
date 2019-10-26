@@ -3,7 +3,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// One half of the directional components of an Edge.
     /// </summary>
-    public class HalfEdge
+    internal class HalfEdge
     {
         /// <summary>
         /// The Edge of which this is one half.

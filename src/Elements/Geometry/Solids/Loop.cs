@@ -5,7 +5,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A Loop of HalfEdges which bound a Face.
     /// </summary>
-    public class Loop
+    internal class Loop
     {
         /// <summary>
         /// The Face to which this Loop corresponds.
