@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -342,7 +342,7 @@ internal entities collection.</p>
     </tbody>
   </table>
   <a id="Elements_Model_AddElement_" data-uid="Elements.Model.AddElement*"></a>
-  <h4 id="Elements_Model_AddElement_Elements_Element_" data-uid="Elements.Model.AddElement(Elements.Element)">AddElement(Element)</h4>
+  <h4 id="Elements_Model_AddElement_Elements_Identifiable_" data-uid="Elements.Model.AddElement(Elements.Identifiable)">AddElement(Identifiable)</h4>
   <div class="markdown level1 summary"><p>Add an element to the model.
 Each property of the element which implements IIdentifiable
 will be added to the entities collection before the element itself.
@@ -353,7 +353,7 @@ added to the entities collection as well.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddElement(Element element)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddElement(Identifiable element)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -366,7 +366,7 @@ added to the entities collection as well.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><a class="xref" href="Elements.Identifiable.html">Identifiable</a></td>
         <td><span class="parametername">element</span></td>
         <td><p>The element to add to the model.</p>
 </td>
@@ -374,13 +374,13 @@ added to the entities collection as well.</p>
     </tbody>
   </table>
   <a id="Elements_Model_AddElements_" data-uid="Elements.Model.AddElements*"></a>
-  <h4 id="Elements_Model_AddElements_IEnumerable_Elements_Element__" data-uid="Elements.Model.AddElements(IEnumerable{Elements.Element})">AddElements(IEnumerable&lt;Element&gt;)</h4>
+  <h4 id="Elements_Model_AddElements_IEnumerable_Elements_Identifiable__" data-uid="Elements.Model.AddElements(IEnumerable{Elements.Identifiable})">AddElements(IEnumerable&lt;Identifiable&gt;)</h4>
   <div class="markdown level1 summary"><p>Add a collection of elements to the model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddElements(IEnumerable&lt;Element&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddElements(IEnumerable&lt;Identifiable&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -393,7 +393,7 @@ added to the entities collection as well.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;</td>
         <td><span class="parametername">elements</span></td>
         <td><p>The elements to add to the model.</p>
 </td>

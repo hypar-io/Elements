@@ -297,38 +297,6 @@ references:
   isSpec: "True"
   fullName: Elements.Column.Location
   nameWithType: Column.Location
-- uid: Elements.Element
-  name: Element
-  href: api/Elements.Element.html
-  commentId: T:Elements.Element
-  fullName: Elements.Element
-  nameWithType: Element
-- uid: Elements.Element.#ctor(Guid,System.String)
-  name: Element(Guid, String)
-  href: api/Elements.Element.html#Elements_Element__ctor_Guid_System_String_
-  commentId: M:Elements.Element.#ctor(Guid,System.String)
-  fullName: Elements.Element.Element(Guid, System.String)
-  nameWithType: Element.Element(Guid, String)
-- uid: Elements.Element.#ctor*
-  name: Element
-  href: api/Elements.Element.html#Elements_Element__ctor_
-  commentId: Overload:Elements.Element.#ctor
-  isSpec: "True"
-  fullName: Elements.Element.Element
-  nameWithType: Element.Element
-- uid: Elements.Element.AdditionalProperties
-  name: AdditionalProperties
-  href: api/Elements.Element.html#Elements_Element_AdditionalProperties
-  commentId: P:Elements.Element.AdditionalProperties
-  fullName: Elements.Element.AdditionalProperties
-  nameWithType: Element.AdditionalProperties
-- uid: Elements.Element.AdditionalProperties*
-  name: AdditionalProperties
-  href: api/Elements.Element.html#Elements_Element_AdditionalProperties_
-  commentId: Overload:Elements.Element.AdditionalProperties
-  isSpec: "True"
-  fullName: Elements.Element.AdditionalProperties
-  nameWithType: Element.AdditionalProperties
 - uid: Elements.Floor
   name: Floor
   href: api/Elements.Floor.html
@@ -6413,12 +6381,12 @@ references:
   isSpec: "True"
   fullName: Elements.Model.Add
   nameWithType: Model.Add
-- uid: Elements.Model.AddElement(Elements.Element)
-  name: AddElement(Element)
-  href: api/Elements.Model.html#Elements_Model_AddElement_Elements_Element_
-  commentId: M:Elements.Model.AddElement(Elements.Element)
-  fullName: Elements.Model.AddElement(Elements.Element)
-  nameWithType: Model.AddElement(Element)
+- uid: Elements.Model.AddElement(Elements.Identifiable)
+  name: AddElement(Identifiable)
+  href: api/Elements.Model.html#Elements_Model_AddElement_Elements_Identifiable_
+  commentId: M:Elements.Model.AddElement(Elements.Identifiable)
+  fullName: Elements.Model.AddElement(Elements.Identifiable)
+  nameWithType: Model.AddElement(Identifiable)
 - uid: Elements.Model.AddElement*
   name: AddElement
   href: api/Elements.Model.html#Elements_Model_AddElement_
@@ -6426,15 +6394,15 @@ references:
   isSpec: "True"
   fullName: Elements.Model.AddElement
   nameWithType: Model.AddElement
-- uid: Elements.Model.AddElements(IEnumerable{Elements.Element})
-  name: AddElements(IEnumerable<Element>)
-  href: api/Elements.Model.html#Elements_Model_AddElements_IEnumerable_Elements_Element__
-  commentId: M:Elements.Model.AddElements(IEnumerable{Elements.Element})
-  name.vb: AddElements(IEnumerable(Of Element))
-  fullName: Elements.Model.AddElements(IEnumerable<Elements.Element>)
-  fullName.vb: Elements.Model.AddElements(IEnumerable(Of Elements.Element))
-  nameWithType: Model.AddElements(IEnumerable<Element>)
-  nameWithType.vb: Model.AddElements(IEnumerable(Of Element))
+- uid: Elements.Model.AddElements(IEnumerable{Elements.Identifiable})
+  name: AddElements(IEnumerable<Identifiable>)
+  href: api/Elements.Model.html#Elements_Model_AddElements_IEnumerable_Elements_Identifiable__
+  commentId: M:Elements.Model.AddElements(IEnumerable{Elements.Identifiable})
+  name.vb: AddElements(IEnumerable(Of Identifiable))
+  fullName: Elements.Model.AddElements(IEnumerable<Elements.Identifiable>)
+  fullName.vb: Elements.Model.AddElements(IEnumerable(Of Elements.Identifiable))
+  nameWithType: Model.AddElements(IEnumerable<Identifiable>)
+  nameWithType.vb: Model.AddElements(IEnumerable(Of Identifiable))
 - uid: Elements.Model.AddElements*
   name: AddElements
   href: api/Elements.Model.html#Elements_Model_AddElements_
