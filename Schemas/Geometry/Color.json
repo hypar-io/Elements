@@ -35,6 +35,5 @@
             "maximum": 1.0,
             "format": "float"
         }
-    },
-    "additionalProperties": false
+    }
 }

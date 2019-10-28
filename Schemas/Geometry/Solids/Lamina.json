@@ -12,6 +12,5 @@
             "description": "The perimeter.",
             "$ref": "https://hypar.io/Schemas/Geometry/Polygon.json"
         }
-    },
-    "additionalProperties": false
+    }
 }

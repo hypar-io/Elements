@@ -23,6 +23,5 @@
             "description": "The Z axis.",
             "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
         }
-    },
-    "additionalProperties": false
+    }
 }

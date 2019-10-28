@@ -21,6 +21,5 @@
             "description": "The direction in which to extrude.",
             "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
         }
-    },
-    "additionalProperties": false
+    }
 }

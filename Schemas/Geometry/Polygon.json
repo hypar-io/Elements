@@ -5,6 +5,5 @@
     "x-namespace": "Elements.Geometry",
     "type": ["object","null"],
     "description": "A closed planar polygon.",
-    "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Polyline.json"}],
-    "additionalProperties": false
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Polyline.json"}]
 }

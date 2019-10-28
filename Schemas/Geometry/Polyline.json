@@ -14,6 +14,5 @@
             "minItems": 2,
             "description": "The vertices of the polygon."
         }
-    },
-    "additionalProperties": false
+    }
 }

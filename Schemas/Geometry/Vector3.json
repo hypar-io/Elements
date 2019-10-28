@@ -19,6 +19,5 @@
             "type": "number",
             "description": "The Z component of the vector."
         }
-    },
-    "additionalProperties": false
+    }
 }

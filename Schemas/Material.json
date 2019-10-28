@@ -26,6 +26,5 @@
             "maximum": 1.0,
             "default": 0.1
         }
-    },
-    "additionalProperties": false
+    }
 }

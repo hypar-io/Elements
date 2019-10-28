@@ -29,6 +29,5 @@
             "type": "number",
             "minimum": 0.0
         }
-    },
-    "additionalProperties": false
+    }
 }

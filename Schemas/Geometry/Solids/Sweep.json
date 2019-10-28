@@ -24,6 +24,5 @@
             "description": "The amount to set back the resulting solid from the end of the curve.",
             "type": "number"
         }
-    },
-    "additionalProperties": false
+    }
 }

@@ -20,6 +20,5 @@
         "discriminator": {
             "type": "string"
         }
-    },
-    "additionalProperties": false
+    }
 }
