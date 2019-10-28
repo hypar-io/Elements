@@ -154,6 +154,8 @@ namespace Elements.Serialization.JSON
                 _isReading = true;
                 var obj = serializer.Deserialize(jObject.CreateReader(), subtype);
                 
+                // Write the id to the cache so that we can retrieve it next time
+                // instead of de-serializing it again.
                 if(typeof(Identifiable).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
                 {
                     var ident = (Identifiable)obj;
