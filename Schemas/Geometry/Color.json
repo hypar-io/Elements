@@ -3,7 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Color",
     "x-namespace": "Elements.Geometry",
-    "type": ["object","null"],
+    "type": "object",
     "description": "A color with red, green, blue, and alpha components.",
     "required": ["Red", "Green", "Blue", "Alpha"],
     "properties": {

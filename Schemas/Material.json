@@ -13,16 +13,18 @@
             "$ref": "https://hypar.io/Schemas/Geometry/Color.json"
         },
         "SpecularFactor": {
-            "description": "The material's specular factor.",
+            "description": "The specular factor between 0.0 and 1.0.",
             "type": "number",
             "minimum": 0.0,
-            "maximum": 1.0
+            "maximum": 1.0,
+            "default": 0.1
         },
         "GlossinessFactor": {
-            "description": "The material's glossiness factor.",
+            "description": "The glossiness factor between 0.0 and 1.0.",
             "type": "number",
             "minimum": 0.0,
-            "maximum": 1.0
+            "maximum": 1.0,
+            "default": 0.1
         }
     },
     "additionalProperties": false

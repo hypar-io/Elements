@@ -21,5 +21,5 @@
             "type": "string"
         }
     },
-    "additionalProperties": true
+    "additionalProperties": false
 }

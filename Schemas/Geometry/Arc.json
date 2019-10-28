@@ -14,11 +14,15 @@
         },
         "StartAngle": {
             "description": "The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.",
-            "type": "number"
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 360.0
         },
         "EndAngle": {
             "description": "The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.",
-            "type": "number"
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 360.0
         },
         "Radius": {
             "description": "The radius of the arc.",
