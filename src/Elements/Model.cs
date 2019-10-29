@@ -9,7 +9,6 @@ using System.Collections;
 using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
-using Newtonsoft.Json.Serialization;
 
 namespace Elements
 {
@@ -18,14 +17,6 @@ namespace Elements
     /// </summary>
     public partial class Model
     {
-        private Dictionary<Guid, Element> _elements = new Dictionary<Guid, Element>();
-
-        /// <summary>
-        /// A dictionary of Elements.
-        /// </summary>
-        [JsonProperty]
-        public Dictionary<Guid, Element> Elements => this._elements;
-
         /// <summary>
         /// Construct an empty model.
         /// </summary>
@@ -48,13 +39,13 @@ namespace Elements
         public void AddElement(Element element)
         {
             if (element == null || 
-                _elements.ContainsKey(element.Id))
+                this.Elements.ContainsKey(element.Id))
             {
                 return;
             }
 
             RecursiveExpandElementData(element);
-            _elements.Add(element.Id, element);
+            this.Elements.Add(element.Id, element);
         }
 
         /// <summary>
@@ -77,9 +68,9 @@ namespace Elements
         /// with the provided id.</returns>
         public T GetElementOfType<T>(Guid id) where T: Element
         {
-            if (_elements.ContainsKey(id))
+            if (this.Elements.ContainsKey(id))
             {
-                return (T)_elements[id];
+                return (T)this.Elements[id];
             }
             return null;
         }
@@ -92,7 +83,7 @@ namespace Elements
         /// with the provided name.</returns>
         public T GetElementByName<T>(string name) where T: Element
         {
-            var found = _elements.FirstOrDefault(e => e.Value.Name == name);
+            var found = this.Elements.FirstOrDefault(e => e.Value.Name == name);
             if (found.Equals(new KeyValuePair<long, Element>()))
             {
                 return null;
@@ -107,7 +98,7 @@ namespace Elements
         /// <returns>A collection of elements of the specified type.</returns>
         public IEnumerable<T> AllElementsOfType<T>()
         {
-            return _elements.Values.OfType<T>();
+            return this.Elements.Values.OfType<T>();
         }
 
         /// <summary>
@@ -192,13 +183,6 @@ namespace Elements
                     }
                 }
             }
-        }
-        
-        [JsonConstructor]
-        internal Model(Dictionary<Guid, Element> elements, Position origin)
-        {
-            _elements = elements;
-            this.Origin = origin;
         }
     }
 }
