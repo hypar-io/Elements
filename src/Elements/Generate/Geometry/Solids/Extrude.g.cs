@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements.Geometry.Solids
         public Extrude(Profile @profile, double @height, Vector3 @direction, double @rotation, bool @isVoid)
             : base(isVoid)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Extrude>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @profile, @height, @direction, @rotation, @isVoid});
+            }
+        
             this.Profile = @profile;
             this.Height = @height;
             this.Direction = @direction;

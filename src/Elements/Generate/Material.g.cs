@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements
         public Material(Color @color, double @specularFactor, double @glossinessFactor, System.Guid @id, string @name)
             : base(id, name)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Material>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @color, @specularFactor, @glossinessFactor, @id, @name});
+            }
+        
             this.Color = @color;
             this.SpecularFactor = @specularFactor;
             this.GlossinessFactor = @glossinessFactor;

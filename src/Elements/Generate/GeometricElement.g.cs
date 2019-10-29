@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,12 @@ namespace Elements
         protected GeometricElement(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
             : base(id, name)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @transform, @material, @representation, @id, @name});
+            }
+        
             this.Transform = @transform;
             this.Material = @material;
             this.Representation = @representation;

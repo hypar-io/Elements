@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,12 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Representation(IList<SolidOperation> @solidOperations)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Representation>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @solidOperations});
+            }
+        
             this.SolidOperations = @solidOperations;
         }
     

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Elements.Validators
 {
@@ -48,12 +49,18 @@ namespace Elements.Validators
 
         private Validator()
         {
+            _validators = new Dictionary<Type, IValidator>();
+
             // Load all available validators
-            _validators = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(asm => asm.GetTypes())
-                .Where(t => t is IValidator)
-                .Cast<IValidator>()
-                .ToDictionary(v=>v.ValidatesType);
+            var validatorTypes = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => typeof(IValidator).IsAssignableFrom(t) && typeof(IValidator) != t);
+
+            foreach (var t in validatorTypes)
+            {
+                var v = (IValidator)Activator.CreateInstance(t);
+                _validators.Add(v.ValidatesType, v);
+            }
         }
 
         /// <summary>

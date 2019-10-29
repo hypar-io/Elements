@@ -13,7 +13,8 @@ namespace Elements.Validators
 
         public void Validate(object[] args)
         {
-            var center = (double)args[0];
+            //Vector3 @center, double @radius, double @startAngle, double @endAngle
+            var center = (Vector3)args[0];
             var radius = (double)args[1];
             var startAngle = (double)args[2];
             var endAngle = (double)args[3];
@@ -71,12 +72,11 @@ namespace Elements.Validators
 
         public void Validate(object[] args)
         {
-            var red = (double)args[0];
-            var green = (double)args[1];
-            var blue = (double)args[2];
-            var alpha = (double)args[3];
-            var specularFactor = (double)args[4];
-            var glossinessFactor = (double)args[5];
+            var red = (Color)args[0];
+            var specularFactor = (double)args[1];
+            var glossinessFactor = (double)args[2];
+            var id = (Guid)args[3];
+            var name = (string)args[4];
             
             if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {

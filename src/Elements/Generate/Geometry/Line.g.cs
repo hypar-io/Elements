@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements.Geometry
         public Line(Vector3 @start, Vector3 @end)
             : base()
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Line>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @start, @end});
+            }
+        
             this.Start = @start;
             this.End = @end;
         }

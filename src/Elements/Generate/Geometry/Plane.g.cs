@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,12 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Plane(Vector3 @origin, Vector3 @normal)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Plane>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @origin, @normal});
+            }
+        
             this.Origin = @origin;
             this.Normal = @normal;
         }

@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements
         [Newtonsoft.Json.JsonConstructor]
         protected Element(System.Guid @id, string @name)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Element>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @id, @name});
+            }
+        
             this.Id = @id;
             this.Name = @name;
         }

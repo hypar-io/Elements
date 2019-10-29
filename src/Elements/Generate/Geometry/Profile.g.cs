@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements.Geometry
         public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id, string @name)
             : base(id, name)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Profile>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @perimeter, @voids, @id, @name});
+            }
+        
             this.Perimeter = @perimeter;
             this.Voids = @voids;
         }

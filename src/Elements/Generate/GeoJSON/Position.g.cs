@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,12 @@ namespace Elements.GeoJSON
         [Newtonsoft.Json.JsonConstructor]
         public Position(double @latitude, double @longitude)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Position>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @latitude, @longitude});
+            }
+        
             this.Latitude = @latitude;
             this.Longitude = @longitude;
         }

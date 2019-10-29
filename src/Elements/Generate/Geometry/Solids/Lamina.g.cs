@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements.Geometry.Solids
         public Lamina(Polygon @perimeter, bool @isVoid)
             : base(isVoid)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Lamina>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @perimeter, @isVoid});
+            }
+        
             this.Perimeter = @perimeter;
         }
     

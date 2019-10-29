@@ -194,6 +194,7 @@ namespace Elements
             }
         }
         
+        [JsonConstructor]
         internal Model(Dictionary<Guid, Element> elements, Position origin)
         {
             _elements = elements;

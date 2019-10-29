@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements.Geometry
         public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle)
             : base()
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Arc>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @center, @radius, @startAngle, @endAngle});
+            }
+        
             this.Center = @center;
             this.Radius = @radius;
             this.StartAngle = @startAngle;

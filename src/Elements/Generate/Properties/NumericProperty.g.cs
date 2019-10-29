@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,12 @@ namespace Elements.Properties
         [Newtonsoft.Json.JsonConstructor]
         public NumericProperty(double @value, NumericPropertyUnitType @unitType)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<NumericProperty>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @value, @unitType});
+            }
+        
             this.Value = @value;
             this.UnitType = @unitType;
         }

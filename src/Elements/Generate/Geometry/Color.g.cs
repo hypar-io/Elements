@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,12 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Color(double @red, double @green, double @blue, double @alpha)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Color>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @red, @green, @blue, @alpha});
+            }
+        
             this.Red = @red;
             this.Green = @green;
             this.Blue = @blue;

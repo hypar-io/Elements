@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements.Geometry.Solids
         public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @rotation, bool @isVoid)
             : base(isVoid)
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Sweep>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @profile, @curve, @startSetback, @endSetback, @rotation, @isVoid});
+            }
+        
             this.Profile = @profile;
             this.Curve = @curve;
             this.StartSetback = @startSetback;

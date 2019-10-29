@@ -8,6 +8,7 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices)
             : base()
         {
+            var validator = Validator.Instance.GetFirstValidatorForType<Polyline>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @vertices});
+            }
+        
             this.Vertices = @vertices;
         }
     
