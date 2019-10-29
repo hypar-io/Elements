@@ -11,5 +11,6 @@
             "description": "The origin of the model.",
             "$ref": "https://hypar.io/Schemas/GeoJSON/Position.json"
         }
-    }
+    },
+    "additionalProperties": false
 }

@@ -19,13 +19,12 @@
 - `Elements.Serialization.IFC.ModelExtensions` is now marked `internal`.
 
 ### Added
-- `Identifiable`
 - `ModelCurve` - Draw curves in 3D.
 - `ModelPoints` - Draw collections of points in 3D.
 - `Elements.Generate` project.
 - `/Schemas` directory.
 - Optional `rotation` on `StructuralFraming` constructors.
-- `Model` now implements `IDictionary<Guid,Identifiable>`.
+- `Model` now has Elements property which is `IDictionary<Guid,Element>`.
 - `double Vector3.CCW(Vector3 a, Vector3 b, Vector3 c)`
 - `bool Line.Intersects(Line l)`
 

@@ -20,7 +20,7 @@ namespace Elements
 
     /// <summary>A material.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Material : Identifiable
+    public partial class Material : Element
     {
         [Newtonsoft.Json.JsonConstructor]
         public Material(Color @color, double @specularFactor, double @glossinessFactor, System.Guid @id, string @name)
@@ -47,15 +47,6 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("GlossinessFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
         public double GlossinessFactor { get; internal set; } = 0.1D;
-    
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties; }
-            set { _additionalProperties = value; }
-        }
     
     
     }

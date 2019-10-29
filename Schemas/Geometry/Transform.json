@@ -11,5 +11,6 @@
             "description": "The transform's matrix.",
             "$ref": "https://hypar.io/Schemas/Geometry/Matrix.json"
         }
-    }
+    },
+    "additionalProperties": false
 }

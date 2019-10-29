@@ -12,5 +12,6 @@
             "description": "A collection of solid operations.",
             "items": {"$ref":"https://hypar.io/Schemas/Geometry/Solids/SolidOperation.json"}
         }
-    }
+    },
+    "additionalProperties": false
 }

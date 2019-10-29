@@ -15,5 +15,6 @@
             "type": "number",
             "description": "The longitude in decimal degrees."
         }
-    }
+    },
+    "additionalProperties": false
 }

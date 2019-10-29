@@ -22,15 +22,15 @@ namespace Elements.Serialization.JSON
         private Dictionary<string, Type> _typeCache;
 
         [System.ThreadStatic]
-        private static Dictionary<Guid, Identifiable> _identifiables;   // = new Dictionary<Guid, Identifiable>();
+        private static Dictionary<Guid, Element> _identifiables;   // = new Dictionary<Guid, Identifiable>();
         
-        public static Dictionary<Guid, Identifiable> Identifiables
+        public static Dictionary<Guid, Element> Identifiables
         {
             get
             {
                 if(_identifiables == null)
                 {
-                    _identifiables = new Dictionary<Guid, Identifiable>();
+                    _identifiables = new Dictionary<Guid, Element>();
                 }
                 return _identifiables;
             }
@@ -81,9 +81,9 @@ namespace Elements.Serialization.JSON
 
                 // Operate on all identifiables with a path less than Entities.xxxxx
                 // This will get all properties.
-                if(value is Identifiable && writer.Path.Split('.').Length == 1)
+                if(value is Element && writer.Path.Split('.').Length == 1)
                 {
-                    var ident = (Identifiable)value;
+                    var ident = (Element)value;
                     writer.WriteValue(ident.Id);
                 }
                 else
@@ -132,7 +132,7 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(Newtonsoft.Json.JsonReader reader, System.Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
-            if(typeof(Identifiable).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1)
+            if(typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1)
             {
                 var id = Guid.Parse(reader.Value.ToString());
                 return Identifiables[id];
@@ -158,9 +158,9 @@ namespace Elements.Serialization.JSON
                 
                 // Write the id to the cache so that we can retrieve it next time
                 // instead of de-serializing it again.
-                if(typeof(Identifiable).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
+                if(typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
                 {
-                    var ident = (Identifiable)obj;
+                    var ident = (Element)obj;
                     if(!Identifiables.ContainsKey(ident.Id))
                     {
                         Identifiables.Add(ident.Id, ident);

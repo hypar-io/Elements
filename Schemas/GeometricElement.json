@@ -3,9 +3,10 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "An element with a geometric representation.",
     "title": "GeometricElement",
+    "x-abstract": true,
     "x-namespace": "Elements",
     "type": ["object", "null"],
-    "allOf": [{"$ref": "https://hypar.io/Schemas/Identifiable.json"}],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Element.json"}],
     "required": ["Transform","Material","Representation","discriminator"],
     "discriminator": "discriminator",
     "properties": {
@@ -24,5 +25,6 @@
         "discriminator": {
             "type": "string"
         }
-    }
+    },
+    "additionalProperties": false
 }

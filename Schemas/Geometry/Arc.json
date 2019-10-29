@@ -29,5 +29,6 @@
             "minimum": 0.0,
             "maximum": 360.0
         }
-    }
+    },
+    "additionalProperties": false
 }

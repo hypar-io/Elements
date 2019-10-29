@@ -15,5 +15,6 @@
             "description": "The normal of the plane.",
             "$ref": "Vector3.json"
         }
-    }
+    },
+    "additionalProperties": false
 }

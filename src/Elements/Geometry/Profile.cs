@@ -7,7 +7,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public partial class Profile : Identifiable
+    public partial class Profile : Element
     {
         /// <summary>
         /// Construct a profile.

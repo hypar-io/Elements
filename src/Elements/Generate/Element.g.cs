@@ -18,15 +18,15 @@ namespace Elements
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>A uniquely identifiable entity.</summary>
+    /// <summary>A uniquely identifiable element.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Identifiable 
+    public abstract partial class Element 
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Identifiable(System.Guid @id, string @name)
+        protected Element(System.Guid @id, string @name)
         {
-            Identifiable.ValidateConstructorParameters(@id, @name);
+            Element.ValidateConstructorParameters(@id, @name);
         
             this.Id = @id;
             this.Name = @name;
@@ -40,15 +40,6 @@ namespace Elements
         /// <summary>A name.</summary>
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
         public string Name { get; internal set; }
-    
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties; }
-            set { _additionalProperties = value; }
-        }
     
     
     }

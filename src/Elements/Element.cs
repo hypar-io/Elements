@@ -14,7 +14,7 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.Opening", typeof(Elements.Opening))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.WideFlangeProfile", typeof(Elements.Geometry.Profiles.WideFlangeProfile))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.HSSPipeProfile", typeof(Elements.Geometry.Profiles.HSSPipeProfile))]
-    public abstract partial class Identifiable
+    public abstract partial class Element
     {
         internal static void ValidateConstructorParameters(System.Guid id, string name)
         {

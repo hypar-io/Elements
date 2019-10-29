@@ -65,8 +65,8 @@ namespace Elements.Tests
 
             var json = this.Model.ToJson();
             var newModel = Model.FromJson(json);
-            Assert.Equal(3, newModel.Count);
-            Assert.Equal(1, newModel.AllEntitiesOfType<TestUserElement>().ToArray().Count());
+            Assert.Equal(3, newModel.Elements.Count);
+            Assert.Equal(1, newModel.AllElementsOfType<TestUserElement>().ToArray().Count());
         }
     }
 }

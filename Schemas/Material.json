@@ -4,7 +4,7 @@
     "title": "Material",
     "x-namespace": "Elements",
     "type": ["object","null"],
-    "allOf": [{"$ref": "https://hypar.io/Schemas/Identifiable.json"}],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Element.json"}],
     "description": "A material.",
     "required": ["Color", "SpecularFactor", "GlossinessFactor"],
     "properties": {
@@ -26,5 +26,6 @@
             "maximum": 1.0,
             "default": 0.1
         }
-    }
+    },
+    "additionalProperties": false
 }

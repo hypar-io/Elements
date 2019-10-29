@@ -7,7 +7,7 @@ namespace Elements
     /// <summary>
     /// A material with red, green, blue, alpha, and metallic factor components.
     /// </summary>
-    public partial class Material: Identifiable
+    public partial class Material: Element
     {
         /// <summary>
         /// Construct a material.

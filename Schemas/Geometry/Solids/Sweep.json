@@ -28,5 +28,6 @@
             "description": "The rotation, in degrees, of the profile.",
             "type": "number"
         }
-    }
+    },
+    "additionalProperties": false
 }

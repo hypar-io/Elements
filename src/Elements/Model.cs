@@ -16,28 +16,16 @@ namespace Elements
     /// <summary>
     /// A container for elements, element types, materials, and profiles.
     /// </summary>
-    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-    public partial class Model : IDictionary<Guid, Identifiable>
+    public partial class Model
     {
-        private Dictionary<Guid, Identifiable> _entities = new Dictionary<Guid, Identifiable>();
+        private Dictionary<Guid, Element> _elements = new Dictionary<Guid, Element>();
 
         /// <summary>
-        /// Entities provides a serializable wrapper around the
-        /// internal entities collection.
+        /// A dictionary of Elements.
         /// </summary>
         [JsonProperty]
-        public Dictionary<Guid, Identifiable> Entities => this._entities;
+        public Dictionary<Guid, Element> Elements => this._elements;
 
-        public ICollection<Guid> Keys => _entities.Keys;
-
-        public ICollection<Identifiable> Values => _entities.Values;
-
-        public int Count => _entities.Count;
-
-        public bool IsReadOnly => false;
-
-        public Identifiable this[Guid key] { get => _entities[key]; set => _entities[key] = value; }
-        
         /// <summary>
         /// Construct an empty model.
         /// </summary>
@@ -46,39 +34,34 @@ namespace Elements
             this.Origin = new Position(0, 0);
         }
 
-        internal static void ValidateConstructorParameters(Position @origin)
-        {
-            return;
-        }
-
         /// <summary>
         /// Add an element to the model.
-        /// Each property of the element which implements IIdentifiable
+        /// Each property of the element which has a type of Element
         /// will be added to the entities collection before the element itself.
-        /// This enables serializers to reference Identifiables by id.
+        /// This enables serializers to reference Elements by id.
         /// Properties which are IList of Element will have each of their items
         /// added to the entities collection as well.  
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
         /// <exception>Thrown when an element 
         /// with the same Id already exists in the model.</exception>
-        public void AddElement(Identifiable element)
+        public void AddElement(Element element)
         {
             if (element == null || 
-                _entities.ContainsKey(element.Id))
+                _elements.ContainsKey(element.Id))
             {
                 return;
             }
 
             RecursiveExpandElementData(element);
-            _entities.Add(element.Id, element);
+            _elements.Add(element.Id, element);
         }
 
         /// <summary>
         /// Add a collection of elements to the model.
         /// </summary>
         /// <param name="elements">The elements to add to the model.</param>
-        public void AddElements(IEnumerable<Identifiable> elements)
+        public void AddElements(IEnumerable<Element> elements)
         {
             foreach (var e in elements)
             {
@@ -92,11 +75,11 @@ namespace Elements
         /// <param name="id">The identifier of the element.</param>
         /// <returns>An entity or null if no entity can be found 
         /// with the provided id.</returns>
-        public T GetEntityOfType<T>(Guid id) where T: Identifiable
+        public T GetElementOfType<T>(Guid id) where T: Element
         {
-            if (_entities.ContainsKey(id))
+            if (_elements.ContainsKey(id))
             {
-                return (T)_entities[id];
+                return (T)_elements[id];
             }
             return null;
         }
@@ -107,10 +90,10 @@ namespace Elements
         /// <param name="name"></param>
         /// <returns>An entity or null if no entity can be found 
         /// with the provided name.</returns>
-        public T GetEntityByName<T>(string name) where T: Identifiable
+        public T GetElementByName<T>(string name) where T: Element
         {
-            var found = _entities.FirstOrDefault(e => e.Value.Name == name);
-            if (found.Equals(new KeyValuePair<long, Identifiable>()))
+            var found = _elements.FirstOrDefault(e => e.Value.Name == name);
+            if (found.Equals(new KeyValuePair<long, Element>()))
             {
                 return null;
             }
@@ -122,9 +105,9 @@ namespace Elements
         /// </summary>
         /// <typeparam name="T">The Type of element to return.</typeparam>
         /// <returns>A collection of elements of the specified type.</returns>
-        public IEnumerable<T> AllEntitiesOfType<T>()
+        public IEnumerable<T> AllElementsOfType<T>()
         {
-            return _entities.Values.OfType<T>();
+            return _elements.Values.OfType<T>();
         }
 
         /// <summary>
@@ -172,12 +155,6 @@ namespace Elements
             return IFCModelExtensions.FromIFC(path, idsToConvert);
         }
 
-        internal Model(Dictionary<Guid, Identifiable> entities, Position origin)
-        {
-            _entities = entities;
-            this.Origin = origin;
-        }
-
         private void RecursiveExpandElementData(object element)
         {
             var props = element.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -189,26 +166,26 @@ namespace Elements
                     continue;
                 }
                 
-                if (typeof(Identifiable).IsAssignableFrom(p.PropertyType))
+                if (typeof(Element).IsAssignableFrom(p.PropertyType))
                 {
-                    var ident =(Identifiable)pValue;
-                    if(this.ContainsKey(ident.Id))
+                    var ident =(Element)pValue;
+                    if(this.Elements.ContainsKey(ident.Id))
                     {
-                        this[ident.Id] = ident;
+                        this.Elements[ident.Id] = ident;
                     }
                     else
                     {
-                        Add(ident.Id, ident);
+                        this.Elements.Add(ident.Id, ident);
                     }
                 }
                 else if(p.PropertyType.IsGenericType && 
                         p.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     var listType = p.PropertyType.GetGenericArguments()[0];
-                    if(typeof(Identifiable).IsAssignableFrom(listType))
+                    if(typeof(Element).IsAssignableFrom(listType))
                     {
                         var list = (IList)pValue;
-                        foreach(Identifiable e in list)
+                        foreach(Element e in list)
                         {
                             AddElement(e);
                         }
@@ -216,63 +193,16 @@ namespace Elements
                 }
             }
         }
-
-        public void Add(Guid key, Identifiable value)
+        
+        internal Model(Dictionary<Guid, Element> elements, Position origin)
         {
-            if(!_entities.ContainsKey(key))
-            {
-                _entities.Add(key, value);
-            }
+            _elements = elements;
+            this.Origin = origin;
         }
 
-        public bool ContainsKey(Guid key)
+        internal static void ValidateConstructorParameters(Position @origin)
         {
-            return _entities.ContainsKey(key);
-        }
-
-        public bool Remove(Guid key)
-        {
-            return _entities.Remove(key);
-        }
-
-        public bool TryGetValue(Guid key, out Identifiable value)
-        {
-            return _entities.TryGetValue(key, out value);
-        }
-
-        public void Add(KeyValuePair<Guid, Identifiable> item)
-        {
-            _entities.Add(item.Key, item.Value);
-        }
-
-        public void Clear()
-        {
-            _entities.Clear();
-        }
-
-        public bool Contains(KeyValuePair<Guid, Identifiable> item)
-        {
-            return _entities.Contains(item);
-        }
-
-        public void CopyTo(KeyValuePair<Guid, Identifiable>[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(KeyValuePair<Guid, Identifiable> item)
-        {
-            return _entities.Remove(item.Key);
-        }
-
-        public IEnumerator<KeyValuePair<Guid, Identifiable>> GetEnumerator()
-        {
-            return _entities.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _entities.GetEnumerator();
+            return;
         }
     }
 }

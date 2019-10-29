@@ -4,7 +4,7 @@
     "title": "Profile",
     "x-namespace": "Elements.Geometry",
     "type": ["object","null"],
-    "allOf": [{"$ref": "https://hypar.io/Schemas/Identifiable.json"}],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Element.json"}],
     "description": "A profile comprised of an external boundary and one or several holes.",
     "required": ["Id","Perimeter","Voids"],
     "properties": {
@@ -19,5 +19,6 @@
                 "$ref": "https://hypar.io/Schemas/Geometry/Polygon.json"
             }
         }
-    }
+    },
+    "additionalProperties": false
 }

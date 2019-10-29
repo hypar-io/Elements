@@ -53,15 +53,6 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Alpha { get; internal set; }
     
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties; }
-            set { _additionalProperties = value; }
-        }
-    
     
     }
 }

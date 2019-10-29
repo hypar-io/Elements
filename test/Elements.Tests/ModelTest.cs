@@ -54,7 +54,7 @@ namespace Elements.Tests
 
         public virtual void Dispose()
         {
-            if(this._model.Any())
+            if(this._model.Elements.Any())
             {
                 if(this.GenerateGlb)
                 {
@@ -69,10 +69,10 @@ namespace Elements.Tests
 
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
 
-                    var elements = this._model.AllEntitiesOfType<Identifiable>();
+                    var elements = this._model.AllElementsOfType<Element>();
                     foreach(var e in elements)
                     {
-                        var newEl = newModel.GetEntityOfType<Identifiable>(e.Id);
+                        var newEl = newModel.GetElementOfType<Element>(e.Id);
                         if(newEl == null)
                         {
                             throw new Exception($"{this.Name}: An element with the id {e.Id}, could not be found in the new model.");

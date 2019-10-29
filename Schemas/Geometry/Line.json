@@ -16,5 +16,6 @@
             "description": "The end of the line.",
             "$ref": "Vector3.json"
         }
-    }
+    },
+    "additionalProperties": false
 }

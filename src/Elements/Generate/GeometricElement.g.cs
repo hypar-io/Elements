@@ -21,10 +21,10 @@ namespace Elements
     /// <summary>An element with a geometric representation.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class GeometricElement : Identifiable
+    public abstract partial class GeometricElement : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        public GeometricElement(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
+        protected GeometricElement(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
             : base(id, name)
         {
             GeometricElement.ValidateConstructorParameters(@transform, @material, @representation, @id, @name);
@@ -45,15 +45,6 @@ namespace Elements
         /// <summary>The element's representation.</summary>
         [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.AllowNull)]
         public Representation Representation { get; internal set; }
-    
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties; }
-            set { _additionalProperties = value; }
-        }
     
     
     }
