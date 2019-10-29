@@ -25,8 +25,6 @@ namespace Elements.GeoJSON
         [Newtonsoft.Json.JsonConstructor]
         public Position(double @latitude, double @longitude)
         {
-            Position.ValidateConstructorParameters(@latitude, @longitude);
-        
             this.Latitude = @latitude;
             this.Longitude = @longitude;
         }

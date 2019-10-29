@@ -25,8 +25,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Matrix(IList<double> @components)
         {
-            Matrix.ValidateConstructorParameters(@components);
-        
             this.Components = @components;
         }
     

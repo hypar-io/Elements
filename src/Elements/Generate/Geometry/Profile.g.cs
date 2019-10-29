@@ -26,8 +26,6 @@ namespace Elements.Geometry
         public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id, string @name)
             : base(id, name)
         {
-            Profile.ValidateConstructorParameters(@perimeter, @voids, @id, @name);
-        
             this.Perimeter = @perimeter;
             this.Voids = @voids;
         }

@@ -26,8 +26,6 @@ namespace Elements.Geometry.Solids
         public Extrude(Profile @profile, double @height, Vector3 @direction, double @rotation, bool @isVoid)
             : base(isVoid)
         {
-            Extrude.ValidateConstructorParameters(@profile, @height, @direction, @rotation, @isVoid);
-        
             this.Profile = @profile;
             this.Height = @height;
             this.Direction = @direction;

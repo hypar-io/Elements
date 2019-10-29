@@ -26,8 +26,6 @@ namespace Elements
         public Material(Color @color, double @specularFactor, double @glossinessFactor, System.Guid @id, string @name)
             : base(id, name)
         {
-            Material.ValidateConstructorParameters(@color, @specularFactor, @glossinessFactor, @id, @name);
-        
             this.Color = @color;
             this.SpecularFactor = @specularFactor;
             this.GlossinessFactor = @glossinessFactor;

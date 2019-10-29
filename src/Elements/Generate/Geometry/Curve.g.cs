@@ -26,8 +26,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Curve()
         {
-            Curve.ValidateConstructorParameters();
-        
         }
     
     

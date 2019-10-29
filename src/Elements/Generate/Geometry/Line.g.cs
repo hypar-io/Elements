@@ -26,8 +26,6 @@ namespace Elements.Geometry
         public Line(Vector3 @start, Vector3 @end)
             : base()
         {
-            Line.ValidateConstructorParameters(@start, @end);
-        
             this.Start = @start;
             this.End = @end;
         }

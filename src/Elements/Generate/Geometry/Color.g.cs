@@ -25,8 +25,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Color(double @red, double @green, double @blue, double @alpha)
         {
-            Color.ValidateConstructorParameters(@red, @green, @blue, @alpha);
-        
             this.Red = @red;
             this.Green = @green;
             this.Blue = @blue;

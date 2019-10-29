@@ -26,8 +26,6 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices)
             : base()
         {
-            Polyline.ValidateConstructorParameters(@vertices);
-        
             this.Vertices = @vertices;
         }
     

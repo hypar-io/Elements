@@ -25,8 +25,6 @@ namespace Elements
         [Newtonsoft.Json.JsonConstructor]
         public Model(Position @origin)
         {
-            Model.ValidateConstructorParameters(@origin);
-        
             this.Origin = @origin;
         }
     

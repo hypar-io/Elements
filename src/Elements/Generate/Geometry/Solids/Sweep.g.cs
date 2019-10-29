@@ -26,8 +26,6 @@ namespace Elements.Geometry.Solids
         public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @rotation, bool @isVoid)
             : base(isVoid)
         {
-            Sweep.ValidateConstructorParameters(@profile, @curve, @startSetback, @endSetback, @rotation, @isVoid);
-        
             this.Profile = @profile;
             this.Curve = @curve;
             this.StartSetback = @startSetback;

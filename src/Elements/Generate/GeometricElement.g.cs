@@ -27,8 +27,6 @@ namespace Elements
         protected GeometricElement(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
             : base(id, name)
         {
-            GeometricElement.ValidateConstructorParameters(@transform, @material, @representation, @id, @name);
-        
             this.Transform = @transform;
             this.Material = @material;
             this.Representation = @representation;

@@ -25,8 +25,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Representation(IList<SolidOperation> @solidOperations)
         {
-            Representation.ValidateConstructorParameters(@solidOperations);
-        
             this.SolidOperations = @solidOperations;
         }
     

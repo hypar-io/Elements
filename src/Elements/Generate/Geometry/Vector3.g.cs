@@ -25,8 +25,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Vector3(double @x, double @y, double @z)
         {
-            Vector3.ValidateConstructorParameters(@x, @y, @z);
-        
             this.X = @x;
             this.Y = @y;
             this.Z = @z;

@@ -25,8 +25,6 @@ namespace Elements.Properties
         [Newtonsoft.Json.JsonConstructor]
         public NumericProperty(double @value, NumericPropertyUnitType @unitType)
         {
-            NumericProperty.ValidateConstructorParameters(@value, @unitType);
-        
             this.Value = @value;
             this.UnitType = @unitType;
         }

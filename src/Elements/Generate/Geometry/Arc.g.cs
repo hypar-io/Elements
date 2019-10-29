@@ -26,8 +26,6 @@ namespace Elements.Geometry
         public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle)
             : base()
         {
-            Arc.ValidateConstructorParameters(@center, @radius, @startAngle, @endAngle);
-        
             this.Center = @center;
             this.Radius = @radius;
             this.StartAngle = @startAngle;

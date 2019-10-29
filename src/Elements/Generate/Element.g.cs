@@ -26,8 +26,6 @@ namespace Elements
         [Newtonsoft.Json.JsonConstructor]
         protected Element(System.Guid @id, string @name)
         {
-            Element.ValidateConstructorParameters(@id, @name);
-        
             this.Id = @id;
             this.Name = @name;
         }

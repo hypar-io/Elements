@@ -26,8 +26,6 @@ namespace Elements.Geometry
         public Polygon(IList<Vector3> @vertices)
             : base(vertices)
         {
-            Polygon.ValidateConstructorParameters(@vertices);
-        
         }
     
     

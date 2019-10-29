@@ -25,8 +25,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Transform(Matrix @matrix)
         {
-            Transform.ValidateConstructorParameters(@matrix);
-        
             this.Matrix = @matrix;
         }
     

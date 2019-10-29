@@ -26,8 +26,6 @@ namespace Elements.Geometry.Solids
         [Newtonsoft.Json.JsonConstructor]
         public SolidOperation(bool @isVoid)
         {
-            SolidOperation.ValidateConstructorParameters(@isVoid);
-        
             this.IsVoid = @isVoid;
         }
     

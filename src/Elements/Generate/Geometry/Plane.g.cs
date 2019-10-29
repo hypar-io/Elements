@@ -25,8 +25,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Plane(Vector3 @origin, Vector3 @normal)
         {
-            Plane.ValidateConstructorParameters(@origin, @normal);
-        
             this.Origin = @origin;
             this.Normal = @normal;
         }

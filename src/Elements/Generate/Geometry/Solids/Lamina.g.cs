@@ -26,8 +26,6 @@ namespace Elements.Geometry.Solids
         public Lamina(Polygon @perimeter, bool @isVoid)
             : base(isVoid)
         {
-            Lamina.ValidateConstructorParameters(@perimeter, @isVoid);
-        
             this.Perimeter = @perimeter;
         }
     
