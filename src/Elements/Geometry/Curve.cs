@@ -10,11 +10,6 @@ namespace Elements.Geometry
     [JsonInheritanceAttribute("Elements.Geometry.Polygon", typeof(Polygon))]
     public abstract partial class Curve : ICurve
     {
-        internal static void ValidateConstructorParameters()
-        {
-            return;
-        }
-        
         /// <summary>
         /// Get the bounding box for this curve.
         /// </summary>

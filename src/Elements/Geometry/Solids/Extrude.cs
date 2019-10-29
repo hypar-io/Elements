@@ -9,14 +9,6 @@ namespace Elements.Geometry.Solids
     {
         private double _rotation = 0.0;
         
-        internal static void ValidateConstructorParameters(Profile @profile, double @height, Vector3 @direction, double rotation, bool @isVoid)
-        {
-            if(direction.Length() == 0)
-            {
-                throw new ArgumentException("The extrude cannot be created. The provided direction has zero length.");
-            }
-        }
-
         /// <summary>
         /// Get the updated solid representation of the frame.
         /// </summary>

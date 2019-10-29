@@ -29,11 +29,6 @@ namespace Elements.GeoJSON
     [JsonConverter(typeof(PositionConverter))]
     public partial class Position
     {
-        internal static void ValidateConstructorParameters(double latitude, double longitude)
-        {
-            return;
-        }
-
         /// <summary>
         /// 
         /// </summary>

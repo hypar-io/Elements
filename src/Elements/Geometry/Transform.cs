@@ -322,10 +322,5 @@ namespace Elements.Geometry
         {
             return new Plane(this.Origin, this.YAxis);
         }
-
-        internal static void ValidateConstructorParameters(Matrix matrix)
-        {
-            return;
-        }
     }
 }

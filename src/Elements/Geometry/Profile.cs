@@ -75,14 +75,6 @@ namespace Elements.Geometry
         /// </summary>
         protected Profile(string name): base(Guid.NewGuid(), name){}
 
-        internal static void ValidateConstructorParameters(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id, string @name)
-        {
-            if (perimeter != null && !perimeter.Vertices.AreCoplanar())
-            {
-                throw new Exception("To construct a profile, all points must line in the same plane.");
-            }
-        }
-
         /// <summary>
         ///  Conduct a clip operation on this profile.
         /// </summary>

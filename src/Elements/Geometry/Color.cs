@@ -51,18 +51,5 @@ namespace Elements.Geometry
         {
             return new {this.Red, this.Green, this.Blue, this.Alpha}.GetHashCode();
         }
-
-        internal static void ValidateConstructorParameters(double alpha, double blue, double green, double red)
-        {
-            if(red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value greater than 0.0.");
-            }
-
-            if(red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value less than 1.0.");
-            }
-        }
     }
 }

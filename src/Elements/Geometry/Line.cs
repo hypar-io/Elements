@@ -194,14 +194,6 @@ namespace Elements.Geometry
             return (this.End - this.Start).Normalized();
         }
 
-        internal static void ValidateConstructorParameters(Vector3 end, Vector3 start)
-        {
-            if (start.IsAlmostEqualTo(end))
-            {
-                throw new ArgumentException($"The line could not be created. The start and end points of the line cannot be the same: start {start}, end {end}");
-            }
-        }
-
         /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>

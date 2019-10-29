@@ -203,17 +203,6 @@ namespace Elements.Geometry
             return this.Vertices;
         }
 
-        internal static void ValidateConstructorParameters(IList<Vector3> vertices)
-        {
-            if(!vertices.AreCoplanar())
-            {
-                throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
-            }
-
-            var segments = SegmentsInternal(vertices);
-            CheckSegmentLengthAndThrow(segments);
-        }
-
         /// <summary>
         /// Check for coincident vertices in the supplied vertex collection.
         /// </summary>
@@ -239,7 +228,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Check if any of the polygon segments have zero length.
         /// </summary>
-        protected static void CheckSegmentLengthAndThrow(IList<Line> segments)
+        internal static void CheckSegmentLengthAndThrow(IList<Line> segments)
         {
             foreach(var s in segments)
             {
@@ -255,7 +244,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="t">The transform representing the plane of the polygon.</param>
         /// <param name="segments"></param>
-        protected static void CheckSelfIntersectionAndThrow(Transform t, IList<Line> segments)
+        internal static void CheckSelfIntersectionAndThrow(Transform t, IList<Line> segments)
         {
             var segmentsTrans = new List<Line>();
 
@@ -282,7 +271,7 @@ namespace Elements.Geometry
             }
         }
 
-        private static Line[] SegmentsInternal(IList<Vector3> vertices)
+        internal static Line[] SegmentsInternal(IList<Vector3> vertices)
         {
             var result = new Line[vertices.Count - 1];
             for (var i = 0; i < vertices.Count - 1; i++)

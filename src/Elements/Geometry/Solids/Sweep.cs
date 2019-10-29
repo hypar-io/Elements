@@ -4,11 +4,6 @@ namespace Elements.Geometry.Solids
     {
         private double _rotation = 0.0;
 
-        internal static void ValidateConstructorParameters(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double rotation, bool @isVoid)
-        {
-            return;
-        }
-
         /// <summary>
         /// Get the updated solid representation of the frame.
         /// </summary>

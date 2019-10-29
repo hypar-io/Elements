@@ -446,17 +446,5 @@ namespace Elements.Geometry
         {
             return $"X: {m11} {m12} {m13}\nY: {m21} {m22} {m23}\nZ: {m31} {m32} {m33}\nOrigin: {tx} {ty} {tz}";
         }
-
-        /// <summary>
-        /// Validate the constructor parameters.
-        /// </summary>
-        /// <param name="components"></param>
-        public static void ValidateConstructorParameters(IList<double> components)
-        {
-            if(components.Count != 12)
-            {
-                throw new ArgumentOutOfRangeException("The matrix could not be created. The component array must have 16 values.");
-            }
-        }
     }
 }

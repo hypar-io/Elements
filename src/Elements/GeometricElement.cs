@@ -4,11 +4,6 @@ namespace Elements
 {
     public abstract partial class GeometricElement
     {
-        internal static void ValidateConstructorParameters(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
-        {
-            return;
-        }
-
         /// <summary>
         /// This method provides an opportunity for geometric elements
         /// to adjust their solid operations before tesselation. As an example,

@@ -199,10 +199,5 @@ namespace Elements
             _elements = elements;
             this.Origin = origin;
         }
-
-        internal static void ValidateConstructorParameters(Position @origin)
-        {
-            return;
-        }
     }
 }

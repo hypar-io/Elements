@@ -447,19 +447,6 @@ namespace Elements.Geometry
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
         }
-
-        internal static void ValidateConstructorParameters(double x, double y, double z)
-        {
-            if(Double.IsNaN(x) || Double.IsNaN(y) || Double.IsNaN(z))
-            {
-                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
-            }
-
-            if(Double.IsInfinity(x) || Double.IsInfinity(y) || Double.IsInfinity(z))
-            {
-                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
-            }
-        }
     }
 
     /// <summary>

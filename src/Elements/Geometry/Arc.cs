@@ -136,24 +136,6 @@ namespace Elements.Geometry
             return new Plane(this.PointAt(0.0), this.PointAt(1.0), this.Center);
         }
 
-        internal static void ValidateConstructorParameters(Vector3 center, double radius, double startAngle, double endAngle)
-        {
-            if (endAngle > 360.0 || startAngle > 360.00)
-            {
-                throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
-            }
-
-            if (endAngle == startAngle)
-            {
-                throw new ArgumentException($"The arc could not be created. The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
-            }
-
-            if (radius <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
-            }
-        }
-
         /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>

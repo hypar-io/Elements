@@ -52,18 +52,5 @@ namespace Elements
         {
             return new ArrayList(){this.Name, this.Color, this.SpecularFactor, this.GlossinessFactor}.GetHashCode();
         }
-
-        internal static void ValidateConstructorParameters(Color @color, double @specularFactor, double @glossinessFactor, System.Guid @id, string @name)
-        {
-            if(specularFactor < 0.0 || glossinessFactor < 0.0)
-            {
-                throw new ArgumentOutOfRangeException("The material could not be created. Specular and glossiness values must be less greater than 0.0.");
-            }
-
-            if(specularFactor > 1.0 || glossinessFactor > 1.0)
-            {
-                throw new ArgumentOutOfRangeException("The material could not be created. Color, specular, and glossiness values must be less than 1.0.");
-            }
-        }
     }
 }

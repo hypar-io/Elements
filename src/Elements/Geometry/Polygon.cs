@@ -435,7 +435,7 @@ namespace Elements.Geometry
             return SegmentsInternal(this.Vertices);
         }
 
-        private static Line[] SegmentsInternal(IList<Vector3> vertices)
+        internal new static Line[] SegmentsInternal(IList<Vector3> vertices)
         {
             var lines = new Line[vertices.Count];
             for(var i=0; i<vertices.Count; i++)
@@ -615,20 +615,6 @@ namespace Elements.Geometry
             var verts = new List<Vector3>(this.Vertices);
             verts.Add(this.Start);
             return verts;
-        }
-
-        internal static new void ValidateConstructorParameters(IList<Vector3> vertices)
-        {
-            if(!vertices.AreCoplanar())
-            {
-                throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
-            }
-
-            var segments = SegmentsInternal(vertices);
-            CheckSegmentLengthAndThrow(segments);
-
-            var t = vertices.ToTransform();
-            CheckSelfIntersectionAndThrow(t, segments);
         }
     }
 

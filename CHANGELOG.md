@@ -14,7 +14,6 @@
 - `Solid`, `Face`, `Vertex`, `Edge`, `HalfEdge`, and `Loop` are now marked `internal`.
 - `Quaternion` is now marked `internal`.
 - `Matrix` is now marked `internal`.
-- `Transform(Matrix matrix)` constructor is now marked `internal`.
 - `SolidConverter` is now marked `internal`.
 - `Elements.Serialization.IFC.ModelExtensions` is now marked `internal`.
 

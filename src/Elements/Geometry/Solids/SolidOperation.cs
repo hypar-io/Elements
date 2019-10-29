@@ -11,15 +11,6 @@ namespace Elements.Geometry.Solids
     public abstract partial class SolidOperation
     {
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="isVoid"></param>
-        public static void ValidateConstructorParameters(bool isVoid)
-        {
-            return;
-        }
-        
-        /// <summary>
         /// Get the updated solid for this operation.
         /// </summary>
         internal virtual Solid GetSolid()

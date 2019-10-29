@@ -9,14 +9,6 @@ namespace Elements.Geometry
     /// </summary>
     public partial class Plane
     {
-        internal static void ValidateConstructorParameters(Vector3 normal, Vector3 origin)
-        {
-            if(normal.IsParallelTo(origin))
-            {
-                throw new ArgumentException("The plane could not be constructed. The normal and origin are parallel.");
-            }
-        }
-
         /// <summary>
         /// Construct a plane by three points.
         /// The plane is constructed as a->b * b->c.
