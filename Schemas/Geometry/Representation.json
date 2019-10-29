@@ -4,7 +4,7 @@
     "description": "The representation of an element.",
     "title": "Representation",
     "x-namespace": "Elements.Geometry",
-    "type": "object",
+    "type": ["object","null"],
     "required": ["SolidOperations"],
     "properties": {
         "SolidOperations": {
