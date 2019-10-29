@@ -3,25 +3,13 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Transform",
     "x-namespace": "Elements.Geometry",
-    "type": "object",
+    "type": ["object","null"],
     "description": "A right-handed coordinate system with +Z up.",
-    "required": ["Origin", "XAxis", "YAxis", "ZAxis"],
+    "required": ["Matrix"],
     "properties": {
-        "Origin": {
-            "description": "The origin.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
-        },
-        "XAxis": {
-            "description": "The X axis.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
-        },
-        "YAxis": {
-            "description": "The Y axis.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
-        },
-        "ZAxis": {
-            "description": "The Z axis.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
+        "Matrix": {
+            "description": "The transform's matrix.",
+            "$ref": "https://hypar.io/Schemas/Geometry/Matrix.json"
         }
     }
 }

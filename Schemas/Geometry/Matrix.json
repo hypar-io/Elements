@@ -1,0 +1,20 @@
+{
+    "$id": "https://hypar.io/Schemas/Geometry/Matrix.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Matrix",
+    "x-namespace": "Elements.Geometry",
+    "type": "object",
+    "description": "A column-ordered 4x3 matrix.",
+    "required": ["Components"],
+    "properties": {
+        "Components": {
+            "description": "The components of the matrix.",
+            "type": "array",
+            "minItems": 12,
+            "maxItems": 12,
+            "items": {
+                "type": "number"
+            }
+        }
+    }
+}
