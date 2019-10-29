@@ -18,7 +18,7 @@ namespace Elements.Tests
             var count = 10;
             for(var i=0.0; i<360.0; i+= 360.0/(double)count)
             {
-                var m2 = new Mass(prof, 1.0, new Material($"color_{j}", new Color((float)j - 1.0f, 0.0f, 0.0f, 1.0f)), new Transform());
+                var m2 = new Mass(prof, 1.0, new Material($"color_{j}", new Color((float)j - 1.0f, 0.0f, 0.0f, 1.0f)));
                 m2.Transform.Scale(new Vector3(j,j,j));
                 m2.Transform.Move(new Vector3(3, 0, 0));
                 m2.Transform.Rotate(Vector3.ZAxis, i);

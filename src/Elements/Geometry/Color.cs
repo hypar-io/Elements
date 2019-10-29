@@ -8,48 +8,14 @@ namespace Elements.Geometry
     public partial class Color
     {
         /// <summary>
-        /// Construct a color from its components.
+        /// Construct a default color.
         /// </summary>
-        /// <param name="red">The red component between 0.0 and 1.0.</param>
-        /// <param name="green">The green component between 0.0 and 1.0.</param>
-        /// <param name="blue">The blue component between 0.0 and 1.0.</param>
-        /// <param name="alpha">The alpha component between 0.0 and 1.0.</param>
-        /// <exception>Thrown when any color component is less than 0.0.</exception>
-        /// <exception>Thrown when any color component is greater than 1.0.</exception>
-        public Color(float red, float green, float blue, float alpha)
+        public Color()
         {
-            if(red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value greater than 0.0.");
-            }
-
-            if(red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value less than 1.0.");
-            }
-
-            this.Red = red;
-            this.Green = green;
-            this.Blue = blue;
-            this.Alpha = alpha;
-        }
-
-        internal Color(double red, double green, double blue, double alpha)
-        {
-            if(red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value greater than 0.0.");
-            }
-
-            if(red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value less than 1.0.");
-            }
-
-            this.Red = red;
-            this.Green = green;
-            this.Blue = blue;
-            this.Alpha = alpha;
+            this.Red = 0.5;
+            this.Green = 0.5;
+            this.Blue = 0.5;
+            this.Alpha = 0.0;
         }
 
         /// <summary>
@@ -84,6 +50,19 @@ namespace Elements.Geometry
         public override int GetHashCode()
         {
             return new {this.Red, this.Green, this.Blue, this.Alpha}.GetHashCode();
+        }
+
+        internal static void ValidateConstructorParameters(double alpha, double blue, double green, double red)
+        {
+            if(red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0)
+            {
+                throw new ArgumentOutOfRangeException("All components must have a value greater than 0.0.");
+            }
+
+            if(red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
+            {
+                throw new ArgumentOutOfRangeException("All components must have a value less than 1.0.");
+            }
         }
     }
 }

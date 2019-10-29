@@ -118,6 +118,7 @@ namespace Elements.Geometry.Profiles
 
         [JsonConstructor]
         public WideFlangeProfile(string name,
+                                 Guid id,
                                  double bf = 0.1,
                                  double d = 0.05,
                                  double tf = 0.005,
@@ -125,13 +126,19 @@ namespace Elements.Geometry.Profiles
                                  VerticalAlignment verticalAlignment = VerticalAlignment.Center,
                                  HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center,
                                  double verticalOffset = 0.0,
-                                 double horizontalOffset = 0.0, Guid id = default(Guid)) : base(id, name)
+                                 double horizontalOffset = 0.0) : base(CreateProfile(bf,
+                                                                d,
+                                                                tf,
+                                                                tw,
+                                                                verticalAlignment,
+                                                                horizontalAlignment,
+                                                                verticalOffset,
+                                                                horizontalOffset), null, id, name)
         {
             this.bf = bf;
             this.d = d;
             this.tf = tf;
             this.tw = tw;
-            this.Perimeter = CreateProfile(bf, d, tf, tw, verticalAlignment, horizontalAlignment, verticalOffset, horizontalOffset);
         }
 
         public WideFlangeProfile(string name) : base(name)
@@ -139,10 +146,14 @@ namespace Elements.Geometry.Profiles
             this.Perimeter = CreateProfile(0.1, 0.05, 0.005, 0.005, VerticalAlignment.Center, HorizontalAlignment.Center, 0.0, 0.0);
         }
 
-        private Polygon CreateProfile(double bf, double d, double tf, double tw, 
-                                    VerticalAlignment verticalAlignment, 
-                                    HorizontalAlignment horizontalAlignment, 
-                                    double verticalOffset, double horizontalOffset)
+        private static Polygon CreateProfile(double bf,
+                                      double d,
+                                      double tf,
+                                      double tw,
+                                      VerticalAlignment verticalAlignment,
+                                      HorizontalAlignment horizontalAlignment,
+                                      double verticalOffset,
+                                      double horizontalOffset)
         {
             var o = new Vector3();
 

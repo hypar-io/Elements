@@ -2,6 +2,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -40,14 +41,20 @@ namespace Elements
         /// <param name="height">The height of the mass from the bottom elevation.</param>
         /// <param name="material">The mass' material. The default is the built in mass material.</param>
         /// <param name="transform">The mass' transform.</param>
-        /// <param name="id">The mass' id.</param>
-        /// <param name="name">The mass' name.</param>
+        /// <param name="representation">The mass' representation.</param>
+        /// <param name="id">The id of the mass.</param>
+        /// <param name="name">The name of the mass.</param>
         public Mass(Profile profile,
                     double height = 1.0,
                     Material material = null,
                     Transform transform = null,
+                    Representation representation = null,
                     Guid id = default(Guid),
-                    string name = null) : base(material, transform, id, name)
+                    string name = null) : base(transform != null ? transform : new Transform(),
+                                               material != null ? material : BuiltInMaterials.Mass,
+                                               representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                               id = id != default(Guid) ? id : Guid.NewGuid(),
+                                               name)
         {
             if (height <= 0)
             {
@@ -56,7 +63,10 @@ namespace Elements
             this.Profile = profile;
             this.Height = height;
             this.Material = material ?? BuiltInMaterials.Mass;
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height));
+            if(this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
+            }
         }
 
         /// <summary>

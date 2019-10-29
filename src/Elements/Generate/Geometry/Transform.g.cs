@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry
 {
@@ -20,21 +22,27 @@ namespace Elements.Geometry
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Transform 
     {
-        /// <summary>The origin.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Origin { get;  set; }
+        [Newtonsoft.Json.JsonConstructor]
+        public Transform(Matrix @matrix)
+        {
+            Transform.ValidateConstructorParameters(@matrix);
+        
+            this.Matrix = @matrix;
+        }
     
-        /// <summary>The X axis.</summary>
-        [Newtonsoft.Json.JsonProperty("XAxis", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 XAxis { get;  set; }
+        /// <summary>The transform's matrix.</summary>
+        [Newtonsoft.Json.JsonProperty("Matrix", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public Matrix Matrix { get; internal set; } = new Matrix();
     
-        /// <summary>The Y axis.</summary>
-        [Newtonsoft.Json.JsonProperty("YAxis", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 YAxis { get;  set; }
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
-        /// <summary>The Z axis.</summary>
-        [Newtonsoft.Json.JsonProperty("ZAxis", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 ZAxis { get;  set; }
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

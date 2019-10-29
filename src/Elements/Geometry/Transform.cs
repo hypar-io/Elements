@@ -5,22 +5,43 @@ using System.Collections.Generic;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A right-handed coordinate system defined by an origin, x, y, and z axes.
+    /// A right-handed coordinate with +z up.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../test/Elements.Tests/Examples/TransformExample.cs?name=example)]
     /// </example>
     public partial class Transform
     {
-        private Matrix _matrix;
+        /// <summary>
+        /// The origin of the transform.
+        /// </summary>
+        [JsonIgnore]
+        public Vector3 Origin => this.Matrix.Translation;
+
+        /// <summary>
+        /// The x axis of the transform.
+        /// </summary>
+        [JsonIgnore]
+        public Vector3 XAxis => this.Matrix.XAxis;
+
+        /// <summary>
+        /// The y axis of the transform.
+        /// </summary>
+        [JsonIgnore]
+        public Vector3 YAxis => this.Matrix.YAxis;
+
+        /// <summary>
+        /// The z axis of the transform.
+        /// </summary>
+        [JsonIgnore]
+        public Vector3 ZAxis => this.Matrix.ZAxis;
 
         /// <summary>
         /// Create the identity transform.
         /// </summary>
         public Transform()
         {
-            this._matrix = new Matrix();
-            SetComponentsFromMatrix();
+            this.Matrix = new Matrix();
         }
         
         /// <summary>
@@ -37,11 +58,9 @@ namespace Elements.Geometry
         /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         public Transform(Vector3 origin, double rotation = 0.0)
         {
-            this._matrix = new Matrix();
-            this._matrix.SetupTranslation(origin);
-            ApplyRotationAndTranslation(rotation, this._matrix.ZAxis, Vector3.Origin);
-            
-            SetComponentsFromMatrix();
+            this.Matrix = new Matrix();
+            this.Matrix.SetupTranslation(origin);
+            ApplyRotationAndTranslation(rotation, this.Matrix.ZAxis, Vector3.Origin);
         }
 
         /// <summary>
@@ -53,11 +72,9 @@ namespace Elements.Geometry
         /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         public Transform(double x, double y, double z, double rotation = 0.0)
         {
-            this._matrix = new Matrix();
-            this._matrix.SetupTranslation(new Vector3(x, y, z));
-            ApplyRotationAndTranslation(rotation, this._matrix.ZAxis, Vector3.Origin);
-            
-            SetComponentsFromMatrix();
+            this.Matrix = new Matrix();
+            this.Matrix.SetupTranslation(new Vector3(x, y, z));
+            ApplyRotationAndTranslation(rotation, this.Matrix.ZAxis, Vector3.Origin);
         }
 
         /// <summary>
@@ -81,10 +98,8 @@ namespace Elements.Geometry
                 y = x.Cross(z.Negate()); 
             }
             
-            this._matrix = new Matrix(x, y, z, Vector3.Origin);
+            this.Matrix = new Matrix(x, y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
-
-            SetComponentsFromMatrix();
         }
 
         private void ApplyRotationAndTranslation(double rotation, Vector3 axis, Vector3 translation)
@@ -109,21 +124,8 @@ namespace Elements.Geometry
             var x = xAxis.Normalized();
             var z = zAxis.Normalized();
             var y = z.Cross(x).Normalized();
-            this._matrix = new Matrix(x, y, z, Vector3.Origin);
+            this.Matrix = new Matrix(x, y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
-
-            SetComponentsFromMatrix();
-        }
-
-        /// <summary>
-        /// Create a transform by a matrix.
-        /// </summary>
-        /// <param name="matrix">The transform's Matrix.</param>
-        
-        internal Transform(Matrix matrix)
-        {
-            this._matrix = matrix;
-            SetComponentsFromMatrix();
         }
 
         /// <summary>
@@ -133,26 +135,12 @@ namespace Elements.Geometry
         /// <param name="xAxis">The X axis of the transform.</param>
         /// <param name="yAxis">The Y axis of the transform.</param>
         /// <param name="zAxis">The Z axis of the transform.</param>
-        [JsonConstructor]
-        public Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)
+        public Transform(Vector3 origin,
+                         Vector3 xAxis,
+                         Vector3 yAxis,
+                         Vector3 zAxis)
         {
-            this._matrix = new Matrix(xAxis, yAxis, zAxis, origin);
-            SetComponentsFromMatrix();
-        }
-
-        /// <summary>
-        /// Set the components of this transform from a matrix.
-        /// Normally, we would pass through the matrix's axis and origin values
-        /// to the property getters. Because Transforms base declaration is 
-        /// generated though, we only have {get;set;}, so this method is used
-        /// after every matrix construction to set the components explicitly.
-        /// </summary>
-        private void SetComponentsFromMatrix()
-        {
-            this.Origin = this._matrix.Translation;
-            this.XAxis = this._matrix.XAxis;
-            this.YAxis = this._matrix.YAxis;
-            this.ZAxis = this._matrix.ZAxis;
+            this.Matrix = new Matrix(xAxis, yAxis, zAxis, origin);
         }
 
         /// <summary>
@@ -161,7 +149,7 @@ namespace Elements.Geometry
         /// <returns>A string representation of the transform.</returns>
         public override string ToString()
         {
-            return this._matrix.ToString();
+            return this.Matrix.ToString();
         }
 
         /// <summary>
@@ -171,7 +159,7 @@ namespace Elements.Geometry
         /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfPoint(Vector3 vector)
         {
-            return vector * this._matrix;
+            return vector * this.Matrix;
         }
 
         /// <summary>
@@ -256,7 +244,7 @@ namespace Elements.Geometry
                     voids[i] = OfPolygon(profile.Voids[i]);
                 }
             }
-            var p = new Profile(OfPolygon(profile.Perimeter), voids);
+            var p = new Profile(OfPolygon(profile.Perimeter), voids, Guid.NewGuid(), null);
             return p;
         }
 
@@ -266,8 +254,7 @@ namespace Elements.Geometry
         /// <param name="transform"></param>
         public void Concatenate(Transform transform)
         {
-            this._matrix = this._matrix * transform._matrix;
-            SetComponentsFromMatrix();
+            this.Matrix = this.Matrix * transform.Matrix;
         }
 
         /// <summary>
@@ -275,8 +262,7 @@ namespace Elements.Geometry
         /// </summary>
         public void Invert()
         {
-            this._matrix = this._matrix.Inverse();
-            SetComponentsFromMatrix();
+            this.Matrix = this.Matrix.Inverse();
         }
 
         /// <summary>
@@ -287,8 +273,7 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupTranslation(translation);
-            this._matrix = this._matrix * m;
-            SetComponentsFromMatrix();
+            this.Matrix = this.Matrix * m;
         }
 
         /// <summary>
@@ -300,8 +285,7 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupRotate(axis, angle * (Math.PI / 180.0));
-            this._matrix = this._matrix * m;
-            SetComponentsFromMatrix();
+            this.Matrix = this.Matrix * m;
         }
 
         /// <summary>
@@ -312,8 +296,7 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupScale(amount);
-            this._matrix = this._matrix * m;
-            SetComponentsFromMatrix();
+            this.Matrix = this.Matrix * m;
         }
 
         /// <summary>
@@ -338,6 +321,11 @@ namespace Elements.Geometry
         public Plane XZ()
         {
             return new Plane(this.Origin, this.YAxis);
+        }
+
+        internal static void ValidateConstructorParameters(Matrix matrix)
+        {
+            return;
         }
     }
 }

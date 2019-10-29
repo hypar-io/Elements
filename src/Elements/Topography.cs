@@ -61,7 +61,7 @@ namespace Elements
                           double cellHeight,
                           double[] elevations,
                           int width,
-                          Func<Triangle, Color> colorizer)
+                          Func<Triangle, Color> colorizer): base(null, null, null, Guid.NewGuid(), null)
         {
             // Elevations a represented by *
             // *-*-*-*
@@ -153,7 +153,7 @@ namespace Elements
         }
 
         [JsonConstructor]
-        internal Topography(List<Elements.Geometry.Vertex> vertices, List<Triangle> triangles) { }
+        internal Topography(List<Elements.Geometry.Vertex> vertices, List<Triangle> triangles) : base(null, null, null, Guid.NewGuid(), null) { }
 
         /// <summary>
         /// Subtract the provided solid from this topography.

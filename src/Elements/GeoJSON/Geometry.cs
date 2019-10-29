@@ -29,15 +29,9 @@ namespace Elements.GeoJSON
     [JsonConverter(typeof(PositionConverter))]
     public partial class Position
     {
-        /// <summary>
-        /// Construct a Position.
-        /// </summary>
-        /// <param name="longitude"></param>
-        /// <param name="latitude"></param>
-        public Position(double longitude, double latitude)
+        internal static void ValidateConstructorParameters(double latitude, double longitude)
         {
-            this.Latitude = latitude;
-            this.Longitude = longitude;
+            return;
         }
 
         /// <summary>
@@ -325,7 +319,7 @@ namespace Elements.GeoJSON
             var lon = reader.ReadAsDouble();
             var lat = reader.ReadAsDouble();
             reader.Read();
-            return new Position(lon.Value,lat.Value);
+            return new Position(lat.Value,lon.Value);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

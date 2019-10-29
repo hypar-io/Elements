@@ -1,6 +1,7 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using System;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -24,17 +25,26 @@ namespace Elements
         /// <param name="perimeter">The perimeter of the panel.</param>
         /// <param name="material">The panel's material</param>
         /// <param name="transform">The panel's transform.</param>
+        /// <param name="representation">The panel's representation.</param>
         /// <param name="id">The id of the panel.</param>
         /// <param name="name">The name of the panel.</param>
         /// <exception>Thrown when the provided perimeter points are not coplanar.</exception>
         public Panel(Polygon perimeter,
                      Material material = null,
                      Transform transform = null,
+                     Representation representation = null,
                      Guid id = default(Guid),
-                     string name = null) : base(material, transform, id, name)
+                     string name = null) : base(transform != null ? transform : new Transform(),
+                                                material != null ? material : BuiltInMaterials.Concrete,
+                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                id != default(Guid) ? id : Guid.NewGuid(),
+                                                name)
         {
             this.Perimeter = perimeter;
-            this.Representation.SolidOperations.Add(new Lamina(this.Perimeter));
+            if(this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Lamina(this.Perimeter));
+            }
         }
 
         /// <summary>
@@ -52,14 +62,6 @@ namespace Elements
         public Vector3 Normal()
         {
             return this.Perimeter.Plane().Normal;
-        }
-
-        /// <summary>
-        /// Update the representations.
-        /// </summary>
-        public override void UpdateRepresentations()
-        {
-            return;
         }
     }
 }

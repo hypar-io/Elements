@@ -121,31 +121,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a vector from x, y, and z coordinates.
-        /// </summary>
-        /// <param name="x">The x coordinate of the vector.</param>
-        /// <param name="y">The y coordinate of the vector.</param>
-        /// <param name="z">The z coordinate of the vector.</param>
-        /// <exception>Thrown if any components of the vector are NaN or Infinity.</exception>
-        [JsonConstructor]
-        public Vector3(double x, double y, double z)
-        {
-            if(Double.IsNaN(x) || Double.IsNaN(y) || Double.IsNaN(z))
-            {
-                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
-            }
-
-            if(Double.IsInfinity(x) || Double.IsInfinity(y) || Double.IsInfinity(z))
-            {
-                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
-            }
-
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-        }
-
-        /// <summary>
         /// Create a vector from x, and y coordinates.
         /// </summary>
         /// <param name="x">The x coordinate of the vector.</param>
@@ -471,6 +446,19 @@ namespace Elements.Geometry
         public static double CCW(Vector3 a, Vector3 b, Vector3 c)
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
+        }
+
+        internal static void ValidateConstructorParameters(double x, double y, double z)
+        {
+            if(Double.IsNaN(x) || Double.IsNaN(y) || Double.IsNaN(z))
+            {
+                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
+            }
+
+            if(Double.IsInfinity(x) || Double.IsInfinity(y) || Double.IsInfinity(z))
+            {
+                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
+            }
         }
     }
 

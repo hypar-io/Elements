@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry.Solids
 {
@@ -20,21 +22,47 @@ namespace Elements.Geometry.Solids
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Sweep : SolidOperation
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @rotation, bool @isVoid)
+            : base(isVoid)
+        {
+            Sweep.ValidateConstructorParameters(@profile, @curve, @startSetback, @endSetback, @rotation, @isVoid);
+        
+            this.Profile = @profile;
+            this.Curve = @curve;
+            this.StartSetback = @startSetback;
+            this.EndSetback = @endSetback;
+            this.Rotation = @rotation;
+        }
+    
         /// <summary>The id of the profile to be swept along the curve.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Profile Profile { get;  set; }
+        public Profile Profile { get; internal set; }
     
         /// <summary>The curve along which the profile will be swept.</summary>
         [Newtonsoft.Json.JsonProperty("Curve", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Curve Curve { get;  set; }
+        public Curve Curve { get; internal set; }
     
         /// <summary>The amount to set back the resulting solid from the start of the curve.</summary>
         [Newtonsoft.Json.JsonProperty("StartSetback", Required = Newtonsoft.Json.Required.Always)]
-        public double StartSetback { get;  set; }
+        public double StartSetback { get; internal set; }
     
         /// <summary>The amount to set back the resulting solid from the end of the curve.</summary>
         [Newtonsoft.Json.JsonProperty("EndSetback", Required = Newtonsoft.Json.Required.Always)]
-        public double EndSetback { get;  set; }
+        public double EndSetback { get; internal set; }
+    
+        /// <summary>The rotation, in degrees, of the profile.</summary>
+        [Newtonsoft.Json.JsonProperty("Rotation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double Rotation { get; internal set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

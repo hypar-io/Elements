@@ -9,16 +9,12 @@ namespace Elements.Geometry
     /// </summary>
     public partial class Plane
     {
-        /// <summary>
-        /// Construct a plane.
-        /// </summary>
-        /// <param name="origin">The origin of the plane.</param>
-        /// <param name="normal">The normal of the plane.</param>
-        [JsonConstructor]
-        public Plane(Vector3 origin, Vector3 normal)
+        internal static void ValidateConstructorParameters(Vector3 normal, Vector3 origin)
         {
-            this.Origin = origin;
-            this.Normal = normal;
+            if(normal.IsParallelTo(origin))
+            {
+                throw new ArgumentException("The plane could not be constructed. The normal and origin are parallel.");
+            }
         }
 
         /// <summary>

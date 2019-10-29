@@ -45,6 +45,11 @@ namespace Elements
             this.Origin = new Position(0, 0);
         }
 
+        internal static void ValidateConstructorParameters(Position @origin)
+        {
+            return;
+        }
+
         /// <summary>
         /// Add an element to the model.
         /// Each property of the element which implements IIdentifiable

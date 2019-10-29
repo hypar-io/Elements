@@ -1,4 +1,3 @@
-using Elements.Geometry;
 using Xunit;
 
 namespace Elements.Geometry.Tests

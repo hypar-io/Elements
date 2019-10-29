@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry.Solids
 {
@@ -21,9 +23,26 @@ namespace Elements.Geometry.Solids
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class SolidOperation 
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public SolidOperation(bool @isVoid)
+        {
+            SolidOperation.ValidateConstructorParameters(@isVoid);
+        
+            this.IsVoid = @isVoid;
+        }
+    
         /// <summary>Is the solid operation a void operation?</summary>
         [Newtonsoft.Json.JsonProperty("IsVoid", Required = Newtonsoft.Json.Required.Always)]
-        public bool IsVoid { get;  set; } = false;
+        public bool IsVoid { get; internal set; } = false;
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

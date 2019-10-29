@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.GeoJSON
 {
@@ -20,13 +22,31 @@ namespace Elements.GeoJSON
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Position 
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public Position(double @latitude, double @longitude)
+        {
+            Position.ValidateConstructorParameters(@latitude, @longitude);
+        
+            this.Latitude = @latitude;
+            this.Longitude = @longitude;
+        }
+    
         /// <summary>The latitude in decimal degrees.</summary>
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
-        public double Latitude { get;  set; }
+        public double Latitude { get; internal set; }
     
         /// <summary>The longitude in decimal degrees.</summary>
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
-        public double Longitude { get;  set; }
+        public double Longitude { get; internal set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

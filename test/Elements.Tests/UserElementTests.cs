@@ -2,6 +2,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -22,7 +23,11 @@ namespace Elements.Tests
                                Profile profile,
                                Material material = null,
                                Guid id = default(Guid),
-                               string name = null) : base(material, null, id, name)
+                               string name = null) : base(new Transform(),
+                                                          material = material != null ? material : BuiltInMaterials.Default,
+                                                          new Representation(new List<SolidOperation>()),
+                                                          id = id != null ? id : Guid.NewGuid(),
+                                                          name)
         {
             this.CenterLine = centerLine;
             this.Profile = profile;
@@ -30,9 +35,9 @@ namespace Elements.Tests
             var t = this.CenterLine.TransformAt(0);
             var x = new Line(t.Origin, t.XAxis * this.CenterLine.Length());
             var y = new Line(t.Origin, t.YAxis * this.CenterLine.Length());
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine));
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, x));
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, y));
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine, 0.0, 0.0, 0.0, false));
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, x,  0.0, 0.0, 0.0, false));
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, y,  0.0, 0.0, 0.0, false));
         }
 
         /// <summary>

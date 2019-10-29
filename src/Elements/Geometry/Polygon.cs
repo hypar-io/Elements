@@ -1,5 +1,4 @@
 using ClipperLib;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,26 +11,6 @@ namespace Elements.Geometry
     public partial class Polygon : Polyline
     {
         private const double scale = 1024.0;
-
-        /// <summary>
-        /// Construct a Polygon from a collection of vertices.
-        /// </summary>
-        /// <param name="vertices">A collection of vertices.</param>
-        /// <exception>Thrown when coincident vertices are provided.</exception>
-        [JsonConstructor]
-        public Polygon(IList<Vector3> vertices): base(vertices)
-        {
-            if(!vertices.AreCoplanar())
-            {
-                throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
-            }
-
-            var segments = this.Segments();
-            CheckSegmentLengthAndThrow(segments);
-
-            var t = vertices.ToTransform();
-            CheckSelfIntersectionAndThrow(t, segments);
-        }
 
         /// <summary>
         /// Implicitly convert a polygon to a profile.
@@ -453,18 +432,23 @@ namespace Elements.Geometry
         /// <returns>A collection of Lines.</returns>
         public override Line[] Segments()
         {
-            var lines = new Line[this.Vertices.Count];
-            for(var i=0; i<this.Vertices.Count; i++)
+            return SegmentsInternal(this.Vertices);
+        }
+
+        private static Line[] SegmentsInternal(IList<Vector3> vertices)
+        {
+            var lines = new Line[vertices.Count];
+            for(var i=0; i<vertices.Count; i++)
             {
-                var a = this.Vertices[i];
+                var a = vertices[i];
                 Vector3 b;
-                if(i == this.Vertices.Count-1)
+                if(i == vertices.Count-1)
                 {
-                    b = this.Vertices[0];
+                    b = vertices[0];
                 }
                 else
                 {
-                    b = this.Vertices[i+1];
+                    b = vertices[i+1];
                 }
                 lines[i] = new Line(a, b);
             }
@@ -631,6 +615,20 @@ namespace Elements.Geometry
             var verts = new List<Vector3>(this.Vertices);
             verts.Add(this.Start);
             return verts;
+        }
+
+        internal static new void ValidateConstructorParameters(IList<Vector3> vertices)
+        {
+            if(!vertices.AreCoplanar())
+            {
+                throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
+            }
+
+            var segments = SegmentsInternal(vertices);
+            CheckSegmentLengthAndThrow(segments);
+
+            var t = vertices.ToTransform();
+            CheckSelfIntersectionAndThrow(t, segments);
         }
     }
 

@@ -18,24 +18,24 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>A planar continuous set of lines.</summary>
+    /// <summary>A column-ordered 4x3 matrix.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Polyline : Curve
+    public partial class Matrix 
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Polyline(IList<Vector3> @vertices)
-            : base()
+        public Matrix(IList<double> @components)
         {
-            Polyline.ValidateConstructorParameters(@vertices);
+            Matrix.ValidateConstructorParameters(@components);
         
-            this.Vertices = @vertices;
+            this.Components = @components;
         }
     
-        /// <summary>The vertices of the polygon.</summary>
-        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
+        /// <summary>The components of the matrix.</summary>
+        [Newtonsoft.Json.JsonProperty("Components", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.MinLength(2)]
-        public IList<Vector3> Vertices { get; internal set; } = new List<Vector3>();
+        [System.ComponentModel.DataAnnotations.MinLength(12)]
+        [System.ComponentModel.DataAnnotations.MaxLength(12)]
+        public IList<double> Components { get; internal set; } = new List<double>();
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     

@@ -42,84 +42,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a polyline from a collection of vertices.
-        /// </summary>
-        /// <param name="vertices">A CCW wound set of vertices.</param>
-        [JsonConstructor]
-        public Polyline(IList<Vector3> vertices)
-        {
-            this.Vertices = vertices;
-        }
-
-        /// <summary>
-        /// Check for coincident vertices in the supplied vertex collection.
-        /// </summary>
-        /// <param name="vertices"></param>
-        protected void CheckCoincidenceAndThrow(IList<Vector3> vertices)
-        {
-            for (var i = 0; i < vertices.Count; i++)
-            {
-                for (var j = 0; j < vertices.Count; j++)
-                {
-                    if (i == j)
-                    {
-                        continue;
-                    }
-                    if (vertices[i].IsAlmostEqualTo(vertices[j]))
-                    {
-                        throw new ArgumentException($"The polyline could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Check if any of the polygon segments have zero length.
-        /// </summary>
-        protected void CheckSegmentLengthAndThrow(IList<Line> segments)
-        {
-            foreach(var s in segments)
-            {
-                if(s.Length() == 0)
-                {
-                    throw new ArgumentException("A segment fo the polyline has zero length.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Check for self-intersection in the supplied line segment collection.
-        /// </summary>
-        /// <param name="t">The transform representing the plane of the polygon.</param>
-        /// <param name="segments"></param>
-        protected void CheckSelfIntersectionAndThrow(Transform t, IList<Line> segments)
-        {
-            var segmentsTrans = new List<Line>();
-
-            foreach(var l in segments)
-            {
-                segmentsTrans.Add(t.OfLine(l));
-            };
-
-            for(var i=0; i<segmentsTrans.Count; i++)
-            {
-                for(var j=0; j<segmentsTrans.Count; j++)
-                {
-                    if(i == j)
-                    {
-                        // Don't check against itself.
-                        continue;
-                    }
-
-                    if (segmentsTrans[i].Intersects2D(segmentsTrans[j]))
-                    {
-                        throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Reverse the direction of a polyline.
         /// </summary>
         /// <returns>Returns a new polyline with opposite winding.</returns>
@@ -145,14 +67,7 @@ namespace Elements.Geometry
         /// <returns>A collection of Lines.</returns>
         public virtual Line[] Segments()
         {
-            var result = new Line[Vertices.Count - 1];
-            for (var i = 0; i < Vertices.Count - 1; i++)
-            {
-                var a = Vertices[i];
-                var b = Vertices[i + 1];
-                result[i] = new Line(a, b);
-            }
-            return result;
+            return SegmentsInternal(this.Vertices);
         }
 
         /// <summary>
@@ -166,38 +81,6 @@ namespace Elements.Geometry
             var segmentIndex = 0;
             var p = PointAtInternal(u, out segmentIndex);
             return p;
-        }
-
-        /// <summary>
-        /// Get a point on the polygon at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        private Vector3 PointAtInternal(double u, out int segmentIndex)
-        {
-            if (u < 0.0 || u > 1.0)
-            {
-                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
-            }
-
-            var d = this.Length() * u;
-            var totalLength = 0.0;
-            for (var i = 0; i < this.Vertices.Count - 1; i++)
-            {
-                var a = this.Vertices[i];
-                var b = this.Vertices[i + 1];
-                var currLength = a.DistanceTo(b);
-                var currVec = (b - a);
-                if (totalLength <= d && totalLength + currLength >= d)
-                {
-                    segmentIndex = i;
-                    return a + currVec * ((d - totalLength) / currLength);
-                }
-                totalLength += currLength;
-            }
-            segmentIndex = this.Vertices.Count - 1;
-            return this.End;
         }
 
         /// <summary>
@@ -312,6 +195,105 @@ namespace Elements.Geometry
             return result;
         }
 
+        /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            return this.Vertices;
+        }
+
+        internal static void ValidateConstructorParameters(IList<Vector3> vertices)
+        {
+            if(!vertices.AreCoplanar())
+            {
+                throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
+            }
+
+            var segments = SegmentsInternal(vertices);
+            CheckSegmentLengthAndThrow(segments);
+        }
+
+        /// <summary>
+        /// Check for coincident vertices in the supplied vertex collection.
+        /// </summary>
+        /// <param name="vertices"></param>
+        protected void CheckCoincidenceAndThrow(IList<Vector3> vertices)
+        {
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                for (var j = 0; j < vertices.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+                    if (vertices[i].IsAlmostEqualTo(vertices[j]))
+                    {
+                        throw new ArgumentException($"The polyline could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if any of the polygon segments have zero length.
+        /// </summary>
+        protected static void CheckSegmentLengthAndThrow(IList<Line> segments)
+        {
+            foreach(var s in segments)
+            {
+                if(s.Length() == 0)
+                {
+                    throw new ArgumentException("A segment fo the polyline has zero length.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check for self-intersection in the supplied line segment collection.
+        /// </summary>
+        /// <param name="t">The transform representing the plane of the polygon.</param>
+        /// <param name="segments"></param>
+        protected static void CheckSelfIntersectionAndThrow(Transform t, IList<Line> segments)
+        {
+            var segmentsTrans = new List<Line>();
+
+            foreach(var l in segments)
+            {
+                segmentsTrans.Add(t.OfLine(l));
+            };
+
+            for(var i=0; i<segmentsTrans.Count; i++)
+            {
+                for(var j=0; j<segmentsTrans.Count; j++)
+                {
+                    if(i == j)
+                    {
+                        // Don't check against itself.
+                        continue;
+                    }
+
+                    if (segmentsTrans[i].Intersects2D(segmentsTrans[j]))
+                    {
+                        throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
+                    }
+                }
+            }
+        }
+
+        private static Line[] SegmentsInternal(IList<Vector3> vertices)
+        {
+            var result = new Line[vertices.Count - 1];
+            for (var i = 0; i < vertices.Count - 1; i++)
+            {
+                var a = vertices[i];
+                var b = vertices[i + 1];
+                result[i] = new Line(a, b);
+            }
+            return result;
+        }
+
         private Transform CreateMiterTransform(int i, Vector3 a, double rotation)
         {
             // Create transforms at 'miter' planes.
@@ -350,11 +332,35 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A list of vertices describing the arc for rendering.
+        /// Get a point on the polygon at parameter u.
         /// </summary>
-        internal override IList<Vector3> RenderVertices()
+        /// <param name="u">A value between 0.0 and 1.0.</param>
+        /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
+        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
+        private Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            return this.Vertices;
+            if (u < 0.0 || u > 1.0)
+            {
+                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
+            }
+
+            var d = this.Length() * u;
+            var totalLength = 0.0;
+            for (var i = 0; i < this.Vertices.Count - 1; i++)
+            {
+                var a = this.Vertices[i];
+                var b = this.Vertices[i + 1];
+                var currLength = a.DistanceTo(b);
+                var currVec = (b - a);
+                if (totalLength <= d && totalLength + currLength >= d)
+                {
+                    segmentIndex = i;
+                    return a + currVec * ((d - totalLength) / currLength);
+                }
+                totalLength += currLength;
+            }
+            segmentIndex = this.Vertices.Count - 1;
+            return this.End;
         }
     }
 }

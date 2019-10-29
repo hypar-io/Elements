@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements
 {
@@ -20,19 +22,40 @@ namespace Elements
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Material : Identifiable
     {
-        /// <summary>The material's color.</summary>
-        [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Color Color { get;  set; }
+        [Newtonsoft.Json.JsonConstructor]
+        public Material(Color @color, double @specularFactor, double @glossinessFactor, System.Guid @id, string @name)
+            : base(id, name)
+        {
+            Material.ValidateConstructorParameters(@color, @specularFactor, @glossinessFactor, @id, @name);
+        
+            this.Color = @color;
+            this.SpecularFactor = @specularFactor;
+            this.GlossinessFactor = @glossinessFactor;
+        }
     
-        /// <summary>The material's specular factor.</summary>
+        /// <summary>The material's color.</summary>
+        [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public Color Color { get; internal set; } = new Color();
+    
+        /// <summary>The specular factor between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("SpecularFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
-        public double SpecularFactor { get;  set; }
+        public double SpecularFactor { get; internal set; } = 0.1D;
     
-        /// <summary>The material's glossiness factor.</summary>
+        /// <summary>The glossiness factor between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("GlossinessFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
-        public double GlossinessFactor { get;  set; }
+        public double GlossinessFactor { get; internal set; } = 0.1D;
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

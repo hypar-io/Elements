@@ -2,6 +2,7 @@ using Elements.Geometry;
 using System;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -32,6 +33,7 @@ namespace Elements
         /// <param name="elevation">The elevation of the space.</param>
         /// <param name="material">The space's material.</param>
         /// <param name="transform">The space's transform.</param>
+        /// <param name="representation">The space's represenation.</param>
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
         /// <exception>Thrown when the height is less than or equal to 0.0.</exception>
@@ -41,8 +43,13 @@ namespace Elements
                      double elevation = 0.0,
                      Material material = null,
                      Transform transform = null,
+                     Representation representation = null,
                      Guid id = default(Guid),
-                     string name = null) : base(material, transform, id, name)
+                     string name = null) : base(transform = transform != null ? transform : new Transform(),
+                                                material = material != null ? material : BuiltInMaterials.Mass,
+                                                representation = representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                id = id != null ? id : Guid.NewGuid(),
+                                                name)
         {
             SetProperties(height, profile, transform, elevation);
         }
@@ -57,7 +64,10 @@ namespace Elements
             this.Profile = profile;
             this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
             this.Height = height;
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height));
+            if(this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
+            }
         }
 
         /// <summary>
@@ -72,7 +82,11 @@ namespace Elements
                        Transform transform = null,
                        Material material = null,
                        Guid id = default(Guid),
-                       string name = null) : base(material, transform, id, name)
+                       string name = null) : base(transform != null ? transform : new Transform(),
+                                                  material != null ? material : BuiltInMaterials.Mass,
+                                                  new Representation(new List<SolidOperation>()),
+                                                  id != default(Guid) ? id : Guid.NewGuid(),
+                                                  name)
         {
             if (geometry == null)
             {

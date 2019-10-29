@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
@@ -26,15 +27,15 @@ namespace Elements
         /// <param name="width">The width of the opening.</param>
         /// <param name="height">The height of the opening.</param>
         /// <param name="transform">The opening's transform.</param>
-        /// <param name="id">The id of the opening..</param>
-        /// <param name="name">The name of the opening.</param>
         public Opening(double x,
                        double y,
                        double width,
                        double height,
-                       Transform transform = null,
-                       Guid id = default(Guid),
-                       string name = null) : base(BuiltInMaterials.Void, transform, id, name)
+                       Transform transform = null) : base(transform = transform != null ? transform : new Transform(),
+                                                          BuiltInMaterials.Void,
+                                                          new Representation(new List<SolidOperation>()),
+                                                          Guid.NewGuid(),
+                                                          null)
         {
             this.Profile = new Profile(Polygon.Rectangle(width, height));
             this.Profile.Transform(new Transform(new Vector3(x, y)));
@@ -47,14 +48,14 @@ namespace Elements
         /// <param name="x">The distance along the x to transform the profile.</param>
         /// <param name="y">The distance along the y to transform the profile.</param>
         /// <param name="transform">The opening's transform.</param>
-        /// <param name="id">The id of the opening.</param>
-        /// <param name="name">The name of the opening.</param>
         public Opening(Polygon perimeter,
                        double x = 0.0,
                        double y = 0.0,
-                       Transform transform = null,
-                       Guid id = default(Guid),
-                       string name = null) : base(BuiltInMaterials.Void, transform, id, name)
+                       Transform transform = null) : base(transform = transform != null ? transform : new Transform(),
+                                                          BuiltInMaterials.Void,
+                                                          new Representation(new List<SolidOperation>()),
+                                                          Guid.NewGuid(),
+                                                          null)
         {
             this.Profile = perimeter;
             this.Profile.Transform(new Transform(new Vector3(x, y)));
@@ -66,14 +67,20 @@ namespace Elements
         /// <param name="profile">A polygon representing the perimeter of the opening.</param>
         /// <param name="depth">The depth of the opening's extrusion.</param>
         /// <param name="transform">The opening's transform.</param>
+        /// <param name="representation">The opening's representation.</param>
         /// <param name="id">The id of the opening.</param>
         /// <param name="name">The name of the opening.</param>
         [JsonConstructor]
         public Opening(Profile profile,
                        double depth,
                        Transform transform = null,
+                       Representation representation = null,
                        Guid id = default(Guid),
-                       string name = null) : base(BuiltInMaterials.Void, transform, id, name)
+                       string name = null) : base(transform != null ? transform : new Transform(),
+                                                  BuiltInMaterials.Void,
+                                                  representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                  id != default(Guid) ? id : Guid.NewGuid(),
+                                                  name)
         {
             this.Profile = profile; // Don't re-transform the profile.
         }

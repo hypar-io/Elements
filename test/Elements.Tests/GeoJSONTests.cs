@@ -63,8 +63,8 @@ namespace Elements.Tests
             var p = new Position(10.0, 5.0);
             var json = JsonConvert.SerializeObject(p);
             var newP = JsonConvert.DeserializeObject<Position>(json);
-            Assert.Equal(10.0, newP.Longitude);
-            Assert.Equal(5.0, newP.Latitude);
+            Assert.Equal(5.0, newP.Longitude);
+            Assert.Equal(10.0, newP.Latitude);
         }
 
         [Fact]

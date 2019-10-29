@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,40 +9,23 @@ namespace Elements.Geometry
     /// </summary>
     public partial class Profile : Identifiable
     {
-        internal Profile(Guid id, string name): base(id, name){}
-        
         /// <summary>
         /// Construct a profile.
         /// </summary>
-        /// <param name="id">The id of the profile.</param>
-        /// <param name="name">The name of the profile.</param>
         /// <param name="perimeter">The perimeter of the profile.</param>
-        /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
-        [JsonConstructor]
-        public Profile(Polygon perimeter, IList<Polygon> voids = null, Guid id = default(Guid), string name = null): base(id, name)
+        public Profile(Polygon perimeter): base(Guid.NewGuid(), null)
         {
             this.Perimeter = perimeter;
-            this.Voids = voids;
-
-            if (!IsPlanar())
-            {
-                throw new Exception("To construct a profile, all points must line in the same plane.");
-            }
-            if(this.Voids != null)
-            {
-                this.Clip();
-            }
         }
 
         /// <summary>
         /// Construct a profile.
         /// </summary>
-        /// <param name="name">The name of the profile.</param>
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="singleVoid">A void in the profile.</param>
-        /// <param name="id">The id of the profile.</param>
-        public Profile(Polygon perimeter, Polygon singleVoid, Guid id = default(Guid), string name = null):
-            this(perimeter, new[] { singleVoid }, id, name){}
+        public Profile(Polygon perimeter,
+                       Polygon singleVoid) :
+            this(perimeter, new[] { singleVoid }, Guid.NewGuid(), null){}
 
         /// <summary>
         /// Get a new profile which is the reverse of this profile.
@@ -59,7 +41,7 @@ namespace Elements.Geometry
                     voids[i] = this.Voids[i].Reversed();
                 }
             }
-            return new Profile(this.Perimeter.Reversed(), voids);
+            return new Profile(this.Perimeter.Reversed(), voids, Guid.NewGuid(), null);
         }
 
         /// <summary>
@@ -92,6 +74,14 @@ namespace Elements.Geometry
         /// Default constructor for profile.
         /// </summary>
         protected Profile(string name): base(Guid.NewGuid(), name){}
+
+        internal static void ValidateConstructorParameters(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id, string @name)
+        {
+            if (perimeter != null && !perimeter.Vertices.AreCoplanar())
+            {
+                throw new Exception("To construct a profile, all points must line in the same plane.");
+            }
+        }
 
         /// <summary>
         ///  Conduct a clip operation on this profile.

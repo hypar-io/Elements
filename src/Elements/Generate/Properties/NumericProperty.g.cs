@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Properties
 {
@@ -20,14 +22,32 @@ namespace Elements.Properties
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class NumericProperty 
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public NumericProperty(double @value, NumericPropertyUnitType @unitType)
+        {
+            NumericProperty.ValidateConstructorParameters(@value, @unitType);
+        
+            this.Value = @value;
+            this.UnitType = @unitType;
+        }
+    
         /// <summary>The property's value</summary>
         [Newtonsoft.Json.JsonProperty("Value", Required = Newtonsoft.Json.Required.Always)]
-        public double Value { get;  set; }
+        public double Value { get; internal set; }
     
         /// <summary>The property's unit type.</summary>
         [Newtonsoft.Json.JsonProperty("UnitType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public NumericPropertyUnitType UnitType { get;  set; }
+        public NumericPropertyUnitType UnitType { get; internal set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

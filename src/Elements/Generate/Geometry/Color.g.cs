@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry
 {
@@ -20,25 +22,45 @@ namespace Elements.Geometry
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Color 
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public Color(double @red, double @green, double @blue, double @alpha)
+        {
+            Color.ValidateConstructorParameters(@red, @green, @blue, @alpha);
+        
+            this.Red = @red;
+            this.Green = @green;
+            this.Blue = @blue;
+            this.Alpha = @alpha;
+        }
+    
         /// <summary>The red component of the color between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("Red", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double Red { get;  set; }
+        public double Red { get; internal set; }
     
         /// <summary>The green component of the color between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("Green", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double Green { get;  set; }
+        public double Green { get; internal set; }
     
         /// <summary>The blue component of the color between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("Blue", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double Blue { get;  set; }
+        public double Blue { get; internal set; }
     
         /// <summary>The alpha component of the color between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("Alpha", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double Alpha { get;  set; }
+        public double Alpha { get; internal set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

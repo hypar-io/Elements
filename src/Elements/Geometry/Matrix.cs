@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry
@@ -6,24 +7,132 @@ namespace Elements.Geometry
     /// <summary>
     /// A column-ordered 4x4 matrix.
     /// </summary>
-    internal class Matrix
-    {
-        double m11 = 0.0;
-        double m21 = 0.0;
-        double m31 = 0.0;
-        double m12 = 0.0;
-        double m22 = 0.0;
-        double m32 = 0.0;
-        double m13 = 0.0;
-        double m23 = 0.0;
-        double m33 = 0.0;
-        double tx = 0.0;
-        double ty = 0.0;
-        double tz = 0.0;
+    public partial class Matrix
+    {   
+        /// <summary>
+        /// m11
+        /// </summary>
+        [JsonIgnore]
+        public double m11
+        {
+            get{return this.Components[0];}
+            set{this.Components[0] = value;}
+        }
+        
+        /// <summary>
+        /// m21
+        /// </summary>
+        [JsonIgnore]
+        public double m21
+        {
+            get{return this.Components[1];}
+            set{this.Components[1] = value;}
+        }
+
+        /// <summary>
+        /// m31
+        /// </summary>
+        [JsonIgnore]
+        public double m31
+        {
+            get{return this.Components[2];}
+            set{this.Components[2] = value;}
+        }
+        
+        /// <summary>
+        /// m12
+        /// </summary>
+        [JsonIgnore]
+        public double m12
+        {
+            get{return this.Components[4];}
+            set{this.Components[4] = value;}
+        }
+
+        /// <summary>
+        /// m22
+        /// </summary>
+        [JsonIgnore]
+        public double m22
+        {
+            get{return this.Components[5];}
+            set{this.Components[5] = value;}
+        }
+
+        /// <summary>
+        /// m32
+        /// </summary>
+        [JsonIgnore]
+        public double m32
+        {
+            get{return this.Components[6];}
+            set{this.Components[6] = value;}
+        }
+
+        /// <summary>
+        /// m13
+        /// </summary>
+        [JsonIgnore]
+        public double m13
+        {
+            get{return this.Components[8];}
+            set{this.Components[8] = value;}
+        }
+
+        /// <summary>
+        /// m23
+        /// </summary>
+        [JsonIgnore]
+        public double m23
+        {
+            get{return this.Components[9];}
+            set{this.Components[9] = value;}
+        }
+
+        /// <summary>
+        /// m33
+        /// </summary>
+        [JsonIgnore]
+        public double m33
+        {
+            get{return this.Components[10];}
+            set{this.Components[10] = value;}
+        }
+
+        /// <summary>
+        /// tx
+        /// </summary>
+        [JsonIgnore]
+        public double tx
+        {
+            get{return this.Components[3];}
+            set{this.Components[3] = value;}
+        }
+
+        /// <summary>
+        /// ty
+        /// </summary>
+        [JsonIgnore]
+        public double ty
+        {
+            get{return this.Components[7];}
+            set{this.Components[7] = value;}
+        }
+
+        /// <summary>
+        /// tz
+        /// </summary>
+        [JsonIgnore]
+        public double tz
+        {
+            get{return this.Components[11];}
+            set{this.Components[11] = value;}
+        }
 
         /// <summary>
         /// The X axis of the Matrix.
         /// </summary>
+        [JsonIgnore]
         public Vector3 XAxis
         {
             get{return new Vector3(m11, m12, m13);}
@@ -32,6 +141,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The Y axis of the Matrix.
         /// </summary>
+        [JsonIgnore]
         public Vector3 YAxis
         {
             get{return new Vector3(m21, m22, m23);}
@@ -40,6 +150,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The Z axis of the Matrix.
         /// </summary>
+        [JsonIgnore]
         public Vector3 ZAxis
         {
             get{return new Vector3(m31, m32, m33);}
@@ -48,6 +159,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The translation component of the Matrix.
         /// </summary>
+        [JsonIgnore]
         public Vector3 Translation
         {
             get{return new Vector3(tx, ty, tz);}
@@ -58,6 +170,7 @@ namespace Elements.Geometry
         /// </summary>
         public Matrix()
         {
+            this.Components = new List<double>(){0,0,0,0,0,0,0,0,0,0,0,0};
             SetIdentity();
         }
 
@@ -68,9 +181,9 @@ namespace Elements.Geometry
         /// <param name="yAxis">The Y axis.</param>
         /// <param name="zAxis">The Z axis.</param>
         /// <param name="translation">The translation.</param>
-        [JsonConstructor]
         public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)
         {
+            this.Components = new List<double>(){0,0,0,0,0,0,0,0,0,0,0,0};
             m11 = xAxis.X;  m12 = xAxis.Y;  m13 = xAxis.Z;
             m21 = yAxis.X;  m22 = yAxis.Y;  m23 = yAxis.Z;
             m31 = zAxis.X;  m32 = zAxis.Y;  m33 = zAxis.Z;
@@ -334,5 +447,16 @@ namespace Elements.Geometry
             return $"X: {m11} {m12} {m13}\nY: {m21} {m22} {m23}\nZ: {m31} {m32} {m33}\nOrigin: {tx} {ty} {tz}";
         }
 
+        /// <summary>
+        /// Validate the constructor parameters.
+        /// </summary>
+        /// <param name="components"></param>
+        public static void ValidateConstructorParameters(IList<double> components)
+        {
+            if(components.Count != 12)
+            {
+                throw new ArgumentOutOfRangeException("The matrix could not be created. The component array must have 16 values.");
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -31,6 +32,7 @@ namespace Elements
         /// <param name="height">The height of the wall.</param>
         /// <param name="material">The material of the wall.</param>
         /// <param name="transform">An option transform for the wall.</param>
+        /// <param name="representation">The wall's representation.</param>
         /// <param name="id">The id of the wall.</param>
         /// <param name="name">The name of the wall.</param>
         [JsonConstructor]
@@ -38,8 +40,13 @@ namespace Elements
                       double height,
                       Material material = null,
                       Transform transform = null,
+                      Representation representation = null,
                       Guid id = default(Guid),
-                      string name = null) : base(material, transform, id, name)
+                      string name = null) : base(transform != null ? transform : new Transform(),
+                                                 material != null ? material : BuiltInMaterials.Concrete,
+                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                 id != default(Guid) ? id : Guid.NewGuid(),
+                                                 name)
         {
             if (height <= 0.0)
             {
@@ -49,7 +56,10 @@ namespace Elements
             this.Profile = profile;
             this.Height = height;
             this.Material = material ?? BuiltInMaterials.Concrete;
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis));
+            if(this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
+            }
         }
 
         /// <summary>
@@ -58,15 +68,21 @@ namespace Elements
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="transform"></param>
+        /// <param name="material"></param>
+        /// <param name="representation"></param>
         /// <returns></returns>
-        protected Wall(Guid id, string name, Transform transform) : base(BuiltInMaterials.Concrete, transform, id, name){}
+        protected Wall(Transform transform, Material material, Representation representation, Guid id, string name) : base(transform, material, representation, id, name){}
 
         /// <summary>
         /// Construct a wall from geometry.
         /// </summary>
         /// <param name="geometry">The geometry of the wall.</param>
         /// <param name="transform">The wall's Transform.</param>
-        internal Wall(Solid geometry, Transform transform = null)
+        internal Wall(Solid geometry, Transform transform = null): base(transform != null ? transform : new Transform(),
+                                                                        BuiltInMaterials.Default,
+                                                                        new Representation(new List<SolidOperation>()),
+                                                                        Guid.NewGuid(),
+                                                                        null)
         {
             if (geometry == null)
             {
@@ -78,14 +94,6 @@ namespace Elements
                 this.Transform = transform;
             }
             this.Representation.SolidOperations.Add(new Import(geometry));
-        }
-
-        /// <summary>
-        /// Update the representations.
-        /// </summary>
-        public override void UpdateRepresentations()
-        {
-            return;
         }
     }
 }

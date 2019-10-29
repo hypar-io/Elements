@@ -46,7 +46,7 @@ namespace Elements
                       Guid id = default(Guid),
                       string name = null) 
             : base(new Line(new Vector3(location.X, location.Y, location.Z + height), location), profile, material, 
-                startSetback, endSetback, rotation, transform, id, name)
+                startSetback, endSetback, rotation, transform, null, id, name)
         {
             this.Location = location;
             this.Height = height;

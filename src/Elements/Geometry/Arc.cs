@@ -37,36 +37,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a plane.
-        /// </summary>
-        /// <param name="center">The center of the arc.</param>
-        /// <param name="radius">The radius of the arc.</param>
-        /// <param name="startAngle">The start angle of the arc in degrees.</param>
-        /// <param name="endAngle">The end angle of the arc in degrees.</param>
-        public Arc(Vector3 center, double radius, double startAngle, double endAngle)
-        {
-            if (endAngle > 360.0 || startAngle > 360.00)
-            {
-                throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
-            }
-
-            if (endAngle == startAngle)
-            {
-                throw new ArgumentException($"The arc could not be created. The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
-            }
-
-            if (radius <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
-            }
-
-            this.EndAngle = endAngle;
-            this.StartAngle = startAngle;
-            this.Radius = radius;
-            this.Center = center;
-        }
-
-        /// <summary>
         /// Return the point at parameter u on the arc.
         /// </summary>
         /// <param name="u">A parameter between 0.0 and 1.0.</param>
@@ -164,6 +134,24 @@ namespace Elements.Geometry
         public Plane Plane()
         {
             return new Plane(this.PointAt(0.0), this.PointAt(1.0), this.Center);
+        }
+
+        internal static void ValidateConstructorParameters(Vector3 center, double radius, double startAngle, double endAngle)
+        {
+            if (endAngle > 360.0 || startAngle > 360.00)
+            {
+                throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
+            }
+
+            if (endAngle == startAngle)
+            {
+                throw new ArgumentException($"The arc could not be created. The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
+            }
+
+            if (radius <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
+            }
         }
 
         /// <summary>

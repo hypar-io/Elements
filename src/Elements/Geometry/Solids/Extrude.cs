@@ -1,3 +1,5 @@
+using System;
+
 namespace Elements.Geometry.Solids
 {
     /// <summary>
@@ -6,21 +8,13 @@ namespace Elements.Geometry.Solids
     public partial class Extrude
     {
         private double _rotation = 0.0;
-
-        /// <summary>
-        /// An extrusion defined by a profile, a height, and a direction.
-        /// </summary>
-        /// <param name="profile">The profile to be extruded.</param>
-        /// <param name="height">The height of the extrusion.</param>
-        /// <param name="direction">The direction of the extrusion.</param>
-        /// <param name="rotation">An optional rotation of the extrusion's profile.</param>
-        /// <param name="isVoid">Is the extrusion operation a void?</param>
-        public Extrude(Profile profile, double height, Vector3 direction = null, double rotation=0.0, bool isVoid = false): base(isVoid)
+        
+        internal static void ValidateConstructorParameters(Profile @profile, double @height, Vector3 @direction, double rotation, bool @isVoid)
         {
-            this.Profile = profile;
-            this.Height = height;
-            this.Direction = direction ?? Vector3.ZAxis;
-            this._rotation = rotation;
+            if(direction.Length() == 0)
+            {
+                throw new ArgumentException("The extrude cannot be created. The provided direction has zero length.");
+            }
         }
 
         /// <summary>

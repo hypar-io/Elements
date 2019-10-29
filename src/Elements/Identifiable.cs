@@ -16,10 +16,9 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.HSSPipeProfile", typeof(Elements.Geometry.Profiles.HSSPipeProfile))]
     public abstract partial class Identifiable
     {
-        public Identifiable(Guid id=default(Guid), string name=null)
+        internal static void ValidateConstructorParameters(System.Guid id, string name)
         {
-            this.Id = id == default(Guid) ? Guid.NewGuid() : id;
-            this.Name = name;
+            return;
         }
     }
 }

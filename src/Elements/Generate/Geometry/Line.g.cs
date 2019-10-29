@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry
 {
@@ -20,13 +22,32 @@ namespace Elements.Geometry
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Line : Curve
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public Line(Vector3 @start, Vector3 @end)
+            : base()
+        {
+            Line.ValidateConstructorParameters(@start, @end);
+        
+            this.Start = @start;
+            this.End = @end;
+        }
+    
         /// <summary>The start of the line.</summary>
         [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Start { get;  set; }
+        public Vector3 Start { get; internal set; }
     
         /// <summary>The end of the line.</summary>
         [Newtonsoft.Json.JsonProperty("End", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 End { get;  set; }
+        public Vector3 End { get; internal set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

@@ -11,14 +11,14 @@ namespace Elements.Geometry.Solids
     public abstract partial class SolidOperation
     {
         /// <summary>
-        /// Create a solid operation.
+        /// 
         /// </summary>
-        /// <param name="isVoid">Is the solid operation a void operation?</param>
-        public SolidOperation(bool isVoid)
+        /// <param name="isVoid"></param>
+        public static void ValidateConstructorParameters(bool isVoid)
         {
-            this.IsVoid = isVoid;
+            return;
         }
-
+        
         /// <summary>
         /// Get the updated solid for this operation.
         /// </summary>

@@ -30,6 +30,6 @@ namespace Elements
                      Transform transform = null,
                      Guid id = default(Guid),
                      string name = null) 
-            : base(curve, profile, material, startSetback, endSetback, rotation, transform, id, name){}
+            : base(curve, profile, material, startSetback, endSetback, rotation, transform, null, id, name){}
     }
 }

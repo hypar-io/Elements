@@ -91,7 +91,7 @@ namespace Elements.Serialization.glTF
                 m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness();
                 m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
-                m.DoubleSided = material.DoubleSided;
+                m.DoubleSided = false;
                 m.Name = material.Name;
 
                 if(material.Color.Alpha < 1.0)
@@ -523,16 +523,19 @@ namespace Elements.Serialization.glTF
             materialName = e.Material.Name;
 
             e.UpdateRepresentations();
-            foreach(var solidOp in e.Representation.SolidOperations)
+            if(e.Representation != null)
             {
-                var solid = solidOp.GetSolid();
-                if(solid != null)
+                foreach(var solidOp in e.Representation.SolidOperations)
                 {
-                    ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
-                        ref materials, ref buffer, bufferViews, accessors);
+                    var solid = solidOp.GetSolid();
+                    if(solid != null)
+                    {
+                        ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
+                            ref materials, ref buffer, bufferViews, accessors);
+                    }
                 }
             }
-
+            
             if (e is ModelCurve)
             {
                 var mc = (ModelCurve)e;

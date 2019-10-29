@@ -18,23 +18,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a line from start and end points.
-        /// </summary>
-        /// <param name="start">The start of the line.</param>
-        /// <param name="end">The end of the line.</param>
-        /// <exception>Thrown when the start and end points are the same.</exception>
-        [JsonConstructor]
-        public Line(Vector3 start, Vector3 end)
-        {
-            if (start.IsAlmostEqualTo(end))
-            {
-                throw new ArgumentException($"The line could not be created. The start and end points of the line cannot be the same: start {start}, end {end}");
-            }
-            this.Start = start;
-            this.End = end;
-        }
-
-        /// <summary>
         /// Construct a line of length from a start along direction.
         /// </summary>
         /// <param name="start"></param>
@@ -209,6 +192,14 @@ namespace Elements.Geometry
         public Vector3 Direction()
         {
             return (this.End - this.Start).Normalized();
+        }
+
+        internal static void ValidateConstructorParameters(Vector3 end, Vector3 start)
+        {
+            if (start.IsAlmostEqualTo(end))
+            {
+                throw new ArgumentException($"The line could not be created. The start and end points of the line cannot be the same: start {start}, end {end}");
+            }
         }
 
         /// <summary>

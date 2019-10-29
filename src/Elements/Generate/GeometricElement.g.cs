@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements
 {
@@ -21,19 +23,28 @@ namespace Elements
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class GeometricElement : Identifiable
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public GeometricElement(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
+            : base(id, name)
+        {
+            GeometricElement.ValidateConstructorParameters(@transform, @material, @representation, @id, @name);
+        
+            this.Transform = @transform;
+            this.Material = @material;
+            this.Representation = @representation;
+        }
+    
         /// <summary>The element's transform.</summary>
-        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public Transform Transform { get;  set; } = new Transform();
+        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Transform Transform { get; internal set; }
     
         /// <summary>The element's material.</summary>
         [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Material Material { get;  set; }
+        public Material Material { get; internal set; }
     
         /// <summary>The element's representation.</summary>
-        [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public Representation Representation { get;  set; } = new Representation();
+        [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Representation Representation { get; internal set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     

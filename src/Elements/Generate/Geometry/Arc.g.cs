@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry
 {
@@ -20,22 +22,45 @@ namespace Elements.Geometry
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Arc : Curve
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle)
+            : base()
+        {
+            Arc.ValidateConstructorParameters(@center, @radius, @startAngle, @endAngle);
+        
+            this.Center = @center;
+            this.Radius = @radius;
+            this.StartAngle = @startAngle;
+            this.EndAngle = @endAngle;
+        }
+    
         /// <summary>The center of the arc.</summary>
         [Newtonsoft.Json.JsonProperty("Center", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Center { get;  set; }
-    
-        /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
-        [Newtonsoft.Json.JsonProperty("StartAngle", Required = Newtonsoft.Json.Required.Always)]
-        public double StartAngle { get;  set; }
-    
-        /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
-        [Newtonsoft.Json.JsonProperty("EndAngle", Required = Newtonsoft.Json.Required.Always)]
-        public double EndAngle { get;  set; }
+        public Vector3 Center { get; internal set; }
     
         /// <summary>The radius of the arc.</summary>
         [Newtonsoft.Json.JsonProperty("Radius", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public double Radius { get;  set; }
+        public double Radius { get; internal set; }
+    
+        /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
+        [Newtonsoft.Json.JsonProperty("StartAngle", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0, 360)]
+        public double StartAngle { get; internal set; }
+    
+        /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
+        [Newtonsoft.Json.JsonProperty("EndAngle", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0, 360)]
+        public double EndAngle { get; internal set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }

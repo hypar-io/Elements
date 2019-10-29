@@ -29,10 +29,10 @@ namespace Elements.Geometry.Profiles
         public double J {get;internal set;}
 
         public HSSPipeProfile(string name,
+                              Guid id,
                               double outerDiam,
                               double innerDiam,
-                              double t,
-                              Guid id = default(Guid)) : 
+                              double t) : 
             base(Polygon.Circle(outerDiam), new Polygon[]{Polygon.Circle(innerDiam).Reversed()}, id, name)
             {
                 this.OuterDiam = outerDiam;

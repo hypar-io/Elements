@@ -11,6 +11,8 @@ using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Line = Elements.Geometry.Line;
+using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements
 {
@@ -21,14 +23,23 @@ namespace Elements
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Identifiable 
     {
+        [Newtonsoft.Json.JsonConstructor]
+        public Identifiable(System.Guid @id, string @name)
+        {
+            Identifiable.ValidateConstructorParameters(@id, @name);
+        
+            this.Id = @id;
+            this.Name = @name;
+        }
+    
         /// <summary>A unique id.</summary>
         [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid Id { get;  set; }
+        public System.Guid Id { get; internal set; }
     
         /// <summary>A name.</summary>
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string Name { get;  set; }
+        public string Name { get; internal set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     

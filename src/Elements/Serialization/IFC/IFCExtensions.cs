@@ -90,7 +90,7 @@ namespace Elements.Serialization.IFC
                 transform.Concatenate(solid.Position.ToTransform());
                 var pline = (IfcPolyline)profileDef.OuterCurve;
                 var outline = pline.ToPolygon(true);
-                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0.0, material, transform, IfcGuid.FromIfcGUID(space.GlobalId), space.Name);
+                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0.0, material, transform, null, IfcGuid.FromIfcGUID(space.GlobalId), space.Name);
                 return result;
             }
             else if (foundSolid.GetType() == typeof(IfcFacetedBrep))
@@ -146,7 +146,7 @@ namespace Elements.Serialization.IFC
 
             solidTransform.Concatenate(transform);
             var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0, 
-                solidTransform, BuiltInMaterials.Concrete, IfcGuid.FromIfcGUID(slab.GlobalId));
+                solidTransform, BuiltInMaterials.Concrete, null, IfcGuid.FromIfcGUID(slab.GlobalId));
             // Console.WriteLine($"Elements Floor Transform:\n{floor.Transform}\n");
 
             floor.Openings.AddRange(openings.Select(o=>o.ToOpening()));
@@ -201,6 +201,7 @@ namespace Elements.Serialization.IFC
                                           (IfcLengthMeasure)solid.Depth,
                                           null,
                                           transform,
+                                          null,
                                           IfcGuid.FromIfcGUID(wall.GlobalId),
                                           wall.Name);
                     return result;
@@ -345,6 +346,7 @@ namespace Elements.Serialization.IFC
                 var newOpening = new Opening(profile,
                                              (IfcLengthMeasure)s.Depth,
                                              solidTransform,
+                                             null,
                                              IfcGuid.FromIfcGUID(opening.GlobalId));
                 return newOpening;
             }
