@@ -9,6 +9,7 @@ using System.Collections;
 using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
+using Newtonsoft.Json.Serialization;
 
 namespace Elements
 {
@@ -131,18 +132,23 @@ namespace Elements
         /// </summary>
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new JsonSerializerSettings(){
-                Formatting = Formatting.Indented
-            });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
 
         /// <summary>
         /// Deserialize a model from JSON.
         /// </summary>
         /// <param name="data">The JSON representing the model.</param>
-        public static Model FromJson(string data)
+        /// <param name="errors">A collection of deserialization errors.</param>
+        public static Model FromJson(string data, List<string> errors = null)
         {
-            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(data);
+            errors = errors ?? new List<string>();
+            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(data, new JsonSerializerSettings(){
+                Error = (sender, args)=>{
+                    errors.Add(args.ErrorContext.Error.Message);
+                    args.ErrorContext.Handled = true;
+                }
+            });
             JsonInheritanceConverter.Identifiables.Clear();
             return model;
         }

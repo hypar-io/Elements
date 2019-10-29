@@ -194,7 +194,11 @@ namespace Elements.Serialization.JSON
                 return _typeCache[discriminator];
             }
 
-            return objectType;
+            throw new Exception($"The type with discriminator, {discriminator}, could not be found. The entity will not be deserialized.");
+
+            // The default behavior for this converter, as provided by nJSONSchema
+            // is to return the base objectType if a derived type can't be found.
+            // return objectType;
         }
 
         private string GetSubtypeDiscriminator(System.Type objectType)
