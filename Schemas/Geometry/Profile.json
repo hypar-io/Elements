@@ -6,7 +6,7 @@
     "type": ["object","null"],
     "allOf": [{"$ref": "https://hypar.io/Schemas/Identifiable.json"}],
     "description": "A profile comprised of an external boundary and one or several holes.",
-    "required": ["Id","Perimeter"],
+    "required": ["Id","Perimeter","Voids"],
     "properties": {
         "Perimeter":{
             "description": "The perimeter of the profile.",
