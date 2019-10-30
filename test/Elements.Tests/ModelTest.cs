@@ -47,7 +47,7 @@ namespace Elements.Tests
 
             if(Directory.Exists("models"))
             {
-                Directory.Delete("models");
+                Directory.Delete("models", true);
             }
             Directory.CreateDirectory("models");
         }
