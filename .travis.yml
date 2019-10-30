@@ -5,4 +5,4 @@ mono: none
 dotnet: 2.0.0
 script:
   - dotnet build ./Elements.sln
-  - dotnet test ./test/Elements.Tests.csproj
+  - dotnet test ./test/Elements.Tests/Elements.Tests.csproj
