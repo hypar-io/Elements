@@ -27,6 +27,8 @@
 - `double Vector3.CCW(Vector3 a, Vector3 b, Vector3 c)`
 - `bool Line.Intersects(Line l)`
 - `Elements.Validators.IValidator` and the `Elements.Validators.Validator` singleton to provide argument validation during construction of user elements.
+- `Line.DivideByLength()`
+- `Line.DivideByCount()`
 
 ### Removed
 - The empty Dynamo project.
