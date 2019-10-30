@@ -62,7 +62,6 @@ namespace Elements
             }
             this.Profile = profile;
             this.Height = height;
-            this.Material = material ?? BuiltInMaterials.Mass;
             if(this.Representation.SolidOperations.Count == 0)
             {
                 this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
