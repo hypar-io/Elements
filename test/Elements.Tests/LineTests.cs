@@ -1,4 +1,3 @@
-using Elements.Geometry;
 using System;
 using Xunit;
 
@@ -68,6 +67,29 @@ namespace Elements.Geometry.Tests
             Assert.True(l1.Intersects2D(l2));     // Intersecting.
             Assert.False(l1.Intersects2D(l3));    // Not intersecting.
             Assert.False(l1.Intersects2D(l4));    // Coincident.
+        }
+
+        [Fact]
+        public void DivideByCount()
+        {
+            var l = new Line(Vector3.Origin, new Vector3(5,0));
+            var segments = l.DivideByCount(5);
+            var len = l.Length();
+            foreach(var s in segments)
+            {
+                Assert.Equal(s.Length(), len/6, 5);
+            }
+        }
+
+        [Fact]
+        public void DivideByLength()
+        {
+            var l = new Line(Vector3.Origin, new Vector3(5,0));
+            var segments = l.DivideByLength(1.1, true);
+            Assert.Equal(4, segments.Count);
+
+            var segments1 = l.DivideByLength(1.1);
+            Assert.Equal(5, segments1.Count);
         }
     }
 }

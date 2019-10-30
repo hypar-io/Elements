@@ -195,6 +195,58 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Divide the line into as many segments of length l as possible.
+        /// </summary>
+        /// <param name="l">The length.</param>
+        /// <param name="removeShortSegments">A flag indicating whether segments shorter than l should be removed.</param>
+        public List<Line> DivideByLength(double l, bool removeShortSegments = false)
+        {
+            var len = this.Length();
+            if(l > len)
+            {
+                return new List<Line>(){new Line(this.Start, this.End)};
+            }
+
+            var total = 0.0;
+            var d = this.Direction();
+            var lines = new List<Line>();
+            while(total + l <= len)
+            { 
+                var a = this.Start + d * total;
+                var b = a + d * l;
+                lines.Add(new Line(a,b));
+                total += l;
+            }
+            if(total < len && !removeShortSegments)
+            {
+                var a = this.Start + d * total;
+                lines.Add(new Line(a, End));
+            }
+            return lines;
+        }
+        
+        /// <summary>
+        /// Divide the line into n+1 equal segments.
+        /// </summary>
+        /// <param name="n">The number of segments.</param>
+        public List<Line> DivideByCount(int n)
+        {
+            if(n < 0)
+            {
+                throw new ArgumentException($"The number of divisions must be greater than 0.");
+            }
+            var lines = new List<Line>();
+            var div = 1.0/(n + 1);
+            for(var t=0.0; t<=1.0-div; t+=div)
+            {
+                var a = PointAt(t);
+                var b = PointAt(t+div);
+                lines.Add(new Line(a,b));
+            }
+            return lines;
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()

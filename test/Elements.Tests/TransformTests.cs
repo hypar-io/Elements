@@ -59,6 +59,20 @@ namespace Elements.Tests
             t = new Transform(Vector3.Origin, Vector3.XAxis);
             Assert.Equal(Vector3.YAxis, t.XAxis);
         }
+
+        [Fact]
+        public void OrientAlongCurve()
+        {
+            this.Name = "TransformsOrientedAlongCurve";
+            var arc = new Arc(Vector3.Origin, 10.0, 45.0, 135.0);
+            for(var i=0.0; i<=1.0; i+= 0.1)
+            {
+                var t = Elements.Geometry.Transform.CreateOrientedAlongCurve(arc, i);
+                var m = new Mass(Polygon.Rectangle(1.0,1.0), 0.5, transform:t);
+                this.Model.AddElement(m);
+                this.Model.AddElements(t.ToModelCurves());
+            }
+        }
     }
     
 }

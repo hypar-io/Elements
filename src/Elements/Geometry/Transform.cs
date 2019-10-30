@@ -322,5 +322,20 @@ namespace Elements.Geometry
         {
             return new Plane(this.Origin, this.YAxis);
         }
+
+        /// <summary>
+        /// Create a transform that is oriented along 
+        /// a curve at parameter t. The transform's +z axis will align with 
+        /// the +z world axis, and the +x axis will align with the tangent
+        /// of the curve.
+        /// </summary>
+        /// <param name="curve">The curve along which to orient the transform.</param>
+        /// <param name="t">A parameter value between 0.0 and 1.0.</param>
+        /// <param name="up"></param>
+        public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = null)
+        {
+            var temp = curve.TransformAt(t);
+            return new Transform(temp.Origin, temp.ZAxis.Negate(), temp.XAxis.Negate(), Vector3.ZAxis);
+        }
     }
 }
