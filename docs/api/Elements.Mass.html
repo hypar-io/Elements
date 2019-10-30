@@ -212,7 +212,7 @@ var mass = new Mass(poly, 5.0);
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
     <div class="level3"><span class="xref">Mass</span></div>
   </div>
@@ -228,13 +228,31 @@ var mass = new Mass(poly, 5.0);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
@@ -246,13 +264,13 @@ var mass = new Mass(poly, 5.0);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Mass__ctor_" data-uid="Elements.Mass.#ctor*"></a>
-  <h4 id="Elements_Mass__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Guid_System_String_" data-uid="Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Guid,System.String)">Mass(Profile, Double, Material, Transform, Guid, String)</h4>
+  <h4 id="Elements_Mass__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)">Mass(Profile, Double, Material, Transform, Representation, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a Mass.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Mass(Profile profile, double height = 1, Material material = null, Transform transform = null, Guid id = null, string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Mass(Profile profile, double height = 1, Material material = null, Transform transform = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -289,15 +307,21 @@ var mass = new Mass(poly, 5.0);
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Guid</span></td>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The mass' representation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
-        <td><p>The mass' id.</p>
+        <td><p>The id of the mass.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td><p>The mass' name.</p>
+        <td><p>The name of the mass.</p>
 </td>
       </tr>
     </tbody>
@@ -359,7 +383,8 @@ var mass = new Mass(poly, 5.0);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Thickness { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double Thickness { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

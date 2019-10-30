@@ -84,12 +84,64 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Representation</span></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Representation_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Representation : object</code></pre>
+    <pre><code class="lang-csharp hljs">public class Representation</code></pre>
   </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Geometry_Representation__ctor_" data-uid="Elements.Geometry.Representation.#ctor*"></a>
+  <h4 id="Elements_Geometry_Representation__ctor_System_Collections_Generic_IList_Elements_Geometry_Solids_SolidOperation__" data-uid="Elements.Geometry.Representation.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.SolidOperation})">Representation(IList&lt;SolidOperation&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Representation(IList&lt;SolidOperation&gt; solidOperations)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Solids.SolidOperation.html">SolidOperation</a>&gt;</td>
+        <td><span class="parametername">solidOperations</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Geometry_Representation_SolidOperations_" data-uid="Elements.Geometry.Representation.SolidOperations*"></a>
@@ -99,7 +151,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;SolidOperation&gt; SolidOperations { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;SolidOperations&quot;, Required = Required.Always)]
+[Required]
+public IList&lt;SolidOperation&gt; SolidOperations { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -111,7 +165,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Solids.SolidOperation.html">SolidOperation</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Solids.SolidOperation.html">SolidOperation</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>

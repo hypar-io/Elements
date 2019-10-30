@@ -82,7 +82,7 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
     <div class="level3"><span class="xref">StructuralFraming</span></div>
       <div class="level4"><a class="xref" href="Elements.Beam.html">Beam</a></div>
@@ -101,13 +101,34 @@
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
@@ -119,13 +140,13 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_StructuralFraming__ctor_" data-uid="Elements.StructuralFraming.#ctor*"></a>
-  <h4 id="Elements_StructuralFraming__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Guid_System_String_" data-uid="Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Guid,System.String)">StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Guid, String)</h4>
+  <h4 id="Elements_StructuralFraming__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)">StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Representation, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a beam.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public StructuralFraming(Curve curve, Profile profile, Material material = null, double startSetback = 0, double endSetback = 0, double rotation = 0, Transform transform = null, Guid id = null, string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public StructuralFraming(Curve curve, Profile profile, Material material = null, double startSetback = 0, double endSetback = 0, double rotation = 0, Transform transform = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -180,7 +201,13 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Guid</span></td>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The structural framing's representation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The structural framing's id.</p>
 </td>
@@ -317,17 +344,6 @@
       </tr>
     </tbody>
   </table>
-  <a id="Elements_StructuralFraming_UpdateRepresentations_" data-uid="Elements.StructuralFraming.UpdateRepresentations*"></a>
-  <h4 id="Elements_StructuralFraming_UpdateRepresentations" data-uid="Elements.StructuralFraming.UpdateRepresentations">UpdateRepresentations()</h4>
-  <div class="markdown level1 summary"><p>Update the representations.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
-  </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
   <a id="Elements_StructuralFraming_Volume_" data-uid="Elements.StructuralFraming.Volume*"></a>
   <h4 id="Elements_StructuralFraming_Volume" data-uid="Elements.StructuralFraming.Volume">Volume()</h4>
   <div class="markdown level1 summary"><p>Calculate the volume of the element.</p>

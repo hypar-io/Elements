@@ -3,6 +3,7 @@ using System.IO;
 using Elements.Geometry;
 using System.Linq;
 using Elements.Serialization.glTF;
+using System.Reflection;
 
 namespace Elements.Tests
 {
@@ -45,11 +46,11 @@ namespace Elements.Tests
             this.GenerateIfc = true;
             this.GenerateJson = true;
 
-            if(Directory.Exists("models"))
+            var modelsDir = Path.Combine(Assembly.GetExecutingAssembly().Location, "models");
+            if(Directory.Exists(modelsDir))
             {
-                Directory.Delete("models", true);
+                Directory.CreateDirectory(modelsDir);
             }
-            Directory.CreateDirectory("models");
         }
 
         public virtual void Dispose()

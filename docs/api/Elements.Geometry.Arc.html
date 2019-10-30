@@ -76,7 +76,7 @@
   
   <h1 id="Elements_Geometry_Arc" data-uid="Elements.Geometry.Arc" class="text-break">Class Arc
   </h1>
-  <div class="markdown level0 summary"><p>A linear curve between two points.</p>
+  <div class="markdown level0 summary"><p>An arc defined by a CCW rotation around a center between a start angle and an end angle.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -89,6 +89,30 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Arc_syntax">Syntax</h5>
@@ -99,12 +123,12 @@
   </h3>
   <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
   <h4 id="Elements_Geometry_Arc__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)">Arc(Vector3, Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Create a plane.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Arc(Vector3 center, double radius, double startAngle, double endAngle)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Arc(Vector3 center, double radius, double startAngle, double endAngle)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -119,26 +143,22 @@
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">center</span></td>
-        <td><p>The center of the arc.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">radius</span></td>
-        <td><p>The radius of the arc.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">startAngle</span></td>
-        <td><p>The start angle of the arc in degrees.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">endAngle</span></td>
-        <td><p>The end angle of the arc in degrees.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -151,7 +171,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Center { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Center&quot;, Required = Required.AllowNull)]
+public Vector3 Center { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -175,7 +196,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -199,7 +221,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double EndAngle { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EndAngle&quot;, Required = Required.Always)]
+[Range(0, 360)]
+public double EndAngle { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -223,7 +247,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Radius { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Radius&quot;, Required = Required.Always)]
+[Range(0, 2147483647)]
+public double Radius { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -247,7 +273,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -271,7 +298,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double StartAngle { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;StartAngle&quot;, Required = Required.Always)]
+[Range(0, 360)]
+public double StartAngle { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

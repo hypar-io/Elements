@@ -84,11 +84,35 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Model</span></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Model_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Model : IDictionary&lt;Guid, Identifiable&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Model</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -101,86 +125,14 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public Model()</code></pre>
   </div>
-  <h3 id="properties">Properties
-  </h3>
-  <a id="Elements_Model_Count_" data-uid="Elements.Model.Count*"></a>
-  <h4 id="Elements_Model_Count" data-uid="Elements.Model.Count">Count</h4>
+  <a id="Elements_Model__ctor_" data-uid="Elements.Model.#ctor*"></a>
+  <h4 id="Elements_Model__ctor_Elements_GeoJSON_Position_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__" data-uid="Elements.Model.#ctor(Elements.GeoJSON.Position,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})">Model(Position, IDictionary&lt;Guid, Element&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Count { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_Entities_" data-uid="Elements.Model.Entities*"></a>
-  <h4 id="Elements_Model_Entities" data-uid="Elements.Model.Entities">Entities</h4>
-  <div class="markdown level1 summary"><p>Entities provides a serializable wrapper around the
-internal entities collection.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Dictionary&lt;Guid, Identifiable&gt; Entities { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Dictionary</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_IsReadOnly_" data-uid="Elements.Model.IsReadOnly*"></a>
-  <h4 id="Elements_Model_IsReadOnly" data-uid="Elements.Model.IsReadOnly">IsReadOnly</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsReadOnly { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_Item_" data-uid="Elements.Model.Item*"></a>
-  <h4 id="Elements_Model_Item_Guid_" data-uid="Elements.Model.Item(Guid)">Item[Guid]</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Identifiable this[Guid key] { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Model(Position origin, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -193,34 +145,29 @@ internal entities collection.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Guid</span></td>
-        <td><span class="parametername">key</span></td>
+        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td><span class="parametername">origin</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="parametername">elements</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Identifiable.html">Identifiable</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_Keys_" data-uid="Elements.Model.Keys*"></a>
-  <h4 id="Elements_Model_Keys" data-uid="Elements.Model.Keys">Keys</h4>
-  <div class="markdown level1 summary"></div>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Model_Elements_" data-uid="Elements.Model.Elements*"></a>
+  <h4 id="Elements_Model_Elements" data-uid="Elements.Model.Elements">Elements</h4>
+  <div class="markdown level1 summary"><p>A collection of Elements keyed by their identifiers.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ICollection&lt;Guid&gt; Keys { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Elements&quot;, Required = Required.Always)]
+[Required]
+public IDictionary&lt;Guid, Element&gt; Elements { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -232,7 +179,7 @@ internal entities collection.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">ICollection</span>&lt;<span class="xref">Guid</span>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -244,7 +191,8 @@ internal entities collection.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Position Origin { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Origin&quot;, Required = Required.AllowNull)]
+public Position Origin { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -261,99 +209,21 @@ internal entities collection.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Model_Values_" data-uid="Elements.Model.Values*"></a>
-  <h4 id="Elements_Model_Values" data-uid="Elements.Model.Values">Values</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ICollection&lt;Identifiable&gt; Values { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">ICollection</span>&lt;<a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
-  <a id="Elements_Model_Add_" data-uid="Elements.Model.Add*"></a>
-  <h4 id="Elements_Model_Add_Guid_Elements_Identifiable_" data-uid="Elements.Model.Add(Guid,Elements.Identifiable)">Add(Guid, Identifiable)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Add(Guid key, Identifiable value)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Guid</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Identifiable.html">Identifiable</a></td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_Add_" data-uid="Elements.Model.Add*"></a>
-  <h4 id="Elements_Model_Add_KeyValuePair_Guid_Elements_Identifiable__" data-uid="Elements.Model.Add(KeyValuePair{Guid,Elements.Identifiable})">Add(KeyValuePair&lt;Guid, Identifiable&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Add(KeyValuePair&lt;Guid, Identifiable&gt; item)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">KeyValuePair</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;</td>
-        <td><span class="parametername">item</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Model_AddElement_" data-uid="Elements.Model.AddElement*"></a>
-  <h4 id="Elements_Model_AddElement_Elements_Identifiable_" data-uid="Elements.Model.AddElement(Elements.Identifiable)">AddElement(Identifiable)</h4>
+  <h4 id="Elements_Model_AddElement_Elements_Element_" data-uid="Elements.Model.AddElement(Elements.Element)">AddElement(Element)</h4>
   <div class="markdown level1 summary"><p>Add an element to the model.
-Each property of the element which implements IIdentifiable
+Each property of the element which has a type of Element
 will be added to the entities collection before the element itself.
-This enables serializers to reference Identifiables by id.
+This enables serializers to reference Elements by id.
 Properties which are IList of Element will have each of their items
 added to the entities collection as well.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddElement(Identifiable element)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddElement(Element element)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -366,7 +236,7 @@ added to the entities collection as well.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Identifiable.html">Identifiable</a></td>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
         <td><span class="parametername">element</span></td>
         <td><p>The element to add to the model.</p>
 </td>
@@ -374,13 +244,13 @@ added to the entities collection as well.</p>
     </tbody>
   </table>
   <a id="Elements_Model_AddElements_" data-uid="Elements.Model.AddElements*"></a>
-  <h4 id="Elements_Model_AddElements_IEnumerable_Elements_Identifiable__" data-uid="Elements.Model.AddElements(IEnumerable{Elements.Identifiable})">AddElements(IEnumerable&lt;Identifiable&gt;)</h4>
+  <h4 id="Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__" data-uid="Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element})">AddElements(IEnumerable&lt;Element&gt;)</h4>
   <div class="markdown level1 summary"><p>Add a collection of elements to the model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddElements(IEnumerable&lt;Identifiable&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddElements(IEnumerable&lt;Element&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -393,21 +263,21 @@ added to the entities collection as well.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td><span class="parametername">elements</span></td>
         <td><p>The elements to add to the model.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Model_AllEntitiesOfType_" data-uid="Elements.Model.AllEntitiesOfType*"></a>
-  <h4 id="Elements_Model_AllEntitiesOfType__1" data-uid="Elements.Model.AllEntitiesOfType``1">AllEntitiesOfType&lt;T&gt;()</h4>
+  <a id="Elements_Model_AllElementsOfType_" data-uid="Elements.Model.AllElementsOfType*"></a>
+  <h4 id="Elements_Model_AllElementsOfType__1" data-uid="Elements.Model.AllElementsOfType``1">AllElementsOfType&lt;T&gt;()</h4>
   <div class="markdown level1 summary"><p>Get all entities of the specified Type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerable&lt;T&gt; AllEntitiesOfType&lt;T&gt;()</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;T&gt; AllElementsOfType&lt;T&gt;()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -419,7 +289,7 @@ added to the entities collection as well.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;T&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
         <td><p>A collection of elements of the specified type.</p>
 </td>
       </tr>
@@ -438,124 +308,6 @@ added to the entities collection as well.</p>
         <td><span class="parametername">T</span></td>
         <td><p>The Type of element to return.</p>
 </td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_Clear_" data-uid="Elements.Model.Clear*"></a>
-  <h4 id="Elements_Model_Clear" data-uid="Elements.Model.Clear">Clear()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Clear()</code></pre>
-  </div>
-  <a id="Elements_Model_Contains_" data-uid="Elements.Model.Contains*"></a>
-  <h4 id="Elements_Model_Contains_KeyValuePair_Guid_Elements_Identifiable__" data-uid="Elements.Model.Contains(KeyValuePair{Guid,Elements.Identifiable})">Contains(KeyValuePair&lt;Guid, Identifiable&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Contains(KeyValuePair&lt;Guid, Identifiable&gt; item)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">KeyValuePair</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;</td>
-        <td><span class="parametername">item</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_ContainsKey_" data-uid="Elements.Model.ContainsKey*"></a>
-  <h4 id="Elements_Model_ContainsKey_Guid_" data-uid="Elements.Model.ContainsKey(Guid)">ContainsKey(Guid)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool ContainsKey(Guid key)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Guid</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_CopyTo_" data-uid="Elements.Model.CopyTo*"></a>
-  <h4 id="Elements_Model_CopyTo_KeyValuePair_Guid_Elements_Identifiable____System_Int32_" data-uid="Elements.Model.CopyTo(KeyValuePair{Guid,Elements.Identifiable}[],System.Int32)">CopyTo(KeyValuePair&lt;Guid, Identifiable&gt;[], Int32)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(KeyValuePair&lt;Guid, Identifiable&gt;[] array, int arrayIndex)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">KeyValuePair</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;[]</td>
-        <td><span class="parametername">array</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">arrayIndex</span></td>
-        <td></td>
       </tr>
     </tbody>
   </table>
@@ -608,13 +360,13 @@ added to the entities collection as well.</p>
     </tbody>
   </table>
   <a id="Elements_Model_FromJson_" data-uid="Elements.Model.FromJson*"></a>
-  <h4 id="Elements_Model_FromJson_System_String_" data-uid="Elements.Model.FromJson(System.String)">FromJson(String)</h4>
+  <h4 id="Elements_Model_FromJson_System_String_System_Collections_Generic_List_System_String__" data-uid="Elements.Model.FromJson(System.String,System.Collections.Generic.List{System.String})">FromJson(String, List&lt;String&gt;)</h4>
   <div class="markdown level1 summary"><p>Deserialize a model from JSON.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Model FromJson(string data)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Model FromJson(string data, List&lt;string&gt; errors = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -630,6 +382,12 @@ added to the entities collection as well.</p>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">data</span></td>
         <td><p>The JSON representing the model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">errors</span></td>
+        <td><p>A collection of deserialization errors.</p>
 </td>
       </tr>
     </tbody>
@@ -649,15 +407,15 @@ added to the entities collection as well.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Model_GetEntityByName_" data-uid="Elements.Model.GetEntityByName*"></a>
-  <h4 id="Elements_Model_GetEntityByName__1_System_String_" data-uid="Elements.Model.GetEntityByName``1(System.String)">GetEntityByName&lt;T&gt;(String)</h4>
+  <a id="Elements_Model_GetElementByName_" data-uid="Elements.Model.GetElementByName*"></a>
+  <h4 id="Elements_Model_GetElementByName__1_System_String_" data-uid="Elements.Model.GetElementByName``1(System.String)">GetElementByName&lt;T&gt;(String)</h4>
   <div class="markdown level1 summary"><p>Get the first entity with the specified name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetEntityByName&lt;T&gt;(string name)
-    where T : Identifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public T GetElementByName&lt;T&gt;(string name)
+    where T : Element</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -708,15 +466,15 @@ with the provided name.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Model_GetEntityOfType_" data-uid="Elements.Model.GetEntityOfType*"></a>
-  <h4 id="Elements_Model_GetEntityOfType__1_Guid_" data-uid="Elements.Model.GetEntityOfType``1(Guid)">GetEntityOfType&lt;T&gt;(Guid)</h4>
+  <a id="Elements_Model_GetElementOfType_" data-uid="Elements.Model.GetElementOfType*"></a>
+  <h4 id="Elements_Model_GetElementOfType__1_System_Guid_" data-uid="Elements.Model.GetElementOfType``1(System.Guid)">GetElementOfType&lt;T&gt;(Guid)</h4>
   <div class="markdown level1 summary"><p>Get an entity by id from the Model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public T GetEntityOfType&lt;T&gt;(Guid id)
-    where T : Identifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public T GetElementOfType&lt;T&gt;(Guid id)
+    where T : Element</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -729,7 +487,7 @@ with the provided name.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Guid</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The identifier of the element.</p>
 </td>
@@ -764,109 +522,6 @@ with the provided id.</p>
     <tbody>
       <tr>
         <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_GetEnumerator_" data-uid="Elements.Model.GetEnumerator*"></a>
-  <h4 id="Elements_Model_GetEnumerator" data-uid="Elements.Model.GetEnumerator">GetEnumerator()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerator&lt;KeyValuePair&lt;Guid, Identifiable&gt;&gt; GetEnumerator()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">IEnumerator</span>&lt;<span class="xref">KeyValuePair</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_Remove_" data-uid="Elements.Model.Remove*"></a>
-  <h4 id="Elements_Model_Remove_Guid_" data-uid="Elements.Model.Remove(Guid)">Remove(Guid)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Remove(Guid key)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Guid</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_Remove_" data-uid="Elements.Model.Remove*"></a>
-  <h4 id="Elements_Model_Remove_KeyValuePair_Guid_Elements_Identifiable__" data-uid="Elements.Model.Remove(KeyValuePair{Guid,Elements.Identifiable})">Remove(KeyValuePair&lt;Guid, Identifiable&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Remove(KeyValuePair&lt;Guid, Identifiable&gt; item)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">KeyValuePair</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Identifiable.html">Identifiable</a>&gt;</td>
-        <td><span class="parametername">item</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -918,51 +573,6 @@ with the provided id.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_TryGetValue_" data-uid="Elements.Model.TryGetValue*"></a>
-  <h4 id="Elements_Model_TryGetValue_Guid_Elements_Identifiable__" data-uid="Elements.Model.TryGetValue(Guid,Elements.Identifiable@)">TryGetValue(Guid, out Identifiable)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryGetValue(Guid key, out Identifiable value)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Guid</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Identifiable.html">Identifiable</a></td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>

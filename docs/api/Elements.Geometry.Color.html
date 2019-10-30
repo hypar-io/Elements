@@ -76,7 +76,7 @@
   
   <h1 id="Elements_Geometry_Color" data-uid="Elements.Geometry.Color" class="text-break">Class Color
   </h1>
-  <div class="markdown level0 summary"><p>An RGBA color.</p>
+  <div class="markdown level0 summary"><p>A color with red, green, blue, and alpha components.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -84,22 +84,49 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Color</span></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Color_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Color : object</code></pre>
+    <pre><code class="lang-csharp hljs">public class Color</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Color__ctor_" data-uid="Elements.Geometry.Color.#ctor*"></a>
-  <h4 id="Elements_Geometry_Color__ctor_System_Single_System_Single_System_Single_System_Single_" data-uid="Elements.Geometry.Color.#ctor(System.Single,System.Single,System.Single,System.Single)">Color(Single, Single, Single, Single)</h4>
-  <div class="markdown level1 summary"><p>Construct a color from its components.</p>
+  <h4 id="Elements_Geometry_Color__ctor" data-uid="Elements.Geometry.Color.#ctor">Color()</h4>
+  <div class="markdown level1 summary"><p>Construct a default color.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Color(float red, float green, float blue, float alpha)</code></pre>
+    <pre><code class="lang-csharp hljs">public Color()</code></pre>
+  </div>
+  <a id="Elements_Geometry_Color__ctor_" data-uid="Elements.Geometry.Color.#ctor*"></a>
+  <h4 id="Elements_Geometry_Color__ctor_System_Double_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Color.#ctor(System.Double,System.Double,System.Double,System.Double)">Color(Double, Double, Double, Double)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Color(double red, double green, double blue, double alpha)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -112,28 +139,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">red</span></td>
-        <td><p>The red component between 0.0 and 1.0.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">green</span></td>
-        <td><p>The green component between 0.0 and 1.0.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">blue</span></td>
-        <td><p>The blue component between 0.0 and 1.0.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">alpha</span></td>
-        <td><p>The alpha component between 0.0 and 1.0.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -141,12 +164,14 @@
   </h3>
   <a id="Elements_Geometry_Color_Alpha_" data-uid="Elements.Geometry.Color.Alpha*"></a>
   <h4 id="Elements_Geometry_Color_Alpha" data-uid="Elements.Geometry.Color.Alpha">Alpha</h4>
-  <div class="markdown level1 summary"><p>The alpha component of the color between 0.0 and 1.0..</p>
+  <div class="markdown level1 summary"><p>The alpha component of the color between 0.0 and 1.0.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Alpha { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Alpha&quot;, Required = Required.Always)]
+[Range(0, 1)]
+public double Alpha { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -165,12 +190,14 @@
   </table>
   <a id="Elements_Geometry_Color_Blue_" data-uid="Elements.Geometry.Color.Blue*"></a>
   <h4 id="Elements_Geometry_Color_Blue" data-uid="Elements.Geometry.Color.Blue">Blue</h4>
-  <div class="markdown level1 summary"><p>The blue component of the color between 0.0 and 1.0..</p>
+  <div class="markdown level1 summary"><p>The blue component of the color between 0.0 and 1.0.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Blue { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Blue&quot;, Required = Required.Always)]
+[Range(0, 1)]
+public double Blue { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -189,12 +216,14 @@
   </table>
   <a id="Elements_Geometry_Color_Green_" data-uid="Elements.Geometry.Color.Green*"></a>
   <h4 id="Elements_Geometry_Color_Green" data-uid="Elements.Geometry.Color.Green">Green</h4>
-  <div class="markdown level1 summary"><p>The green component of the color between 0.0 and 1.0..</p>
+  <div class="markdown level1 summary"><p>The green component of the color between 0.0 and 1.0.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Green { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Green&quot;, Required = Required.Always)]
+[Range(0, 1)]
+public double Green { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -218,7 +247,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Red { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Red&quot;, Required = Required.Always)]
+[Range(0, 1)]
+public double Red { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -278,6 +309,8 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <a id="Elements_Geometry_Color_GetHashCode_" data-uid="Elements.Geometry.Color.GetHashCode*"></a>
   <h4 id="Elements_Geometry_Color_GetHashCode" data-uid="Elements.Geometry.Color.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for this color.</p>
@@ -302,6 +335,8 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Color_ToArray_" data-uid="Elements.Geometry.Color.ToArray*"></a>
   <h4 id="Elements_Geometry_Color_ToArray" data-uid="Elements.Geometry.Color.ToArray">ToArray()</h4>
   <div class="markdown level1 summary"><p>Get the color's components as an array.</p>

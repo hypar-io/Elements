@@ -237,7 +237,7 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
     <div class="level3"><span class="xref">Topography</span></div>
   </div>
@@ -257,13 +257,31 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
@@ -275,7 +293,7 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Topography__ctor_" data-uid="Elements.Topography.#ctor*"></a>
-  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,Func{Elements.Geometry.Triangle,Elements.Geometry.Color})">Topography(Vector3, Double, Double, Double[], Int32, Func&lt;Triangle, Color&gt;)</h4>
+  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_System_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})">Topography(Vector3, Double, Double, Double[], Int32, Func&lt;Triangle, Color&gt;)</h4>
   <div class="markdown level1 summary"><p>Create a topography.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -323,7 +341,7 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">Func</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>, <a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>, <a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
         <td><span class="parametername">colorizer</span></td>
         <td><p>A function which produces a color for a triangle.</p>
 </td>
@@ -351,7 +369,7 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Guid</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -387,7 +405,8 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Mesh Mesh { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Mesh Mesh { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
