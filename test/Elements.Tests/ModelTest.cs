@@ -45,7 +45,7 @@ namespace Elements.Tests
             this.GenerateIfc = true;
             this.GenerateJson = true;
 
-            if(!Directory.Exists("models"))
+            if(Directory.Exists("models"))
             {
                 Directory.Delete("models");
             }
