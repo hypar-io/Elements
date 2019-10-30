@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -76,7 +76,7 @@
   
   <h1 id="Elements_GeoJSON_Position" data-uid="Elements.GeoJSON.Position" class="text-break">Class Position
   </h1>
-  <div class="markdown level0 summary"><p>A GeoJSON position specified by longitude and latitude.</p>
+  <div class="markdown level0 summary"><p>A position.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -84,30 +84,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Position</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.GeoJSON.html">Elements.GeoJSON</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_GeoJSON_Position_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(PositionConverter))]
-public class Position</code></pre>
+    <pre><code class="lang-csharp hljs">public class Position : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -118,7 +99,7 @@ public class Position</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Position(double lon, double lat)</code></pre>
+    <pre><code class="lang-csharp hljs">public Position(double longitude, double latitude)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -132,12 +113,12 @@ public class Position</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">lon</span></td>
+        <td><span class="parametername">longitude</span></td>
         <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">lat</span></td>
+        <td><span class="parametername">latitude</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -151,8 +132,7 @@ public class Position</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;latitude&quot;)]
-public double Latitude { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Latitude { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -176,8 +156,7 @@ public double Latitude { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;longitude&quot;)]
-public double Longitude { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Longitude { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -236,8 +215,6 @@ public double Longitude { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <a id="Elements_GeoJSON_Position_GetHashCode_" data-uid="Elements.GeoJSON.Position.GetHashCode*"></a>
   <h4 id="Elements_GeoJSON_Position_GetHashCode" data-uid="Elements.GeoJSON.Position.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"></div>
@@ -261,8 +238,6 @@ public double Longitude { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_GeoJSON_Position_ToVectorMeters_" data-uid="Elements.GeoJSON.Position.ToVectorMeters*"></a>
   <h4 id="Elements_GeoJSON_Position_ToVectorMeters" data-uid="Elements.GeoJSON.Position.ToVectorMeters">ToVectorMeters()</h4>
   <div class="markdown level1 summary"><p>Convert the position to a vector.</p>

@@ -3,7 +3,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// One half of the directional components of an Edge.
     /// </summary>
-    public class HalfEdge
+    internal class HalfEdge
     {
         /// <summary>
         /// The Edge of which this is one half.
@@ -20,7 +20,11 @@ namespace Elements.Geometry.Solids
         /// </summary>
         public Loop Loop{get; internal set;}
 
-        internal HalfEdge(Vertex v)
+        /// <summary>
+        /// Create a half edge.
+        /// </summary>
+        /// <param name="v"></param>
+        public HalfEdge(Vertex v)
         {
             this.Vertex = v;
             v.HalfEdge = this;

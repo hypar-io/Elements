@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Elements.Geometry.Profiles
 {
     /// <summary>
-    /// Base class for types which serve Profiles.
+    /// Base class for all types which serve profiles.
     /// </summary>
     public abstract class ProfileServer
     {
@@ -23,7 +23,7 @@ namespace Elements.Geometry.Profiles
         /// </summary>
         /// <param name="name"></param>
         /// <returns>A Profile. Throws an exception if a profile with the specified name cannot be found.</returns>
-        /// <exception cref="System.Exception">Thrown when a Profile with the specfied name cannot be found.</exception>
+        /// <exception>Thrown when a Profile with the specfied name cannot be found.</exception>
         public Profile GetProfileByName(string name)
         {
             if (!this._profiles.ContainsKey(name))

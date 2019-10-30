@@ -1,9 +1,7 @@
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
-using Elements.Interfaces;
 using Elements.Geometry.Solids;
 using System;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -11,9 +9,10 @@ namespace Elements
     /// A zero-thickness planar element defined by a perimeter.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Examples/PanelExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/PanelExample.cs?name=example)]
     /// </example>
-    public class Panel : Element, IMaterial, ILamina
+    [UserElement]
+    public class Panel : GeometricElement
     {
         /// <summary>
         /// The perimeter of the panel.
@@ -21,26 +20,31 @@ namespace Elements
         public Polygon Perimeter { get; }
 
         /// <summary>
-        /// The panel's material.
-        /// </summary>
-        public Material Material {get;}
-
-        /// <summary>
         /// Create a panel.
         /// </summary>
         /// <param name="perimeter">The perimeter of the panel.</param>
         /// <param name="material">The panel's material</param>
         /// <param name="transform">The panel's transform.</param>
-        /// <exception cref="System.ArgumentException">Thrown when the provided perimeter points are not coplanar.</exception>
-        [JsonConstructor]
-        public Panel(Polygon perimeter, Material material = null, Transform transform = null)
+        /// <param name="representation">The panel's representation.</param>
+        /// <param name="id">The id of the panel.</param>
+        /// <param name="name">The name of the panel.</param>
+        /// <exception>Thrown when the provided perimeter points are not coplanar.</exception>
+        public Panel(Polygon perimeter,
+                     Material material = null,
+                     Transform transform = null,
+                     Representation representation = null,
+                     Guid id = default(Guid),
+                     string name = null) : base(transform != null ? transform : new Transform(),
+                                                material != null ? material : BuiltInMaterials.Concrete,
+                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                id != default(Guid) ? id : Guid.NewGuid(),
+                                                name)
         {
-            if(transform != null)
-            {
-                this.Transform = transform;
-            }
             this.Perimeter = perimeter;
-            this.Material = material == null ? BuiltInMaterials.Default : material;
+            if(this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Lamina(this.Perimeter));
+            }
         }
 
         /// <summary>
@@ -58,14 +62,6 @@ namespace Elements
         public Vector3 Normal()
         {
             return this.Perimeter.Plane().Normal;
-        }
-
-        /// <summary>
-        /// Get the updated solid representation of the panel.
-        /// </summary>
-        public Solid GetUpdatedSolid()
-        {
-            return Kernel.Instance.CreateLamina(this);
         }
     }
 }

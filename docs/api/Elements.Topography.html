@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -237,73 +237,45 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
-    <div class="level2"><span class="xref">Topography</span></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
+    <div class="level3"><span class="xref">Topography</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Type">Element.Type</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Properties">Element.Properties</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Transform">Element.Transform</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_">Element.AddProperty(String, IProperty)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_RemoveProperty_System_String_">Element.RemoveProperty(String)</a>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Topography_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Topography : Element, IElement, IIdentifiable, ITransformable, IPropertySet, ITessellate, IMaterial</code></pre>
+    <pre><code class="lang-csharp hljs">public class Topography : GeometricElement, ITessellate</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Topography__ctor_" data-uid="Elements.Topography.#ctor*"></a>
-  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_System_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})">Topography(Vector3, Double, Double, Double[], Int32, Func&lt;Triangle, Color&gt;)</h4>
+  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,Func{Elements.Geometry.Triangle,Elements.Geometry.Color})">Topography(Vector3, Double, Double, Double[], Int32, Func&lt;Triangle, Color&gt;)</h4>
   <div class="markdown level1 summary"><p>Create a topography.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -351,7 +323,7 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>, <a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>, <a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
         <td><span class="parametername">colorizer</span></td>
         <td><p>A function which produces a color for a triangle.</p>
 </td>
@@ -360,14 +332,14 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Topography_Material_" data-uid="Elements.Topography.Material*"></a>
-  <h4 id="Elements_Topography_Material" data-uid="Elements.Topography.Material">Material</h4>
-  <div class="markdown level1 summary"><p>The material of the topography.</p>
+  <a id="Elements_Topography_MaterialId_" data-uid="Elements.Topography.MaterialId*"></a>
+  <h4 id="Elements_Topography_MaterialId" data-uid="Elements.Topography.MaterialId">MaterialId</h4>
+  <div class="markdown level1 summary"><p>The material id of the topography.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material Material { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Guid MaterialId { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -379,7 +351,7 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="xref">Guid</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -415,8 +387,7 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Mesh Mesh { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Mesh Mesh { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -486,24 +457,20 @@ public Mesh Mesh { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Topography_UpdateRepresentations_" data-uid="Elements.Topography.UpdateRepresentations*"></a>
+  <h4 id="Elements_Topography_UpdateRepresentations" data-uid="Elements.Topography.UpdateRepresentations">UpdateRepresentations()</h4>
+  <div class="markdown level1 summary"><p>Update the representations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
-  </div>
-  <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IMaterial.html">IMaterial</a>
   </div>
 </article>
           </div>

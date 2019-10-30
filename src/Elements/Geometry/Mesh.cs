@@ -244,12 +244,12 @@ Triangles:{_triangles.Count}";
 
                 if (v.Color != null)
                 {
-                    c_max[0] = Math.Max(c_max[0], v.Color.Red);
-                    c_max[1] = Math.Max(c_max[1], v.Color.Green);
-                    c_max[2] = Math.Max(c_max[2], v.Color.Blue);
-                    c_min[0] = Math.Min(c_min[0], v.Color.Red);
-                    c_min[1] = Math.Min(c_min[1], v.Color.Green);
-                    c_min[2] = Math.Min(c_min[2], v.Color.Blue);
+                    c_max[0] = Math.Max(c_max[0], (float)v.Color.Red);
+                    c_max[1] = Math.Max(c_max[1], (float)v.Color.Green);
+                    c_max[2] = Math.Max(c_max[2], (float)v.Color.Blue);
+                    c_min[0] = Math.Min(c_min[0], (float)v.Color.Red);
+                    c_min[1] = Math.Min(c_min[1], (float)v.Color.Green);
+                    c_min[2] = Math.Min(c_min[2], (float)v.Color.Blue);
 
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Color.Red), 0, colorBuffer, ci, floatSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Color.Green), 0, colorBuffer, ci + floatSize, floatSize);

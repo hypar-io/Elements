@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Elements.Geometry.Interfaces
 {
     /// <summary>
@@ -8,24 +6,9 @@ namespace Elements.Geometry.Interfaces
     public interface ICurve
     {
         /// <summary>
-        /// A type descriptor for use in deserialization.
-        /// </summary>
-        string Type { get; }
-
-        /// <summary>
         /// Calculate the length of the curve.
         /// </summary>
         double Length();
-
-        /// <summary>
-        /// The start of the curve.
-        /// </summary>
-        Vector3 Start { get; }
-
-        /// <summary>
-        /// The end of the curve.
-        /// </summary>
-        Vector3 End { get; }
 
         /// <summary>
         /// Get a point along the curve at parameter u.
@@ -38,21 +21,18 @@ namespace Elements.Geometry.Interfaces
         /// Get the frame from the curve at parameter u.
         /// </summary>
         /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <param name="rotation">An optional rotation of the transform around its z axis.</param>
         /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
-        Transform TransformAt(double u);
+        Transform TransformAt(double u, double rotation = 0.0);
 
         /// <summary>
         /// Get a collection of Transforms which represent frames along this ICurve.
         /// </summary>
         /// <param name="startSetback">The offset from the start of the ICurve.</param>
         /// <param name="endSetback">The offset from the end of the ICurve.</param>
+        /// <param name="rotation">An optional rotation of all frames around their z axes.</param>
         /// <returns>A collection of Transforms.</returns>
-        Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0);
-
-        /// <summary>
-        /// Get an ICurve which is the reverse of this curve.
-        /// </summary>
-        ICurve Reversed();
+        Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0, double rotation = 0.0);
 
         /// <summary>
         /// Get the bounding box of this curve.

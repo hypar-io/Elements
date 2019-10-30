@@ -1,85 +1,66 @@
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A coordinate system defined by an origin, x, y, and z axes.
+    /// A right-handed coordinate with +z up.
     /// </summary>
-    public class Transform
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/TransformExample.cs?name=example)]
+    /// </example>
+    public partial class Transform
     {
-        private Matrix _matrix;
-
         /// <summary>
-        /// The transform's matrix.
-        /// </summary>
-        public Matrix Matrix
-        {
-            get => _matrix;
-        }
-
-        /// <summary>
-        /// The origin.
+        /// The origin of the transform.
         /// </summary>
         [JsonIgnore]
-        public Vector3 Origin
-        {
-            get { return this._matrix.Translation; }
-        }
+        public Vector3 Origin => this.Matrix.Translation;
 
         /// <summary>
-        /// The X axis.
+        /// The x axis of the transform.
         /// </summary>
         [JsonIgnore]
-        public Vector3 XAxis
-        {
-            get { return this._matrix.XAxis; }
-        }
+        public Vector3 XAxis => this.Matrix.XAxis;
 
         /// <summary>
-        /// The Y axis.
+        /// The y axis of the transform.
         /// </summary>
         [JsonIgnore]
-        public Vector3 YAxis
-        {
-            get { return this._matrix.YAxis; }
-        }
+        public Vector3 YAxis => this.Matrix.YAxis;
 
         /// <summary>
-        /// The Z axis.
+        /// The z axis of the transform.
         /// </summary>
         [JsonIgnore]
-        public Vector3 ZAxis
-        {
-            get { return this._matrix.ZAxis; }
-        }
+        public Vector3 ZAxis => this.Matrix.ZAxis;
 
         /// <summary>
         /// Create the identity transform.
         /// </summary>
         public Transform()
         {
-            this._matrix = new Matrix();
+            this.Matrix = new Matrix();
         }
         
         /// <summary>
         /// Create a transform by copying another transform.
         /// </summary>
         /// <param name="t">The transform to copy.</param>
-        public Transform(Transform t)
-        {
-            this._matrix = new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin));
-        }
+        public Transform(Transform t): 
+            this(new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin))){}
 
         /// <summary>
         /// Create a transform with a translation.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
-        public Transform(Vector3 origin)
+        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
+        public Transform(Vector3 origin, double rotation = 0.0)
         {
-            this._matrix = new Matrix();
-            this._matrix.SetupTranslation(origin);
+            this.Matrix = new Matrix();
+            this.Matrix.SetupTranslation(origin);
+            ApplyRotationAndTranslation(rotation, this.Matrix.ZAxis, Vector3.Origin);
         }
 
         /// <summary>
@@ -88,85 +69,78 @@ namespace Elements.Geometry
         /// <param name="x">The X component of translation.</param>
         /// <param name="y">The Y component of translation.</param>
         /// <param name="z">The Z component of translation.</param>
-        public Transform(double x, double y, double z)
+        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
+        public Transform(double x, double y, double z, double rotation = 0.0)
         {
-            this._matrix = new Matrix();
-            this._matrix.SetupTranslation(new Vector3(x, y, z));
+            this.Matrix = new Matrix();
+            this.Matrix.SetupTranslation(new Vector3(x, y, z));
+            ApplyRotationAndTranslation(rotation, this.Matrix.ZAxis, Vector3.Origin);
         }
 
         /// <summary>
-        /// Create a transform centered at origin and an up vector.
+        /// Create a transform centered at origin with its Z axis pointing
+        /// along up.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
-        /// <param name="up">The vector which will define the Z axis of the transform.</param>
-        public Transform(Vector3 origin, Vector3 up)
+        /// <param name="z">The vector which will define the Z axis of the transform.</param>
+        /// <param name="rotation">An optional rotation around the z axis.</param>
+        public Transform(Vector3 origin, Vector3 z, double rotation = 0.0)
         {
-            var test = Vector3.XAxis;
-            if(up.IsParallelTo(Vector3.XAxis))
-            {
-                test = Vector3.YAxis;
+            Vector3 x = Vector3.XAxis;
+            Vector3 y = Vector3.YAxis;
+
+            if(!z.IsParallelTo(Vector3.ZAxis))
+            {   
+                // Project up onto the ortho plane
+                var p = new Plane(origin, z);
+                var test = Vector3.ZAxis.Project(p);
+                x = test.Cross(z);
+                y = x.Cross(z.Negate()); 
             }
-            var y = up.Cross(test);
-            var x = y.Cross(up); 
-            this._matrix = new Matrix(x, y, up, origin);
+            
+            this.Matrix = new Matrix(x, y, z, Vector3.Origin);
+            ApplyRotationAndTranslation(rotation, z, origin);
+        }
+
+        private void ApplyRotationAndTranslation(double rotation, Vector3 axis, Vector3 translation)
+        {
+            if(rotation != 0.0)
+            {
+                this.Rotate(axis, rotation);
+            }
+            // Apply translation after rotation.
+            this.Move(translation);
         }
 
         /// <summary>
-        /// Create a transform by origin and axes.
+        /// Create a transform by origin and X and Z axes.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
         /// <param name="xAxis">The X axis of the transform.</param>
         /// <param name="zAxis">The Z axis of the transform.</param>
-        public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis)
+        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
+        public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis, double rotation = 0.0)
         {
             var x = xAxis.Normalized();
             var z = zAxis.Normalized();
             var y = z.Cross(x).Normalized();
-            this._matrix = new Matrix(x, y, z, origin);
+            this.Matrix = new Matrix(x, y, z, Vector3.Origin);
+            ApplyRotationAndTranslation(rotation, z, origin);
         }
 
         /// <summary>
-        /// Create a transform by a matrix.
-        /// </summary>
-        /// <param name="matrix">The transform's Matrix.</param>
-        [JsonConstructor]
-        public Transform(Matrix matrix)
-        {
-            this._matrix = matrix;
-        }
-
-        /// <summary>
-        /// Create a transform with origin at origin,
-        /// whose Z axis points from start to end, and whose
-        /// up direction is up.
+        /// Create a transform by origin, X, Y, and Z axes.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
-        /// <param name="start">The start of the z vector.</param>
-        /// <param name="end">The end of the z vector.</param>
-        /// <param name="up">A vector which can be used to orient the transform.</param>
-        internal Transform(Vector3 origin, Vector3 start, Vector3 end, Vector3 up = null)
+        /// <param name="xAxis">The X axis of the transform.</param>
+        /// <param name="yAxis">The Y axis of the transform.</param>
+        /// <param name="zAxis">The Z axis of the transform.</param>
+        public Transform(Vector3 origin,
+                         Vector3 xAxis,
+                         Vector3 yAxis,
+                         Vector3 zAxis)
         {
-            var z = (end - start).Normalized();
-
-            if (up == null)
-            {
-                up = Vector3.ZAxis;
-                if (up.IsParallelTo(z))
-                {
-                    if (z.IsParallelTo(Vector3.XAxis))
-                    {
-                        up = Vector3.YAxis;
-                    }
-                    else
-                    {
-                        up = Vector3.XAxis;
-                    }
-                }
-            }
-
-            var x = z.Cross(up).Normalized();
-            var y = x.Cross(z);
-            this._matrix = new Matrix(x, y, z, origin);
+            this.Matrix = new Matrix(xAxis, yAxis, zAxis, origin);
         }
 
         /// <summary>
@@ -175,7 +149,7 @@ namespace Elements.Geometry
         /// <returns>A string representation of the transform.</returns>
         public override string ToString()
         {
-            return this._matrix.ToString();
+            return this.Matrix.ToString();
         }
 
         /// <summary>
@@ -185,7 +159,7 @@ namespace Elements.Geometry
         /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfPoint(Vector3 vector)
         {
-            return vector * this._matrix;
+            return vector * this.Matrix;
         }
 
         /// <summary>
@@ -210,7 +184,7 @@ namespace Elements.Geometry
         /// <returns>A new polygon transformed by this transform.</returns>
         public Polygon OfPolygon(Polygon polygon)
         {
-            var transformed = new Vector3[polygon.Vertices.Length];
+            var transformed = new Vector3[polygon.Vertices.Count];
             for (var i = 0; i < transformed.Length; i++)
             {
                 transformed[i] = OfPoint(polygon.Vertices[i]);
@@ -224,10 +198,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygons">The polygons to transform.</param>
         /// <returns>An array of polygons transformed by this transform.</returns>
-        public Polygon[] OfPolygons(Polygon[] polygons)
+        public Polygon[] OfPolygons(IList<Polygon> polygons)
         {
-            var result = new Polygon[polygons.Length];
-            for(var i=0; i<polygons.Length; i++)
+            var result = new Polygon[polygons.Count];
+            for(var i=0; i<polygons.Count; i++)
             {
                 result[i] = OfPolygon(polygons[i]);
             }
@@ -264,13 +238,13 @@ namespace Elements.Geometry
             Polygon[] voids = null;
             if (profile.Voids != null)
             {
-                voids = new Polygon[profile.Voids.Length];
+                voids = new Polygon[profile.Voids.Count];
                 for (var i = 0; i < voids.Length; i++)
                 {
                     voids[i] = OfPolygon(profile.Voids[i]);
                 }
             }
-            var p = new Profile(OfPolygon(profile.Perimeter), voids);
+            var p = new Profile(OfPolygon(profile.Perimeter), voids, Guid.NewGuid(), null);
             return p;
         }
 
@@ -280,7 +254,7 @@ namespace Elements.Geometry
         /// <param name="transform"></param>
         public void Concatenate(Transform transform)
         {
-            this._matrix = this._matrix * transform._matrix;
+            this.Matrix = this.Matrix * transform.Matrix;
         }
 
         /// <summary>
@@ -288,7 +262,7 @@ namespace Elements.Geometry
         /// </summary>
         public void Invert()
         {
-            this._matrix = this._matrix.Inverse();
+            this.Matrix = this.Matrix.Inverse();
         }
 
         /// <summary>
@@ -299,7 +273,7 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupTranslation(translation);
-            this._matrix = this._matrix * m;
+            this.Matrix = this.Matrix * m;
         }
 
         /// <summary>
@@ -311,7 +285,7 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupRotate(axis, angle * (Math.PI / 180.0));
-            this._matrix = this._matrix * m;
+            this.Matrix = this.Matrix * m;
         }
 
         /// <summary>
@@ -322,7 +296,7 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupScale(amount);
-            this._matrix = this._matrix * m;
+            this.Matrix = this.Matrix * m;
         }
 
         /// <summary>
@@ -347,6 +321,21 @@ namespace Elements.Geometry
         public Plane XZ()
         {
             return new Plane(this.Origin, this.YAxis);
+        }
+
+        /// <summary>
+        /// Create a transform that is oriented along 
+        /// a curve at parameter t. The transform's +z axis will align with 
+        /// the +z world axis, and the +x axis will align with the tangent
+        /// of the curve.
+        /// </summary>
+        /// <param name="curve">The curve along which to orient the transform.</param>
+        /// <param name="t">A parameter value between 0.0 and 1.0.</param>
+        /// <param name="up"></param>
+        public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = null)
+        {
+            var temp = curve.TransformAt(t);
+            return new Transform(temp.Origin, temp.ZAxis.Negate(), temp.XAxis.Negate(), Vector3.ZAxis);
         }
     }
 }

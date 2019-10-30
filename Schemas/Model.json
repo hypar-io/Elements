@@ -1,0 +1,23 @@
+{
+    "$id": "https://hypar.io/Schemas/Model.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A container of elements.",
+    "title": "Model",
+    "x-namespace": "Elements",
+    "type": "object",
+    "required": ["Origin","Elements"],
+    "properties": {
+        "Origin": {
+            "description": "The origin of the model.",
+            "$ref": "https://hypar.io/Schemas/GeoJSON/Position.json"
+        },
+        "Elements": {
+            "description": "A collection of Elements keyed by their identifiers.",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "https://hypar.io/Schemas/Element.json"
+            }
+        }
+    },
+    "additionalProperties": false
+}

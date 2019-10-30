@@ -27,31 +27,8 @@ namespace Elements.GeoJSON
     /// A GeoJSON position specified by longitude and latitude.
     /// </summary>
     [JsonConverter(typeof(PositionConverter))]
-    public class Position
+    public partial class Position
     {
-        /// <summary>
-        /// The latitude in decimal degrees.
-        /// </summary>
-        [JsonProperty("latitude")]
-        public double Latitude {get;}
-
-        /// <summary>
-        /// The longitude in decimal degrees.
-        /// </summary>
-        [JsonProperty("longitude")]
-        public double Longitude{get;}
-
-        /// <summary>
-        /// Construct a Position.
-        /// </summary>
-        /// <param name="lon"></param>
-        /// <param name="lat"></param>
-        public Position(double lon, double lat)
-        {
-            this.Latitude = lat;
-            this.Longitude = lon;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -98,7 +75,7 @@ namespace Elements.GeoJSON
         /// Construct a Point.
         /// </summary>
         /// <param name="coordinates"></param>
-        /// <exception cref="System.ArgumentNullException">Thrown when the provided coordinates are null.</exception>
+        /// <exception>Thrown when the provided coordinates are null.</exception>
         public Point(Position coordinates)
         {
             if(coordinates == null)
@@ -124,7 +101,7 @@ namespace Elements.GeoJSON
         /// Construct a Line.
         /// </summary>
         /// <param name="coordinates"></param>
-        ///<exception cref="System.ArgumentException">Thrown when the coordinates provides does not contain 2 items.</exception>
+        ///<exception>Thrown when the coordinates provides does not contain 2 items.</exception>
         public Line(Position[] coordinates)
         {
             if(coordinates == null || coordinates.Length != 2)
@@ -150,7 +127,7 @@ namespace Elements.GeoJSON
         /// Construct a MultiPoint.
         /// </summary>
         /// <param name="coordinates"></param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the coordinates provided contains 1 item or less.</exception>
+        /// <exception>Thrown when the coordinates provided contains 1 item or less.</exception>
         public MultiPoint(Position[] coordinates)
         {
             if(coordinates == null || coordinates.Length <= 1)
@@ -337,7 +314,7 @@ namespace Elements.GeoJSON
             var lon = reader.ReadAsDouble();
             var lat = reader.ReadAsDouble();
             reader.Read();
-            return new Position(lon.Value,lat.Value);
+            return new Position(lat.Value,lon.Value);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

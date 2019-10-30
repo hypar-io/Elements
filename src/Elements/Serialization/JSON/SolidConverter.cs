@@ -18,11 +18,11 @@ namespace Elements.Serialization.JSON
     /// serializes and deserializes starting at the Solid's Faces, using
     /// Vertex and Edge ids to reconstruct and link the Edges and Vertices as necessary.
     /// </summary>
-    public class SolidConverter : JsonConverter
+    internal class SolidConverter : JsonConverter
     {
         private List<Type> _solidTypes;
         
-        public SolidConverter(Dictionary<Guid, Material> materials)
+        public SolidConverter(IDictionary<Guid, Material> materials)
         {
             try
             {

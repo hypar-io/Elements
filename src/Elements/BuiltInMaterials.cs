@@ -15,12 +15,13 @@ namespace Elements
         private static Material _wood = new Material("wood", new Color(0.94f, 0.94f, 0.94f, 1.0f), 0.0f, 0.0f);
         private static Material _black = new Material("black", new Color(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, 0.0f);
         private static Material _edges = new Material("edges", new Color(0.1f, 0.1f, 0.1f, 1.0f), 0.0f, 0.0f);
-        private static Material _topography = new Material("topography", new Color(0.59f, 0.59f, 0.39f, 1.0f), 0.0f, 0.0f, true);
+        private static Material _points = new Material("points", new Color(1.0f, 1.0f, 0.0f, 1.0f), 0.0f, 0.0f);
+        private static Material _topography = new Material("topography", new Color(0.59f, 0.59f, 0.39f, 1.0f), 0.0f, 0.0f);
         private static Material _edgesHighlighted = new Material("edge_highlighted", new Color(1.0f, 1.0f, 0.0f, 1.0f), 0.0f, 0.0f);
         private static Material _void = new Material("void", new Color(Colors.Lime.Red, Colors.Lime.Green, Colors.Lime.Blue, 0.1f), 0.1f, 0.1f);
-        private static Material _xAxis = new Material("x_axis", new Color(1.0f, 0.0f, 0.0f, 1.0f), 0.1f, 0.1f);
-        private static Material _yAxis = new Material("x_axis", new Color(0.0f, 1.0f, 0.0f, 1.0f), 0.1f, 0.1f);
-        private static Material _zAxis = new Material("x_axis", new Color(0.0f, 0.0f, 1.0f, 1.0f), 0.1f, 0.1f);
+        private static Material _xAxis = new Material("X", new Color(1.0f, 0.0f, 0.0f, 1.0f), 0.1f, 0.1f);
+        private static Material _yAxis = new Material("Y", new Color(0.0f, 1.0f, 0.0f, 1.0f), 0.1f, 0.1f);
+        private static Material _zAxis = new Material("Z", new Color(0.0f, 0.0f, 1.0f, 1.0f), 0.1f, 0.1f);
         private static Material _trans = new Material("trans", new Color(0.0f,0.0f,0.0f,0.0f),0.0f,0.0f);
 
         /// <summary>
@@ -62,6 +63,11 @@ namespace Elements
         /// Edges
         /// </summary>
         public static Material Edges => _edges;
+
+        /// <summary>
+        /// Points
+        /// </summary>
+        public static Material Points => _points;
 
         /// <summary>
         /// Topography

@@ -1,0 +1,30 @@
+{
+    "$id": "https://hypar.io/Schemas/GeometricElement.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "An element with a geometric representation.",
+    "title": "GeometricElement",
+    "x-abstract": true,
+    "x-namespace": "Elements",
+    "type": ["object", "null"],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Element.json"}],
+    "required": ["Transform","Material","Representation","discriminator"],
+    "discriminator": "discriminator",
+    "properties": {
+        "Transform": {
+            "description": "The element's transform.",
+            "$ref": "https://hypar.io/Schemas/Geometry/Transform.json"
+        },
+        "Material": {
+            "description": "The element's material.",
+            "$ref": "https://hypar.io/Schemas/Material.json"
+        },
+        "Representation": {
+            "description": "The element's representation.",
+            "$ref": "https://hypar.io/Schemas/Geometry/Representation.json"
+        },
+        "discriminator": {
+            "type": "string"
+        }
+    },
+    "additionalProperties": false
+}

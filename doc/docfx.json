@@ -24,17 +24,9 @@
       {
         "files": [
           "api/**.yml",
-          "index.md"
-        ]
-      },
-      {
-        "files": [
-          "Elements/**.yml",
-          "Elements/**.md"
-        ]
-      },
-      {
-        "files": [
+          "index.md",
+          "Articles/**.yml",
+          "Articles/**.md",
           "toc.yml",
           "*.md"
         ]
@@ -57,7 +49,7 @@
         ]
       },
       {
-        "src": "../test/bin/debug/netcoreapp2.0/models/",
+        "src": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/",
         "files": [
           "Elements_**.glb"
         ],

@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -76,53 +76,43 @@
   
   <h1 id="Elements_Material" data-uid="Elements.Material" class="text-break">Class Material
   </h1>
-  <div class="markdown level0 summary"><p>A material with red, green, blue, alpha, and metallic factor components.</p>
+  <div class="markdown level0 summary"><p>A material.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Material</span></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><span class="xref">Material</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <span class="xref">System.Object.GetType()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
     <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_AdditionalProperties">Identifiable.AdditionalProperties</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Material_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Material : IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public class Material : Identifiable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_System_Guid_System_String_Elements_Geometry_Color_System_Single_System_Single_System_Boolean_" data-uid="Elements.Material.#ctor(System.Guid,System.String,Elements.Geometry.Color,System.Single,System.Single,System.Boolean)">Material(Guid, String, Color, Single, Single, Boolean)</h4>
+  <h4 id="Elements_Material__ctor_Guid_System_String_Elements_Geometry_Color_System_Single_System_Single_System_Boolean_" data-uid="Elements.Material.#ctor(Guid,System.String,Elements.Geometry.Color,System.Single,System.Single,System.Boolean)">Material(Guid, String, Color, Single, Single, Boolean)</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Material(Guid id, string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, bool doubleSided = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(Guid id, string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, bool doubleSided = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -135,7 +125,7 @@ public Material(Guid id, string name, Color color, float specularFactor = 0.1F, 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The unique identifier of the material.</p>
 </td>
@@ -168,27 +158,6 @@ public Material(Guid id, string name, Color color, float specularFactor = 0.1F, 
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">doubleSided</span></td>
         <td><p>Is the material double sided?</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the specular or glossiness value is less than 0.0.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the specular or glossiness value is greater than 1.0.</p>
 </td>
       </tr>
     </tbody>
@@ -270,32 +239,11 @@ public Material(Guid id, string name, Color color, float specularFactor = 0.1F, 
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the specular or glossiness value is less than 0.0.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the specular or glossiness value is greater than 1.0.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Material_Color_" data-uid="Elements.Material.Color*"></a>
   <h4 id="Elements_Material_Color" data-uid="Elements.Material.Color">Color</h4>
-  <div class="markdown level1 summary"><p>The RGBA color of the material.</p>
+  <div class="markdown level1 summary"><p>The material's color.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -343,12 +291,12 @@ public Material(Guid id, string name, Color color, float specularFactor = 0.1F, 
   </table>
   <a id="Elements_Material_GlossinessFactor_" data-uid="Elements.Material.GlossinessFactor*"></a>
   <h4 id="Elements_Material_GlossinessFactor" data-uid="Elements.Material.GlossinessFactor">GlossinessFactor</h4>
-  <div class="markdown level1 summary"><p>The glossiness factor.</p>
+  <div class="markdown level1 summary"><p>The material's glossiness factor.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float GlossinessFactor { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double GlossinessFactor { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -360,67 +308,19 @@ public Material(Guid id, string name, Color color, float specularFactor = 0.1F, 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Material_Id_" data-uid="Elements.Material.Id*"></a>
-  <h4 id="Elements_Material_Id" data-uid="Elements.Material.Id">Id</h4>
-  <div class="markdown level1 summary"><p>The unique identifier of the material.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Guid Id { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Guid</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Material_Name_" data-uid="Elements.Material.Name*"></a>
-  <h4 id="Elements_Material_Name" data-uid="Elements.Material.Name">Name</h4>
-  <div class="markdown level1 summary"><p>The name of the material.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Material_SpecularFactor_" data-uid="Elements.Material.SpecularFactor*"></a>
   <h4 id="Elements_Material_SpecularFactor" data-uid="Elements.Material.SpecularFactor">SpecularFactor</h4>
-  <div class="markdown level1 summary"><p>The specular factor.</p>
+  <div class="markdown level1 summary"><p>The material's specular factor.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float SpecularFactor { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double SpecularFactor { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -432,7 +332,7 @@ public Material(Guid id, string name, Color color, float specularFactor = 0.1F, 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -480,8 +380,6 @@ public Material(Guid id, string name, Color color, float specularFactor = 0.1F, 
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <a id="Elements_Material_GetHashCode_" data-uid="Elements.Material.GetHashCode*"></a>
   <h4 id="Elements_Material_GetHashCode" data-uid="Elements.Material.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the material.</p>
@@ -506,12 +404,6 @@ public Material(Guid id, string name, Color color, float specularFactor = 0.1F, 
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
 </article>
           </div>
           

@@ -1,0 +1,24 @@
+{
+    "$id": "https://hypar.io/Schemas/Geometry/Profile.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Profile",
+    "x-namespace": "Elements.Geometry",
+    "type": ["object","null"],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Element.json"}],
+    "description": "A profile comprised of an external boundary and one or several holes.",
+    "required": ["Id","Perimeter","Voids"],
+    "properties": {
+        "Perimeter":{
+            "description": "The perimeter of the profile.",
+            "$ref": "https://hypar.io/Schemas/Geometry/Polygon.json"
+        },
+        "Voids": {
+            "type": ["null","array"],
+            "description": "A collection of Polygons representing voids in the profile.",
+            "items": {
+                "$ref": "https://hypar.io/Schemas/Geometry/Polygon.json"
+            }
+        }
+    },
+    "additionalProperties": false
+}

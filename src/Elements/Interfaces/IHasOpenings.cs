@@ -1,15 +1,14 @@
+#pragma warning disable CS1591
+
 using System.Collections.Generic;
 
 namespace Elements.Interfaces
 {
-    /// <summary>
-    /// Has a collection of opening.
-    /// </summary>
     public interface IHasOpenings
     {
         /// <summary>
-        /// A collection of openings which are transformed in the coordinate system of their host element.
+        /// A collection of openings.
         /// </summary>
-        List<Opening> Openings{get;}
+        List<Opening> Openings {get;}
     }
 }

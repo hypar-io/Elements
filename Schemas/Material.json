@@ -1,0 +1,31 @@
+{
+    "$id": "https://hypar.io/Schemas/Components/Material.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Material",
+    "x-namespace": "Elements",
+    "type": ["object","null"],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Element.json"}],
+    "description": "A material.",
+    "required": ["Color", "SpecularFactor", "GlossinessFactor"],
+    "properties": {
+        "Color": {
+            "description": "The material's color.",
+            "$ref": "https://hypar.io/Schemas/Geometry/Color.json"
+        },
+        "SpecularFactor": {
+            "description": "The specular factor between 0.0 and 1.0.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.1
+        },
+        "GlossinessFactor": {
+            "description": "The glossiness factor between 0.0 and 1.0.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.1
+        }
+    },
+    "additionalProperties": false
+}

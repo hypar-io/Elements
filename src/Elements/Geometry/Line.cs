@@ -1,57 +1,20 @@
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// A linear curve between two points.
     /// </summary>
-    public class Line : ICurve
+    public partial class Line : Curve
     {
-        /// <summary>
-        /// The type of the curve.
-        /// Used during deserialization to disambiguate derived types.
-        /// </summary>
-        [JsonProperty(Order = -100)]
-        public string Type
-        {
-            get { return this.GetType().FullName.ToLower(); }
-        }
-        
-        /// <summary>
-        /// The start of the line.
-        /// </summary>
-        public Vector3 Start { get; }
-
-        /// <summary>
-        /// The end of the line.
-        /// </summary>
-        public Vector3 End { get; }
-
         /// <summary>
         /// Calculate the length of the line.
         /// </summary>
-        public double Length()
+        public override double Length()
         {
             return this.Start.DistanceTo(this.End);
-        }
-
-        /// <summary>
-        /// Construct a line from start and end points.
-        /// </summary>
-        /// <param name="start">The start of the line.</param>
-        /// <param name="end">The end of the line.</param>
-        /// <exception cref="System.ArgumentException">Thrown when the start and end points are the same.</exception>
-        [JsonConstructor]
-        public Line(Vector3 start, Vector3 end)
-        {
-            if (start.IsAlmostEqualTo(end))
-            {
-                throw new ArgumentException($"The line could not be created. The start and end points of the line cannot be the same: start {start}, end {end}");
-            }
-            this.Start = start;
-            this.End = end;
         }
 
         /// <summary>
@@ -71,10 +34,11 @@ namespace Elements.Geometry
         /// positive Z axis points along the curve.
         /// </summary>
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
+        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         /// <returns>A transform.</returns>
-        public Transform TransformAt(double u)
+        public override Transform TransformAt(double u, double rotation = 0.0)
         {
-            return new Transform(PointAt(u), this.Start, this.End, null);
+            return new Transform(PointAt(u), (this.Start-this.End).Normalized(), rotation);
         }
 
         /// <summary>
@@ -82,7 +46,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u"></param>
         /// <returns>A point on the curve at parameter u.</returns>
-        public Vector3 PointAt(double u)
+        public override Vector3 PointAt(double u)
         {
             if (u == 0.0)
             {
@@ -105,8 +69,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a new line that is the reverse of the original line.
         /// </summary>
-        /// <returns></returns>
-        public ICurve Reversed()
+        public Line Reversed()
         {
             return new Line(End, Start);
         }
@@ -115,7 +78,6 @@ namespace Elements.Geometry
         /// Thicken a line by the specified amount.
         /// </summary>
         /// <param name="amount">The amount to thicken the line.</param>
-        /// <returns></returns>
         public Polygon Thicken(double amount)
         {
             if(Start.Z != End.Z)
@@ -160,11 +122,12 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback">The offset from the start of the line.</param>
         /// <param name="endSetback">The offset from the end of the line.</param>
+        /// <param name="rotation">An optional rotation in degrees around all the frames' z axes.</param>
         /// <returns>A collection of transforms.</returns>
-        public Transform[] Frames(double startSetback, double endSetback)
+        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
         {
             var l = this.Length();
-            return new Transform[] { TransformAt(0.0 + startSetback / l), TransformAt(1.0 - endSetback / l) };
+            return new Transform[] { TransformAt(0.0 + startSetback / l, rotation), TransformAt(1.0 - endSetback / l, rotation) };
         }
 
         /// <summary>
@@ -188,10 +151,30 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Does this line intersect the provided line in 2D?
+        /// </summary>
+        /// <param name="l"></param>
+        /// <returns>Return true if the lines intersect, 
+        /// false if the lines have coincident vertices or do not intersect.</returns>
+        public bool Intersects2D(Line l)
+        {
+            var a = Vector3.CCW(this.Start, this.End, l.Start) * Vector3.CCW(this.Start, this.End, l.End);
+            var b = Vector3.CCW(l.Start, l.End, this.Start) * Vector3.CCW(l.Start, l.End, this.End);
+            if (IsAlmostZero(a) || a > Vector3.Tolerance ) return false;
+            if (IsAlmostZero(b) || b > Vector3.Tolerance ) return false;
+            return true;
+        }
+
+        private bool IsAlmostZero(double a)
+        {
+            return Math.Abs(a) < Vector3.Tolerance;
+        }
+
+        /// <summary>
         /// Get the bounding box for this line.
         /// </summary>
         /// <returns>A bounding box for this line.</returns>
-        public BBox3 Bounds()
+        public override BBox3 Bounds()
         {
             if(this.Start < this.End)
             {
@@ -209,6 +192,66 @@ namespace Elements.Geometry
         public Vector3 Direction()
         {
             return (this.End - this.Start).Normalized();
+        }
+
+        /// <summary>
+        /// Divide the line into as many segments of length l as possible.
+        /// </summary>
+        /// <param name="l">The length.</param>
+        /// <param name="removeShortSegments">A flag indicating whether segments shorter than l should be removed.</param>
+        public List<Line> DivideByLength(double l, bool removeShortSegments = false)
+        {
+            var len = this.Length();
+            if(l > len)
+            {
+                return new List<Line>(){new Line(this.Start, this.End)};
+            }
+
+            var total = 0.0;
+            var d = this.Direction();
+            var lines = new List<Line>();
+            while(total + l <= len)
+            { 
+                var a = this.Start + d * total;
+                var b = a + d * l;
+                lines.Add(new Line(a,b));
+                total += l;
+            }
+            if(total < len && !removeShortSegments)
+            {
+                var a = this.Start + d * total;
+                lines.Add(new Line(a, End));
+            }
+            return lines;
+        }
+        
+        /// <summary>
+        /// Divide the line into n+1 equal segments.
+        /// </summary>
+        /// <param name="n">The number of segments.</param>
+        public List<Line> DivideByCount(int n)
+        {
+            if(n < 0)
+            {
+                throw new ArgumentException($"The number of divisions must be greater than 0.");
+            }
+            var lines = new List<Line>();
+            var div = 1.0/(n + 1);
+            for(var t=0.0; t<=1.0-div; t+=div)
+            {
+                var a = PointAt(t);
+                var b = PointAt(t+div);
+                lines.Add(new Line(a,b));
+            }
+            return lines;
+        }
+
+        /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            return new []{this.Start, this.End};
         }
     }
 }

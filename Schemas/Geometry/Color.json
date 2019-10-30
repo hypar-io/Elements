@@ -1,0 +1,40 @@
+{
+    "$id": "https://hypar.io/Schemas/Geometry/Color.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Color",
+    "x-namespace": "Elements.Geometry",
+    "type": "object",
+    "description": "A color with red, green, blue, and alpha components.",
+    "required": ["Red", "Green", "Blue", "Alpha"],
+    "properties": {
+        "Red": {
+            "description": "The red component of the color between 0.0 and 1.0.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "format": "float"
+        },
+        "Green": {
+            "description": "The green component of the color between 0.0 and 1.0.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "format": "float"
+        },
+        "Blue": {
+            "description": "The blue component of the color between 0.0 and 1.0.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "format": "float"
+        },
+        "Alpha": {
+            "description": "The alpha component of the color between 0.0 and 1.0.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "format": "float"
+        }
+    },
+    "additionalProperties": false
+}

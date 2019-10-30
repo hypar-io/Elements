@@ -15,7 +15,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid : ITessellate
+    internal class Solid : ITessellate
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -50,15 +50,15 @@ namespace Elements.Geometry.Solids
         /// Construct a lamina solid.
         /// </summary>
         /// <param name="perimeter">The perimeter of the lamina's faces.</param>
-        public static Solid CreateLamina(Vector3[] perimeter)
+        public static Solid CreateLamina(IList<Vector3> perimeter)
         {   
             var solid = new Solid();
             var loop1 = new Loop();
             var loop2 = new Loop();
-            for (var i = 0; i < perimeter.Length; i++)
+            for (var i = 0; i < perimeter.Count; i++)
             {
                 var a = solid.AddVertex(perimeter[i]);
-                var b = solid.AddVertex(perimeter[i == perimeter.Length - 1 ? 0 : i + 1]);
+                var b = solid.AddVertex(perimeter[i == perimeter.Count - 1 ? 0 : i + 1]);
                 var e = solid.AddEdge(a, b);
                 loop1.AddEdgeToEnd(e.Left);
                 loop2.AddEdgeToStart(e.Right);
@@ -75,10 +75,15 @@ namespace Elements.Geometry.Solids
         /// <param name="holes">The holes of the face to sweep.</param>
         /// <param name="distance">The distance to sweep.</param>
         /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
+        /// <param name="rotation">An optional rotation in degrees of the perimeter around the z axis.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon perimeter, Polygon[] holes, double distance, bool bothSides = false) 
+        public static Solid SweepFace(Polygon perimeter,
+                                      IList<Polygon> holes,
+                                      double distance,
+                                      bool bothSides = false,
+                                      double rotation = 0.0) 
         {
-            return Solid.SweepFace(perimeter, holes, Vector3.ZAxis, distance, bothSides);
+            return Solid.SweepFace(perimeter, holes, Vector3.ZAxis, distance, bothSides, rotation);
         }
 
         /// <summary>
@@ -89,8 +94,14 @@ namespace Elements.Geometry.Solids
         /// <param name="curve">The curve along which to sweep.</param>
         /// <param name="startSetback">The setback of the sweep from the start of the curve.</param>
         /// <param name="endSetback">The setback of the sweep from the end of the curve.</param>
+        /// <param name="rotation">An optional rotation in degrees of the perimeter around the tangent of the curve.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFaceAlongCurve(Polygon perimeter, Polygon[] holes, ICurve curve,  double startSetback = 0, double endSetback = 0)
+        public static Solid SweepFaceAlongCurve(Polygon perimeter,
+                                                IList<Polygon> holes,
+                                                ICurve curve,
+                                                double startSetback = 0,
+                                                double endSetback = 0,
+                                                double rotation = 0.0)
         {
             var solid = new Solid();
 
@@ -98,14 +109,14 @@ namespace Elements.Geometry.Solids
             var ssb = startSetback / l;
             var esb = endSetback / l;
 
-            var transforms = curve.Frames(ssb, esb);
+            var transforms = curve.Frames(ssb, esb, rotation);
 
             if (curve is Polygon)
             {
                 for (var i = 0; i < transforms.Length; i++)
                 {
                     var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
-                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i].XY(), next.XY());
+                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i].XY(), next.XY(), rotation);
                 }
             }
             else
@@ -117,7 +128,7 @@ namespace Elements.Geometry.Solids
                 if(holes != null)
                 {
                     cap = solid.AddFace(transforms[0].OfPolygon(perimeter), transforms[0].OfPolygons(holes));
-                    openEdges = new Edge[1 + holes.Length][];
+                    openEdges = new Edge[1 + holes.Count][];
                 }
                 else
                 {
@@ -156,8 +167,14 @@ namespace Elements.Geometry.Solids
         /// <param name="direction">The direction in which to sweep.</param>
         /// <param name="distance">The distance to sweep.</param>
         /// <param name="bothSides">Should the sweep start offset by direction distance/2? </param>
+        /// <param name="rotation">An optional rotation in degrees of the perimeter around the direction vector.</param>
         /// <returns>A solid.</returns>
-        public static Solid SweepFace(Polygon perimeter, Polygon[] holes, Vector3 direction, double distance, bool bothSides = false)
+        public static Solid SweepFace(Polygon perimeter,
+                                      IList<Polygon> holes,
+                                      Vector3 direction,
+                                      double distance,
+                                      bool bothSides = false,
+                                      double rotation = 0.0)
         {
             // We do a difference of the polygons
             // to get the clipped shape. This will fail in interesting
@@ -173,7 +190,7 @@ namespace Elements.Geometry.Solids
             Face fStart = null;
             if(bothSides)
             {
-                var t = new Transform(direction.Negated()* (distance/2));
+                var t = new Transform(direction.Negate()* (distance/2), rotation);
                 if(holes != null)
                 {
                     fStart = solid.AddFace(t.OfPolygon(perimeter.Reversed()), t.OfPolygons(holes.Reversed()));
@@ -199,8 +216,8 @@ namespace Elements.Geometry.Solids
 
             if(holes != null)
             {
-                var fEndInner = new Loop[holes.Length];
-                for(var i=0; i<holes.Length; i++)
+                var fEndInner = new Loop[holes.Count];
+                for(var i=0; i<holes.Count; i++)
                 {
                     fEndInner[i] = solid.SweepLoop(fStart.Inner[i], direction, distance);
                 }
@@ -233,15 +250,15 @@ namespace Elements.Geometry.Solids
         /// <param name="outer">A polygon representing the perimeter of the face.</param>
         /// <param name="inner">An array of polygons representing the holes in the face.</param>
         /// <returns>The newly added face.</returns>
-        public Face AddFace(Polygon outer, Polygon[] inner = null)
+        public Face AddFace(Polygon outer, IList<Polygon> inner = null)
         {
             var outerLoop = LoopFromPolygon(outer);
             Loop[] innerLoops = null;
 
             if(inner != null)
             {
-                innerLoops = new Loop[inner.Length];
-                for(var i=0; i<inner.Length; i++)
+                innerLoops = new Loop[inner.Count];
+                for(var i=0; i<inner.Count; i++)
                 {
                     innerLoops[i] = LoopFromPolygon(inner[i]);
                 }
@@ -287,15 +304,15 @@ namespace Elements.Geometry.Solids
         /// <param name="p"></param>
         public Edge[] AddEdges(Polygon p)
         {
-            var loop = new Edge[p.Vertices.Length];
-            var vertices = new Vertex[p.Vertices.Length];
-            for (var i = 0; i < p.Vertices.Length; i++)
+            var loop = new Edge[p.Vertices.Count];
+            var vertices = new Vertex[p.Vertices.Count];
+            for (var i = 0; i < p.Vertices.Count; i++)
             {
                 vertices[i] = AddVertex(p.Vertices[i]);
             }
-            for(var i=0; i< p.Vertices.Length; i++)
+            for(var i=0; i< p.Vertices.Count; i++)
             {
-                loop[i] = AddEdge(vertices[i], i == p.Vertices.Length - 1 ? vertices[0] : vertices[i+1]);
+                loop[i] = AddEdge(vertices[i], i == p.Vertices.Count - 1 ? vertices[0] : vertices[i+1]);
             }
             return loop;
         }
@@ -525,12 +542,12 @@ namespace Elements.Geometry.Solids
         protected Loop LoopFromPolygon(Polygon p)
         {
             var loop = new Loop();
-            var verts = new Vertex[p.Vertices.Length];
-            for (var i = 0; i < p.Vertices.Length; i++)
+            var verts = new Vertex[p.Vertices.Count];
+            for (var i = 0; i < p.Vertices.Count; i++)
             {
                 verts[i] = AddVertex(p.Vertices[i]);
             }
-            for (var i=0; i<p.Vertices.Length; i++)
+            for (var i=0; i<p.Vertices.Count; i++)
             {
                 var v1 = verts[i];
                 var v2 = i == verts.Length - 1 ? verts[0] : verts[i+1];
@@ -640,10 +657,10 @@ namespace Elements.Geometry.Solids
             return openEdge;
         }
 
-        private Loop SweepPolygonBetweenPlanes(Polygon p, Plane start, Plane end)
+        private Loop SweepPolygonBetweenPlanes(Polygon p, Plane start, Plane end, double rotation = 0.0)
         {
             // Transform the polygon to the mid plane between two transforms.
-            var mid = new Line(start.Origin, end.Origin).TransformAt(0.5).OfPolygon(p);
+            var mid = new Line(start.Origin, end.Origin).TransformAt(0.5, rotation).OfPolygon(p);
             var v = (end.Origin - start.Origin).Normalized();
             var startP = mid.ProjectAlong(v, start);
             var endP = mid.ProjectAlong(v, end);

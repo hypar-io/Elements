@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 
@@ -13,9 +12,10 @@ namespace Elements
     /// A topographic mesh defined by an array of elevation values.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Examples/TopographyExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/TopographyExample.cs?name=example)]
     /// </example>
-    public class Topography : Element, ITessellate, IMaterial
+    [UserElement]
+    public class Topography : GeometricElement, ITessellate
     {
         private Func<Triangle, Color> _colorizer;
 
@@ -24,6 +24,7 @@ namespace Elements
         private double _minElevation = double.PositiveInfinity;
 
         private double _maxElevation = double.NegativeInfinity;
+        private Guid materialId;
 
         /// <summary>
         /// The topography's mesh.
@@ -42,9 +43,9 @@ namespace Elements
         public double MinElevation => _minElevation;
 
         /// <summary>
-        /// The material of the topography.
+        /// The material id of the topography.
         /// </summary>
-        public Material Material { get; }
+        public Guid MaterialId { get => this.Material != null ? this.Material.Id : materialId; private set => materialId = value; }
 
         /// <summary>
         /// Create a topography.
@@ -55,7 +56,12 @@ namespace Elements
         /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
         /// <param name="width"></param>
         /// <param name="colorizer">A function which produces a color for a triangle.</param>
-        public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int width, Func<Triangle, Color> colorizer)
+        public Topography(Vector3 origin,
+                          double cellWidth,
+                          double cellHeight,
+                          double[] elevations,
+                          int width,
+                          Func<Triangle, Color> colorizer): base(null, null, null, Guid.NewGuid(), null)
         {
             // Elevations a represented by *
             // *-*-*-*
@@ -68,11 +74,11 @@ namespace Elements
             {
                 throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be equally divisible by the width plus one, {width}.");
             }
-            if(colorizer == null)
+            if (colorizer == null)
             {
                 throw new ArgumentNullException("The topography could not be created. You must supply a colorizer function.");
             }
-            
+
             this.Material = BuiltInMaterials.Topography;
             this._colorizer = colorizer;
 
@@ -116,8 +122,8 @@ namespace Elements
                         var a = this._mesh.Vertices[i];
                         var b = this._mesh.Vertices[i - width];
                         var c = this._mesh.Vertices[i - (width + 1)];
-                        this._mesh.AddTriangle(c,b,a);
-                        
+                        this._mesh.AddTriangle(c, b, a);
+
                         // Bottom triangle
                         var d = this._mesh.Vertices[i];
                         var e = this._mesh.Vertices[i + 1];
@@ -128,14 +134,14 @@ namespace Elements
                 }
             }
         }
-        
+
         /// <summary>
         /// Tessellate the topography.
         /// </summary>
         /// <param name="mesh">The mesh into which the topography's facets will be added.</param>
         public void Tessellate(ref Mesh mesh)
         {
-            foreach(var t in this._mesh.Triangles)
+            foreach (var t in this._mesh.Triangles)
             {
                 var c = this._colorizer(t);
                 t.Vertices[0].Color = c;
@@ -147,16 +153,7 @@ namespace Elements
         }
 
         [JsonConstructor]
-        internal Topography(List<Elements.Geometry.Vertex> vertices, List<Triangle> triangles){}
-
-        /// <summary>
-        /// Subtract the provided mass from this topography.
-        /// </summary>
-        /// <param name="mass">The mass to subtract.</param>
-        internal void Subtract(Mass mass)
-        {
-            Subtract(mass.Geometry, mass.Transform);
-        }
+        internal Topography(List<Elements.Geometry.Vertex> vertices, List<Triangle> triangles) : base(null, null, null, Guid.NewGuid(), null) { }
 
         /// <summary>
         /// Subtract the provided solid from this topography.
@@ -167,33 +164,33 @@ namespace Elements
         private void Subtract(Solid solid, Transform transform = null)
         {
             var intersects = new List<Triangle>();
-            for(var i=this._mesh.Triangles.Count - 1; i>=0; i--)
+            for (var i = this._mesh.Triangles.Count - 1; i >= 0; i--)
             {
                 var t = this._mesh.Triangles[i];
                 var xsect = GetIntersectionType(t, solid, transform);
-                if(xsect == IntersectionType.Intersect)
+                if (xsect == IntersectionType.Intersect)
                 {
                     intersects.Add(t);
                     this._mesh.Triangles.RemoveAt(i);
                 }
-                else if(xsect == IntersectionType.Inside)
+                else if (xsect == IntersectionType.Inside)
                 {
                     this._mesh.Triangles.RemoveAt(i);
                 }
             }
 
-            foreach(var t in intersects)
+            foreach (var t in intersects)
             {
                 var input = new List<Vector3>();
-                foreach(var v in t.Vertices)
+                foreach (var v in t.Vertices)
                 {
                     input.Add(v.Position);
                 }
 
-                foreach(var f in solid.Faces.Values)
+                foreach (var f in solid.Faces.Values)
                 {
                     var fp = f.Plane();
-                    if(transform != null)
+                    if (transform != null)
                     {
                         fp = transform.OfPlane(fp);
                     }
@@ -217,21 +214,21 @@ namespace Elements
                         var a = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3]].Position.ToVector3());
                         var b = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3());
                         var c = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3());
-                        this._mesh.AddTriangle(a,b,c);
+                        this._mesh.AddTriangle(a, b, c);
                     }
                 }
-                catch(ArgumentOutOfRangeException ex)
+                catch (ArgumentOutOfRangeException ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
             }
 
-            for(var i=this._mesh.Triangles.Count - 1; i>=0; i--)
+            for (var i = this._mesh.Triangles.Count - 1; i >= 0; i--)
             {
                 var t = this._mesh.Triangles[i];
                 var area = t.Area();
-                if(area == 0.0 || 
-                    double.IsNaN(area) || 
+                if (area == 0.0 ||
+                    double.IsNaN(area) ||
                     area < Vector3.Tolerance ||
                     t.Normal.IsNaN())
                 {
@@ -247,9 +244,9 @@ namespace Elements
 
         private Elements.Geometry.Vertex MergeOrReturnNew(Vector3 v)
         {
-            foreach(var vx in this._mesh.Vertices)
+            foreach (var vx in this._mesh.Vertices)
             {
-                if(vx.Position.IsAlmostEqualTo(v))
+                if (vx.Position.IsAlmostEqualTo(v))
                 {
                     return vx;
                 }
@@ -267,7 +264,7 @@ namespace Elements
             foreach (var f in s.Faces.Values)
             {
                 var p = f.Plane();
-                if(trans != null)
+                if (trans != null)
                 {
                     p = trans.OfPlane(p);
                 }
@@ -275,11 +272,11 @@ namespace Elements
                 var d2 = p.Normal.Dot(t.Vertices[1].Position - p.Origin);
                 var d3 = p.Normal.Dot(t.Vertices[2].Position - p.Origin);
 
-                if(d1 < 0 && d2 < 0 && d3 < 0)
+                if (d1 < 0 && d2 < 0 && d3 < 0)
                 {
                     inside++;
                 }
-                else if(d1 > 0 && d2 > 0 && d3 > 0)
+                else if (d1 > 0 && d2 > 0 && d3 > 0)
                 {
                     outside++;
                 }
@@ -288,16 +285,16 @@ namespace Elements
                     xsect++;
                 }
             }
-            
-            if(outside == fCount)
+
+            if (outside == fCount)
             {
                 return IntersectionType.Outside;
             }
-            else if(inside == fCount)
+            else if (inside == fCount)
             {
                 return IntersectionType.Inside;
             }
-            else if(inside + xsect == fCount)
+            else if (inside + xsect == fCount)
             {
                 return IntersectionType.Intersect;
             }
@@ -311,20 +308,20 @@ namespace Elements
             // https://www.cs.drexel.edu/~david/Classes/CS430/Lectures/L-05_Polygons.6.pdf
             var output = new List<Vector3>();
 
-            for(var j=0; j<input.Count; j++)
+            for (var j = 0; j < input.Count; j++)
             {
                 // edge of the triangle
                 var start = input[j];
-                var end = input[j == input.Count - 1 ? 0 : j+1];
+                var end = input[j == input.Count - 1 ? 0 : j + 1];
                 var d1 = p.Normal.Dot(start - p.Origin);
                 var d2 = p.Normal.Dot(end - p.Origin);
 
-                if(d1 < 0 && d2 < 0)
+                if (d1 < 0 && d2 < 0)
                 {
                     //both inside
                     output.Add(start);
                 }
-                else if(d1 < 0 && d2 > 0)
+                else if (d1 < 0 && d2 > 0)
                 {
                     //start inside
                     //end outside
@@ -333,22 +330,30 @@ namespace Elements
                     output.Add(start);
                     output.Add(xsect);
                 }
-                else if(d1 > 0 && d2 > 0)
+                else if (d1 > 0 && d2 > 0)
                 {
                     //both outside
                 }
-                else if(d1 > 0 && d2 < 0)
+                else if (d1 > 0 && d2 < 0)
                 {
                     //start outside
                     //end inside
                     //add intersection
-                    var xsect =new Line(start, end).Intersect(p);
+                    var xsect = new Line(start, end).Intersect(p);
                     output.Add(xsect);
                 }
             }
 
             return output;
-        } 
+        }
+
+        /// <summary>
+        /// Update the representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            return;
+        }
     }
 
     internal static class TopographyExtensions

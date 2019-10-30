@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -82,85 +82,50 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
-    <div class="level2"><span class="xref">StructuralFraming</span></div>
-      <div class="level3"><a class="xref" href="Elements.Beam.html">Beam</a></div>
-      <div class="level3"><a class="xref" href="Elements.Brace.html">Brace</a></div>
-      <div class="level3"><a class="xref" href="Elements.Column.html">Column</a></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IElement.html">IElement</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a></div>
-    <div><a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType</a>&lt;<a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a>&gt;</div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ISweepAlongCurve.html">ISweepAlongCurve</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a></div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
+    <div class="level3"><span class="xref">StructuralFraming</span></div>
+      <div class="level4"><a class="xref" href="Elements.Beam.html">Beam</a></div>
+      <div class="level4"><a class="xref" href="Elements.Brace.html">Brace</a></div>
+      <div class="level4"><a class="xref" href="Elements.Column.html">Column</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Type">Element.Type</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Properties">Element.Properties</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Transform">Element.Transform</a>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_AddProperty_System_String_Elements_Interfaces_IProperty_">Element.AddProperty(String, IProperty)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_RemoveProperty_System_String_">Element.RemoveProperty(String)</a>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_StructuralFraming_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class StructuralFraming : Element, IElement, IIdentifiable, ITransformable, IPropertySet, IElementType&lt;StructuralFramingType&gt;, ISweepAlongCurve, IProfile, ISolid</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class StructuralFraming : GeometricElement</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_StructuralFraming__ctor_" data-uid="Elements.StructuralFraming.#ctor*"></a>
-  <h4 id="Elements_StructuralFraming__ctor_Elements_Geometry_Interfaces_ICurve_Elements_StructuralFramingType_System_Double_System_Double_Elements_Geometry_Transform_" data-uid="Elements.StructuralFraming.#ctor(Elements.Geometry.Interfaces.ICurve,Elements.StructuralFramingType,System.Double,System.Double,Elements.Geometry.Transform)">StructuralFraming(ICurve, StructuralFramingType, Double, Double, Transform)</h4>
+  <h4 id="Elements_StructuralFraming__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Guid_System_String_" data-uid="Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Guid,System.String)">StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a beam.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public StructuralFraming(ICurve curve, StructuralFramingType elementType, double startSetback = 0, double endSetback = 0, Transform transform = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public StructuralFraming(Curve curve, Profile profile, Material material = null, double startSetback = 0, double endSetback = 0, double rotation = 0, Transform transform = null, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -173,15 +138,21 @@ public StructuralFraming(ICurve curve, StructuralFramingType elementType, double
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></td>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
         <td><span class="parametername">curve</span></td>
         <td><p>The center line of the beam.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a></td>
-        <td><span class="parametername">elementType</span></td>
-        <td><p>The structural framing type.</p>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td><p>The structural framing's profile.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The structural framing's material.</p>
 </td>
       </tr>
       <tr>
@@ -197,9 +168,27 @@ public StructuralFraming(ICurve curve, StructuralFramingType elementType, double
 </td>
       </tr>
       <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation in degrees of the transform around its z axis.</p>
+</td>
+      </tr>
+      <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td><span class="parametername">transform</span></td>
         <td><p>The element's Transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The structural framing's id.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The structural framing's name.</p>
 </td>
       </tr>
     </tbody>
@@ -213,8 +202,7 @@ public StructuralFraming(ICurve curve, StructuralFramingType elementType, double
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(ICurveConverter))]
-public ICurve Curve { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Curve Curve { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -226,31 +214,7 @@ public ICurve Curve { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_StructuralFraming_ElementType_" data-uid="Elements.StructuralFraming.ElementType*"></a>
-  <h4 id="Elements_StructuralFraming_ElementType" data-uid="Elements.StructuralFraming.ElementType">ElementType</h4>
-  <div class="markdown level1 summary"><p>The element type of the structural framing.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public StructuralFramingType ElementType { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.StructuralFramingType.html">StructuralFramingType</a></td>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -281,13 +245,12 @@ public ICurve Curve { get; }</code></pre>
   </table>
   <a id="Elements_StructuralFraming_Profile_" data-uid="Elements.StructuralFraming.Profile*"></a>
   <h4 id="Elements_StructuralFraming_Profile" data-uid="Elements.StructuralFraming.Profile">Profile</h4>
-  <div class="markdown level1 summary"><p>The extrusion's profile.</p>
+  <div class="markdown level1 summary"><p>The structural framing's profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Profile Profile { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile Profile { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -330,30 +293,6 @@ public Profile Profile { get; }</code></pre>
   </table>
   <h3 id="methods">Methods
   </h3>
-  <a id="Elements_StructuralFraming_GetUpdatedSolid_" data-uid="Elements.StructuralFraming.GetUpdatedSolid*"></a>
-  <h4 id="Elements_StructuralFraming_GetUpdatedSolid" data-uid="Elements.StructuralFraming.GetUpdatedSolid">GetUpdatedSolid()</h4>
-  <div class="markdown level1 summary"><p>Get the updated solid representation of the framing element.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Solid GetUpdatedSolid()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_StructuralFraming_ProfileTransformed_" data-uid="Elements.StructuralFraming.ProfileTransformed*"></a>
   <h4 id="Elements_StructuralFraming_ProfileTransformed" data-uid="Elements.StructuralFraming.ProfileTransformed">ProfileTransformed()</h4>
   <div class="markdown level1 summary"><p>Get the cross-section profile of the framing element transformed by the element's transform.</p>
@@ -378,6 +317,17 @@ public Profile Profile { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_StructuralFraming_UpdateRepresentations_" data-uid="Elements.StructuralFraming.UpdateRepresentations*"></a>
+  <h4 id="Elements_StructuralFraming_UpdateRepresentations" data-uid="Elements.StructuralFraming.UpdateRepresentations">UpdateRepresentations()</h4>
+  <div class="markdown level1 summary"><p>Update the representations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
   <a id="Elements_StructuralFraming_Volume_" data-uid="Elements.StructuralFraming.Volume*"></a>
   <h4 id="Elements_StructuralFraming_Volume" data-uid="Elements.StructuralFraming.Volume">Volume()</h4>
   <div class="markdown level1 summary"><p>Calculate the volume of the element.</p>
@@ -402,31 +352,6 @@ public Profile Profile { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElement.html">IElement</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable.html">ITransformable</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IPropertySet.html">IPropertySet</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IElementType-1.html">IElementType&lt;TElementType&gt;</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ISweepAlongCurve.html">ISweepAlongCurve</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IProfile.html">IProfile</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ISolid.html">ISolid</a>
-  </div>
 </article>
           </div>
           

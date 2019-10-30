@@ -1,5 +1,3 @@
-using Elements.Interfaces;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,121 +5,27 @@ using System.Linq;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// The vertical alignment of a profile.
-    /// </summary>
-    public enum VerticalAlignment
-    {
-        /// <summary>
-        /// Align the profile along its top.
-        /// </summary>
-        Top,
-        /// <summary>
-        /// Align the profile along its center.
-        /// </summary>
-        Center,
-        /// <summary>
-        /// Align the profile along its bottom.
-        /// </summary>
-        Bottom
-    }
-
-    /// <summary>
-    /// The horizontal alignment of a profile.
-    /// </summary>
-    public enum HorizontalAlignment
-    {
-        /// <summary>
-        /// Align the profile along its left edge.
-        /// </summary>
-        Left,
-        /// <summary>
-        /// Align the profile along its center.
-        /// </summary>
-        Center,
-        /// <summary>
-        /// Align the profile along its right edge.
-        /// </summary>
-        Right
-    }
-
-    /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public class Profile : IIdentifiable
+    public partial class Profile : Element
     {
-        private Polygon _perimeter;
-        private Polygon[] _voids;
-
-        /// <summary>
-        /// The identifier of the profile.
-        /// </summary>
-        public Guid Id { get; internal set; }
-
-        /// <summary>
-        /// The name of the profile.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// The perimeter of the profile.
-        /// </summary>
-        public Polygon Perimeter { get => _perimeter; protected set => _perimeter = value; }
-
-        /// <summary>
-        /// A collection of Polygons representing voids in the profile.
-        /// </summary>
-        public Polygon[] Voids { get => _voids; protected set => _voids = value; }
-
         /// <summary>
         /// Construct a profile.
         /// </summary>
-        /// <param name="id">The unique identifier of the profile.</param>
-        /// <param name="name">The name of the profile.</param>
         /// <param name="perimeter">The perimeter of the profile.</param>
-        /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
-        [JsonConstructor]
-        public Profile(Guid id, Polygon perimeter, Polygon[] voids, string name = null)
+        public Profile(Polygon perimeter): base(Guid.NewGuid(), null)
         {
-            this.Id = id;
             this.Perimeter = perimeter;
-            this.Voids = voids;
-
-            this.Name = name;
-            if (!IsPlanar())
-            {
-                throw new Exception("To construct a profile, all points must line in the same plane.");
-            }
-            if(this.Voids != null)
-            {
-                this.Clip();
-            }
         }
-        
-        /// <summary>
-        /// Construct a profile.
-        /// </summary>
-        /// <param name="name">The name of the profile.</param>
-        /// <param name="perimeter">The perimeter of the profile.</param>
-        /// <param name="voids">A collection of Polygons representing voids in the profile.</param>
-        public Profile(Polygon perimeter, Polygon[] voids, string name = null):
-            this(Guid.NewGuid(), perimeter, voids, name){}
 
         /// <summary>
         /// Construct a profile.
         /// </summary>
-        /// <param name="name">The name of the profile.</param>
-        /// <param name="perimeter">The perimeter of the profile</param>
-        public Profile(Polygon perimeter, string name = null): 
-            this(Guid.NewGuid(), perimeter, null, name){}
-
-        /// <summary>
-        /// Construct a profile.
-        /// </summary>
-        /// <param name="name">The name of the profile.</param>
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="singleVoid">A void in the profile.</param>
-        public Profile(Polygon perimeter, Polygon singleVoid, string name = null):
-            this(Guid.NewGuid(), perimeter, new[] { singleVoid }, name){}
+        public Profile(Polygon perimeter,
+                       Polygon singleVoid) :
+            this(perimeter, new[] { singleVoid }, Guid.NewGuid(), null){}
 
         /// <summary>
         /// Get a new profile which is the reverse of this profile.
@@ -131,13 +35,13 @@ namespace Elements.Geometry
             Polygon[] voids = null;
             if (this.Voids != null)
             {
-                voids = new Polygon[this.Voids.Length];
-                for (var i = 0; i < this.Voids.Length; i++)
+                voids = new Polygon[this.Voids.Count];
+                for (var i = 0; i < this.Voids.Count; i++)
                 {
                     voids[i] = this.Voids[i].Reversed();
                 }
             }
-            return new Profile(this.Perimeter.Reversed(), voids);
+            return new Profile(this.Perimeter.Reversed(), voids, Guid.NewGuid(), null);
         }
 
         /// <summary>
@@ -149,24 +53,42 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Transform this profile in place.
+        /// </summary>
+        /// <param name="t">The transform.</param>
+        public void Transform(Transform t)
+        {
+            this.Perimeter.Transform(t);
+            if(this.Voids == null)
+            {
+                return;
+            }
+            
+            for(var i=0; i<this.Voids.Count; i++)
+            {
+                this.Voids[i].Transform(t);
+            }
+        }
+
+        /// <summary>
         /// Default constructor for profile.
         /// </summary>
-        protected Profile(string name)
-        {
-            this.Id = Guid.NewGuid();
-            this.Name = name;
-        }
+        protected Profile(string name): base(Guid.NewGuid(), name){}
 
         /// <summary>
         ///  Conduct a clip operation on this profile.
         /// </summary>
-        private void Clip()
+        internal void Clip(IEnumerable<Profile> additionalHoles = null)
         {
             var clipper = new ClipperLib.Clipper();
             clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
             if (this.Voids != null)
             {
                 clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            }
+            if(additionalHoles != null)
+            {
+                clipper.AddPaths(additionalHoles.Select(h=>h.Perimeter.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             }
             var solution = new List<List<ClipperLib.IntPoint>>();
             var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
@@ -183,7 +105,7 @@ namespace Elements.Geometry
 
         private double ClippedArea()
         {
-            if (this.Voids == null || this.Voids.Length == 0)
+            if (this.Voids == null || this.Voids.Count == 0)
             {
                 return this.Perimeter.Area();
             }
@@ -204,7 +126,7 @@ namespace Elements.Geometry
             var b = (v[i] - v[1]).Normalized();
 
             // Solve for parallel vectors
-            while(b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negated()))
+            while(b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negate()))
             {
                 i++;
                 b = (v[i] - v[1]).Normalized();

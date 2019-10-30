@@ -1,9 +1,8 @@
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -11,14 +10,15 @@ namespace Elements
     /// An extruded volume.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Examples/MassExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/MassExample.cs?name=example)]
     /// </example>
-    public class Mass : Element, ISolid, IExtrude, IMaterial
+    [UserElement]
+    public class Mass : GeometricElement
     {
         /// <summary>
-        /// The Profile of the mass.
+        /// The profile of the mass.
         /// </summary>
-        public Profile Profile { get; }
+        public Profile Profile { get; private set; }
 
         /// <summary>
         /// The height of the mass.
@@ -35,39 +35,26 @@ namespace Elements
         }
 
         /// <summary>
-        /// The mass' geometry.
-        /// </summary>
-        public Solid Geometry { get; }
-
-        /// <summary>
-        /// The mass' material.
-        /// </summary>
-        public Material Material {get;}
-
-        /// <summary>
-        /// The direction of the mass's extrusion.
-        /// </summary>
-        public Vector3 ExtrudeDirection => Vector3.ZAxis;
-
-        /// <summary>
-        /// The depth of the mass' extrusion.
-        /// </summary>
-        public double ExtrudeDepth => this.Height;
-        
-        /// <summary>
-        /// Should the mass extrude to both sides of the profile?
-        /// </summary>
-        public bool BothSides => false;
-
-        /// <summary>
         /// Construct a Mass.
         /// </summary>
         /// <param name="profile">The profile of the mass.</param>
         /// <param name="height">The height of the mass from the bottom elevation.</param>
         /// <param name="material">The mass' material. The default is the built in mass material.</param>
         /// <param name="transform">The mass' transform.</param>
-        [JsonConstructor]
-        public Mass(Profile profile, double height = 1.0, Material material = null, Transform transform = null)
+        /// <param name="representation">The mass' representation.</param>
+        /// <param name="id">The id of the mass.</param>
+        /// <param name="name">The name of the mass.</param>
+        public Mass(Profile profile,
+                    double height = 1.0,
+                    Material material = null,
+                    Transform transform = null,
+                    Representation representation = null,
+                    Guid id = default(Guid),
+                    string name = null) : base(transform != null ? transform : new Transform(),
+                                               material != null ? material : BuiltInMaterials.Mass,
+                                               representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                               id = id != default(Guid) ? id : Guid.NewGuid(),
+                                               name)
         {
             if (height <= 0)
             {
@@ -75,33 +62,10 @@ namespace Elements
             }
             this.Profile = profile;
             this.Height = height;
-            if(transform != null)
+            if(this.Representation.SolidOperations.Count == 0)
             {
-                this.Transform = transform;
+                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
             }
-            this.Material = material == null ? BuiltInMaterials.Mass : material;
-        }
-
-        /// <summary>
-        /// Construct a Mass.
-        /// </summary>
-        /// <param name="profile">The profile of the mass.</param>
-        /// <param name="height">The height of the mass from the bottom elevation.</param>
-        /// <param name="material">The mass' material. The default is the built in mass material.</param>
-        /// <param name="transform">The mass's transform.</param>
-        public Mass(Polygon profile, double height = 1.0, Material material = null, Transform transform = null)
-        {
-            if (height <= 0)
-            {
-                throw new ArgumentOutOfRangeException($"The mass could not be created. The height provided, {height}, must be greater than zero.");
-            }
-            this.Profile = new Profile(profile);
-            this.Height = height;
-            if(transform != null)
-            {
-                this.Transform = transform;
-            }
-            this.Material = material == null ? BuiltInMaterials.Mass : material;
         }
 
         /// <summary>
@@ -121,11 +85,11 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get the updated solid representation of the Mass.
+        /// Update the representations.
         /// </summary>
-        public Solid GetUpdatedSolid()
+        public override void UpdateRepresentations()
         {
-            return Kernel.Instance.CreateExtrude(this);
+            return;
         }
     }
 }

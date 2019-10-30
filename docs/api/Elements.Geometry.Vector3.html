@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -86,23 +86,7 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.IComparable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -114,7 +98,7 @@
   </h3>
   <a id="Elements_Geometry_Vector3__ctor_" data-uid="Elements.Geometry.Vector3.#ctor*"></a>
   <h4 id="Elements_Geometry_Vector3__ctor" data-uid="Elements.Geometry.Vector3.#ctor">Vector3()</h4>
-  <div class="markdown level1 summary"><p>Construct a default vector at the origin.</p>
+  <div class="markdown level1 summary"><p>Create a default vector at the origin.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -123,7 +107,7 @@
   </div>
   <a id="Elements_Geometry_Vector3__ctor_" data-uid="Elements.Geometry.Vector3.#ctor*"></a>
   <h4 id="Elements_Geometry_Vector3__ctor_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.#ctor(Elements.Geometry.Vector3)">Vector3(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Construct a Vector3 by copying the components of another Vector3.</p>
+  <div class="markdown level1 summary"><p>Create a Vector3 by copying the components of another Vector3.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -150,7 +134,7 @@
   </table>
   <a id="Elements_Geometry_Vector3__ctor_" data-uid="Elements.Geometry.Vector3.#ctor*"></a>
   <h4 id="Elements_Geometry_Vector3__ctor_System_Double_System_Double_" data-uid="Elements.Geometry.Vector3.#ctor(System.Double,System.Double)">Vector3(Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Construct a vector from x, and y coordinates.</p>
+  <div class="markdown level1 summary"><p>Create a vector from x, and y coordinates.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -181,31 +165,14 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown if any components of the vector are NaN or Infinity.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Vector3__ctor_" data-uid="Elements.Geometry.Vector3.#ctor*"></a>
   <h4 id="Elements_Geometry_Vector3__ctor_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Vector3.#ctor(System.Double,System.Double,System.Double)">Vector3(Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Construct a vector from x, y, and z coordinates.</p>
+  <div class="markdown level1 summary"><p>Create a vector from x, y, and z coordinates.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Vector3(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3(double x, double y, double z)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -233,22 +200,6 @@ public Vector3(double x, double y, double z)</code></pre>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">z</span></td>
         <td><p>The z coordinate of the vector.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown if any components of the vector are NaN or Infinity.</p>
 </td>
       </tr>
     </tbody>
@@ -282,7 +233,7 @@ public Vector3(double x, double y, double z)</code></pre>
   </h3>
   <a id="Elements_Geometry_Vector3_Origin_" data-uid="Elements.Geometry.Vector3.Origin*"></a>
   <h4 id="Elements_Geometry_Vector3_Origin" data-uid="Elements.Geometry.Vector3.Origin">Origin</h4>
-  <div class="markdown level1 summary"><p>Construct a vector at the origin.</p>
+  <div class="markdown level1 summary"><p>Create a vector at the origin.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -330,7 +281,7 @@ public Vector3(double x, double y, double z)</code></pre>
   </table>
   <a id="Elements_Geometry_Vector3_XAxis_" data-uid="Elements.Geometry.Vector3.XAxis*"></a>
   <h4 id="Elements_Geometry_Vector3_XAxis" data-uid="Elements.Geometry.Vector3.XAxis">XAxis</h4>
-  <div class="markdown level1 summary"><p>Construct a vector along the X axis.</p>
+  <div class="markdown level1 summary"><p>Create a vector along the X axis.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -378,7 +329,7 @@ public Vector3(double x, double y, double z)</code></pre>
   </table>
   <a id="Elements_Geometry_Vector3_YAxis_" data-uid="Elements.Geometry.Vector3.YAxis*"></a>
   <h4 id="Elements_Geometry_Vector3_YAxis" data-uid="Elements.Geometry.Vector3.YAxis">YAxis</h4>
-  <div class="markdown level1 summary"><p>Construct a vector along the Y axis.</p>
+  <div class="markdown level1 summary"><p>Create a vector along the Y axis.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -426,7 +377,7 @@ public Vector3(double x, double y, double z)</code></pre>
   </table>
   <a id="Elements_Geometry_Vector3_ZAxis_" data-uid="Elements.Geometry.Vector3.ZAxis*"></a>
   <h4 id="Elements_Geometry_Vector3_ZAxis" data-uid="Elements.Geometry.Vector3.ZAxis">ZAxis</h4>
-  <div class="markdown level1 summary"><p>Construct a vector along the Z axis.</p>
+  <div class="markdown level1 summary"><p>Create a vector along the Z axis.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -494,7 +445,7 @@ public Vector3(double x, double y, double z)</code></pre>
   </table>
   <a id="Elements_Geometry_Vector3_AtNEqualSpacesAlongLine_" data-uid="Elements.Geometry.Vector3.AtNEqualSpacesAlongLine*"></a>
   <h4 id="Elements_Geometry_Vector3_AtNEqualSpacesAlongLine_Elements_Geometry_Line_System_Int32_System_Boolean_" data-uid="Elements.Geometry.Vector3.AtNEqualSpacesAlongLine(Elements.Geometry.Line,System.Int32,System.Boolean)">AtNEqualSpacesAlongLine(Line, Int32, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Construct vectors at n equal spaces along the provided line.</p>
+  <div class="markdown level1 summary"><p>Create vectors at n equal spaces along the provided line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -541,7 +492,7 @@ public Vector3(double x, double y, double z)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -585,6 +536,61 @@ public Vector3(double x, double y, double z)</code></pre>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>A vector which is the average of this and v.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_CCW_" data-uid="Elements.Geometry.Vector3.CCW*"></a>
+  <h4 id="Elements_Geometry_Vector3_CCW_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.CCW(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">CCW(Vector3, Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Check whether three points are wound CCW in two dimensions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static double CCW(Vector3 a, Vector3 b, Vector3 c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The third point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are colinear.</p>
 </td>
       </tr>
     </tbody>
@@ -885,8 +891,6 @@ The distance will be negative when this vector lies
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <a id="Elements_Geometry_Vector3_GetHashCode_" data-uid="Elements.Geometry.Vector3.GetHashCode*"></a>
   <h4 id="Elements_Geometry_Vector3_GetHashCode" data-uid="Elements.Geometry.Vector3.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the vector.</p>
@@ -911,8 +915,6 @@ The distance will be negative when this vector lies
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Vector3_IsAlmostEqualTo_" data-uid="Elements.Geometry.Vector3.IsAlmostEqualTo*"></a>
   <h4 id="Elements_Geometry_Vector3_IsAlmostEqualTo_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)">IsAlmostEqualTo(Vector3)</h4>
   <div class="markdown level1 summary"><p>Determine whether this vector's components are equal to those of v, within tolerance.</p>
@@ -1048,14 +1050,14 @@ The distance will be negative when this vector lies
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Vector3_Negated_" data-uid="Elements.Geometry.Vector3.Negated*"></a>
-  <h4 id="Elements_Geometry_Vector3_Negated" data-uid="Elements.Geometry.Vector3.Negated">Negated()</h4>
+  <a id="Elements_Geometry_Vector3_Negate_" data-uid="Elements.Geometry.Vector3.Negate*"></a>
+  <h4 id="Elements_Geometry_Vector3_Negate" data-uid="Elements.Geometry.Vector3.Negate">Negate()</h4>
   <div class="markdown level1 summary"><p>Construct a new vector which is the inverse of this vector.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Negated()</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Negate()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1075,7 +1077,7 @@ The distance will be negative when this vector lies
   </table>
   <a id="Elements_Geometry_Vector3_Normalized_" data-uid="Elements.Geometry.Vector3.Normalized*"></a>
   <h4 id="Elements_Geometry_Vector3_Normalized" data-uid="Elements.Geometry.Vector3.Normalized">Normalized()</h4>
-  <div class="markdown level1 summary"><p>Return a new vector which is the normalized version of this vector.</p>
+  <div class="markdown level1 summary"><p>Return a new vector which is the unitized version of this vector.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1281,8 +1283,6 @@ The distance will be negative when this vector lies
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
   <h3 id="operators">Operators
   </h3>
   <a id="Elements_Geometry_Vector3_op_Addition_" data-uid="Elements.Geometry.Vector3.op_Addition*"></a>
@@ -1630,10 +1630,7 @@ The distance will be negative when this vector lies
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">System.IComparable&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <span class="xref">IEquatable&lt;&gt;</span>
   </div>
 </article>
           </div>

@@ -1,10 +1,10 @@
 using Elements.Geometry;
 using Elements.Interfaces;
-using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
-using Elements.Geometry.Solids;
 using System;
+using Elements.Geometry.Solids;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements
 {
@@ -12,109 +12,75 @@ namespace Elements
     /// A floor is a horizontal element defined by a profile.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Examples/FloorExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/FloorExample.cs?name=example)]
     /// </example>
-    public class Floor : Element, IElementType<FloorType>, ISolid, IExtrude, IHasOpenings
+    [UserElement]
+    public class Floor : GeometricElement, IHasOpenings
     {
-        private List<Opening> _openings = new List<Opening>();
-
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
-        public double Elevation { get; }
+        public double Elevation { get; private set; }
 
         /// <summary>
-        /// The floor type of the floor.
+        /// The thickness of the floor.
         /// </summary>
-        public FloorType ElementType { get; }
+        public double Thickness { get; private set;}
 
         /// <summary>
         /// The untransformed profile of the floor.
         /// </summary>
-        public Profile Profile { get; }
+        public Profile Profile { get; private set; }
 
         /// <summary>
-        /// The floor's geometry.
+        /// A collection of openings in the floor.
         /// </summary>
-        public Solid Geometry { get; }
-
-        /// <summary>
-        /// The openings in the floor.
-        /// </summary>
-        public List<Opening> Openings
-        {
-            get{return _openings;}
-            set{_openings = value;}
-        }
-
-        /// <summary>
-        /// The extrude direction of the floor.
-        /// </summary>
-        public Vector3 ExtrudeDirection {get;}
-
-        /// <summary>
-        /// The extrude depth of the floor.
-        /// </summary>
-        public double ExtrudeDepth => this.Thickness();
-
-        /// <summary>
-        /// Extrude to both sides?
-        /// </summary>
-        public bool BothSides => false;
+        public List<Opening> Openings{ get; } = new List<Opening>();
 
         /// <summary>
         /// Create a floor.
         /// </summary>
-        /// <param name="profile">The profile of the floor.</param>
-        /// <param name="elementType">The floor type of the floor.</param>
-        /// <param name="elevation">The elevation of the top of the floor.</param>
+        /// <param name="profile">The perimeter of the floor.</param>
+        /// <param name="thickness">The thickness of the floor.</param>
+        /// <param name="elevation">The elevation of the top of the floor.
+        /// If a transform has been provided, this elevation will be added to the origin of that transform.</param>
         /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
-        /// <param name="openings">An array of openings in the floor.</param>
-        public Floor(Polygon profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
+        /// <param name="material">The floor's material.</param>
+        /// <param name="representation">The floor's representation.</param>
+        /// <param name="id">The floor's id.</param>
+        /// <param name="name">The floor's name.</param>
+        public Floor(Profile profile,
+                     double thickness,
+                     double elevation = 0.0,
+                     Transform transform = null,
+                     Material material = null,
+                     Representation representation = null,
+                     Guid id = default(Guid),
+                     string name = null) : base(transform != null ? transform : new Transform(),
+                                                material != null ? material : BuiltInMaterials.Concrete,
+                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                id != default(Guid) ? id : Guid.NewGuid(),
+                                                name)
         {
-            this.Profile = new Profile(profile);
-            if(openings != null)
-            {
-                this._openings = openings;
-            }
-            this.Elevation = elevation;
-            this.ElementType = elementType;
-            var thickness = elementType.Thickness();
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.ExtrudeDirection = Vector3.ZAxis;
+            SetProperties(profile, elevation, thickness, material, transform);
         }
 
-        /// <summary>
-        /// Create a floor.
-        /// </summary>
-        /// <param name="profile">The profile of the floor.</param>
-        /// <param name="start">A tranform used to pre-transform the profile and direction vector before sweeping the geometry.</param>
-        /// <param name="direction">The direction of the floor's sweep.</param>
-        /// <param name="elementType">The floor type of the floor.</param>
-        /// <param name="elevation">The elevation of the floor.</param>
-        /// <param name="transform">The floor's transform. If set, this will override the elevation.</param>
-        public Floor(Profile profile, Transform start, Vector3 direction, FloorType elementType, double elevation = 0.0, Transform transform = null)
-        {
-            this.Elevation = elevation;
-            this.ElementType = elementType;
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.Profile = start.OfProfile(profile);
-            this.ExtrudeDirection = start.OfVector(direction);
-        }
-
-        [JsonConstructor]
-        internal Floor(Profile profile, FloorType elementType, double elevation = 0.0, Transform transform = null, List<Opening> openings = null)
+        private void SetProperties(Profile profile, double elevation, double thickness, Material material, Transform transform)
         {
             this.Profile = profile;
-            if(openings != null)
-            {
-                this._openings = openings;
-            }
             this.Elevation = elevation;
-            this.ElementType = elementType;
-            var thickness = elementType.Thickness();
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
-            this.ExtrudeDirection = Vector3.ZAxis;
+
+            if(thickness <= 0.0) 
+            {
+                throw new ArgumentOutOfRangeException($"The floor could not be created. The provided thickness ({thickness}) was less than or equal to zero.");
+            }
+
+            this.Thickness = thickness;
+            if(elevation != 0.0)
+            {
+                this.Transform.Move(new Vector3(0,0,elevation));
+            }
+            this.Material = material ?? BuiltInMaterials.Concrete;
         }
 
         /// <summary>
@@ -123,23 +89,6 @@ namespace Elements
         public Profile ProfileTransformed()
         {
             return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
-        }
-
-        /// <summary>
-        /// Calculate thickness of the floor's extrusion.
-        /// </summary>
-        public double Thickness()
-        {
-            return this.ElementType.Thickness();
-        }
-
-        /// <summary>
-        /// Get the updated solid representation of the floor.
-        /// </summary>
-        /// <returns></returns>
-        public Solid GetUpdatedSolid()
-        {
-            return Kernel.Instance.CreateExtrude(this);
         }
 
         /// <summary>
@@ -157,8 +106,31 @@ namespace Elements
         /// <returns>The area of the floor, not including the area of openings.</returns>
         public double Volume()
         {
-            return Math.Abs(this.Profile.Area()) * this.Thickness();
+            return Math.Abs(this.Profile.Area()) * this.Thickness;
         }
 
+        /// <summary>
+        /// Update the representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            if(this.Openings.Count > 0)
+            {
+                this.Openings.ForEach(o=>o.UpdateRepresentations());
+
+                // Find all the void ops which point in the same direction.
+                var holes = this.Openings.SelectMany(o=>o.Representation.SolidOperations.
+                                                        Where(op=>op is Extrude && op.IsVoid == true).
+                                                        Cast<Extrude>().
+                                                        Where(ex=>ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
+                if(holes.Any())
+                {
+                    var holeProfiles = holes.Select(ex=>ex.Profile);
+                    this.Profile.Clip(holeProfiles);
+                }
+            }
+            this.Representation.SolidOperations.Clear();
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, 0, false));
+        }
     }
 }

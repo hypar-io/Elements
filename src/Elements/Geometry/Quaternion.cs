@@ -5,7 +5,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A quaternion.
     /// </summary>
-    public class Quaternion
+    internal class Quaternion
     {
         /// <summary>
         /// The X component.

@@ -3,7 +3,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A Solid Edge.
     /// </summary>
-    public class Edge
+    internal class Edge
     {
         /// <summary>
         /// The Id of the Edge.
@@ -44,6 +44,19 @@ namespace Elements.Geometry.Solids
         internal Edge(long id)
         {
             this.Id = id;
+        }
+
+        internal void Reverse()
+        {   
+            // Reverse the half edges.
+            Left.Vertex = Right.Vertex;
+            Right.Vertex = Left.Vertex;
+            var left = Left;
+            var right = Right;
+
+            //Flip the edge
+            Left = right;
+            Right = left;
         }
     }
 }

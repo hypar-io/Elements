@@ -7,12 +7,12 @@ namespace Elements.Geometry
     /// <summary>
     /// A 3D vector.
     /// </summary>
-    public class Vector3 : IComparable<Vector3>, IEquatable<Vector3>
+    public partial class Vector3 : IComparable<Vector3>, IEquatable<Vector3>
     {
         /// <summary>
         /// A tolerance for comparison operations.
         /// </summary>
-        public static double Tolerance = 0.000000001;
+        public static double Tolerance = 1e-9;
 
         private static Vector3 _xAxis = new Vector3(1, 0, 0);
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
@@ -20,25 +20,7 @@ namespace Elements.Geometry
         private static Vector3 _origin = new Vector3();
 
         /// <summary>
-        /// The X component of the vector.
-        /// </summary>
-        /// <returns></returns>
-        public double X { get; internal set; }
-
-        /// <summary>
-        /// The Y component of the vector.
-        /// </summary>
-        /// <returns></returns>
-        public double Y { get; internal set; }
-
-        /// <summary>
-        /// The Z component of the vector.
-        /// </summary>
-        /// <returns></returns>
-        public double Z { get; internal set; }
-
-        /// <summary>
-        /// Construct a vector at the origin.
+        /// Create a vector at the origin.
         /// </summary>
         /// <returns></returns>
         public static Vector3 Origin
@@ -70,7 +52,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector along the X axis.
+        /// Create a vector along the X axis.
         /// </summary>
         public static Vector3 XAxis
         {
@@ -78,7 +60,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector along the Y axis.
+        /// Create a vector along the Y axis.
         /// </summary>
         public static Vector3 YAxis
         {
@@ -86,16 +68,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector along the Z axis.
+        /// Create a vector along the Z axis.
         /// </summary>
-        /// <returns></returns>
         public static Vector3 ZAxis
         {
             get { return _zAxis; }
         }
 
         /// <summary>
-        /// Construct vectors at n equal spaces along the provided line.
+        /// Create vectors at n equal spaces along the provided line.
         /// </summary>
         /// <param name="line">The line.</param>
         /// <param name="n">The number of samples along the line.</param>
@@ -119,7 +100,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a default vector at the origin.
+        /// Create a default vector at the origin.
         /// </summary>
         public Vector3()
         {
@@ -129,7 +110,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Vector3 by copying the components of another Vector3.
+        /// Create a Vector3 by copying the components of another Vector3.
         /// </summary>
         /// <param name="v">The Vector3 to copy.</param>
         public Vector3(Vector3 v)
@@ -140,36 +121,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector from x, y, and z coordinates.
-        /// </summary>
-        /// <param name="x">The x coordinate of the vector.</param>
-        /// <param name="y">The y coordinate of the vector.</param>
-        /// <param name="z">The z coordinate of the vector.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if any components of the vector are NaN or Infinity.</exception>
-        [JsonConstructor]
-        public Vector3(double x, double y, double z)
-        {
-            if(Double.IsNaN(x) || Double.IsNaN(y) || Double.IsNaN(z))
-            {
-                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
-            }
-
-            if(Double.IsInfinity(x) || Double.IsInfinity(y) || Double.IsInfinity(z))
-            {
-                throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
-            }
-
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-        }
-
-        /// <summary>
-        /// Construct a vector from x, and y coordinates.
+        /// Create a vector from x, and y coordinates.
         /// </summary>
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">Thy y coordinate of the vector.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if any components of the vector are NaN or Infinity.</exception>
+        /// <exception>Thrown if any components of the vector are NaN or Infinity.</exception>
         public Vector3(double x, double y)
         {
             if(Double.IsNaN(x) || Double.IsNaN(y))
@@ -195,9 +151,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Return a new vector which is the normalized version of this vector.
+        /// Return a new vector which is the unitized version of this vector.
         /// </summary>
-        /// <returns></returns>
         public Vector3 Normalized()
         {
             var length = Length();
@@ -350,7 +305,7 @@ namespace Elements.Geometry
         /// Construct a new vector which is the inverse of this vector.
         /// </summary>
         /// <returns>A new vector which is the inverse of this vector.</returns>
-        public Vector3 Negated()
+        public Vector3 Negate()
         {
             return new Vector3(-X, -Y, -Z);
         }
@@ -480,6 +435,18 @@ namespace Elements.Geometry
         {
             return Double.IsNaN(this.X) || Double.IsNaN(this.Y) || Double.IsNaN(this.Z);
         }
+
+        /// <summary>
+        /// Check whether three points are wound CCW in two dimensions.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are colinear.</returns>
+        public static double CCW(Vector3 a, Vector3 b, Vector3 c)
+        {
+            return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
+        }
     }
 
     /// <summary>
@@ -512,6 +479,43 @@ namespace Elements.Geometry
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Compute a transform with the origin at points[0], with
+        /// an X axis along points[1]->points[0], and a normal
+        /// computed using the vectors points[2]->points[1] and 
+        /// points[1]->points[0].
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static Transform ToTransform(this IList<Vector3> points)
+        {
+            var a = new Vector3(points[1].X - points[0].X,
+                                points[1].Y - points[0].Y,
+                                points[1].Z - points[0].Z).Normalized();
+
+            // We need to search for a second vector that is not colinear 
+            // with the first. If all the vectors are tried, and one isn't
+            // found that's not parallel to the first, you'll 
+            // get a zero-length normal.
+            Vector3 b = null;
+            for(var i=2; i<points.Count; i++)
+            {
+                b = new Vector3(points[i].X - points[1].X,
+                            points[i].Y - points[1].Y,
+                            points[i].Z - points[1].Z).Normalized();
+                var dot = b.Dot(a);
+                if(dot > -1 && dot < 1)
+                {
+                    // Console.WriteLine("Found valid second vector.");
+                    break;
+                }
+            }
+
+            var n = b.Cross(a);
+            var t = new Transform(points[0], a, n);
+            return t;
         }
 
         /// <summary>

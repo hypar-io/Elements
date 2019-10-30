@@ -1,0 +1,21 @@
+{
+    "$id": "https://hypar.io/Schemas/Geometry/Line.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Line",
+    "x-namespace": "Elements.Geometry",
+    "type": ["object","null"],
+    "description": "A line between two points. The line is parameterized from 0.0(start) to 1.0(end)",
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Curve.json"}],
+    "required": ["Start", "End"],
+    "properties": {
+        "Start": {
+            "description": "The start of the line.",
+            "$ref": "Vector3.json"
+        },
+        "End": {
+            "description": "The end of the line.",
+            "$ref": "Vector3.json"
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,39 +1,25 @@
-using Elements.Interfaces;
-using Elements.Geometry.Interfaces;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using System;
+using System.Collections.Generic;
 
 namespace Elements
 {
     /// <summary>
     /// An element defined by a perimeter and a cross section swept along that perimeter.
     /// </summary>
-    public class Frame : Element, IProfile, IMaterial, ISweepAlongCurve
+    [UserElement]
+    public class Frame : GeometricElement
     {
         /// <summary>
         /// The frame's profile.
         /// </summary>
-        public Profile Profile { get; }
-
-        /// <summary>
-        /// The frame's material.
-        /// </summary>
-        public Material Material { get; }
+        public Profile Profile { get; private set; }
 
         /// <summary>
         /// The perimeter of the frame.
         /// </summary>
-        public ICurve Curve { get; }
-
-        /// <summary>
-        /// The start setback of the sweep along the curve.
-        /// </summary>
-        public double StartSetback => 0.0;
-
-        /// <summary>
-        /// The end setback of the sweep along the curve.
-        /// </summary>
-        public double EndSetback => 0.0;
+        public Curve Curve { get; private set; }
 
         /// <summary>
         /// Create a frame.
@@ -43,21 +29,33 @@ namespace Elements
         /// <param name="offset">The amount which the perimeter will be offset internally.</param>
         /// <param name="material">The frame's material.</param>
         /// <param name="transform">The frame's transform.</param>
-        public Frame(Polygon curve, Profile profile, double offset = 0.0, Material material = null, Transform transform = null)
+        /// <param name="representation">The frame's representation.</param>
+        /// <param name="id">The id of the frame.</param>
+        /// <param name="name">The name of the frame.</param>
+        public Frame(Polygon curve,
+                     Profile profile,
+                     double offset = 0.0,
+                     Material material = null,
+                     Transform transform = null,
+                     Representation representation = null,
+                     Guid id = default(Guid),
+                     string name = null) : base(transform != null ? transform : new Transform(),
+                                                material != null ? material : BuiltInMaterials.Default,
+                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                id != default(Guid) ? id : Guid.NewGuid(),
+                                                name)
+        {
+            SetProperties(curve, profile, transform, offset);
+        }
+
+        private void SetProperties(Polygon curve, Profile profile, Transform transform, double offset)
         {
             this.Curve = curve.Offset(-offset)[0];
             this.Profile = profile;
-            this.Transform = transform;
-            this.Material = material != null ? material : BuiltInMaterials.Default;
-        }
-
-        /// <summary>
-        /// Get the updated solid representation of the frame.
-        /// </summary>
-        /// <returns></returns>
-        public Solid GetUpdatedSolid()
-        {
-            return Kernel.Instance.CreateSweepAlongCurve(this);
+            if(this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, 0.0, false));
+            }
         }
     }
 }

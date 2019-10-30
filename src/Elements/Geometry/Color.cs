@@ -5,53 +5,17 @@ namespace Elements.Geometry
     /// <summary>
     /// An RGBA color.
     /// </summary>
-    public class Color
+    public partial class Color
     {
         /// <summary>
-        /// The red component of the color.
+        /// Construct a default color.
         /// </summary>
-        public float Red{get;}
-
-        /// <summary>
-        /// The green component of the color.
-        /// </summary>
-        public float Green{get;}
-
-        /// <summary>
-        /// The blue component of the color.
-        /// </summary>
-        public float Blue{get;}
-
-        /// <summary>
-        /// The alpha component of the color.
-        /// </summary>
-        public float Alpha{get;}
-
-        /// <summary>
-        /// Construct a color from its components.
-        /// </summary>
-        /// <param name="red">The red component between 0.0 and 1.0.</param>
-        /// <param name="green">The green component between 0.0 and 1.0.</param>
-        /// <param name="blue">The blue component between 0.0 and 1.0.</param>
-        /// <param name="alpha">The alpha component between 0.0 and 1.0.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when any color component is less than 0.0.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when any color component is greater than 1.0.</exception>
-        public Color(float red, float green, float blue, float alpha)
+        public Color()
         {
-            if(red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value greater than 0.0.");
-            }
-
-            if(red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
-            {
-                throw new ArgumentOutOfRangeException("All components must have a value less than 1.0.");
-            }
-
-            this.Red = red;
-            this.Green = green;
-            this.Blue = blue;
-            this.Alpha = alpha;
+            this.Red = 0.5;
+            this.Green = 0.5;
+            this.Blue = 0.5;
+            this.Alpha = 0.0;
         }
 
         /// <summary>
@@ -60,7 +24,7 @@ namespace Elements.Geometry
         /// <returns>An array containing the color's components.</returns>
         public float[] ToArray()
         {
-            return new[]{Red, Green, Blue};
+            return new[]{(float)Red, (float)Green, (float)Blue, (float)Alpha};
         }
 
         /// <summary>

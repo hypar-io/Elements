@@ -1,0 +1,357 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ModelCurve
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ModelCurve
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.40.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.ModelCurve">
+  
+  <h1 id="Elements_ModelCurve" data-uid="Elements.ModelCurve" class="text-break">Class ModelCurve
+  </h1>
+  <div class="markdown level0 summary"><p>A curve which is visible in 3D.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div id="model"></div>
+  <script type="text/javascript" src="../js/three.js"></script>
+  <script type="text/javascript" src="../js/GLTFLoader.js"></script>
+  <script type="text/javascript" src="../js/OrbitControls.js"></script>
+  <script>
+    var scene = new THREE.Scene();
+    var div = document.getElementById("model")
+    var camera = new THREE.PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize( div.clientWidth, div.clientHeight );
+    renderer.setClearColor( 0x000000, 0 );
+    div.appendChild( renderer.domElement );
+  
+    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+  
+    var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add( light );
+  
+    var axesHelper = new THREE.AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    var size = 100;
+    var divisions = 100;
+    var colorCenterLine = new THREE.Color( 0xa0a0a0 );
+    var colorGrid = new THREE.Color( 0xdbdbdb );
+    var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
+    scene.add( gridHelper );
+  
+    window.addEventListener( 'resize', onWindowResize, false );
+  
+    camera.position.z = 5;
+  
+    // Instantiate a loader
+    var loader = new THREE.GLTFLoader();
+  
+    // Load a glTF resource
+    loader.load(
+      // resource URL
+      '../models/Elements_ModelCurve.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+  
+        scene.add( gltf.scene );
+  
+        gltf.animations; // Array<THREE.AnimationClip>
+        gltf.scene; // THREE.Scene
+        gltf.scenes; // Array<THREE.Scene>
+        gltf.cameras; // Array<THREE.Camera>
+        gltf.asset; // Object
+  
+        fitCameraToObject(gltf.scene, 2.0, controls)
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+  
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+  
+      },
+      // called when loading has errors
+      function ( error ) {
+  
+        console.log( 'An error happened' );
+  
+      }
+    );
+  
+    var animate = function () {
+      requestAnimationFrame( animate );
+  
+      // cube.rotation.x += 0.01;
+      // cube.rotation.y += 0.01;
+  
+      renderer.render( scene, camera );
+    };
+  
+    function onWindowResize(){
+      var div = document.getElementById("model");
+      camera.aspect = div.clientWidth / div.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize( div.clientWidth, div.clientHeight );
+    };
+  
+    const fitCameraToObject = function ( object, offset, orbitControls ) {
+  
+      const boundingBox = new THREE.Box3();
+      boundingBox.setFromObject( object );
+  
+      const center = boundingBox.getCenter();
+      const size = boundingBox.getSize();
+  
+      // get the max side of the bounding box
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
+      const fov = this.camera.fov * ( Math.PI / 180 );
+      let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
+      
+      // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
+      // object filling the whole canvas
+      if( offset !== undefined && offset !== 0 ) cameraZ *= offset;
+  
+      camera.position.set( center.x, center.y, cameraZ );
+  
+      // set the far plane of the camera so that it easily encompasses the whole object
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
+  
+      this.camera.far = cameraToFarEdge * 3;
+      this.camera.updateProjectionMatrix();
+  
+      if ( orbitControls !== undefined ) {
+  
+        // set camera to rotate around center of loaded object
+        orbitControls.target = center;
+  
+        // prevent camera from zooming out far enough to create far plane cutoff
+        orbitControls.maxDistance = cameraToFarEdge * 2;
+      }
+    };
+  
+    animate();
+  </script><h5 id="Elements_ModelCurve_examples"><strong>Examples</strong></h5>
+  <pre><code class="lang-csharp" name="Main">// Create some curves for your model curves.
+var line = new Line(Vector3.Origin, new Vector3(5,5,5));
+var arc = new Arc(new Vector3(0,0,0), 2.0, 45.0, 135.0);
+var pline = Polygon.L(2, 2, 0.5);
+
+// Create model curves from the curves.
+var lineModelCurve = new ModelCurve(line, new Material(&quot;Red&quot;, Colors.Red));
+var arcModelCurve = new ModelCurve(arc, new Material(&quot;Orange&quot;, Colors.Orange), new Transform(5, 0, 0));
+var plineModelCurve = new ModelCurve(pline, new Material(&quot;Purple&quot;, Colors.Purple), new Transform(10, 0, 0));
+</code></pre>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
+    <div class="level3"><span class="xref">ModelCurve</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_AdditionalProperties">GeometricElement.AdditionalProperties</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_ModelCurve_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ModelCurve : GeometricElement</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_ModelCurve__ctor_" data-uid="Elements.ModelCurve.#ctor*"></a>
+  <h4 id="Elements_ModelCurve__ctor_Elements_Geometry_Curve_Elements_Material_Elements_Geometry_Transform_Guid_System_String_" data-uid="Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Guid,System.String)">ModelCurve(Curve, Material, Transform, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Create a model curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ModelCurve(Curve curve, Material material = null, Transform transform = null, Guid id = null, string name = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">curve</span></td>
+        <td><p>The curve.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The material. Specular and glossiness components will be ignored.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The model curve's transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The id of the model curve.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the model curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_ModelCurve_Curve_" data-uid="Elements.ModelCurve.Curve*"></a>
+  <h4 id="Elements_ModelCurve_Curve" data-uid="Elements.ModelCurve.Curve">Curve</h4>
+  <div class="markdown level1 summary"><p>The curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Curve Curve { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_ModelCurve_UpdateRepresentations_" data-uid="Elements.ModelCurve.UpdateRepresentations*"></a>
+  <h4 id="Elements_ModelCurve_UpdateRepresentations" data-uid="Elements.ModelCurve.UpdateRepresentations">UpdateRepresentations()</h4>
+  <div class="markdown level1 summary"><p>Update the representations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

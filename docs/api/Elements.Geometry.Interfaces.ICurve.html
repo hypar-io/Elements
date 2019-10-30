@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -85,80 +85,6 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public interface ICurve</code></pre>
   </div>
-  <h3 id="properties">Properties
-  </h3>
-  <a id="Elements_Geometry_Interfaces_ICurve_End_" data-uid="Elements.Geometry.Interfaces.ICurve.End*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_End" data-uid="Elements.Geometry.Interfaces.ICurve.End">End</h4>
-  <div class="markdown level1 summary"><p>The end of the curve.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Vector3 End { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Interfaces_ICurve_Start_" data-uid="Elements.Geometry.Interfaces.ICurve.Start*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_Start" data-uid="Elements.Geometry.Interfaces.ICurve.Start">Start</h4>
-  <div class="markdown level1 summary"><p>The start of the curve.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Vector3 Start { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Interfaces_ICurve_Type_" data-uid="Elements.Geometry.Interfaces.ICurve.Type*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_Type" data-uid="Elements.Geometry.Interfaces.ICurve.Type">Type</h4>
-  <div class="markdown level1 summary"><p>A type descriptor for use in deserialization.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">string Type { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Geometry_Interfaces_ICurve_Bounds_" data-uid="Elements.Geometry.Interfaces.ICurve.Bounds*"></a>
@@ -186,13 +112,13 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Interfaces_ICurve_Frames_" data-uid="Elements.Geometry.Interfaces.ICurve.Frames*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Interfaces.ICurve.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
+  <h4 id="Elements_Geometry_Interfaces_ICurve_Frames_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Interfaces.ICurve.Frames(System.Double,System.Double,System.Double)">Frames(Double, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Get a collection of Transforms which represent frames along this ICurve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Transform[] Frames(double startSetback = 0, double endSetback = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">Transform[] Frames(double startSetback = 0, double endSetback = 0, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -214,6 +140,12 @@
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">endSetback</span></td>
         <td><p>The offset from the end of the ICurve.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation of all frames around their z axes.</p>
 </td>
       </tr>
     </tbody>
@@ -301,38 +233,14 @@
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Interfaces_ICurve_Reversed_" data-uid="Elements.Geometry.Interfaces.ICurve.Reversed*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_Reversed" data-uid="Elements.Geometry.Interfaces.ICurve.Reversed">Reversed()</h4>
-  <div class="markdown level1 summary"><p>Get an ICurve which is the reverse of this curve.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ICurve Reversed()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Interfaces_ICurve_TransformAt_" data-uid="Elements.Geometry.Interfaces.ICurve.TransformAt*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_TransformAt_System_Double_" data-uid="Elements.Geometry.Interfaces.ICurve.TransformAt(System.Double)">TransformAt(Double)</h4>
+  <h4 id="Elements_Geometry_Interfaces_ICurve_TransformAt_System_Double_System_Double_" data-uid="Elements.Geometry.Interfaces.ICurve.TransformAt(System.Double,System.Double)">TransformAt(Double, Double)</h4>
   <div class="markdown level1 summary"><p>Get the frame from the curve at parameter u.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Transform TransformAt(double u)</code></pre>
+    <pre><code class="lang-csharp hljs">Transform TransformAt(double u, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -348,6 +256,12 @@
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
         <td><p>A parameter on the curve between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation of the transform around its z axis.</p>
 </td>
       </tr>
     </tbody>

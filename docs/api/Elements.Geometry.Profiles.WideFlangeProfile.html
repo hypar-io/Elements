@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -81,21 +81,12 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></div>
-    <div class="level2"><span class="xref">WideFlangeProfile</span></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a></div>
+    <div class="level1"><a class="xref" href="Elements.Identifiable.html">Identifiable</a></div>
+    <div class="level2"><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></div>
+    <div class="level3"><span class="xref">WideFlangeProfile</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="Elements.Geometry.Profile.html#Elements_Geometry_Profile_Id">Profile.Id</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Profile.html#Elements_Geometry_Profile_Name">Profile.Name</a>
-    </div>
     <div>
       <a class="xref" href="Elements.Geometry.Profile.html#Elements_Geometry_Profile_Perimeter">Profile.Perimeter</a>
     </div>
@@ -109,32 +100,23 @@
       <a class="xref" href="Elements.Geometry.Profile.html#Elements_Geometry_Profile_Area">Profile.Area()</a>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <a class="xref" href="Elements.Geometry.Profile.html#Elements_Geometry_Profile_Transform_Elements_Geometry_Transform_">Profile.Transform(Transform)</a>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Id">Identifiable.Id</a>
     </div>
     <div>
-      <span class="xref">System.Object.GetHashCode()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_Name">Identifiable.Name</a>
     </div>
     <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="Elements.Identifiable.html#Elements_Identifiable_AdditionalProperties">Identifiable.AdditionalProperties</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.Profiles.html">Elements.Geometry.Profiles</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Profiles_WideFlangeProfile_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class WideFlangeProfile : Profile, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public class WideFlangeProfile : Profile</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -164,12 +146,12 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Profiles_WideFlangeProfile__ctor_" data-uid="Elements.Geometry.Profiles.WideFlangeProfile.#ctor*"></a>
-  <h4 id="Elements_Geometry_Profiles_WideFlangeProfile__ctor_System_String_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_VerticalAlignment_Elements_Geometry_HorizontalAlignment_System_Double_System_Double_" data-uid="Elements.Geometry.Profiles.WideFlangeProfile.#ctor(System.String,System.Double,System.Double,System.Double,System.Double,Elements.Geometry.VerticalAlignment,Elements.Geometry.HorizontalAlignment,System.Double,System.Double)">WideFlangeProfile(String, Double, Double, Double, Double, VerticalAlignment, HorizontalAlignment, Double, Double)</h4>
+  <h4 id="Elements_Geometry_Profiles_WideFlangeProfile__ctor_System_String_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Profiles_VerticalAlignment_Elements_Geometry_Profiles_HorizontalAlignment_System_Double_System_Double_Guid_" data-uid="Elements.Geometry.Profiles.WideFlangeProfile.#ctor(System.String,System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Profiles.VerticalAlignment,Elements.Geometry.Profiles.HorizontalAlignment,System.Double,System.Double,Guid)">WideFlangeProfile(String, Double, Double, Double, Double, VerticalAlignment, HorizontalAlignment, Double, Double, Guid)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public WideFlangeProfile(string name, double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, VerticalAlignment verticalAlignment = VerticalAlignment.Center, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, double verticalOffset = 0, double horizontalOffset = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public WideFlangeProfile(string name, double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, VerticalAlignment verticalAlignment = VerticalAlignment.Center, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, double verticalOffset = 0, double horizontalOffset = 0, Guid id = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -207,12 +189,12 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.VerticalAlignment.html">VerticalAlignment</a></td>
+        <td><a class="xref" href="Elements.Geometry.Profiles.VerticalAlignment.html">VerticalAlignment</a></td>
         <td><span class="parametername">verticalAlignment</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.HorizontalAlignment.html">HorizontalAlignment</a></td>
+        <td><a class="xref" href="Elements.Geometry.Profiles.HorizontalAlignment.html">HorizontalAlignment</a></td>
         <td><span class="parametername">horizontalAlignment</span></td>
         <td></td>
       </tr>
@@ -226,6 +208,11 @@
         <td><span class="parametername">horizontalOffset</span></td>
         <td></td>
       </tr>
+      <tr>
+        <td><span class="xref">Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
@@ -236,8 +223,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double A { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double A { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -260,8 +246,7 @@ public double A { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double bf { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double bf { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -284,8 +269,7 @@ public double bf { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Cw { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Cw { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -308,8 +292,7 @@ public double Cw { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double d { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double d { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -332,8 +315,7 @@ public double d { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double dAf { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double dAf { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -356,8 +338,7 @@ public double dAf { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public string gage { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string gage { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -380,8 +361,7 @@ public string gage { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Ix { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Ix { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -404,8 +384,7 @@ public double Ix { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Iy { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Iy { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -428,8 +407,7 @@ public double Iy { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double J { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double J { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -452,8 +430,7 @@ public double J { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double k { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double k { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -476,8 +453,7 @@ public double k { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double k1 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double k1 { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -500,8 +476,7 @@ public double k1 { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Qf { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Qf { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -524,8 +499,7 @@ public double Qf { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Qw { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Qw { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -548,8 +522,7 @@ public double Qw { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double rt { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double rt { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -572,8 +545,7 @@ public double rt { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double rx { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double rx { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -596,8 +568,7 @@ public double rx { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double ry { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double ry { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -620,8 +591,7 @@ public double ry { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Sw { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Sw { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -644,8 +614,7 @@ public double Sw { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Sx { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Sx { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -668,8 +637,7 @@ public double Sx { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Sy { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Sy { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -692,8 +660,7 @@ public double Sy { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public string T { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string T { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -716,8 +683,7 @@ public string T { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double tf { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double tf { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -740,8 +706,7 @@ public double tf { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double tw { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double tw { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -764,8 +729,7 @@ public double tw { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Wno { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Wno { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -788,8 +752,7 @@ public double Wno { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Zx { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Zx { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -812,8 +775,7 @@ public double Zx { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Zy { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Zy { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -830,10 +792,6 @@ public double Zy { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="Elements.Interfaces.IIdentifiable.html">IIdentifiable</a>
-  </div>
 </article>
           </div>
           

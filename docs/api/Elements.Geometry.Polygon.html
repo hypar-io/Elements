@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -82,8 +82,9 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></div>
-    <div class="level2"><span class="xref">Polygon</span></div>
+    <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
+    <div class="level2"><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></div>
+    <div class="level3"><span class="xref">Polygon</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -91,12 +92,6 @@
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Type">Polyline.Type</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline__vertices">Polyline._vertices</a>
-    </div>
     <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Vertices">Polyline.Vertices</a>
     </div>
@@ -107,28 +102,25 @@
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_End">Polyline.End</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckCoincidenceAndThrow_IList_Elements_Geometry_Vector3__">Polyline.CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckSegmentLengthAndThrow_IList_Elements_Geometry_Line__">Polyline.CheckSegmentLengthAndThrow(IList&lt;Line&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckSelfIntersectionAndThrow_Elements_Geometry_Transform_IList_Elements_Geometry_Line__">Polyline.CheckSelfIntersectionAndThrow(Transform, IList&lt;Line&gt;)</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_PointAt_System_Double_">Polyline.PointAt(Double)</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_TransformAt_System_Double_">Polyline.TransformAt(Double)</a>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_TransformAt_System_Double_System_Double_">Polyline.TransformAt(Double, Double)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Bounds">Polyline.Bounds()</a>
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Plane">Polyline.Plane()</a>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
@@ -140,13 +132,13 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Polygon__ctor_" data-uid="Elements.Geometry.Polygon.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polygon__ctor_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.Polygon.#ctor(Elements.Geometry.Vector3[])">Polygon(Vector3[])</h4>
+  <h4 id="Elements_Geometry_Polygon__ctor_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polygon.#ctor(IList{Elements.Geometry.Vector3})">Polygon(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a Polygon from a collection of vertices.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon(Vector3[] vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -159,25 +151,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
         <td><p>A collection of vertices.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentException</span></td>
-        <td><p>Thrown when coincident vertices are provided.</p>
 </td>
       </tr>
     </tbody>
@@ -490,7 +466,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the subtraction of the supplied Polygon from this Polygon.
 Returns null if the area of this Polygon is entirely subtracted.
 Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.</p>
@@ -499,7 +475,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Difference_" data-uid="Elements.Geometry.Polygon.Difference*"></a>
-  <h4 id="Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon})">Difference(IList&lt;Polygon&gt;)</h4>
+  <h4 id="Elements_Geometry_Polygon_Difference_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Polygon.Difference(IList{Elements.Geometry.Polygon})">Difference(IList&lt;Polygon&gt;)</h4>
   <div class="markdown level1 summary"><p>Constructs the geometric difference between this Polygon and the supplied Polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -518,7 +494,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">difPolys</span></td>
         <td><p>The list of intersecting Polygons.</p>
 </td>
@@ -535,7 +511,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the subtraction of the supplied Polygons from this Polygon.
 Returns null if the area of this Polygon is entirely subtracted.
 Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.</p>
@@ -670,16 +646,14 @@ Returns a list containing a representation of the perimeter of this Polygon if t
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <a id="Elements_Geometry_Polygon_Frames_" data-uid="Elements.Geometry.Polygon.Frames*"></a>
-  <h4 id="Elements_Geometry_Polygon_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_Frames_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.Frames(System.Double,System.Double,System.Double)">Frames(Double, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Get the transforms used to transform a Profile extruded along this Polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -701,6 +675,12 @@ Returns a list containing a representation of the perimeter of this Polygon if t
         <td><span class="parametername">endSetback</span></td>
         <td></td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>An optional rotation in degrees of all frames around their z axes.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -719,7 +699,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Frames_System_Double_System_Double_">Polyline.Frames(Double, Double)</a></div>
+  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Frames_System_Double_System_Double_System_Double_">Polyline.Frames(Double, Double, Double)</a></div>
   <a id="Elements_Geometry_Polygon_GetHashCode_" data-uid="Elements.Geometry.Polygon.GetHashCode*"></a>
   <h4 id="Elements_Geometry_Polygon_GetHashCode" data-uid="Elements.Geometry.Polygon.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the polygon.</p>
@@ -744,8 +724,6 @@ Returns a list containing a representation of the perimeter of this Polygon if t
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Polygon_Intersection_" data-uid="Elements.Geometry.Polygon.Intersection*"></a>
   <h4 id="Elements_Geometry_Polygon_Intersection_Elements_Geometry_Polygon_" data-uid="Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon)">Intersection(Polygon)</h4>
   <div class="markdown level1 summary"><p>Constructs the Polygon intersections between this Polygon and the supplied Polygon.</p>
@@ -783,7 +761,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the intersection of this Polygon with the supplied Polygon.
 Returns null if the two Polygons do not intersect.</p>
 </td>
@@ -958,27 +936,6 @@ Returns null if the two Polygons do not intersect.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><p>A Polygon with the specified number of sides.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the radius is less than or equal to zero.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when the number of sides is less than 3.</p>
 </td>
       </tr>
     </tbody>
@@ -1166,13 +1123,13 @@ Returns null if the two Polygons do not intersect.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Rectangle_" data-uid="Elements.Geometry.Polygon.Rectangle*"></a>
-  <h4 id="Elements_Geometry_Polygon_Rectangle_System_Double_System_Double_Elements_Geometry_Vector3_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.Rectangle(System.Double,System.Double,Elements.Geometry.Vector3,System.Double,System.Double)">Rectangle(Double, Double, Vector3, Double, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_Rectangle_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.Rectangle(System.Double,System.Double)">Rectangle(Double, Double)</h4>
   <div class="markdown level1 summary"><p>Create a rectangle.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Polygon Rectangle(double width, double height, Vector3 origin = null, double verticalOffset = 0, double horizontalOffset = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Polygon Rectangle(double width, double height)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1194,24 +1151,6 @@ Returns null if the two Polygons do not intersect.</p>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">height</span></td>
         <td><p>The height of the rectangle.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">origin</span></td>
-        <td><p>An optional origin to displace the rectangle.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">verticalOffset</span></td>
-        <td><p>An optional amount the rectangle should be offset from center in the vertical direction.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">horizontalOffset</span></td>
-        <td><p>An optional amount the rectangle should be offset from center in the horizontal direction.</p>
 </td>
       </tr>
     </tbody>
@@ -1397,6 +1336,33 @@ Returns null if the two Polygons do not intersect.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polygon_Transform_" data-uid="Elements.Geometry.Polygon.Transform*"></a>
+  <h4 id="Elements_Geometry_Polygon_Transform_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Polygon.Transform(Elements.Geometry.Transform)">Transform(Transform)</h4>
+  <div class="markdown level1 summary"><p>Transform this polygon in place.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Transform(Transform t)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">t</span></td>
+        <td><p>The transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polygon_Union_" data-uid="Elements.Geometry.Polygon.Union*"></a>
   <h4 id="Elements_Geometry_Polygon_Union_Elements_Geometry_Polygon_" data-uid="Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon)">Union(Polygon)</h4>
   <div class="markdown level1 summary"><p>Constructs the geometric union between this Polygon and the supplied Polygon.</p>
@@ -1442,7 +1408,7 @@ Returns null if a union cannot be performed on the two Polygons.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Union_" data-uid="Elements.Geometry.Polygon.Union*"></a>
-  <h4 id="Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon})">Union(IList&lt;Polygon&gt;)</h4>
+  <h4 id="Elements_Geometry_Polygon_Union_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Polygon.Union(IList{Elements.Geometry.Polygon})">Union(IList&lt;Polygon&gt;)</h4>
   <div class="markdown level1 summary"><p>Constructs the geometric union between this Polygon and the supplied list of Polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1461,7 +1427,7 @@ Returns null if a union cannot be performed on the two Polygons.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">polygons</span></td>
         <td><p>The list of Polygons to be combined with this Polygon.</p>
 </td>
@@ -1522,10 +1488,54 @@ Returns null if a union cannot be performed on the complete list of Polygons.</p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the symmetric difference of this Polygon and the supplied Polygon.
 Returns a representation of this Polygon and the supplied Polygon if the Polygons do not intersect.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="operators">Operators
+  </h3>
+  <a id="Elements_Geometry_Polygon_op_Implicit_" data-uid="Elements.Geometry.Polygon.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Polygon_op_Implicit_Elements_Geometry_Polygon__Elements_Geometry_Profile" data-uid="Elements.Geometry.Polygon.op_Implicit(Elements.Geometry.Polygon)~Elements.Geometry.Profile">Implicit(Polygon to Profile)</h4>
+  <div class="markdown level1 summary"><p>Implicitly convert a polygon to a profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Profile(Polygon p)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>The polygon to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

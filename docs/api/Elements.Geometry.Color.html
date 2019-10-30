@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -84,29 +84,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Color</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Color_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Color</code></pre>
+    <pre><code class="lang-csharp hljs">public class Color : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -155,37 +137,16 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when any color component is less than 0.0.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.ArgumentOutOfRangeException</span></td>
-        <td><p>Thrown when any color component is greater than 1.0.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Geometry_Color_Alpha_" data-uid="Elements.Geometry.Color.Alpha*"></a>
   <h4 id="Elements_Geometry_Color_Alpha" data-uid="Elements.Geometry.Color.Alpha">Alpha</h4>
-  <div class="markdown level1 summary"><p>The alpha component of the color.</p>
+  <div class="markdown level1 summary"><p>The alpha component of the color between 0.0 and 1.0..</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Alpha { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Alpha { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -197,19 +158,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Color_Blue_" data-uid="Elements.Geometry.Color.Blue*"></a>
   <h4 id="Elements_Geometry_Color_Blue" data-uid="Elements.Geometry.Color.Blue">Blue</h4>
-  <div class="markdown level1 summary"><p>The blue component of the color.</p>
+  <div class="markdown level1 summary"><p>The blue component of the color between 0.0 and 1.0..</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Blue { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Blue { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -221,19 +182,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Color_Green_" data-uid="Elements.Geometry.Color.Green*"></a>
   <h4 id="Elements_Geometry_Color_Green" data-uid="Elements.Geometry.Color.Green">Green</h4>
-  <div class="markdown level1 summary"><p>The green component of the color.</p>
+  <div class="markdown level1 summary"><p>The green component of the color between 0.0 and 1.0..</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Green { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Green { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -245,19 +206,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Color_Red_" data-uid="Elements.Geometry.Color.Red*"></a>
   <h4 id="Elements_Geometry_Color_Red" data-uid="Elements.Geometry.Color.Red">Red</h4>
-  <div class="markdown level1 summary"><p>The red component of the color.</p>
+  <div class="markdown level1 summary"><p>The red component of the color between 0.0 and 1.0.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float Red { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Red { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -269,7 +230,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -317,8 +278,6 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <a id="Elements_Geometry_Color_GetHashCode_" data-uid="Elements.Geometry.Color.GetHashCode*"></a>
   <h4 id="Elements_Geometry_Color_GetHashCode" data-uid="Elements.Geometry.Color.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for this color.</p>
@@ -343,8 +302,6 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Color_ToArray_" data-uid="Elements.Geometry.Color.ToArray*"></a>
   <h4 id="Elements_Geometry_Color_ToArray" data-uid="Elements.Geometry.Color.ToArray">ToArray()</h4>
   <div class="markdown level1 summary"><p>Get the color's components as an array.</p>

@@ -1,24 +1,59 @@
 #pragma warning disable CS1591
 
+using System;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry.Profiles
 {
+    /// <summary>
+    /// The vertical alignment of a profile.
+    /// </summary>
+    public enum VerticalAlignment
+    {
+        /// <summary>
+        /// Align the profile along its top.
+        /// </summary>
+        Top,
+        /// <summary>
+        /// Align the profile along its center.
+        /// </summary>
+        Center,
+        /// <summary>
+        /// Align the profile along its bottom.
+        /// </summary>
+        Bottom
+    }
+
+    /// <summary>
+    /// The horizontal alignment of a profile.
+    /// </summary>
+    public enum HorizontalAlignment
+    {
+        /// <summary>
+        /// Align the profile along its left edge.
+        /// </summary>
+        Left,
+        /// <summary>
+        /// Align the profile along its center.
+        /// </summary>
+        Center,
+        /// <summary>
+        /// Align the profile along its right edge.
+        /// </summary>
+        Right
+    }
+
     public class WideFlangeProfile : Profile
     {
         [JsonIgnore]
         public double A {get; internal set;}
 
-        [JsonIgnore]
         public double d {get; internal set;}
 
-        [JsonIgnore]
         public double tw {get;internal set;}
 
-        [JsonIgnore]
         public double bf {get;internal set;}
 
-        [JsonIgnore]
         public double tf {get;internal set;}
 
         [JsonIgnore]
@@ -81,12 +116,29 @@ namespace Elements.Geometry.Profiles
         [JsonIgnore]
         public double Qw {get;internal set;}
 
-        public WideFlangeProfile(string name, double bf = 0.1, double d = 0.05, double tf = 0.005, double tw = 0.005, 
-                                    VerticalAlignment verticalAlignment = VerticalAlignment.Center, 
-                                    HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center, 
-                                    double verticalOffset = 0.0, double horizontalOffset = 0.0) : base(name)
+        [JsonConstructor]
+        public WideFlangeProfile(string name,
+                                 Guid id,
+                                 double bf = 0.1,
+                                 double d = 0.05,
+                                 double tf = 0.005,
+                                 double tw = 0.005,
+                                 VerticalAlignment verticalAlignment = VerticalAlignment.Center,
+                                 HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center,
+                                 double verticalOffset = 0.0,
+                                 double horizontalOffset = 0.0) : base(CreateProfile(bf,
+                                                                d,
+                                                                tf,
+                                                                tw,
+                                                                verticalAlignment,
+                                                                horizontalAlignment,
+                                                                verticalOffset,
+                                                                horizontalOffset), null, id, name)
         {
-            this.Perimeter = CreateProfile(bf, d, tf, tw, verticalAlignment, horizontalAlignment, verticalOffset, horizontalOffset);
+            this.bf = bf;
+            this.d = d;
+            this.tf = tf;
+            this.tw = tw;
         }
 
         public WideFlangeProfile(string name) : base(name)
@@ -94,10 +146,14 @@ namespace Elements.Geometry.Profiles
             this.Perimeter = CreateProfile(0.1, 0.05, 0.005, 0.005, VerticalAlignment.Center, HorizontalAlignment.Center, 0.0, 0.0);
         }
 
-        private Polygon CreateProfile(double bf, double d, double tf, double tw, 
-                                    VerticalAlignment verticalAlignment, 
-                                    HorizontalAlignment horizontalAlignment, 
-                                    double verticalOffset, double horizontalOffset)
+        private static Polygon CreateProfile(double bf,
+                                      double d,
+                                      double tf,
+                                      double tw,
+                                      VerticalAlignment verticalAlignment,
+                                      HorizontalAlignment horizontalAlignment,
+                                      double verticalOffset,
+                                      double horizontalOffset)
         {
             var o = new Vector3();
 

@@ -1,4 +1,5 @@
 using ClipperLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,11 +13,10 @@ namespace Elements.Geometry
         private const double scale = 1024.0;
 
         /// <summary>
-        /// Construct a Polygon from a collection of vertices.
+        /// Implicitly convert a polygon to a profile.
         /// </summary>
-        /// <param name="vertices">A collection of vertices.</param>
-        /// <exception cref="System.ArgumentException">Thrown when coincident vertices are provided.</exception>
-        public Polygon(Vector3[] vertices) : base(vertices){}
+        /// <param name="p">The polygon to convert.</param>
+        public static implicit operator Profile(Polygon p) => new Profile(p);
 
         /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
@@ -432,18 +432,23 @@ namespace Elements.Geometry
         /// <returns>A collection of Lines.</returns>
         public override Line[] Segments()
         {
-            var lines = new Line[_vertices.Length];
-            for(var i=0; i<_vertices.Length; i++)
+            return SegmentsInternal(this.Vertices);
+        }
+
+        internal new static Line[] SegmentsInternal(IList<Vector3> vertices)
+        {
+            var lines = new Line[vertices.Count];
+            for(var i=0; i<vertices.Count; i++)
             {
-                var a = _vertices[i];
+                var a = vertices[i];
                 Vector3 b;
-                if(i == _vertices.Length-1)
+                if(i == vertices.Count-1)
                 {
-                    b = _vertices[0];
+                    b = vertices[0];
                 }
                 else
                 {
-                    b = _vertices[i+1];
+                    b = vertices[i+1];
                 }
                 lines[i] = new Line(a, b);
             }
@@ -456,7 +461,7 @@ namespace Elements.Geometry
         /// <returns>Returns a new Polygon whose vertices are reversed.</returns>
         public new Polygon Reversed()
         {
-            return new Polygon(this._vertices.Reverse().ToArray());
+            return new Polygon(this.Vertices.Reverse().ToArray());
         }
 
         /// <summary>
@@ -470,12 +475,12 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            if(this.Vertices.Length != p.Vertices.Length)
+            if(this.Vertices.Count != p.Vertices.Count)
             {
                 return false;
             }
 
-            for(var i=0; i<this.Vertices.Length; i++)
+            for(var i=0; i<this.Vertices.Count; i++)
             {
                 if(!this.Vertices[i].Equals(p.Vertices[i]))
                 {
@@ -501,7 +506,7 @@ namespace Elements.Geometry
         /// <param name="p"></param>
         public Polygon Project(Plane p)
         {
-            var projected = new Vector3[this.Vertices.Length];
+            var projected = new Vector3[this.Vertices.Count];
             for(var i=0; i<projected.Length; i++)
             {
                 projected[i] = this.Vertices[i].Project(p);
@@ -517,8 +522,8 @@ namespace Elements.Geometry
         /// <returns>A Polygon projected onto the Plane.</returns>
         public Polygon ProjectAlong(Vector3 direction, Plane p)
         {
-            var projected = new Vector3[this.Vertices.Length];
-            for(var i=0; i<this.Vertices.Length; i++)
+            var projected = new Vector3[this.Vertices.Count];
+            for(var i=0; i<this.Vertices.Count; i++)
             {
                 projected[i] = this.Vertices[i].ProjectAlong(direction, p);
             }
@@ -530,10 +535,11 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
+        /// <param name="rotation">An optional rotation in degrees of all frames around their z axes.</param>
         /// <returns></returns>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
         {
-            return FramesInternal(startSetback, endSetback, true);
+            return FramesInternal(startSetback, endSetback, true, rotation);
         }
 
         /// <summary>
@@ -542,7 +548,7 @@ namespace Elements.Geometry
         /// <returns>A string containing the string representations of this Polygon's vertices.</returns>
         public override string ToString()
         {
-            return string.Join(", ", this._vertices.Select(v=>v.ToString()));
+            return string.Join(", ", this.Vertices.Select(v=>v.ToString()));
         }
 
         /// <summary>
@@ -551,10 +557,10 @@ namespace Elements.Geometry
         public override double Length()
         {
             var length = 0.0;
-            for(var i=0; i<this._vertices.Length; i++)
+            for(var i=0; i<this.Vertices.Count; i++)
             {
-                var next = i == this._vertices.Length - 1 ? 0 : i+1;
-                length += this._vertices[i].DistanceTo(this._vertices[next]);
+                var next = i == this.Vertices.Count - 1 ? 0 : i+1;
+                length += this.Vertices[i].DistanceTo(this.Vertices[next]);
             }
             return length;
         }
@@ -571,7 +577,7 @@ namespace Elements.Geometry
                 x += pnt.X;
                 y += pnt.Y;
             }
-            return new Vector3(x / Vertices.Length, y / Vertices.Length);
+            return new Vector3(x / Vertices.Count, y / Vertices.Count);
         }
 
         /// <summary>
@@ -580,13 +586,35 @@ namespace Elements.Geometry
         public double Area()
         {
             var area = 0.0;
-            for(var i = 0; i<= _vertices.Length-1; i++)
+            for(var i = 0; i<= this.Vertices.Count-1; i++)
             {
-                var j = (i+1) % _vertices.Length;
-                area += _vertices[i].X * _vertices[j].Y;
-                area -= _vertices[i].Y * _vertices[j].X;
+                var j = (i+1) % this.Vertices.Count;
+                area += this.Vertices[i].X * this.Vertices[j].Y;
+                area -= this.Vertices[i].Y * this.Vertices[j].X;
             }
             return area/2.0;
+        }
+
+        /// <summary>
+        /// Transform this polygon in place.
+        /// </summary>
+        /// <param name="t">The transform.</param>
+        public void Transform(Transform t)
+        {
+            for(var i=0; i<this.Vertices.Count; i++)
+            {
+                this.Vertices[i] = t.OfPoint(this.Vertices[i]);
+            }
+        }
+
+        /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            var verts = new List<Vector3>(this.Vertices);
+            verts.Add(this.Start);
+            return verts;
         }
     }
 
@@ -628,7 +656,7 @@ namespace Elements.Geometry
             return new Polygon(converted);
         }
 
-        public static Polygon[] Reversed(this Polygon[] polygons)
+        public static IList<Polygon> Reversed(this IList<Polygon> polygons)
         {
             return polygons.Select(p=>p.Reversed()).ToArray();
         }
