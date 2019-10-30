@@ -10,6 +10,12 @@ namespace Elements
     public partial class Material: Element
     {
         /// <summary>
+        /// A uri to an image file to be used as a texture.
+        /// </summary>
+        /// <value></value>
+        public Uri Texture{get;set;}
+
+        /// <summary>
         /// Construct a material.
         /// </summary>
         /// <param name="name"></param>

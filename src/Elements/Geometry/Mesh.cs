@@ -93,6 +93,22 @@ namespace Elements.Geometry
             return contour;
         }
     }
+    
+    /// <summary>
+    /// A UV texture coordinate.
+    /// </summary>
+    public struct UV
+    {
+        /// <summary>
+        /// The U coordinate.
+        /// </summary>
+        public double U{get;set;}
+
+        /// <summary>
+        /// The v coordinate.
+        /// </summary>
+        public double V{get;set;}
+    }
 
     /// <summary>
     /// A mesh vertex.
@@ -119,6 +135,11 @@ namespace Elements.Geometry
         /// The index of the vertex within a mesh.
         /// </summary>
         public int Index { get; internal set; }
+
+        /// <summary>
+        /// The texture coordinate of the vertex.
+        /// </summary>
+        public UV UV {get; set;}
 
         /// <summary>
         /// Create a vertex.
@@ -175,9 +196,10 @@ Triangles:{_triangles.Count}";
         /// Get all buffers required for rendering.
         /// </summary>
         public void GetBuffers(out byte[] vertexBuffer, out byte[] indexBuffer,
-                                out byte[] normalBuffer, out byte[] colorBuffer,
+                                out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer,
                                 out double[] v_max, out double[] v_min, out double[] n_min, out double[] n_max,
-                                out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max)
+                                out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max,
+                                out double[] uv_max, out double[] uv_min)
         {
             var floatSize = sizeof(float);
             var ushortSize = sizeof(ushort);
@@ -185,6 +207,7 @@ Triangles:{_triangles.Count}";
             vertexBuffer = new byte[this._vertices.Count * floatSize * 3];
             normalBuffer = new byte[this._vertices.Count * floatSize * 3];
             indexBuffer = new byte[this._triangles.Count * ushortSize * 3];
+            uvBuffer = new byte[this._vertices.Count * floatSize *2];
 
             if(this._vertices[0].Color != null)
             {
@@ -203,6 +226,8 @@ Triangles:{_triangles.Count}";
             v_min = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             n_min = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             n_max = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+            uv_max = new double[2] { double.MinValue, double.MinValue};
+            uv_min = new double[2] { double.MaxValue, double.MaxValue};
 
             index_max = ushort.MinValue;
             index_min = ushort.MaxValue;
@@ -223,6 +248,9 @@ Triangles:{_triangles.Count}";
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.Y), 0, normalBuffer, vi + floatSize, floatSize);
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
 
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.UV.U), 0, uvBuffer, vi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.UV.V), 0, uvBuffer, vi + floatSize, floatSize);
+
                 vi += 3 * floatSize;
 
                 v_max[0] = Math.Max(v_max[0], v.Position.X);
@@ -238,6 +266,11 @@ Triangles:{_triangles.Count}";
                 n_min[0] = Math.Min(n_min[0], v.Normal.X);
                 n_min[1] = Math.Min(n_min[1], v.Normal.Y);
                 n_min[2] = Math.Min(n_min[2], v.Normal.Z);
+
+                uv_max[0] = Math.Max(uv_max[0], v.UV.U);
+                uv_max[1] = Math.Max(uv_max[1], v.UV.V);
+                uv_min[0] = Math.Min(uv_min[0], v.UV.U);
+                uv_min[1] = Math.Min(uv_min[1], v.UV.V);
 
                 index_max = Math.Max(index_max, (ushort)v.Index);
                 index_min = Math.Min(index_min, (ushort)v.Index);

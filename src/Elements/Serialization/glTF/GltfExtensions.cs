@@ -76,7 +76,13 @@ namespace Elements.Serialization.glTF
         {
             var materialDict = new Dictionary<string, int>();
             var newMaterials = new List<glTFLoader.Schema.Material>();
+
+            var textureDict = new Dictionary<Uri, int>();
+            var textures = new List<glTFLoader.Schema.Texture>();
+
             var matId = 0;
+            // var texId = 0;
+            // var texCoordsId = 0;
 
             foreach(var material in materials)
             {
@@ -91,6 +97,27 @@ namespace Elements.Serialization.glTF
                 m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness();
                 m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
+
+                // if(material.Texture != null)
+                // {
+                //     if(textureDict.ContainsKey(material.Texture))
+                //     {
+                //         break;
+                //     }
+                //     var ti = new TextureInfo();
+
+                //     // Add the texture
+                //     ti.Index = texId;
+
+                //     // Add the texcoords
+                //     var coords = new Tex
+                //     ti.TexCoord = texCoordsId;
+
+                //     m.PbrMetallicRoughness.BaseColorTexture = ti;
+                //     texId++;
+                //     texCoordsId++;
+                // }
+                
                 m.DoubleSided = false;
                 m.Name = material.Name;
 
@@ -116,6 +143,7 @@ namespace Elements.Serialization.glTF
             }
 
             gltf.Materials = newMaterials.ToArray();
+            // gltf.Textures = textures;
 
             return materialDict;
         }
@@ -177,8 +205,8 @@ namespace Elements.Serialization.glTF
             return id;
         }
 
-        internal static int AddTriangleMesh(this Gltf gltf, string name, List<byte> buffer, List<BufferView> bufferViews, List<Accessor> accessors, byte[] vertices, byte[] normals, byte[] indices, byte[] colors,
-        double[] vMin, double[] vMax, double[] nMin, double[] nMax, ushort iMin, ushort iMax, int materialId, float[] cMin, float[] cMax, int? parent_index, Transform transform = null)
+        internal static int AddTriangleMesh(this Gltf gltf, string name, List<byte> buffer, List<BufferView> bufferViews, List<Accessor> accessors, byte[] vertices, byte[] normals, byte[] indices, byte[] colors, byte[] uvs,
+        double[] vMin, double[] vMax, double[] nMin, double[] nMax, ushort iMin, ushort iMax, double[] uvMin, double[] uvMax, int materialId, float[] cMin, float[] cMax, int? parent_index, Transform transform = null)
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
@@ -186,7 +214,7 @@ namespace Elements.Serialization.glTF
             var vBuff = AddBufferView(bufferViews, 0, buffer.Count, vertices.Length, null, null);
             var nBuff = AddBufferView(bufferViews, 0, buffer.Count + vertices.Length, normals.Length, null, null);
             var iBuff = AddBufferView(bufferViews, 0, buffer.Count + vertices.Length + normals.Length, indices.Length, null, null);
-
+            
             buffer.AddRange(vertices);
             buffer.AddRange(normals);
             buffer.AddRange(indices);
@@ -200,7 +228,7 @@ namespace Elements.Serialization.glTF
             var vAccess = AddAccessor(accessors, vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length/sizeof(float)/3, new[]{(float)vMin[0], (float)vMin[1], (float)vMin[2]}, new[]{(float)vMax[0],(float)vMax[1],(float)vMax[2]}, Accessor.TypeEnum.VEC3);
             var nAccess = AddAccessor(accessors, nBuff, 0, Accessor.ComponentTypeEnum.FLOAT, normals.Length/sizeof(float)/3, new[]{(float)nMin[0], (float)nMin[1], (float)nMin[2]}, new[]{(float)nMax[0], (float)nMax[1], (float)nMax[2]}, Accessor.TypeEnum.VEC3);
             var iAccess = AddAccessor(accessors, iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_SHORT, indices.Length/sizeof(ushort), new[]{(float)iMin}, new[]{(float)iMax}, Accessor.TypeEnum.SCALAR);
-            
+
             var prim = new MeshPrimitive();
             prim.Indices = iAccess;
             prim.Material = materialId;
@@ -210,6 +238,14 @@ namespace Elements.Serialization.glTF
                 {"POSITION",vAccess}
             };
 
+            if(uvs.Length > 0)
+            {
+                var uvBuff = AddBufferView(bufferViews, 0, buffer.Count, uvs.Length, null, null);
+                buffer.AddRange(uvs);
+                var uvAccess = AddAccessor(accessors, uvBuff, 0,Accessor.ComponentTypeEnum.FLOAT, uvs.Length/sizeof(float)/2, new []{(float)uvMin[0], (float)uvMin[1]}, new []{(float)uvMax[0], (float)uvMax[1]}, Accessor.TypeEnum.VEC2);
+                prim.Attributes.Add("TEXCOORD_0", uvAccess);
+            }
+            
             // TODO: Add to the buffer above instead of inside this block.
             // There's a chance the padding operation will put padding before
             // the color information.
@@ -217,7 +253,6 @@ namespace Elements.Serialization.glTF
             {
                 var cBuff = AddBufferView(bufferViews, 0, buffer.Count, colors.Length, null, null);
                 buffer.AddRange(colors);
-
                 var cAccess = AddAccessor(accessors, cBuff, 0, Accessor.ComponentTypeEnum.FLOAT, colors.Length/sizeof(float)/3, cMin, cMax, Accessor.TypeEnum.VEC3);
                 prim.Attributes.Add("COLOR_0", cAccess);
             }
@@ -375,21 +410,24 @@ namespace Elements.Serialization.glTF
             byte[] normalBuffer;
             byte[] indexBuffer;
             byte[] colorBuffer;
+            byte[] uvBuffer;
+
             double[] vmin; double[] vmax;
             double[] nmin; double[] nmax;
             float[] cmin; float[] cmax;
             ushort imin; ushort imax;
+            double[] uvmin; double[] uvmax;
 
-            mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+            mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin, 
-                            out cmax, out imin, out imax);
+                            out cmax, out imin, out imax, out uvmax, out uvmin);
 
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
 
             gltf.AddTriangleMesh("mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
-                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, materials[BuiltInMaterials.Default.Name], cmin, cmax, null, null);
+                                        indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
+                                        imin, imax, uvmin, uvmax, materials[BuiltInMaterials.Default.Name], cmin, cmax, null, null);
 
             var edgeCount = 0;
             var vertices = new List<Vector3>();
@@ -558,20 +596,23 @@ namespace Elements.Serialization.glTF
                 byte[] normalBuffer;
                 byte[] indexBuffer;
                 byte[] colorBuffer;
+                byte[] uvBuffer;
+
                 double[] vmin; double[] vmax;
                 double[] nmin; double[] nmax;
                 float[] cmin; float[] cmax;
                 ushort imin; ushort imax;
+                double[] uvmin; double[] uvmax;
 
-                mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+                mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
                                 out vmax, out vmin, out nmin, out nmax, out cmin,
-                                out cmax, out imin, out imax);
+                                out cmax, out imin, out imax, out uvmax, out uvmin);
 
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.
                 gltf.AddTriangleMesh(e.Id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
-                                        indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, materials[materialName], cmin, cmax, null, ((GeometricElement)e).Transform);
+                                        indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
+                                        imin, imax, uvmax, uvmin, materials[materialName], cmin, cmax, null, ((GeometricElement)e).Transform);
             }
         }
 
@@ -583,18 +624,21 @@ namespace Elements.Serialization.glTF
             byte[] normalBuffer;
             byte[] indexBuffer;
             byte[] colorBuffer;
+            byte[] uvBuffer;
+
             double[] vmin; double[] vmax;
             double[] nmin; double[] nmax;
             float[] cmin; float[] cmax;
             ushort imin; ushort imax;
+            double[] uvmin; double[] uvmax;
 
-            solid.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer,
+            solid.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin,
-                            out cmax, out imin, out imax);
+                            out cmax, out imin, out imax, out uvmax, out uvmin);
 
             gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
-                                indexBuffer, colorBuffer, vmin, vmax, nmin, nmax,
-                                imin, imax, materials[materialName], cmin, cmax, null, t);
+                                indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
+                                imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, t);
         }
 
         private static void AddLines(long id, IList<Vector3> vertices, Gltf gltf, 
