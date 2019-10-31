@@ -108,6 +108,17 @@ namespace Elements.Geometry
         /// The v coordinate.
         /// </summary>
         public double V{get;set;}
+        
+        /// <summary>
+        /// Construct a UV.
+        /// </summary>
+        /// <param name="u">The u parameter.</param>
+        /// <param name="v">The v parameter.</param>
+        public UV(double u, double v)
+        {
+            this.U = u;
+            this.V = v;
+        }
     }
 
     /// <summary>
@@ -199,7 +210,7 @@ Triangles:{_triangles.Count}";
                                 out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer,
                                 out double[] v_max, out double[] v_min, out double[] n_min, out double[] n_max,
                                 out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max,
-                                out double[] uv_max, out double[] uv_min)
+                                out double[] uv_min, out double[] uv_max)
         {
             var floatSize = sizeof(float);
             var ushortSize = sizeof(ushort);
@@ -235,6 +246,7 @@ Triangles:{_triangles.Count}";
             var vi = 0;
             var ii = 0;
             var ci = 0;
+            var uvi = 0;
 
             for (var i = 0; i < this._vertices.Count; i++)
             {
@@ -248,9 +260,10 @@ Triangles:{_triangles.Count}";
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.Y), 0, normalBuffer, vi + floatSize, floatSize);
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
 
-                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.UV.U), 0, uvBuffer, vi, floatSize);
-                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.UV.V), 0, uvBuffer, vi + floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.UV.U), 0, uvBuffer, uvi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.UV.V), 0, uvBuffer, uvi + floatSize, floatSize);
 
+                uvi += 2 * floatSize;
                 vi += 3 * floatSize;
 
                 v_max[0] = Math.Max(v_max[0], v.Position.X);
@@ -342,10 +355,12 @@ Triangles:{_triangles.Count}";
         /// <param name="position">The position of the vertex.</param>
         /// <param name="normal">The vertex's normal.</param>
         /// <param name="color">The vertex's color.</param>
+        /// <param name="uv">The texture coordinate of the vertex.</param>
         /// <returns>The newly created vertex.</returns>
-        internal Vertex AddVertex(Vector3 position, Vector3 normal = null, Color color = null)
+        internal Vertex AddVertex(Vector3 position, UV uv, Vector3 normal = null, Color color = null)
         {
             var v = new Vertex(position, normal, color);
+            v.UV = uv;
             this._vertices.Add(v);
             v.Index = (this._vertices.Count) - 1;
             return v;

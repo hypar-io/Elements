@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Elements.Geometry;
+using Elements.Serialization.glTF;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -60,6 +61,46 @@ namespace Elements.Tests
             };
 
             var topo = new Topography(Vector3.Origin, d, d, elevations, w, colorizer);
+            this.Model.AddElement(topo);
+        }
+
+        [Fact]
+        public void TexturedTopography()
+        {
+            this.Name = "TexturedTopography";
+
+            // Read topo elevations
+            var w = 512/8 - 1;
+            var data = JsonConvert.DeserializeObject<Dictionary<string,double[]>>(File.ReadAllText("./elevations.json"));
+            var elevations = data["points"];
+
+            // Compute the mapbox tile side lenth.
+            var d = (40075016.685578 / Math.Pow(2, 15))/w;
+
+            Func<Triangle,Color> colorizer = (tri) => {
+                var slope = tri.Normal.AngleTo(Vector3.ZAxis);
+                if(slope >=0.0 && slope < 15.0)
+                {
+                    return Colors.Green;
+                }
+                else if(slope >= 15.0 && slope < 30.0)
+                {
+                    return Colors.Yellow;
+                }
+                else if(slope >= 30.0 && slope < 45.0)
+                {
+                    return Colors.Orange;
+                }
+                else if(slope >= 45.0)
+                {
+                    return Colors.Red;
+                }
+                return Colors.Red;
+            };
+            
+            var m = new Material("texture",Colors.Gray, 0.0f, 0.0f, "UV.jpg");
+
+            var topo = new Topography(Vector3.Origin, d, d, elevations, w, colorizer, m);
             this.Model.AddElement(topo);
         }
     }

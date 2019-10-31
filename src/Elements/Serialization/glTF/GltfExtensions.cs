@@ -9,6 +9,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using Elements.Geometry.Solids;
 using Elements.Geometry.Interfaces;
+using SixLabors.ImageSharp.Processing;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -72,17 +73,21 @@ namespace Elements.Serialization.glTF
             return Convert.ToBase64String(bytes);
         }
 
-        internal static Dictionary<string,int> AddMaterials(this Gltf gltf, IList<Material> materials)
+        internal static Dictionary<string,int> AddMaterials(this Gltf gltf, IList<Material> materials, List<byte> buffer, List<BufferView> bufferViews)
         {
             var materialDict = new Dictionary<string, int>();
             var newMaterials = new List<glTFLoader.Schema.Material>();
 
-            var textureDict = new Dictionary<Uri, int>();
+            var textureDict = new Dictionary<string, int>(); // the name of the texture image, the id of the texture
             var textures = new List<glTFLoader.Schema.Texture>();
+            
+            var images = new List<glTFLoader.Schema.Image>();
+            var samplers = new List<glTFLoader.Schema.Sampler>();
 
             var matId = 0;
-            // var texId = 0;
-            // var texCoordsId = 0;
+            var texId = 0;
+            var imageId = 0;
+            var samplerId = 0;
 
             foreach(var material in materials)
             {
@@ -97,29 +102,77 @@ namespace Elements.Serialization.glTF
                 m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness();
                 m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
-
-                // if(material.Texture != null)
-                // {
-                //     if(textureDict.ContainsKey(material.Texture))
-                //     {
-                //         break;
-                //     }
-                //     var ti = new TextureInfo();
-
-                //     // Add the texture
-                //     ti.Index = texId;
-
-                //     // Add the texcoords
-                //     var coords = new Tex
-                //     ti.TexCoord = texCoordsId;
-
-                //     m.PbrMetallicRoughness.BaseColorTexture = ti;
-                //     texId++;
-                //     texCoordsId++;
-                // }
-                
                 m.DoubleSided = false;
                 m.Name = material.Name;
+
+                m.Extensions = new Dictionary<string, object>{
+                    {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
+                        {"diffuseFactor", new[]{material.Color.Red,material.Color.Green,material.Color.Blue,material.Color.Alpha}},
+                        {"specularFactor", new[]{material.SpecularFactor, material.SpecularFactor, material.SpecularFactor}},
+                        {"glossinessFactor", material.GlossinessFactor}
+                    }}
+                };
+
+                if(material.Texture != null)
+                {
+                    // Add the texture
+                    var ti = new TextureInfo();
+                    m.PbrMetallicRoughness.BaseColorTexture = ti;
+                    ti.Index = texId;
+                    ti.TexCoord = 0;
+                    ((Dictionary<string,object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+
+                    if(textureDict.ContainsKey(material.Texture))
+                    {
+                        ti.Index = textureDict[material.Texture];
+                    }
+                    else
+                    {
+                        var tex = new Texture();
+                        textures.Add(tex);
+                        
+                        var image = new glTFLoader.Schema.Image();
+
+                        // Flip the image vertically.
+                        // This is required for OpenGlES implementations
+                        // of glTF.
+                        using(var ms = new MemoryStream())
+                        {
+                            using (var texImage = SixLabors.ImageSharp.Image.Load(material.Texture))
+                            {
+                                texImage.Mutate(x => x.Flip(FlipMode.Vertical));
+                                texImage.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+                            }
+                            var imageData = ms.ToArray();
+                            image.BufferView = AddBufferView(bufferViews, 0, buffer.Count, imageData.Length, null, null );
+                            buffer.AddRange(imageData);
+                        }
+                        
+                        while(buffer.Count % 4 != 0)
+                        {
+                            // Console.WriteLine("Padding...");
+                            buffer.Add(0);
+                        }
+
+                        image.MimeType =glTFLoader.Schema.Image.MimeTypeEnum.image_png;
+                        tex.Source = imageId;
+                        images.Add(image);
+
+                        var sampler = new Sampler();
+                        sampler.MagFilter = Sampler.MagFilterEnum.LINEAR;
+                        sampler.MinFilter = Sampler.MinFilterEnum.LINEAR;
+                        sampler.WrapS = Sampler.WrapSEnum.REPEAT;
+                        sampler.WrapT = Sampler.WrapTEnum.REPEAT;
+                        tex.Sampler = samplerId;
+                        samplers.Add(sampler);
+
+                        textureDict.Add(material.Texture, texId);
+
+                        texId++;
+                        imageId++;
+                        samplerId++;
+                    }
+                }
 
                 if(material.Color.Alpha < 1.0)
                 {
@@ -130,20 +183,26 @@ namespace Elements.Serialization.glTF
                     m.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.OPAQUE;
                 }
 
-                m.Extensions = new Dictionary<string, object>{
-                    {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
-                        {"diffuseFactor", new[]{material.Color.Red,material.Color.Green,material.Color.Blue,material.Color.Alpha}},
-                        {"specularFactor", new[]{material.SpecularFactor, material.SpecularFactor, material.SpecularFactor}},
-                        {"glossinessFactor", material.GlossinessFactor}
-                    }}
-                };
-
                 materialDict.Add(m.Name, matId);
                 matId++;
             }
 
-            gltf.Materials = newMaterials.ToArray();
-            // gltf.Textures = textures;
+            if(materials.Count > 0)
+            {
+                gltf.Materials = newMaterials.ToArray();
+            }
+            if(textures.Count > 0)
+            {
+                gltf.Textures = textures.ToArray();
+            }
+            if(images.Count > 0)
+            {
+                gltf.Images = images.ToArray();
+            }
+            if(samplers.Count > 0)
+            {
+                gltf.Samplers = samplers.ToArray();
+            }
 
             return materialDict;
         }
@@ -212,11 +271,12 @@ namespace Elements.Serialization.glTF
             m.Name = name;
 
             var vBuff = AddBufferView(bufferViews, 0, buffer.Count, vertices.Length, null, null);
-            var nBuff = AddBufferView(bufferViews, 0, buffer.Count + vertices.Length, normals.Length, null, null);
-            var iBuff = AddBufferView(bufferViews, 0, buffer.Count + vertices.Length + normals.Length, indices.Length, null, null);
-            
             buffer.AddRange(vertices);
+
+            var nBuff = AddBufferView(bufferViews, 0, buffer.Count, normals.Length, null, null);
             buffer.AddRange(normals);
+
+            var iBuff = AddBufferView(bufferViews, 0, buffer.Count, indices.Length, null, null);
             buffer.AddRange(indices);
 
             while(buffer.Count % 4 != 0)
@@ -400,9 +460,13 @@ namespace Elements.Serialization.glTF
 
             gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
 
-            var materials = gltf.AddMaterials(new[]{BuiltInMaterials.Default, BuiltInMaterials.Edges, BuiltInMaterials.EdgesHighlighted});
-            
             var buffer = new List<byte>();
+            var bufferViews = new List<BufferView>();
+
+            var materials = gltf.AddMaterials(new[] { BuiltInMaterials.Default, BuiltInMaterials.Edges, BuiltInMaterials.EdgesHighlighted },
+                                              buffer,
+                                              bufferViews);
+            
             var mesh = new Elements.Geometry.Mesh();
             solid.Tessellate(ref mesh);
 
@@ -422,7 +486,7 @@ namespace Elements.Serialization.glTF
                             out vmax, out vmin, out nmin, out nmax, out cmin, 
                             out cmax, out imin, out imax, out uvmax, out uvmin);
 
-            var bufferViews = new List<BufferView>();
+            
             var accessors = new List<Accessor>();
 
             gltf.AddTriangleMesh("mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
@@ -527,11 +591,11 @@ namespace Elements.Serialization.glTF
 
             gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
 
-            var materialsToAdd = model.AllElementsOfType<Material>().ToList();
-            var materials = gltf.AddMaterials(materialsToAdd);
-
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
+
+            var materialsToAdd = model.AllElementsOfType<Material>().ToList();
+            var materials = gltf.AddMaterials(materialsToAdd, buffer, bufferViews);
 
             var elements = model.AllElementsOfType<GeometricElement>().Where(t=>t.GetType() != typeof(Opening));
 

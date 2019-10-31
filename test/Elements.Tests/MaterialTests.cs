@@ -1,5 +1,6 @@
 using Elements;
 using Elements.Geometry;
+using Elements.Serialization.glTF;
 using System;
 using Xunit;
 
@@ -38,8 +39,7 @@ namespace Elements.Tests
         public void TextureTest()
         {
             this.Name = "TextureTest";
-            var m = new Material("test", Colors.Gray, 1.0f, 1.0f);
-            m.Texture = new Uri("file:///UV.jpg");
+            var m = new Material("test", Colors.Gray, 0.0f, 0.0f, "UV.jpg");
             var mass = new Mass(Polygon.Rectangle(10,10), 10, m);
 
             this.Model.AddElement(mass);
