@@ -24,7 +24,6 @@ namespace Elements
         private double _minElevation = double.PositiveInfinity;
 
         private double _maxElevation = double.NegativeInfinity;
-        private Guid materialId;
 
         /// <summary>
         /// The topography's mesh.
@@ -43,11 +42,6 @@ namespace Elements
         public double MinElevation => _minElevation;
 
         /// <summary>
-        /// The material id of the topography.
-        /// </summary>
-        public Guid MaterialId { get => this.Material != null ? this.Material.Id : materialId; private set => materialId = value; }
-
-        /// <summary>
         /// Create a topography.
         /// </summary>
         /// <param name="origin">The origin of the topography.</param>
@@ -56,12 +50,18 @@ namespace Elements
         /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
         /// <param name="width"></param>
         /// <param name="colorizer">A function which produces a color for a triangle.</param>
+        /// <param name="material">The topography's material.</param>
         public Topography(Vector3 origin,
                           double cellWidth,
                           double cellHeight,
                           double[] elevations,
                           int width,
-                          Func<Triangle, Color> colorizer): base(null, null, null, Guid.NewGuid(), null)
+                          Func<Triangle, Color> colorizer,
+                          Material material = null): base(null,
+                                                          material != null ? material : BuiltInMaterials.Topography,
+                                                          null,
+                                                          Guid.NewGuid(),
+                                                          null)
         {
             // Elevations a represented by *
             // *-*-*-*
@@ -79,7 +79,6 @@ namespace Elements
                 throw new ArgumentNullException("The topography could not be created. You must supply a colorizer function.");
             }
 
-            this.Material = BuiltInMaterials.Topography;
             this._colorizer = colorizer;
 
             var triangles = (Math.Sqrt(elevations.Length) - 1) * width * 2;
@@ -89,7 +88,8 @@ namespace Elements
             for (var i = 0; i < elevations.Length; i++)
             {
                 var el = elevations[i];
-                this._mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el));
+                var uv = new UV((double)x/(double)width, (double)y/(double)width);
+                this._mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv:uv);
                 _minElevation = Math.Min(_minElevation, el);
                 _maxElevation = Math.Max(_maxElevation, el);
 
@@ -251,7 +251,7 @@ namespace Elements
                     return vx;
                 }
             }
-            var newVtx = this._mesh.AddVertex(v);
+            var newVtx = this._mesh.AddVertex(v, new UV());
             return newVtx;
         }
 

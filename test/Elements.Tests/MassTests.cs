@@ -2,6 +2,7 @@ using Elements.Geometry;
 using System;
 using Xunit;
 using System.Linq;
+using Elements.Serialization.glTF;
 
 namespace Elements.Tests
 {
@@ -53,6 +54,8 @@ namespace Elements.Tests
             var f2 = new Floor(profile2, 0.2, 10.0);
             var f3 = new Floor(profile3, 0.2, 20.0);
             this.Model.AddElements(new[] { f1, f2, f3 });
+
+            this.Model.ToGlTF("./models/TransformedMasses.gltf",false);
         }
 
         [Fact]

@@ -1,11 +1,12 @@
 using Elements;
 using Elements.Geometry;
+using Elements.Serialization.glTF;
 using System;
 using Xunit;
 
 namespace Elements.Tests
 {
-    public class MaterialTests
+    public class MaterialTests: ModelTest
     {
         [Fact]
         public void Construct()
@@ -32,6 +33,16 @@ namespace Elements.Tests
         {
             var material = new Material("test", Colors.Mint, 0.2f, 0.2f);
             Assert.Equal(material.Color, Colors.Mint);
+        }
+
+        [Fact]
+        public void TextureTest()
+        {
+            this.Name = "TextureTest";
+            var m = new Material("test", Colors.Gray, 0.0f, 0.0f, "UV.jpg");
+            var mass = new Mass(Polygon.Rectangle(10,10), 10, m);
+
+            this.Model.AddElement(mass);
         }
     }
 }
