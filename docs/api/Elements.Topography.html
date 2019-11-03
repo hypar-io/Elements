@@ -293,13 +293,13 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Topography__ctor_" data-uid="Elements.Topography.#ctor*"></a>
-  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_System_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})">Topography(Vector3, Double, Double, Double[], Int32, Func&lt;Triangle, Color&gt;)</h4>
+  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_System_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__Elements_Material_" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color},Elements.Material)">Topography(Vector3, Double, Double, Double[], Int32, Func&lt;Triangle, Color&gt;, Material)</h4>
   <div class="markdown level1 summary"><p>Create a topography.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int width, Func&lt;Triangle, Color&gt; colorizer)</code></pre>
+    <pre><code class="lang-csharp hljs">public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int width, Func&lt;Triangle, Color&gt; colorizer, Material material = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -346,34 +346,16 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
         <td><p>A function which produces a color for a triangle.</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The topography's material.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Topography_MaterialId_" data-uid="Elements.Topography.MaterialId*"></a>
-  <h4 id="Elements_Topography_MaterialId" data-uid="Elements.Topography.MaterialId">MaterialId</h4>
-  <div class="markdown level1 summary"><p>The material id of the topography.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Guid MaterialId { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Guid</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Topography_MaxElevation_" data-uid="Elements.Topography.MaxElevation*"></a>
   <h4 id="Elements_Topography_MaxElevation" data-uid="Elements.Topography.MaxElevation">MaxElevation</h4>
   <div class="markdown level1 summary"><p>The maximum elevation of the topography.</p>

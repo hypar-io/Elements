@@ -175,13 +175,13 @@
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Geometry_Mesh_GetBuffers_" data-uid="Elements.Geometry.Mesh.GetBuffers*"></a>
-  <h4 id="Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__" data-uid="Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)">GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)</h4>
+  <h4 id="Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____" data-uid="Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)">GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])</h4>
   <div class="markdown level1 summary"><p>Get all buffers required for rendering.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void GetBuffers(out byte[] vertexBuffer, out byte[] indexBuffer, out byte[] normalBuffer, out byte[] colorBuffer, out double[] v_max, out double[] v_min, out double[] n_min, out double[] n_max, out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max)</code></pre>
+    <pre><code class="lang-csharp hljs">public void GetBuffers(out byte[] vertexBuffer, out byte[] indexBuffer, out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer, out double[] v_max, out double[] v_min, out double[] n_min, out double[] n_max, out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max, out double[] uv_min, out double[] uv_max)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -211,6 +211,11 @@
       <tr>
         <td><span class="xref">System.Byte</span>[]</td>
         <td><span class="parametername">colorBuffer</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span>[]</td>
+        <td><span class="parametername">uvBuffer</span></td>
         <td></td>
       </tr>
       <tr>
@@ -251,6 +256,16 @@
       <tr>
         <td><span class="xref">System.UInt16</span></td>
         <td><span class="parametername">index_max</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td><span class="parametername">uv_min</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td><span class="parametername">uv_max</span></td>
         <td></td>
       </tr>
     </tbody>

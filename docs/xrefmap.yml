@@ -2806,15 +2806,15 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Mesh.Mesh
   nameWithType: Mesh.Mesh
-- uid: Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)
-  name: GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)
-  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__
-  commentId: M:Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@)
-  name.vb: GetBuffers(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16)
-  fullName: Elements.Geometry.Mesh.GetBuffers(out System.Byte[], out System.Byte[], out System.Byte[], out System.Byte[], out System.Double[], out System.Double[], out System.Double[], out System.Double[], out System.Single[], out System.Single[], out System.UInt16, out System.UInt16)
-  fullName.vb: Elements.Geometry.Mesh.GetBuffers(ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Single(), ByRef System.Single(), ByRef System.UInt16, ByRef System.UInt16)
-  nameWithType: Mesh.GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16)
-  nameWithType.vb: Mesh.GetBuffers(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16)
+- uid: Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)
+  name: GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____
+  commentId: M:Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)
+  name.vb: GetBuffers(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16, ByRef Double(), ByRef Double())
+  fullName: Elements.Geometry.Mesh.GetBuffers(out System.Byte[], out System.Byte[], out System.Byte[], out System.Byte[], out System.Byte[], out System.Double[], out System.Double[], out System.Double[], out System.Double[], out System.Single[], out System.Single[], out System.UInt16, out System.UInt16, out System.Double[], out System.Double[])
+  fullName.vb: Elements.Geometry.Mesh.GetBuffers(ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Single(), ByRef System.Single(), ByRef System.UInt16, ByRef System.UInt16, ByRef System.Double(), ByRef System.Double())
+  nameWithType: Mesh.GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])
+  nameWithType.vb: Mesh.GetBuffers(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16, ByRef Double(), ByRef Double())
 - uid: Elements.Geometry.Mesh.GetBuffers*
   name: GetBuffers
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_GetBuffers_
@@ -4943,6 +4943,51 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Triangle.Vertices
   nameWithType: Triangle.Vertices
+- uid: Elements.Geometry.UV
+  name: UV
+  href: api/Elements.Geometry.UV.html
+  commentId: T:Elements.Geometry.UV
+  fullName: Elements.Geometry.UV
+  nameWithType: UV
+- uid: Elements.Geometry.UV.#ctor(System.Double,System.Double)
+  name: UV(Double, Double)
+  href: api/Elements.Geometry.UV.html#Elements_Geometry_UV__ctor_System_Double_System_Double_
+  commentId: M:Elements.Geometry.UV.#ctor(System.Double,System.Double)
+  fullName: Elements.Geometry.UV.UV(System.Double, System.Double)
+  nameWithType: UV.UV(Double, Double)
+- uid: Elements.Geometry.UV.#ctor*
+  name: UV
+  href: api/Elements.Geometry.UV.html#Elements_Geometry_UV__ctor_
+  commentId: Overload:Elements.Geometry.UV.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.UV.UV
+  nameWithType: UV.UV
+- uid: Elements.Geometry.UV.U
+  name: U
+  href: api/Elements.Geometry.UV.html#Elements_Geometry_UV_U
+  commentId: P:Elements.Geometry.UV.U
+  fullName: Elements.Geometry.UV.U
+  nameWithType: UV.U
+- uid: Elements.Geometry.UV.U*
+  name: U
+  href: api/Elements.Geometry.UV.html#Elements_Geometry_UV_U_
+  commentId: Overload:Elements.Geometry.UV.U
+  isSpec: "True"
+  fullName: Elements.Geometry.UV.U
+  nameWithType: UV.U
+- uid: Elements.Geometry.UV.V
+  name: V
+  href: api/Elements.Geometry.UV.html#Elements_Geometry_UV_V
+  commentId: P:Elements.Geometry.UV.V
+  fullName: Elements.Geometry.UV.V
+  nameWithType: UV.V
+- uid: Elements.Geometry.UV.V*
+  name: V
+  href: api/Elements.Geometry.UV.html#Elements_Geometry_UV_V_
+  commentId: Overload:Elements.Geometry.UV.V
+  isSpec: "True"
+  fullName: Elements.Geometry.UV.V
+  nameWithType: UV.V
 - uid: Elements.Geometry.Vector3
   name: Vector3
   href: api/Elements.Geometry.Vector3.html
@@ -5603,6 +5648,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vertex.Position
   nameWithType: Vertex.Position
+- uid: Elements.Geometry.Vertex.UV
+  name: UV
+  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_UV
+  commentId: P:Elements.Geometry.Vertex.UV
+  fullName: Elements.Geometry.Vertex.UV
+  nameWithType: Vertex.UV
+- uid: Elements.Geometry.Vertex.UV*
+  name: UV
+  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_UV_
+  commentId: Overload:Elements.Geometry.Vertex.UV
+  isSpec: "True"
+  fullName: Elements.Geometry.Vertex.UV
+  nameWithType: Vertex.UV
 - uid: Elements.Interfaces
   name: Elements.Interfaces
   href: api/Elements.Interfaces.html
@@ -5743,12 +5801,12 @@ references:
   commentId: M:Elements.Material.#ctor(System.String)
   fullName: Elements.Material.Material(System.String)
   nameWithType: Material.Material(String)
-- uid: Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single)
-  name: Material(String, Color, Single, Single)
-  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_
-  commentId: M:Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single)
-  fullName: Elements.Material.Material(System.String, Elements.Geometry.Color, System.Single, System.Single)
-  nameWithType: Material.Material(String, Color, Single, Single)
+- uid: Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String)
+  name: Material(String, Color, Single, Single, String)
+  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_System_String_
+  commentId: M:Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String)
+  fullName: Elements.Material.Material(System.String, Elements.Geometry.Color, System.Single, System.Single, System.String)
+  nameWithType: Material.Material(String, Color, Single, Single, String)
 - uid: Elements.Material.#ctor*
   name: Material
   href: api/Elements.Material.html#Elements_Material__ctor_
@@ -5821,6 +5879,19 @@ references:
   isSpec: "True"
   fullName: Elements.Material.SpecularFactor
   nameWithType: Material.SpecularFactor
+- uid: Elements.Material.Texture
+  name: Texture
+  href: api/Elements.Material.html#Elements_Material_Texture
+  commentId: P:Elements.Material.Texture
+  fullName: Elements.Material.Texture
+  nameWithType: Material.Texture
+- uid: Elements.Material.Texture*
+  name: Texture
+  href: api/Elements.Material.html#Elements_Material_Texture_
+  commentId: Overload:Elements.Material.Texture
+  isSpec: "True"
+  fullName: Elements.Material.Texture
+  nameWithType: Material.Texture
 - uid: Elements.Model
   name: Model
   href: api/Elements.Model.html
@@ -6747,15 +6818,15 @@ references:
   commentId: T:Elements.Topography
   fullName: Elements.Topography
   nameWithType: Topography
-- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})
-  name: Topography(Vector3, Double, Double, Double[], Int32, Func<Triangle, Color>)
-  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_System_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__
-  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color})
-  name.vb: Topography(Vector3, Double, Double, Double(), Int32, Func(Of Triangle, Color))
-  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double[], System.Int32, System.Func<Elements.Geometry.Triangle, Elements.Geometry.Color>)
-  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double(), System.Int32, System.Func(Of Elements.Geometry.Triangle, Elements.Geometry.Color))
-  nameWithType: Topography.Topography(Vector3, Double, Double, Double[], Int32, Func<Triangle, Color>)
-  nameWithType.vb: Topography.Topography(Vector3, Double, Double, Double(), Int32, Func(Of Triangle, Color))
+- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color},Elements.Material)
+  name: Topography(Vector3, Double, Double, Double[], Int32, Func<Triangle, Color>, Material)
+  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_System_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__Elements_Material_
+  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color},Elements.Material)
+  name.vb: Topography(Vector3, Double, Double, Double(), Int32, Func(Of Triangle, Color), Material)
+  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double[], System.Int32, System.Func<Elements.Geometry.Triangle, Elements.Geometry.Color>, Elements.Material)
+  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double(), System.Int32, System.Func(Of Elements.Geometry.Triangle, Elements.Geometry.Color), Elements.Material)
+  nameWithType: Topography.Topography(Vector3, Double, Double, Double[], Int32, Func<Triangle, Color>, Material)
+  nameWithType.vb: Topography.Topography(Vector3, Double, Double, Double(), Int32, Func(Of Triangle, Color), Material)
 - uid: Elements.Topography.#ctor*
   name: Topography
   href: api/Elements.Topography.html#Elements_Topography__ctor_
@@ -6763,19 +6834,6 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.Topography
   nameWithType: Topography.Topography
-- uid: Elements.Topography.MaterialId
-  name: MaterialId
-  href: api/Elements.Topography.html#Elements_Topography_MaterialId
-  commentId: P:Elements.Topography.MaterialId
-  fullName: Elements.Topography.MaterialId
-  nameWithType: Topography.MaterialId
-- uid: Elements.Topography.MaterialId*
-  name: MaterialId
-  href: api/Elements.Topography.html#Elements_Topography_MaterialId_
-  commentId: Overload:Elements.Topography.MaterialId
-  isSpec: "True"
-  fullName: Elements.Topography.MaterialId
-  nameWithType: Topography.MaterialId
 - uid: Elements.Topography.MaxElevation
   name: MaxElevation
   href: api/Elements.Topography.html#Elements_Topography_MaxElevation

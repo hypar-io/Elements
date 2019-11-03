@@ -2,3 +2,5 @@
   href: index.md
 - name: Elements API
   href: api/
+- name: Types
+  href: Types.md

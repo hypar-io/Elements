@@ -190,13 +190,13 @@ public Material(Color color, double specularFactor, double glossinessFactor, Gui
     </tbody>
   </table>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single)">Material(String, Color, Single, Single)</h4>
+  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_System_String_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String)">Material(String, Color, Single, Single, String)</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F)</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, string texture = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -230,6 +230,12 @@ public Material(Color color, double specularFactor, double glossinessFactor, Gui
         <td><span class="xref">System.Single</span></td>
         <td><span class="parametername">glossinessFactor</span></td>
         <td><p>The glossiness component of the color. Between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">texture</span></td>
+        <td><p>A relative path to a jpg or png image file to be used as a texture.</p>
 </td>
       </tr>
     </tbody>
@@ -310,6 +316,31 @@ public double SpecularFactor { get; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Material_Texture_" data-uid="Elements.Material.Texture*"></a>
+  <h4 id="Elements_Material_Texture" data-uid="Elements.Material.Texture">Texture</h4>
+  <div class="markdown level1 summary"><p>A relative file path to an image file to be used as a texture.
+The image data will be packed into the glTF's buffer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Texture { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
         <td></td>
       </tr>
     </tbody>
