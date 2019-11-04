@@ -1,12 +1,31 @@
 # Types
 
-## NOTE: The following functionality is only available as of version 0.4.0.
+### NOTE: The following functionality is only available as of version 0.4.0.
 
+## Introduction
+When architects, engineers, and contractors communicate with one another, they do so using the language of building. There is a general agreement about what a "beam" is. The architect's view of a beam and the engineer's view of the same beam may differ however. The achitect needs to know what the depth of the beam is to conduct coordination of other systems, while the engineer might only need to know the end points of the beam and its stiffness to conduct their analysis. For different phases of work, the definition of "beam" is negotiated through drawings, email, conversations, and legal contracts. Over time, as software has become available to represent buildings with greater fidelity, definitions of "beam" and many other building components have been hard-coded into those software. Projects like [IFC](https://www.buildingsmart.org/standards/bsi-standards/industry-foundation-classes/) have endeavoured to make industry-standard representations for many entities in the built environment. These standards are important as they guarantee the longevity of your building data, but come with the downside of 
+
+The sophistication of the systems available to generate building data have outpaced the ability for standards bodies and software vendors to include up-to-date representations of everything we design and construct. The end result of this is that there are core representations of building elements in IFC, Revit, and other BIM applications that cover a good part of the built environment but need to have a "proxy" container for everything else that doesn't adhere to one of those core representations. The challenge with this is that "proxy" elements no longer have semantic value. Speaking about a "facade anchor bolt", is reduced to speaking about "a proxy element with properties ..."
+
+Our solution thus far in AEC has been to build highly coupled systems. A Dynamo or Grasshopper script knows exactly what the stream of numbers that it's going to receive means because the authoring party and the receiving party had a conversation that added meaning to the data. Without that conversation, the two systems could not be made to meaningfully communicate. In order for our industry to escape the current requirement to build monolithic, project-specific tools and workflows, we need to be able to build systems that can operate on semantic data without knowing anything about the authoring system. 
+
+
+Systems need to be able to communicate with one another without knowing that each other exist.
+
+There needs to be a better way for AEC professionals to define 
+
+As systems like Hypar move to generate more of the built environment using computers, 
+
+Software, unlike traditional building, is a world of well-defined contracts. As our industry transitions to using computers to generate buildings, the shape of the 
+
+When computer systems speak to each other, there is a similar notion of contracts. That is, the data that one system sends to another must meet with the receiving system's expectation, or an exception will occur. 
+
+## Type Systems
 Let's say that you're a mechanical engineer and you want to introduce a new type to Elements called "VAV Box". To introduce this new type, first you need to design it. Where will it fit in the existing Elements type hierarchy? Will an existing base type be used? If so, will the base type need to be changed? Once that's figured out you'll need to write code that represents your type (in the case of Elements as a C# class) and propose that change to the maintainers of the library. The maintainers approve the change and your "VAV Box" class is made availble in the next release. Any small iteration on the design of your type based on use or user feedback requires that you repeat the whole cycle. 
 
 This scenario creates several challenges. First, it requires direct interaction with the maintainers of the Elements library. Most AEC developers don't know how to propose a change to the Elements code and requiring that they undertake our code review process just to introduce a container for data that represents a thing they know is challenging. Second, the maintainers of Elements now "own" the "VAV Box" type and are therefore required to make sure that they don't break it in the future. Imagine how many hundreds of thousands, or potentially millions, of different types of components are in a building. It's not reasonable to assume that one library is going to be able to encapsulate them all. Finally, although having the base description for a type be C# code works well in the short term, it limits the Elements' team's flexibility in the future to work with other languages. 
 
-To address these challenges we've introduced the ability for an AEC developer to create a schema which describes their type using [JSON schema](https://json-schema.org/), and to generate source code from that schema. Schemas can be shared and extended allowing for the growth of a type system from the community.
+To address these challenges we've introduced the ability for an AEC developer to create a schema which describes their type using [JSON schema](https://json-schema.org/), and to generate source code from that schema. Schemas can be shared and extended allowing for the growth of a type system from the community. 
 
 ## Getting Started
 

@@ -23,12 +23,11 @@
     "content": [
       {
         "files": [
-          "api/**.yml",
           "index.md",
-          "Articles/**.yml",
-          "Articles/**.md",
           "toc.yml",
-          "*.md"
+          "*.md",
+          "api/**",
+          "Elements/**"
         ]
       }
     ],

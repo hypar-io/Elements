@@ -5,11 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IHasOpenings
-   | Hypar Docs </title>
+    <title>What is Elements? | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IHasOpenings
-   | Hypar Docs ">
+    <meta name="title" content="What is Elements? | Hypar Docs ">
     <meta name="generator" content="docfx 2.40.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -18,7 +16,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -72,44 +70,21 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Elements.Interfaces.IHasOpenings">
-  
-  <h1 id="Elements_Interfaces_IHasOpenings" data-uid="Elements.Interfaces.IHasOpenings" class="text-break">Interface IHasOpenings
-  </h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Interfaces.html">Elements.Interfaces</a></h6>
-  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
-  <h5 id="Elements_Interfaces_IHasOpenings_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IHasOpenings</code></pre>
-  </div>
-  <h3 id="properties">Properties
-  </h3>
-  <a id="Elements_Interfaces_IHasOpenings_Openings_" data-uid="Elements.Interfaces.IHasOpenings.Openings*"></a>
-  <h4 id="Elements_Interfaces_IHasOpenings_Openings" data-uid="Elements.Interfaces.IHasOpenings.Openings">Openings</h4>
-  <div class="markdown level1 summary"><p>A collection of openings.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">List&lt;Opening&gt; Openings { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="what-is-elements">What is Elements?</h1>
+
+<p>Elements is a cross-platform library for creating building elements. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings.</p>
+<p>When we started <a href="https://www.hypar.io">Hypar</a> we needed a library that would generate building elements and run at the core of each function on the platform. Because we don't like rebuilding the wheel, we looked around for existing libraries that fulfilled the following requirements:</p>
+<ul>
+<li>The library must be small and fast. Elements is currently ~300kb and we're working every day to make it smaller.</li>
+<li>The library must be cross-platform.</li>
+<li>The library must have great visual documentation. If we're going to pass this library on as a recommendation to developers on Hypar, we want great docs.</li>
+<li>The library must be free of dependencies on host applications like Rhino or Revit or geometry kernels like Open Cascade which, while really cool, become a black box in your system.</li>
+<li>The library must be able to serialize data to formats like JSON, <a href="https://www.buildingsmart.org/about/what-is-openbim/ifc-introduction/">IFC</a>,and <a href="https://www.khronos.org/gltf/">glTF</a>, that are useful to architects, engineers, contractors, and people building real-time visualization applications for AEC.</li>
+<li>The library must be written in a language that supports developer productivity through things like type safety, and which supports code re-use in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.</li>
+<li>Serialization and deserialization of types that extend <code>Element</code> should be possible provided that those types are made up of primitives defined in this library.</li>
+</ul>
+<p>We couldn't find anything quite right. So we started building this.</p>
 </article>
           </div>
           
