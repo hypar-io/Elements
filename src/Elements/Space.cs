@@ -30,7 +30,6 @@ namespace Elements
         /// </summary>
         /// <param name="profile">The profile of the space.</param>
         /// <param name="height">The height of the space.</param>
-        /// <param name="elevation">The elevation of the space.</param>
         /// <param name="material">The space's material.</param>
         /// <param name="transform">The space's transform.</param>
         /// <param name="representation">The space's represenation.</param>
@@ -40,7 +39,6 @@ namespace Elements
         [JsonConstructor]
         public Space(Profile profile,
                      double height,
-                     double elevation = 0.0,
                      Material material = null,
                      Transform transform = null,
                      Representation representation = null,
@@ -51,10 +49,10 @@ namespace Elements
                                                 id = id != null ? id : Guid.NewGuid(),
                                                 name)
         {
-            SetProperties(height, profile, transform, elevation);
+            SetProperties(height, profile, transform);
         }
 
-        private void SetProperties(double height, Profile profile, Transform transform, double elevation)
+        private void SetProperties(double height, Profile profile, Transform transform)
         {
             if (height <= 0.0)
             {
@@ -62,7 +60,7 @@ namespace Elements
             }
 
             this.Profile = profile;
-            this.Transform = transform != null ? transform : new Transform(new Vector3(0, 0, elevation));
+            this.Transform = transform ?? new Transform();
             this.Height = height;
             if(this.Representation.SolidOperations.Count == 0)
             {

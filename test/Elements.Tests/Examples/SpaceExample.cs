@@ -17,7 +17,7 @@ namespace Elements.Tests.Examples
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var profile = new Profile(new Polygon(new[]{a,b,c,d}));
-            var space = new Space(profile, 10, 0);
+            var space = new Space(profile, 10);
             // </example>
 
             this.Model.AddElement(space);

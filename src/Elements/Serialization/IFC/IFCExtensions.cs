@@ -90,7 +90,7 @@ namespace Elements.Serialization.IFC
                 transform.Concatenate(solid.Position.ToTransform());
                 var pline = (IfcPolyline)profileDef.OuterCurve;
                 var outline = pline.ToPolygon(true);
-                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0.0, material, transform, null, IfcGuid.FromIfcGUID(space.GlobalId), space.Name);
+                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, material, transform, null, IfcGuid.FromIfcGUID(space.GlobalId), space.Name);
                 return result;
             }
             else if (foundSolid.GetType() == typeof(IfcFacetedBrep))
