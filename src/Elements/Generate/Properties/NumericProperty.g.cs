@@ -75,5 +75,8 @@ namespace Elements.Properties
         [System.Runtime.Serialization.EnumMember(Value = @"Number")]
         Number = 7,
     
+        [System.Runtime.Serialization.EnumMember(Value = @"Volume")]
+        Volume = 8,
+    
     }
 }

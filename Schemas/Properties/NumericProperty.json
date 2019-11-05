@@ -14,7 +14,7 @@
         "UnitType": {
             "type": "string",
             "description": "The property's unit type.",
-            "enum": ["Length","Mass","Force","Area","Pressure","Currency","Time","Number"]
+            "enum": ["Length","Mass","Force","Area","Pressure","Currency","Time","Number","Volume"]
         }
     },
     "additionalProperties": false

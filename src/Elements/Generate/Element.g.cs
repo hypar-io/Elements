@@ -22,10 +22,10 @@ namespace Elements
     /// <summary>A uniquely identifiable element.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
-    public abstract partial class Element 
+    public partial class Element 
     {
         [Newtonsoft.Json.JsonConstructor]
-        protected Element(System.Guid @id, string @name)
+        public Element(System.Guid @id, string @name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Element>();
             if(validator != null)

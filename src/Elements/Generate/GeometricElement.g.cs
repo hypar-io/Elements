@@ -22,10 +22,10 @@ namespace Elements
     /// <summary>An element with a geometric representation.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
-    public abstract partial class GeometricElement : Element
+    public partial class GeometricElement : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        protected GeometricElement(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
+        public GeometricElement(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
             : base(id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
