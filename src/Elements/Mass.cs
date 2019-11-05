@@ -53,7 +53,7 @@ namespace Elements
                     string name = null) : base(transform != null ? transform : new Transform(),
                                                material != null ? material : BuiltInMaterials.Mass,
                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
-                                               id = id != default(Guid) ? id : Guid.NewGuid(),
+                                               id != default(Guid) ? id : Guid.NewGuid(),
                                                name)
         {
             if (height <= 0)

@@ -46,7 +46,7 @@ namespace Elements
                      string name = null) : base(transform = transform != null ? transform : new Transform(),
                                                 material = material != null ? material : BuiltInMaterials.Mass,
                                                 representation = representation != null ? representation : new Representation(new List<SolidOperation>()),
-                                                id = id != null ? id : Guid.NewGuid(),
+                                                id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
         {
             SetProperties(height, profile, transform);
