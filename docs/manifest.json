@@ -151,7 +151,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "qBtpNXp0AbnWyp5yL1+9LA=="
+          "hash": "2LB3jhTBVv82mXx72lDFgA=="
         }
       },
       "is_incremental": false,
@@ -711,6 +711,42 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Ray.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Ray.html",
+          "hash": "E2HDq42Qi3uP/0JpMmUffg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.RayIntersectionResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.RayIntersectionResult.html",
+          "hash": "yz/4CIs+Zi0Zc0nIPBfmRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.RayIntersectionResultType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.RayIntersectionResultType.html",
+          "hash": "hN+Oh5Bz7D0LTTg0rFzBdg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Geometry.Representation.yml",
       "output": {
         ".html": {
@@ -859,7 +895,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.html",
-          "hash": "MPvA4jq10xKZSAueL6Wo0g=="
+          "hash": "JlpeXioJPXjoxc3tquu5mQ=="
         }
       },
       "is_incremental": false,
@@ -1075,7 +1111,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Space.html",
-          "hash": "7U7Gu1obMI8HWC0mfH2M7Q=="
+          "hash": "QxmmR0L6JBG/JyAOcli14Q=="
         }
       },
       "is_incremental": false,
@@ -2041,17 +2077,17 @@
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
-        "ManagedReferenceDocumentProcessor": {
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build"
         },
-        "ResourceDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

@@ -4269,6 +4269,151 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profiles.WideFlangeProfileServer.Instance
   nameWithType: WideFlangeProfileServer.Instance
+- uid: Elements.Geometry.Ray
+  name: Ray
+  href: api/Elements.Geometry.Ray.html
+  commentId: T:Elements.Geometry.Ray
+  fullName: Elements.Geometry.Ray
+  nameWithType: Ray
+- uid: Elements.Geometry.Ray.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  name: Ray(Vector3, Vector3)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Ray.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Ray.Ray(Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  nameWithType: Ray.Ray(Vector3, Vector3)
+- uid: Elements.Geometry.Ray.#ctor*
+  name: Ray
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray__ctor_
+  commentId: Overload:Elements.Geometry.Ray.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.Ray.Ray
+  nameWithType: Ray.Ray
+- uid: Elements.Geometry.Ray.Direction
+  name: Direction
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Direction
+  commentId: P:Elements.Geometry.Ray.Direction
+  fullName: Elements.Geometry.Ray.Direction
+  nameWithType: Ray.Direction
+- uid: Elements.Geometry.Ray.Direction*
+  name: Direction
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Direction_
+  commentId: Overload:Elements.Geometry.Ray.Direction
+  isSpec: "True"
+  fullName: Elements.Geometry.Ray.Direction
+  nameWithType: Ray.Direction
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.RayIntersectionResult@)
+  name: Intersects(Triangle, out RayIntersectionResult)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Triangle_Elements_Geometry_RayIntersectionResult__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.RayIntersectionResult@)
+  name.vb: Intersects(Triangle, ByRef RayIntersectionResult)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle, out Elements.Geometry.RayIntersectionResult)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle, ByRef Elements.Geometry.RayIntersectionResult)
+  nameWithType: Ray.Intersects(Triangle, out RayIntersectionResult)
+  nameWithType.vb: Ray.Intersects(Triangle, ByRef RayIntersectionResult)
+- uid: Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.RayIntersectionResult@)
+  name: Intersects(Topography, out RayIntersectionResult)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Topography_Elements_Geometry_RayIntersectionResult__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.RayIntersectionResult@)
+  name.vb: Intersects(Topography, ByRef RayIntersectionResult)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Topography, out Elements.Geometry.RayIntersectionResult)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Topography, ByRef Elements.Geometry.RayIntersectionResult)
+  nameWithType: Ray.Intersects(Topography, out RayIntersectionResult)
+  nameWithType.vb: Ray.Intersects(Topography, ByRef RayIntersectionResult)
+- uid: Elements.Geometry.Ray.Intersects*
+  name: Intersects
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_
+  commentId: Overload:Elements.Geometry.Ray.Intersects
+  isSpec: "True"
+  fullName: Elements.Geometry.Ray.Intersects
+  nameWithType: Ray.Intersects
+- uid: Elements.Geometry.Ray.Origin
+  name: Origin
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Origin
+  commentId: P:Elements.Geometry.Ray.Origin
+  fullName: Elements.Geometry.Ray.Origin
+  nameWithType: Ray.Origin
+- uid: Elements.Geometry.Ray.Origin*
+  name: Origin
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Origin_
+  commentId: Overload:Elements.Geometry.Ray.Origin
+  isSpec: "True"
+  fullName: Elements.Geometry.Ray.Origin
+  nameWithType: Ray.Origin
+- uid: Elements.Geometry.RayIntersectionResult
+  name: RayIntersectionResult
+  href: api/Elements.Geometry.RayIntersectionResult.html
+  commentId: T:Elements.Geometry.RayIntersectionResult
+  fullName: Elements.Geometry.RayIntersectionResult
+  nameWithType: RayIntersectionResult
+- uid: Elements.Geometry.RayIntersectionResult.#ctor(Elements.Geometry.Vector3,Elements.Geometry.RayIntersectionResultType)
+  name: RayIntersectionResult(Vector3, RayIntersectionResultType)
+  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult__ctor_Elements_Geometry_Vector3_Elements_Geometry_RayIntersectionResultType_
+  commentId: M:Elements.Geometry.RayIntersectionResult.#ctor(Elements.Geometry.Vector3,Elements.Geometry.RayIntersectionResultType)
+  fullName: Elements.Geometry.RayIntersectionResult.RayIntersectionResult(Elements.Geometry.Vector3, Elements.Geometry.RayIntersectionResultType)
+  nameWithType: RayIntersectionResult.RayIntersectionResult(Vector3, RayIntersectionResultType)
+- uid: Elements.Geometry.RayIntersectionResult.#ctor*
+  name: RayIntersectionResult
+  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult__ctor_
+  commentId: Overload:Elements.Geometry.RayIntersectionResult.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.RayIntersectionResult.RayIntersectionResult
+  nameWithType: RayIntersectionResult.RayIntersectionResult
+- uid: Elements.Geometry.RayIntersectionResult.Point
+  name: Point
+  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult_Point
+  commentId: P:Elements.Geometry.RayIntersectionResult.Point
+  fullName: Elements.Geometry.RayIntersectionResult.Point
+  nameWithType: RayIntersectionResult.Point
+- uid: Elements.Geometry.RayIntersectionResult.Point*
+  name: Point
+  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult_Point_
+  commentId: Overload:Elements.Geometry.RayIntersectionResult.Point
+  isSpec: "True"
+  fullName: Elements.Geometry.RayIntersectionResult.Point
+  nameWithType: RayIntersectionResult.Point
+- uid: Elements.Geometry.RayIntersectionResult.Type
+  name: Type
+  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult_Type
+  commentId: P:Elements.Geometry.RayIntersectionResult.Type
+  fullName: Elements.Geometry.RayIntersectionResult.Type
+  nameWithType: RayIntersectionResult.Type
+- uid: Elements.Geometry.RayIntersectionResult.Type*
+  name: Type
+  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult_Type_
+  commentId: Overload:Elements.Geometry.RayIntersectionResult.Type
+  isSpec: "True"
+  fullName: Elements.Geometry.RayIntersectionResult.Type
+  nameWithType: RayIntersectionResult.Type
+- uid: Elements.Geometry.RayIntersectionResultType
+  name: RayIntersectionResultType
+  href: api/Elements.Geometry.RayIntersectionResultType.html
+  commentId: T:Elements.Geometry.RayIntersectionResultType
+  fullName: Elements.Geometry.RayIntersectionResultType
+  nameWithType: RayIntersectionResultType
+- uid: Elements.Geometry.RayIntersectionResultType.Behind
+  name: Behind
+  href: api/Elements.Geometry.RayIntersectionResultType.html#Elements_Geometry_RayIntersectionResultType_Behind
+  commentId: F:Elements.Geometry.RayIntersectionResultType.Behind
+  fullName: Elements.Geometry.RayIntersectionResultType.Behind
+  nameWithType: RayIntersectionResultType.Behind
+- uid: Elements.Geometry.RayIntersectionResultType.Intersect
+  name: Intersect
+  href: api/Elements.Geometry.RayIntersectionResultType.html#Elements_Geometry_RayIntersectionResultType_Intersect
+  commentId: F:Elements.Geometry.RayIntersectionResultType.Intersect
+  fullName: Elements.Geometry.RayIntersectionResultType.Intersect
+  nameWithType: RayIntersectionResultType.Intersect
+- uid: Elements.Geometry.RayIntersectionResultType.IntersectsAtVertex
+  name: IntersectsAtVertex
+  href: api/Elements.Geometry.RayIntersectionResultType.html#Elements_Geometry_RayIntersectionResultType_IntersectsAtVertex
+  commentId: F:Elements.Geometry.RayIntersectionResultType.IntersectsAtVertex
+  fullName: Elements.Geometry.RayIntersectionResultType.IntersectsAtVertex
+  nameWithType: RayIntersectionResultType.IntersectsAtVertex
+- uid: Elements.Geometry.RayIntersectionResultType.Parallel
+  name: Parallel
+  href: api/Elements.Geometry.RayIntersectionResultType.html#Elements_Geometry_RayIntersectionResultType_Parallel
+  commentId: F:Elements.Geometry.RayIntersectionResultType.Parallel
+  fullName: Elements.Geometry.RayIntersectionResultType.Parallel
+  nameWithType: RayIntersectionResultType.Parallel
 - uid: Elements.Geometry.Representation
   name: Representation
   href: api/Elements.Geometry.Representation.html
@@ -6553,12 +6698,12 @@ references:
   commentId: T:Elements.Space
   fullName: Elements.Space
   nameWithType: Space
-- uid: Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Space(Profile, Double, Double, Material, Transform, Representation, Guid, String)
-  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Profile_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Space.Space(Elements.Geometry.Profile, System.Double, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Space.Space(Profile, Double, Double, Material, Transform, Representation, Guid, String)
+- uid: Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
+  name: Space(Profile, Double, Material, Transform, Representation, Guid, String)
+  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
+  commentId: M:Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
+  fullName: Elements.Space.Space(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
+  nameWithType: Space.Space(Profile, Double, Material, Transform, Representation, Guid, String)
 - uid: Elements.Space.#ctor*
   name: Space
   href: api/Elements.Space.html#Elements_Space__ctor_

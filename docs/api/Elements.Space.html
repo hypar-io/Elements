@@ -206,7 +206,7 @@ var b = new Vector3(30, 10);
 var c = new Vector3(20, 50);
 var d = new Vector3(-10, 5);
 var profile = new Profile(new Polygon(new[]{a,b,c,d}));
-var space = new Space(profile, 10, 0);
+var space = new Space(profile, 10);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -263,14 +263,14 @@ var space = new Space(profile, 10, 0);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Space__ctor_" data-uid="Elements.Space.#ctor*"></a>
-  <h4 id="Elements_Space__ctor_Elements_Geometry_Profile_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)">Space(Profile, Double, Double, Material, Transform, Representation, Guid, String)</h4>
+  <h4 id="Elements_Space__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)">Space(Profile, Double, Material, Transform, Representation, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a space.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Space(Profile profile, double height, double elevation = 0, Material material = null, Transform transform = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
+public Space(Profile profile, double height, Material material = null, Transform transform = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -292,12 +292,6 @@ public Space(Profile profile, double height, double elevation = 0, Material mate
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">height</span></td>
         <td><p>The height of the space.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">elevation</span></td>
-        <td><p>The elevation of the space.</p>
 </td>
       </tr>
       <tr>
