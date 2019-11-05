@@ -29,6 +29,7 @@
 - `Elements.Validators.IValidator` and the `Elements.Validators.Validator` singleton to provide argument validation during construction of user elements.
 - `Line.DivideByLength()`
 - `Line.DivideByCount()`
+- `Ray` class.
 
 ### Removed
 - The empty Dynamo project.
