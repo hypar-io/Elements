@@ -46,8 +46,8 @@ namespace Elements.Tests
             this.GenerateIfc = true;
             this.GenerateJson = true;
 
-            var modelsDir = Path.Combine(Assembly.GetExecutingAssembly().Location, "models");
-            if(Directory.Exists(modelsDir))
+            var modelsDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "models");
+            if(!Directory.Exists(modelsDir))
             {
                 Directory.CreateDirectory(modelsDir);
             }
