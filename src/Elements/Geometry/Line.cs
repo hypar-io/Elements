@@ -143,7 +143,12 @@ namespace Elements.Geometry
                 return null;
             }
             var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(d);
-            if(t > this.Length())
+
+            // If t > the length of the line, the point
+            // of intersection is past the end of the line.
+            // If t < 0, the point of intersection is behind
+            // the start of the line.
+            if(t > this.Length() || t < 0)
             {
                 return null;
             }

@@ -49,6 +49,14 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void InPlaneDoesNotIntersect()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5,0,0));
+            var plane = new Plane(Vector3.Origin, Vector3.ZAxis);
+            Assert.Null(line.Intersect(plane));
+        }
+
+        [Fact]
         public void TooFar_DoesNotIntersect()
         {
             var line = new Line(Vector3.Origin, new Vector3(5.0,0,0));
