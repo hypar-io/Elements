@@ -38,7 +38,7 @@ namespace Elements.Geometry.Solids
     
         /// <summary>Is the solid operation a void operation?</summary>
         [Newtonsoft.Json.JsonProperty("IsVoid", Required = Newtonsoft.Json.Required.Always)]
-        public bool IsVoid { get; internal set; } = false;
+        public bool IsVoid { get; set; } = false;
     
     
     }

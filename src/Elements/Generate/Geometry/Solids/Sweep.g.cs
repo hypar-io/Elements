@@ -42,23 +42,23 @@ namespace Elements.Geometry.Solids
     
         /// <summary>The id of the profile to be swept along the curve.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Profile Profile { get; internal set; }
+        public Profile Profile { get; set; }
     
         /// <summary>The curve along which the profile will be swept.</summary>
         [Newtonsoft.Json.JsonProperty("Curve", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Curve Curve { get; internal set; }
+        public Curve Curve { get; set; }
     
         /// <summary>The amount to set back the resulting solid from the start of the curve.</summary>
         [Newtonsoft.Json.JsonProperty("StartSetback", Required = Newtonsoft.Json.Required.Always)]
-        public double StartSetback { get; internal set; }
+        public double StartSetback { get; set; }
     
         /// <summary>The amount to set back the resulting solid from the end of the curve.</summary>
         [Newtonsoft.Json.JsonProperty("EndSetback", Required = Newtonsoft.Json.Required.Always)]
-        public double EndSetback { get; internal set; }
+        public double EndSetback { get; set; }
     
         /// <summary>The rotation, in degrees, of the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Rotation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Rotation { get; internal set; }
+        public double Rotation { get; set; }
     
     
     }

@@ -82,10 +82,6 @@ namespace Elements
             this.Profile = profile;
             this.Material = material != null ? material : BuiltInMaterials.Steel;
             this._rotation = rotation;
-            if(this.Representation.SolidOperations.Count == 0)
-            {
-                this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, this.StartSetback, this.EndSetback, this._rotation, false));
-            }
         }
 
         /// <summary>
@@ -107,6 +103,15 @@ namespace Elements
         public Profile ProfileTransformed()
         {
             return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
+        }
+        
+        /// <summary>
+        /// Update the representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            this.Representation.SolidOperations.Clear();
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, this.StartSetback, this.EndSetback, this._rotation, false));
         }
     }
 }

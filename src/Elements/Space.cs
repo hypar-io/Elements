@@ -3,6 +3,7 @@ using System;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements
 {
@@ -62,10 +63,6 @@ namespace Elements
             this.Profile = profile;
             this.Transform = transform ?? new Transform();
             this.Height = height;
-            if(this.Representation.SolidOperations.Count == 0)
-            {
-                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
-            }
         }
 
         /// <summary>
@@ -123,11 +120,17 @@ namespace Elements
         }
 
         /// <summary>
-        /// Update the representations.
+        /// Update representations.
         /// </summary>
         public override void UpdateRepresentations()
         {
-            return;
+            // Don't override imported geometry.
+            if(this.Representation.SolidOperations.Count > 0 && this.Representation.SolidOperations.All(s=>s.GetType() == typeof(Import)))
+            {
+                return;
+            }
+            this.Representation.SolidOperations.Clear();
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
         }
     }
 }

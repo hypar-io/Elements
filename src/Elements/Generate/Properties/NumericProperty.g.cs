@@ -38,12 +38,12 @@ namespace Elements.Properties
     
         /// <summary>The property's value</summary>
         [Newtonsoft.Json.JsonProperty("Value", Required = Newtonsoft.Json.Required.Always)]
-        public double Value { get; internal set; }
+        public double Value { get; set; }
     
         /// <summary>The property's unit type.</summary>
         [Newtonsoft.Json.JsonProperty("UnitType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public NumericPropertyUnitType UnitType { get; internal set; }
+        public NumericPropertyUnitType UnitType { get; set; }
     
     
     }

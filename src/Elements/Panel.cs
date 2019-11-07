@@ -41,10 +41,6 @@ namespace Elements
                                                 name)
         {
             this.Perimeter = perimeter;
-            if(this.Representation.SolidOperations.Count == 0)
-            {
-                this.Representation.SolidOperations.Add(new Lamina(this.Perimeter));
-            }
         }
 
         /// <summary>
@@ -62,6 +58,15 @@ namespace Elements
         public Vector3 Normal()
         {
             return this.Perimeter.Plane().Normal;
+        }
+
+        /// <summary>
+        /// Update representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            this.Representation.SolidOperations.Clear();
+            this.Representation.SolidOperations.Add(new Lamina(this.Perimeter));
         }
     }
 }

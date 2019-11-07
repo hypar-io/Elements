@@ -38,12 +38,12 @@ namespace Elements
     
         /// <summary>The origin of the model.</summary>
         [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Position Origin { get; internal set; }
+        public Position Origin { get; set; }
     
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
         [Newtonsoft.Json.JsonProperty("Elements", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; internal set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
+        public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
     
     
     }

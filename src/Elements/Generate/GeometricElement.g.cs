@@ -41,15 +41,15 @@ namespace Elements
     
         /// <summary>The element's transform.</summary>
         [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Transform Transform { get; internal set; }
+        public Transform Transform { get; set; }
     
         /// <summary>The element's material.</summary>
         [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Material Material { get; internal set; }
+        public Material Material { get; set; }
     
         /// <summary>The element's representation.</summary>
         [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Representation Representation { get; internal set; }
+        public Representation Representation { get; set; }
     
     
     }

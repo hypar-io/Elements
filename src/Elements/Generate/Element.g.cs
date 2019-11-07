@@ -40,11 +40,11 @@ namespace Elements
         /// <summary>A unique id.</summary>
         [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid Id { get; internal set; }
+        public System.Guid Id { get; set; }
     
         /// <summary>A name.</summary>
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string Name { get; internal set; }
+        public string Name { get; set; }
     
     
     }

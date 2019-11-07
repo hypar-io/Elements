@@ -40,13 +40,5 @@ namespace Elements
         {
             this.Locations = locations != null ? locations : new List<Vector3>();
         }
-
-        /// <summary>
-        /// Update the geometry.
-        /// </summary>
-        public override void UpdateRepresentations()
-        {
-            return;
-        }
     }
 }

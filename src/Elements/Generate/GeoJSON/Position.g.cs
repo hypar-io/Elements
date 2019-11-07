@@ -38,11 +38,11 @@ namespace Elements.GeoJSON
     
         /// <summary>The latitude in decimal degrees.</summary>
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
-        public double Latitude { get; internal set; }
+        public double Latitude { get; set; }
     
         /// <summary>The longitude in decimal degrees.</summary>
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
-        public double Longitude { get; internal set; }
+        public double Longitude { get; set; }
     
     
     }

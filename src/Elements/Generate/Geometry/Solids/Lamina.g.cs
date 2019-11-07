@@ -38,7 +38,7 @@ namespace Elements.Geometry.Solids
     
         /// <summary>The perimeter.</summary>
         [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Polygon Perimeter { get; internal set; }
+        public Polygon Perimeter { get; set; }
     
     
     }

@@ -40,7 +40,7 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(2)]
-        public IList<Vector3> Vertices { get; internal set; } = new List<Vector3>();
+        public IList<Vector3> Vertices { get; set; } = new List<Vector3>();
     
     
     }

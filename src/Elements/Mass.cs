@@ -62,10 +62,6 @@ namespace Elements
             }
             this.Profile = profile;
             this.Height = height;
-            if(this.Representation.SolidOperations.Count == 0)
-            {
-                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
-            }
         }
 
         /// <summary>
@@ -89,7 +85,8 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            return;
+            this.Representation.SolidOperations.Clear();
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
         }
     }
 }

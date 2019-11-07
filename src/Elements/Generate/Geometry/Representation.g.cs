@@ -38,7 +38,7 @@ namespace Elements.Geometry
         /// <summary>A collection of solid operations.</summary>
         [Newtonsoft.Json.JsonProperty("SolidOperations", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public IList<SolidOperation> SolidOperations { get; internal set; } = new List<SolidOperation>();
+        public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
     
     
     }

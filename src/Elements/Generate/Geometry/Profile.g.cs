@@ -39,11 +39,11 @@ namespace Elements.Geometry
     
         /// <summary>The perimeter of the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Polygon Perimeter { get; internal set; }
+        public Polygon Perimeter { get; set; }
     
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.AllowNull)]
-        public IList<Polygon> Voids { get; internal set; }
+        public IList<Polygon> Voids { get; set; }
     
     
     }

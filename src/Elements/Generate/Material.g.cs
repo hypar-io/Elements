@@ -41,17 +41,17 @@ namespace Elements
         /// <summary>The material's color.</summary>
         [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Color Color { get; internal set; } = new Color();
+        public Color Color { get; set; } = new Color();
     
         /// <summary>The specular factor between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("SpecularFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
-        public double SpecularFactor { get; internal set; } = 0.1D;
+        public double SpecularFactor { get; set; } = 0.1D;
     
         /// <summary>The glossiness factor between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("GlossinessFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, 1)]
-        public double GlossinessFactor { get; internal set; } = 0.1D;
+        public double GlossinessFactor { get; set; } = 0.1D;
     
     
     }

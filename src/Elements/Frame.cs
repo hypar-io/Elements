@@ -52,10 +52,16 @@ namespace Elements
         {
             this.Curve = curve.Offset(-offset)[0];
             this.Profile = profile;
-            if(this.Representation.SolidOperations.Count == 0)
-            {
-                this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, 0.0, false));
-            }
+            
+        }
+
+        /// <summary>
+        /// Update representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            this.Representation.SolidOperations.Clear();
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, 0.0, false));
         }
     }
 }

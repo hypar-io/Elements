@@ -41,20 +41,20 @@ namespace Elements.Geometry.Solids
     
         /// <summary>The id of the profile to extrude.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Profile Profile { get; internal set; }
+        public Profile Profile { get; set; }
     
         /// <summary>The height of the extrusion.</summary>
         [Newtonsoft.Json.JsonProperty("Height", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        public double Height { get; internal set; }
+        public double Height { get; set; }
     
         /// <summary>The direction in which to extrude.</summary>
         [Newtonsoft.Json.JsonProperty("Direction", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Direction { get; internal set; }
+        public Vector3 Direction { get; set; }
     
         /// <summary>The rotation, in degrees, of the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Rotation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Rotation { get; internal set; }
+        public double Rotation { get; set; }
     
     
     }

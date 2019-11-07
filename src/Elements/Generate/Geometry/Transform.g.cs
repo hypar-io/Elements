@@ -38,7 +38,7 @@ namespace Elements.Geometry
         /// <summary>The transform's matrix.</summary>
         [Newtonsoft.Json.JsonProperty("Matrix", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Matrix Matrix { get; internal set; } = new Matrix();
+        public Matrix Matrix { get; set; } = new Matrix();
     
     
     }

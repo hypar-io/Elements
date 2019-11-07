@@ -40,7 +40,7 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(12)]
         [System.ComponentModel.DataAnnotations.MaxLength(12)]
-        public IList<double> Components { get; internal set; } = new List<double>();
+        public IList<double> Components { get; set; } = new List<double>();
     
     
     }

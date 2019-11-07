@@ -86,16 +86,11 @@ namespace Elements
         }
 
         /// <summary>
-        /// Call this method before operations on geometry to ensure that
-        /// geometric operations have been updated.
+        /// Update representations
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if(this.Representation.SolidOperations.Count > 0)
-            {
-                return;
-            }
-
+            this.Representation.SolidOperations.Clear();
             // TODO(Ian): Give this a proper depth when booleans are supported.
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, 5, this.Transform.ZAxis, 0.0, true));
         }

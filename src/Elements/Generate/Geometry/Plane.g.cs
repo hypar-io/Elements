@@ -38,11 +38,11 @@ namespace Elements.Geometry
     
         /// <summary>The origin of the plane.</summary>
         [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Origin { get; internal set; }
+        public Vector3 Origin { get; set; }
     
         /// <summary>The normal of the plane.</summary>
         [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Normal { get; internal set; }
+        public Vector3 Normal { get; set; }
     
     
     }

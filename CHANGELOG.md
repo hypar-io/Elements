@@ -16,6 +16,7 @@
 - `Matrix` is now marked `internal`.
 - `SolidConverter` is now marked `internal`.
 - `Elements.Serialization.IFC.ModelExtensions` is now marked `internal`.
+- All core type property setters are now `public`.
 
 ### Added
 - `ModelCurve` - Draw curves in 3D.
