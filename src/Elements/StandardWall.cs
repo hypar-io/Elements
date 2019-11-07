@@ -24,7 +24,7 @@ namespace Elements
         /// <summary>
         /// The thickness of the wall.
         /// </summary>
-        public double Thickness { get; protected set;}
+        public double Thickness { get; set;}
 
         /// <summary>
         /// A collection of openings in the floor.

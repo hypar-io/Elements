@@ -167,7 +167,7 @@ public Model(Position origin, IDictionary&lt;Guid, Element&gt; elements)</code><
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Elements&quot;, Required = Required.Always)]
 [Required]
-public IDictionary&lt;Guid, Element&gt; Elements { get; }</code></pre>
+public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -192,7 +192,7 @@ public IDictionary&lt;Guid, Element&gt; Elements { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Origin&quot;, Required = Required.AllowNull)]
-public Position Origin { get; }</code></pre>
+public Position Origin { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

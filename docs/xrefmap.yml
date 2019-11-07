@@ -510,6 +510,19 @@ references:
   isSpec: "True"
   fullName: Elements.Frame.Profile
   nameWithType: Frame.Profile
+- uid: Elements.Frame.UpdateRepresentations
+  name: UpdateRepresentations()
+  href: api/Elements.Frame.html#Elements_Frame_UpdateRepresentations
+  commentId: M:Elements.Frame.UpdateRepresentations
+  fullName: Elements.Frame.UpdateRepresentations()
+  nameWithType: Frame.UpdateRepresentations()
+- uid: Elements.Frame.UpdateRepresentations*
+  name: UpdateRepresentations
+  href: api/Elements.Frame.html#Elements_Frame_UpdateRepresentations_
+  commentId: Overload:Elements.Frame.UpdateRepresentations
+  isSpec: "True"
+  fullName: Elements.Frame.UpdateRepresentations
+  nameWithType: Frame.UpdateRepresentations
 - uid: Elements.GeoJSON
   name: Elements.GeoJSON
   href: api/Elements.GeoJSON.html
@@ -6312,19 +6325,6 @@ references:
   isSpec: "True"
   fullName: Elements.ModelPoints.Locations
   nameWithType: ModelPoints.Locations
-- uid: Elements.ModelPoints.UpdateRepresentations
-  name: UpdateRepresentations()
-  href: api/Elements.ModelPoints.html#Elements_ModelPoints_UpdateRepresentations
-  commentId: M:Elements.ModelPoints.UpdateRepresentations
-  fullName: Elements.ModelPoints.UpdateRepresentations()
-  nameWithType: ModelPoints.UpdateRepresentations()
-- uid: Elements.ModelPoints.UpdateRepresentations*
-  name: UpdateRepresentations
-  href: api/Elements.ModelPoints.html#Elements_ModelPoints_UpdateRepresentations_
-  commentId: Overload:Elements.ModelPoints.UpdateRepresentations
-  isSpec: "True"
-  fullName: Elements.ModelPoints.UpdateRepresentations
-  nameWithType: ModelPoints.UpdateRepresentations
 - uid: Elements.Opening
   name: Opening
   href: api/Elements.Opening.html
@@ -6440,6 +6440,19 @@ references:
   isSpec: "True"
   fullName: Elements.Panel.Perimeter
   nameWithType: Panel.Perimeter
+- uid: Elements.Panel.UpdateRepresentations
+  name: UpdateRepresentations()
+  href: api/Elements.Panel.html#Elements_Panel_UpdateRepresentations
+  commentId: M:Elements.Panel.UpdateRepresentations
+  fullName: Elements.Panel.UpdateRepresentations()
+  nameWithType: Panel.UpdateRepresentations()
+- uid: Elements.Panel.UpdateRepresentations*
+  name: UpdateRepresentations
+  href: api/Elements.Panel.html#Elements_Panel_UpdateRepresentations_
+  commentId: Overload:Elements.Panel.UpdateRepresentations
+  isSpec: "True"
+  fullName: Elements.Panel.UpdateRepresentations
+  nameWithType: Panel.UpdateRepresentations
 - uid: Elements.Properties
   name: Elements.Properties
   href: api/Elements.Properties.html
@@ -6545,6 +6558,12 @@ references:
   commentId: F:Elements.Properties.NumericPropertyUnitType.Time
   fullName: Elements.Properties.NumericPropertyUnitType.Time
   nameWithType: NumericPropertyUnitType.Time
+- uid: Elements.Properties.NumericPropertyUnitType.Volume
+  name: Volume
+  href: api/Elements.Properties.NumericPropertyUnitType.html#Elements_Properties_NumericPropertyUnitType_Volume
+  commentId: F:Elements.Properties.NumericPropertyUnitType.Volume
+  fullName: Elements.Properties.NumericPropertyUnitType.Volume
+  nameWithType: NumericPropertyUnitType.Volume
 - uid: Elements.Serialization.glTF
   name: Elements.Serialization.glTF
   href: api/Elements.Serialization.glTF.html
@@ -6944,6 +6963,19 @@ references:
   isSpec: "True"
   fullName: Elements.StructuralFraming.StartSetback
   nameWithType: StructuralFraming.StartSetback
+- uid: Elements.StructuralFraming.UpdateRepresentations
+  name: UpdateRepresentations()
+  href: api/Elements.StructuralFraming.html#Elements_StructuralFraming_UpdateRepresentations
+  commentId: M:Elements.StructuralFraming.UpdateRepresentations
+  fullName: Elements.StructuralFraming.UpdateRepresentations()
+  nameWithType: StructuralFraming.UpdateRepresentations()
+- uid: Elements.StructuralFraming.UpdateRepresentations*
+  name: UpdateRepresentations
+  href: api/Elements.StructuralFraming.html#Elements_StructuralFraming_UpdateRepresentations_
+  commentId: Overload:Elements.StructuralFraming.UpdateRepresentations
+  isSpec: "True"
+  fullName: Elements.StructuralFraming.UpdateRepresentations
+  nameWithType: StructuralFraming.UpdateRepresentations
 - uid: Elements.StructuralFraming.Volume
   name: Volume()
   href: api/Elements.StructuralFraming.html#Elements_StructuralFraming_Volume

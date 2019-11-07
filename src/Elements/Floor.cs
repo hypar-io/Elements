@@ -20,17 +20,17 @@ namespace Elements
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
-        public double Elevation { get; private set; }
+        public double Elevation { get; set; }
 
         /// <summary>
         /// The thickness of the floor.
         /// </summary>
-        public double Thickness { get; private set;}
+        public double Thickness { get; set;}
 
         /// <summary>
         /// The untransformed profile of the floor.
         /// </summary>
-        public Profile Profile { get; private set; }
+        public Profile Profile { get; set; }
 
         /// <summary>
         /// A collection of openings in the floor.

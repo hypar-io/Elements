@@ -16,7 +16,7 @@ namespace Elements
         /// <summary>
         /// The curve.
         /// </summary>
-        public Curve Curve { get; private set;}
+        public Curve Curve { get; set;}
 
         /// <summary>
         /// Create a model curve.

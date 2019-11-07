@@ -172,7 +172,7 @@ public Arc(Vector3 center, double radius, double startAngle, double endAngle)</c
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Center&quot;, Required = Required.AllowNull)]
-public Vector3 Center { get; }</code></pre>
+public Vector3 Center { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -223,7 +223,7 @@ public Vector3 End { get; }</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EndAngle&quot;, Required = Required.Always)]
 [Range(0, 360)]
-public double EndAngle { get; }</code></pre>
+public double EndAngle { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -249,7 +249,7 @@ public double EndAngle { get; }</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Radius&quot;, Required = Required.Always)]
 [Range(0, 2147483647)]
-public double Radius { get; }</code></pre>
+public double Radius { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -300,7 +300,7 @@ public Vector3 Start { get; }</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;StartAngle&quot;, Required = Required.Always)]
 [Range(0, 360)]
-public double StartAngle { get; }</code></pre>
+public double StartAngle { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

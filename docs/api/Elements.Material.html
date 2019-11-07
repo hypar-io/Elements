@@ -251,7 +251,7 @@ public Material(Color color, double specularFactor, double glossinessFactor, Gui
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Color&quot;, Required = Required.Always)]
 [Required]
-public Color Color { get; }</code></pre>
+public Color Color { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -277,7 +277,7 @@ public Color Color { get; }</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;GlossinessFactor&quot;, Required = Required.Always)]
 [Range(0, 1)]
-public double GlossinessFactor { get; }</code></pre>
+public double GlossinessFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -303,7 +303,7 @@ public double GlossinessFactor { get; }</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;SpecularFactor&quot;, Required = Required.Always)]
 [Range(0, 1)]
-public double SpecularFactor { get; }</code></pre>
+public double SpecularFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

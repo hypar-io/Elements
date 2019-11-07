@@ -7,19 +7,19 @@ namespace Elements
     /// <summary>
     /// A material with red, green, blue, alpha, and metallic factor components.
     /// </summary>
-    public partial class Material: Element
+    public partial class Material : Element
     {
         /// <summary>
         /// A relative file path to an image file to be used as a texture.
         /// The image data will be packed into the glTF's buffer.
         /// </summary>
-        public string Texture{get;}
+        public string Texture { get; }
 
         /// <summary>
         /// Construct a material.
         /// </summary>
         /// <param name="name"></param>
-        public Material(string name): base(Guid.NewGuid(), name)
+        public Material(string name) : base(Guid.NewGuid(), name)
         {
             this.Color = Colors.Gray;
         }
@@ -34,7 +34,7 @@ namespace Elements
         /// <param name="texture">A relative path to a jpg or png image file to be used as a texture.</param>
         /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
-        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, string texture = null): 
+        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, string texture = null) :
             this(color, specularFactor, glossinessFactor, Guid.NewGuid(), name)
         {
             this.Texture = texture;
@@ -47,7 +47,7 @@ namespace Elements
         public override bool Equals(object obj)
         {
             var m = obj as Material;
-            if(m == null)
+            if (m == null)
             {
                 return false;
             }
@@ -60,7 +60,7 @@ namespace Elements
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return new ArrayList(){this.Name, this.Color, this.SpecularFactor, this.GlossinessFactor}.GetHashCode();
+            return new ArrayList() { this.Name, this.Color, this.SpecularFactor, this.GlossinessFactor }.GetHashCode();
         }
     }
 }

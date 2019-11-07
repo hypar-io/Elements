@@ -18,12 +18,12 @@ namespace Elements
         /// <summary>
         /// The profile of the mass.
         /// </summary>
-        public Profile Profile { get; private set; }
+        public Profile Profile { get; set; }
 
         /// <summary>
         /// The height of the mass.
         /// </summary>
-        public double Height { get; }
+        public double Height { get; set; }
 
         /// <summary>
         /// The thickness of the mass' extrusion.

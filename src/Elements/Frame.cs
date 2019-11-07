@@ -14,12 +14,12 @@ namespace Elements
         /// <summary>
         /// The frame's profile.
         /// </summary>
-        public Profile Profile { get; private set; }
+        public Profile Profile { get; set; }
 
         /// <summary>
         /// The perimeter of the frame.
         /// </summary>
-        public Curve Curve { get; private set; }
+        public Curve Curve { get; set; }
 
         /// <summary>
         /// Create a frame.

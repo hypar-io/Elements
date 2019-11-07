@@ -19,12 +19,12 @@ namespace Elements
         /// <summary>
         /// The profile of the space.
         /// </summary>
-        public Profile Profile { get; private set; }
+        public Profile Profile { get; set; }
 
         /// <summary>
         /// The space's height.
         /// </summary>
-        public double Height { get; private set; }
+        public double Height { get; set; }
 
         /// <summary>
         /// Construct a space.

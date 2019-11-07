@@ -158,7 +158,7 @@ public NumericProperty(double value, NumericPropertyUnitType unitType)</code></p
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;UnitType&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
 [JsonConverter(typeof(StringEnumConverter))]
-public NumericPropertyUnitType UnitType { get; }</code></pre>
+public NumericPropertyUnitType UnitType { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -183,7 +183,7 @@ public NumericPropertyUnitType UnitType { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Value&quot;, Required = Required.Always)]
-public double Value { get; }</code></pre>
+public double Value { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

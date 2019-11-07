@@ -17,7 +17,7 @@ namespace Elements
         /// <summary>
         /// The profile of the opening.
         /// </summary>
-        public Profile Profile { get; private set; }
+        public Profile Profile { get; set; }
 
         /// <summary>
         /// Create a rectangular opening.

@@ -128,7 +128,7 @@ public abstract class Element</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-protected Element(Guid id, string name)</code></pre>
+public Element(Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -163,7 +163,7 @@ protected Element(Guid id, string name)</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Id&quot;, Required = Required.Always)]
 [Required(AllowEmptyStrings = true)]
-public Guid Id { get; }</code></pre>
+public Guid Id { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -188,7 +188,7 @@ public Guid Id { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Name&quot;, Required = Required.AllowNull)]
-public string Name { get; }</code></pre>
+public string Name { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

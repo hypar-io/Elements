@@ -142,7 +142,7 @@ public abstract class GeometricElement : Element</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-protected GeometricElement(Transform transform, Material material, Representation representation, Guid id, string name)</code></pre>
+public GeometricElement(Transform transform, Material material, Representation representation, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -191,7 +191,7 @@ protected GeometricElement(Transform transform, Material material, Representatio
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Material&quot;, Required = Required.AllowNull)]
-public Material Material { get; }</code></pre>
+public Material Material { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -216,7 +216,7 @@ public Material Material { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Representation&quot;, Required = Required.AllowNull)]
-public Representation Representation { get; }</code></pre>
+public Representation Representation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -241,7 +241,7 @@ public Representation Representation { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Transform&quot;, Required = Required.AllowNull)]
-public Transform Transform { get; }</code></pre>
+public Transform Transform { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

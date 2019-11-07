@@ -15,17 +15,17 @@ namespace Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        public Curve Curve { get; private set; }
+        public Curve Curve { get; set; }
 
         /// <summary>
         /// The setback of the framing's extrusion at the start.
         /// </summary>
-        public double StartSetback { get; private set; }
+        public double StartSetback { get; set; }
 
         /// <summary>
         /// The setback of the framing's extrusion at the end.
         /// </summary>
-        public double EndSetback { get; private set; }
+        public double EndSetback { get; set; }
 
         /// <summary>
         /// The structural framing's profile.

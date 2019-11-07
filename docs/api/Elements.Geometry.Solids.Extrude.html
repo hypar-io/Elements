@@ -176,7 +176,7 @@ public Extrude(Profile profile, double height, Vector3 direction, double rotatio
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Direction&quot;, Required = Required.AllowNull)]
-public Vector3 Direction { get; }</code></pre>
+public Vector3 Direction { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -202,7 +202,7 @@ public Vector3 Direction { get; }</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Height&quot;, Required = Required.Always)]
 [Range(0, 2147483647)]
-public double Height { get; }</code></pre>
+public double Height { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -227,7 +227,7 @@ public double Height { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Profile&quot;, Required = Required.AllowNull)]
-public Profile Profile { get; }</code></pre>
+public Profile Profile { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -252,7 +252,7 @@ public Profile Profile { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Rotation&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public double Rotation { get; }</code></pre>
+public double Rotation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

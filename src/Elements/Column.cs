@@ -15,12 +15,12 @@ namespace Elements
         /// <summary>
         /// The location of the base of the column.
         /// </summary>
-        public Vector3 Location{get;}
+        public Vector3 Location { get; set; }
 
         /// <summary>
         /// The height of the column.
         /// </summary>
-        public double Height{get;}
+        public double Height { get; set; }
 
         /// <summary>
         /// Construct a Column.
@@ -44,8 +44,8 @@ namespace Elements
                       double endSetback = 0.0,
                       double rotation = 0.0,
                       Guid id = default(Guid),
-                      string name = null) 
-            : base(new Line(new Vector3(location.X, location.Y, location.Z + height), location), profile, material, 
+                      string name = null)
+            : base(new Line(new Vector3(location.X, location.Y, location.Z + height), location), profile, material,
                 startSetback, endSetback, rotation, transform, null, id, name)
         {
             this.Location = location;
