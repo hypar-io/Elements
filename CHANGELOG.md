@@ -42,6 +42,7 @@
 - Transforms on curves are now consistently oriented with the +X axis oriented to the "right" and the +Z axis oriented along the inverse of the tangent of the curve.
 - Built in materials for displaying transforms are now red, green, and blue. Previously they were all red.
 - All classes deriving from `Element` now pass their `id`, `transform`, and `name` to the base constructor.
+- Line/plane intersections now return null if the intersection is "behind" the start of the line.
 
 ## 0.3.8
 ### Changed
