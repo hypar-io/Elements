@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Xunit;
 using Xunit.Abstractions;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry.Tests
 {
@@ -651,7 +652,32 @@ namespace Elements.Geometry.Tests
             var b = new Vector3(5,0,0);
             var c = new Vector3(5,0,5);
             var p = new Polygon(new[]{a,b,c});
-        
+        }
+
+        [Fact]
+        public void DeserializesWithoutDiscriminator()
+        {
+            // We've received a Polygon and we know that we're receiving
+            // a Polygon. The Polygon should deserialize without a 
+            // discriminator.
+            string json = @"
+            {
+                ""Vertices"": [
+                    {""X"":1,""Y"":1,""Z"":2},
+                    {""X"":2,""Y"":1,""Z"":2},
+                    {""X"":2,""Y"":2,""Z"":2},
+                    {""X"":1,""Y"":2,""Z"":2}
+                ]
+            }
+            ";
+            var polygon = JsonConvert.DeserializeObject<Polygon>(json);
+            
+            // We've created a new Polygon, which will have a discriminator
+            // because it was created using the JsonInheritanceConverter.
+            var newJson = JsonConvert.SerializeObject(polygon);
+            var newPolygon = (Polygon)JsonConvert.DeserializeObject<Polygon>(newJson);
+
+            Assert.Equal(polygon.Vertices.Count, newPolygon.Vertices.Count);
         }
     }
 }

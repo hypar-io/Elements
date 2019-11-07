@@ -60,7 +60,7 @@ namespace Elements.Tests
             var errors = new List<string>();
             var model = Model.FromJson(modelStr, errors);
             Assert.Equal(2, model.Elements.Count);
-            Assert.Equal(1, errors.Count);
+            Assert.Equal(2, errors.Count);
         }
   
         private Model QuadPanelModel()
