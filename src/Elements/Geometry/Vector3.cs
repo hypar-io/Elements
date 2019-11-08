@@ -10,7 +10,7 @@ namespace Elements.Geometry
     public partial class Vector3 : IComparable<Vector3>, IEquatable<Vector3>
     {
         /// <summary>
-        /// A tolerance for comparison operations.
+        /// A tolerance for comparison operations of 1e-9.
         /// </summary>
         public static double Epsilon = 1e-9;
 
