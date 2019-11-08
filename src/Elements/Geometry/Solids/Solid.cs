@@ -106,6 +106,13 @@ namespace Elements.Geometry.Solids
             var solid = new Solid();
 
             var l = curve.Length();
+            // The start and end setbacks can't be more than
+            // the length of the beam together.
+            if((startSetback + endSetback) >= l)
+            {
+                startSetback = 0;
+                endSetback = 0;
+            }
             var ssb = startSetback / l;
             var esb = endSetback / l;
 

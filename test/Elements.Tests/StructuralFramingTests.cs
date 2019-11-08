@@ -121,5 +121,15 @@ namespace Elements.Tests
             Assert.Equal(line, brace.Curve);
             this.Model.AddElement(brace);
         }
+
+        [Fact]
+        public void ShortBeamWithSetbacksDoesNotThrow()
+        {
+            this.Name = "ShortBeamWithSetbacks";
+            var line = new Line(Vector3.Origin, new Vector3(1,0,0));
+            // Create setbacks that are the same length as the beam itself.
+            var beam = new Beam(line, Polygon.Rectangle(0.5,0.5), BuiltInMaterials.Steel, 0.5, 0.5);
+            this.Model.AddElement(beam);
+        }
     }
 }

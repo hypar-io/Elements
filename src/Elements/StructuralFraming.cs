@@ -38,8 +38,8 @@ namespace Elements
         /// <param name="curve">The center line of the beam.</param>
         /// <param name="profile">The structural framing's profile.</param>
         /// <param name="material">The structural framing's material.</param>
-        /// <param name="startSetback">The setback of the beam's extrusion at its start.</param>
-        /// <param name="endSetback">The setback of the beam's extrusion at its end.</param>
+        /// <param name="startSetback">The setback distance of the beam's extrusion at its start.</param>
+        /// <param name="endSetback">The setback distance of the beam's extrusion at its end.</param>
         /// <param name="rotation">An optional rotation in degrees of the transform around its z axis.</param>
         /// <param name="transform">The element's Transform.</param>
         /// <param name="representation">The structural framing's representation.</param>
