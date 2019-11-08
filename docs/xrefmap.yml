@@ -5293,6 +5293,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.Dot
   nameWithType: Vector3.Dot
+- uid: Elements.Geometry.Vector3.Epsilon
+  name: Epsilon
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Epsilon
+  commentId: F:Elements.Geometry.Vector3.Epsilon
+  fullName: Elements.Geometry.Vector3.Epsilon
+  nameWithType: Vector3.Epsilon
 - uid: Elements.Geometry.Vector3.Equals(Elements.Geometry.Vector3)
   name: Equals(Vector3)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Equals_Elements_Geometry_Vector3_
@@ -5364,6 +5370,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.IsParallelTo
   nameWithType: Vector3.IsParallelTo
+- uid: Elements.Geometry.Vector3.IsZero
+  name: IsZero()
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsZero
+  commentId: M:Elements.Geometry.Vector3.IsZero
+  fullName: Elements.Geometry.Vector3.IsZero()
+  nameWithType: Vector3.IsZero()
+- uid: Elements.Geometry.Vector3.IsZero*
+  name: IsZero
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsZero_
+  commentId: Overload:Elements.Geometry.Vector3.IsZero
+  isSpec: "True"
+  fullName: Elements.Geometry.Vector3.IsZero
+  nameWithType: Vector3.IsZero
 - uid: Elements.Geometry.Vector3.Length
   name: Length()
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Length
@@ -5552,12 +5571,6 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.ToArray
   nameWithType: Vector3.ToArray
-- uid: Elements.Geometry.Vector3.Tolerance
-  name: Tolerance
-  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Tolerance
-  commentId: F:Elements.Geometry.Vector3.Tolerance
-  fullName: Elements.Geometry.Vector3.Tolerance
-  nameWithType: Vector3.Tolerance
 - uid: Elements.Geometry.Vector3.ToString
   name: ToString()
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_ToString

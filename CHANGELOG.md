@@ -31,6 +31,7 @@
 - `Line.DivideByLength()`
 - `Line.DivideByCount()`
 - `Ray` class.
+- `Vector3.IsZero()`
 
 ### Removed
 - The empty Dynamo project.
@@ -44,6 +45,8 @@
 - Built in materials for displaying transforms are now red, green, and blue. Previously they were all red.
 - All classes deriving from `Element` now pass their `id`, `transform`, and `name` to the base constructor.
 - Line/plane intersections now return null if the intersection is "behind" the start of the line.
+- Beams whose setbacks total more than the length of the beam no longer fail.
+- Plane construction no longer fails when the normal vector and the origin vector are "parallel".
 
 ## 0.3.8
 ### Changed
