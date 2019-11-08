@@ -12,7 +12,7 @@ namespace Elements.Geometry
         /// <summary>
         /// A tolerance for comparison operations.
         /// </summary>
-        public static double Tolerance = 1e-9;
+        public static double Epsilon = 1e-9;
 
         private static Vector3 _xAxis = new Vector3(1, 0, 0);
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
@@ -335,9 +335,9 @@ namespace Elements.Geometry
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
         public bool IsAlmostEqualTo(Vector3 v)
         {
-            if (Math.Abs(this.X - v.X) < Tolerance &&
-                Math.Abs(this.Y - v.Y) < Tolerance &&
-                Math.Abs(this.Z - v.Z) < Tolerance)
+            if (Math.Abs(this.X - v.X) < Epsilon &&
+                Math.Abs(this.Y - v.Y) < Epsilon &&
+                Math.Abs(this.Z - v.Z) < Epsilon)
             {
                 return true;
             }
@@ -437,6 +437,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Is this vector zero length?
+        /// </summary>
+        /// <returns>True if this vector's components are all less than Epsilon.</returns>
+        public bool IsZero()
+        {
+            return Math.Abs(this.X) < Vector3.Epsilon && Math.Abs(this.Y) < Vector3.Epsilon && Math.Abs(this.Z) < Vector3.Epsilon;
+        }
+
+        /// <summary>
         /// Check whether three points are wound CCW in two dimensions.
         /// </summary>
         /// <param name="a">The first point.</param>
@@ -473,7 +482,7 @@ namespace Elements.Geometry
                 var d = points[i];
                 var cd = d - a;
                 var tp = ab.Dot(ac.Cross(cd));
-                if (Math.Abs(tp) > Vector3.Tolerance)
+                if (Math.Abs(tp) > Vector3.Epsilon)
                 {
                     return false;
                 }

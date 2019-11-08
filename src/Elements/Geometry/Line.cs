@@ -165,14 +165,14 @@ namespace Elements.Geometry
         {
             var a = Vector3.CCW(this.Start, this.End, l.Start) * Vector3.CCW(this.Start, this.End, l.End);
             var b = Vector3.CCW(l.Start, l.End, this.Start) * Vector3.CCW(l.Start, l.End, this.End);
-            if (IsAlmostZero(a) || a > Vector3.Tolerance ) return false;
-            if (IsAlmostZero(b) || b > Vector3.Tolerance ) return false;
+            if (IsAlmostZero(a) || a > Vector3.Epsilon ) return false;
+            if (IsAlmostZero(b) || b > Vector3.Epsilon ) return false;
             return true;
         }
 
         private bool IsAlmostZero(double a)
         {
-            return Math.Abs(a) < Vector3.Tolerance;
+            return Math.Abs(a) < Vector3.Epsilon;
         }
 
         /// <summary>

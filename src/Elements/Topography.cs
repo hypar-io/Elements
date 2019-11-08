@@ -229,7 +229,7 @@ namespace Elements
                 var area = t.Area();
                 if (area == 0.0 ||
                     double.IsNaN(area) ||
-                    area < Vector3.Tolerance ||
+                    area < Vector3.Epsilon ||
                     t.Normal.IsNaN())
                 {
                     this._mesh.Triangles.RemoveAt(i);

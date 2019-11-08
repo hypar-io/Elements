@@ -99,9 +99,9 @@ namespace Elements.Validators
             var origin = (Vector3)args[0];
             var normal = (Vector3)args[1];
 
-            if(normal.IsParallelTo(origin))
+            if(normal.IsZero())
             {
-                throw new ArgumentException("The plane could not be constructed. The normal and origin are parallel.");
+                throw new ArgumentException($"The plane could not be constructed. The normal, {normal}, has zero length.");
             }
         }
     }

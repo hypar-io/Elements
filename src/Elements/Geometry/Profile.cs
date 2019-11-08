@@ -143,7 +143,7 @@ namespace Elements.Geometry
             foreach (var v in vertices)
             {
                 var d = v.DistanceTo(p);
-                if (Math.Abs(d) > Vector3.Tolerance)
+                if (Math.Abs(d) > Vector3.Epsilon)
                 {
                     Console.WriteLine($"Out of plane distance: {d}.");
                     return false;
