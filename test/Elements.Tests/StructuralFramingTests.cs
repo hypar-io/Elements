@@ -123,13 +123,26 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ShortBeamWithSetbacksDoesNotThrow()
+        public void Setbacks()
         {
-            this.Name = "ShortBeamWithSetbacks";
-            var line = new Line(Vector3.Origin, new Vector3(1,0,0));
-            // Create setbacks that are the same length as the beam itself.
-            var beam = new Beam(line, Polygon.Rectangle(0.5,0.5), BuiltInMaterials.Steel, 0.5, 0.5);
+            this.Name = "BeamSetbacks";
+            var line = new Line(Vector3.Origin, new Vector3(3,3,0));
+            var mc = new ModelCurve(line, BuiltInMaterials.XAxis);
+            this.Model.AddElement(mc);
+            // Normal setbacks
+            var beam = new Beam(line, this._testProfile, BuiltInMaterials.Steel, 2.0, 2.0);
             this.Model.AddElement(beam);
+
+            var line1 = new Line(new Vector3(2,0,0), new Vector3(5,3,0));
+            var mc1 = new ModelCurve(line1, BuiltInMaterials.XAxis);
+            this.Model.AddElement(mc1);
+
+            var sb = line1.Length()/2;
+            // Setbacks longer in total than the beam.
+            // We are testing to ensure that the beam gets created
+            // without throwing. It will not have setbacks.
+            var beam1 = new Beam(line1, this._testProfile, BuiltInMaterials.Steel, sb, sb);
+            this.Model.AddElement(beam1);
         }
     }
 }

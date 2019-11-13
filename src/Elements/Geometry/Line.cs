@@ -120,14 +120,13 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a collection of transforms which represent frames along this line.
         /// </summary>
-        /// <param name="startSetback">The offset from the start of the line.</param>
-        /// <param name="endSetback">The offset from the end of the line.</param>
+        /// <param name="startSetback">The parameter offset from the start of the line. Between 0 and 1.</param>
+        /// <param name="endSetback">The parameter offset from the end of the line. Between 0 and 1.</param>
         /// <param name="rotation">An optional rotation in degrees around all the frames' z axes.</param>
         /// <returns>A collection of transforms.</returns>
         public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
         {
-            var l = this.Length();
-            return new Transform[] { TransformAt(0.0 + startSetback / l, rotation), TransformAt(1.0 - endSetback / l, rotation) };
+            return new Transform[] { TransformAt(0.0 + startSetback, rotation), TransformAt(1.0 - endSetback, rotation) };
         }
 
         /// <summary>
