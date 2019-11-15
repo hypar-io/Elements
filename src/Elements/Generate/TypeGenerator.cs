@@ -158,6 +158,7 @@ namespace Elements.Generate
                 // MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
                 // MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "netstandard.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ComponentModel.Annotations.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Diagnostics.Tools.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.Serialization.Primitives.dll")),
@@ -188,6 +189,7 @@ namespace Elements.Generate
                     {
                         Console.WriteLine(d.ToString());
                     }
+                    throw new Exception("There was an error creating and assembly for the user defined types. See the console for more information.");
                 }
             }
             return assembly;
