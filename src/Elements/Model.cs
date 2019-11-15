@@ -27,25 +27,31 @@ namespace Elements
 
         /// <summary>
         /// Add an element to the model.
-        /// Each property of the element which has a type of Element
-        /// will be added to the entities collection before the element itself.
-        /// This enables serializers to reference Elements by id.
-        /// Properties which are IList of Element will have each of their items
-        /// added to the entities collection as well.  
+        /// This operation recursively searches the element's properties
+        /// for element sub-properties and adds those elements to the elements
+        /// dictionary before adding the element itself. 
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
-        /// <exception>Thrown when an element 
-        /// with the same Id already exists in the model.</exception>
         public void AddElement(Element element)
         {
-            if (element == null || 
-                this.Elements.ContainsKey(element.Id))
+            if(this.Elements.ContainsKey(element.Id) || element == null)
             {
                 return;
             }
 
-            RecursiveExpandElementData(element);
-            this.Elements.Add(element.Id, element);
+            // Look at all public properties of the element. 
+            // For all properties which inherit from element, add those
+            // to the elements dictionary first. This will ensure that 
+            // those elements will be read out and be available before 
+            // an attempt is made to deserialize the element itself.
+            var subElements = RecursiveGatherSubElements(element);
+            foreach(var e in subElements)
+            {
+                if(!this.Elements.ContainsKey(e.Id))
+                {
+                    this.Elements.Add(e.Id, e);
+                }
+            }
         }
 
         /// <summary>
@@ -106,24 +112,33 @@ namespace Elements
         /// </summary>
         public string ToJson() 
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            // Recursively add elements and sub elements in the correct
+            // order for serialization. We do this here because element properties
+            // may have been null when originally added, and we need to ensure
+            // that they have a value if they've been set since.
+            var exportModel = new Model();
+            foreach(var kvp in this.Elements)
+            {
+                exportModel.AddElement(kvp.Value);
+            }
+            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel);
         }
 
         /// <summary>
         /// Deserialize a model from JSON.
         /// </summary>
-        /// <param name="data">The JSON representing the model.</param>
+        /// <param name="json">The JSON representing the model.</param>
         /// <param name="errors">A collection of deserialization errors.</param>
-        public static Model FromJson(string data, List<string> errors = null)
+        public static Model FromJson(string json, List<string> errors = null)
         {
             errors = errors ?? new List<string>();
-            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(data, new JsonSerializerSettings(){
+            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings(){
                 Error = (sender, args)=>{
                     errors.Add(args.ErrorContext.Error.Message);
                     args.ErrorContext.Handled = true;
                 }
             });
-            JsonInheritanceConverter.Identifiables.Clear();
+            JsonInheritanceConverter.Elements.Clear();
             return model;
         }
 
@@ -146,43 +161,54 @@ namespace Elements
             return IFCModelExtensions.FromIFC(path, idsToConvert);
         }
 
-        private void RecursiveExpandElementData(object element)
+        private static List<Element> RecursiveGatherSubElements(object obj)
         {
-            var props = element.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var elements = new List<Element>();
+
+            if(obj == null)
+            {
+                return elements;
+            }
+
+            var t = obj.GetType();
+
+            // Ignore value types and strings
+            // as they won't have properties that
+            // could be elements.
+            if(!t.IsClass || t == typeof(string))
+            {
+                return elements;
+            }
+
+            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach(var p in props)
             {
-                var pValue = p.GetValue(element);
+                var pValue = p.GetValue(obj,null);
                 if(pValue == null)
                 {
                     continue;
                 }
-                
-                if (typeof(Element).IsAssignableFrom(p.PropertyType))
+
+                var elems = pValue as IList;
+                if (elems != null)
                 {
-                    var ident =(Element)pValue;
-                    if(this.Elements.ContainsKey(ident.Id))
+                    foreach (var item in elems)
                     {
-                        this.Elements[ident.Id] = ident;
-                    }
-                    else
-                    {
-                        this.Elements.Add(ident.Id, ident);
+                        elements.AddRange(RecursiveGatherSubElements(item));
                     }
                 }
-                else if(p.PropertyType.IsGenericType && 
-                        p.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
-                {
-                    var listType = p.PropertyType.GetGenericArguments()[0];
-                    if(typeof(Element).IsAssignableFrom(listType))
-                    {
-                        var list = (IList)pValue;
-                        foreach(Element e in list)
-                        {
-                            AddElement(e);
-                        }
-                    }
+                else {
+                    elements.AddRange(RecursiveGatherSubElements(pValue));
                 }
             }
+
+            var e = obj as Element;
+            if(e != null)
+            {
+                elements.Add(e);
+            }
+
+            return elements;
         }
     }
 }
