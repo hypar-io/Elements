@@ -214,11 +214,9 @@ public Position Origin { get; set; }</code></pre>
   <a id="Elements_Model_AddElement_" data-uid="Elements.Model.AddElement*"></a>
   <h4 id="Elements_Model_AddElement_Elements_Element_" data-uid="Elements.Model.AddElement(Elements.Element)">AddElement(Element)</h4>
   <div class="markdown level1 summary"><p>Add an element to the model.
-Each property of the element which has a type of Element
-will be added to the entities collection before the element itself.
-This enables serializers to reference Elements by id.
-Properties which are IList of Element will have each of their items
-added to the entities collection as well.</p>
+This operation recursively searches the element's properties
+for element sub-properties and adds those elements to the elements
+dictionary before adding the element itself.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -366,7 +364,7 @@ added to the entities collection as well.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Model FromJson(string data, List&lt;string&gt; errors = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Model FromJson(string json, List&lt;string&gt; errors = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -380,7 +378,7 @@ added to the entities collection as well.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">data</span></td>
+        <td><span class="parametername">json</span></td>
         <td><p>The JSON representing the model.</p>
 </td>
       </tr>

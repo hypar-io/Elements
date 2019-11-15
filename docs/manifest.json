@@ -979,7 +979,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Model.html",
-          "hash": "H9puRFEZCdJf2GzWkNRkgA=="
+          "hash": "wV7pC972AO2kCziNgiMpsA=="
         }
       },
       "is_incremental": false,
@@ -1087,7 +1087,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Serialization.JSON.JsonInheritanceConverter.html",
-          "hash": "gHoCaPc+07oPNLy+jpTPyg=="
+          "hash": "zoSGGfmJ3/K2HZFnHVwY9Q=="
         }
       },
       "is_incremental": false,
@@ -2099,13 +2099,6 @@
         "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
-          "skipped_file_count": 0
-        },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
@@ -2123,6 +2116,13 @@
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 101,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }
