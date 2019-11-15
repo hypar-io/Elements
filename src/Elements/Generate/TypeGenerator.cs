@@ -72,12 +72,12 @@ namespace Elements.Generate
         private static string[] _coreTypeNames;
         
         /// <summary>
-        /// Write a user-defined type to a .cs file 
+        /// Generate a user-defined type in a .cs file from a schema.
         /// </summary>
         /// <param name="uri">The uri to the schema which defines the type. This can be a url or a relative file path.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
         /// <param name="isUserElement">Is the type a user-defined element?</param>
-        public static void WriteUserElementTypeFromUri(string uri, string outputBaseDir, bool isUserElement = false)
+        public static void GenerateUserElementTypeFromUri(string uri, string outputBaseDir, bool isUserElement = false)
         {
             var schema = GetSchema(uri);
 
@@ -185,12 +185,11 @@ namespace Elements.Generate
             return assembly;
         }
 
-        private static string[] GetCoreTypeNames()
-        {
-            return _hyparSchemas.Select(u=>u.Split(new[]{"/"}, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToArray();
-        }
-
-        private static void WriteElementTypes(string outputBaseDir)
+        /// <summary>
+        /// Generate the core element types as .cs files to the specified output directory. 
+        /// </summary>
+        /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
+        public static void GenerateElementTypes(string outputBaseDir)
         {
             var typeNames = _hyparSchemas.Select(u=>u.Split(new[]{"/"}, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToList();
 
@@ -203,8 +202,13 @@ namespace Elements.Generate
                     Directory.CreateDirectory(outDir);
                 }
 
-                WriteUserElementTypeFromUri(uri, outDir);
+                GenerateUserElementTypeFromUri(uri, outDir);
             }
+        }
+
+        private static string[] GetCoreTypeNames()
+        {
+            return _hyparSchemas.Select(u=>u.Split(new[]{"/"}, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToArray();
         }
 
         private static string GetFileNameFromTypeName(string typeName)
