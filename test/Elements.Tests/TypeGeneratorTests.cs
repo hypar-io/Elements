@@ -35,7 +35,7 @@ namespace Elements.Tests
 }";
 
         [Fact]
-        public void GenerateCodeFromSchema()
+        public void GeneratesCodeFromSchema()
         {
             var tmpPath = Path.GetTempPath();
             var schemaPath = Path.Combine(tmpPath, "beam.json");
@@ -67,6 +67,14 @@ namespace Elements.Tests
             var t = new Transform();
             var m = BuiltInMaterials.Steel;
             var mullion = Activator.CreateInstance(mullionType, new object[]{profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), Guid.NewGuid(), "Test Mullion" });
+        }
+
+        [Fact]
+        public void ThrowsWithBadSchema()
+        {
+            var uris = new []{"https://raw.githubusercontent.com/hypar-io/UserElementSchemaTest/master/ThisDoesn'tExist.json", 
+                                "https://raw.githubusercontent.com/hypar-io/UserElementSchemaTest/master/Mullion.json"};
+            Assert.Throws<Exception>(()=>TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(uris));
         }
     }
 }

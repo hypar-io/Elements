@@ -110,23 +110,30 @@ namespace Elements.Generate
             var code = new List<string>();
             foreach(var uri in uris)
             {
-                var schema = GetSchema(uri);
-
-                string ns;
-                if(!GetNamespace(schema, out ns))
+                try
                 {
-                    return null;
-                }
+                    var schema = GetSchema(uri);
 
-                var typeName = schema.Title;
-                if(_coreTypeNames == null)
+                    string ns;
+                    if(!GetNamespace(schema, out ns))
+                    {
+                        return null;
+                    }
+
+                    var typeName = schema.Title;
+                    if(_coreTypeNames == null)
+                    {
+                        _coreTypeNames = GetCoreTypeNames();
+                    }
+                    var localExcludes = _coreTypeNames.Where(n=>n != typeName).ToArray();
+
+                    var csharp = WriteTypeFromSchema(schema, typeName, ns,  true, localExcludes);
+                    code.Add(csharp);
+                }
+                catch
                 {
-                    _coreTypeNames = GetCoreTypeNames();
+                    throw new Exception($"There was an error reading the schema at {uri}. Type generation will not continue.");
                 }
-                var localExcludes = _coreTypeNames.Where(n=>n != typeName).ToArray();
-
-                var csharp = WriteTypeFromSchema(schema, typeName, ns,  true, localExcludes);
-                code.Add(csharp);
             }
 
             // Generate the assembly from the various code files.
