@@ -34,7 +34,7 @@ namespace Elements
         /// <param name="element">The element to add to the model.</param>
         public void AddElement(Element element)
         {
-            if(this.Elements.ContainsKey(element.Id) || element == null)
+            if(element == null || this.Elements.ContainsKey(element.Id))
             {
                 return;
             }
@@ -121,6 +121,7 @@ namespace Elements
             {
                 exportModel.AddElement(kvp.Value);
             }
+            exportModel.Origin = this.Origin;
             return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel);
         }
 
