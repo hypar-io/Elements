@@ -23,17 +23,17 @@ namespace Elements.Serialization.JSON
         private Dictionary<string, Type> _typeCache;
 
         [System.ThreadStatic]
-        private static Dictionary<Guid, Element> _identifiables;   // = new Dictionary<Guid, Identifiable>();
+        private static Dictionary<Guid, Element> _elements;
         
-        public static Dictionary<Guid, Element> Identifiables
+        public static Dictionary<Guid, Element> Elements
         {
             get
             {
-                if(_identifiables == null)
+                if(_elements == null)
                 {
-                    _identifiables = new Dictionary<Guid, Element>();
+                    _elements = new Dictionary<Guid, Element>();
                 }
-                return _identifiables;
+                return _elements;
             }
         }
 
@@ -133,10 +133,12 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(Newtonsoft.Json.JsonReader reader, System.Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
+            // The serialized value is an identifier, so the expectation is 
+            // that the element with that id has already been deserialized.
             if(typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1)
             {
                 var id = Guid.Parse(reader.Value.ToString());
-                return Identifiables[id];
+                return Elements[id];
             }
 
             var jObject = serializer.Deserialize<Newtonsoft.Json.Linq.JObject>(reader);
@@ -177,30 +179,32 @@ namespace Elements.Serialization.JSON
                 _isReading = true;
                 var obj = serializer.Deserialize(jObject.CreateReader(), subtype);
 
-                if(obj==null)
-                {
-                    var baseMessage = "This may happen if the type is not recognized in the system.";
-                    if(discriminator != null)
-                    {
-                        throw new Exception($"And object with the discriminator, {discriminator}, could not be deserialized. {baseMessage}");
-                    }
-                    else
-                    {
-                        throw new Exception(baseMessage);
-                    }
-                }
                 // Write the id to the cache so that we can retrieve it next time
                 // instead of de-serializing it again.
                 if(typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
                 {
                     var ident = (Element)obj;
-                    if(!Identifiables.ContainsKey(ident.Id))
+                    if(!Elements.ContainsKey(ident.Id))
                     {
-                        Identifiables.Add(ident.Id, ident);
+                        Elements.Add(ident.Id, ident);
                     }
                 }
 
                 return obj;
+            }
+            catch(Exception ex)
+            {
+                var baseMessage = "This may happen if the type is not recognized in the system.";
+                var moreInfoMessage = "See the inner exception for more details.";
+
+                if(discriminator != null)
+                {
+                    throw new Exception($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage} {moreInfoMessage}", ex);
+                }
+                else
+                {
+                    throw new Exception($"{baseMessage} {moreInfoMessage}", ex);
+                }
             }
             finally
             {
