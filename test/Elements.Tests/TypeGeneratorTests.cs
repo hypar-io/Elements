@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Elements.Generate;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
@@ -10,6 +12,39 @@ namespace Elements.Tests
 {
     public class TypeGeneratorTests
     {
+        const string schema = @"{
+    ""$id"": ""https://hypar.io/Schemas/Beam.json"",
+    ""$schema"": ""http://json-schema.org/draft-07/schema#"",
+    ""description"": ""A beam."",
+    ""title"": ""Beam"",
+    ""x-namespace"": ""Elements"",
+    ""type"": [""object"", ""null""],
+    ""allOf"": [{""$ref"": ""https://hypar.io/Schemas/GeometricElement.json""}],
+    ""required"": [""CenterLine"", ""Profile""],
+    ""properties"": {
+        ""CenterLine"": {
+            ""description"": ""The center line of the beam."",
+            ""$ref"": ""https://hypar.io/Schemas/Geometry/Line.json""
+        },
+        ""Profile"": {
+            ""description"": ""The beam's cross section."",
+            ""$ref"": ""https://hypar.io/Schemas/Geometry/Profile.json""
+        }
+    },
+    ""additionalProperties"": false
+}";
+
+        [Fact]
+        public void GenerateCodeFromSchema()
+        {
+            var tmpPath = Path.GetTempPath();
+            var schemaPath = Path.Combine(tmpPath, "beam.json");
+            File.WriteAllText(schemaPath, schema);
+            var relPath = Path.GetRelativePath(Assembly.GetExecutingAssembly().Location, schemaPath);
+            TypeGenerator.GenerateUserElementTypeFromUri(relPath, tmpPath, true);
+            var code = File.ReadAllText(Path.Combine(tmpPath, "beam.g.cs"));
+        }
+        
         [Fact]
         public void GeneratesInMemoryAssembly()
         {
