@@ -101,12 +101,12 @@ namespace Elements.Generate
         /// <summary>
         /// Generate an in-memory assembly containing all the types generated from the supplied uris.
         /// </summary>
-        /// <param name="uris">A collection of uris to JSON schema.static These can be public urls or relative file paths.</param>
+        /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
         /// <returns>An assembly containing the generated types or null if no Assembly could be generated.</returns>
         public static Assembly GenerateInMemoryAssemblyFromUrisAndLoad(string[] uris)
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
-            
+
             var code = new List<string>();
             foreach(var uri in uris)
             {
