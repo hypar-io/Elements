@@ -4,6 +4,10 @@ using Xunit;
 using Elements.Geometry;
 using Elements.Serialization.glTF;
 using System.Collections.Generic;
+using Elements.Generate;
+using Newtonsoft.Json;
+using Elements.Geometry.Solids;
+using System.Linq;
 
 namespace Elements.Tests
 {
@@ -61,6 +65,65 @@ namespace Elements.Tests
             var model = Model.FromJson(modelStr, errors);
             Assert.Equal(2, model.Elements.Count);
             Assert.Equal(2, errors.Count);
+        }
+
+        /// <summary>
+        /// Test whether two models, containing user defined types, can be 
+        /// deserialized and merged into one model.
+        /// </summary>
+        [Fact]
+        public void MergesModelsWithUserDefinedTypes()
+        {
+            var schemas = new[]{
+                "../../../models/Merge/Envelope.json",
+                "../../../models/Merge/FacadePanel.json",
+                "../../../models/Merge/Level.json"
+            };
+
+            var asm = TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(schemas);
+            var facadePanelType = asm.GetType("Elements.FacadePanel");
+            Assert.NotNull(facadePanelType);
+            var envelopeType = asm.GetType("Elements.Envelope");
+            Assert.NotNull(envelopeType);
+            var model1 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/facade.json"));
+            // var model2 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/structure.json"));
+        }
+
+        [Fact]
+        public void ElementWithDeeplyNestedElementSerializesCorrectly()
+        {
+            var p = new Profile(Polygon.Rectangle(1,1));
+            // Create a mass overiding its representation.
+            // This will introduce a profile into the serialization for the
+            // representation. This should be serialized correctly.
+            var mass1 = new Mass(p,
+                                1,
+                                BuiltInMaterials.Mass,
+                                new Transform(),
+                                new Representation(new List<SolidOperation> { new Extrude(p, 2, Vector3.ZAxis, 0, false) }));
+            // A second mass that uses a separate embedded profile.
+            // This is really a mistake because the user wants the profile
+            // that they supply in the constructor to be used, but the profile
+            // supplied in the representation will override it.
+            var mass2 = new Mass(p,
+                                1,
+                                BuiltInMaterials.Mass,
+                                new Transform(),
+                                new Representation(new List<SolidOperation> { new Extrude(new Profile(Polygon.Rectangle(1,1)), 2, Vector3.ZAxis, 0, false) }));
+            var model = new Model();
+            model.AddElement(mass1);
+            model.AddElement(mass2);
+            Assert.Equal(2, model.AllElementsOfType<Profile>().Count());
+            Assert.Equal(2, model.AllElementsOfType<Mass>().Count());
+            Assert.Equal(1, model.AllElementsOfType<Material>().Count());
+
+            var json = model.ToJson();
+            File.WriteAllText("./deepSerialize.json", json);
+
+            var newModel = Model.FromJson(json);
+            Assert.Equal(2, newModel.AllElementsOfType<Profile>().Count());
+            Assert.Equal(2, newModel.AllElementsOfType<Mass>().Count());
+            Assert.Equal(1, newModel.AllElementsOfType<Material>().Count());
         }
   
         private Model QuadPanelModel()
