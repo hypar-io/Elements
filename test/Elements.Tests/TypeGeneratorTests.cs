@@ -15,13 +15,15 @@ namespace Elements.Tests
     public sealed class IgnoreOnTravisFact : FactAttribute
     {
         public IgnoreOnTravisFact() {
-            if(IsTravis()) {
+            if(IsTravis()) 
+            {
                 Skip = "Ignore on Travis.";
             }
         }
         
         private static bool IsTravis()
-            => Environment.GetEnvironmentVariable("TRAVIS") != null;
+        {
+            return Environment.GetEnvironmentVariable("TRAVIS") != null;
         }
 
     }
