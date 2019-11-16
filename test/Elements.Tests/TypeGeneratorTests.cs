@@ -2,14 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Elements;
 using Elements.Generate;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
+using Elements.Tests;
 using Xunit;
 
 namespace Elements.Tests
 {
+    public sealed class IgnoreOnTravisFact : FactAttribute
+    {
+        public IgnoreOnTravisFact() {
+            if(IsTravis()) {
+                Skip = "Ignore on Travis.";
+            }
+        }
+        
+        private static bool IsTravis()
+            => Environment.GetEnvironmentVariable("TRAVIS") != null;
+        }
+
+    }
+
     public class TypeGeneratorTests
     {
         const string schema = @"{
@@ -34,7 +50,7 @@ namespace Elements.Tests
     ""additionalProperties"": false
 }";
 
-        [Fact]
+        [IgnoreOnTravisFact]
         public void GeneratesCodeFromSchema()
         {
             var tmpPath = Path.GetTempPath();
@@ -45,7 +61,7 @@ namespace Elements.Tests
             var code = File.ReadAllText(Path.Combine(tmpPath, "beam.g.cs"));
         }
         
-        [Fact]
+        [IgnoreOnTravisFact]
         public void GeneratesInMemoryAssembly()
         {
             var uris = new []{"https://raw.githubusercontent.com/hypar-io/UserElementSchemaTest/master/FacadeAnchor.json", 
@@ -69,7 +85,7 @@ namespace Elements.Tests
             var mullion = Activator.CreateInstance(mullionType, new object[]{profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), Guid.NewGuid(), "Test Mullion" });
         }
 
-        [Fact]
+        [IgnoreOnTravisFact]
         public void ThrowsWithBadSchema()
         {
             var uris = new []{"https://raw.githubusercontent.com/hypar-io/UserElementSchemaTest/master/ThisDoesn'tExist.json", 
