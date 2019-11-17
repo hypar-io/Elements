@@ -86,7 +86,15 @@ namespace Elements.Tests
             var envelopeType = asm.GetType("Elements.Envelope");
             Assert.NotNull(envelopeType);
             var model1 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/facade.json"));
-            // var model2 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/structure.json"));
+            var count1 = model1.Elements.Count;
+
+            var model2 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/structure.json"));
+            var count2 = model2.Elements.Count;
+
+            var merge = new Model();
+            merge.AddElements(model1.Elements.Values);
+            merge.AddElements(model2.Elements.Values);
+            merge.ToGlTF("models/Merge.glb");
         }
 
         [Fact]
