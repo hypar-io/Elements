@@ -8,7 +8,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An arc defined as a CCW rotation from the +X axis around a center between a start angle and an end angle.
     /// </summary>
-    public partial class Arc : ICurve
+    public partial class Arc : ICurve, IEquatable<Arc>
     {
         /// <summary>
         /// Calculate the length of the arc.
@@ -149,6 +149,20 @@ namespace Elements.Geometry
                 vertices[i] = PointAt(t);
             }
             return vertices;
+        }
+
+        /// <summary>
+        /// Is this arc equal to the provided arc?
+        /// </summary>
+        /// <param name="other">The arc to test.</param>
+        /// <returns>Returns true if the two arcs are equal, otherwise false.</returns>
+        public bool Equals(Arc other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+            return this.Center.Equals(other.Center) && this.StartAngle == other.StartAngle && this.EndAngle == other.EndAngle;
         }
     }
 }

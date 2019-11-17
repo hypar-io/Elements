@@ -7,7 +7,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A linear curve between two points.
     /// </summary>
-    public partial class Line : Curve
+    public partial class Line : Curve, IEquatable<Line>
     {
         /// <summary>
         /// Calculate the length of the line.
@@ -94,18 +94,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this line equal the provided line?
+        /// Is this line equal to the provided line?
         /// </summary>
-        /// <param name="obj">The target line.</param>
+        /// <param name="other">The target line.</param>
         /// <returns>True if the start and end points of the lines are equal, otherwise false.</returns>
-        public override bool Equals(object obj)
+        public bool Equals(Line other)
         {
-            var line = obj as Line;
-            if (line == null)
+            if (other == null)
             {
                 return false;
             }
-            return this.Start.Equals(line.Start) && this.End.Equals(line.End);
+            return this.Start.Equals(other.Start) && this.End.Equals(other.End);
         }
 
         /// <summary>

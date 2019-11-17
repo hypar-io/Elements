@@ -1,9 +1,11 @@
+using System;
+
 namespace Elements.Geometry
 {
     /// <summary>
     /// An infinite ray starting at origin and pointing towards direction.
     /// </summary>
-    public class Ray
+    public class Ray: IEquatable<Ray>
     {
         /// <summary>
         /// The origin of the ray.
@@ -100,6 +102,20 @@ namespace Elements.Geometry
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Is this ray equal to the provided ray?
+        /// </summary>
+        /// <param name="other">The ray to test.</param>
+        /// <returns>Returns true if the two rays are equal, otherwise false.</returns>
+        public bool Equals(Ray other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+            return this.Origin.Equals(other.Origin) && this.Direction.Equals(other.Direction);
         }
     }
 }

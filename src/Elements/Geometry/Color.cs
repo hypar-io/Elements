@@ -5,7 +5,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An RGBA color.
     /// </summary>
-    public partial class Color
+    public partial class Color: IEquatable<Color>
     {
         /// <summary>
         /// Construct a default color.
@@ -50,6 +50,20 @@ namespace Elements.Geometry
         public override int GetHashCode()
         {
             return new {this.Red, this.Green, this.Blue, this.Alpha}.GetHashCode();
+        }
+
+        /// <summary>
+        /// Is this color equal to the provided color?
+        /// </summary>
+        /// <param name="other">The color to test.</param>
+        /// <returns>Returns true if the two colors are equal, otherwise false.</returns>
+        public bool Equals(Color other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+            return this.Red == other.Red && this.Blue == other.Blue && this.Green == other.Green && this.Alpha == other.Alpha;
         }
     }
 }
