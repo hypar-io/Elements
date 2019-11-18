@@ -70,11 +70,13 @@ namespace Elements
         /// Add a collection of elements to the model.
         /// </summary>
         /// <param name="elements">The elements to add to the model.</param>
-        public void AddElements(IEnumerable<Element> elements)
+        /// <param name="gatherSubElements">Should sub-elements in properties be 
+        /// added to the model's elements collection?</param>
+        public void AddElements(IEnumerable<Element> elements, bool gatherSubElements = true)
         {
             foreach (var e in elements)
             {
-                AddElement(e);
+                AddElement(e, gatherSubElements);
             }
         }
 
@@ -194,7 +196,7 @@ namespace Elements
             }
             t.GetCustomAttribute(typeof(JsonIgnoreAttribute));
             var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                         .Where(p=>p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) != null);
+                         .Where(p=>p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null);
             foreach(var p in props)
             {
                 var pValue = p.GetValue(obj,null);
