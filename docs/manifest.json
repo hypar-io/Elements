@@ -151,7 +151,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "2LB3jhTBVv82mXx72lDFgA=="
+          "hash": "5XJ39TQZzsOp5ohUbGbcew=="
         }
       },
       "is_incremental": false,
@@ -248,6 +248,30 @@
         ".html": {
           "relative_path": "api/Elements.Frame.html",
           "hash": "nXQP84ErcVZDsp83szCA1A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Generate.TypeGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Generate.TypeGenerator.html",
+          "hash": "YvhbvvgiubyDC3fvQQnzUA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Generate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Generate.html",
+          "hash": "u9t+sFmo6P7Ojojj2fapCw=="
         }
       },
       "is_incremental": false,
@@ -955,7 +979,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Model.html",
-          "hash": "H9puRFEZCdJf2GzWkNRkgA=="
+          "hash": "wV7pC972AO2kCziNgiMpsA=="
         }
       },
       "is_incremental": false,
@@ -1063,7 +1087,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Serialization.JSON.JsonInheritanceConverter.html",
-          "hash": "gHoCaPc+07oPNLy+jpTPyg=="
+          "hash": "zoSGGfmJ3/K2HZFnHVwY9Q=="
         }
       },
       "is_incremental": false,
@@ -2091,7 +2115,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 99,
+          "total_file_count": 101,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

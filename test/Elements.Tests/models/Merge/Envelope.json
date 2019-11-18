@@ -1,0 +1,39 @@
+{
+    "$id": "https://hypar.io/BuildingBlocks/schemas/envelope.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "Represents one part of a building enclosure.",
+    "title": "Envelope",
+    "x-namespace": "Elements",
+    "type": ["object", "null"],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/GeometricElement.json"}],
+    "required": ["discriminator"],
+    "discriminator": "discriminator",
+  "properties": {
+    "discriminator": {
+      "type": "string"
+    },
+    "Profile": {
+      "description": "The id of the profile to extrude.",
+      "$ref": "https://hypar.io/Schemas/Geometry/Profile.json"
+    },
+    "Elevation": {
+      "description": "The elevation of the envelope.",
+      "type": "number",
+      "minimum": 0
+    },
+    "Height": {
+      "description": "The height of the envelope.",
+      "type": "number",
+      "minimum": 0
+    },
+    "Direction": {
+      "description": "The direction in which to extrude.",
+      "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
+    },
+    "Rotation": {
+      "description": "The rotation in degrees of the envelope.",
+      "type": "number"
+    }
+  },
+    "additionalProperties": false
+}

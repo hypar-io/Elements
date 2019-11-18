@@ -21,7 +21,7 @@
 ### Added
 - `ModelCurve` - Draw curves in 3D.
 - `ModelPoints` - Draw collections of points in 3D.
-- `Elements.Generate` project.
+- `Elements.Generate.TypeGenerator` class.
 - `/Schemas` directory.
 - Optional `rotation` on `StructuralFraming` constructors.
 - `Model` now has Elements property which is `IDictionary<Guid,Element>`.

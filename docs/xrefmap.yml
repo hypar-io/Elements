@@ -523,6 +523,60 @@ references:
   isSpec: "True"
   fullName: Elements.Frame.UpdateRepresentations
   nameWithType: Frame.UpdateRepresentations
+- uid: Elements.Generate
+  name: Elements.Generate
+  href: api/Elements.Generate.html
+  commentId: N:Elements.Generate
+  fullName: Elements.Generate
+  nameWithType: Elements.Generate
+- uid: Elements.Generate.TypeGenerator
+  name: TypeGenerator
+  href: api/Elements.Generate.TypeGenerator.html
+  commentId: T:Elements.Generate.TypeGenerator
+  fullName: Elements.Generate.TypeGenerator
+  nameWithType: TypeGenerator
+- uid: Elements.Generate.TypeGenerator.GenerateElementTypes(System.String)
+  name: GenerateElementTypes(String)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypes_System_String_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateElementTypes(System.String)
+  fullName: Elements.Generate.TypeGenerator.GenerateElementTypes(System.String)
+  nameWithType: TypeGenerator.GenerateElementTypes(String)
+- uid: Elements.Generate.TypeGenerator.GenerateElementTypes*
+  name: GenerateElementTypes
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypes_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateElementTypes
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GenerateElementTypes
+  nameWithType: TypeGenerator.GenerateElementTypes
+- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(System.String[])
+  name: GenerateInMemoryAssemblyFromUrisAndLoad(String[])
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoad_System_String___
+  commentId: M:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(System.String[])
+  name.vb: GenerateInMemoryAssemblyFromUrisAndLoad(String())
+  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(System.String[])
+  fullName.vb: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(System.String())
+  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(String[])
+  nameWithType.vb: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(String())
+- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad*
+  name: GenerateInMemoryAssemblyFromUrisAndLoad
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoad_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad
+  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad
+- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri(System.String,System.String,System.Boolean)
+  name: GenerateUserElementTypeFromUri(String, String, Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUri_System_String_System_String_System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri(System.String,System.String,System.Boolean)
+  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri(System.String, System.String, System.Boolean)
+  nameWithType: TypeGenerator.GenerateUserElementTypeFromUri(String, String, Boolean)
+- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri*
+  name: GenerateUserElementTypeFromUri
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUri_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri
+  nameWithType: TypeGenerator.GenerateUserElementTypeFromUri
 - uid: Elements.GeoJSON
   name: Elements.GeoJSON
   href: api/Elements.GeoJSON.html
@@ -6685,19 +6739,19 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.CanWrite
   nameWithType: JsonInheritanceConverter.CanWrite
-- uid: Elements.Serialization.JSON.JsonInheritanceConverter.Identifiables
-  name: Identifiables
-  href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_Identifiables
-  commentId: P:Elements.Serialization.JSON.JsonInheritanceConverter.Identifiables
-  fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Identifiables
-  nameWithType: JsonInheritanceConverter.Identifiables
-- uid: Elements.Serialization.JSON.JsonInheritanceConverter.Identifiables*
-  name: Identifiables
-  href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_Identifiables_
-  commentId: Overload:Elements.Serialization.JSON.JsonInheritanceConverter.Identifiables
+- uid: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
+  name: Elements
+  href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_Elements
+  commentId: P:Elements.Serialization.JSON.JsonInheritanceConverter.Elements
+  fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
+  nameWithType: JsonInheritanceConverter.Elements
+- uid: Elements.Serialization.JSON.JsonInheritanceConverter.Elements*
+  name: Elements
+  href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_Elements_
+  commentId: Overload:Elements.Serialization.JSON.JsonInheritanceConverter.Elements
   isSpec: "True"
-  fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Identifiables
-  nameWithType: JsonInheritanceConverter.Identifiables
+  fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
+  nameWithType: JsonInheritanceConverter.Elements
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   name: ReadJson(JsonReader, Type, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
