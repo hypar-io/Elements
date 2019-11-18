@@ -55,11 +55,15 @@ namespace Elements
 
             this.Profile = profile;
             this.Height = height;
-            this.Material = material ?? BuiltInMaterials.Concrete;
-            if(this.Representation.SolidOperations.Count == 0)
-            {
-                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
-            }
+        }
+
+        /// <summary>
+        /// Update the representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            this.Representation.SolidOperations.Clear();
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ZeroHeight()
+        public void ZeroHeightThrows()
         {
             var a = Vector3.Origin;
             var b = new Vector3(0.0, 5.0);
@@ -35,7 +35,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ZeroThickness()
+        public void ZeroThicknessThrows()
         {
             var a = Vector3.Origin;
             var b = new Vector3(0.0, 5.0);
@@ -44,7 +44,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void NonPlanarCenterLine()
+        public void NonPlanarCenterLineThrows()
         {
             var a = Vector3.Origin;
             var b = new Vector3(0.0, 5.0, 5.0);

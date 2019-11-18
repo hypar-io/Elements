@@ -60,13 +60,11 @@ namespace Elements
                                                             id != default(Guid) ? id : Guid.NewGuid(),
                                                             name)
         {
-            SetProperties(curve, profile, material, transform, startSetback, endSetback, rotation);
+            SetProperties(curve, profile, startSetback, endSetback, rotation);
         }
 
         private void SetProperties(Curve curve,
                                    Profile profile,
-                                   Material material,
-                                   Transform transform,
                                    double startSetback,
                                    double endSetback,
                                    double rotation)
@@ -80,7 +78,6 @@ namespace Elements
             this.StartSetback = startSetback;
             this.EndSetback = endSetback;
             this.Profile = profile;
-            this.Material = material != null ? material : BuiltInMaterials.Steel;
             this._rotation = rotation;
         }
 

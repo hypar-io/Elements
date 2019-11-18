@@ -16,7 +16,7 @@ namespace Elements.Tests
                 new Opening(1, 1, 1, 1),
                 new Opening(3, 3, 1, 3),
             };
-            var floor = new Floor(p, 0.1, 0.5, null, new Material("green", Colors.Green, 0.0f, 0.0f));
+            var floor = new Floor(p, 0.1, new Transform(0,0,0.5), new Material("green", Colors.Green, 0.0f, 0.0f));
 
             this.Model.AddElement(floor);
             this.Model.AddElements(openings);

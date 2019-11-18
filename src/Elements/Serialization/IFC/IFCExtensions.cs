@@ -142,12 +142,10 @@ namespace Elements.Serialization.IFC
 
             var outline = (Polygon)solid.SweptArea.ToCurve();
             var solidTransform = solid.Position.ToTransform();
-            // Console.WriteLine($"Solid transform:\n{solidTransform.ToString()}\n");
 
             solidTransform.Concatenate(transform);
-            var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth, 0, 
+            var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth, 
                 solidTransform, BuiltInMaterials.Concrete, null, IfcGuid.FromIfcGUID(slab.GlobalId));
-            // Console.WriteLine($"Elements Floor Transform:\n{floor.Transform}\n");
 
             floor.Openings.AddRange(openings.Select(o=>o.ToOpening()));
 
