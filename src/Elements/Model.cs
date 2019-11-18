@@ -32,24 +32,36 @@ namespace Elements
         /// dictionary before adding the element itself. 
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
-        public void AddElement(Element element)
+        /// <param name="gatherSubElements">Should sub-elements in properties be 
+        /// added to the model's elements collection?</param>
+        public void AddElement(Element element, bool gatherSubElements = true)
         {
             if(element == null || this.Elements.ContainsKey(element.Id))
             {
                 return;
             }
 
-            // Look at all public properties of the element. 
-            // For all properties which inherit from element, add those
-            // to the elements dictionary first. This will ensure that 
-            // those elements will be read out and be available before 
-            // an attempt is made to deserialize the element itself.
-            var subElements = RecursiveGatherSubElements(element);
-            foreach(var e in subElements)
+            if(gatherSubElements)
             {
-                if(!this.Elements.ContainsKey(e.Id))
+                // Look at all public properties of the element. 
+                // For all properties which inherit from element, add those
+                // to the elements dictionary first. This will ensure that 
+                // those elements will be read out and be available before 
+                // an attempt is made to deserialize the element itself.
+                var subElements = RecursiveGatherSubElements(element);
+                foreach(var e in subElements)
                 {
-                    this.Elements.Add(e.Id, e);
+                    if(!this.Elements.ContainsKey(e.Id))
+                    {
+                        this.Elements.Add(e.Id, e);
+                    }
+                }
+            }
+            else
+            {
+                if(!this.Elements.ContainsKey(element.Id))
+                {
+                    this.Elements.Add(element.Id, element);
                 }
             }
         }
@@ -180,8 +192,9 @@ namespace Elements
             {
                 return elements;
             }
-
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            t.GetCustomAttribute(typeof(JsonIgnoreAttribute));
+            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                         .Where(p=>p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) != null);
             foreach(var p in props)
             {
                 var pValue = p.GetValue(obj,null);
