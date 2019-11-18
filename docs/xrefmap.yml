@@ -6145,12 +6145,12 @@ references:
   isSpec: "True"
   fullName: Elements.Model.Model
   nameWithType: Model.Model
-- uid: Elements.Model.AddElement(Elements.Element)
-  name: AddElement(Element)
-  href: api/Elements.Model.html#Elements_Model_AddElement_Elements_Element_
-  commentId: M:Elements.Model.AddElement(Elements.Element)
-  fullName: Elements.Model.AddElement(Elements.Element)
-  nameWithType: Model.AddElement(Element)
+- uid: Elements.Model.AddElement(Elements.Element,System.Boolean)
+  name: AddElement(Element, Boolean)
+  href: api/Elements.Model.html#Elements_Model_AddElement_Elements_Element_System_Boolean_
+  commentId: M:Elements.Model.AddElement(Elements.Element,System.Boolean)
+  fullName: Elements.Model.AddElement(Elements.Element, System.Boolean)
+  nameWithType: Model.AddElement(Element, Boolean)
 - uid: Elements.Model.AddElement*
   name: AddElement
   href: api/Elements.Model.html#Elements_Model_AddElement_
@@ -6158,15 +6158,15 @@ references:
   isSpec: "True"
   fullName: Elements.Model.AddElement
   nameWithType: Model.AddElement
-- uid: Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element})
-  name: AddElements(IEnumerable<Element>)
-  href: api/Elements.Model.html#Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__
-  commentId: M:Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element})
-  name.vb: AddElements(IEnumerable(Of Element))
-  fullName: Elements.Model.AddElements(System.Collections.Generic.IEnumerable<Elements.Element>)
-  fullName.vb: Elements.Model.AddElements(System.Collections.Generic.IEnumerable(Of Elements.Element))
-  nameWithType: Model.AddElements(IEnumerable<Element>)
-  nameWithType.vb: Model.AddElements(IEnumerable(Of Element))
+- uid: Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element},System.Boolean)
+  name: AddElements(IEnumerable<Element>, Boolean)
+  href: api/Elements.Model.html#Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__System_Boolean_
+  commentId: M:Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element},System.Boolean)
+  name.vb: AddElements(IEnumerable(Of Element), Boolean)
+  fullName: Elements.Model.AddElements(System.Collections.Generic.IEnumerable<Elements.Element>, System.Boolean)
+  fullName.vb: Elements.Model.AddElements(System.Collections.Generic.IEnumerable(Of Elements.Element), System.Boolean)
+  nameWithType: Model.AddElements(IEnumerable<Element>, Boolean)
+  nameWithType.vb: Model.AddElements(IEnumerable(Of Element), Boolean)
 - uid: Elements.Model.AddElements*
   name: AddElements
   href: api/Elements.Model.html#Elements_Model_AddElements_
