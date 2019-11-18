@@ -17,6 +17,7 @@
 - `SolidConverter` is now marked `internal`.
 - `Elements.Serialization.IFC.ModelExtensions` is now marked `internal`.
 - All core type property setters are now `public`.
+- The `elevation` parameter has been removed from `Floor`. Floor elevation is now set by passing a `Transform` with a Z coordinate.
 
 ### Added
 - `ModelCurve` - Draw curves in 3D.
@@ -47,6 +48,7 @@
 - Line/plane intersections now return null if the intersection is "behind" the start of the line.
 - Beams whose setbacks total more than the length of the beam no longer fail.
 - Plane construction no longer fails when the normal vector and the origin vector are "parallel".
+- Fixed #209.
 
 ## 0.3.8
 ### Changed
