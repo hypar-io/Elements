@@ -5,7 +5,7 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
 # Words of Warning
-- The Elements library is currently undergoing rapid development and breaking API changes. Until we achieve a 1.0 release, we are playing a little fast and loose with semantic versioning. Updates will be written to the `CHANGELOG`.
+- The Elements library is currently undergoing rapid development and breaking API changes. Until we achieve a 1.0 release, we are playing a little fast and loose with semantic versioning. Updates will be written to the [`CHANGELOG`](CHANGELOG.md).
 
 ## Getting Started
 In a .net core project:
@@ -94,4 +94,4 @@ docfx -f --serve
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp)
 
 ## Updating the Changelog
-We use `CHANGELOG.md` to provide a list of changes to Elements. The easiest way to compile this log for new releases is to look at the commits that occurred between changes. This can be done as follows: `git log --pretty=oneline v0.3.6...v0.3.7`, where the tags are changed appropriately.
+We use [`CHANGELOG.md`](CHANGELOG.md) to provide a list of changes to Elements. The easiest way to compile this log for new releases is to look at the commits that occurred between changes. This can be done as follows: `git log --pretty=oneline v0.3.6...v0.3.7`, where the tags are changed appropriately.
