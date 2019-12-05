@@ -37,26 +37,35 @@ namespace Elements.Serialization.glTF
 
         /// <summary>
         /// Save a model to gltf.
+        /// If there is no geometry, an empty GLTF will still be produced.
         /// </summary>
         /// <param name="model">The model to serialize.</param>
         /// <param name="path">The output path.</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true)
         {
-            if(model.Elements.Count == 0)
+            if(model.Elements.Count > 0)
             {
-                File.WriteAllText(path, emptyGltf);
-                return;
+                if(useBinarySerialization)
+                {
+                    if (SaveGlb(model, path))
+                    {
+                        return;
+                    }
+                    // Else fall through to produce an empty GLTF.
+                }
+                else
+                {
+                    if (SaveGltf(model, path))
+                    {
+                        return;
+                    }
+                    // Else fall through to produce an empty GLTF.
+                }
             }
 
-            if(useBinarySerialization)
-            {
-                SaveGlb(model, path);
-            }
-            else
-            {
-                SaveGltf(model, path);
-            }
+            // There are no elements that produced geometry. Write an empty GLTF.
+            File.WriteAllText(path, emptyGltf);
         }
 
         /// <summary>
@@ -68,6 +77,10 @@ namespace Elements.Serialization.glTF
             var buffer = new List<byte>();
             var tmp = Path.GetTempFileName();
             var gltf = InitializeGlTF(model, buffer);
+            if (gltf == null)
+            {
+                return "";
+            }
             gltf.SaveBinaryModel(buffer.ToArray(), tmp);
             var bytes = File.ReadAllBytes(tmp);
             return Convert.ToBase64String(bytes);
@@ -532,18 +545,29 @@ namespace Elements.Serialization.glTF
             gltf.SaveBinaryModel(buffer.ToArray(), path);
         }
 
-        private static void SaveGlb(Model model, string path)
+        /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
+        private static bool SaveGlb(Model model, string path)
         {
             var buffer = new List<byte>();
             var gltf = InitializeGlTF(model, buffer);
+            if (gltf == null)
+            {
+                return false;
+            }
+
             gltf.SaveBinaryModel(buffer.ToArray(), path);
+            return true; 
         }
 
-        private static void SaveGltf(Model model, string path)
+        /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
+        private static bool SaveGltf(Model model, string path)
         {
             var buffer = new List<byte>();
 
             var gltf = InitializeGlTF(model, buffer);
+            if (gltf == null) {
+                return false;
+            }
 
             var uri = Path.GetFileNameWithoutExtension(path) + ".bin";
             gltf.Buffers[0].Uri = uri;
@@ -560,6 +584,7 @@ namespace Elements.Serialization.glTF
                 fs.Write(buffer.ToArray(), 0, buffer.Count());
             }
             gltf.SaveModel(path);
+            return true;
         }
 
         private static Gltf InitializeGlTF(Model model, List<byte> buffer)
@@ -602,6 +627,9 @@ namespace Elements.Serialization.glTF
             foreach(var e in elements)
             {
                 GetRenderDataForElement(e, gltf, materials, buffer, bufferViews, accessors);
+            }
+            if (buffer.Count() == 0) {
+                return null;
             }
 
             var buff = new glTFLoader.Schema.Buffer();

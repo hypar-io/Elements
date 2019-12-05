@@ -19,7 +19,8 @@ namespace Elements.Geometry
         /// <summary>
         /// The triangle's normal.
         /// </summary>
-        public Vector3 Normal { get; }
+        /// <value></value>
+        public Vector3 Normal {get;}
 
         /// <summary>
         /// Create a triangle.
@@ -31,13 +32,14 @@ namespace Elements.Geometry
         {
             this.Vertices = new[] { a, b, c };
 
-            // Bend the normals for the associated vertices.
-            var p1 = new Plane(a.Position, b.Position, c.Position);
-            a.Normal = ((a.Normal + p1.Normal) / 2.0).Normalized();
-            b.Normal = ((b.Normal + p1.Normal) / 2.0).Normalized();
-            c.Normal = ((c.Normal + p1.Normal) / 2.0).Normalized();
+            var ab = (b.Position-a.Position).Normalized();
+            var bc = (c.Position-a.Position).Normalized();
+            this.Normal = ab.Cross(bc).Normalized();
 
-            this.Normal = p1.Normal;
+            // Bend the normals for the associated vertices.
+            a.Normal = ((a.Normal + this.Normal) / 2.0).Normalized();
+            b.Normal = ((b.Normal + this.Normal) / 2.0).Normalized();
+            c.Normal = ((c.Normal + this.Normal) / 2.0).Normalized();
         }
 
         [JsonConstructor]
@@ -48,14 +50,14 @@ namespace Elements.Geometry
             var a = this.Vertices[0];
             var b = this.Vertices[1];
             var c = this.Vertices[2];
+            var ab = (b.Position-a.Position).Normalized();
+            var bc = (c.Position-a.Position).Normalized();
+            this.Normal = ab.Cross(bc).Normalized();
 
             // Bend the normals for the associated vertices.
-            var p1 = new Plane(a.Position, b.Position, c.Position);
-            a.Normal = ((a.Normal + p1.Normal) / 2.0).Normalized();
-            b.Normal = ((b.Normal + p1.Normal) / 2.0).Normalized();
-            c.Normal = ((c.Normal + p1.Normal) / 2.0).Normalized();
-
-            this.Normal = p1.Normal;
+            a.Normal = ((a.Normal + this.Normal) / 2.0).Normalized();
+            b.Normal = ((b.Normal + this.Normal) / 2.0).Normalized();
+            c.Normal = ((c.Normal + this.Normal) / 2.0).Normalized();
         }
 
         /// <summary>

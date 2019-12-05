@@ -212,7 +212,7 @@ public Position Origin { get; set; }</code></pre>
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Model_AddElement_" data-uid="Elements.Model.AddElement*"></a>
-  <h4 id="Elements_Model_AddElement_Elements_Element_" data-uid="Elements.Model.AddElement(Elements.Element)">AddElement(Element)</h4>
+  <h4 id="Elements_Model_AddElement_Elements_Element_System_Boolean_" data-uid="Elements.Model.AddElement(Elements.Element,System.Boolean)">AddElement(Element, Boolean)</h4>
   <div class="markdown level1 summary"><p>Add an element to the model.
 This operation recursively searches the element's properties
 for element sub-properties and adds those elements to the elements
@@ -221,7 +221,7 @@ dictionary before adding the element itself.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddElement(Element element)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddElement(Element element, bool gatherSubElements = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -239,16 +239,23 @@ dictionary before adding the element itself.</p>
         <td><p>The element to add to the model.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">gatherSubElements</span></td>
+        <td><p>Should sub-elements in properties be
+added to the model's elements collection?</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <a id="Elements_Model_AddElements_" data-uid="Elements.Model.AddElements*"></a>
-  <h4 id="Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__" data-uid="Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element})">AddElements(IEnumerable&lt;Element&gt;)</h4>
+  <h4 id="Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__System_Boolean_" data-uid="Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element},System.Boolean)">AddElements(IEnumerable&lt;Element&gt;, Boolean)</h4>
   <div class="markdown level1 summary"><p>Add a collection of elements to the model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddElements(IEnumerable&lt;Element&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddElements(IEnumerable&lt;Element&gt; elements, bool gatherSubElements = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -264,6 +271,13 @@ dictionary before adding the element itself.</p>
         <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td><span class="parametername">elements</span></td>
         <td><p>The elements to add to the model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">gatherSubElements</span></td>
+        <td><p>Should sub-elements in properties be
+added to the model's elements collection?</p>
 </td>
       </tr>
     </tbody>
