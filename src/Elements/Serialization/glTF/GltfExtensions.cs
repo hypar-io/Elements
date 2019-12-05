@@ -37,6 +37,7 @@ namespace Elements.Serialization.glTF
 
         /// <summary>
         /// Save a model to gltf.
+        /// If there is no geometry, an empty GLTF will still be produced.
         /// </summary>
         /// <param name="model">The model to serialize.</param>
         /// <param name="path">The output path.</param>
@@ -51,6 +52,7 @@ namespace Elements.Serialization.glTF
                     {
                         return;
                     }
+                    // Else fall through to produce an empty GLTF.
                 }
                 else
                 {
@@ -58,9 +60,11 @@ namespace Elements.Serialization.glTF
                     {
                         return;
                     }
+                    // Else fall through to produce an empty GLTF.
                 }
             }
 
+            // There are no elements that produced geometry. Write an empty GLTF.
             File.WriteAllText(path, emptyGltf);
         }
 
