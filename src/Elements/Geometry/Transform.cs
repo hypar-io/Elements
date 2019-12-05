@@ -10,7 +10,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../test/Elements.Tests/Examples/TransformExample.cs?name=example)]
     /// </example>
-    public partial class Transform
+    public partial class Transform : IEquatable<Transform>
     {
         /// <summary>
         /// The origin of the transform.
@@ -336,6 +336,20 @@ namespace Elements.Geometry
         {
             var temp = curve.TransformAt(t);
             return new Transform(temp.Origin, temp.ZAxis.Negate(), temp.XAxis.Negate(), Vector3.ZAxis);
+        }
+
+        /// <summary>
+        /// Is this transform equal to the provided transform?
+        /// </summary>
+        /// <param name="other">The transform to test.</param>
+        /// <returns>True if the two transforms are equal, otherwise false.</returns>
+        public bool Equals(Transform other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+            return this.Matrix.Equals(other.Matrix);
         }
     }
 }

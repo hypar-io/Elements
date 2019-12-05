@@ -75,20 +75,7 @@ namespace Elements
 
             this.CenterLine = centerLine;
             this.Height = height;
-
-            // Construct a transform whose X axis is the centerline of the wall.
-            // The wall is described as if it's lying flat in the XY plane of that Transform.
-            var d = centerLine.Direction();
-            var z = d.Cross(Vector3.ZAxis);
-            var wallTransform = new Transform(centerLine.Start, d, z);
-            this.Transform = wallTransform;
-            if(transform != null) 
-            {
-                wallTransform.Concatenate(transform);
-            }
-            this.Profile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(centerLine.Length(), height)));
             this.Thickness = thickness;
-            this.Material = material != null ? material : BuiltInMaterials.Concrete;
         }
 
         /// <summary>
@@ -96,6 +83,14 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
+            // Construct a transform whose X axis is the centerline of the wall.
+            // The wall is described as if it's lying flat in the XY plane of that Transform.
+            var d = this.CenterLine.Direction();
+            var z = d.Cross(Vector3.ZAxis);
+            var wallTransform = new Transform(this.CenterLine.Start, d, z);
+
+            var wallProfile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(this.CenterLine.Length(), this.Height)));
+
             if(this.Openings.Count > 0)
             {
                 this.Openings.ForEach(o=>o.UpdateRepresentations());
@@ -108,11 +103,17 @@ namespace Elements
                 if(holes.Any())
                 {
                     var holeProfiles = holes.Select(ex=>ex.Profile);
-                    this.Profile.Clip(holeProfiles);
+                    wallProfile.Clip(holeProfiles);
                 }
             }
+
+            // Set the wall's profile to the wallProfile created here
+            // as we will use it for the solid op below. 
+            this.Profile = wallTransform.OfProfile(wallProfile);
             this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, 0.0, false));
+
+            // Transform the wall profile to be "standing up".
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, z, 0.0, false));
         }
     }
 }

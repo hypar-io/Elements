@@ -52,7 +52,6 @@ namespace Elements
         {
             this.Curve = curve.Offset(-offset)[0];
             this.Profile = profile;
-            
         }
 
         /// <summary>

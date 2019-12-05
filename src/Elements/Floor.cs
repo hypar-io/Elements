@@ -2,9 +2,9 @@ using Elements.Geometry;
 using Elements.Interfaces;
 using System;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -20,7 +20,8 @@ namespace Elements
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
-        public double Elevation { get; set; }
+        [JsonIgnore]
+        public double Elevation => this.Transform.Origin.Z;
 
         /// <summary>
         /// The thickness of the floor.
@@ -42,16 +43,13 @@ namespace Elements
         /// </summary>
         /// <param name="profile">The perimeter of the floor.</param>
         /// <param name="thickness">The thickness of the floor.</param>
-        /// <param name="elevation">The elevation of the top of the floor.
-        /// If a transform has been provided, this elevation will be added to the origin of that transform.</param>
-        /// <param name="transform">The floor's transform. If set, this will override the floor's elevation.</param>
+        /// <param name="transform">The floor's transform. Create a transform with a Z coordinate for the origin, to define the elevation of the floor.</param>
         /// <param name="material">The floor's material.</param>
         /// <param name="representation">The floor's representation.</param>
         /// <param name="id">The floor's id.</param>
         /// <param name="name">The floor's name.</param>
         public Floor(Profile profile,
                      double thickness,
-                     double elevation = 0.0,
                      Transform transform = null,
                      Material material = null,
                      Representation representation = null,
@@ -62,25 +60,18 @@ namespace Elements
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
         {
-            SetProperties(profile, elevation, thickness, material, transform);
+            SetProperties(profile, thickness, material, transform);
         }
 
-        private void SetProperties(Profile profile, double elevation, double thickness, Material material, Transform transform)
+        private void SetProperties(Profile profile, double thickness, Material material, Transform transform)
         {
-            this.Profile = profile;
-            this.Elevation = elevation;
-
             if(thickness <= 0.0) 
             {
                 throw new ArgumentOutOfRangeException($"The floor could not be created. The provided thickness ({thickness}) was less than or equal to zero.");
             }
 
+            this.Profile = profile;
             this.Thickness = thickness;
-            if(elevation != 0.0)
-            {
-                this.Transform.Move(new Vector3(0,0,elevation));
-            }
-            this.Material = material ?? BuiltInMaterials.Concrete;
         }
 
         /// <summary>

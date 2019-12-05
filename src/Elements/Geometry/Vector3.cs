@@ -29,20 +29,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Is this vector equal to the provided vector?
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            var v = obj as Vector3;
-            if (v == null)
-            {
-                return false;
-            }
-
-            return this.IsAlmostEqualTo(v);
-        }
-
-        /// <summary>
         /// Get the hash code for the vector.
         /// </summary>
         /// <returns></returns>
@@ -412,19 +398,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Implement the IEquatable interface.
+        /// Is this vector equal to the provided vector?
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns>True if all the components of this and the provided vector are equal.</returns>
+        /// <param name="other">The vector to test.</param>
+        /// <returns>Returns true if all components of the two vectors are within Epsilon, otherwise false.</returns>
         public bool Equals(Vector3 other)
         {
-            var v = other as Vector3;
-            if (v == null)
+            if(other == null)
             {
                 return false;
             }
-
-            return this.IsAlmostEqualTo(v);
+            return this.IsAlmostEqualTo(other);
         }
 
         /// <summary>

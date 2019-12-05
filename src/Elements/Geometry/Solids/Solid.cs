@@ -186,12 +186,12 @@ namespace Elements.Geometry.Solids
             // We do a difference of the polygons
             // to get the clipped shape. This will fail in interesting
             // ways if the clip creates two islands.
-            if(holes != null)
-            {
-                var newPerimeter = perimeter.Difference(holes);
-                perimeter = newPerimeter[0];
-                holes = newPerimeter.Skip(1).Take(newPerimeter.Count - 1).ToArray();
-            }
+            // if(holes != null)
+            // {
+            //     var newPerimeter = perimeter.Difference(holes);
+            //     perimeter = newPerimeter[0];
+            //     holes = newPerimeter.Skip(1).Take(newPerimeter.Count - 1).ToArray();
+            // }
             
             var solid = new Solid();
             Face fStart = null;

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using Elements;
+using System.Runtime.InteropServices;
 using Elements.Generate;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
-using Elements.Tests;
 using Xunit;
 
 namespace Elements.Tests
@@ -25,7 +25,35 @@ namespace Elements.Tests
         {
             return Environment.GetEnvironmentVariable("TRAVIS") != null;
         }
+    }
 
+    public sealed class IgnoreOnMacFact : FactAttribute
+    {
+        public IgnoreOnMacFact() 
+        {
+            if(IsMac())
+            {
+                Skip = "Ignore on mac.";
+            }
+        }
+
+        private static bool IsMac()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        }
+    }
+
+    public class MultiFact : FactAttribute
+    {
+        public MultiFact(params Type[] types)
+        {
+            var result = types.Select(Activator.CreateInstance).Cast<FactAttribute>().ToList();
+
+            if (result.Any(it => !string.IsNullOrEmpty(it.Skip)))
+            {
+                Skip = string.Join(", ", result.Where(it => !string.IsNullOrEmpty(it.Skip)).Select(it => it.Skip));
+            }
+        }
     }
 
     public class TypeGeneratorTests
@@ -51,8 +79,9 @@ namespace Elements.Tests
     },
     ""additionalProperties"": false
 }";
-
-        [IgnoreOnTravisFact]
+        // We've started ignoring these tests on mac because on 
+        // Catalina we receive an System.Net.Http.CurlException : Login denied.
+        [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact))]
         public void GeneratesCodeFromSchema()
         {
             var tmpPath = Path.GetTempPath();
@@ -63,11 +92,11 @@ namespace Elements.Tests
             var code = File.ReadAllText(Path.Combine(tmpPath, "beam.g.cs"));
         }
         
-        [IgnoreOnTravisFact]
+        [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact))]
         public void GeneratesInMemoryAssembly()
         {
-            var uris = new []{"https://raw.githubusercontent.com/hypar-io/UserElementSchemaTest/master/FacadeAnchor.json", 
-                                "https://raw.githubusercontent.com/hypar-io/UserElementSchemaTest/master/Mullion.json"};
+            var uris = new []{"https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadeAnchor.json", 
+                                "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
             var asm = TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(uris);
             var mullionType = asm.GetType("Test.Foo.Bar.Mullion");
             var anchorType = asm.GetType("Test.Foo.Bar.FacadeAnchor");
@@ -90,8 +119,8 @@ namespace Elements.Tests
         [IgnoreOnTravisFact]
         public void ThrowsWithBadSchema()
         {
-            var uris = new []{"https://raw.githubusercontent.com/hypar-io/UserElementSchemaTest/master/ThisDoesn'tExist.json", 
-                                "https://raw.githubusercontent.com/hypar-io/UserElementSchemaTest/master/Mullion.json"};
+            var uris = new []{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesn'tExist.json", 
+                                "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
             Assert.Throws<Exception>(()=>TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(uris));
         }
     }

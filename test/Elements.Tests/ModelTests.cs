@@ -86,7 +86,15 @@ namespace Elements.Tests
             var envelopeType = asm.GetType("Elements.Envelope");
             Assert.NotNull(envelopeType);
             var model1 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/facade.json"));
-            // var model2 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/structure.json"));
+            var count1 = model1.Elements.Count;
+
+            var model2 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/structure.json"));
+            var count2 = model2.Elements.Count;
+
+            var merge = new Model();
+            merge.AddElements(model1.Elements.Values);
+            merge.AddElements(model2.Elements.Values);
+            merge.ToGlTF("models/Merge.glb");
         }
 
         [Fact]
@@ -124,6 +132,38 @@ namespace Elements.Tests
             Assert.Equal(2, newModel.AllElementsOfType<Profile>().Count());
             Assert.Equal(2, newModel.AllElementsOfType<Mass>().Count());
             Assert.Equal(1, newModel.AllElementsOfType<Material>().Count());
+        }
+
+        [Fact]
+        public void CoreElementTransformsAreIdempotentDuringSerialization()
+        {
+            var model = new Model();
+            // Create a floor with an elevation.
+            // This will mutate the element's transform.
+            var floor = new Floor(Polygon.L(20, 20, 5), 0.1, new Transform(0,0,0.5));
+            model.AddElement(floor);
+
+            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5,5,5)), Polygon.Rectangle(0.1,0.1));
+            model.AddElement(beam);
+
+            var wall = new StandardWall(new Line(Vector3.Origin, new Vector3(20,0,0)), 0.2, 3.5);
+            model.AddElement(wall);
+
+            // Serialize the floor, recording the mutated transform.
+            var json = model.ToJson();
+
+            // Deserialize the floor, which will deserialize the elevation
+            // and add it to the transform.
+            var newModel = Model.FromJson(json);
+            
+            var newFloor = newModel.AllElementsOfType<Floor>().First();
+            Assert.Equal(floor.Transform, newFloor.Transform);
+
+            var newBeam = newModel.AllElementsOfType<Beam>().First();
+            Assert.Equal(beam.Transform, newBeam.Transform);
+
+            var newWall = newModel.AllElementsOfType<StandardWall>().First();
+            Assert.Equal(wall.Transform, newWall.Transform);
         }
   
         private Model QuadPanelModel()

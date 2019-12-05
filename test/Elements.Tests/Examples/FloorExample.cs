@@ -12,10 +12,12 @@ namespace Elements.Tests.Examples
             this.Name = "Elements_Floor";
 
             // <example>            
-            // Create two floors.
+            // Create a floor with no elevation.
             var p = Polygon.L(10, 20, 5);
-            var floor1 = new Floor(p, 0.1, 0);
-            var floor2 = new Floor(p, 0.1, 3);
+            var floor1 = new Floor(p, 0.1);
+
+            // Create a floor with an elevation.
+            var floor2 = new Floor(p, 0.1, new Transform(0,0,3));
 
             // Create some openings.
             var openings = new List<Opening>(){

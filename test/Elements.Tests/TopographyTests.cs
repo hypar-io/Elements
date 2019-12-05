@@ -42,7 +42,7 @@ namespace Elements.Tests
         {
             this.Name = "TexturedTopography";
             var m = new Material("texture",Colors.Gray, 0.0f, 0.0f, "UV.jpg");
-            var topo = CreateTopoFromMapboxElevations(m);
+            var topo = CreateTopoFromMapboxElevations(null, m);
             this.Model.AddElement(topo);
         }
 
@@ -66,7 +66,30 @@ namespace Elements.Tests
             _output.WriteLine($"Serialization of topography w/out recursive gather: {sw.ElapsedMilliseconds.ToString()}ms");
         }
 
-        private static Topography CreateTopoFromMapboxElevations(Material material = null)
+        [Fact]
+        public void RaysIntersectTopography()
+        {
+            this.Name = "RayTopographyIntersection";
+            var topo = CreateTopoFromMapboxElevations(new Vector3(10000000,10000000));
+            var mp = new ModelPoints(new List<Vector3>(), new Material("xsect", Colors.Black));
+            foreach(var t in topo.Mesh.Triangles)
+            {
+                var o = t.Vertices[0].Position;
+                var c = new[]{t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position}.Average();
+                var r = new Ray(new Vector3(c.X, c.Y), Vector3.ZAxis);
+                if(r.Intersects(t, out Vector3 result))
+                {
+                    mp.Locations.Add(result);
+                }
+            }
+            this.Model.AddElement(topo);
+            if(mp.Locations.Count > 0)
+            {
+                this.Model.AddElement(mp);
+            }
+        }
+
+        private static Topography CreateTopoFromMapboxElevations(Vector3 origin = null, Material material = null)
         {
             // Read topo elevations
             var w = 512/8 - 1;
@@ -97,7 +120,7 @@ namespace Elements.Tests
                 return Colors.Red;
             };
 
-            return new Topography(Vector3.Origin, d, d, elevations, w, colorizer, material);
+            return new Topography(origin != null ? origin : Vector3.Origin, d, d, elevations, w, colorizer, material);
         }
     }
 }

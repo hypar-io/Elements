@@ -7,7 +7,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A column-ordered 4x4 matrix.
     /// </summary>
-    public partial class Matrix
+    public partial class Matrix: IEquatable<Matrix>
     {   
         /// <summary>
         /// m11
@@ -445,6 +445,23 @@ namespace Elements.Geometry
         public override string ToString()
         {
             return $"X: {m11} {m12} {m13}\nY: {m21} {m22} {m23}\nZ: {m31} {m32} {m33}\nOrigin: {tx} {ty} {tz}";
+        }
+
+        /// <summary>
+        /// Is this matrix equal to other?
+        /// </summary>
+        /// <param name="other">The transform to test.</param>
+        /// <returns>True if the two transforms are equal, otherwise false.</returns>
+        public bool Equals(Matrix other)
+        {
+            for(var i=0; i<Components.Count; i++)
+            {
+                if(this.Components[i] != other.Components[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

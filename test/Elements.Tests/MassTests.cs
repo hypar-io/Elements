@@ -50,9 +50,9 @@ namespace Elements.Tests
             var mass3 = new Mass(profile3, 10.0, material3, new Transform(new Vector3(0,0,20.0)));
             this.Model.AddElements(new[] { mass1, mass2, mass3 });
 
-            var f1 = new Floor(profile1, 0.2, 0.0);
-            var f2 = new Floor(profile2, 0.2, 10.0);
-            var f3 = new Floor(profile3, 0.2, 20.0);
+            var f1 = new Floor(profile1, 0.2);
+            var f2 = new Floor(profile2, 0.2, new Transform(0,0,10.0));
+            var f3 = new Floor(profile3, 0.2, new Transform(0,0,20.0));
             this.Model.AddElements(new[] { f1, f2, f3 });
 
             this.Model.ToGlTF("./models/TransformedMasses.gltf",false);

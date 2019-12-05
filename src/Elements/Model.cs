@@ -133,6 +133,13 @@ namespace Elements
             var exportModel = new Model();
             foreach(var kvp in this.Elements)
             {
+                // Some elements compute profiles and transforms
+                // during UpdateRepresentation. Call UpdateRepresentation
+                // here to ensure these values are correct in the JSON.
+                if(kvp.Value is GeometricElement)
+                {
+                    ((GeometricElement)kvp.Value).UpdateRepresentations();
+                }
                 exportModel.AddElement(kvp.Value);
             }
             exportModel.Origin = this.Origin;

@@ -75,8 +75,8 @@ namespace Elements.IFC.Tests
         public void Floor()
         {
             var planShape = Polygon.L(2,4,1.5);
-            var floor = new Floor(planShape, 0.1, 0.0);
-            var floor1 = new Floor(planShape, 0.1, 2);
+            var floor = new Floor(planShape, 0.1);
+            var floor1 = new Floor(planShape, 0.1, new Transform(0,0,2));
             var o = new Opening(0.5, 0.5, 0.5, 0.5);
             floor.Openings.Add(o);
 

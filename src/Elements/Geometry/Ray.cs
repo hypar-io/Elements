@@ -1,9 +1,11 @@
+using System;
+
 namespace Elements.Geometry
 {
     /// <summary>
     /// An infinite ray starting at origin and pointing towards direction.
     /// </summary>
-    public class Ray
+    public class Ray: IEquatable<Ray>
     {
         /// <summary>
         /// The origin of the ray.
@@ -27,58 +29,50 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
+        /// https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
         /// </summary>
-        /// <param name="tri"></param>
-        /// <param name="result"></param>
-        public bool Intersects(Triangle tri, out RayIntersectionResult result)
+        /// <param name="tri">The triangle to intersect.</param>
+        /// <param name="result">The intersection result.</param>
+        /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the type and location of intersection.</returns>
+        public bool Intersects(Triangle tri, out Vector3 result) 
         {
-            result = null;
-            var D = tri.Normal.Dot(tri.Vertices[0].Position);
-            var denom = tri.Normal.Dot(this.Direction);
-            if (denom == 0)
-            {
-                // Ray and triangle are parallel
-                result = new RayIntersectionResult(null, RayIntersectionResultType.Parallel);
-                return false;
-            }
-            double t = (tri.Normal.Dot(this.Origin) + D) / denom;
-            var P = this.Origin + t * this.Direction;
-            if (t < 0)
-            {
-                // Triangle is "behind" the ray.
-                result = new RayIntersectionResult(null, RayIntersectionResultType.Behind);
-                return false;
-            }
-            var edge0 = tri.Vertices[1].Position - tri.Vertices[0].Position;
-            var edge1 = tri.Vertices[2].Position - tri.Vertices[1].Position;
-            var edge2 = tri.Vertices[0].Position - tri.Vertices[2].Position;
-            var C0 = P - tri.Vertices[0].Position;
-            var C1 = P - tri.Vertices[1].Position;
-            var C2 = P - tri.Vertices[2].Position;
+            var vertex0 = tri.Vertices[0].Position;
+            var vertex1 = tri.Vertices[1].Position;
+            var vertex2 = tri.Vertices[2].Position;
+            var edge1 = (vertex1 - vertex0);
+            var edge2 = (vertex2 - vertex0);
+            var h = this.Direction.Cross(edge2);
+            var s = this.Origin - vertex0;
+            double a, f, u, v;
 
-            if(P.IsAlmostEqualTo(tri.Vertices[0].Position) || 
-                P.IsAlmostEqualTo(tri.Vertices[1].Position) || 
-                P.IsAlmostEqualTo(tri.Vertices[2].Position))
+            a = edge1.Dot(h);
+            if (a > -Vector3.Epsilon && a < Vector3.Epsilon) {
+                result = null;
+                return false;    // This ray is parallel to this triangle.
+            }
+            f = 1.0 / a;
+            u = f * (s.Dot(h));
+            if (u < 0.0 || u > 1.0) {
+                result = null;
+                return false;
+            }
+            var q = s.Cross(edge1);
+            v = f * this.Direction.Dot(q);
+            if (v < 0.0 || u + v > 1.0) {
+                result = null;
+                return false;
+            }
+            // At this stage we can compute t to find out where the intersection point is on the line.
+            double t = f * edge2.Dot(q);
+            if (t > Vector3.Epsilon && t < 1/Vector3.Epsilon) // ray intersection
             {
-                // Intersection occurs at a vertex of the triangle.
-                result = new RayIntersectionResult(P, RayIntersectionResultType.IntersectsAtVertex);
+                result = this.Origin + this.Direction * t;
                 return true;
-            }
-
-            var x1 = tri.Normal.Dot(edge0.Cross(C0));
-            var x2 = tri.Normal.Dot(edge1.Cross(C1));
-            var x3 = tri.Normal.Dot(edge2.Cross(C2));
-
-            if (x1 > 0 &&
-                x2 > 0 &&
-                x3 > 0)
+            } else // This means that there is a line intersection but not a ray intersection.
             {
-                result = new RayIntersectionResult(P, RayIntersectionResultType.Intersect);
-                return true; // P is inside the triangle
+                result = null;
+                return false;
             }
-            result = null;
-            return false;
         }
         
         /// <summary>
@@ -89,7 +83,7 @@ namespace Elements.Geometry
         /// <returns>True if an intersection result occurs.
         /// The type of intersection should be checked in the intersection result. 
         /// False if no intersection occurs.</returns>
-        public bool Intersects(Topography topo, out RayIntersectionResult xsect)
+        public bool Intersects(Topography topo, out Vector3 xsect)
         {
             xsect = null;
             foreach (var t in topo.Mesh.Triangles)
@@ -100,6 +94,20 @@ namespace Elements.Geometry
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Is this ray equal to the provided ray?
+        /// </summary>
+        /// <param name="other">The ray to test.</param>
+        /// <returns>Returns true if the two rays are equal, otherwise false.</returns>
+        public bool Equals(Ray other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+            return this.Origin.Equals(other.Origin) && this.Direction.Equals(other.Direction);
         }
     }
 }

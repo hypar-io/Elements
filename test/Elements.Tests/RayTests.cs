@@ -15,13 +15,11 @@ namespace Elements.Tests
 			var c = new Vertex(new Vector3(0, 0.5, 1.0));
 			var t = new Triangle(a,b,c);
 			var r = new Ray(Vector3.Origin, Vector3.ZAxis);
-			RayIntersectionResult xsect;
-			var intersects = r.Intersects(t, out xsect);
-			Assert.True(xsect.Type == RayIntersectionResultType.Intersect);
+			Vector3 xsect;
+			Assert.True(r.Intersects(t, out xsect));
 
 			r = new Ray(Vector3.Origin, Vector3.ZAxis.Negate());
-			intersects = r.Intersects(t, out xsect);
-			Assert.True(xsect.Type == RayIntersectionResultType.Behind);
+			Assert.False(r.Intersects(t, out xsect));
 		}
 
 		[Fact]
@@ -32,9 +30,8 @@ namespace Elements.Tests
 			var c = new Vertex(new Vector3(0, 0.5, 1.0));
 			var t = new Triangle(a,b,c);
 			var r = new Ray(new Vector3(-0.5, -0.5, 0.0), Vector3.ZAxis);
-			RayIntersectionResult xsect;
-			var intersects = r.Intersects(t, out xsect);
-			Assert.True(xsect.Type == RayIntersectionResultType.IntersectsAtVertex);
+			Vector3 xsect;
+			Assert.True(r.Intersects(t, out xsect));
 		}
 
 		[Fact]
@@ -45,39 +42,61 @@ namespace Elements.Tests
 			var c = new Vertex(new Vector3(0, 0.5, 1.0));
 			var t = new Triangle(a,b,c);
 			var r = new Ray(Vector3.Origin, Vector3.XAxis);
-			RayIntersectionResult xsect;
-			var intersects = r.Intersects(t, out xsect);
-			Assert.True(xsect.Type == RayIntersectionResultType.Parallel);
+			Vector3 xsect;
+			Assert.False(r.Intersects(t, out xsect));
 		}
 
 		[Fact]
-		public void OriginRayIntersectsTopography()
+		public void RayIntersectsTopography()
 		{
 			this.Name = "RayIntersectTopo";
 
-			var elevations = new double[100];
+			var elevations = new double[25];
 
 			int e = 0;
-			for(var x=0; x<10; x++)
+			for(var x=0; x<5; x++)
 			{
-				for(var y=0; y<10; y++)
+				for(var y=0; y<5; y++)
 				{
-					elevations[e] = Math.Sin(((double)x/10.0)*Math.PI) * 10;
+					elevations[e] = Math.Sin(((double)x/5.0)*Math.PI) * 10;
 					e++;
 				}
 			}
-			var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 9, (tri)=>{return Colors.White;});
+			var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 4, (tri)=>{return Colors.White;});
 			this.Model.AddElement(topo);
 
-			var ray = new Ray(Vector3.Origin, Vector3.ZAxis);
-			this.Model.AddElement(ModelCurveFromRay(ray));
+			var modelPoints = new ModelPoints(new List<Vector3>(), new Material("begin", Colors.Blue));
+			this.Model.AddElement(modelPoints);
+			foreach(var t in topo.Mesh.Triangles)
+			{
+				var c = Center(t);
+				var o = new Vector3(c.X, c.Y);
+				modelPoints.Locations.Add(o);
 
-			RayIntersectionResult xsect;
-			ray.Intersects(topo, out xsect);
-			Assert.True(xsect.Type == RayIntersectionResultType.IntersectsAtVertex);
-
-			this.Model.AddElement(ModelPointsFromIntersection(xsect));
+				var ray = new Ray(o, Vector3.ZAxis);
+				
+				Vector3 xsect;
+				if(ray.Intersects(t, out xsect))
+				{
+					try
+					{
+						var l = new Line(o, xsect);
+						var ml = new ModelCurve(l);
+						this.Model.AddElement(ml);
+					}
+					catch
+					{
+						continue;
+					}
+				}
+			}
 		}
+
+		private static Vector3 Center(Triangle t)
+		{
+			return new Vector3[]{t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position}.Average();
+		}
+
 
 		private static ModelCurve ModelCurveFromRay(Ray r)
 		{
@@ -85,9 +104,9 @@ namespace Elements.Tests
 			return new ModelCurve(line);		
 		}
 
-		private static ModelPoints ModelPointsFromIntersection(RayIntersectionResult xsect)
+		private static ModelPoints ModelPointsFromIntersection(Vector3 xsect)
 		{
-			return new ModelPoints(new List<Vector3>(){xsect.Point});
+			return new ModelPoints(new List<Vector3>(){xsect});
 		}
     }
 }

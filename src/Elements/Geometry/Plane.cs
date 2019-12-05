@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +6,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A cartesian plane.
     /// </summary>
-    public partial class Plane
+    public partial class Plane: IEquatable<Plane>
     {
         /// <summary>
         /// Construct a plane by three points.
@@ -50,6 +49,20 @@ namespace Elements.Geometry
             }
             this.Origin = origin;
             this.Normal = (points[0]-points[1]).Normalized().Cross((points[2] - points[0]).Normalized());
+        }
+
+        /// <summary>
+        /// Is this plane equal to the provided plane?
+        /// </summary>
+        /// <param name="other">The plane to test.</param>
+        /// <returns>Returns true if the two planes are equal, otherwise false.</returns>
+        public bool Equals(Plane other)
+        {
+            if(other == null)
+            {
+                return false;
+            }
+            return this.Normal.Equals(other.Normal) && this.Origin.Equals(other.Origin);
         }
     }
 }
