@@ -4,6 +4,7 @@ using System;
 using Elements.Geometry.Solids;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -19,7 +20,8 @@ namespace Elements
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
-        public double Elevation { get; set; }
+        [JsonIgnore]
+        public double Elevation => this.Transform.Origin.Z;
 
         /// <summary>
         /// The thickness of the floor.
