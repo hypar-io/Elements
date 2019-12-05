@@ -107,10 +107,13 @@ namespace Elements
                 }
             }
 
+            // Set the wall's profile to the wallProfile created here
+            // as we will use it for the solid op below. 
+            this.Profile = wallTransform.OfProfile(wallProfile);
             this.Representation.SolidOperations.Clear();
 
             // Transform the wall profile to be "standing up".
-            this.Representation.SolidOperations.Add(new Extrude(wallTransform.OfProfile(wallProfile), this.Thickness, z, 0.0, false));
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, z, 0.0, false));
         }
     }
 }
