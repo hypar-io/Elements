@@ -348,12 +348,12 @@ references:
   commentId: T:Elements.Floor
   fullName: Elements.Floor
   nameWithType: Floor
-- uid: Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Floor(Profile, Double, Double, Transform, Material, Representation, Guid, String)
-  href: api/Elements.Floor.html#Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Floor.Floor(Elements.Geometry.Profile, System.Double, System.Double, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Floor.Floor(Profile, Double, Double, Transform, Material, Representation, Guid, String)
+- uid: Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
+  name: Floor(Profile, Double, Transform, Material, Representation, Guid, String)
+  href: api/Elements.Floor.html#Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Guid_System_String_
+  commentId: M:Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
+  fullName: Elements.Floor.Floor(Elements.Geometry.Profile, System.Double, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Guid, System.String)
+  nameWithType: Floor.Floor(Profile, Double, Transform, Material, Representation, Guid, String)
 - uid: Elements.Floor.#ctor*
   name: Floor
   href: api/Elements.Floor.html#Elements_Floor__ctor_
@@ -1317,6 +1317,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Arc.EndAngle
   nameWithType: Arc.EndAngle
+- uid: Elements.Geometry.Arc.Equals(Elements.Geometry.Arc)
+  name: Equals(Arc)
+  href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc_Equals_Elements_Geometry_Arc_
+  commentId: M:Elements.Geometry.Arc.Equals(Elements.Geometry.Arc)
+  fullName: Elements.Geometry.Arc.Equals(Elements.Geometry.Arc)
+  nameWithType: Arc.Equals(Arc)
+- uid: Elements.Geometry.Arc.Equals*
+  name: Equals
+  href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc_Equals_
+  commentId: Overload:Elements.Geometry.Arc.Equals
+  isSpec: "True"
+  fullName: Elements.Geometry.Arc.Equals
+  nameWithType: Arc.Equals
 - uid: Elements.Geometry.Arc.Frames(System.Double,System.Double,System.Double)
   name: Frames(Double, Double, Double)
   href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc_Frames_System_Double_System_Double_System_Double_
@@ -1554,6 +1567,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Color.Blue
   nameWithType: Color.Blue
+- uid: Elements.Geometry.Color.Equals(Elements.Geometry.Color)
+  name: Equals(Color)
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_Equals_Elements_Geometry_Color_
+  commentId: M:Elements.Geometry.Color.Equals(Elements.Geometry.Color)
+  fullName: Elements.Geometry.Color.Equals(Elements.Geometry.Color)
+  nameWithType: Color.Equals(Color)
 - uid: Elements.Geometry.Color.Equals(System.Object)
   name: Equals(Object)
   href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_Equals_System_Object_
@@ -2288,12 +2307,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.End
   nameWithType: Line.End
-- uid: Elements.Geometry.Line.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Equals_System_Object_
-  commentId: M:Elements.Geometry.Line.Equals(System.Object)
-  fullName: Elements.Geometry.Line.Equals(System.Object)
-  nameWithType: Line.Equals(Object)
+- uid: Elements.Geometry.Line.Equals(Elements.Geometry.Line)
+  name: Equals(Line)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Equals_Elements_Geometry_Line_
+  commentId: M:Elements.Geometry.Line.Equals(Elements.Geometry.Line)
+  fullName: Elements.Geometry.Line.Equals(Elements.Geometry.Line)
+  nameWithType: Line.Equals(Line)
 - uid: Elements.Geometry.Line.Equals*
   name: Equals
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Equals_
@@ -2491,6 +2510,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Matrix.Determinant
   nameWithType: Matrix.Determinant
+- uid: Elements.Geometry.Matrix.Equals(Elements.Geometry.Matrix)
+  name: Equals(Matrix)
+  href: api/Elements.Geometry.Matrix.html#Elements_Geometry_Matrix_Equals_Elements_Geometry_Matrix_
+  commentId: M:Elements.Geometry.Matrix.Equals(Elements.Geometry.Matrix)
+  fullName: Elements.Geometry.Matrix.Equals(Elements.Geometry.Matrix)
+  nameWithType: Matrix.Equals(Matrix)
+- uid: Elements.Geometry.Matrix.Equals*
+  name: Equals
+  href: api/Elements.Geometry.Matrix.html#Elements_Geometry_Matrix_Equals_
+  commentId: Overload:Elements.Geometry.Matrix.Equals
+  isSpec: "True"
+  fullName: Elements.Geometry.Matrix.Equals
+  nameWithType: Matrix.Equals
 - uid: Elements.Geometry.Matrix.Inverse
   name: Inverse()
   href: api/Elements.Geometry.Matrix.html#Elements_Geometry_Matrix_Inverse
@@ -2962,6 +2994,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Plane.Plane
   nameWithType: Plane.Plane
+- uid: Elements.Geometry.Plane.Equals(Elements.Geometry.Plane)
+  name: Equals(Plane)
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_Equals_Elements_Geometry_Plane_
+  commentId: M:Elements.Geometry.Plane.Equals(Elements.Geometry.Plane)
+  fullName: Elements.Geometry.Plane.Equals(Elements.Geometry.Plane)
+  nameWithType: Plane.Equals(Plane)
+- uid: Elements.Geometry.Plane.Equals*
+  name: Equals
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_Equals_
+  commentId: Overload:Elements.Geometry.Plane.Equals
+  isSpec: "True"
+  fullName: Elements.Geometry.Plane.Equals
+  nameWithType: Plane.Equals
 - uid: Elements.Geometry.Plane.Normal
   name: Normal
   href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_Normal
@@ -4368,24 +4413,37 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Ray.Direction
   nameWithType: Ray.Direction
-- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.RayIntersectionResult@)
-  name: Intersects(Triangle, out RayIntersectionResult)
-  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Triangle_Elements_Geometry_RayIntersectionResult__
-  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.RayIntersectionResult@)
-  name.vb: Intersects(Triangle, ByRef RayIntersectionResult)
-  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle, out Elements.Geometry.RayIntersectionResult)
-  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle, ByRef Elements.Geometry.RayIntersectionResult)
-  nameWithType: Ray.Intersects(Triangle, out RayIntersectionResult)
-  nameWithType.vb: Ray.Intersects(Triangle, ByRef RayIntersectionResult)
-- uid: Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.RayIntersectionResult@)
-  name: Intersects(Topography, out RayIntersectionResult)
-  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Topography_Elements_Geometry_RayIntersectionResult__
-  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.RayIntersectionResult@)
-  name.vb: Intersects(Topography, ByRef RayIntersectionResult)
-  fullName: Elements.Geometry.Ray.Intersects(Elements.Topography, out Elements.Geometry.RayIntersectionResult)
-  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Topography, ByRef Elements.Geometry.RayIntersectionResult)
-  nameWithType: Ray.Intersects(Topography, out RayIntersectionResult)
-  nameWithType.vb: Ray.Intersects(Topography, ByRef RayIntersectionResult)
+- uid: Elements.Geometry.Ray.Equals(Elements.Geometry.Ray)
+  name: Equals(Ray)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Equals_Elements_Geometry_Ray_
+  commentId: M:Elements.Geometry.Ray.Equals(Elements.Geometry.Ray)
+  fullName: Elements.Geometry.Ray.Equals(Elements.Geometry.Ray)
+  nameWithType: Ray.Equals(Ray)
+- uid: Elements.Geometry.Ray.Equals*
+  name: Equals
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Equals_
+  commentId: Overload:Elements.Geometry.Ray.Equals
+  isSpec: "True"
+  fullName: Elements.Geometry.Ray.Equals
+  nameWithType: Ray.Equals
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.Vector3@)
+  name: Intersects(Triangle, out Vector3)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Triangle_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.Vector3@)
+  name.vb: Intersects(Triangle, ByRef Vector3)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle, out Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle, ByRef Elements.Geometry.Vector3)
+  nameWithType: Ray.Intersects(Triangle, out Vector3)
+  nameWithType.vb: Ray.Intersects(Triangle, ByRef Vector3)
+- uid: Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.Vector3@)
+  name: Intersects(Topography, out Vector3)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Topography_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.Vector3@)
+  name.vb: Intersects(Topography, ByRef Vector3)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Topography, out Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Topography, ByRef Elements.Geometry.Vector3)
+  nameWithType: Ray.Intersects(Topography, out Vector3)
+  nameWithType.vb: Ray.Intersects(Topography, ByRef Vector3)
 - uid: Elements.Geometry.Ray.Intersects*
   name: Intersects
   href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_
@@ -4406,81 +4464,6 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Ray.Origin
   nameWithType: Ray.Origin
-- uid: Elements.Geometry.RayIntersectionResult
-  name: RayIntersectionResult
-  href: api/Elements.Geometry.RayIntersectionResult.html
-  commentId: T:Elements.Geometry.RayIntersectionResult
-  fullName: Elements.Geometry.RayIntersectionResult
-  nameWithType: RayIntersectionResult
-- uid: Elements.Geometry.RayIntersectionResult.#ctor(Elements.Geometry.Vector3,Elements.Geometry.RayIntersectionResultType)
-  name: RayIntersectionResult(Vector3, RayIntersectionResultType)
-  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult__ctor_Elements_Geometry_Vector3_Elements_Geometry_RayIntersectionResultType_
-  commentId: M:Elements.Geometry.RayIntersectionResult.#ctor(Elements.Geometry.Vector3,Elements.Geometry.RayIntersectionResultType)
-  fullName: Elements.Geometry.RayIntersectionResult.RayIntersectionResult(Elements.Geometry.Vector3, Elements.Geometry.RayIntersectionResultType)
-  nameWithType: RayIntersectionResult.RayIntersectionResult(Vector3, RayIntersectionResultType)
-- uid: Elements.Geometry.RayIntersectionResult.#ctor*
-  name: RayIntersectionResult
-  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult__ctor_
-  commentId: Overload:Elements.Geometry.RayIntersectionResult.#ctor
-  isSpec: "True"
-  fullName: Elements.Geometry.RayIntersectionResult.RayIntersectionResult
-  nameWithType: RayIntersectionResult.RayIntersectionResult
-- uid: Elements.Geometry.RayIntersectionResult.Point
-  name: Point
-  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult_Point
-  commentId: P:Elements.Geometry.RayIntersectionResult.Point
-  fullName: Elements.Geometry.RayIntersectionResult.Point
-  nameWithType: RayIntersectionResult.Point
-- uid: Elements.Geometry.RayIntersectionResult.Point*
-  name: Point
-  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult_Point_
-  commentId: Overload:Elements.Geometry.RayIntersectionResult.Point
-  isSpec: "True"
-  fullName: Elements.Geometry.RayIntersectionResult.Point
-  nameWithType: RayIntersectionResult.Point
-- uid: Elements.Geometry.RayIntersectionResult.Type
-  name: Type
-  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult_Type
-  commentId: P:Elements.Geometry.RayIntersectionResult.Type
-  fullName: Elements.Geometry.RayIntersectionResult.Type
-  nameWithType: RayIntersectionResult.Type
-- uid: Elements.Geometry.RayIntersectionResult.Type*
-  name: Type
-  href: api/Elements.Geometry.RayIntersectionResult.html#Elements_Geometry_RayIntersectionResult_Type_
-  commentId: Overload:Elements.Geometry.RayIntersectionResult.Type
-  isSpec: "True"
-  fullName: Elements.Geometry.RayIntersectionResult.Type
-  nameWithType: RayIntersectionResult.Type
-- uid: Elements.Geometry.RayIntersectionResultType
-  name: RayIntersectionResultType
-  href: api/Elements.Geometry.RayIntersectionResultType.html
-  commentId: T:Elements.Geometry.RayIntersectionResultType
-  fullName: Elements.Geometry.RayIntersectionResultType
-  nameWithType: RayIntersectionResultType
-- uid: Elements.Geometry.RayIntersectionResultType.Behind
-  name: Behind
-  href: api/Elements.Geometry.RayIntersectionResultType.html#Elements_Geometry_RayIntersectionResultType_Behind
-  commentId: F:Elements.Geometry.RayIntersectionResultType.Behind
-  fullName: Elements.Geometry.RayIntersectionResultType.Behind
-  nameWithType: RayIntersectionResultType.Behind
-- uid: Elements.Geometry.RayIntersectionResultType.Intersect
-  name: Intersect
-  href: api/Elements.Geometry.RayIntersectionResultType.html#Elements_Geometry_RayIntersectionResultType_Intersect
-  commentId: F:Elements.Geometry.RayIntersectionResultType.Intersect
-  fullName: Elements.Geometry.RayIntersectionResultType.Intersect
-  nameWithType: RayIntersectionResultType.Intersect
-- uid: Elements.Geometry.RayIntersectionResultType.IntersectsAtVertex
-  name: IntersectsAtVertex
-  href: api/Elements.Geometry.RayIntersectionResultType.html#Elements_Geometry_RayIntersectionResultType_IntersectsAtVertex
-  commentId: F:Elements.Geometry.RayIntersectionResultType.IntersectsAtVertex
-  fullName: Elements.Geometry.RayIntersectionResultType.IntersectsAtVertex
-  nameWithType: RayIntersectionResultType.IntersectsAtVertex
-- uid: Elements.Geometry.RayIntersectionResultType.Parallel
-  name: Parallel
-  href: api/Elements.Geometry.RayIntersectionResultType.html#Elements_Geometry_RayIntersectionResultType_Parallel
-  commentId: F:Elements.Geometry.RayIntersectionResultType.Parallel
-  fullName: Elements.Geometry.RayIntersectionResultType.Parallel
-  nameWithType: RayIntersectionResultType.Parallel
 - uid: Elements.Geometry.Representation
   name: Representation
   href: api/Elements.Geometry.Representation.html
@@ -4834,6 +4817,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Transform.CreateOrientedAlongCurve
   nameWithType: Transform.CreateOrientedAlongCurve
+- uid: Elements.Geometry.Transform.Equals(Elements.Geometry.Transform)
+  name: Equals(Transform)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Equals_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Transform.Equals(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Transform.Equals(Elements.Geometry.Transform)
+  nameWithType: Transform.Equals(Transform)
+- uid: Elements.Geometry.Transform.Equals*
+  name: Equals
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Equals_
+  commentId: Overload:Elements.Geometry.Transform.Equals
+  isSpec: "True"
+  fullName: Elements.Geometry.Transform.Equals
+  nameWithType: Transform.Equals
 - uid: Elements.Geometry.Transform.Invert
   name: Invert()
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Invert
@@ -5359,12 +5355,6 @@ references:
   commentId: M:Elements.Geometry.Vector3.Equals(Elements.Geometry.Vector3)
   fullName: Elements.Geometry.Vector3.Equals(Elements.Geometry.Vector3)
   nameWithType: Vector3.Equals(Vector3)
-- uid: Elements.Geometry.Vector3.Equals(System.Object)
-  name: Equals(Object)
-  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Equals_System_Object_
-  commentId: M:Elements.Geometry.Vector3.Equals(System.Object)
-  fullName: Elements.Geometry.Vector3.Equals(System.Object)
-  nameWithType: Vector3.Equals(Object)
 - uid: Elements.Geometry.Vector3.Equals*
   name: Equals
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Equals_
@@ -7664,3 +7654,16 @@ references:
   isSpec: "True"
   fullName: Elements.Wall.Profile
   nameWithType: Wall.Profile
+- uid: Elements.Wall.UpdateRepresentations
+  name: UpdateRepresentations()
+  href: api/Elements.Wall.html#Elements_Wall_UpdateRepresentations
+  commentId: M:Elements.Wall.UpdateRepresentations
+  fullName: Elements.Wall.UpdateRepresentations()
+  nameWithType: Wall.UpdateRepresentations()
+- uid: Elements.Wall.UpdateRepresentations*
+  name: UpdateRepresentations
+  href: api/Elements.Wall.html#Elements_Wall_UpdateRepresentations_
+  commentId: Overload:Elements.Wall.UpdateRepresentations
+  isSpec: "True"
+  fullName: Elements.Wall.UpdateRepresentations
+  nameWithType: Wall.UpdateRepresentations

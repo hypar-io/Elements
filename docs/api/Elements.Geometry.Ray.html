@@ -84,6 +84,10 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Ray</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Ray.html">Ray</a>&gt;</div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -112,7 +116,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Ray_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Ray</code></pre>
+    <pre><code class="lang-csharp hljs">public class Ray : IEquatable&lt;Ray&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -201,14 +205,14 @@
   </table>
   <h3 id="methods">Methods
   </h3>
-  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
-  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Triangle_Elements_Geometry_RayIntersectionResult__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.RayIntersectionResult@)">Intersects(Triangle, out RayIntersectionResult)</h4>
-  <div class="markdown level1 summary"><p><a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution">https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution</a></p>
+  <a id="Elements_Geometry_Ray_Equals_" data-uid="Elements.Geometry.Ray.Equals*"></a>
+  <h4 id="Elements_Geometry_Ray_Equals_Elements_Geometry_Ray_" data-uid="Elements.Geometry.Ray.Equals(Elements.Geometry.Ray)">Equals(Ray)</h4>
+  <div class="markdown level1 summary"><p>Is this ray equal to the provided ray?</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Triangle tri, out RayIntersectionResult result)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Equals(Ray other)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -221,14 +225,10 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></td>
-        <td><span class="parametername">tri</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.RayIntersectionResult.html">RayIntersectionResult</a></td>
-        <td><span class="parametername">result</span></td>
-        <td></td>
+        <td><a class="xref" href="Elements.Geometry.Ray.html">Ray</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The ray to test.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -243,18 +243,68 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>Returns true if the two rays are equal, otherwise false.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
-  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Topography_Elements_Geometry_RayIntersectionResult__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.RayIntersectionResult@)">Intersects(Topography, out RayIntersectionResult)</h4>
+  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Triangle_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.Vector3@)">Intersects(Triangle, out Vector3)</h4>
+  <div class="markdown level1 summary"><p><a href="https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm">https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Triangle tri, out Vector3 result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></td>
+        <td><span class="parametername">tri</span></td>
+        <td><p>The triangle to intersect.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The intersection result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection occurs, otherwise false. If true, check the intersection result for the type and location of intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
+  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Topography_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.Vector3@)">Intersects(Topography, out Vector3)</h4>
   <div class="markdown level1 summary"><p>Does this ray intersect the provided topography?</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Topography topo, out RayIntersectionResult xsect)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Intersects(Topography topo, out Vector3 xsect)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -273,7 +323,7 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.RayIntersectionResult.html">RayIntersectionResult</a></td>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">xsect</span></td>
         <td><p>The intersection result.</p>
 </td>
@@ -298,6 +348,10 @@ False if no intersection occurs.</p>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
 </article>
           </div>
           

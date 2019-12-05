@@ -151,7 +151,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "5XJ39TQZzsOp5ohUbGbcew=="
+          "hash": "aCU18MDstcvaibNraNlyYA=="
         }
       },
       "is_incremental": false,
@@ -235,7 +235,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Floor.html",
-          "hash": "JzdWifHNU3tjr7PoK9zfxQ=="
+          "hash": "2hQ7f5EQHTGC6EdKUtsVyA=="
         }
       },
       "is_incremental": false,
@@ -463,7 +463,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Arc.html",
-          "hash": "z9g+zj1DzSsPLbGg7dDNBA=="
+          "hash": "DNzxh1IiNh28hsgT8I+Oow=="
         }
       },
       "is_incremental": false,
@@ -487,7 +487,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Color.html",
-          "hash": "cC4k8NXVvyWvlvISEsruaQ=="
+          "hash": "P5j7v3diZLudLSoBZxtBYw=="
         }
       },
       "is_incremental": false,
@@ -559,7 +559,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Line.html",
-          "hash": "WWZCQbATHtJQIjWKmLbcjw=="
+          "hash": "3YEkpTbQXJ5BCW18BLgTAw=="
         }
       },
       "is_incremental": false,
@@ -571,7 +571,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Matrix.html",
-          "hash": "7rmr4Kk5ayJUCZaDWsrr/g=="
+          "hash": "maAt1obmk+QtAznBJNB/NA=="
         }
       },
       "is_incremental": false,
@@ -595,7 +595,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Plane.html",
-          "hash": "WUmt5LirfnUpUu18sWzVLw=="
+          "hash": "NEo1ba1KfXA26YrjQszcwA=="
         }
       },
       "is_incremental": false,
@@ -739,31 +739,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Ray.html",
-          "hash": "nPZpqw+YtY8EMMu9RQ2c2g=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Geometry.RayIntersectionResult.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Geometry.RayIntersectionResult.html",
-          "hash": "b0df0ie0/xsgpNITlbVLuw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Geometry.RayIntersectionResultType.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Geometry.RayIntersectionResultType.html",
-          "hash": "og7YkgTFWk/9eCc3kG5A3Q=="
+          "hash": "K7cFcjHKM67LeEqmyYMRAQ=="
         }
       },
       "is_incremental": false,
@@ -847,7 +823,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Transform.html",
-          "hash": "ALMVPrPJlLLpc+l91ZCpIg=="
+          "hash": "ZeizbLeB539C85wCplIMPw=="
         }
       },
       "is_incremental": false,
@@ -883,7 +859,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Vector3.html",
-          "hash": "89Aw8T7P2d2VDQtyIj4HpQ=="
+          "hash": "JeP4lQGph2JB4dW5SjRMiQ=="
         }
       },
       "is_incremental": false,
@@ -919,7 +895,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.html",
-          "hash": "O2XU84mqzMVPSPa9oq7oZQ=="
+          "hash": "GA8yttAWp8VAsTDcvW1MAw=="
         }
       },
       "is_incremental": false,
@@ -1111,7 +1087,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Serialization.glTF.GltfExtensions.html",
-          "hash": "vccf1uuJTxPUCyhr92nLPQ=="
+          "hash": "c2imNriNp7TOrtvr0gQhaQ=="
         }
       },
       "is_incremental": false,
@@ -1147,7 +1123,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.StandardWall.html",
-          "hash": "ggJIGdTDYNlQMpV8GbhiBw=="
+          "hash": "RZEJ5HTnxCdnFCZ5ndCNRQ=="
         }
       },
       "is_incremental": false,
@@ -1363,7 +1339,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Wall.html",
-          "hash": "04eiPnA0++Bh2m7m1VL3FQ=="
+          "hash": "HV5CM3KgmjS8oeg0gNuzvw=="
         }
       },
       "is_incremental": false,
@@ -2106,13 +2082,6 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
-          "skipped_file_count": 0
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
@@ -2122,7 +2091,14 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 101,
+          "total_file_count": 99,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }

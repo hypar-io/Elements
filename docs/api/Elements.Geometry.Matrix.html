@@ -84,6 +84,10 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Matrix</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Matrix.html">Matrix</a>&gt;</div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -109,7 +113,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Matrix_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Matrix</code></pre>
+    <pre><code class="lang-csharp hljs">public class Matrix : IEquatable&lt;Matrix&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -649,6 +653,49 @@ public Vector3 ZAxis { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Matrix_Equals_" data-uid="Elements.Geometry.Matrix.Equals*"></a>
+  <h4 id="Elements_Geometry_Matrix_Equals_Elements_Geometry_Matrix_" data-uid="Elements.Geometry.Matrix.Equals(Elements.Geometry.Matrix)">Equals(Matrix)</h4>
+  <div class="markdown level1 summary"><p>Is this matrix equal to other?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(Matrix other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Matrix.html">Matrix</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The transform to test.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the two transforms are equal, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Matrix_Inverse_" data-uid="Elements.Geometry.Matrix.Inverse*"></a>
   <h4 id="Elements_Geometry_Matrix_Inverse" data-uid="Elements.Geometry.Matrix.Inverse">Inverse()</h4>
   <div class="markdown level1 summary"><p>Compute the inverse of the matrix.</p>
@@ -1011,6 +1058,10 @@ public Vector3 ZAxis { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
 </article>
           </div>
           
