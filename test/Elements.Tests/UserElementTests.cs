@@ -29,7 +29,7 @@ namespace Elements.Tests
                                string name = null) : base(new Transform(),
                                                           material = material != null ? material : BuiltInMaterials.Default,
                                                           new Representation(new List<SolidOperation>()),
-                                                          id = id != null ? id : Guid.NewGuid(),
+                                                          id = id != default(Guid) ? id : Guid.NewGuid(),
                                                           name)
         {
             this.CenterLine = centerLine;
@@ -39,6 +39,7 @@ namespace Elements.Tests
             var t = this.CenterLine.TransformAt(0);
             var x = new Line(t.Origin, t.XAxis * this.CenterLine.Length());
             var y = new Line(t.Origin, t.YAxis * this.CenterLine.Length());
+
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine, 0.0, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, x,  0.0, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, y,  0.0, 0.0, 0.0, false));
@@ -64,10 +65,12 @@ namespace Elements.Tests
 
             var json = this.Model.ToJson();
             var newModel = Model.FromJson(json);
-
+            var newUe = newModel.AllElementsOfType<TestUserElement>().First();
+            
             Assert.Equal(6, newModel.Elements.Count);
-            Assert.Equal(1, newModel.AllElementsOfType<TestUserElement>().Count());
-
+            Assert.Equal(ue.Representation.SolidOperations.Count, newUe.Representation.SolidOperations.Count);
+            Assert.Equal(ue.Id, newUe.Id);
+            
             // Two profiles. The one for the user element
             // and the one for the sub-element masses.
             Assert.Equal(2, newModel.AllElementsOfType<Profile>().Count());
