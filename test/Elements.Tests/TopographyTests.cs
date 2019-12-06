@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Elements.Geometry;
 using Newtonsoft.Json;
 using Xunit;
@@ -25,7 +26,7 @@ namespace Elements.Tests
             var colorizer = new Func<Triangle,Color>((t)=>{
                 return Colors.Green;
             });
-            var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 3, colorizer);
+            var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 3);
             this.Model.AddElement(topo);
         }
 
@@ -67,6 +68,18 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void TopographyReserializationGetsTopography()
+        {
+            var topo = CreateTopoFromMapboxElevations();
+            this.Model.AddElement(topo);
+            var json = this.Model.ToJson();
+            var newModel = Model.FromJson(json);
+            var newTopo = newModel.AllElementsOfType<Topography>().First();
+            Assert.Equal(topo.Mesh.Triangles.Count, newTopo.Mesh.Triangles.Count);
+            Assert.Equal(topo.Mesh.Vertices.Count, newTopo.Mesh.Vertices.Count);
+        }
+
+        [Fact]
         public void RaysIntersectTopography()
         {
             this.Name = "RayTopographyIntersection";
@@ -99,28 +112,7 @@ namespace Elements.Tests
             // Compute the mapbox tile side lenth.
             var d = (40075016.685578 / Math.Pow(2, 15))/w;
 
-            Func<Triangle,Color> colorizer = (tri) => {
-                var slope = tri.Normal.AngleTo(Vector3.ZAxis);
-                if(slope >=0.0 && slope < 15.0)
-                {
-                    return Colors.Green;
-                }
-                else if(slope >= 15.0 && slope < 30.0)
-                {
-                    return Colors.Yellow;
-                }
-                else if(slope >= 30.0 && slope < 45.0)
-                {
-                    return Colors.Orange;
-                }
-                else if(slope >= 45.0)
-                {
-                    return Colors.Red;
-                }
-                return Colors.Red;
-            };
-
-            return new Topography(origin != null ? origin : Vector3.Origin, d, d, elevations, w, colorizer, material);
+            return new Topography(origin != null ? origin : Vector3.Origin, d, d, elevations, w, material);
         }
     }
 }

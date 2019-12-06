@@ -17,9 +17,7 @@ namespace Elements
     [UserElement]
     public class Topography : GeometricElement, ITessellate
     {
-        private Func<Triangle, Color> _colorizer;
-
-        private Mesh _mesh = new Mesh();
+        private Mesh _mesh;
 
         private double _minElevation = double.PositiveInfinity;
 
@@ -42,22 +40,47 @@ namespace Elements
         public double MinElevation => _minElevation;
 
         /// <summary>
+        /// A flat list of elevation data which is used to generate the topographic
+        /// mesh's vertices. The elevations will be used with the RowWidth property
+        /// to convert the flat list into a square grid.
+        /// </summary>
+        public double[] Elevations { get; }
+
+        /// <summary>
+        /// The origin of the topography.
+        /// </summary>
+        public Vector3 Origin { get; }
+
+        /// <summary>
+        /// The number of cells 'across' the topography.
+        /// </summary>
+        public int RowWidth { get; }
+
+        /// <summary>
+        /// The width of a cell.
+        /// </summary>
+        public double CellWidth { get; }
+
+        /// <summary>
+        /// The height of a cell.
+        /// </summary>
+        public double CellHeight { get; }
+
+        /// <summary>
         /// Create a topography.
         /// </summary>
         /// <param name="origin">The origin of the topography.</param>
         /// <param name="cellWidth">The width of each square "cell" of the topography.</param>
         /// <param name="cellHeight">The height of each square "cell" of the topography.</param>
         /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
-        /// <param name="width"></param>
-        /// <param name="colorizer">A function which produces a color for a triangle.</param>
+        /// <param name="rowWidth"></param>
         /// <param name="material">The topography's material.</param>
         public Topography(Vector3 origin,
                           double cellWidth,
                           double cellHeight,
                           double[] elevations,
-                          int width,
-                          Func<Triangle, Color> colorizer,
-                          Material material = null): base(null,
+                          int rowWidth,
+                          Material material = null) : base(null,
                                                           material != null ? material : BuiltInMaterials.Topography,
                                                           null,
                                                           Guid.NewGuid(),
@@ -70,30 +93,32 @@ namespace Elements
             // |/|/|/|
             // *-*-*-*
 
-            if (elevations.Length % (width + 1) != 0)
+            this._mesh = new Mesh();
+
+            this.Origin = origin;
+            this.CellWidth = cellWidth;
+            this.RowWidth = rowWidth;
+            this.CellHeight = cellHeight;
+            this.Elevations = elevations;
+
+            if (elevations.Length % (rowWidth + 1) != 0)
             {
-                throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be equally divisible by the width plus one, {width}.");
-            }
-            if (colorizer == null)
-            {
-                throw new ArgumentNullException("The topography could not be created. You must supply a colorizer function.");
+                throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be equally divisible by the width plus one, {rowWidth}.");
             }
 
-            this._colorizer = colorizer;
-
-            var triangles = (Math.Sqrt(elevations.Length) - 1) * width * 2;
+            var triangles = (Math.Sqrt(elevations.Length) - 1) * rowWidth * 2;
 
             var x = 0;
             var y = 0;
             for (var i = 0; i < elevations.Length; i++)
             {
                 var el = elevations[i];
-                var uv = new UV((double)x/(double)width, (double)y/(double)width);
-                this._mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv:uv);
+                var uv = new UV((double)x / (double)rowWidth, (double)y / (double)rowWidth);
+                this._mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv: uv);
                 _minElevation = Math.Min(_minElevation, el);
                 _maxElevation = Math.Max(_maxElevation, el);
 
-                if (x == width)
+                if (x == rowWidth)
                 {
                     x = 0;
                     y++;
@@ -109,7 +134,7 @@ namespace Elements
             for (var i = 0; i < elevations.Length; i++)
             {
                 var v = this._mesh.Vertices[i];
-                if (x == width)
+                if (x == rowWidth)
                 {
                     x = 0;
                     y++;
@@ -120,14 +145,14 @@ namespace Elements
                     {
                         // Top triangle
                         var a = this._mesh.Vertices[i];
-                        var b = this._mesh.Vertices[i - width];
-                        var c = this._mesh.Vertices[i - (width + 1)];
+                        var b = this._mesh.Vertices[i - rowWidth];
+                        var c = this._mesh.Vertices[i - (rowWidth + 1)];
                         this._mesh.AddTriangle(c, b, a);
 
                         // Bottom triangle
                         var d = this._mesh.Vertices[i];
                         var e = this._mesh.Vertices[i + 1];
-                        var f = this._mesh.Vertices[i - width];
+                        var f = this._mesh.Vertices[i - rowWidth];
                         this._mesh.AddTriangle(f, e, d);
                     }
                     x++;
@@ -141,19 +166,8 @@ namespace Elements
         /// <param name="mesh">The mesh into which the topography's facets will be added.</param>
         public void Tessellate(ref Mesh mesh)
         {
-            foreach (var t in this._mesh.Triangles)
-            {
-                var c = this._colorizer(t);
-                t.Vertices[0].Color = c;
-                t.Vertices[1].Color = c;
-                t.Vertices[2].Color = c;
-            }
-
             mesh.AddMesh(this._mesh);
         }
-
-        [JsonConstructor]
-        internal Topography(List<Elements.Geometry.Vertex> vertices, List<Triangle> triangles) : base(null, null, null, Guid.NewGuid(), null) { }
 
         /// <summary>
         /// Subtract the provided solid from this topography.
@@ -361,7 +375,7 @@ namespace Elements
         internal static ContourVertex[] ToContourVertexArray(this List<Vector3> pts)
         {
             var contour = new ContourVertex[pts.Count];
-            for(var i=0; i < contour.Length; i++)
+            for (var i = 0; i < contour.Length; i++)
             {
                 var v = pts[i];
                 contour[i] = new ContourVertex();
