@@ -18,8 +18,9 @@ namespace Elements
         /// <summary>
         /// Construct a material.
         /// </summary>
-        /// <param name="name"></param>
-        public Material(string name) : base(Guid.NewGuid(), name)
+        /// <param name="name">The name of the material.</param>
+        /// <param name="id">The id of the material.</param>
+        public Material(string name, Guid id = default(Guid)) : base(id, name)
         {
             this.Color = Colors.Gray;
         }
@@ -32,10 +33,20 @@ namespace Elements
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
         /// <param name="texture">A relative path to a jpg or png image file to be used as a texture.</param>
+        /// <param name="id">The id of the material.</param>
         /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
-        public Material(string name, Color color, float specularFactor = 0.1f, float glossinessFactor = 0.1f, string texture = null) :
-            this(color, specularFactor, glossinessFactor, Guid.NewGuid(), name)
+        public Material(string name,
+                        Color color,
+                        float specularFactor = 0.1f,
+                        float glossinessFactor = 0.1f,
+                        string texture = null,
+                        Guid id = default(Guid)) :
+            this(color,
+                 specularFactor,
+                 glossinessFactor,
+                 id != default(Guid) ? id : Guid.NewGuid(),
+                 name)
         {
             this.Texture = texture;
         }

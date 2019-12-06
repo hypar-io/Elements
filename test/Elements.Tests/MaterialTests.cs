@@ -2,6 +2,7 @@ using Elements;
 using Elements.Geometry;
 using Elements.Serialization.glTF;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace Elements.Tests
@@ -43,6 +44,17 @@ namespace Elements.Tests
             var mass = new Mass(Polygon.Rectangle(10,10), 10, m);
 
             this.Model.AddElement(mass);
+        }
+
+        [Fact]
+        public void BuiltInMaterialsAlwaysHaveSameId()
+        {
+            var m1 = BuiltInMaterials.Wood;
+            this.Model.AddElement(m1);
+            var json = this.Model.ToJson();
+            var newModel = Model.FromJson(json);
+            var m2 = newModel.AllElementsOfType<Material>().First();
+            Assert.Equal(m1.Id, m2.Id);
         }
     }
 }
