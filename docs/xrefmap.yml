@@ -6010,18 +6010,18 @@ references:
   commentId: M:Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Guid,System.String)
   fullName: Elements.Material.Material(Elements.Geometry.Color, System.Double, System.Double, System.Guid, System.String)
   nameWithType: Material.Material(Color, Double, Double, Guid, String)
-- uid: Elements.Material.#ctor(System.String)
-  name: Material(String)
-  href: api/Elements.Material.html#Elements_Material__ctor_System_String_
-  commentId: M:Elements.Material.#ctor(System.String)
-  fullName: Elements.Material.Material(System.String)
-  nameWithType: Material.Material(String)
-- uid: Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String)
-  name: Material(String, Color, Single, Single, String)
-  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_System_String_
-  commentId: M:Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String)
-  fullName: Elements.Material.Material(System.String, Elements.Geometry.Color, System.Single, System.Single, System.String)
-  nameWithType: Material.Material(String, Color, Single, Single, String)
+- uid: Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String,System.Guid)
+  name: Material(String, Color, Single, Single, String, Guid)
+  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_System_String_System_Guid_
+  commentId: M:Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String,System.Guid)
+  fullName: Elements.Material.Material(System.String, Elements.Geometry.Color, System.Single, System.Single, System.String, System.Guid)
+  nameWithType: Material.Material(String, Color, Single, Single, String, Guid)
+- uid: Elements.Material.#ctor(System.String,System.Guid)
+  name: Material(String, Guid)
+  href: api/Elements.Material.html#Elements_Material__ctor_System_String_System_Guid_
+  commentId: M:Elements.Material.#ctor(System.String,System.Guid)
+  fullName: Elements.Material.Material(System.String, System.Guid)
+  nameWithType: Material.Material(String, Guid)
 - uid: Elements.Material.#ctor*
   name: Material
   href: api/Elements.Material.html#Elements_Material__ctor_
@@ -7052,15 +7052,15 @@ references:
   commentId: T:Elements.Topography
   fullName: Elements.Topography
   nameWithType: Topography
-- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color},Elements.Material)
-  name: Topography(Vector3, Double, Double, Double[], Int32, Func<Triangle, Color>, Material)
-  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_System_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__Elements_Material_
-  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color},Elements.Material)
-  name.vb: Topography(Vector3, Double, Double, Double(), Int32, Func(Of Triangle, Color), Material)
-  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double[], System.Int32, System.Func<Elements.Geometry.Triangle, Elements.Geometry.Color>, Elements.Material)
-  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double(), System.Int32, System.Func(Of Elements.Geometry.Triangle, Elements.Geometry.Color), Elements.Material)
-  nameWithType: Topography.Topography(Vector3, Double, Double, Double[], Int32, Func<Triangle, Color>, Material)
-  nameWithType.vb: Topography.Topography(Vector3, Double, Double, Double(), Int32, Func(Of Triangle, Color), Material)
+- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,Elements.Material)
+  name: Topography(Vector3, Double, Double, Double[], Int32, Material)
+  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_Elements_Material_
+  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,Elements.Material)
+  name.vb: Topography(Vector3, Double, Double, Double(), Int32, Material)
+  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double[], System.Int32, Elements.Material)
+  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double(), System.Int32, Elements.Material)
+  nameWithType: Topography.Topography(Vector3, Double, Double, Double[], Int32, Material)
+  nameWithType.vb: Topography.Topography(Vector3, Double, Double, Double(), Int32, Material)
 - uid: Elements.Topography.#ctor*
   name: Topography
   href: api/Elements.Topography.html#Elements_Topography__ctor_
@@ -7068,6 +7068,45 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.Topography
   nameWithType: Topography.Topography
+- uid: Elements.Topography.CellHeight
+  name: CellHeight
+  href: api/Elements.Topography.html#Elements_Topography_CellHeight
+  commentId: P:Elements.Topography.CellHeight
+  fullName: Elements.Topography.CellHeight
+  nameWithType: Topography.CellHeight
+- uid: Elements.Topography.CellHeight*
+  name: CellHeight
+  href: api/Elements.Topography.html#Elements_Topography_CellHeight_
+  commentId: Overload:Elements.Topography.CellHeight
+  isSpec: "True"
+  fullName: Elements.Topography.CellHeight
+  nameWithType: Topography.CellHeight
+- uid: Elements.Topography.CellWidth
+  name: CellWidth
+  href: api/Elements.Topography.html#Elements_Topography_CellWidth
+  commentId: P:Elements.Topography.CellWidth
+  fullName: Elements.Topography.CellWidth
+  nameWithType: Topography.CellWidth
+- uid: Elements.Topography.CellWidth*
+  name: CellWidth
+  href: api/Elements.Topography.html#Elements_Topography_CellWidth_
+  commentId: Overload:Elements.Topography.CellWidth
+  isSpec: "True"
+  fullName: Elements.Topography.CellWidth
+  nameWithType: Topography.CellWidth
+- uid: Elements.Topography.Elevations
+  name: Elevations
+  href: api/Elements.Topography.html#Elements_Topography_Elevations
+  commentId: P:Elements.Topography.Elevations
+  fullName: Elements.Topography.Elevations
+  nameWithType: Topography.Elevations
+- uid: Elements.Topography.Elevations*
+  name: Elevations
+  href: api/Elements.Topography.html#Elements_Topography_Elevations_
+  commentId: Overload:Elements.Topography.Elevations
+  isSpec: "True"
+  fullName: Elements.Topography.Elevations
+  nameWithType: Topography.Elevations
 - uid: Elements.Topography.MaxElevation
   name: MaxElevation
   href: api/Elements.Topography.html#Elements_Topography_MaxElevation
@@ -7107,6 +7146,32 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.MinElevation
   nameWithType: Topography.MinElevation
+- uid: Elements.Topography.Origin
+  name: Origin
+  href: api/Elements.Topography.html#Elements_Topography_Origin
+  commentId: P:Elements.Topography.Origin
+  fullName: Elements.Topography.Origin
+  nameWithType: Topography.Origin
+- uid: Elements.Topography.Origin*
+  name: Origin
+  href: api/Elements.Topography.html#Elements_Topography_Origin_
+  commentId: Overload:Elements.Topography.Origin
+  isSpec: "True"
+  fullName: Elements.Topography.Origin
+  nameWithType: Topography.Origin
+- uid: Elements.Topography.RowWidth
+  name: RowWidth
+  href: api/Elements.Topography.html#Elements_Topography_RowWidth
+  commentId: P:Elements.Topography.RowWidth
+  fullName: Elements.Topography.RowWidth
+  nameWithType: Topography.RowWidth
+- uid: Elements.Topography.RowWidth*
+  name: RowWidth
+  href: api/Elements.Topography.html#Elements_Topography_RowWidth_
+  commentId: Overload:Elements.Topography.RowWidth
+  isSpec: "True"
+  fullName: Elements.Topography.RowWidth
+  nameWithType: Topography.RowWidth
 - uid: Elements.Topography.Tessellate(Elements.Geometry.Mesh@)
   name: Tessellate(ref Mesh)
   href: api/Elements.Topography.html#Elements_Topography_Tessellate_Elements_Geometry_Mesh__

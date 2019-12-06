@@ -49,6 +49,8 @@
 - Beams whose setbacks total more than the length of the beam no longer fail.
 - Plane construction no longer fails when the normal vector and the origin vector are "parallel".
 - Fixed #209.
+- Topography is now serialized to JSON.
+- Built in materials now have an assigned Id.
 
 ## 0.3.8
 ### Changed

@@ -208,31 +208,8 @@ var elevations = data[&quot;points&quot;];
 // Compute the mapbox tile size.
 var cellSize = (40075016.685578 / Math.Pow(2, 15))/w;
 
-// Create a colorizer which colors a triangle
-// according to its slope.
-Func&lt;Triangle,Color&gt; colorizer = (tri) =&gt; {
-    var slope = tri.Normal.AngleTo(Vector3.ZAxis);
-    if(slope &gt;=0.0 &amp;&amp; slope &lt; 15.0)
-    {
-        return Colors.Green;
-    }
-    else if(slope &gt;= 15.0 &amp;&amp; slope &lt; 30.0)
-    {
-        return Colors.Yellow;
-    }
-    else if(slope &gt;= 30.0 &amp;&amp; slope &lt; 45.0)
-    {
-        return Colors.Orange;
-    }
-    else if(slope &gt;= 45.0)
-    {
-        return Colors.Red;
-    }
-    return Colors.Red;
-};
-
 // Create a topography.
-var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, colorizer);
+var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -293,13 +270,13 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Topography__ctor_" data-uid="Elements.Topography.#ctor*"></a>
-  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_System_Func_Elements_Geometry_Triangle_Elements_Geometry_Color__Elements_Material_" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,System.Func{Elements.Geometry.Triangle,Elements.Geometry.Color},Elements.Material)">Topography(Vector3, Double, Double, Double[], Int32, Func&lt;Triangle, Color&gt;, Material)</h4>
+  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_Elements_Material_" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,Elements.Material)">Topography(Vector3, Double, Double, Double[], Int32, Material)</h4>
   <div class="markdown level1 summary"><p>Create a topography.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int width, Func&lt;Triangle, Color&gt; colorizer, Material material = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int rowWidth, Material material = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -337,14 +314,8 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">width</span></td>
+        <td><span class="parametername">rowWidth</span></td>
         <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Func</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>, <a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
-        <td><span class="parametername">colorizer</span></td>
-        <td><p>A function which produces a color for a triangle.</p>
-</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Material.html">Material</a></td>
@@ -356,6 +327,80 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w, col
   </table>
   <h3 id="properties">Properties
   </h3>
+  <a id="Elements_Topography_CellHeight_" data-uid="Elements.Topography.CellHeight*"></a>
+  <h4 id="Elements_Topography_CellHeight" data-uid="Elements.Topography.CellHeight">CellHeight</h4>
+  <div class="markdown level1 summary"><p>The height of a cell.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double CellHeight { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Topography_CellWidth_" data-uid="Elements.Topography.CellWidth*"></a>
+  <h4 id="Elements_Topography_CellWidth" data-uid="Elements.Topography.CellWidth">CellWidth</h4>
+  <div class="markdown level1 summary"><p>The width of a cell.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double CellWidth { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Topography_Elevations_" data-uid="Elements.Topography.Elevations*"></a>
+  <h4 id="Elements_Topography_Elevations" data-uid="Elements.Topography.Elevations">Elevations</h4>
+  <div class="markdown level1 summary"><p>A flat list of elevation data which is used to generate the topographic
+mesh's vertices. The elevations will be used with the RowWidth property
+to convert the flat list into a square grid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double[] Elevations { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Topography_MaxElevation_" data-uid="Elements.Topography.MaxElevation*"></a>
   <h4 id="Elements_Topography_MaxElevation" data-uid="Elements.Topography.MaxElevation">MaxElevation</h4>
   <div class="markdown level1 summary"><p>The maximum elevation of the topography.</p>
@@ -425,6 +470,54 @@ public Mesh Mesh { get; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Topography_Origin_" data-uid="Elements.Topography.Origin*"></a>
+  <h4 id="Elements_Topography_Origin" data-uid="Elements.Topography.Origin">Origin</h4>
+  <div class="markdown level1 summary"><p>The origin of the topography.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 Origin { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Topography_RowWidth_" data-uid="Elements.Topography.RowWidth*"></a>
+  <h4 id="Elements_Topography_RowWidth" data-uid="Elements.Topography.RowWidth">RowWidth</h4>
+  <div class="markdown level1 summary"><p>The number of cells 'across' the topography.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int RowWidth { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
         <td></td>
       </tr>
     </tbody>
