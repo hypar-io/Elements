@@ -53,20 +53,19 @@ namespace Elements.Tests
             this.Name = "UserElement";
 
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
-            var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)));
+            var m = new Material("UserElementGreen", Colors.Green);
+            var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)), m);
             
             var p = new Profile(Polygon.Rectangle(1,1));
-            var m1 = new Mass(p, 1);
-            var m2 = new Mass(p, 1);
+            var m1 = new Mass(p, 1, BuiltInMaterials.Wood);
             ue.SubElements.Add(m1);
-            ue.SubElements.Add(m2);
 
             this.Model.AddElement(ue);
 
             var json = this.Model.ToJson();
             var newModel = Model.FromJson(json);
 
-            Assert.Equal(7, newModel.Elements.Count);
+            Assert.Equal(6, newModel.Elements.Count);
             Assert.Equal(1, newModel.AllElementsOfType<TestUserElement>().Count());
 
             // Two profiles. The one for the user element
