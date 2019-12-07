@@ -18,13 +18,13 @@ namespace Elements.Serialization.IFC
         {
             var products = new List<IfcProduct>();
 
+            e.UpdateRepresentations();
+
             IfcProductDefinitionShape shape = null;
             var localPlacement = e.Transform.ToIfcLocalPlacement(doc);
             
             var geoms = new List<IfcRepresentationItem>();
 
-            e.UpdateRepresentations();
-            
             foreach(var op in e.Representation.SolidOperations)
             {
                 IfcGeometricRepresentationItem geom = null;
@@ -366,6 +366,7 @@ namespace Elements.Serialization.IFC
                                                     IfcBuildingElementProxyTypeEnum.ELEMENT);
             return proxy;
         }
+        
         private static IfcSlab ToIfc(this Floor floor, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
