@@ -60,10 +60,10 @@ namespace Elements
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
         {
-            SetProperties(profile, thickness, material, transform);
+            SetProperties(profile, thickness);
         }
 
-        private void SetProperties(Profile profile, double thickness, Material material, Transform transform)
+        private void SetProperties(Profile profile, double thickness)
         {
             if(thickness <= 0.0) 
             {
