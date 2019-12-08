@@ -31,18 +31,18 @@ namespace Elements.Serialization.IFC
                 if(op is Sweep)
                 {
                     var sweep = (Sweep)op;
-                    geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(e.Transform, doc);
+                    geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
                     // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(e.Transform, doc);
                 }
                 else if(op is Extrude)
                 {
                     var extrude = (Extrude)op;
-                    geom = extrude.ToIfcExtrudedAreaSolid(e.Transform, doc);
+                    geom = extrude.ToIfcExtrudedAreaSolid(doc);
                 }
                 else if(op is Lamina)
                 {
                     var lamina = (Lamina)op;
-                    geom = lamina.ToIfcShellBasedSurfaceModel(e.Transform, doc);
+                    geom = lamina.ToIfcShellBasedSurfaceModel(doc);
                 }
                 else
                 {
@@ -129,9 +129,9 @@ namespace Elements.Serialization.IFC
             return localPlacement;
         }
 
-        internal static IfcExtrudedAreaSolid ToIfcExtrudedAreaSolid(this Extrude extrude, Transform transform, Document doc)
+        internal static IfcExtrudedAreaSolid ToIfcExtrudedAreaSolid(this Extrude extrude, Document doc)
         {
-            var position = transform.ToIfcAxis2Placement3D(doc);
+            var position = new Transform().ToIfcAxis2Placement3D(doc);
 
             var extrudeDepth = extrude.Height;
             var extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
@@ -250,7 +250,7 @@ namespace Elements.Serialization.IFC
             return solid;
         }
 
-        private static IfcSurfaceCurveSweptAreaSolid ToIfcSurfaceCurveSweptAreaSolid(this Sweep sweep, Transform transform, Document doc)
+        private static IfcSurfaceCurveSweptAreaSolid ToIfcSurfaceCurveSweptAreaSolid(this Sweep sweep, Document doc)
         {
             var position = new Transform().ToIfcAxis2Placement3D(doc);
             var sweptArea = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
@@ -281,10 +281,8 @@ namespace Elements.Serialization.IFC
             return solid;
         }
 
-        private static IfcShellBasedSurfaceModel ToIfcShellBasedSurfaceModel(this Lamina lamina, Transform transform, Document doc)
+        private static IfcShellBasedSurfaceModel ToIfcShellBasedSurfaceModel(this Lamina lamina, Document doc)
         {
-            var position = transform.ToIfcAxis2Placement3D(doc);
-
             var plane = lamina.Perimeter.Plane().ToIfcPlane(doc);
             var outer = lamina.Perimeter.ToIfcCurve(doc);
             var bplane = new IfcCurveBoundedPlane(plane, outer, new List<IfcCurve>{});

@@ -70,6 +70,7 @@ namespace Elements.Tests
             Assert.Equal(6, newModel.Elements.Count);
             Assert.Equal(ue.Representation.SolidOperations.Count, newUe.Representation.SolidOperations.Count);
             Assert.Equal(ue.Id, newUe.Id);
+            Assert.Equal(ue.Transform, newUe.Transform);
             
             // Two profiles. The one for the user element
             // and the one for the sub-element masses.
