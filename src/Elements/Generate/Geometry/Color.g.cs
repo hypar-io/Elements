@@ -21,7 +21,7 @@ namespace Elements.Geometry
 
     /// <summary>A color with red, green, blue, and alpha components.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Color 
+    public partial struct Color 
     {
         [Newtonsoft.Json.JsonConstructor]
         public Color(double @red, double @green, double @blue, double @alpha)

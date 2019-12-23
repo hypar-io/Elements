@@ -160,7 +160,7 @@ namespace Elements.Geometry
         /// <param name="position">The position of the vertex.</param>
         /// <param name="normal">The vertex's normal.</param>
         /// <param name="color">The vertex's color.</param>
-        public Vertex(Vector3 position, Vector3? normal = null, Color color = null)
+        public Vertex(Vector3 position, Vector3? normal = null, Color color = default(Color))
         {
             this.Position = position;
             this.Normal = Vector3.Origin;
@@ -222,7 +222,7 @@ Triangles:{_triangles.Count}";
             indexBuffer = new byte[this._triangles.Count * ushortSize * 3];
             uvBuffer = new byte[this._vertices.Count * floatSize *2];
 
-            if(this._vertices[0].Color != null)
+            if(!this._vertices[0].Color.Equals(default(Color)))
             {
                 colorBuffer = new byte[this._vertices.Count * floatSize * 3];
                 c_min = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
@@ -290,7 +290,7 @@ Triangles:{_triangles.Count}";
                 index_max = Math.Max(index_max, (ushort)v.Index);
                 index_min = Math.Min(index_min, (ushort)v.Index);
 
-                if (v.Color != null)
+                if (!v.Color.Equals(default(Color)))
                 {
                     c_max[0] = Math.Max(c_max[0], (float)v.Color.Red);
                     c_max[1] = Math.Max(c_max[1], (float)v.Color.Green);
@@ -359,7 +359,7 @@ Triangles:{_triangles.Count}";
         /// <param name="color">The vertex's color.</param>
         /// <param name="uv">The texture coordinate of the vertex.</param>
         /// <returns>The newly created vertex.</returns>
-        internal Vertex AddVertex(Vector3 position, UV uv, Vector3 normal = default(Vector3), Color color = null)
+        internal Vertex AddVertex(Vector3 position, UV uv, Vector3 normal = default(Vector3), Color color = default(Color))
         {
             var v = new Vertex(position, normal, color);
             v.UV = uv;
