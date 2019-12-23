@@ -159,8 +159,6 @@ namespace Elements.Tests
             var sw = new Stopwatch();
             sw.Start();
 
-            this.Name = "WideFlange";
-
             var x = 0.0;
             var z = 0.0;
             var profile = WideFlangeProfileServer.Instance.AllProfiles().First();
@@ -169,7 +167,6 @@ namespace Elements.Tests
             {
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
                 var beam = new Beam(line, profile, BuiltInMaterials.Steel);
-                this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
                 {
