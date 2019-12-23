@@ -162,11 +162,14 @@ namespace Elements.Tests
             var x = 0.0;
             var z = 0.0;
             var profile = WideFlangeProfileServer.Instance.AllProfiles().First();
-            var n = 10000;
+            var n = 100000;
+            var mesh = new Mesh();
             for(var i=0; i<n; i++)
             {
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
                 var beam = new Beam(line, profile, BuiltInMaterials.Steel);
+                beam.UpdateRepresentations();
+                beam.Representation.SolidOperations.First().GetSolid().Tessellate(ref mesh);
                 x += 2.0;
                 if (x > 20.0)
                 {
