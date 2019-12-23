@@ -152,5 +152,35 @@ namespace Elements.Tests
             var beam1 = new Beam(line1, this._testProfile, BuiltInMaterials.Steel, sb, sb);
             this.Model.AddElement(beam1);
         }
+
+        [Fact]
+        public void Benchmark()
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+
+            this.Name = "WideFlange";
+
+            var x = 0.0;
+            var z = 0.0;
+            var profile = WideFlangeProfileServer.Instance.AllProfiles().First();
+            var n = 1000;
+            for(var i=0; i<n; i++)
+            {
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
+                var beam = new Beam(line, profile, BuiltInMaterials.Steel);
+                this.Model.AddElement(beam);
+                x += 2.0;
+                if (x > 20.0)
+                {
+                    z += 2.0;
+                    x = 0.0;
+                }
+            }
+
+            sw.Stop();
+            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating {n} beams.");
+            Console.WriteLine($"{GC.GetTotalMemory(false)}bytes allocated.");
+        }
     }
 }
