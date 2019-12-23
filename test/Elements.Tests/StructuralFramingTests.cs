@@ -179,8 +179,8 @@ namespace Elements.Tests
             }
 
             sw.Stop();
-            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for creating {n} beams.");
-            Console.WriteLine($"{GC.GetTotalMemory(true)}bytes allocated.");
+            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds} ms for creating {n} beams.");
+            Console.WriteLine($"{GC.GetTotalMemory(true)} bytes allocated.");
         }
     }
 }
