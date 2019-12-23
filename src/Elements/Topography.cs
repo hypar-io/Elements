@@ -340,9 +340,11 @@ namespace Elements
                     //start inside
                     //end outside
                     //add intersection
-                    var xsect = new Line(start, end).Intersect(p);
-                    output.Add(start);
-                    output.Add(xsect);
+                    if(new Line(start, end).Intersects(p, out Vector3 result))
+                    {
+                        output.Add(start);
+                        output.Add(result);
+                    }
                 }
                 else if (d1 > 0 && d2 > 0)
                 {
@@ -353,8 +355,10 @@ namespace Elements
                     //start outside
                     //end inside
                     //add intersection
-                    var xsect = new Line(start, end).Intersect(p);
-                    output.Add(xsect);
+                    if(new Line(start, end).Intersects(p, out Vector3 result))
+                    {
+                        output.Add(result);
+                    }
                 }
             }
 

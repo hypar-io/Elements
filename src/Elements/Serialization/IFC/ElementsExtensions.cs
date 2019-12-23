@@ -314,7 +314,7 @@ namespace Elements.Serialization.IFC
             if (curve is Line)
             {
                 var l = (Line)curve;
-                if(l.Direction() == Vector3.ZAxis)
+                if(l.Direction().Equals(Vector3.ZAxis))
                 {
                     return new Plane(l.Start, Vector3.ZAxis);
                 }

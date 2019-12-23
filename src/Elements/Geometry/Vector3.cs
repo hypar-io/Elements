@@ -7,7 +7,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A 3D vector.
     /// </summary>
-    public partial class Vector3 : IComparable<Vector3>, IEquatable<Vector3>
+    public partial struct Vector3 : IComparable<Vector3>, IEquatable<Vector3>
     {
         /// <summary>
         /// A tolerance for comparison operations of 1e-9.
@@ -86,16 +86,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a default vector at the origin.
-        /// </summary>
-        public Vector3()
-        {
-            this.X = 0;
-            this.Y = 0;
-            this.Z = 0;
-        }
-
-        /// <summary>
         /// Create a Vector3 by copying the components of another Vector3.
         /// </summary>
         /// <param name="v">The Vector3 to copy.</param>
@@ -126,6 +116,7 @@ namespace Elements.Geometry
 
             this.X = x;
             this.Y = y;
+            this.Z = 0;
         }
 
         /// <summary>
@@ -404,10 +395,6 @@ namespace Elements.Geometry
         /// <returns>Returns true if all components of the two vectors are within Epsilon, otherwise false.</returns>
         public bool Equals(Vector3 other)
         {
-            if(other == null)
-            {
-                return false;
-            }
             return this.IsAlmostEqualTo(other);
         }
 
@@ -492,7 +479,7 @@ namespace Elements.Geometry
             // with the first. If all the vectors are tried, and one isn't
             // found that's not parallel to the first, you'll 
             // get a zero-length normal.
-            Vector3 b = null;
+            Vector3 b = new Vector3();
             for(var i=2; i<points.Count; i++)
             {
                 b = new Vector3(points[i].X - points[1].X,

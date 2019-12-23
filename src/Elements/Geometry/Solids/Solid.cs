@@ -718,15 +718,14 @@ namespace Elements.Geometry.Solids
         {
             var start = e.Left.Vertex;
             var end = e.Right.Vertex;
-            var xsect = new Line(start.Point, end.Point).Intersect(p);
-            if(xsect == null)
+            if(!new Line(start.Point, end.Point).Intersects(p, out Vector3 result))
             {
                 return;
             }
 
             // Add vertex at intersection.
             // Create new edge from vertex to end.
-            var mid = AddVertex(xsect);
+            var mid = AddVertex(result);
             var e1 = AddEdge(mid, end);
 
             // Adjust end of existing edge to

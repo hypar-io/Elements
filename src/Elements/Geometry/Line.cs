@@ -132,13 +132,16 @@ namespace Elements.Geometry
         /// Intersect this line with the specified plane 
         /// </summary>
         /// <param name="p">The plane.</param>
-        /// <returns>The point of intersection or null if no intersection occurs.</returns>
-        public Vector3 Intersect(Plane p) {
+        /// <param name="result">The location of intersection.</param>
+        /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
+        public bool Intersects(Plane p, out Vector3 result) {
+            result = default(Vector3);
+            
             var d = this.Direction();
 
             // Test for perpendicular.
             if (p.Normal.Dot(d) == 0) {
-                return null;
+                return false;
             }
             var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(d);
 
@@ -148,9 +151,10 @@ namespace Elements.Geometry
             // the start of the line.
             if(t > this.Length() || t < 0)
             {
-                return null;
+                return false;
             }
-            return this.Start + d * t;
+            result = this.Start + d * t;
+            return true;
         }
 
         /// <summary>

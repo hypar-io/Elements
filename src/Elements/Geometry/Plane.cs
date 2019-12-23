@@ -18,11 +18,6 @@ namespace Elements.Geometry
         /// <exception>Thrown when any of a, b, or c are null.</exception>
         public Plane(Vector3 a, Vector3 b, Vector3 c)
         {
-            if(a == null || b == null || c == null)
-            {
-                throw new ArgumentNullException();
-            }
-
             this.Origin = a;
             var ab = (b-a).Normalized();
             var bc = (c-a).Normalized();
@@ -43,7 +38,7 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("The plane could not be created. You must supply a minimum of 3 points.");
             }
-            if(points[0] == points[1] || points[0] == points[2] || points[1] == points[2])
+            if(points[0].Equals(points[1]) || points[0].Equals(points) || points[1].Equals(points[2]))
             {
                 throw new ArgumentException("The plane could not be created. The points must not be coincident.");
             }

@@ -332,7 +332,7 @@ namespace Elements.Geometry
         /// <param name="curve">The curve along which to orient the transform.</param>
         /// <param name="t">A parameter value between 0.0 and 1.0.</param>
         /// <param name="up"></param>
-        public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = null)
+        public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))
         {
             var temp = curve.TransformAt(t);
             return new Transform(temp.Origin, temp.ZAxis.Negate(), temp.XAxis.Negate(), Vector3.ZAxis);

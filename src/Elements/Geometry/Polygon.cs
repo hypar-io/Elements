@@ -27,10 +27,6 @@ namespace Elements.Geometry
         /// </returns>
         public bool Contains(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return false;
-            }
             var thisPath = this.ToClipperPath();
             var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
@@ -74,10 +70,6 @@ namespace Elements.Geometry
         /// </returns>
         public bool Covers(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return false;
-            }
             var thisPath = this.ToClipperPath();
             var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
@@ -121,10 +113,6 @@ namespace Elements.Geometry
         /// </returns>
         public bool Disjoint(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return true;
-            }
             var thisPath = this.ToClipperPath();
             var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
@@ -196,10 +184,6 @@ namespace Elements.Geometry
         /// </returns>
         public bool Touches(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return false;
-            }
             var thisPath = this.ToClipperPath();
             var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != -1)

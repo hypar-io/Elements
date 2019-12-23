@@ -92,11 +92,13 @@ namespace Elements.Geometry.Solids
                     //start inside
                     //end outside
                     //add intersection
-                    var xsect = new Line(start, end).Intersect(p);
-                    inside.Add(start);
-                    inside.Add(xsect);
-
-                    outside.Add(xsect);
+                    if(new Line(start, end).Intersects(p, out Vector3 result))
+                    {
+                        inside.Add(start);
+                        inside.Add(result);
+                        outside.Add(result);
+                    }
+                    
                 }
                 else if(d1 > 0 && d2 > 0)
                 {
@@ -108,11 +110,12 @@ namespace Elements.Geometry.Solids
                     //start outside
                     //end inside
                     //add intersection
-                    var xsect =new Line(start, end).Intersect(p);
-                    inside.Add(xsect);
-
-                    outside.Add(start);
-                    outside.Add(xsect);
+                    if(new Line(start, end).Intersects(p, out Vector3 result))
+                    {
+                        inside.Add(result);
+                        outside.Add(start);
+                        outside.Add(result);
+                    }
                 }
             }
         }

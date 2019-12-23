@@ -118,7 +118,7 @@ namespace Elements.IFC.Tests
                 for(var i=0; i<colA.Count; i++)
                 {
                     var a = colA[i];
-                    Vector3 b = null;
+                    Vector3 b = default(Vector3);
                     if(i+1 < colA.Count)
                     {
                         b = colA[i+1];

@@ -99,20 +99,22 @@ namespace Elements.Geometry
             var segmentIndex = 0;
             var o = PointAtInternal(u, out segmentIndex);
             var up = Vector3.ZAxis;
-            Vector3 x = null;
+            Vector3 x = Vector3.XAxis; // Vector3: Convert to XAxis
 
             // Check if the provided parameter is equal
             // to one of the vertices.
-            Vector3 a = null;
+            Vector3 a = new Vector3();
+            var isEqualToVertex = false;
             foreach(var v in this.Vertices)
             {
                 if (v.Equals(o))
                 {
+                    isEqualToVertex = true;
                     a = v;
                 }
             }
 
-            if (a != null)
+            if (isEqualToVertex)
             {
                 var idx = this.Vertices.IndexOf(a);
 
