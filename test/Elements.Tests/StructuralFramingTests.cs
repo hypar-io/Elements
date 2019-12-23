@@ -3,6 +3,7 @@ using Elements.Geometry.Profiles;
 using System;
 using System.Linq;
 using Xunit;
+using System.Diagnostics;
 
 namespace Elements.Tests
 {
@@ -59,6 +60,9 @@ namespace Elements.Tests
         [Fact]
         public void WideFlange()
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             this.Name = "WideFlange";
 
             var x = 0.0;
@@ -77,6 +81,10 @@ namespace Elements.Tests
                     x = 0.0;
                 }
             }
+
+            sw.Stop();
+            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating beams.");
+            Console.WriteLine($"{GC.GetTotalMemory(false)}bytes allocated.");
         }
 
         [Fact]
