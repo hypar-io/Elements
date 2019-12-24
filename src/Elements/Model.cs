@@ -183,12 +183,21 @@ namespace Elements
             return IFCModelExtensions.FromIFC(path, idsToConvert);
         }
 
-        private static List<Element> RecursiveGatherSubElements(object obj)
+        private List<Element> RecursiveGatherSubElements(object obj)
         {
             var elements = new List<Element>();
 
             if(obj == null)
             {
+                return elements;
+            }
+
+            var e = obj as Element;
+            if(e != null && Elements.ContainsKey(e.Id))
+            {
+                // Do nothing. The Element has already 
+                // been added. This assumes that that the sub-elements
+                // have been added as well and we don't need to continue.
                 return elements;
             }
 
@@ -225,7 +234,6 @@ namespace Elements
                 }
             }
 
-            var e = obj as Element;
             if(e != null)
             {
                 elements.Add(e);
