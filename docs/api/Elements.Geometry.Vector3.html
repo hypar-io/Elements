@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Vector3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.47.0.0">
+    <meta name="generator" content="docfx 2.48.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -86,26 +86,7 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.IComparable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -190,8 +171,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Vector3(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3(double x, double y, double z)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -278,8 +258,7 @@ public Vector3(double x, double y, double z)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;X&quot;, Required = Required.Always)]
-public double X { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double X { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -327,8 +306,7 @@ public double X { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Y&quot;, Required = Required.Always)]
-public double Y { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Y { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -376,8 +354,7 @@ public double Y { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Z&quot;, Required = Required.Always)]
-public double Z { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Z { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -511,7 +488,7 @@ public double Z { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -894,8 +871,6 @@ The distance will be negative when this vector lies
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Vector3_IsAlmostEqualTo_" data-uid="Elements.Geometry.Vector3.IsAlmostEqualTo*"></a>
   <h4 id="Elements_Geometry_Vector3_IsAlmostEqualTo_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)">IsAlmostEqualTo(Vector3)</h4>
   <div class="markdown level1 summary"><p>Determine whether this vector's components are equal to those of v, within tolerance.</p>
@@ -1289,8 +1264,6 @@ The distance will be negative when this vector lies
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
   <h3 id="operators">Operators
   </h3>
   <a id="Elements_Geometry_Vector3_op_Addition_" data-uid="Elements.Geometry.Vector3.op_Addition*"></a>
@@ -1638,10 +1611,7 @@ The distance will be negative when this vector lies
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">System.IComparable&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <span class="xref">IEquatable&lt;&gt;</span>
   </div>
 </article>
           </div>

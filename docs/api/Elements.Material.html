@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Material
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.47.0.0">
+    <meta name="generator" content="docfx 2.48.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -93,21 +93,6 @@
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -118,13 +103,12 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Guid_System_String_" data-uid="Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Guid,System.String)">Material(Color, Double, Double, Guid, String)</h4>
+  <h4 id="Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Guid_System_String_" data-uid="Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Guid,System.String)">Material(Color, Double, Double, System.Guid, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Material(Color color, double specularFactor, double glossinessFactor, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(Color color, double specularFactor, double glossinessFactor, System.Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -164,13 +148,13 @@ public Material(Color color, double specularFactor, double glossinessFactor, Gui
     </tbody>
   </table>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_System_String_System_Guid_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String,System.Guid)">Material(String, Color, Single, Single, String, Guid)</h4>
+  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_System_String_Guid_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String,Guid)">Material(String, Color, Single, Single, String, Guid)</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, string texture = null, Guid id = default(Guid))</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, string texture = null, Guid id = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -213,7 +197,7 @@ public Material(Color color, double specularFactor, double glossinessFactor, Gui
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the material.</p>
 </td>
@@ -221,13 +205,13 @@ public Material(Color color, double specularFactor, double glossinessFactor, Gui
     </tbody>
   </table>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_System_String_System_Guid_" data-uid="Elements.Material.#ctor(System.String,System.Guid)">Material(String, Guid)</h4>
+  <h4 id="Elements_Material__ctor_System_String_Guid_" data-uid="Elements.Material.#ctor(System.String,Guid)">Material(String, Guid)</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(string name, Guid id = default(Guid))</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(string name, Guid id = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -246,7 +230,7 @@ public Material(Color color, double specularFactor, double glossinessFactor, Gui
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the material.</p>
 </td>
@@ -262,9 +246,7 @@ public Material(Color color, double specularFactor, double glossinessFactor, Gui
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Color&quot;, Required = Required.Always)]
-[Required]
-public Color Color { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Color Color { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -288,9 +270,7 @@ public Color Color { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;GlossinessFactor&quot;, Required = Required.Always)]
-[Range(0, 1)]
-public double GlossinessFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double GlossinessFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -314,9 +294,7 @@ public double GlossinessFactor { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;SpecularFactor&quot;, Required = Required.Always)]
-[Range(0, 1)]
-public double SpecularFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double SpecularFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -401,8 +379,6 @@ The image data will be packed into the glTF's buffer.</p>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <a id="Elements_Material_GetHashCode_" data-uid="Elements.Material.GetHashCode*"></a>
   <h4 id="Elements_Material_GetHashCode" data-uid="Elements.Material.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the material.</p>
@@ -427,8 +403,6 @@ The image data will be packed into the glTF's buffer.</p>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.GetHashCode()</span></div>
 </article>
           </div>
           
