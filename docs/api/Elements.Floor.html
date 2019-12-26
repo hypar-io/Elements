@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Floor
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.47.0.0">
+    <meta name="generator" content="docfx 2.48.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -245,27 +245,6 @@ floor1.Openings.AddRange(openings);
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -276,13 +255,13 @@ floor1.Openings.AddRange(openings);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Floor__ctor_" data-uid="Elements.Floor.#ctor*"></a>
-  <h4 id="Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)">Floor(Profile, Double, Transform, Material, Representation, Guid, String)</h4>
+  <h4 id="Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_Guid_System_String_" data-uid="Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,Guid,System.String)">Floor(Profile, Double, Transform, Material, Representation, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a floor.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Floor(Profile profile, double thickness, Transform transform = null, Material material = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Floor(Profile profile, double thickness, Transform transform = null, Material material = null, Representation representation = null, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -325,7 +304,7 @@ floor1.Openings.AddRange(openings);
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The floor's id.</p>
 </td>
@@ -347,8 +326,7 @@ floor1.Openings.AddRange(openings);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double Elevation { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Elevation { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -384,7 +362,7 @@ public double Elevation { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
