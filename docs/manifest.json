@@ -834,7 +834,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Model.html",
-          "hash": "8WCgOcURijVbN1f92qsHaA=="
+          "hash": "rmpNwhhDD8LmaJF9VN3AKg=="
         }
       },
       "is_incremental": false,
@@ -1315,10 +1315,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparAreaResult.png",
+      "source_relative_path": "images/HyparAreaResult2019.11.29.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparAreaResult.png"
+          "relative_path": "images/HyparAreaResult2019.11.29.png"
         }
       },
       "is_incremental": false,
@@ -1337,10 +1337,21 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparCardFlip2019.06.16.png",
+      "source_relative_path": "images/HyparCardFlip2019.11.29.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparCardFlip2019.06.16.png"
+          "relative_path": "images/HyparCardFlip2019.11.29.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparEmptyWorkflow2019.11.29.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparEmptyWorkflow2019.11.29.png"
         }
       },
       "is_incremental": false,
@@ -1535,17 +1546,6 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparLabels.png",
-      "output": {
-        "resource": {
-          "relative_path": "images/HyparLabels.png"
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
       "source_relative_path": "images/HyparLabels2.PNG",
       "output": {
         "resource": {
@@ -1579,10 +1579,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparLanding2019.06.16.png",
+      "source_relative_path": "images/HyparLanding2019.11.29.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparLanding2019.06.16.png"
+          "relative_path": "images/HyparLanding2019.11.29.png"
         }
       },
       "is_incremental": false,
@@ -1612,10 +1612,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparOption2019.06.16.png",
+      "source_relative_path": "images/HyparOptions2019.11.29.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparOption2019.06.16.png"
+          "relative_path": "images/HyparOptions2019.11.29.png"
         }
       },
       "is_incremental": false,
@@ -1623,21 +1623,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparOptions2019.06.16.png",
+      "source_relative_path": "images/HyparOutput2019.11.29.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparOptions2019.06.16.png"
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
-      "source_relative_path": "images/HyparOutputs.png",
-      "output": {
-        "resource": {
-          "relative_path": "images/HyparOutputs.png"
+          "relative_path": "images/HyparOutput2019.11.29.png"
         }
       },
       "is_incremental": false,
@@ -1821,10 +1810,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparStarterFunction2019.06.16.PNG",
+      "source_relative_path": "images/HyparStarterFunction2019.11.29.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparStarterFunction2019.06.16.PNG"
+          "relative_path": "images/HyparStarterFunction2019.11.29.png"
         }
       },
       "is_incremental": false,
@@ -1843,10 +1832,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparStarterFunctionNoOptions2019.06.16.PNG",
+      "source_relative_path": "images/HyparStarterFunctionFirstRun2019.11.29.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparStarterFunctionNoOptions2019.06.16.PNG"
+          "relative_path": "images/HyparStarterFunctionFirstRun2019.11.29.png"
         }
       },
       "is_incremental": false,
@@ -1854,10 +1843,21 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparStarterHeight2019.06.16.png",
+      "source_relative_path": "images/HyparStarterHeight2019.11.29.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparStarterHeight2019.06.16.png"
+          "relative_path": "images/HyparStarterHeight2019.11.29.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparWorkflows2019.11.29.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparWorkflows2019.11.29.png"
         }
       },
       "is_incremental": false,
@@ -1891,7 +1891,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "R4QlvgvlkJ3vU2Hj5qIGiA=="
+          "hash": "q18JEU7Bm48645rLHRlNQw=="
         }
       },
       "is_incremental": false,
@@ -1946,36 +1946,34 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": false,
-        "details": "Cannot build incrementally because last build info is missing.",
+        "can_incremental": true,
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0,
-        "full_build_reason_code": "NoAvailableBuildCache"
+        "skipped_file_count": 0
       },
       "processors": {
-        "ConceptualDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 3,
-          "skipped_file_count": 0
-        },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 99,
-          "skipped_file_count": 0
-        },
-        "ResourceDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "TocDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 99,
+          "skipped_file_count": 99
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 3,
+          "skipped_file_count": 2
+        },
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
