@@ -67,7 +67,7 @@
 <h1 id="getting-started-with-hypar">Getting Started with Hypar</h1>
 
 <p>Hypar is a cloud platform for generating buildings that makes it easy to publish, distribute, and maintain your building design logic. Rather than requiring web development skills to scale and deliver your design logic, Hypar lets you concentrate on what you want to get done while the platform creates the interface for your audience and provides computation, visualization, delivery, interoperability, and access control for your functions.</p>
-<p>By uploading a function to Hypar you can produce twenty options for a building problem in just a few seconds:</p>
+<p>By uploading a function to Hypar you can produce multiple options for a building problem in just a few seconds, and combine them with other people's functions to create rich, realistic designs:</p>
 <p><img src="images/HyparIntro.png" alt=""></p>
 <p>In this introduction to Hypar, we'll work with a much simpler function that generates masses of variable dimensions.</p>
 <div style="page-break-after: always;"></div>
@@ -75,7 +75,7 @@
 <p>Before getting started, there are a few things you'll need and some other things you might want to know.</p>
 <h3 id="things-youll-need">Things you'll need</h3>
 <ul>
-<li><p>A 'modern' web browser.</p>
+<li>A 'modern' web browser.
 <ul>
 <li>We'll use <strong>Google Chrome</strong> for this guide, but <strong>Firefox</strong> or <strong>Brave</strong> should also work fine.
 <ul>
@@ -86,21 +86,28 @@
 </li>
 </ul>
 </li>
-<li><p><strong>Visual Studio Community</strong> (Windows) or <strong>VS Code</strong> (Windows, Mac OS, Linux)</p>
+<li><strong>VSCode</strong> (Windows, Mac OS, Linux) or any other C#-compatible code editor.
 <ul>
-<li>We'll use <strong>Visual Studio Community</strong> or <strong>VSC</strong> for this guide, but if you're more comfortable in <strong>VS Code</strong>, take analogous actions in that editor when we come to those steps.
+<li>We strongly suggest using <strong>VSCode</strong>, because we make a very helpful Hypar Plugin for VSCode (see the next bullet). These instructions currently assume you're using Visual Studio Community 2019+, but the steps should be similar and we'll update this guide soon.
 <ul>
-<li><a href="https://visualstudio.microsoft.com/vs/community/">Visual Studio Community</a></li>
+<li><a href="https://code.visualstudio.com/">Download VSCode</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>Access to a command line for your operating system.</p>
+<li>If you're using VSCode, install the <strong>Hypar Function Builder</strong> extension:
+<ul>
+<li>Select <strong>&quot;Extensions&quot;</strong> in the <strong>&quot;View&quot;</strong> menu.</li>
+<li>Search for <strong>&quot;Hypar&quot;.</strong></li>
+<li>Click <strong>&quot;Install&quot;</strong> on <strong>Hypar Function Builder</strong>.</li>
+</ul>
+</li>
+<li>Access to a command line for your operating system.
 <ul>
 <li>We'll use the <strong>Windows Command Prompt</strong> for this guide, but other operating system command prompts should work similarly.</li>
 </ul>
 </li>
-<li><p>Microsoft .Net Core 2.1.</p>
+<li>Microsoft .Net Core 2.1.
 <ul>
 <li>Hypar uses the cross-platform dotnet framework created and maintained by Microsoft. The version number is important! There might be issues with later or earlier versions of .Net Core.
 <ul>
@@ -121,9 +128,9 @@
 <h3 id="signing-up-for-hypar">Signing up for Hypar</h3>
 <p>To upload anything to the Hypar platform, you're going to need an account.
 Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.io</a>, and you should see a page that looks like this.</p>
-<p><img src="images/HyparLanding2019.06.16.png" alt=""></p>
+<p><img src="images/HyparLanding2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>If you don't have an account already, click on the <strong>Sign Up</strong> button below the logo on the right. That should take you to the Sign Up screen.</p>
+<p>If you don't have an account already, click on the <strong>Create a free account</strong> button below the logo. That should take you to the Sign Up screen.</p>
 <p><img src="images/HyparLogin2019.06.16.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>Fill in a username, an email address you can access, and the password you'd like to use. Then click on the <strong>Sign up</strong> button in the center of the screen.</p>
@@ -154,28 +161,31 @@ Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.i
 <div style="page-break-after: always;"></div>
 <p>Now more stuff happens, but the important thing right now is to know that your function has been published (privately) to Hypar!</p>
 <p><img src="images/HyparFunctionPublished2019.06.16.png" alt=""></p>
-<p>With one command you've created a web application that we're going to customize and publish again (and again and again), but first let's see what we've got so far. <a href="Back to https://hypar.io" target="_blank">Back to https://hypar.io</a>.</p>
+<p>With one command you've created a web application that we're going to customize and publish again (and again and again), but first let's see what we've got so far. <a href="https://hypar.io" target="_blank">Back to https://hypar.io</a>.</p>
 <div style="page-break-after: always;"></div>
-<p>This time, click on the <strong>Sign In</strong> button on the left below the logo...</p>
-<p><img src="images/HyparLanding2019.06.16.png" alt=""></p>
+<p>This time, click on the <strong>sign in</strong> button on the left below the logo...</p>
+<p><img src="images/HyparLanding2019.11.29.png" alt=""></p>
 <p>...and sign in using your new account:</p>
 <p><img src="images/HyparSignIn2019.06.16.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>Once you sign in, you'll see something like the following screen:</p>
-<p><img src="images/HyparStarterFunction2019.06.16.PNG" alt=""></p>
+<p><img src="images/HyparWorkflows2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>All the function cards have default graphics because they haven't produced options yet. Click on the card flipper arrow on the lower right of your <strong>StarterFunction</strong> card:</p>
-<p><img src="images/HyparCardFlip2019.06.16.png" alt=""></p>
+<p>Create a new workflow using the form on the bottom left. Type in any name you want (perhaps &quot;Starter workflow&quot;) and click <strong>Create</strong>. You'll see this screen:</p>
+<p><img src="images/HyparEmptyWorkflow2019.11.29.png" alt=""></p>
+<p>Click <strong>Add Function</strong> in the top left of the screen to open the function library and search for &quot;StarterFunction&quot; (or whatever you named your function).</p>
+<p><img src="images/HyparStarterFunction2019.11.29.png" alt=""></p>
+<p>Click on the <strong>more...</strong> link on the lower right of your <strong>StarterFunction</strong> card:</p>
+<p><img src="images/HyparCardFlip2019.11.29.png" alt=""></p>
+<div style="page-break-after: always;"></div>
 <p>That checked <strong>Private</strong> box is what's keeping your new function invisible to everyone but you and the administrators of Hypar. If you ever want everyone to see your function, you'll have to uncheck that box and read our warning that the world is about to see your work. Try changing the setting, then make it private again.</p>
+<p>Now let's make some options. Click <strong>Insert</strong> on StarterFunction and <strong>hide</strong> the Function Library. Your function will run automatically and you should see something like this:</p>
+<p><img src="images/HyparStarterFunctionFirstRun2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>Now let's make some options. Click on <strong>StarterFunction</strong> card title. You should see something like this:</p>
-<p><img src="images/HyparStarterFunctionNoOptions2019.06.16.PNG" alt=""></p>
-<p>Click on the <strong>Sample 10 Options</strong> in the lower left corner of the page to generate some options. After a few progress messages go by, you should see something like this:</p>
-<p><img src="images/HyparOptions2019.06.16.png" alt=""></p>
+<p>You've run a web application that you created by just typing <code>hypar new</code>! Click in the 3D view to zoom, pan, and rotate the result. Now click on StarterFunction's <strong>Settings</strong> and <strong>Alternatives</strong> buttons, the first two buttons after its name on the left:</p>
+<p><img src="images/HyparOptions2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>You've generated a bunch of extruded rectangles! More importantly, you've just used a web application you created with one command. Let's do a little more exploration into the options before we explain everything that happened. Click on one of the option cards to look at one of them in more detail:</p>
-<p><img src="images/HyparOption2019.06.16.png" alt=""></p>
-<p>Click in the geometry display window to zoom, pan, and rotate the option.</p>
+In the alternatives list, you can see that your function has actually run many times with different input values. Click different alternatives to view them in 3D. The range sliders on the left are set to allow all possible lengths and widths. You can shrink these ranges to generate just the options you want.
 <div style="page-break-after: always;"></div>
 <p>Now let's go back and look at everything that happened and what it means for writing your own custom Hypar functions in the future. We'll place blue boxes around what we're talking about, like this:</p>
 <p><img src="images/HyparStartFunctionCreate2019.06.16.png" alt=""></p>
@@ -224,29 +234,20 @@ Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.i
 <div style="page-break-after: always;"></div>
 <p>Now we have our new <strong>Height</strong> input. Let's send this up to Hypar using <strong>hypar publish</strong> and see how our function works now:</p>
 <p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
-<p>Opening <strong>StarterFunction</strong> on Hypar again, we now have a <strong>Height</strong> input in addition to the <strong>Length</strong> and <strong>Width</strong> inputs. Setting height to 10 gives us 10 options with identical heights and varied lengths and widths:</p>
-<p><img src="images/HyparStarterHeight2019.06.16.png" alt=""></p>
+<p>Opening <strong>StarterFunction</strong> on Hypar again, we now have a <strong>Height</strong> input in addition to the <strong>Length</strong> and <strong>Width</strong> inputs.  Unchecking &quot;Sample Range&quot; on height and setting its slider to 10m gives us a set of alternatives with identical heights and varied lengths and widths:</p>
+<p><img src="images/HyparStarterHeight2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>What if we wanted a maximum height of 20? Let's go back to the <strong>hypar.json</strong> file and change the maximum for the input range:</p>
 <p><img src="images/HyparStarter20Height2019.06.16.png" alt=""></p>
 <p>Save the file and run <strong>hypar publish</strong> again at the command prompt:</p>
 <p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>When we open <strong>StarterFunction</strong> on Hypar again, the range is changed:</p>
+<p>When we open <strong>StarterFunction</strong> on Hypar again, the range can now be set to 20:</p>
 <p><img src="images/HyparHeightUpdate.png" alt=""></p>
-<p>If you click the <strong>Sample 10 Options</strong> button with the height set to 20, you should see results that look something like this:</p>
-<p><img src="images/HyparHeight20Options.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>Now let's allow Hypar to sample the <strong>Height</strong> range instead by toggling <strong>Select Value</strong> to <strong>Sample Range</strong> on the slider:</p>
-<p><img src="images/HyparSample20Options.png" alt=""></p>
-<p>Note that <strong>Sample 10 Options</strong> has become <strong>Sample 20 Options</strong>. What happened there?</p>
-<div style="page-break-after: always;"></div>
-<p>Hypar uses the widest range of values within a group of sliders to determine how many options it will create at once, up to a limit of 20. Since your <strong>Height</strong> slider now has a <strong>min</strong> of <strong>1</strong> and a <strong>max</strong> of <strong>20</strong> with a <strong>step</strong> of <strong>1</strong>, you now can sample 20 options:</p>
-<p><img src="images/HyparJSONHeightMinMaxStep.PNG" alt=""></p>
 <div style="page-break-after: always;"></div>
 <h3 id="adding-a-new-function-output">Adding a new function output</h3>
-<p>In Hypar click one of the options and look at the function outputs. You should see something like this, although your volume result might be different:</p>
-<p><img src="images/HyparOutputs.png" alt=""></p>
+<p>Hypar can also generate non-geometric data. In Hypar, click <strong>&quot;Show outputs&quot;</strong> in the top left. You should see something like this, although your volume result might be different:</p>
+<p><img src="images/HyparOutput2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>What if we also wanted to display the area of our cube? For this exercise we'll add a new output to the <strong>hypar.json</strong> and calculate the result we need. Add these new lines to the <strong>hypar.json</strong>:</p>
 <p><img src="images/HyparJSONOutputs.PNG" alt=""></p>
@@ -264,41 +265,69 @@ Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.i
 <div style="page-break-after: always;"></div>
 <p>Once you've made that change and saved the file, publish the function to Hypar again:</p>
 <p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
-<p>In Hypar return to the <strong>StarterFunction</strong> options page either by clicking on the browser's <strong>back</strong> button or by clicking on <strong>explore</strong> and the <strong>StarterFunction</strong> card again. Then click on the <strong>Sample 20 Options</strong> button to arrive at a screen that looks something like this:</p>
-<p><img src="images/HyparAreaOptions.png" alt=""></p>
+<p>Return to Hypar, reload the page, and force StarterFunction to run again by tweaking one of its input parameters. Click <strong>Show outputs</strong> and you should see the result of your area calculation:</p>
+<p><img src="images/HyparAreaResult2019.11.29.png" alt=""></p>
+<!--
+TODO: Labels can't be trivially added to masses right now.
+
+What if we wanted to see these results in the graphic display as well?
+We'll handle that by adding **properties** to the generated masses, and display them using the **Label** dropdown. For the moment the **Label** dropdown only has **None** as an entry:
+
+![](./images/HyparLabels.png)
+
 <div style="page-break-after: always;"></div>
-<p>Click on one of the options. Now you should see your area calculation on the left side:</p>
-<p><img src="images/HyparAreaResult.png" alt=""></p>
-<p>What if we wanted to see these results in the graphic display as well?
-We'll handle that by adding <strong>properties</strong> to the generated masses, and display them using the <strong>Label</strong> dropdown. For the moment the <strong>Label</strong> dropdown only has <strong>None</strong> as an entry:</p>
-<p><img src="images/HyparLabels.png" alt=""></p>
+
+To add labels for our **volume** and **area** values open **StarterFunction.cs** in VSC. Move the two value calculations up under the **height** input, because we're going to need those values a little earlier so we can add them as properties to our **mass**:
+
+![](./images/HyparStartFunctionLabels1.PNG)
+
 <div style="page-break-after: always;"></div>
-<p>To add labels for our <strong>volume</strong> and <strong>area</strong> values open <strong>StarterFunction.cs</strong> in VSC. Move the two value calculations up under the <strong>height</strong> input, because we're going to need those values a little earlier so we can add them as properties to our <strong>mass</strong>:</p>
-<p><img src="images/HyparStartFunctionLabels1.PNG" alt=""></p>
+
+Before we add the **mass** to our Hypar **model**, we need to add a couple of **NumericProperty** entries to the **mass**. Add these lines before **model.AddElement(mass)**:
+
+![](./images/HyparAddProperties.PNG)
+
+There's a lot happening in these two lines, so let's look at each part, using our new **Volume** property as an example of how both lines work. Since we're adding a property to our **mass**, we use its method **AddProperty**:
+
+![](./images/HyparAddProperty.PNG)
+
+The first argument this method needs is a name for the new property, which in this case is **"Volume"**:
+
+![](./images/HyparAddPropertyName.PNG)
+
+Next the method needs to know what kind of property you're going to add. Eligible values for this argument are **StringProperty** (if we were adding a string value), or in this case **NumericProperty**:
+
+![](./images/HyparAddNumericProperty.PNG)
+
 <div style="page-break-after: always;"></div>
-<p>Before we add the <strong>mass</strong> to our Hypar <strong>model</strong>, we need to add a couple of <strong>NumericProperty</strong> entries to the <strong>mass</strong>. Add these lines before <strong>model.AddElement(mass)</strong>:</p>
-<p><img src="images/HyparAddProperties.PNG" alt=""></p>
-<p>There's a lot happening in these two lines, so let's look at each part, using our new <strong>Volume</strong> property as an example of how both lines work. Since we're adding a property to our <strong>mass</strong>, we use its method <strong>AddProperty</strong>:</p>
-<p><img src="images/HyparAddProperty.PNG" alt=""></p>
-<p>The first argument this method needs is a name for the new property, which in this case is <strong>&quot;Volume&quot;</strong>:</p>
-<p><img src="images/HyparAddPropertyName.PNG" alt=""></p>
-<p>Next the method needs to know what kind of property you're going to add. Eligible values for this argument are <strong>StringProperty</strong> (if we were adding a string value), or in this case <strong>NumericProperty</strong>:</p>
-<p><img src="images/HyparAddNumericProperty.PNG" alt=""></p>
+
+The new **NumericProperty** needs two arguments: the value, which in this case is the **volume** variable calculated above, and then the **UnitType**, which for this output is **UnitType.Volume**:
+
+![](./images/HyparNewNumericProperty.PNG)
+
+Save the file and publish **StarterFunction** again:
+
+![](./images/HyparPublish2019.06.16.png)
+
 <div style="page-break-after: always;"></div>
-<p>The new <strong>NumericProperty</strong> needs two arguments: the value, which in this case is the <strong>volume</strong> variable calculated above, and then the <strong>UnitType</strong>, which for this output is <strong>UnitType.Volume</strong>:</p>
-<p><img src="images/HyparNewNumericProperty.PNG" alt=""></p>
-<p>Save the file and publish <strong>StarterFunction</strong> again:</p>
-<p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
+
+When you return to Hypar, click on the **Sample 20 Options** button in **StarterFunction** to create 20 new options, then click on one of the options to open it in the interactive display. In the **Label** dropdown you should see the two new properties you just added:
+
+![](./images/HyparLabels2.PNG)
+
+Select **volume** and you should see the value appear in the graphic display on the mass:
+
+![](./images/HyparLabels3.png)
+
+Now you see why we specified the **UnitType** for the new property. Specifying the **UnitType** as **UnitType.Volume** tells Hypar to add **m3** to the displayed value to denote cubic meters. Internally Hypar maintains all values in metric units. Functions can calculate the conversion to Imperial units if required. 
+
 <div style="page-break-after: always;"></div>
-<p>When you return to Hypar, click on the <strong>Sample 20 Options</strong> button in <strong>StarterFunction</strong> to create 20 new options, then click on one of the options to open it in the interactive display. In the <strong>Label</strong> dropdown you should see the two new properties you just added:</p>
-<p><img src="images/HyparLabels2.PNG" alt=""></p>
-<p>Select <strong>volume</strong> and you should see the value appear in the graphic display on the mass:</p>
-<p><img src="images/HyparLabels3.png" alt=""></p>
-<p>Now you see why we specified the <strong>UnitType</strong> for the new property. Specifying the <strong>UnitType</strong> as <strong>UnitType.Volume</strong> tells Hypar to add <strong>m3</strong> to the displayed value to denote cubic meters. Internally Hypar maintains all values in metric units. Functions can calculate the conversion to Imperial units if required.</p>
-<div style="page-break-after: always;"></div>
-<p>If you select <strong>area</strong> in the <strong>Label</strong> dropdown, you should see the value notated in square meters:</p>
-<p><img src="images/HyparLabels4.png" alt=""></p>
-<p>You're not limited to simple values like these. You can add any static or calculated value you'd like to any Hypar Element (like Mass).</p>
+
+If you select **area** in the **Label** dropdown, you should see the value notated in square meters:
+
+![](./images/HyparLabels4.png)
+
+You're not limited to simple values like these. You can add any static or calculated value you'd like to any Hypar Element (like Mass).  -->
 <p>To learn more about the open source Hypar Elements library browse to the <a href="https://github.com/hypar-io/Elements">GitHub repository</a>.</p>
 </article>
           </div>
