@@ -5,6 +5,9 @@
 - `Vector3` is now a struct.
 - `Color` is now a struct.
 
+### Added
+- `Bezier`.
+
 ## 0.4.0
 ### Changed
 - All element types are partial classes with one part of the class generated from its JSON schema.

@@ -123,7 +123,15 @@ namespace Elements.Geometry.Solids
                 for (var i = 0; i < transforms.Length; i++)
                 {
                     var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
-                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i].XY(), next.XY(), rotation);
+                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i], next, rotation);
+                }
+            }
+            else if(curve is Bezier)
+            {
+                for (var i = 0; i < transforms.Length - 1; i++)
+                {
+                    var next = transforms[i + 1];
+                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i], next, rotation);
                 }
             }
             else
@@ -680,13 +688,15 @@ namespace Elements.Geometry.Solids
             return openEdge;
         }
 
-        private Loop SweepPolygonBetweenPlanes(Polygon p, Plane start, Plane end, double rotation = 0.0)
+        private Loop SweepPolygonBetweenPlanes(Polygon p, Transform start, Transform end, double rotation = 0.0)
         {
             // Transform the polygon to the mid plane between two transforms.
-            var mid = new Line(start.Origin, end.Origin).TransformAt(0.5, rotation).OfPolygon(p);
-            var v = (end.Origin - start.Origin).Normalized();
-            var startP = mid.ProjectAlong(v, start);
-            var endP = mid.ProjectAlong(v, end);
+            // var mid = new Line(start.Origin, end.Origin).TransformAt(0.5, rotation).OfPolygon(p);
+            // var v = (end.Origin - start.Origin).Normalized();
+            // var startP = mid.ProjectAlong(v, start);
+            // var endP = mid.ProjectAlong(v, end);
+            var startP = start.OfPolygon(p);
+            var endP = end.OfPolygon(p);
 
             var loop1 = AddEdges(startP);
             var loop2 = AddEdges(endP);
