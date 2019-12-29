@@ -33,13 +33,13 @@ namespace Elements.Geometry
 
         private void Extend(Vector3 v)
         {
-            var newMin = new Vector3();
+            var newMin = new Vector3(Min.X, Min.Y, Min.Z);
             if (v.X < this.Min.X) newMin.X = v.X;
             if (v.Y < this.Min.Y) newMin.Y = v.Y;
             if (v.Z < this.Min.Z) newMin.Z = v.Z;
             this.Min = newMin;
             
-            var newMax = new Vector3();
+            var newMax = new Vector3(Max.X, Max.Y, Max.Z);
             if (v.X > this.Max.X) newMax.X = v.X;
             if (v.Y > this.Max.Y) newMax.Y = v.Y;
             if (v.Z > this.Max.Z) newMax.Z = v.Z;
