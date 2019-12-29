@@ -5,7 +5,8 @@ namespace Elements.Geometry
 {
     // Some resources:
     // https://pomax.github.io/bezierinfo/#curveintersection
-    
+    // http://webhome.cs.uvic.ca/~blob/courses/305/notes/pdf/ref-frames.pdf
+
     /// <summary>
     /// A Bezier curve.
     /// </summary>
@@ -60,6 +61,7 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Get a piecewise linear approximation of the length of the curve.
+        /// https://en.wikipedia.org/wiki/Arc_length
         /// </summary>
         public override double Length()
         {
@@ -140,25 +142,81 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override Transform TransformAt(double u, double rotation = 0)
         {
-            // Derivative
-            // B'(t) = n * SUM(i-0..n-1)b i,n-1(t)(Pi+1 - Pi)
-            var n = this.ControlPoints.Count - 1;
-            var p = new Vector3();
-            var t = u;
-            for (var i = 0; i <= n - 1; i++)
-            {
-                p += BerensteinBasisPolynomial(n - 1, i, t) * (this.ControlPoints[i + 1] - this.ControlPoints[i]);
-            }
-            var z = p.Negate();
-            var x = z.Cross(Vector3.ZAxis.Negate());
-
-            var trans = new Transform(PointAt(u), x, z);
+            var trans = new Transform(PointAt(u), NormalAt(u), TangentAt(u).Negate());
             if (rotation != 0.0)
             {
                 trans.Rotate(trans.ZAxis, rotation);
             }
 
-            return new Transform(PointAt(u), x, z);
+            return trans;
+        }
+
+        /// <summary>
+        /// Get the velocity to the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter between 0.0 and 1.0.</param>
+        public Vector3 VelocityAt(double u)
+        {
+            // First derivative
+            // B'(t) = n * SUM(i-0..n-1)b i,n-1(t)(Pi+1 - Pi)
+            var n = this.ControlPoints.Count - 1;
+            var V = new Vector3();
+            var t = u;
+            for (var i = 0; i <= n - 1; i++)
+            {
+                V += BerensteinBasisPolynomial(n - 1, i, t) * (this.ControlPoints[i + 1] - this.ControlPoints[i]);
+            }
+            return V;
+        }
+
+        /// <summary>
+        /// Get the acceleration of the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter between 0.0 and 1.0.</param>
+        public Vector3 AccelerationAt(double u)
+        {
+            // Second derivative
+            // https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/spline/Bezier/bezier-der.html
+            // B''(t) = SUM(i=0..n-2) b n-2,i (t)(n(n-1)(Pi+2 - 2Pi+1  + Pi)
+            var n = this.ControlPoints.Count - 1;
+            var Q = new Vector3();
+            var t = u;
+            for (var i = 0; i <= n - 2; i++)
+            {
+                Q += BerensteinBasisPolynomial(n - 2, i, t) * (n * (n-1) * (this.ControlPoints[i+2] - 2 * this.ControlPoints[i+1] + this.ControlPoints[i]));
+            }
+            return Q;
+        }
+
+        /// <summary>
+        /// Get the tangent to the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter between 0.0 and 1.0.</param>
+        public Vector3 TangentAt(double u)
+        {
+            return VelocityAt(u).Normalized();
+        }
+
+        /// <summary>
+        /// Get the normal of the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter between 0.0 and 1.0.</param>
+        public Vector3 NormalAt(double u)
+        {
+            var V = VelocityAt(u);
+            var Q = AccelerationAt(u);
+            return V.Cross(Q).Cross(V).Normalized();
+        }
+
+        /// <summary>
+        /// Get the binormal to the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter between 0.0 and 1.0.</param>
+        public Vector3 BinormalAt(double u)
+        {
+            var T = TangentAt(u);
+            var N = NormalAt(u);
+            return T.Cross(N);
         }
 
         internal override IList<Vector3> RenderVertices()
