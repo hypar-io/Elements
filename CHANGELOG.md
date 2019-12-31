@@ -10,6 +10,8 @@
 - `Bezier`
 - `WideFlangeProfileType`
 - `HSSPipeProfileType`
+- `Curve.MinimumChordLength` static property to allow the user to set the minimum chord length for subdivision of all curves for rendering.
+- `Circle`
 
 ## 0.4.0
 ### Changed
