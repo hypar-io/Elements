@@ -8,6 +8,7 @@ namespace Elements.Geometry
     [JsonInheritanceAttribute("Elements.Geometry.Arc", typeof(Arc))]
     [JsonInheritanceAttribute("Elements.Geometry.Polyline", typeof(Polyline))]
     [JsonInheritanceAttribute("Elements.Geometry.Polygon", typeof(Polygon))]
+    [JsonInheritanceAttribute("Elements.Geometry.Bezier", typeof(Bezier))]
     public abstract partial class Curve : ICurve
     {
         /// <summary>
