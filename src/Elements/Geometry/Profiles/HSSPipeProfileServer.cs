@@ -321,7 +321,7 @@ O.D.,I.D.,t,wt./ft.,A,I,S,r,J
                         var values = line.Split(',');
                         try
                         {
-                            var profileType = (HSSPipeProfileType)lineCount;
+                            var profileType = (HSSPipeProfileType)(lineCount - 1);
                             var profile = new HSSPipeProfile(profileType.ToString(), Guid.NewGuid(), double.Parse(values[0]) * InchesToMeters,
                                                             double.Parse(values[1]) * InchesToMeters,
                                                             double.Parse(values[2]) * InchesToMeters)

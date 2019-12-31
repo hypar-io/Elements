@@ -12,6 +12,12 @@ namespace Elements.Geometry
     public abstract partial class Curve : ICurve
     {
         /// <summary>
+        /// The minimum chord length allowed for subdivision of the curve.
+        /// A lower MinimumChordLength results in smoother curves.
+        /// </summary>
+        public static double MinimumChordLength = 0.1;
+
+        /// <summary>
         /// Get the bounding box for this curve.
         /// </summary>
         /// <returns>A bounding box for this curve.</returns>
@@ -23,8 +29,17 @@ namespace Elements.Geometry
         /// <param name="startSetback">The offset from the start of the curve.</param>
         /// <param name="endSetback">The offset from the end of the curve.</param>
         /// <returns>A collection of transforms.</returns>
-        public abstract Transform[] Frames(double startSetback = 0, double endSetback = 0);
-        
+        public virtual Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0)
+        {
+            var parameters = GetSampleParameters(startSetback, endSetback);
+            var transforms = new Transform[parameters.Length];
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                transforms[i] = TransformAt(parameters[i]);
+            }
+            return transforms;
+        }
+
         /// <summary>
         /// Calculate the length of the curve.
         /// </summary>
@@ -44,6 +59,11 @@ namespace Elements.Geometry
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
         /// <returns>A transform.</returns>
         public abstract Transform TransformAt(double u);
+
+        internal virtual double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
+        {
+            return new[] { 0.0, 1.0 - endSetback };
+        }
 
         /// <summary>
         /// A list of vertices used to render the curve.

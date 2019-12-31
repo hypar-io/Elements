@@ -44,10 +44,6 @@ namespace Hypar.Tests
             var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W21x55);
             var beam = new Beam(bezier, profile, material:BuiltInMaterials.Default, rotation: 45);
             this.Model.AddElement(beam);
-
-            this.Model.ToGlTF("bezier.gltf", false);
-
-            this._output.WriteLine($"The bezier is {bezier.Length()} units long.");
         }
     }
 }

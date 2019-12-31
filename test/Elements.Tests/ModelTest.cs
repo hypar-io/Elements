@@ -59,8 +59,8 @@ namespace Elements.Tests
             {
                 if(this.GenerateGlb)
                 {
-                    var modelPath = $"models/{this._name}.glb";
-                    this._model.ToGlTF(modelPath);
+                    var modelPath = $"models/{this._name}.gltf";
+                    this._model.ToGlTF(modelPath, false);
                 }
 
                 if(this.GenerateJson)

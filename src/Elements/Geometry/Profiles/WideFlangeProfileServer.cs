@@ -323,14 +323,13 @@ namespace Elements.Geometry.Profiles
         W5x16,
         W4x13,
     }
-    
+
     /// <summary>
     ///A singleton class which serves every Wide Flange section as defined by AISC.
     /// </summary>
     public sealed class WideFlangeProfileServer : ProfileServer<WideFlangeProfileType>
     {
-        private static string _data = @"
-A,d,tw,bf,tf,T,k,k1,gage,rt,d/Af,Ix,Sx,rx,Iy,Sy,ry,Zx,Zy,J,Cw,Wno,Sw,Qf,Qw
+        private static string _data = @"A,d,tw,bf,tf,T,k,k1,gage,rt,d/Af,Ix,Sx,rx,Iy,Sy,ry,Zx,Zy,J,Cw,Wno,Sw,Qf,Qw
 98.3,44,1.02,16,1.77,38-3/4,2.56,1.3125,5-1/2,4.12,1.56,31100,1410,17.8,1200,151,3.5,1620,236,74.4,536000,168,1190,279,805
 85.8,43.6,0.87,15.8,1.58,38-3/4,2.37,1.25,5-1/2,4.1,1.74,27100,1240,17.8,1050,132,3.49,1420,206,51.5,464000,166,1040,248,704
 83.8,44.02,1.024,11.811,1.772,38-5/8,2.6875,1.375,5-1/2,2.95,2.1,24600,1120,17.1,490,83,2.42,1310,135,60,219000,125,653,204,657
@@ -647,30 +646,31 @@ A,d,tw,bf,tf,T,k,k1,gage,rt,d/Af,Ix,Sx,rx,Iy,Sy,ry,Zx,Zy,J,Cw,Wno,Sw,Qf,Qw
 5.56,5.15,0.27,5.03,0.43,3-1/2,0.73,0.4375,2-3/4,1.38,2.38,26.3,10.2,2.17,9.13,3.63,1.28,11.6,5.53,0.316,50.9,5.94,3.21,2.42,5.73
 4.71,5.01,0.24,5,0.36,3-1/2,0.66,0.4375,2-3/4,1.37,2.78,21.4,8.55,2.13,7.51,3,1.26,9.63,4.58,0.192,40.6,5.81,2.62,1.99,4.74
 3.83,4.16,0.28,4.06,0.345,2-5/8,0.595,0.5,2-1/4,1.1,2.97,11.3,5.46,1.72,3.86,1.9,1,6.28,2.92,0.151,14,3.87,1.36,1.24,3.09
-";      
+";
         private static WideFlangeProfileServer instance = null;
 
         private WideFlangeProfileServer()
         {
             // Read the data.
-            using(var reader = new StringReader(_data))
+            using (var reader = new StringReader(_data))
             {
                 var lineCount = -1;
-                while(true)
+                while (true)
                 {
                     lineCount++;
-                    var line  = reader.ReadLine();
+                    var line = reader.ReadLine();
 
-                    if(lineCount == 0)
+                    if (lineCount == 0)
                     {
                         continue;
                     }
 
-                    if(line != null)
+                    if (line != null)
                     {
                         var values = line.Split(',');
-                        var profileType = (WideFlangeProfileType)lineCount;
-                        try{
+                        var profileType = (WideFlangeProfileType)(lineCount - 1);
+                        try
+                        {
                             var profile = new WideFlangeProfile(profileType.ToString(),
                                 Guid.NewGuid(),
                                 double.Parse(values[3]) * InchesToMeters,
@@ -702,9 +702,11 @@ A,d,tw,bf,tf,T,k,k1,gage,rt,d/Af,Ix,Sx,rx,Iy,Sy,ry,Zx,Zy,J,Cw,Wno,Sw,Qf,Qw
                             };
                             _profiles.Add(profileType, profile);
                         }
-                        catch
+                        catch(Exception ex)
                         {
                             Console.WriteLine($"The section, {profileType.ToString()}, could not be loaded.");
+                            Console.WriteLine(ex.Message);
+                            Console.WriteLine(ex.StackTrace);
                         }
                     }
                     else
@@ -722,7 +724,7 @@ A,d,tw,bf,tf,T,k,k1,gage,rt,d/Af,Ix,Sx,rx,Iy,Sy,ry,Zx,Zy,J,Cw,Wno,Sw,Qf,Qw
         {
             get
             {
-                if (instance==null)
+                if (instance == null)
                 {
                     instance = new WideFlangeProfileServer();
                 }
