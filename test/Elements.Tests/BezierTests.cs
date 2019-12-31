@@ -32,12 +32,9 @@ namespace Hypar.Tests
             var f = new Vector3(5, 0, 5);
             var ctrlPts = new List<Vector3>{a,b,c,d,e,f};
             var bezier = new Bezier(ctrlPts);
+            
             var mc = new ModelCurve(bezier);
             this.Model.AddElement(mc);
-
-            var bounds = bezier.Bounds();
-            this._output.WriteLine($"Min: {bounds.Min}");
-            this._output.WriteLine($"Max: {bounds.Max}");
 
             for(var t=0.0; t<=1.0; t+=0.1)
             {
