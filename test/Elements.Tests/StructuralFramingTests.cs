@@ -14,7 +14,7 @@ namespace Elements.Tests
             Line, Polyline, Polygon, Arc
         }
 
-        private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
+        private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
 
         [Theory]
         [InlineData("LinearBeam", BeamType.Line, 0.25, 0.25)]

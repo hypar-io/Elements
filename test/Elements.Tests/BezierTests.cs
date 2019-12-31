@@ -1,7 +1,6 @@
 using Elements;
 using Elements.Geometry;
 using Elements.Geometry.Profiles;
-using Elements.Serialization.glTF;
 using Elements.Tests;
 using System.Collections.Generic;
 using Xunit;

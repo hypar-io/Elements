@@ -126,11 +126,13 @@ namespace Elements.Geometry.Solids
             }
             else if(curve is Bezier)
             {
+                var startCap = solid.AddFace(transforms[0].OfPolygon(perimeter));
                 for (var i = 0; i < transforms.Length - 1; i++)
                 {
                     var next = transforms[i + 1];
                     solid.SweepPolygonBetweenPlanes(perimeter, transforms[i], next);
                 }
+                var endCap = solid.AddFace(transforms[transforms.Length - 1].OfPolygon(perimeter).Reversed());
             }
             else
             {
