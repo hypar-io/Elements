@@ -21,9 +21,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback">The offset from the start of the curve.</param>
         /// <param name="endSetback">The offset from the end of the curve.</param>
-        /// <param name="rotation">An optional rotation of the transform around its Z axis.</param>
         /// <returns>A collection of transforms.</returns>
-        public abstract Transform[] Frames(double startSetback = 0, double endSetback = 0, double rotation = 0.0);
+        public abstract Transform[] Frames(double startSetback = 0, double endSetback = 0);
         
         /// <summary>
         /// Calculate the length of the curve.
@@ -42,9 +41,8 @@ namespace Elements.Geometry
         /// positive Z axis points along the curve.
         /// </summary>
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
-        /// <param name="rotation">An optional rotation of the transform around its Z axis.</param>
         /// <returns>A transform.</returns>
-        public abstract Transform TransformAt(double u, double rotation = 0.0);
+        public abstract Transform TransformAt(double u);
 
         /// <summary>
         /// A list of vertices used to render the curve.

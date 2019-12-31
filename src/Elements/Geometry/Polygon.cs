@@ -519,11 +519,9 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
-        /// <param name="rotation">An optional rotation in degrees of all frames around their z axes.</param>
-        /// <returns></returns>
-        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
+        public override Transform[] Frames(double startSetback, double endSetback)
         {
-            return FramesInternal(startSetback, endSetback, true, rotation);
+            return FramesInternal(startSetback, endSetback, true);
         }
 
         /// <summary>

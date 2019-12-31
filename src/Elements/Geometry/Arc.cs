@@ -59,14 +59,13 @@ namespace Elements.Geometry
         /// Return transform on the arc at parameter u.
         /// </summary>
         /// <param name="u">A parameter between 0.0 and 1.0 on the arc.</param>
-        /// <param name="rotation">An optional rotation of the transform around its Z axis.</param>
         /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
-        public override Transform TransformAt(double u, double rotation = 0.0)
+        public override Transform TransformAt(double u)
         {
             var p = PointAt(u);
             var x = (p-this.Center).Normalized();
             var y = Vector3.ZAxis;
-            return new Transform(p, x, x.Cross(y), rotation);
+            return new Transform(p, x, x.Cross(y));
         }
 
         /// <summary>
@@ -74,9 +73,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback">The parameter offset from the start of the arc. Between 0 and 1.</param>
         /// <param name="endSetback">The parameter offset from the end of the arc. Between 0 and 1.</param>
-        /// <param name="rotation">An optional rotation for all frames around their Z axes.</param>
         /// <returns>A collection of transforms.</returns>
-        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
+        public override Transform[] Frames(double startSetback, double endSetback)
         {
             var div = 10;
             var l = this.Length();
@@ -87,15 +85,15 @@ namespace Elements.Geometry
                 Transform t;
                 if (i == 0)
                 {
-                    t = TransformAt(0.0 + startSetback, rotation);
+                    t = TransformAt(0.0 + startSetback);
                 }
                 else if (i == div)
                 {
-                    t = TransformAt(1.0 - endSetback, rotation);
+                    t = TransformAt(1.0 - endSetback);
                 }
                 else
                 {
-                    t = TransformAt(startSetback + i * step, rotation);
+                    t = TransformAt(startSetback + i * step);
                 }
                 result[i] = t;
             }

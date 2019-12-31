@@ -20,10 +20,6 @@
         "Direction": {
             "description": "The direction in which to extrude.",
             "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
-        },
-        "Rotation": {
-            "description": "The rotation, in degrees, of the profile.",
-            "type": "number"
         }
     },
     "additionalProperties": false

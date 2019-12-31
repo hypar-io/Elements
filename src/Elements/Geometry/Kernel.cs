@@ -28,18 +28,18 @@ namespace Elements.Geometry
         /// Create a sweep along a curve.
         /// </summary>
         /// <returns>A solid.</returns>
-        public Solid CreateSweepAlongCurve(Profile profile, Curve curve, double startSetback, double endSetback, double rotation = 0.0)
+        public Solid CreateSweepAlongCurve(Profile profile, Curve curve, double startSetback, double endSetback)
         {
-            return Solid.SweepFaceAlongCurve(profile.Perimeter, profile.Voids, curve, startSetback, endSetback, rotation);
+            return Solid.SweepFaceAlongCurve(profile.Perimeter, profile.Voids, curve, startSetback, endSetback);
         }
 
         /// <summary>
         /// Create an extrude.
         /// </summary>
         /// <returns>A solid.</returns>
-        public Solid CreateExtrude(Profile profile, double depth, Vector3 direction, double rotation = 0.0)
+        public Solid CreateExtrude(Profile profile, double depth, Vector3 direction)
         {
-            return Solid.SweepFace(profile.Perimeter, profile.Voids, direction, depth, false, rotation);
+            return Solid.SweepFace(profile.Perimeter, profile.Voids, direction, depth, false);
         }
 
         /// <summary>

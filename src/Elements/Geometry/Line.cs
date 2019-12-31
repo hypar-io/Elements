@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -34,11 +33,10 @@ namespace Elements.Geometry
         /// positive Z axis points along the curve.
         /// </summary>
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
-        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         /// <returns>A transform.</returns>
-        public override Transform TransformAt(double u, double rotation = 0.0)
+        public override Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), (this.Start-this.End).Normalized(), rotation);
+            return new Transform(PointAt(u), (this.Start-this.End).Normalized());
         }
 
         /// <summary>
@@ -121,11 +119,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback">The parameter offset from the start of the line. Between 0 and 1.</param>
         /// <param name="endSetback">The parameter offset from the end of the line. Between 0 and 1.</param>
-        /// <param name="rotation">An optional rotation in degrees around all the frames' z axes.</param>
         /// <returns>A collection of transforms.</returns>
-        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
+        public override Transform[] Frames(double startSetback, double endSetback)
         {
-            return new Transform[] { TransformAt(0.0 + startSetback, rotation), TransformAt(1.0 - endSetback, rotation) };
+            return new Transform[] { TransformAt(0.0 + startSetback), TransformAt(1.0 - endSetback) };
         }
 
         /// <summary>

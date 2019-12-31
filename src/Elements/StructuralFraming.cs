@@ -10,8 +10,6 @@ namespace Elements
     /// </summary>
     public abstract class StructuralFraming : GeometricElement
     {
-        private double _rotation = 0.0;
-
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
@@ -31,6 +29,11 @@ namespace Elements
         /// The structural framing's profile.
         /// </summary>
         public Profile Profile { get; set; }
+
+        /// <summary>
+        /// The profile rotation around the center curve of the beam in degrees.
+        /// </summary>
+        public double Rotation { get; set; }
 
         /// <summary>
         /// Construct a beam.
@@ -78,7 +81,7 @@ namespace Elements
             this.StartSetback = startSetback;
             this.EndSetback = endSetback;
             this.Profile = profile;
-            this._rotation = rotation;
+            this.Rotation = rotation;
         }
 
         /// <summary>
@@ -101,14 +104,20 @@ namespace Elements
         {
             return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
         }
-        
+
         /// <summary>
         /// Update the representations.
         /// </summary>
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, this.StartSetback, this.EndSetback, this._rotation, false));
+            var profileTrans = new Transform();
+            profileTrans.Rotate(profileTrans.ZAxis, this.Rotation);
+            this.Representation.SolidOperations.Add(new Sweep(profileTrans.OfProfile(this.Profile),
+                                                              this.Curve,
+                                                              this.StartSetback,
+                                                              this.EndSetback,
+                                                              false));
         }
     }
 }

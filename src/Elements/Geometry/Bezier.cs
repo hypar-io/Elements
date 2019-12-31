@@ -47,9 +47,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
-        /// <param name="rotation"></param>
         /// <returns></returns>
-        public override Transform[] Frames(double startSetback = 0, double endSetback = 0, double rotation = 0)
+        public override Transform[] Frames(double startSetback = 0, double endSetback = 0)
         {
             var transforms = new Transform[_samples + 1];
             for (var i = 0; i <= _samples; i++)
@@ -138,17 +137,9 @@ namespace Elements.Geometry
         /// of the tanget and the +Z axis.
         /// </summary>
         /// <param name="u">The parameter along the curve between 0.0 and 1.0.</param>
-        /// <param name="rotation">The rotation of the transform around the curve.</param>
-        /// <returns></returns>
-        public override Transform TransformAt(double u, double rotation = 0)
+        public override Transform TransformAt(double u)
         {
-            var trans = new Transform(PointAt(u), NormalAt(u), TangentAt(u).Negate());
-            if (rotation != 0.0)
-            {
-                trans.Rotate(trans.ZAxis, rotation);
-            }
-
-            return trans;
+            return new Transform(PointAt(u), NormalAt(u), TangentAt(u).Negate());
         }
 
         /// <summary>
