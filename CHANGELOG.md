@@ -1,12 +1,15 @@
 # Changelog
 
-## 0.4.1
+## 0.4.2
 ### Changed
 - `Vector3` is now a struct.
 - `Color` is now a struct.
+- `ProfileServer.GetProfileByName(...)` is now deprecated in favor of `ProfileServer.GetProfileByType(...)`
 
 ### Added
-- `Bezier`.
+- `Bezier`
+- `WideFlangeProfileType`
+- `HSSPipeProfileType`
 
 ## 0.4.0
 ### Changed

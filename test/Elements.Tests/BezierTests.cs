@@ -4,7 +4,6 @@ using Elements.Geometry.Profiles;
 using Elements.Serialization.glTF;
 using Elements.Tests;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -42,8 +41,8 @@ namespace Hypar.Tests
                 this.Model.AddElements(trans.ToModelCurves());
             }
 
-            var profile = WideFlangeProfileServer.Instance.AllProfiles().First();
-            var beam = new Beam(bezier, profile, material:BuiltInMaterials.Default);
+            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W21x55);
+            var beam = new Beam(bezier, profile, material:BuiltInMaterials.Default, rotation: 45);
             this.Model.AddElement(beam);
 
             this.Model.ToGlTF("bezier.gltf", false);
