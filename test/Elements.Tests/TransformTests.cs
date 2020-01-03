@@ -39,6 +39,20 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Transform_AboutPoint()
+        {
+            var transformOrigin = new Vector3(5, 5, 10);
+            var pointToTransform = new Vector3(0, 10, 20);
+            var scaleFactor = 0.5;
+            var t = new Transform();
+            t.Scale(scaleFactor,transformOrigin);
+            var vt = t.OfPoint(pointToTransform);
+            Assert.Equal(2.5, vt.X);
+            Assert.Equal(7.5, vt.Y);
+            Assert.Equal(15.0, vt.Z);
+        }
+
+        [Fact]
         public void Transform_Translate()
         {
             var t = new Transform(new Vector3(5,0,0), Vector3.XAxis, Vector3.YAxis.Negate());

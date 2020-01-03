@@ -322,6 +322,27 @@ namespace Elements.Geometry
         {
             return new Plane(this.Origin, this.YAxis);
         }
+        /// <summary>
+        /// Scale uniformly about the origin.
+        /// </summary>
+        /// <param name="amount">The amount to scale uniformly</param>
+        public void Scale(double amount)
+        {
+            Scale(new Vector3(amount, amount, amount));
+        }
+        /// <summary>
+        /// Scale uniformly about a point
+        /// </summary>
+        /// <param name="amount">The scale factor</param>
+        /// <param name="origin">The origin of scaling</param>
+        /// /// <returns></returns>
+        public void Scale(double amount, Vector3 origin)
+        {
+            Move(origin.Negate());
+            Scale(amount);
+            Move(origin);
+
+        }
 
         /// <summary>
         /// Create a transform that is oriented along 
