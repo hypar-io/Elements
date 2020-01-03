@@ -12,6 +12,7 @@
 - `HSSPipeProfileType`
 - `Curve.MinimumChordLength` static property to allow the user to set the minimum chord length for subdivision of all curves for rendering.
 - `Circle`
+- `FrameType` Bezier curves can have their frames calculated using Frenet frames or "road like" frames.
 
 ## 0.4.0
 ### Changed
