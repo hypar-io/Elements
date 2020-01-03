@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Elements.Geometry
 {   
     /// <summary>
-    /// A column-ordered 4x4 matrix.
+    /// A column-ordered 4x3 matrix.
     /// </summary>
     public partial class Matrix: IEquatable<Matrix>
     {   

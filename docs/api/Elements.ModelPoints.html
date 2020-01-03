@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ModelPoints
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.47.0.0">
+    <meta name="generator" content="docfx 2.48.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -246,27 +246,6 @@ var modelPoints = new ModelPoints(pts, pink);
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -277,14 +256,13 @@ var modelPoints = new ModelPoints(pts, pink);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_ModelPoints__ctor_" data-uid="Elements.ModelPoints.#ctor*"></a>
-  <h4 id="Elements_ModelPoints__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Guid_System_String_" data-uid="Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)">ModelPoints(IList&lt;Vector3&gt;, Material, Transform, Guid, String)</h4>
+  <h4 id="Elements_ModelPoints__ctor_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_Guid_System_String_" data-uid="Elements.ModelPoints.#ctor(IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,Guid,System.String)">ModelPoints(IList&lt;Vector3&gt;, Material, Transform, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a collection of points.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = null, Transform transform = null, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = null, Transform transform = null, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -297,7 +275,7 @@ public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = nu
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">locations</span></td>
         <td><p>The locations of the points.</p>
 </td>
@@ -315,7 +293,7 @@ public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = nu
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the model curve.</p>
 </td>
@@ -349,7 +327,7 @@ public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = nu
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
