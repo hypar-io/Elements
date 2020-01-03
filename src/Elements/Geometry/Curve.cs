@@ -9,6 +9,7 @@ namespace Elements.Geometry
     [JsonInheritanceAttribute("Elements.Geometry.Polyline", typeof(Polyline))]
     [JsonInheritanceAttribute("Elements.Geometry.Polygon", typeof(Polygon))]
     [JsonInheritanceAttribute("Elements.Geometry.Bezier", typeof(Bezier))]
+    [JsonInheritanceAttribute("Elements.Geometry.Circle", typeof(Circle))]
     public abstract partial class Curve : ICurve
     {
         /// <summary>
@@ -26,8 +27,8 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a collection of transforms which represent frames along this curve.
         /// </summary>
-        /// <param name="startSetback">The offset from the start of the curve.</param>
-        /// <param name="endSetback">The offset from the end of the curve.</param>
+        /// <param name="startSetback">The offset parameter from the start of the curve.</param>
+        /// <param name="endSetback">The offset parameter from the end of the curve.</param>
         /// <returns>A collection of transforms.</returns>
         public virtual Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0)
         {
@@ -62,7 +63,7 @@ namespace Elements.Geometry
 
         internal virtual double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
         {
-            return new[] { 0.0, 1.0 - endSetback };
+            return new[] { startSetback, 1.0 - endSetback };
         }
 
         /// <summary>

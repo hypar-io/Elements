@@ -92,8 +92,8 @@ namespace Elements.Geometry.Solids
         /// <param name="perimeter">The perimeter of the face to sweep.</param>
         /// <param name="holes">The holes of the face to sweep.</param>
         /// <param name="curve">The curve along which to sweep.</param>
-        /// <param name="startSetback">The setback of the sweep from the start of the curve.</param>
-        /// <param name="endSetback">The setback of the sweep from the end of the curve.</param>
+        /// <param name="startSetback">The setback distance of the sweep from the start of the curve.</param>
+        /// <param name="endSetback">The setback distance of the sweep from the end of the curve.</param>
         /// <returns>A solid.</returns>
         public static Solid SweepFaceAlongCurve(Polygon perimeter,
                                                 IList<Polygon> holes,
@@ -104,6 +104,7 @@ namespace Elements.Geometry.Solids
             var solid = new Solid();
 
             var l = curve.Length();
+            
             // The start and end setbacks can't be more than
             // the length of the beam together.
             if((startSetback + endSetback) >= l)
@@ -111,6 +112,10 @@ namespace Elements.Geometry.Solids
                 startSetback = 0;
                 endSetback = 0;
             }
+
+            // Calculate the setback parameter as a percentage
+            // of the curve length. This will not work for curves
+            // without non-uniform parameterization.
             var ssb = startSetback / l;
             var esb = endSetback / l;
 

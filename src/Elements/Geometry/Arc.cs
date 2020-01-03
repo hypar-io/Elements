@@ -104,6 +104,15 @@ namespace Elements.Geometry
 
         internal override double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
         {
+            // Arc length calculations.
+            // var l = this.Length();
+            // var arcLength = l - startSetback - endSetback;
+            // al = (alpha * PI * r) / 180
+            // alpha = (al * 180)/(PI * r)
+            // var arcAngle = (arcLength * 360) / (2 * Math.PI * this.Radius);
+            // var parameterSpan = 1.0 - startSetback/l - endSetback/l;
+
+            // Parameter calculations.
             var angleSpan = this.EndAngle - this.StartAngle;
             var partialAngleSpan = angleSpan - angleSpan * startSetback - angleSpan * endSetback;
             var parameterSpan = 1.0 - 1.0 * startSetback - 1.0 * endSetback;

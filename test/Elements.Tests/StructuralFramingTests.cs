@@ -11,7 +11,7 @@ namespace Elements.Tests
     {
         public enum BeamType
         {
-            Line, Polyline, Polygon, Arc
+            Line, Polyline, Polygon, Arc, Circle
         }
 
         private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
@@ -21,6 +21,7 @@ namespace Elements.Tests
         [InlineData("PolylineBeam", BeamType.Polyline, 0.25, 0.25)]
         [InlineData("PolygonBeam", BeamType.Polygon, 0.25, 0.25)]
         [InlineData("ArcBeam", BeamType.Arc, 0.25, 0.25)]
+        [InlineData("CircleBeam", BeamType.Circle, 3.0, 3.0)]
         public void Beam(string testName, BeamType beamType, double startSetback, double endSetback)
         {
             this.Name = testName;
@@ -39,6 +40,9 @@ namespace Elements.Tests
                     break;
                 case BeamType.Polyline:
                     cl = ModelTest.TestPolyline;
+                    break;
+                case BeamType.Circle:
+                    cl = ModelTest.TestCircle;
                     break;
             }
 

@@ -29,20 +29,19 @@ namespace Hypar.Tests
             var e = new Vector3(0, 0, 4);
             var f = new Vector3(5, 0, 5);
             var ctrlPts = new List<Vector3>{a,b,c,d,e,f};
-            var bezier = new Bezier(ctrlPts);
+
+            var bezier1 = new Bezier(ctrlPts);
+            var bezier2 = new Bezier(ctrlPts, FrameType.RoadLike);
             
-            var mc = new ModelCurve(bezier);
-            this.Model.AddElement(mc);
-
-            for(var t=0.0; t<=1.0; t+=0.1)
-            {
-                var trans = bezier.TransformAt(t);
-                this.Model.AddElements(trans.ToModelCurves());
-            }
-
             var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W21x55);
-            var beam = new Beam(bezier, profile, material:BuiltInMaterials.Default, rotation: 45);
+
+            // Get transforms with Frenet frame.
+            var beam = new Beam(bezier1, profile, material:BuiltInMaterials.Default);
             this.Model.AddElement(beam);
+
+            // Get transforms with road-like frame.
+            var beam1 = new Beam(bezier2, profile, material:BuiltInMaterials.Default, transform: new Transform(0, 0, 0));
+            this.Model.AddElement(beam1);
         }
     }
 }

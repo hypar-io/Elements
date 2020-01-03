@@ -8,6 +8,22 @@ namespace Elements.Geometry
     // http://webhome.cs.uvic.ca/~blob/courses/305/notes/pdf/ref-frames.pdf
 
     /// <summary>
+    /// The frame type to be used for operations requiring 
+    /// a moving frame around the curve.
+    /// </summary>
+    public enum FrameType
+    {
+        /// <summary>
+        /// A Frenet frame.
+        /// </summary>
+        Frenet,
+        /// <summary>
+        /// A frame with the up axis aligned with +Z.
+        /// </summary>
+        RoadLike
+    }
+
+    /// <summary>
     /// A Bezier curve.
     /// </summary>
     public class Bezier : Curve
@@ -21,10 +37,16 @@ namespace Elements.Geometry
         public List<Vector3> ControlPoints { get; set; }
 
         /// <summary>
+        /// The frame type to use when calculating transforms along the curve.
+        /// </summary>
+        public FrameType FrameType { get; set; }
+
+        /// <summary>
         /// Construct a bezier.
         /// </summary>
         /// <param name="controlPoints">The control points of the curve.</param>
-        public Bezier(List<Vector3> controlPoints)
+        /// <param name="frameType">The frame type to use when calculating frames.</param>
+        public Bezier(List<Vector3> controlPoints, FrameType frameType = FrameType.Frenet)
         {
             if (controlPoints.Count < 3)
             {
@@ -32,6 +54,7 @@ namespace Elements.Geometry
             }
 
             this.ControlPoints = controlPoints;
+            this.FrameType = frameType;
         }
 
         /// <summary>
@@ -53,7 +76,7 @@ namespace Elements.Geometry
             var transforms = new Transform[_samples + 1];
             for (var i = 0; i <= _samples; i++)
             {
-                transforms[i] = TransformAt(i * 1.0/_samples);
+                transforms[i] = TransformAt(i * 1.0 / _samples);
             }
             return transforms;
         }
@@ -139,7 +162,18 @@ namespace Elements.Geometry
         /// <param name="u">The parameter along the curve between 0.0 and 1.0.</param>
         public override Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), NormalAt(u), TangentAt(u).Negate());
+            switch (this.FrameType)
+            {
+                case FrameType.Frenet:
+                    return new Transform(PointAt(u), NormalAt(u), TangentAt(u).Negate());
+                case FrameType.RoadLike:
+                    var up = Vector3.ZAxis;
+                    var z = TangentAt(u).Negate();
+                    var x = z.Cross(up);
+                    return new Transform(PointAt(u), x, z);
+            }
+
+            throw new Exception("Curve.FrameType must specify which frame type to use.");
         }
 
         /// <summary>
@@ -174,7 +208,7 @@ namespace Elements.Geometry
             var t = u;
             for (var i = 0; i <= n - 2; i++)
             {
-                Q += BerensteinBasisPolynomial(n - 2, i, t) * (n * (n-1) * (this.ControlPoints[i+2] - 2 * this.ControlPoints[i+1] + this.ControlPoints[i]));
+                Q += BerensteinBasisPolynomial(n - 2, i, t) * (n * (n - 1) * (this.ControlPoints[i + 2] - 2 * this.ControlPoints[i + 1] + this.ControlPoints[i]));
             }
             return Q;
         }

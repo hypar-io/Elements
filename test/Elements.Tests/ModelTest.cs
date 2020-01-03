@@ -38,6 +38,7 @@ namespace Elements.Tests
         internal static Arc TestArc = new Arc(Vector3.Origin, 2.0, 0.0, 90.0);
         internal static Polyline TestPolyline = new Polyline(new []{new Vector3(0,0), new Vector3(0,2), new Vector3(0,3,1)});
         internal static Polygon TestPolygon = Polygon.Ngon(5, 2);
+        internal static Circle TestCircle = new Circle(Vector3.Origin, 5);
 
         public ModelTest()
         {
