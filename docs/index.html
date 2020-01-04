@@ -8,7 +8,7 @@
     <title>Getting Started with Hypar | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Getting Started with Hypar | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
@@ -186,7 +186,6 @@ Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.i
 <p><img src="images/HyparOptions2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 In the alternatives list, you can see that your function has actually run many times with different input values. Click different alternatives to view them in 3D. The range sliders on the left are set to allow all possible lengths and widths. You can shrink these ranges to generate just the options you want.
-<div style="page-break-after: always;"></div>
 <p>Now let's go back and look at everything that happened and what it means for writing your own custom Hypar functions in the future. We'll place blue boxes around what we're talking about, like this:</p>
 <p><img src="images/HyparStartFunctionCreate2019.06.16.png" alt=""></p>
 <p>The first thing that happened was that the <strong>hypar new</strong> command created a new local project folder within the current folder. In Windows Explorer, the new folder looks like this:</p>
@@ -237,7 +236,7 @@ In the alternatives list, you can see that your function has actually run many t
 <p>Opening <strong>StarterFunction</strong> on Hypar again, we now have a <strong>Height</strong> input in addition to the <strong>Length</strong> and <strong>Width</strong> inputs.  Unchecking &quot;Sample Range&quot; on height and setting its slider to 10m gives us a set of alternatives with identical heights and varied lengths and widths:</p>
 <p><img src="images/HyparStarterHeight2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>What if we wanted a maximum height of 20? Let's go back to the <strong>hypar.json</strong> file and change the maximum for the input range:</p>
+<p>What if we wanted a maximum height of 20m? Let's go back to the <strong>hypar.json</strong> file and change the maximum for the input range:</p>
 <p><img src="images/HyparStarter20Height2019.06.16.png" alt=""></p>
 <p>Save the file and run <strong>hypar publish</strong> again at the command prompt:</p>
 <p><img src="images/HyparPublish2019.06.16.png" alt=""></p>

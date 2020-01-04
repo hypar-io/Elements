@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Transform
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -227,6 +227,31 @@ for(var i=0.0; i&lt;360.0; i+= 360.0/(double)count)
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Transform</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Transform.html">Transform</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -665,7 +690,7 @@ of the curve.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -963,7 +988,7 @@ of the curve.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Transform_OfPolygons_" data-uid="Elements.Geometry.Transform.OfPolygons*"></a>
-  <h4 id="Elements_Geometry_Transform_OfPolygons_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Transform.OfPolygons(IList{Elements.Geometry.Polygon})">OfPolygons(IList&lt;Polygon&gt;)</h4>
+  <h4 id="Elements_Geometry_Transform_OfPolygons_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Transform.OfPolygons(System.Collections.Generic.IList{Elements.Geometry.Polygon})">OfPolygons(IList&lt;Polygon&gt;)</h4>
   <div class="markdown level1 summary"><p>Transform the specified polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -982,7 +1007,7 @@ of the curve.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">polygons</span></td>
         <td><p>The polygons to transform.</p>
 </td>
@@ -1176,6 +1201,8 @@ of the curve.</p>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.ToString()</span></div>
   <a id="Elements_Geometry_Transform_XY_" data-uid="Elements.Geometry.Transform.XY*"></a>
   <h4 id="Elements_Geometry_Transform_XY" data-uid="Elements.Geometry.Transform.XY">XY()</h4>
   <div class="markdown level1 summary"><p>Calculate XY plane of the transform.</p>
@@ -1248,6 +1275,10 @@ of the curve.</p>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_Transform_Elements_Geometry_Transform_">ModelCurveExtensions.ToModelCurves(Transform, Transform)</a>

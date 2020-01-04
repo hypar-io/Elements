@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polyline
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -90,6 +90,30 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Polyline_syntax">Syntax</h5>
@@ -99,7 +123,7 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polyline__ctor_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Polyline__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -117,7 +141,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
         <td></td>
       </tr>
@@ -192,7 +216,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -226,7 +250,7 @@
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
   <a id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow*"></a>
-  <h4 id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow(IList{Elements.Geometry.Vector3})">CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow(System.Collections.Generic.IList{Elements.Geometry.Vector3})">CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Check for coincident vertices in the supplied vertex collection.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -245,20 +269,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polyline_Frames_" data-uid="Elements.Geometry.Polyline.Frames*"></a>
-  <h4 id="Elements_Geometry_Polyline_Frames_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Polyline.Frames(System.Double,System.Double,System.Double)">Frames(Double, Double, Double)</h4>
+  <h4 id="Elements_Geometry_Polyline_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Polyline.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
   <div class="markdown level1 summary"><p>Get the transforms used to transform a Profile extruded along this Polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -280,12 +304,6 @@
         <td><span class="parametername">endSetback</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">rotation</span></td>
-        <td><p>An optional rotation in degrees of all frames around their z axes.</p>
-</td>
-      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -304,7 +322,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_System_Double_">Curve.Frames(Double, Double, Double)</a></div>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a></div>
   <a id="Elements_Geometry_Polyline_Length_" data-uid="Elements.Geometry.Polyline.Length*"></a>
   <h4 id="Elements_Geometry_Polyline_Length" data-uid="Elements.Geometry.Polyline.Length">Length()</h4>
   <div class="markdown level1 summary"><p>Calculate the length of the polygon.</p>
@@ -475,14 +493,16 @@
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.ToString()</span></div>
   <a id="Elements_Geometry_Polyline_TransformAt_" data-uid="Elements.Geometry.Polyline.TransformAt*"></a>
-  <h4 id="Elements_Geometry_Polyline_TransformAt_System_Double_System_Double_" data-uid="Elements.Geometry.Polyline.TransformAt(System.Double,System.Double)">TransformAt(Double, Double)</h4>
+  <h4 id="Elements_Geometry_Polyline_TransformAt_System_Double_" data-uid="Elements.Geometry.Polyline.TransformAt(System.Double)">TransformAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get the Transform at the specified parameter along the Polygon.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u, double rotation = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -498,12 +518,6 @@
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
         <td><p>The parameter on the Polygon between 0.0 and 1.0.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">rotation</span></td>
-        <td><p>An optional rotation in degrees of the transform around its z axis.</p>
 </td>
       </tr>
     </tbody>
@@ -525,7 +539,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_System_Double_">Curve.TransformAt(Double, Double)</a></div>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
