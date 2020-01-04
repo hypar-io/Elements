@@ -13,7 +13,7 @@ namespace Elements.Tests.Examples
 
             // <example>
             // Create a framing type.
-            var profile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
+            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
 
             // Create a straight beam.
             var line = new Line(Vector3.Origin, new Vector3(5,0,5));

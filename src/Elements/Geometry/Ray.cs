@@ -36,6 +36,8 @@ namespace Elements.Geometry
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the type and location of intersection.</returns>
         public bool Intersects(Triangle tri, out Vector3 result) 
         {
+            result = default(Vector3);
+
             var vertex0 = tri.Vertices[0].Position;
             var vertex1 = tri.Vertices[1].Position;
             var vertex2 = tri.Vertices[2].Position;
@@ -47,19 +49,16 @@ namespace Elements.Geometry
 
             a = edge1.Dot(h);
             if (a > -Vector3.Epsilon && a < Vector3.Epsilon) {
-                result = null;
                 return false;    // This ray is parallel to this triangle.
             }
             f = 1.0 / a;
             u = f * (s.Dot(h));
             if (u < 0.0 || u > 1.0) {
-                result = null;
                 return false;
             }
             var q = s.Cross(edge1);
             v = f * this.Direction.Dot(q);
             if (v < 0.0 || u + v > 1.0) {
-                result = null;
                 return false;
             }
             // At this stage we can compute t to find out where the intersection point is on the line.
@@ -70,7 +69,6 @@ namespace Elements.Geometry
                 return true;
             } else // This means that there is a line intersection but not a ray intersection.
             {
-                result = null;
                 return false;
             }
         }
@@ -79,16 +77,16 @@ namespace Elements.Geometry
         /// Does this ray intersect the provided topography?
         /// </summary>
         /// <param name="topo">The topography.</param>
-        /// <param name="xsect">The intersection result.</param>
+        /// <param name="result">The location of intersection.</param>
         /// <returns>True if an intersection result occurs.
         /// The type of intersection should be checked in the intersection result. 
         /// False if no intersection occurs.</returns>
-        public bool Intersects(Topography topo, out Vector3 xsect)
+        public bool Intersects(Topography topo, out Vector3 result)
         {
-            xsect = null;
+            result = default(Vector3);
             foreach (var t in topo.Mesh.Triangles)
             {
-                if (this.Intersects(t, out xsect))
+                if (this.Intersects(t, out result))
                 {
                     return true;
                 }

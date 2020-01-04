@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -26,7 +25,7 @@ namespace Elements.Geometry
         public Line(Vector3 start, Vector3 direction, double length)
         {
             this.Start = start;
-            this.End = start + direction.Normalized()*length;
+            this.End = start + direction.Normalized() * length;
         }
 
         /// <summary>
@@ -34,11 +33,10 @@ namespace Elements.Geometry
         /// positive Z axis points along the curve.
         /// </summary>
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
-        /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         /// <returns>A transform.</returns>
-        public override Transform TransformAt(double u, double rotation = 0.0)
+        public override Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), (this.Start-this.End).Normalized(), rotation);
+            return new Transform(PointAt(u), (this.Start - this.End).Normalized());
         }
 
         /// <summary>
@@ -80,11 +78,11 @@ namespace Elements.Geometry
         /// <param name="amount">The amount to thicken the line.</param>
         public Polygon Thicken(double amount)
         {
-            if(Start.Z != End.Z)
+            if (Start.Z != End.Z)
             {
                 throw new Exception("The line could not be thickened. Only lines with their start and end at the same elevation can be thickened.");
             }
-            
+
             var offsetN = this.Direction().Cross(Vector3.ZAxis);
             var a = this.Start + (offsetN * (amount / 2));
             var b = this.End + (offsetN * (amount / 2));
@@ -117,28 +115,21 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a collection of transforms which represent frames along this line.
-        /// </summary>
-        /// <param name="startSetback">The parameter offset from the start of the line. Between 0 and 1.</param>
-        /// <param name="endSetback">The parameter offset from the end of the line. Between 0 and 1.</param>
-        /// <param name="rotation">An optional rotation in degrees around all the frames' z axes.</param>
-        /// <returns>A collection of transforms.</returns>
-        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
-        {
-            return new Transform[] { TransformAt(0.0 + startSetback, rotation), TransformAt(1.0 - endSetback, rotation) };
-        }
-
-        /// <summary>
         /// Intersect this line with the specified plane 
         /// </summary>
         /// <param name="p">The plane.</param>
-        /// <returns>The point of intersection or null if no intersection occurs.</returns>
-        public Vector3 Intersect(Plane p) {
+        /// <param name="result">The location of intersection.</param>
+        /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
+        public bool Intersects(Plane p, out Vector3 result)
+        {
+            result = default(Vector3);
+
             var d = this.Direction();
 
             // Test for perpendicular.
-            if (p.Normal.Dot(d) == 0) {
-                return null;
+            if (p.Normal.Dot(d) == 0)
+            {
+                return false;
             }
             var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(d);
 
@@ -146,11 +137,12 @@ namespace Elements.Geometry
             // of intersection is past the end of the line.
             // If t < 0, the point of intersection is behind
             // the start of the line.
-            if(t > this.Length() || t < 0)
+            if (t > this.Length() || t < 0)
             {
-                return null;
+                return false;
             }
-            return this.Start + d * t;
+            result = this.Start + d * t;
+            return true;
         }
 
         /// <summary>
@@ -163,8 +155,8 @@ namespace Elements.Geometry
         {
             var a = Vector3.CCW(this.Start, this.End, l.Start) * Vector3.CCW(this.Start, this.End, l.End);
             var b = Vector3.CCW(l.Start, l.End, this.Start) * Vector3.CCW(l.Start, l.End, this.End);
-            if (IsAlmostZero(a) || a > Vector3.Epsilon ) return false;
-            if (IsAlmostZero(b) || b > Vector3.Epsilon ) return false;
+            if (IsAlmostZero(a) || a > Vector3.Epsilon) return false;
+            if (IsAlmostZero(b) || b > Vector3.Epsilon) return false;
             return true;
         }
 
@@ -179,7 +171,7 @@ namespace Elements.Geometry
         /// <returns>A bounding box for this line.</returns>
         public override BBox3 Bounds()
         {
-            if(this.Start < this.End)
+            if (this.Start < this.End)
             {
                 return new BBox3(this.Start, this.End);
             }
@@ -205,46 +197,46 @@ namespace Elements.Geometry
         public List<Line> DivideByLength(double l, bool removeShortSegments = false)
         {
             var len = this.Length();
-            if(l > len)
+            if (l > len)
             {
-                return new List<Line>(){new Line(this.Start, this.End)};
+                return new List<Line>() { new Line(this.Start, this.End) };
             }
 
             var total = 0.0;
             var d = this.Direction();
             var lines = new List<Line>();
-            while(total + l <= len)
-            { 
+            while (total + l <= len)
+            {
                 var a = this.Start + d * total;
                 var b = a + d * l;
-                lines.Add(new Line(a,b));
+                lines.Add(new Line(a, b));
                 total += l;
             }
-            if(total < len && !removeShortSegments)
+            if (total < len && !removeShortSegments)
             {
                 var a = this.Start + d * total;
                 lines.Add(new Line(a, End));
             }
             return lines;
         }
-        
+
         /// <summary>
         /// Divide the line into n+1 equal segments.
         /// </summary>
         /// <param name="n">The number of segments.</param>
         public List<Line> DivideByCount(int n)
         {
-            if(n < 0)
+            if (n < 0)
             {
                 throw new ArgumentException($"The number of divisions must be greater than 0.");
             }
             var lines = new List<Line>();
-            var div = 1.0/(n + 1);
-            for(var t=0.0; t<=1.0-div; t+=div)
+            var div = 1.0 / (n + 1);
+            for (var t = 0.0; t <= 1.0 - div; t += div)
             {
                 var a = PointAt(t);
-                var b = PointAt(t+div);
-                lines.Add(new Line(a,b));
+                var b = PointAt(t + div);
+                lines.Add(new Line(a, b));
             }
             return lines;
         }
@@ -254,7 +246,7 @@ namespace Elements.Geometry
         /// </summary>
         internal override IList<Vector3> RenderVertices()
         {
-            return new []{this.Start, this.End};
+            return new[] { this.Start, this.End };
         }
     }
 }

@@ -35,34 +35,34 @@ namespace Elements.Geometry.Tests
         {
             var line = new Line(Vector3.Origin, new Vector3(5.0,0,0));
             var plane = new Plane(new Vector3(2.5,0,0), Vector3.XAxis);
-            var x = line.Intersect(plane);
-            Assert.Equal(x, plane.Origin);
+            if(line.Intersects(plane, out Vector3 result))
+            {
+                Assert.True(result.Equals(plane.Origin));
+            }
         }
 
         [Fact]
-        public void Parallel_DoesNotIntersect()
+        public void LineParallelToPlaneDoesNotIntersect()
         {
             var line = new Line(Vector3.Origin, Vector3.ZAxis);
             var plane = new Plane(new Vector3(5.1,0,0), Vector3.XAxis);
-            var x = line.Intersect(plane);
-            Assert.Null(x);
+            Assert.False(line.Intersects(plane, out Vector3 result));
         }
 
         [Fact]
-        public void InPlaneDoesNotIntersect()
+        public void LineInPlaneDoesNotIntersect()
         {
             var line = new Line(Vector3.Origin, new Vector3(5,0,0));
             var plane = new Plane(Vector3.Origin, Vector3.ZAxis);
-            Assert.Null(line.Intersect(plane));
+            Assert.False(line.Intersects(plane, out Vector3 result));
         }
 
         [Fact]
-        public void TooFar_DoesNotIntersect()
+        public void LineTooFarDoesNotIntersect()
         {
             var line = new Line(Vector3.Origin, new Vector3(5.0,0,0));
             var plane = new Plane(new Vector3(5.1,0,0), Vector3.XAxis);
-            var x = line.Intersect(plane);
-            Assert.Null(x);
+            Assert.False(line.Intersects(plane, out Vector3 result));
         }
 
         [Fact]

@@ -5,19 +5,8 @@ namespace Elements.Geometry
     /// <summary>
     /// An RGBA color.
     /// </summary>
-    public partial class Color: IEquatable<Color>
+    public partial struct Color: IEquatable<Color>
     {
-        /// <summary>
-        /// Construct a default color.
-        /// </summary>
-        public Color()
-        {
-            this.Red = 0.5;
-            this.Green = 0.5;
-            this.Blue = 0.5;
-            this.Alpha = 0.0;
-        }
-
         /// <summary>
         /// Get the color's components as an array.
         /// </summary>
@@ -34,12 +23,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            var m = obj as Color;
-            if(m == null)
-            {
-                return false;
-            }
-
+            var m = (Color)obj;
             return m.Red == this.Red && m.Green == this.Green && m.Blue == this.Blue && m.Alpha == this.Alpha;
         }
 
@@ -59,10 +43,6 @@ namespace Elements.Geometry
         /// <returns>Returns true if the two colors are equal, otherwise false.</returns>
         public bool Equals(Color other)
         {
-            if(other == null)
-            {
-                return false;
-            }
             return this.Red == other.Red && this.Blue == other.Blue && this.Green == other.Green && this.Alpha == other.Alpha;
         }
     }

@@ -21,7 +21,7 @@ namespace Elements.Geometry
 
     /// <summary>A 3D vector.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.27.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Vector3 
+    public partial struct Vector3 
     {
         [Newtonsoft.Json.JsonConstructor]
         public Vector3(double @x, double @y, double @z)

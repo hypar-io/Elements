@@ -11,7 +11,7 @@ namespace Elements.Tests
         {
             this.Name = "ModelCurves";
             var line = new Line(Vector3.Origin, new Vector3(5,5,5));
-            var arc = new Arc(new Vector3(0,0,0), 2.0, 45.0, 135.0);
+            var arc = new Arc(Vector3.Origin, 2.0, 45.0, 135.0);
             var pline = Polygon.L(2, 2, 0.5);
 
             var lineModelCurve = new ModelCurve(line, new Material("Red", Colors.Red));

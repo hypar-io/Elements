@@ -105,7 +105,7 @@ namespace Elements.IFC.Tests
             var m1 = new Material("red", Colors.Red, 0f, 0f);
             var m2 = new Material("green", Colors.Green, 0f, 0f);
 
-            var prof = WideFlangeProfileServer.Instance.GetProfileByName("W16x31");
+            var prof = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
             for(var j=0; j<pts.Count; j++)
             {
                 var colA = pts[j];
@@ -118,7 +118,7 @@ namespace Elements.IFC.Tests
                 for(var i=0; i<colA.Count; i++)
                 {
                     var a = colA[i];
-                    Vector3 b = null;
+                    Vector3 b = default(Vector3);
                     if(i+1 < colA.Count)
                     {
                         b = colA[i+1];

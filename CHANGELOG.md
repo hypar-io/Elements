@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.2
+### Changed
+- `Vector3` is now a struct.
+- `Color` is now a struct.
+- `ProfileServer.GetProfileByName(...)` is now deprecated in favor of `ProfileServer.GetProfileByType(...)`
+
+### Added
+- `Bezier`
+- `WideFlangeProfileType`
+- `HSSPipeProfileType`
+- `Curve.MinimumChordLength` static property to allow the user to set the minimum chord length for subdivision of all curves for rendering.
+- `Circle`
+- `FrameType` Bezier curves can have their frames calculated using Frenet frames or "road like" frames.
+
 ## 0.4.0
 ### Changed
 - All element types are partial classes with one part of the class generated from its JSON schema.

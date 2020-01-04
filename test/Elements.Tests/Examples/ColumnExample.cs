@@ -13,10 +13,10 @@ namespace Elements.Tests.Examples
 
             // <example>
             // Create a framing type.
-            var profile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
+            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
 
             // Create a column.
-            var column = new Column(Vector3.Origin, 3.0, WideFlangeProfileServer.Instance.GetProfileByName("W44x335"), BuiltInMaterials.Steel);
+            var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
             // </example>
 
             this.Model.AddElement(column);

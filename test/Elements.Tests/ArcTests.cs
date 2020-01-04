@@ -62,5 +62,15 @@ namespace Hypar.Tests
             Assert.Equal(new Vector3(0, 0, 1), t.YAxis);
             Assert.Equal(new Vector3(1, 0, 0), t.ZAxis);
         }
+
+        [Fact]
+        public void Frames()
+        {
+            var arc = new Arc(Vector3.Origin, 5.0, 0.0, 180.0);
+            var frames = arc.Frames();
+
+            var arc1 = new Arc(Vector3.Origin, 5.0, 0.0, 180.0);
+            var frames1 = arc.Frames(0.1, 0.1);
+        }
     }
 }

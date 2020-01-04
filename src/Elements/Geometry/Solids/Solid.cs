@@ -92,20 +92,19 @@ namespace Elements.Geometry.Solids
         /// <param name="perimeter">The perimeter of the face to sweep.</param>
         /// <param name="holes">The holes of the face to sweep.</param>
         /// <param name="curve">The curve along which to sweep.</param>
-        /// <param name="startSetback">The setback of the sweep from the start of the curve.</param>
-        /// <param name="endSetback">The setback of the sweep from the end of the curve.</param>
-        /// <param name="rotation">An optional rotation in degrees of the perimeter around the tangent of the curve.</param>
+        /// <param name="startSetback">The setback distance of the sweep from the start of the curve.</param>
+        /// <param name="endSetback">The setback distance of the sweep from the end of the curve.</param>
         /// <returns>A solid.</returns>
         public static Solid SweepFaceAlongCurve(Polygon perimeter,
                                                 IList<Polygon> holes,
                                                 ICurve curve,
                                                 double startSetback = 0,
-                                                double endSetback = 0,
-                                                double rotation = 0.0)
+                                                double endSetback = 0)
         {
             var solid = new Solid();
 
             var l = curve.Length();
+            
             // The start and end setbacks can't be more than
             // the length of the beam together.
             if((startSetback + endSetback) >= l)
@@ -113,18 +112,32 @@ namespace Elements.Geometry.Solids
                 startSetback = 0;
                 endSetback = 0;
             }
+
+            // Calculate the setback parameter as a percentage
+            // of the curve length. This will not work for curves
+            // without non-uniform parameterization.
             var ssb = startSetback / l;
             var esb = endSetback / l;
 
-            var transforms = curve.Frames(ssb, esb, rotation);
+            var transforms = curve.Frames(ssb, esb);
 
             if (curve is Polygon)
             {
                 for (var i = 0; i < transforms.Length; i++)
                 {
                     var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
-                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i].XY(), next.XY(), rotation);
+                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i], next);
                 }
+            }
+            else if(curve is Bezier)
+            {
+                var startCap = solid.AddFace(transforms[0].OfPolygon(perimeter));
+                for (var i = 0; i < transforms.Length - 1; i++)
+                {
+                    var next = transforms[i + 1];
+                    solid.SweepPolygonBetweenPlanes(perimeter, transforms[i], next);
+                }
+                var endCap = solid.AddFace(transforms[transforms.Length - 1].OfPolygon(perimeter).Reversed());
             }
             else
             {
@@ -680,13 +693,15 @@ namespace Elements.Geometry.Solids
             return openEdge;
         }
 
-        private Loop SweepPolygonBetweenPlanes(Polygon p, Plane start, Plane end, double rotation = 0.0)
+        private Loop SweepPolygonBetweenPlanes(Polygon p, Transform start, Transform end, double rotation = 0.0)
         {
             // Transform the polygon to the mid plane between two transforms.
-            var mid = new Line(start.Origin, end.Origin).TransformAt(0.5, rotation).OfPolygon(p);
-            var v = (end.Origin - start.Origin).Normalized();
-            var startP = mid.ProjectAlong(v, start);
-            var endP = mid.ProjectAlong(v, end);
+            // var mid = new Line(start.Origin, end.Origin).TransformAt(0.5, rotation).OfPolygon(p);
+            // var v = (end.Origin - start.Origin).Normalized();
+            // var startP = mid.ProjectAlong(v, start);
+            // var endP = mid.ProjectAlong(v, end);
+            var startP = start.OfPolygon(p);
+            var endP = end.OfPolygon(p);
 
             var loop1 = AddEdges(startP);
             var loop2 = AddEdges(endP);
@@ -718,15 +733,14 @@ namespace Elements.Geometry.Solids
         {
             var start = e.Left.Vertex;
             var end = e.Right.Vertex;
-            var xsect = new Line(start.Point, end.Point).Intersect(p);
-            if(xsect == null)
+            if(!new Line(start.Point, end.Point).Intersects(p, out Vector3 result))
             {
                 return;
             }
 
             // Add vertex at intersection.
             // Create new edge from vertex to end.
-            var mid = AddVertex(xsect);
+            var mid = AddVertex(result);
             var e1 = AddEdge(mid, end);
 
             // Adjust end of existing edge to

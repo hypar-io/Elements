@@ -27,10 +27,6 @@ namespace Elements.Geometry
         /// </returns>
         public bool Contains(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return false;
-            }
             var thisPath = this.ToClipperPath();
             var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
@@ -74,10 +70,6 @@ namespace Elements.Geometry
         /// </returns>
         public bool Covers(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return false;
-            }
             var thisPath = this.ToClipperPath();
             var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
@@ -121,10 +113,6 @@ namespace Elements.Geometry
         /// </returns>
         public bool Disjoint(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return true;
-            }
             var thisPath = this.ToClipperPath();
             var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
@@ -196,10 +184,6 @@ namespace Elements.Geometry
         /// </returns>
         public bool Touches(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return false;
-            }
             var thisPath = this.ToClipperPath();
             var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != -1)
@@ -535,11 +519,9 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
-        /// <param name="rotation">An optional rotation in degrees of all frames around their z axes.</param>
-        /// <returns></returns>
-        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
+        public override Transform[] Frames(double startSetback, double endSetback)
         {
-            return FramesInternal(startSetback, endSetback, true, rotation);
+            return FramesInternal(startSetback, endSetback, true);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using Elements.Geometry.Profiles;
 using System;
 using System.Linq;
 using Xunit;
+using System.Diagnostics;
 
 namespace Elements.Tests
 {
@@ -10,16 +11,17 @@ namespace Elements.Tests
     {
         public enum BeamType
         {
-            Line, Polyline, Polygon, Arc
+            Line, Polyline, Polygon, Arc, Circle
         }
 
-        private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
+        private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
 
         [Theory]
         [InlineData("LinearBeam", BeamType.Line, 0.25, 0.25)]
         [InlineData("PolylineBeam", BeamType.Polyline, 0.25, 0.25)]
         [InlineData("PolygonBeam", BeamType.Polygon, 0.25, 0.25)]
         [InlineData("ArcBeam", BeamType.Arc, 0.25, 0.25)]
+        [InlineData("CircleBeam", BeamType.Circle, 3.0, 3.0)]
         public void Beam(string testName, BeamType beamType, double startSetback, double endSetback)
         {
             this.Name = testName;
@@ -38,6 +40,9 @@ namespace Elements.Tests
                     break;
                 case BeamType.Polyline:
                     cl = ModelTest.TestPolyline;
+                    break;
+                case BeamType.Circle:
+                    cl = ModelTest.TestCircle;
                     break;
             }
 
@@ -59,6 +64,9 @@ namespace Elements.Tests
         [Fact]
         public void WideFlange()
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             this.Name = "WideFlange";
 
             var x = 0.0;
@@ -77,6 +85,10 @@ namespace Elements.Tests
                     x = 0.0;
                 }
             }
+
+            sw.Stop();
+            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating beams.");
+            Console.WriteLine($"{GC.GetTotalMemory(false)}bytes allocated.");
         }
 
         [Fact]
@@ -143,6 +155,36 @@ namespace Elements.Tests
             // without throwing. It will not have setbacks.
             var beam1 = new Beam(line1, this._testProfile, BuiltInMaterials.Steel, sb, sb);
             this.Model.AddElement(beam1);
+        }
+
+        [Fact(Skip="Benchmark")]
+        public void Benchmark()
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+
+            var x = 0.0;
+            var z = 0.0;
+            var profile = WideFlangeProfileServer.Instance.AllProfiles().First();
+            var n = 100000;
+            var mesh = new Mesh();
+            for(var i=0; i<n; i++)
+            {
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
+                var beam = new Beam(line, profile, BuiltInMaterials.Steel);
+                beam.UpdateRepresentations();
+                beam.Representation.SolidOperations.First().GetSolid().Tessellate(ref mesh);
+                x += 2.0;
+                if (x > 20.0)
+                {
+                    z += 2.0;
+                    x = 0.0;
+                }
+            }
+
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds} ms for creating {n} beams.");
+            Console.WriteLine($"{GC.GetTotalMemory(true)} bytes allocated.");
         }
     }
 }

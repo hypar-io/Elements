@@ -24,20 +24,19 @@ namespace Elements.Geometry.Solids
     public partial class Sweep : SolidOperation
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @rotation, bool @isVoid)
+        public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, bool @isVoid)
             : base(isVoid)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Sweep>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @profile, @curve, @startSetback, @endSetback, @rotation, @isVoid});
+                validator.Validate(new object[]{ @profile, @curve, @startSetback, @endSetback, @isVoid});
             }
         
             this.Profile = @profile;
             this.Curve = @curve;
             this.StartSetback = @startSetback;
             this.EndSetback = @endSetback;
-            this.Rotation = @rotation;
         }
     
         /// <summary>The id of the profile to be swept along the curve.</summary>
@@ -55,10 +54,6 @@ namespace Elements.Geometry.Solids
         /// <summary>The amount to set back the resulting solid from the end of the curve.</summary>
         [Newtonsoft.Json.JsonProperty("EndSetback", Required = Newtonsoft.Json.Required.Always)]
         public double EndSetback { get; set; }
-    
-        /// <summary>The rotation, in degrees, of the profile.</summary>
-        [Newtonsoft.Json.JsonProperty("Rotation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Rotation { get; set; }
     
     
     }

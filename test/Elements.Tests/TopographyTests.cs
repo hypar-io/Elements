@@ -43,7 +43,7 @@ namespace Elements.Tests
         {
             this.Name = "TexturedTopography";
             var m = new Material("texture",Colors.Gray, 0.0f, 0.0f, "UV.jpg");
-            var topo = CreateTopoFromMapboxElevations(null, m);
+            var topo = CreateTopoFromMapboxElevations(material: m);
             this.Model.AddElement(topo);
         }
 
@@ -102,7 +102,7 @@ namespace Elements.Tests
             }
         }
 
-        private static Topography CreateTopoFromMapboxElevations(Vector3 origin = null, Material material = null)
+        private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
         {
             // Read topo elevations
             var w = 512/8 - 1;
@@ -112,7 +112,7 @@ namespace Elements.Tests
             // Compute the mapbox tile side lenth.
             var d = (40075016.685578 / Math.Pow(2, 15))/w;
 
-            return new Topography(origin != null ? origin : Vector3.Origin, d, d, elevations, w, material);
+            return new Topography(origin.Equals(default(Vector3)) ? origin : Vector3.Origin, d, d, elevations, w, material);
         }
     }
 }

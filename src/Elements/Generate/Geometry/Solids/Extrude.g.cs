@@ -36,7 +36,6 @@ namespace Elements.Geometry.Solids
             this.Profile = @profile;
             this.Height = @height;
             this.Direction = @direction;
-            this.Rotation = @rotation;
         }
     
         /// <summary>The id of the profile to extrude.</summary>
@@ -51,10 +50,6 @@ namespace Elements.Geometry.Solids
         /// <summary>The direction in which to extrude.</summary>
         [Newtonsoft.Json.JsonProperty("Direction", Required = Newtonsoft.Json.Required.AllowNull)]
         public Vector3 Direction { get; set; }
-    
-        /// <summary>The rotation, in degrees, of the profile.</summary>
-        [Newtonsoft.Json.JsonProperty("Rotation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Rotation { get; set; }
     
     
     }

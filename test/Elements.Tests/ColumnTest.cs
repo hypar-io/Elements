@@ -11,7 +11,7 @@ namespace Elements.Tests
         {
             this.Name = "Elements_Column";
 
-            var profile = WideFlangeProfileServer.Instance.GetProfileByName("W44x335");
+            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
             var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
             
             this.Model.AddElement(column);

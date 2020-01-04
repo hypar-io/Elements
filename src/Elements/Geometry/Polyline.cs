@@ -87,9 +87,8 @@ namespace Elements.Geometry
         /// Get the Transform at the specified parameter along the Polygon.
         /// </summary>
         /// <param name="u">The parameter on the Polygon between 0.0 and 1.0.</param>
-        /// <param name="rotation">An optional rotation in degrees of the transform around its z axis.</param>
         /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
-        public override Transform TransformAt(double u, double rotation = 0.0)
+        public override Transform TransformAt(double u)
         {
             if (u < 0.0 || u > 1.0)
             {
@@ -99,30 +98,32 @@ namespace Elements.Geometry
             var segmentIndex = 0;
             var o = PointAtInternal(u, out segmentIndex);
             var up = Vector3.ZAxis;
-            Vector3 x = null;
+            Vector3 x = Vector3.XAxis; // Vector3: Convert to XAxis
 
             // Check if the provided parameter is equal
             // to one of the vertices.
-            Vector3 a = null;
+            Vector3 a = new Vector3();
+            var isEqualToVertex = false;
             foreach(var v in this.Vertices)
             {
                 if (v.Equals(o))
                 {
+                    isEqualToVertex = true;
                     a = v;
                 }
             }
 
-            if (a != null)
+            if (isEqualToVertex)
             {
                 var idx = this.Vertices.IndexOf(a);
 
                 if (idx == 0 || idx == this.Vertices.Count - 1)
                 {
-                    return CreateOthogonalTransform(idx, a, rotation);
+                    return CreateOthogonalTransform(idx, a);
                 }
                 else
                 {
-                    return CreateMiterTransform(idx, a, rotation);
+                    return CreateMiterTransform(idx, a);
                 }
             }
             else
@@ -143,7 +144,7 @@ namespace Elements.Geometry
                     totalLength += currLength;
                 }
             }
-            return new Transform(o, x, up, rotation);
+            return new Transform(o, x, up);
         }
 
         /// <summary>
@@ -151,11 +152,9 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
-        /// <param name="rotation">An optional rotation in degrees of all frames around their z axes.</param>
-        /// <returns></returns>
-        public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0.0)
+        public override Transform[] Frames(double startSetback, double endSetback)
         {
-            return FramesInternal(startSetback, endSetback, false, rotation);
+            return FramesInternal(startSetback, endSetback, false);
         }
 
         /// <summary>
@@ -175,7 +174,7 @@ namespace Elements.Geometry
             return new Plane(this.Vertices[0], this.Vertices[1], this.Vertices[2]);
         }
 
-        internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false, double rotation = 0.0)
+        internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)
         {
             // Create an array of transforms with the same
             // number of items as the vertices.
@@ -185,11 +184,11 @@ namespace Elements.Geometry
                 var a = this.Vertices[i];
                 if (closed)
                 {
-                    result[i] = CreateMiterTransform(i, a, rotation);
+                    result[i] = CreateMiterTransform(i, a);
                 }
                 else
                 {
-                    result[i] = CreateOthogonalTransform(i, a, rotation);
+                    result[i] = CreateOthogonalTransform(i, a);
                 }
             }
             return result;
@@ -283,7 +282,7 @@ namespace Elements.Geometry
             return result;
         }
 
-        private Transform CreateMiterTransform(int i, Vector3 a, double rotation)
+        private Transform CreateMiterTransform(int i, Vector3 a)
         {
             // Create transforms at 'miter' planes.
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
@@ -291,22 +290,22 @@ namespace Elements.Geometry
             var x = (b - a).Normalized().Average((c - a).Normalized()).Negate();
             var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
 
-            return new Transform(this.Vertices[i], x, x.Cross(up), rotation);
+            return new Transform(this.Vertices[i], x, x.Cross(up));
         }
 
-        private Transform CreateOthogonalTransform(int i, Vector3 a, double rotation)
+        private Transform CreateOthogonalTransform(int i, Vector3 a)
         {
             Vector3 b, x, c;
 
             if (i == 0)
             {
                 b = this.Vertices[i + 1];
-                return new Transform(a, (a-b).Normalized(), rotation);
+                return new Transform(a, (a-b).Normalized());
             }
             else if (i == this.Vertices.Count - 1)
             {
                 b = this.Vertices[i - 1];
-                return new Transform(a, (b-a).Normalized(), rotation);
+                return new Transform(a, (b-a).Normalized());
             }
             else
             {
@@ -316,7 +315,7 @@ namespace Elements.Geometry
                 var v2 = (c - a).Normalized();
                 x = v1.Average(v2).Negate();
                 var up = v2.Cross(v1);
-                return new Transform(this.Vertices[i], x, up.Cross(x), rotation);
+                return new Transform(this.Vertices[i], x, up.Cross(x));
             }
         }
 

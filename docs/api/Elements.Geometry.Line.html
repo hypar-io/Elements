@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Line
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -88,7 +88,34 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -304,7 +331,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -352,7 +379,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -400,63 +427,6 @@
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Line_Frames_" data-uid="Elements.Geometry.Line.Frames*"></a>
-  <h4 id="Elements_Geometry_Line_Frames_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Line.Frames(System.Double,System.Double,System.Double)">Frames(Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Get a collection of transforms which represent frames along this line.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback, double rotation = 0)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">startSetback</span></td>
-        <td><p>The parameter offset from the start of the line. Between 0 and 1.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">endSetback</span></td>
-        <td><p>The parameter offset from the end of the line. Between 0 and 1.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">rotation</span></td>
-        <td><p>An optional rotation in degrees around all the frames' z axes.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a>[]</td>
-        <td><p>A collection of transforms.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_System_Double_">Curve.Frames(Double, Double, Double)</a></div>
   <a id="Elements_Geometry_Line_GetHashCode_" data-uid="Elements.Geometry.Line.GetHashCode*"></a>
   <h4 id="Elements_Geometry_Line_GetHashCode" data-uid="Elements.Geometry.Line.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the line.</p>
@@ -481,14 +451,16 @@
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Line_Intersect_" data-uid="Elements.Geometry.Line.Intersect*"></a>
-  <h4 id="Elements_Geometry_Line_Intersect_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Line.Intersect(Elements.Geometry.Plane)">Intersect(Plane)</h4>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
+  <a id="Elements_Geometry_Line_Intersects_" data-uid="Elements.Geometry.Line.Intersects*"></a>
+  <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)">Intersects(Plane, out Vector3)</h4>
   <div class="markdown level1 summary"><p>Intersect this line with the specified plane</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Intersect(Plane p)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane p, out Vector3 result)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -506,6 +478,12 @@
         <td><p>The plane.</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The location of intersection.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -518,8 +496,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><p>The point of intersection or null if no intersection occurs.</p>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the line intersects the plane, false if no intersection occurs.</p>
 </td>
       </tr>
     </tbody>
@@ -704,14 +682,14 @@ false if the lines have coincident vertices or do not intersect.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Line_TransformAt_" data-uid="Elements.Geometry.Line.TransformAt*"></a>
-  <h4 id="Elements_Geometry_Line_TransformAt_System_Double_System_Double_" data-uid="Elements.Geometry.Line.TransformAt(System.Double,System.Double)">TransformAt(Double, Double)</h4>
+  <h4 id="Elements_Geometry_Line_TransformAt_System_Double_" data-uid="Elements.Geometry.Line.TransformAt(System.Double)">TransformAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get a transform whose XY plane is perpendicular to the curve, and whose
 positive Z axis points along the curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u, double rotation = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -727,12 +705,6 @@ positive Z axis points along the curve.</p>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
         <td><p>The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">rotation</span></td>
-        <td><p>An optional rotation in degrees around the transform's z axis.</p>
 </td>
       </tr>
     </tbody>
@@ -754,13 +726,13 @@ positive Z axis points along the curve.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_System_Double_">Curve.TransformAt(Double, Double)</a></div>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
 </article>
           </div>
