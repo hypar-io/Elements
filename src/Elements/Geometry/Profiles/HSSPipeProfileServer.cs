@@ -154,8 +154,7 @@ namespace Elements.Geometry.Profiles
     /// </summary>
     public sealed class HSSPipeProfileServer : ProfileServer<HSSPipeProfileType>
     {
-        private static string _data = @"
-O.D.,I.D.,t,wt./ft.,A,I,S,r,J
+        private static string _data = @"O.D.,I.D.,t,wt./ft.,A,I,S,r,J
 20,19.07,0.465,104,28.5,1360,136,6.91,2720
 20,19.302,0.349,78.7,21.5,1040,104,6.95,2080
 18,17.07,0.465,93.5,25.6,985,109,6.2,1970

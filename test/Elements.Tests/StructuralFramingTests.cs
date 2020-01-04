@@ -157,7 +157,7 @@ namespace Elements.Tests
             this.Model.AddElement(beam1);
         }
 
-        [Fact]
+        [Fact(Skip="Benchmark")]
         public void Benchmark()
         {
             var sw = new Stopwatch();
