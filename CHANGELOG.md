@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.4
+### Added
+- `Contour`.
+- `Transform.Reflect(Vector3 n)`
+
 ## 0.4.2
 ### Changed
 - `Vector3` is now a struct.
