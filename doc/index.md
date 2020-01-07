@@ -19,7 +19,7 @@ Before getting started, there are a few things you'll need and some other things
         * [Firefox](https://www.mozilla.org/en-US/firefox/new/)
         * [Brave](https://brave.com/download/)
 * **VSCode** (Windows, Mac OS, Linux) or any other C#-compatible code editor.
-    * We strongly suggest using **VSCode**, because we make a very helpful Hypar Plugin for VSCode (see the next bullet). These instructions currently assume you're using Visual Studio Community 2019+, but the steps should be similar and we'll update this guide soon.
+    * We strongly suggest using **VSCode**, because we make a very helpful Hypar Plugin for VSCode (see the next bullet).
         * [Download VSCode](https://code.visualstudio.com/)
 * If you're using VSCode, install the **Hypar Function Builder** extension:
     * Select **"Extensions"** in the **"View"** menu.
@@ -87,9 +87,11 @@ dotnet tool install -g hypar.cli
 ```
 ![](./images/HyparCLIinstall2019.06.16.PNG)
 
+Close and reopen the Command Prompt to finish the installation.
+
 Now you're ready to send your first function to Hypar. First use the command prompt cd (for "<u>c</u>hange <u>d</u>irectory") command to navigate to the folder where you'd like to place your function project.
 
-Now try this in the same Windows Command Prompt:
+Try this in the Windows Command Prompt:
 ```bash
 hypar new
 ```
@@ -190,28 +192,25 @@ These three files are what make your C# code compatible with Hypar services. The
 
 After **hypar init** executes, there's some housekeeping that completes the local changes, then after you sign in the **hypar new** command uploads your new function.
 
-In the **StarterFunction** folder you'll see a matching **StarterFunction.sln** file.
-
-![](./images/HyparStarterFolder2019.06.16.png)
-
 <div style="page-break-after: always;"></div>
 
-Double click on **StarterFunction.sln** to open it in Visual Studio Community (VSC).
+Go back and open the StarterFunction directory in VSCode:
 
-![](./images/HyparSLN2019.06.16.png)
+![](./images/HyparOpenVSCode.png)
 
-Now use VSC to open the **hypar.json** file, and we'll look at how this configuration influences what you see when you work with a function on Hypar. 
+VSCode will look like this, with all of the files in the left column:
 
-**IMPORTANT:**
-**Do <u>not</u> use "Add Existing Item" to add the hypar.json to the project. VSC will silently make a copy and place it in the ./src folder, while the Hypar CLI will still read the original file. Just open the file to edit it when you need to.**
+![](./images/HyparVSCodeHome.png)
+
+Now use Code to open the **hypar.json** file, and we'll look at how this configuration influences what you see when you work with a function on Hypar.
 
 The **"inputs"** section of the **hypar.json** determines what inputs you see for the uploaded function:
 
-![](./images/HyparInputs2019.06.16.png)
+![](./images/HyparInputs2020.01.07.png)
 
 The **"outputs"** section determines the values you see associated with each option:
 
-![](./images/HyparOutputs2019.06.16.png)
+![](./images/HyparOutputs2020.01.07.png)
 
 In the next exercise, we're going add a new **Height** input to this function.
 
@@ -219,29 +218,29 @@ In the next exercise, we're going add a new **Height** input to this function.
 
 ### Adding a new function input
 
-First, let's open the **StarterFunctionInputs.g.cs** file in VSC and look at the **StarterFunctionInputs** class to see how the **hypar.json** turns into code. Note how the corresponding entries become public class properties:
+First, let's open the **src/StarterFunctionInputs.g.cs** file in Code and look at the **StarterFunctionInputs** class to see how the **hypar.json** turns into code. Note how the corresponding entries become public class properties:
 
-![](./images/HyparInputsClassJSON2019.06.16.png)
+![](./images/HyparInputsClassJSON2020.01.07.png)
 
 <div style="page-break-after: always;"></div>
 
-Edit your **hypar.json** file to look like the one illustrated below. Copy the **"Width"** output and change the copy's **name** and **description** values to refer to **"Height"** and **"The height"** instead of **"Width"** and **"The width"**. VSC politely inserts a comma after the **"Width"** section's closing brace now that it's no longer the last input field:
+Edit your **hypar.json** file to look like the one illustrated below. Copy the **"Width"** output and change the copy's **name** and **description** values to refer to **"Height"** and **"The height"** instead of **"Width"** and **"The width"**. Insert a comma after the **"Width"** section's closing brace now that it's no longer the last input field:
 
-![](./images/HyparHeightInputJSON2019.06.16.png)
+![](./images/HyparHeightInputJSON2020.01.07.png)
 
 Save this file and open the command prompt again, using the cd command to change the current directory to your project folder. Then run **hypar init**:
 
 ![](./images/HyparInitCommand2019.06.16.png)
 
-**hypar init** reads the json file to understand how to regenerate the input and output class files as well as the function file. When you return to VSC, if the **StarterFunctionInputs.g.cs** file is still open, you'll see a warning that the file has been changed externally, which is what **hypar init** did when it rewrote the three **.g.cs** files. Select "Yes to All" if you get this warning, and open **StarterFunctionInputs.g.cs** to see what changed.
+**hypar init** reads the json file to understand how to regenerate the input and output class files as well as the function file. Open **StarterFunctionInputs.g.cs** to see what changed.
 
 <div style="page-break-after: always;"></div>
 
-![](./images/HyparInitChange2019.06.16.png)
+![](./images/HyparInitChange2020.01.07.png)
 
 Now that we have this new entry for **Height**, we have to tell our function to use it. Open **StarterFunction.cs** and change the **var height = 1.0;** line to use the height input value instead:
 
-![](./images/HyparHeightInput2019.06.16.png)
+![](./images/HyparHeightInput2020.01.07.png)
 
 <div style="page-break-after: always;"></div>
 
@@ -257,7 +256,7 @@ Opening **StarterFunction** on Hypar again, we now have a **Height** input in ad
 
 What if we wanted a maximum height of 20m? Let's go back to the **hypar.json** file and change the maximum for the input range:
 
-![](./images/HyparStarter20Height2019.06.16.png)
+![](./images/HyparStarter20Height2020.01.07.png)
 
 Save the file and run **hypar publish** again at the command prompt:
 
@@ -281,7 +280,7 @@ Hypar can also generate non-geometric data. In Hypar, click **"Show outputs"** i
 
 What if we also wanted to display the area of our cube? For this exercise we'll add a new output to the **hypar.json** and calculate the result we need. Add these new lines to the **hypar.json**:
 
-![](./images/HyparJSONOutputs.PNG)
+![](./images/HyparJSONOutputs.png)
 
 <div style="page-break-after: always;"></div>
 
@@ -289,21 +288,13 @@ Copy the **"Volume"** section down and change its **"name"** field to **"Area"**
 
 ![](./images/HyparInitCommand2019.06.16.png)
 
-Now in VSC let's see what changed. Open **StarterFunctionOutputs.g.cs** and you should see your new **Area** output under the **Volume** output:
+Now in Code let's see what changed. Open **src/StarterFunctionOutputs.g.cs** and you should see your new **Area** output under the **Volume** output:
 
-![](./images/HyparOutputsChanged.PNG)
+![](./images/HyparOutputsChanged.png)
 
-Also note that the **StarterFunctionOutputs** constructor at the bottom of the illustration has a new **double area** argument. 
+Also note that the **StarterFunctionOutputs** constructor at the bottom of the illustration has a new **double area** argument. Calculate and add the **area** output like this:
 
-<div style="page-break-after: always;"></div>
-
-That new argument is important when we open **StarterFunction.cs** in VSC and see that we now have an error condition:
-
-![](./images/HyparStarterFunctionError.png)
-
-That's because we're still calling **StarterFunctionOutputs** with just the **volume** output. We have to calculate and add the **area** output like this:
-
-![](./images/HyparAreaOutput.PNG)
+![](./images/HyparAreaOutput.png)
 
 <div style="page-break-after: always;"></div>
 
