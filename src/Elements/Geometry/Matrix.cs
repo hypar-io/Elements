@@ -341,6 +341,33 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Setup the matrix to reflect about a plane with normal n.
+        /// </summary>
+        /// <param name="n">The normal of the reflection plane.</param>
+        /// <exception>Thrown when provided Plane's normal is not unit length.</exception>
+        public void SetupReflect(Vector3 n)
+        {
+            if (Math.Abs(n.Dot(n) - 1.0) > 0.1)
+            {
+                throw new Exception("The specified vector is not unit length.");
+            }
+
+            var ax = -2.0 * n.X;
+            var ay = -2.0 * n.Y;
+            var az = -2.0 * n.Z;
+
+            m11 = 1.0 + ax * n.X;
+            m22 = 1.0 + ay * n.Y;
+            m32 = 1.0 + az * n.Z;
+
+            m12 = m21 = ax * n.Y;
+            m13 = m31 = ax * n.Z;
+            m23 = m32 = ay * n.Z;
+
+            tx = ty = tz = 0.0;
+        }
+
+        /// <summary>
         /// Transform the specified vector.
         /// </summary>
         /// <param name="p">The vector to transform.</param>
