@@ -38,18 +38,19 @@ namespace Elements.Tests
             Assert.Equal(0.5, vt.Z);
         }
 
+
         [Fact]
-        public void Transform_AboutPoint()
+        public void Transform_ScaleAboutPoint()
         {
-            var transformOrigin = new Vector3(5, 5, 10);
-            var pointToTransform = new Vector3(0, 10, 20);
-            var scaleFactor = 0.5;
+            var transformOrigin = new Vector3(10, -5, 4);
+            var pointToTransform = new Vector3(2, 9, 18);
+            var scaleFactor = 2.5;
             var t = new Transform();
             t.Scale(scaleFactor,transformOrigin);
             var vt = t.OfPoint(pointToTransform);
-            Assert.Equal(2.5, vt.X);
-            Assert.Equal(7.5, vt.Y);
-            Assert.Equal(15.0, vt.Z);
+            Assert.Equal(-10, vt.X);
+            Assert.Equal(30, vt.Y);
+            Assert.Equal(39, vt.Z);
         }
 
         [Fact]

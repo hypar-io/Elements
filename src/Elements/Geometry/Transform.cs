@@ -43,13 +43,14 @@ namespace Elements.Geometry
         {
             this.Matrix = new Matrix();
         }
-        
+
         /// <summary>
         /// Create a transform by copying another transform.
         /// </summary>
         /// <param name="t">The transform to copy.</param>
-        public Transform(Transform t): 
-            this(new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin))){}
+        public Transform(Transform t) :
+            this(new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin)))
+        { }
 
         /// <summary>
         /// Create a transform with a translation.
@@ -89,22 +90,22 @@ namespace Elements.Geometry
             Vector3 x = Vector3.XAxis;
             Vector3 y = Vector3.YAxis;
 
-            if(!z.IsParallelTo(Vector3.ZAxis))
-            {   
+            if (!z.IsParallelTo(Vector3.ZAxis))
+            {
                 // Project up onto the ortho plane
                 var p = new Plane(origin, z);
                 var test = Vector3.ZAxis.Project(p);
                 x = test.Cross(z);
-                y = x.Cross(z.Negate()); 
+                y = x.Cross(z.Negate());
             }
-            
+
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
         }
 
         private void ApplyRotationAndTranslation(double rotation, Vector3 axis, Vector3 translation)
         {
-            if(rotation != 0.0)
+            if (rotation != 0.0)
             {
                 this.Rotate(axis, rotation);
             }
@@ -171,9 +172,9 @@ namespace Elements.Geometry
         {
             var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, Vector3.Origin);
             return new Vector3(
-                vector.X*m.XAxis.X + vector.Y*YAxis.X + vector.Z*ZAxis.X,
-                vector.X*m.XAxis.Y + vector.Y*YAxis.Y + vector.Z*ZAxis.Y,
-                vector.X*m.XAxis.Z + vector.Y*YAxis.Z + vector.Z*ZAxis.Z
+                vector.X * m.XAxis.X + vector.Y * YAxis.X + vector.Z * ZAxis.X,
+                vector.X * m.XAxis.Y + vector.Y * YAxis.Y + vector.Z * ZAxis.Y,
+                vector.X * m.XAxis.Z + vector.Y * YAxis.Z + vector.Z * ZAxis.Z
             );
         }
 
@@ -201,7 +202,7 @@ namespace Elements.Geometry
         public Polygon[] OfPolygons(IList<Polygon> polygons)
         {
             var result = new Polygon[polygons.Count];
-            for(var i=0; i<polygons.Count; i++)
+            for (var i = 0; i < polygons.Count; i++)
             {
                 result[i] = OfPolygon(polygons[i]);
             }
@@ -337,9 +338,8 @@ namespace Elements.Geometry
         /// <param name="origin">The origin of scaling</param>
         public void Scale(double factor, Vector3 origin)
         {
-            Move(origin.Negate());
             Scale(factor);
-            Move(origin);
+            Move(origin * (1-factor));
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace Elements.Geometry
         /// <returns>True if the two transforms are equal, otherwise false.</returns>
         public bool Equals(Transform other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }
