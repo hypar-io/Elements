@@ -325,23 +325,21 @@ namespace Elements.Geometry
         /// <summary>
         /// Scale uniformly about the origin.
         /// </summary>
-        /// <param name="amount">The amount to scale uniformly</param>
-        public void Scale(double amount)
+        /// <param name="factor">The amount to scale uniformly</param>
+        public void Scale(double factor)
         {
-            Scale(new Vector3(amount, amount, amount));
+            Scale(new Vector3(factor, factor, factor));
         }
         /// <summary>
         /// Scale uniformly about a point
         /// </summary>
-        /// <param name="amount">The scale factor</param>
+        /// <param name="factor">The scale factor</param>
         /// <param name="origin">The origin of scaling</param>
-        /// /// <returns></returns>
-        public void Scale(double amount, Vector3 origin)
+        public void Scale(double factor, Vector3 origin)
         {
             Move(origin.Negate());
-            Scale(amount);
+            Scale(factor);
             Move(origin);
-
         }
 
         /// <summary>
