@@ -94,8 +94,8 @@ namespace Elements.Geometry
                 // Project up onto the ortho plane
                 var p = new Plane(origin, z);
                 var test = Vector3.ZAxis.Project(p);
-                x = test.Cross(z);
-                y = x.Cross(z.Negate()); 
+                x = test.Cross(z).Normalized();
+                y = x.Cross(z.Negate()).Normalized(); 
             }
             
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
