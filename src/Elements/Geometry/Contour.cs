@@ -16,6 +16,7 @@ namespace Elements.Geometry
         /// Construct a contour.
         /// </summary>
         /// <param name="curves">A list of curves to create the contour.</param>
+        /// <exception>Throws an ArgumentException when the provided curves are not contiguous.</exception>
         public Contour(List<Curve> curves)
         {
             for (var i = 0; i <= curves.Count - 1; i++)
