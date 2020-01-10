@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Transform
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.47.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -815,6 +815,49 @@ of the curve.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Transform_OfBezier_" data-uid="Elements.Geometry.Transform.OfBezier*"></a>
+  <h4 id="Elements_Geometry_Transform_OfBezier_Elements_Geometry_Bezier_" data-uid="Elements.Geometry.Transform.OfBezier(Elements.Geometry.Bezier)">OfBezier(Bezier)</h4>
+  <div class="markdown level1 summary"><p>Transform the specifed bezier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Bezier OfBezier(Bezier bezier)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Bezier.html">Bezier</a></td>
+        <td><span class="parametername">bezier</span></td>
+        <td><p>The bezier to transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Bezier.html">Bezier</a></td>
+        <td><p>A new bezier transformed by this transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Transform_OfLine_" data-uid="Elements.Geometry.Transform.OfLine*"></a>
   <h4 id="Elements_Geometry_Transform_OfLine_Elements_Geometry_Line_" data-uid="Elements.Geometry.Transform.OfLine(Elements.Geometry.Line)">OfLine(Line)</h4>
   <div class="markdown level1 summary"><p>Transform the specified line.</p>
@@ -1112,6 +1155,33 @@ of the curve.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>A new vector transformed by this transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Transform_Reflect_" data-uid="Elements.Geometry.Transform.Reflect*"></a>
+  <h4 id="Elements_Geometry_Transform_Reflect_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.Reflect(Elements.Geometry.Vector3)">Reflect(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Reflect about the plane with normal n.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Reflect(Vector3 n)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">n</span></td>
+        <td><p>The normal of the reflection plane.</p>
 </td>
       </tr>
     </tbody>

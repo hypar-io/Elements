@@ -9,9 +9,6 @@ namespace Elements
     /// <summary>
     /// A wall defined by a planar profile extruded to a height.
     /// </summary>
-    /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/WallExample.cs?name=example)]
-    /// </example>
     [UserElement]
     public class Wall : GeometricElement
     {

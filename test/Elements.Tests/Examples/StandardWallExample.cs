@@ -9,7 +9,7 @@ namespace Elements.Tests.Examples
         [Fact]
         public void Example()
         {
-            this.Name = "Elements_Wall";
+            this.Name = "Elements_StandardWall";
             // <example>
             // Create a wall.
             var line = new Line(new Vector3(0, 0, 0), new Vector3(10, 10, 0));
