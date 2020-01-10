@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Types | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Types | Hypar Docs ">
+    <meta name="generator" content="docfx 2.48.0.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/vs2015.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="index.html">
+          <img id="logo" class="svg" src="logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="types">Types</h1>
+
+<h2 id="note-the-following-functionality-is-only-available-as-of-version-040">NOTE: The following functionality is only available as of version 0.4.0.</h2>
+<p>Let's say that you're a mechanical engineer and you want to introduce a new type to Elements called &quot;VAV Box&quot;. To introduce this new type, first you need to design it. Where will it fit in the existing Elements type hierarchy? Will an existing base type be used? If so, will the base type need to be changed? Once that's figured out you'll need to write code that represents your type (in the case of Elements as a C# class) and propose that change to the maintainers of the library. The maintainers approve the change and your &quot;VAV Box&quot; class is made availble in the next release. Any small iteration on the design of your type based on use or user feedback requires that you repeat the whole cycle.</p>
+<p>This scenario creates several challenges. First, it requires direct interaction with the maintainers of the Elements library. Most AEC developers don't know how to propose a change to the Elements code and requiring that they undertake our code review process just to introduce a container for data that represents a thing they know is challenging. Second, the maintainers of Elements now &quot;own&quot; the &quot;VAV Box&quot; type and are therefore required to make sure that they don't break it in the future. Imagine how many hundreds of thousands, or potentially millions, of different types of components are in a building. It's not reasonable to assume that one library is going to be able to encapsulate them all. Finally, although having the base description for a type be C# code works well in the short term, it limits the Elements' team's flexibility in the future to work with other languages.</p>
+<p>To address these challenges we've introduced the ability for an AEC developer to create a schema which describes their type using <a href="https://json-schema.org/">JSON schema</a>, and to generate source code from that schema. Schemas can be shared and extended allowing for the growth of a type system from the community.</p>
+<h2 id="getting-started">Getting Started</h2>
+<h3 id="core-concepts">Core Concepts</h3>
+<h4 id="element">Element</h4>
+<p>The primary concept behind Elements types is the <code>Element</code>. An <code>Element</code> is the base type for all things that you will create. It has a unique identifier and a name. That's it. Everything else will be added by you.</p>
+<h4 id="primitives">Primitives</h4>
+<p>An Element is extended by adding properties to a schema. The properties can be of the following types.</p>
+<ul>
+<li><strong>Curve</strong>
+<ul>
+<li><strong>Arc</strong> - An arc defined by a center and a radius.</li>
+<li><strong>Line</strong> - A line defined by a start and end points.</li>
+<li><strong>Polygon</strong> - A collection of vertices describing an enclosed polygonal shape.</li>
+</ul>
+</li>
+<li><strong>Material</strong> - A material specified using the <a href="https://en.wikipedia.org/wiki/Physically_based_rendering">physically based rendering</a> model.</li>
+<li><strong>NumericProperty</strong> - A property value with a unit type.</li>
+<li><strong>Plane</strong> - A plane described by its origin and normal vector.</li>
+<li><strong>Profile</strong> - A composite type containing a perimeter <code>Polygon</code> and a collection of <code>Polygon</code></li>
+<li><strong>Representation</strong> - A container for solid operations like <code>Extrude</code> and <code>Sweep</code>.</li>
+<li><strong>Transform</strong> - A right-handed coordinate system with +Z &quot;up&quot;.</li>
+<li><strong>Vector3</strong> - A vector with x, y, and z components.</li>
+</ul>
+<h3 id="create-a-type">Create a Type</h3>
+<p>The first step is to define a schema that represents your type. Good examples for what a schema looks like can be found in the Hypar base schemas. Here's the schema for <a href="https://hypar.io/Schemas/GeometricElement.json"><code>GeometricElement</code></a>, a type which extends <code>Element</code> to include a <code>Transform</code> and a <code>Representation</code>.</p>
+<p>JSON schemas can be authored in any text editor, although an editor with good JSON schema support, like <a href="https://code.visualstudio.com/">Visual Studio Code</a>, is recommended. Good editors have built in JSON schema validation and code completion. You can also use an <a href="https://www.jsonschemavalidator.net/">online validator</a>.</p>
+<h4 id="an-example-beam">An Example Beam</h4>
+<p>The following schema describes a simple beam with a center line and a cross-section profile. Note that using the <code>allOf</code> field, we can inherit from <code>GeometricElement</code> so that a Beam will extend that base type.</p>
+<pre><code class="lang-json">{
+    &quot;$id&quot;: &quot;https://hypar.io/Schemas/Beam.json&quot;,
+    &quot;$schema&quot;: &quot;http://json-schema.org/draft-07/schema#&quot;,
+    &quot;description&quot;: &quot;A beam.&quot;,
+    &quot;title&quot;: &quot;Beam&quot;,
+    &quot;x-namespace&quot;: &quot;Elements&quot;,
+    &quot;type&quot;: [&quot;object&quot;, &quot;null&quot;],
+    &quot;allOf&quot;: [{&quot;$ref&quot;: &quot;https://hypar.io/Schemas/GeometricElement.json&quot;}],
+    &quot;required&quot;: [&quot;CenterLine&quot;, &quot;Profile&quot;],
+    &quot;properties&quot;: {
+        &quot;CenterLine&quot;: {
+            &quot;description&quot;: &quot;The center line of the beam.&quot;,
+            &quot;$ref&quot;: &quot;https://hypar.io/Schemas/Geometry/Line.json&quot;
+        },
+        &quot;Profile&quot;: {
+            &quot;description&quot;: &quot;The beam's cross section.&quot;,
+            &quot;$ref&quot;: &quot;https://hypar.io/Schemas/Geometry/Profile.json&quot;
+        }
+    },
+    &quot;additionalProperties&quot;: false
+}
+</code></pre>
+<h4 id="generate-code-for-your-type">Generate Code for your Type</h4>
+<p>The <a href="https://www.nuget.org/packages/Hypar.CLI/0.4.0">Hypar CLI</a> can be used to generate code for your type.</p>
+<pre><code class="lang-bash">hypar generate-types -u ./beam.json -o ./Structural
+</code></pre>
+<h4 id="generate-code-for-your-hypar-function">Generate Code for your Hypar Function</h4>
+<p>You can specify that your Hypar function requires additional types by declaring those types in the <code>element_types</code> property of the <code>hypar.json</code>. The <code>element_types</code> array contains uris, either as relative file paths or urls to JSON schemas representing types. When you run <code>hypar init</code> code will be generated from each of the schemas specified in the <code>element_types</code> array and placed in your function's <code>/src</code> directory.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

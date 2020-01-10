@@ -1,0 +1,86 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "cwd": "..",
+          "files": [
+            "src/**.csproj"
+          ],
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**",
+            "src/Dynamo/**",
+            "src/Revit/**",
+            "src/Unity/**"
+          ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "index.md",
+          "toc.yml",
+          "*.md",
+          "api/**",
+          "Elements/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      },
+      {
+        "files": [
+          "favicon.ico"
+        ]
+      },
+      {
+        "files": [
+          "js/**"
+        ]
+      },
+      {
+        "src": "../test/Elements.Tests/bin/debug/netcoreapp2.0/models/",
+        "files": [
+          "Elements_**.glb"
+        ],
+        "dest": "models"
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [],
+        "exclude": [
+          "obj/**",
+          "../docs/**"
+        ]
+      }
+    ],
+    "dest": "../docs/",
+    "globalMetadata": {
+      "_appTitle": "Hypar Docs",
+      "_appFooter": "Copyright © Hypar Inc., 2019",
+      "_disableContribution": true,
+      "_enableSearch": true,
+      "_disableBreadcrumb": true,
+      "_disableFooter": true,
+      "_appFaviconPath": "favicon.ico"
+    },
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "template": [
+      "./template/hypar"
+    ],
+    "postProcessors": [],
+    "markdownEngineName": "markdig",
+    "noLangKeyword": false
+  }
+}

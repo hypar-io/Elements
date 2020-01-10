@@ -1,8 +1,10 @@
 language: csharp
-solution: ./csharp/hypar.sln
+solution: ./hypar.sln
 dist: trusty
 mono: none
 dotnet: 2.0.0
 script:
-  - dotnet build ./csharp/hypar.sln
-  - dotnet test ./csharp/test/Hypar.SDK.Tests/hypar-sdk-tests.csproj
+  - dotnet build ./Elements.sln
+  - dotnet test ./test/Elements.Tests/Elements.Tests.csproj
+env:
+  - TRAVIS=true

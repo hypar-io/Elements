@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="DBApplication">
+    <Name>HyparRevit</Name>
+    <FullClassName>Hypar.Revit.HyparRevitApp</FullClassName>
+    <Description>"Load a model from Hypar."</Description>
+    <Assembly>.\HyparRevit.dll</Assembly>
+    <AddInId>502fe383-2648-4e98-adf8-5e6047f9dc34</AddInId>
+    <VendorDescription>"Hypar, LLC, hypar.io"</VendorDescription>
+    <VendorId>HYPR</VendorId>
+  </AddIn>
+</RevitAddIns>

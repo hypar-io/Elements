@@ -1,0 +1,545 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Polyline
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Polyline
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.48.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.Geometry.Polyline">
+  
+  <h1 id="Elements_Geometry_Polyline" data-uid="Elements.Geometry.Polyline" class="text-break">Class Polyline
+  </h1>
+  <div class="markdown level0 summary"><p>A planar continuous set of lines.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
+    <div class="level2"><span class="xref">Polyline</span></div>
+      <div class="level3"><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Geometry_Polyline_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ICurve</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
+  <h4 id="Elements_Geometry_Polyline__ctor_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">vertices</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Geometry_Polyline_End_" data-uid="Elements.Geometry.Polyline.End*"></a>
+  <h4 id="Elements_Geometry_Polyline_End" data-uid="Elements.Geometry.Polyline.End">End</h4>
+  <div class="markdown level1 summary"><p>The end of the polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Start_" data-uid="Elements.Geometry.Polyline.Start*"></a>
+  <h4 id="Elements_Geometry_Polyline_Start" data-uid="Elements.Geometry.Polyline.Start">Start</h4>
+  <div class="markdown level1 summary"><p>The start of the polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Vertices_" data-uid="Elements.Geometry.Polyline.Vertices*"></a>
+  <h4 id="Elements_Geometry_Polyline_Vertices" data-uid="Elements.Geometry.Polyline.Vertices">Vertices</h4>
+  <div class="markdown level1 summary"><p>The vertices of the polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Geometry_Polyline_Bounds_" data-uid="Elements.Geometry.Polyline.Bounds*"></a>
+  <h4 id="Elements_Geometry_Polyline_Bounds" data-uid="Elements.Geometry.Polyline.Bounds">Bounds()</h4>
+  <div class="markdown level1 summary"><p>Get the bounding box for this curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override BBox3 Bounds()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
+  <a id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow*"></a>
+  <h4 id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow(IList{Elements.Geometry.Vector3})">CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Check for coincident vertices in the supplied vertex collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void CheckCoincidenceAndThrow(IList&lt;Vector3&gt; vertices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">vertices</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Frames_" data-uid="Elements.Geometry.Polyline.Frames*"></a>
+  <h4 id="Elements_Geometry_Polyline_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Polyline.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the transforms used to transform a Profile extruded along this Polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startSetback</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endSetback</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a></div>
+  <a id="Elements_Geometry_Polyline_Length_" data-uid="Elements.Geometry.Polyline.Length*"></a>
+  <h4 id="Elements_Geometry_Polyline_Length" data-uid="Elements.Geometry.Polyline.Length">Length()</h4>
+  <div class="markdown level1 summary"><p>Calculate the length of the polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double Length()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <a id="Elements_Geometry_Polyline_Plane_" data-uid="Elements.Geometry.Polyline.Plane*"></a>
+  <h4 id="Elements_Geometry_Polyline_Plane" data-uid="Elements.Geometry.Polyline.Plane">Plane()</h4>
+  <div class="markdown level1 summary"><p>Compute the Plane defined by the first three vertices of the Polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Plane Plane()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><p>A Plane.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_PointAt_" data-uid="Elements.Geometry.Polyline.PointAt*"></a>
+  <h4 id="Elements_Geometry_Polyline_PointAt_System_Double_" data-uid="Elements.Geometry.Polyline.PointAt(System.Double)">PointAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Get a point on the polygon at parameter u.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Vector3 PointAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>A value between 0.0 and 1.0.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
+  <a id="Elements_Geometry_Polyline_Reversed_" data-uid="Elements.Geometry.Polyline.Reversed*"></a>
+  <h4 id="Elements_Geometry_Polyline_Reversed" data-uid="Elements.Geometry.Polyline.Reversed">Reversed()</h4>
+  <div class="markdown level1 summary"><p>Reverse the direction of a polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline Reversed()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><p>Returns a new polyline with opposite winding.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Segments_" data-uid="Elements.Geometry.Polyline.Segments*"></a>
+  <h4 id="Elements_Geometry_Polyline_Segments" data-uid="Elements.Geometry.Polyline.Segments">Segments()</h4>
+  <div class="markdown level1 summary"><p>Get a collection a lines representing each segment of this polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Line[] Segments()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a>[]</td>
+        <td><p>A collection of Lines.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_ToString_" data-uid="Elements.Geometry.Polyline.ToString*"></a>
+  <h4 id="Elements_Geometry_Polyline_ToString" data-uid="Elements.Geometry.Polyline.ToString">ToString()</h4>
+  <div class="markdown level1 summary"><p>Get a string representation of this polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_TransformAt_" data-uid="Elements.Geometry.Polyline.TransformAt*"></a>
+  <h4 id="Elements_Geometry_Polyline_TransformAt_System_Double_" data-uid="Elements.Geometry.Polyline.TransformAt(System.Double)">TransformAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Get the Transform at the specified parameter along the Polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The parameter on the Polygon between 0.0 and 1.0.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><p>A Transform with its Z axis aligned trangent to the Polygon.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

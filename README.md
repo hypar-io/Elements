@@ -1,48 +1,89 @@
-<img src="./hypar_logo.svg" width="300px" style="display: block;margin-left: auto;margin-right: auto;width: 50%;">
+# Elements
 
-# elements
-[![Build Status](https://travis-ci.org/hypar-io/sdk.svg?branch=master)](https://travis-ci.org/hypar-io/elements)
-![NuGet](https://img.shields.io/nuget/v/HyparSDK.svg)
+[![Build Status](https://travis-ci.org/hypar-io/elements.svg?branch=master)](https://travis-ci.org/hypar-io/elements)
+![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
-Hypar Elements is a library for creating building elements like Walls, Beams, and Spaces. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings. Here's an example using Elements to create a `Beam`:
-```c#
-var line = new Line(Vector3.Origin, new Vector3(5,5,5));
-var beam = new Beam(line, Profiles.WideFlangeProfile());
-var model = new Model();
-model.AddElement(beam);
-var json = model.ToJson();
-```
-## Why
-When we started [Hypar](https://www.hypar.io), we needed a small library of building elements that could run in microservices executing on Linux, and was therefore free of dependencies on host applications like Rhino or Revit. We wanted it to have an API that took the best parts from the various object models and programming APIs available in the AEC space. We wanted it to serialize to formats like JSON and IFC that were useful to architects, engineers, and contractors. And even though the library needed to stand alone, we wanted it to be usable in addins to other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity. We looked around and nothing fit the bill, so we started building this. 
-
-## Donate
-Hypar Elements is open source and will remain so **forever**. Your donation will directly support the development of the Hypar Elements. Hypar Elements has been demonstrated to work in Revit addins, Unity projects, and as Lambdas running on AWS. Send us a donation and open a feature request telling us what you'd like it to do.  
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
+# Words of Warning
+- The Elements library is currently undergoing rapid development and breaking API changes. Until we achieve a 1.0 release, we are playing a little fast and loose with semantic versioning. Updates will be written to the [`CHANGELOG`](CHANGELOG.md).
 
 ## Getting Started
-Hypar Elements is available as a [NuGet package](https://www.nuget.org/packages/HyparSDK).
-To install for dotnet projects:
-```bash
-dotnet add package HyparSDK
+In a .net core project:
 ```
+> dotnet add package Hypar.Elements
+```
+In Visual Studio:
+```
+PM> Install-Package Hypar.Elements
+```
+## Documentation
+Find the documentation [here](https://hypar-io.github.io/Elements/index.html).
 
 ## Examples
-The best examples are those provided in the [tests](https://github.com/hypar-io/sdk/tree/master/csharp/test/Hypar.SDK.Tests), where we demonstrate usage of almost every function in the library.
+The best examples are those provided in the [tests](https://github.com/hypar-io/elements/tree/master/test/Examples), where we demonstrate usage of almost every function in the library.
 
-## Building the SDK
-You'll only need to do this if you want to contribute to the Elements library, otherwise you can use the Nuget packages that are published regularly.
+## What
+Elements is a cross-platform library for creating building elements. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings.
+
+When we started [Hypar](https://www.hypar.io) we needed a library that would generate building elements and run at the core of each function on the platform. Because we don't like rebuilding the wheel, we looked around for existing libraries that fulfilled the following requirements:
+- The library must be small and fast. Elements is currently ~300kb and we're working every day to make it smaller.
+- The library must run in micro-services on Linux.
+- The library must have great visual documentation. If we're going to pass this library on as a recommendation to developers on Hypar, we want great docs.
+- The library must be free of dependencies on host applications like Rhino or Revit or geometry kernels like Open Cascade which, while really cool, become a black box in your system.
+- The library must be able to serialize data to formats like JSON, [IFC](https://www.buildingsmart.org/about/what-is-openbim/ifc-introduction/),and [glTF](https://www.khronos.org/gltf/), that are useful to architects, engineers, contractors, and people building real-time visualization applications for AEC.
+- The library must be written in a language that supports developer productivity through things like type safety, and which supports code re-use in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
+- Serialization and deserialization of types that extend `Element` should be possible provided that those types are made up of primitives defined in this library.
+
+We couldn't find anything quite right. So we started building this. 
+
+## Design Principles
+- There is one base type: Element.
+  - Elements have a unique identifier and a transform.
+  - An Element can have any number of properties whose types are defined in the provided schemas.
+- The library is schema first. 
+  - Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C# (ex: attributes) to convey meaning of the types or their properties. 
+- The core Element types will be defined in exactly the same way that third-party types will be defined. 
+  - It is possible that over time these types (ex: Beam, Column, Wall, etc.) are removed from the library and only made available as schemas from which user elements can be derived.
+- User-defined element schemas should perform as first class citizens in the system.
+
+## Code Generation
+- Elements constructs its primitive types from schemas in the `/Schemas` directory. These schemas are provided as JSON schema. The generator mechanism can be found in the `/src/Generate` directory.
+- Elements uses [NJsonSchema](https://github.com/RicoSuter/NJsonSchema) to generate C# classes from JSON schemas.
+- The default collection type used is `System.Collections.Generic.IList`.
+- Generated classes are marked as `partial`. You can add constructors using a separate partial class, but remember that those constructors will not be available to other developers unless you share them in a library (ex: a NuGet package).
+- The custom class template for the code generator can be found in `/Generate/Templates`.
+- Core class definitions are generated as `CSharpClassStyle.POCO` using NJsonSchema. This results in class definitions without constructors.
+- Deserialization into inherited types is handled in two ways:
+  - Base types that live in the Elements library are decorated with one or more `JsonInheritanceAttribute` pointing to their derived types.
+  - External types that inherit from `Element` must be decorated with the `UserElement` attribute. This is required because a type author doesn't have access to the base types, and must therefore signify to the serializer that it needs to load a specific type.
+
+
+## Geometry
+Elements contains a very simple BREP geometry kernel, and a small set of geometric types like vectors, lines, and polygons. Elements uses a right-handed coordinate system with +Z "up". Elements is unitless except as indicated when calling a geometric method (ex: arcs requires angles in degrees).
+
+We are often asked whether the Elements library supports the ____ geometry kernel. It does not. Yet. The geometry kernel that we've created for Elements is a very simple BREP kernel which does "flat stuff with holes in it" really well. We think Nurbs are sexy, and we'll definitely support more curvy stuff in the future, it's just that the effort required to support ____ geometry kernel for micro-services running in the cloud is not small. Good geometry kernels are also usually large, expensive, and not open source, so they introduce a lot of concerns which are orthogonal to why we built this library in the first place. If you are interested in using Elements with another geometry library, we love pull requests.
+
+## Donate
+Hypar Elements is open source and will remain so **forever**. Your donation will directly support the development of the Hypar Elements. Hypar Elements has been demonstrated to work in Revit add-ins, Unity projects, and as Lambdas running on AWS. Send us a donation and open a feature request telling us what you'd like it to do.  
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
+
+## Build
+You'll only need to do this if you want to contribute to the library, otherwise you can use the [NuGet package](https://www.nuget.org/) that is published regularly.
+
 ```
 dotnet build
 ```
 
-## Testing the SDK
+## Test
 ```
 dotnet test
 ```
 
-## Words of Warning
-- Hypar Elements is currently in alpha. Please do not use it for production work.
+## Building the Documentation
+```
+cd doc
+docfx -f --serve
+```
 
 ## Third Party Libraries and Specifications
 
@@ -50,12 +91,7 @@ dotnet test
 - [Clipper](http://www.angusj.com/delphi/clipper.php)
 - [GeoJson](http://geojson.org/)
 - [glTF](https://www.khronos.org/gltf/).
+- [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp)
 
-## Hypar Elements
-Hypar Elements is at the heart of the Hypar platform. A Hypar generator is a piece of code that is executed in the cloud to generate a building or a set of building components. You author the generator logic referencing the Hypar Elements library, and publish the generator to Hypar, then Hypar executes it for you and store the results. You can see some generators written using Hypar Elements running on [Hypar](https://hypar.io). Hypar is just one example of a business that can be built on top of this tool. We fully expect you'll go and build your own cool thing.
-
-## Getting Started Developing for the Hypar Platform
-The easiest way to get started is to clone the [starter](https://github.com/hypar-io/starter) repo, which already includes a reference to the Hypar SDK and some example code to get you started.
-```bash
-git clone https://github.com/hypar-io/starter
-```
+## Updating the Changelog
+We use [`CHANGELOG.md`](CHANGELOG.md) to provide a list of changes to Elements. The easiest way to compile this log for new releases is to look at the commits that occurred between changes. This can be done as follows: `git log --pretty=oneline v0.3.6...v0.3.7`, where the tags are changed appropriately.

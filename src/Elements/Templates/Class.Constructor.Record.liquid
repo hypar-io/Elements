@@ -1,0 +1,28 @@
+{% assign skipComma = true -%}
+{% if HasInheritance %}
+{% assign parentProperties = BaseClass.AllProperties -%}
+{% else %}
+{% assign parentProperties = "" | empty -%}
+{% endif %}
+
+{% assign sortedProperties = AllProperties | sort: "Name" -%}
+{% assign sortedParentProperties = parentProperties | sort: "Name" -%}
+
+[Newtonsoft.Json.JsonConstructor]
+{% if IsAbstract %}protected{% else %}public{% endif %} {{ClassName}}({% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%} {{ property.Type }} @{{ property.Name | lowercamelcase }}{% endfor -%})
+{% assign skipComma = true -%}
+{% if HasInheritance -%}
+    : base({% for property in parentProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}{{ property.Name | lowercamelcase }}{% endfor -%})
+{% endif -%}
+{
+    var validator = Validator.Instance.GetFirstValidatorForType<{{ClassName}}>();
+    if(validator != null)
+    {
+        {% assign skipComma = true -%}
+validator.Validate(new object[]{ {% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}@{{ property.Name | lowercamelcase }}{% endfor -%} });
+    }
+
+{% for property in Properties -%}
+    this.{{property.PropertyName}} = @{{property.Name | lowercamelcase}};
+{% endfor -%}
+}
