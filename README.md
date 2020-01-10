@@ -38,7 +38,7 @@ We couldn't find anything quite right. So we started building this.
 
 ## Design Principles
 - There is one base type: Element.
-  - Elements have a unique identifier and a transform.
+  - Elements have a unique identifier and a name.
   - An Element can have any number of properties whose types are defined in the provided schemas.
 - The library is schema first. 
   - Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C# (ex: attributes) to convey meaning of the types or their properties. 
