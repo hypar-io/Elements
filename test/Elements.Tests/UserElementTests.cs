@@ -37,8 +37,8 @@ namespace Elements.Tests
             this.SubElements = new List<Element>();
 
             var t = this.CenterLine.TransformAt(0);
-            var x = new Line(t.Origin, t.XAxis * this.CenterLine.Length());
-            var y = new Line(t.Origin, t.YAxis * this.CenterLine.Length());
+            var x = new Line(t.Origin, t.Origin + t.XAxis * this.CenterLine.Length());
+            var y = new Line(t.Origin, t.Origin + t.YAxis * this.CenterLine.Length());
 
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, x,  0.0, 0.0, false));

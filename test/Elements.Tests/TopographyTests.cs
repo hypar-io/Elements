@@ -42,7 +42,7 @@ namespace Elements.Tests
         public void TopographyHasTextureApplied()
         {
             this.Name = "TexturedTopography";
-            var m = new Material("texture",Colors.Gray, 0.0f, 0.0f, "UV.jpg");
+            var m = new Material("texture",Colors.Gray, 0.0f, 0.0f, "./Textures/UV.jpg");
             var topo = CreateTopoFromMapboxElevations(material: m);
             this.Model.AddElement(topo);
         }

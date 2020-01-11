@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ModelCurve
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -200,15 +200,30 @@
   
     animate();
   </script><h5 id="Elements_ModelCurve_examples"><strong>Examples</strong></h5>
-  <pre><code class="lang-csharp" name="Main">// Create some curves for your model curves.
+  <pre><code class="lang-csharp" name="Main">// A line
 var line = new Line(Vector3.Origin, new Vector3(5,5,5));
+
+// An arc
 var arc = new Arc(Vector3.Origin, 2.0, 45.0, 135.0);
+
+// A polygon
 var pline = Polygon.L(2, 2, 0.5);
+
+// A Bezier
+var a = Vector3.Origin;
+var b = new Vector3(5, 0, 1);
+var c = new Vector3(5, 5, 2);
+var d = new Vector3(0, 5, 3);
+var e = new Vector3(0, 0, 4);
+var f = new Vector3(5, 0, 5);
+var ctrlPts = new List&lt;Vector3&gt;{a,b,c,d,e,f};
+var bezier = new Bezier(ctrlPts);
 
 // Create model curves from the curves.
 var lineModelCurve = new ModelCurve(line, new Material(&quot;Red&quot;, Colors.Red));
 var arcModelCurve = new ModelCurve(arc, new Material(&quot;Orange&quot;, Colors.Orange), new Transform(5, 0, 0));
 var plineModelCurve = new ModelCurve(pline, new Material(&quot;Purple&quot;, Colors.Purple), new Transform(10, 0, 0));
+var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Colors.Green), new Transform(15, 0, 0));
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -237,6 +252,27 @@ var plineModelCurve = new ModelCurve(pline, new Material(&quot;Purple&quot;, Col
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -247,13 +283,13 @@ var plineModelCurve = new ModelCurve(pline, new Material(&quot;Purple&quot;, Col
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_ModelCurve__ctor_" data-uid="Elements.ModelCurve.#ctor*"></a>
-  <h4 id="Elements_ModelCurve__ctor_Elements_Geometry_Curve_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_Guid_System_String_" data-uid="Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,Guid,System.String)">ModelCurve(Curve, Material, Transform, Representation, Guid, String)</h4>
+  <h4 id="Elements_ModelCurve__ctor_Elements_Geometry_Curve_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)">ModelCurve(Curve, Material, Transform, Representation, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a model curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ModelCurve(Curve curve, Material material = null, Transform transform = null, Representation representation = null, Guid id = null, string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public ModelCurve(Curve curve, Material material = null, Transform transform = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -290,7 +326,7 @@ var plineModelCurve = new ModelCurve(pline, new Material(&quot;Purple&quot;, Col
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Guid</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the model curve.</p>
 </td>

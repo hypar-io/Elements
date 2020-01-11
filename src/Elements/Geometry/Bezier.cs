@@ -247,9 +247,9 @@ namespace Elements.Geometry
         internal override IList<Vector3> RenderVertices()
         {
             var vertices = new List<Vector3>();
-            for (var t = 0.0; t <= 1.0; t += 1.0 / _samples)
+            for (var i = 0; i <= _samples; i++)
             {
-                vertices.Add(PointAt(t));
+                vertices.Add(PointAt(i * 1.0 / _samples));
             }
             return vertices;
         }

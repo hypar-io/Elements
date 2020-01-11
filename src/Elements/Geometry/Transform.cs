@@ -94,8 +94,8 @@ namespace Elements.Geometry
                 // Project up onto the ortho plane
                 var p = new Plane(origin, z);
                 var test = Vector3.ZAxis.Project(p);
-                x = test.Cross(z);
-                y = x.Cross(z.Negate()); 
+                x = test.Cross(z).Normalized();
+                y = x.Cross(z.Negate()).Normalized(); 
             }
             
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
@@ -249,6 +249,21 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Transform the specifed bezier.
+        /// </summary>
+        /// <param name="bezier">The bezier to transform.</param>
+        /// <returns>A new bezier transformed by this transform.</returns>
+        public Bezier OfBezier(Bezier bezier)
+        {
+            var newCtrlPoints = new List<Vector3>();
+            foreach(var vp in bezier.ControlPoints)
+            {
+                newCtrlPoints.Add(OfPoint(vp));
+            }
+            return new Bezier(newCtrlPoints);
+        }
+
+        /// <summary>
         /// Concatenate the transform.
         /// </summary>
         /// <param name="transform"></param>
@@ -296,6 +311,17 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupScale(amount);
+            this.Matrix = this.Matrix * m;
+        }
+
+        /// <summary>
+        /// Reflect about the plane with normal n.
+        /// </summary>
+        /// <param name="n">The normal of the reflection plane.</param>
+        public void Reflect(Vector3 n)
+        {
+            var m = new Matrix();
+            m.SetupReflect(n);
             this.Matrix = this.Matrix * m;
         }
 

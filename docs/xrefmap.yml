@@ -2212,6 +2212,71 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Colors.Yellow
   nameWithType: Colors.Yellow
+- uid: Elements.Geometry.Contour
+  name: Contour
+  href: api/Elements.Geometry.Contour.html
+  commentId: T:Elements.Geometry.Contour
+  fullName: Elements.Geometry.Contour
+  nameWithType: Contour
+- uid: Elements.Geometry.Contour.#ctor(System.Collections.Generic.List{Elements.Geometry.Curve})
+  name: Contour(List<Curve>)
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour__ctor_System_Collections_Generic_List_Elements_Geometry_Curve__
+  commentId: M:Elements.Geometry.Contour.#ctor(System.Collections.Generic.List{Elements.Geometry.Curve})
+  name.vb: Contour(List(Of Curve))
+  fullName: Elements.Geometry.Contour.Contour(System.Collections.Generic.List<Elements.Geometry.Curve>)
+  fullName.vb: Elements.Geometry.Contour.Contour(System.Collections.Generic.List(Of Elements.Geometry.Curve))
+  nameWithType: Contour.Contour(List<Curve>)
+  nameWithType.vb: Contour.Contour(List(Of Curve))
+- uid: Elements.Geometry.Contour.#ctor*
+  name: Contour
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour__ctor_
+  commentId: Overload:Elements.Geometry.Contour.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.Contour.Contour
+  nameWithType: Contour.Contour
+- uid: Elements.Geometry.Contour.GetEnumerator
+  name: GetEnumerator()
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_GetEnumerator
+  commentId: M:Elements.Geometry.Contour.GetEnumerator
+  fullName: Elements.Geometry.Contour.GetEnumerator()
+  nameWithType: Contour.GetEnumerator()
+- uid: Elements.Geometry.Contour.GetEnumerator*
+  name: GetEnumerator
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_GetEnumerator_
+  commentId: Overload:Elements.Geometry.Contour.GetEnumerator
+  isSpec: "True"
+  fullName: Elements.Geometry.Contour.GetEnumerator
+  nameWithType: Contour.GetEnumerator
+- uid: Elements.Geometry.Contour.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:Elements.Geometry.Contour.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: Elements.Geometry.Contour.System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: Contour.IEnumerable.GetEnumerator()
+  nameWithType.vb: Contour.System.Collections.IEnumerable.GetEnumerator()
+- uid: Elements.Geometry.Contour.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:Elements.Geometry.Contour.System#Collections#IEnumerable#GetEnumerator
+  isSpec: "True"
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: Elements.Geometry.Contour.System.Collections.IEnumerable.GetEnumerator
+  nameWithType: Contour.IEnumerable.GetEnumerator
+  nameWithType.vb: Contour.System.Collections.IEnumerable.GetEnumerator
+- uid: Elements.Geometry.Contour.ToPolygon
+  name: ToPolygon()
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_ToPolygon
+  commentId: M:Elements.Geometry.Contour.ToPolygon
+  fullName: Elements.Geometry.Contour.ToPolygon()
+  nameWithType: Contour.ToPolygon()
+- uid: Elements.Geometry.Contour.ToPolygon*
+  name: ToPolygon
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_ToPolygon_
+  commentId: Overload:Elements.Geometry.Contour.ToPolygon
+  isSpec: "True"
+  fullName: Elements.Geometry.Contour.ToPolygon
+  nameWithType: Contour.ToPolygon
 - uid: Elements.Geometry.Curve
   name: Curve
   href: api/Elements.Geometry.Curve.html
@@ -2903,6 +2968,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Matrix.SetupProject
   nameWithType: Matrix.SetupProject
+- uid: Elements.Geometry.Matrix.SetupReflect(Elements.Geometry.Vector3)
+  name: SetupReflect(Vector3)
+  href: api/Elements.Geometry.Matrix.html#Elements_Geometry_Matrix_SetupReflect_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Matrix.SetupReflect(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Matrix.SetupReflect(Elements.Geometry.Vector3)
+  nameWithType: Matrix.SetupReflect(Vector3)
+- uid: Elements.Geometry.Matrix.SetupReflect*
+  name: SetupReflect
+  href: api/Elements.Geometry.Matrix.html#Elements_Geometry_Matrix_SetupReflect_
+  commentId: Overload:Elements.Geometry.Matrix.SetupReflect
+  isSpec: "True"
+  fullName: Elements.Geometry.Matrix.SetupReflect
+  nameWithType: Matrix.SetupReflect
 - uid: Elements.Geometry.Matrix.SetupRotate(Elements.Geometry.Vector3,System.Double)
   name: SetupRotate(Vector3, Double)
   href: api/Elements.Geometry.Matrix.html#Elements_Geometry_Matrix_SetupRotate_Elements_Geometry_Vector3_System_Double_
@@ -7821,6 +7899,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Transform.Move
   nameWithType: Transform.Move
+- uid: Elements.Geometry.Transform.OfBezier(Elements.Geometry.Bezier)
+  name: OfBezier(Bezier)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfBezier_Elements_Geometry_Bezier_
+  commentId: M:Elements.Geometry.Transform.OfBezier(Elements.Geometry.Bezier)
+  fullName: Elements.Geometry.Transform.OfBezier(Elements.Geometry.Bezier)
+  nameWithType: Transform.OfBezier(Bezier)
+- uid: Elements.Geometry.Transform.OfBezier*
+  name: OfBezier
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfBezier_
+  commentId: Overload:Elements.Geometry.Transform.OfBezier
+  isSpec: "True"
+  fullName: Elements.Geometry.Transform.OfBezier
+  nameWithType: Transform.OfBezier
 - uid: Elements.Geometry.Transform.OfLine(Elements.Geometry.Line)
   name: OfLine(Line)
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfLine_Elements_Geometry_Line_
@@ -7928,6 +8019,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Transform.Origin
   nameWithType: Transform.Origin
+- uid: Elements.Geometry.Transform.Reflect(Elements.Geometry.Vector3)
+  name: Reflect(Vector3)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Reflect_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Transform.Reflect(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Transform.Reflect(Elements.Geometry.Vector3)
+  nameWithType: Transform.Reflect(Vector3)
+- uid: Elements.Geometry.Transform.Reflect*
+  name: Reflect
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Reflect_
+  commentId: Overload:Elements.Geometry.Transform.Reflect
+  isSpec: "True"
+  fullName: Elements.Geometry.Transform.Reflect
+  nameWithType: Transform.Reflect
 - uid: Elements.Geometry.Transform.Rotate(Elements.Geometry.Vector3,System.Double)
   name: Rotate(Vector3, Double)
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Rotate_Elements_Geometry_Vector3_System_Double_
@@ -8825,6 +8929,51 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vertex.UV
   nameWithType: Vertex.UV
+- uid: Elements.Instance
+  name: Instance
+  href: api/Elements.Instance.html
+  commentId: T:Elements.Instance
+  fullName: Elements.Instance
+  nameWithType: Instance
+- uid: Elements.Instance.#ctor(Elements.GeometricElement,Elements.Geometry.Transform,System.Guid,System.String)
+  name: Instance(GeometricElement, Transform, Guid, String)
+  href: api/Elements.Instance.html#Elements_Instance__ctor_Elements_GeometricElement_Elements_Geometry_Transform_System_Guid_System_String_
+  commentId: M:Elements.Instance.#ctor(Elements.GeometricElement,Elements.Geometry.Transform,System.Guid,System.String)
+  fullName: Elements.Instance.Instance(Elements.GeometricElement, Elements.Geometry.Transform, System.Guid, System.String)
+  nameWithType: Instance.Instance(GeometricElement, Transform, Guid, String)
+- uid: Elements.Instance.#ctor*
+  name: Instance
+  href: api/Elements.Instance.html#Elements_Instance__ctor_
+  commentId: Overload:Elements.Instance.#ctor
+  isSpec: "True"
+  fullName: Elements.Instance.Instance
+  nameWithType: Instance.Instance
+- uid: Elements.Instance.Parent
+  name: Parent
+  href: api/Elements.Instance.html#Elements_Instance_Parent
+  commentId: P:Elements.Instance.Parent
+  fullName: Elements.Instance.Parent
+  nameWithType: Instance.Parent
+- uid: Elements.Instance.Parent*
+  name: Parent
+  href: api/Elements.Instance.html#Elements_Instance_Parent_
+  commentId: Overload:Elements.Instance.Parent
+  isSpec: "True"
+  fullName: Elements.Instance.Parent
+  nameWithType: Instance.Parent
+- uid: Elements.Instance.Transform
+  name: Transform
+  href: api/Elements.Instance.html#Elements_Instance_Transform
+  commentId: P:Elements.Instance.Transform
+  fullName: Elements.Instance.Transform
+  nameWithType: Instance.Transform
+- uid: Elements.Instance.Transform*
+  name: Transform
+  href: api/Elements.Instance.html#Elements_Instance_Transform_
+  commentId: Overload:Elements.Instance.Transform
+  isSpec: "True"
+  fullName: Elements.Instance.Transform
+  nameWithType: Instance.Transform
 - uid: Elements.Interfaces
   name: Elements.Interfaces
   href: api/Elements.Interfaces.html
@@ -10694,3 +10843,93 @@ references:
   isSpec: "True"
   fullName: Elements.Wall.UpdateRepresentations
   nameWithType: Wall.UpdateRepresentations
+- uid: Hypar.Elements
+  name: Hypar.Elements
+  href: api/Hypar.Elements.html
+  commentId: N:Hypar.Elements
+  fullName: Hypar.Elements
+  nameWithType: Hypar.Elements
+- uid: Hypar.Elements.Units
+  name: Units
+  href: api/Hypar.Elements.Units.html
+  commentId: T:Hypar.Elements.Units
+  fullName: Hypar.Elements.Units
+  nameWithType: Units
+- uid: Hypar.Elements.Units.DegreesToRadians(System.Double)
+  name: DegreesToRadians(Double)
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_DegreesToRadians_System_Double_
+  commentId: M:Hypar.Elements.Units.DegreesToRadians(System.Double)
+  fullName: Hypar.Elements.Units.DegreesToRadians(System.Double)
+  nameWithType: Units.DegreesToRadians(Double)
+- uid: Hypar.Elements.Units.DegreesToRadians*
+  name: DegreesToRadians
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_DegreesToRadians_
+  commentId: Overload:Hypar.Elements.Units.DegreesToRadians
+  isSpec: "True"
+  fullName: Hypar.Elements.Units.DegreesToRadians
+  nameWithType: Units.DegreesToRadians
+- uid: Hypar.Elements.Units.FeetToMeters(System.Double)
+  name: FeetToMeters(Double)
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_FeetToMeters_System_Double_
+  commentId: M:Hypar.Elements.Units.FeetToMeters(System.Double)
+  fullName: Hypar.Elements.Units.FeetToMeters(System.Double)
+  nameWithType: Units.FeetToMeters(Double)
+- uid: Hypar.Elements.Units.FeetToMeters*
+  name: FeetToMeters
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_FeetToMeters_
+  commentId: Overload:Hypar.Elements.Units.FeetToMeters
+  isSpec: "True"
+  fullName: Hypar.Elements.Units.FeetToMeters
+  nameWithType: Units.FeetToMeters
+- uid: Hypar.Elements.Units.InchesToMeters(System.Double)
+  name: InchesToMeters(Double)
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_InchesToMeters_System_Double_
+  commentId: M:Hypar.Elements.Units.InchesToMeters(System.Double)
+  fullName: Hypar.Elements.Units.InchesToMeters(System.Double)
+  nameWithType: Units.InchesToMeters(Double)
+- uid: Hypar.Elements.Units.InchesToMeters*
+  name: InchesToMeters
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_InchesToMeters_
+  commentId: Overload:Hypar.Elements.Units.InchesToMeters
+  isSpec: "True"
+  fullName: Hypar.Elements.Units.InchesToMeters
+  nameWithType: Units.InchesToMeters
+- uid: Hypar.Elements.Units.MetersToFeet(System.Double)
+  name: MetersToFeet(Double)
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_MetersToFeet_System_Double_
+  commentId: M:Hypar.Elements.Units.MetersToFeet(System.Double)
+  fullName: Hypar.Elements.Units.MetersToFeet(System.Double)
+  nameWithType: Units.MetersToFeet(Double)
+- uid: Hypar.Elements.Units.MetersToFeet*
+  name: MetersToFeet
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_MetersToFeet_
+  commentId: Overload:Hypar.Elements.Units.MetersToFeet
+  isSpec: "True"
+  fullName: Hypar.Elements.Units.MetersToFeet
+  nameWithType: Units.MetersToFeet
+- uid: Hypar.Elements.Units.MetersToInches(System.Double)
+  name: MetersToInches(Double)
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_MetersToInches_System_Double_
+  commentId: M:Hypar.Elements.Units.MetersToInches(System.Double)
+  fullName: Hypar.Elements.Units.MetersToInches(System.Double)
+  nameWithType: Units.MetersToInches(Double)
+- uid: Hypar.Elements.Units.MetersToInches*
+  name: MetersToInches
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_MetersToInches_
+  commentId: Overload:Hypar.Elements.Units.MetersToInches
+  isSpec: "True"
+  fullName: Hypar.Elements.Units.MetersToInches
+  nameWithType: Units.MetersToInches
+- uid: Hypar.Elements.Units.RadiansToDegrees(System.Double)
+  name: RadiansToDegrees(Double)
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_RadiansToDegrees_System_Double_
+  commentId: M:Hypar.Elements.Units.RadiansToDegrees(System.Double)
+  fullName: Hypar.Elements.Units.RadiansToDegrees(System.Double)
+  nameWithType: Units.RadiansToDegrees(Double)
+- uid: Hypar.Elements.Units.RadiansToDegrees*
+  name: RadiansToDegrees
+  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_RadiansToDegrees_
+  commentId: Overload:Hypar.Elements.Units.RadiansToDegrees
+  isSpec: "True"
+  fullName: Hypar.Elements.Units.RadiansToDegrees
+  nameWithType: Units.RadiansToDegrees

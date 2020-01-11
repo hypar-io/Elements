@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.4
+### Added
+- `Contour`
+- `Transform.Reflect(Vector3 n)`
+- `Instance`
+
+### Fixed
+- Fixed [#125](https://github.com/hypar-io/Hypar/issues/125).
+- Fixed one Transform constructor whose computed axes were not unit length, causing the transform to scale.
+
 ## 0.4.2
 ### Changed
 - `Vector3` is now a struct.

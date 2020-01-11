@@ -24,7 +24,7 @@ namespace Elements.Serialization.glTF
 
         private static int GetNextId()
         {
-            _currentId ++;
+            _currentId++;
             return _currentId;
         }
 
@@ -44,9 +44,9 @@ namespace Elements.Serialization.glTF
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true)
         {
-            if(model.Elements.Count > 0)
+            if (model.Elements.Count > 0)
             {
-                if(useBinarySerialization)
+                if (useBinarySerialization)
                 {
                     if (SaveGlb(model, path))
                     {
@@ -86,14 +86,14 @@ namespace Elements.Serialization.glTF
             return Convert.ToBase64String(bytes);
         }
 
-        internal static Dictionary<string,int> AddMaterials(this Gltf gltf, IList<Material> materials, List<byte> buffer, List<BufferView> bufferViews)
+        internal static Dictionary<string, int> AddMaterials(this Gltf gltf, IList<Material> materials, List<byte> buffer, List<BufferView> bufferViews)
         {
             var materialDict = new Dictionary<string, int>();
             var newMaterials = new List<glTFLoader.Schema.Material>();
 
             var textureDict = new Dictionary<string, int>(); // the name of the texture image, the id of the texture
             var textures = new List<glTFLoader.Schema.Texture>();
-            
+
             var images = new List<glTFLoader.Schema.Image>();
             var samplers = new List<glTFLoader.Schema.Sampler>();
 
@@ -102,9 +102,9 @@ namespace Elements.Serialization.glTF
             var imageId = 0;
             var samplerId = 0;
 
-            foreach(var material in materials)
+            foreach (var material in materials)
             {
-                if(materialDict.ContainsKey(material.Name))
+                if (materialDict.ContainsKey(material.Name))
                 {
                     continue;
                 }
@@ -126,16 +126,16 @@ namespace Elements.Serialization.glTF
                     }}
                 };
 
-                if(material.Texture != null)
+                if (material.Texture != null)
                 {
                     // Add the texture
                     var ti = new TextureInfo();
                     m.PbrMetallicRoughness.BaseColorTexture = ti;
                     ti.Index = texId;
                     ti.TexCoord = 0;
-                    ((Dictionary<string,object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+                    ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
 
-                    if(textureDict.ContainsKey(material.Texture))
+                    if (textureDict.ContainsKey(material.Texture))
                     {
                         ti.Index = textureDict[material.Texture];
                     }
@@ -143,13 +143,13 @@ namespace Elements.Serialization.glTF
                     {
                         var tex = new Texture();
                         textures.Add(tex);
-                        
+
                         var image = new glTFLoader.Schema.Image();
 
                         // Flip the image vertically.
                         // This is required for OpenGlES implementations
                         // of glTF.
-                        using(var ms = new MemoryStream())
+                        using (var ms = new MemoryStream())
                         {
                             using (var texImage = SixLabors.ImageSharp.Image.Load(material.Texture))
                             {
@@ -157,17 +157,17 @@ namespace Elements.Serialization.glTF
                                 texImage.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
                             }
                             var imageData = ms.ToArray();
-                            image.BufferView = AddBufferView(bufferViews, 0, buffer.Count, imageData.Length, null, null );
+                            image.BufferView = AddBufferView(bufferViews, 0, buffer.Count, imageData.Length, null, null);
                             buffer.AddRange(imageData);
                         }
-                        
-                        while(buffer.Count % 4 != 0)
+
+                        while (buffer.Count % 4 != 0)
                         {
                             // Console.WriteLine("Padding...");
                             buffer.Add(0);
                         }
 
-                        image.MimeType =glTFLoader.Schema.Image.MimeTypeEnum.image_png;
+                        image.MimeType = glTFLoader.Schema.Image.MimeTypeEnum.image_png;
                         tex.Source = imageId;
                         images.Add(image);
 
@@ -187,7 +187,7 @@ namespace Elements.Serialization.glTF
                     }
                 }
 
-                if(material.Color.Alpha < 1.0)
+                if (material.Color.Alpha < 1.0)
                 {
                     m.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.BLEND;
                 }
@@ -200,19 +200,19 @@ namespace Elements.Serialization.glTF
                 matId++;
             }
 
-            if(materials.Count > 0)
+            if (materials.Count > 0)
             {
                 gltf.Materials = newMaterials.ToArray();
             }
-            if(textures.Count > 0)
+            if (textures.Count > 0)
             {
                 gltf.Textures = textures.ToArray();
             }
-            if(images.Count > 0)
+            if (images.Count > 0)
             {
                 gltf.Images = images.ToArray();
             }
-            if(samplers.Count > 0)
+            if (samplers.Count > 0)
             {
                 gltf.Samplers = samplers.ToArray();
             }
@@ -249,17 +249,17 @@ namespace Elements.Serialization.glTF
 
             return bufferViews.Count - 1;
         }
-        
+
         private static int AddNode(this Gltf gltf, List<Node> nodes, Node n, int? parent)
         {
             nodes.Add(n);
             var id = nodes.Count - 1;
 
-            if(parent != null)
+            if (parent != null)
             {
-                if(nodes[(int)parent].Children == null)
+                if (nodes[(int)parent].Children == null)
                 {
-                    nodes[(int)parent].Children = new[]{id};
+                    nodes[(int)parent].Children = new[] { id };
                 }
                 else
                 {
@@ -268,10 +268,35 @@ namespace Elements.Serialization.glTF
                     children.Add(id);
                     nodes[(int)parent].Children = children.ToArray();
                 }
-                
+
             }
 
             return id;
+        }
+
+        internal static void AddInstanceMesh(this Gltf gltf,
+                                            List<glTFLoader.Schema.Node> nodes,
+                                            List<int> meshIds,
+                                            Transform transform)
+        {
+            var a = transform.XAxis;
+            var b = transform.YAxis;
+            var c = transform.ZAxis;
+
+            var matrix = new[]{
+                    (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
+                    (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
+                    (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
+                    (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
+                };
+
+            foreach (var meshId in meshIds)
+            {
+                var node = new Node();
+                node.Matrix = matrix;
+                node.Mesh = meshId;
+                gltf.AddNode(nodes, node, 0);
+            }
         }
 
         internal static int AddTriangleMesh(this Gltf gltf,
@@ -312,52 +337,52 @@ namespace Elements.Serialization.glTF
             var iBuff = AddBufferView(bufferViews, 0, buffer.Count, indices.Length, null, null);
             buffer.AddRange(indices);
 
-            while(buffer.Count % 4 != 0)
+            while (buffer.Count % 4 != 0)
             {
                 // Console.WriteLine("Padding...");
                 buffer.Add(0);
             }
 
-            var vAccess = AddAccessor(accessors, vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length/sizeof(float)/3, new[]{(float)vMin[0], (float)vMin[1], (float)vMin[2]}, new[]{(float)vMax[0],(float)vMax[1],(float)vMax[2]}, Accessor.TypeEnum.VEC3);
-            var nAccess = AddAccessor(accessors, nBuff, 0, Accessor.ComponentTypeEnum.FLOAT, normals.Length/sizeof(float)/3, new[]{(float)nMin[0], (float)nMin[1], (float)nMin[2]}, new[]{(float)nMax[0], (float)nMax[1], (float)nMax[2]}, Accessor.TypeEnum.VEC3);
-            var iAccess = AddAccessor(accessors, iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_SHORT, indices.Length/sizeof(ushort), new[]{(float)iMin}, new[]{(float)iMax}, Accessor.TypeEnum.SCALAR);
+            var vAccess = AddAccessor(accessors, vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length / sizeof(float) / 3, new[] { (float)vMin[0], (float)vMin[1], (float)vMin[2] }, new[] { (float)vMax[0], (float)vMax[1], (float)vMax[2] }, Accessor.TypeEnum.VEC3);
+            var nAccess = AddAccessor(accessors, nBuff, 0, Accessor.ComponentTypeEnum.FLOAT, normals.Length / sizeof(float) / 3, new[] { (float)nMin[0], (float)nMin[1], (float)nMin[2] }, new[] { (float)nMax[0], (float)nMax[1], (float)nMax[2] }, Accessor.TypeEnum.VEC3);
+            var iAccess = AddAccessor(accessors, iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_SHORT, indices.Length / sizeof(ushort), new[] { (float)iMin }, new[] { (float)iMax }, Accessor.TypeEnum.SCALAR);
 
             var prim = new MeshPrimitive();
             prim.Indices = iAccess;
             prim.Material = materialId;
             prim.Mode = MeshPrimitive.ModeEnum.TRIANGLES;
-            prim.Attributes = new Dictionary<string,int>{
+            prim.Attributes = new Dictionary<string, int>{
                 {"NORMAL",nAccess},
                 {"POSITION",vAccess}
             };
 
-            if(uvs.Length > 0)
+            if (uvs.Length > 0)
             {
                 var uvBuff = AddBufferView(bufferViews, 0, buffer.Count, uvs.Length, null, null);
                 buffer.AddRange(uvs);
-                var uvAccess = AddAccessor(accessors, uvBuff, 0,Accessor.ComponentTypeEnum.FLOAT, uvs.Length/sizeof(float)/2, new []{(float)uvMin[0], (float)uvMin[1]}, new []{(float)uvMax[0], (float)uvMax[1]}, Accessor.TypeEnum.VEC2);
+                var uvAccess = AddAccessor(accessors, uvBuff, 0, Accessor.ComponentTypeEnum.FLOAT, uvs.Length / sizeof(float) / 2, new[] { (float)uvMin[0], (float)uvMin[1] }, new[] { (float)uvMax[0], (float)uvMax[1] }, Accessor.TypeEnum.VEC2);
                 prim.Attributes.Add("TEXCOORD_0", uvAccess);
             }
-            
+
             // TODO: Add to the buffer above instead of inside this block.
             // There's a chance the padding operation will put padding before
             // the color information.
-            if(colors.Length > 0)
+            if (colors.Length > 0)
             {
                 var cBuff = AddBufferView(bufferViews, 0, buffer.Count, colors.Length, null, null);
                 buffer.AddRange(colors);
-                var cAccess = AddAccessor(accessors, cBuff, 0, Accessor.ComponentTypeEnum.FLOAT, colors.Length/sizeof(float)/3, cMin, cMax, Accessor.TypeEnum.VEC3);
+                var cAccess = AddAccessor(accessors, cBuff, 0, Accessor.ComponentTypeEnum.FLOAT, colors.Length / sizeof(float) / 3, cMin, cMax, Accessor.TypeEnum.VEC3);
                 prim.Attributes.Add("COLOR_0", cAccess);
             }
 
-            m.Primitives = new[]{prim};
+            m.Primitives = new[] { prim };
 
             // Add mesh to gltf
             meshes.Add(m);
 
             var parentId = 0;
-            
-            if(transform != null)
+
+            if (transform != null)
             {
                 var a = transform.XAxis;
                 var b = transform.YAxis;
@@ -379,10 +404,10 @@ namespace Elements.Serialization.glTF
             var node = new Node();
             node.Mesh = meshes.Count - 1;
             gltf.AddNode(nodes, node, parentId);
-            
+
             return meshes.Count - 1;
         }
-    
+
         internal static int AddLineLoop(this Gltf gltf,
                                         string name,
                                         List<byte> buffer,
@@ -408,31 +433,31 @@ namespace Elements.Serialization.glTF
             buffer.AddRange(vertices);
             buffer.AddRange(indices);
 
-            while(buffer.Count % 4 != 0)
+            while (buffer.Count % 4 != 0)
             {
                 // Console.WriteLine("Padding...");
                 buffer.Add(0);
             }
-            
-            var vAccess = AddAccessor(accessors, vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length/sizeof(float)/3, new[]{(float)vMin[0], (float)vMin[1], (float)vMin[2]}, new[]{(float)vMax[0],(float)vMax[1],(float)vMax[2]}, Accessor.TypeEnum.VEC3);
-            var iAccess = AddAccessor(accessors, iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_SHORT, indices.Length/sizeof(ushort), new[]{(float)iMin}, new[]{(float)iMax}, Accessor.TypeEnum.SCALAR);
+
+            var vAccess = AddAccessor(accessors, vBuff, 0, Accessor.ComponentTypeEnum.FLOAT, vertices.Length / sizeof(float) / 3, new[] { (float)vMin[0], (float)vMin[1], (float)vMin[2] }, new[] { (float)vMax[0], (float)vMax[1], (float)vMax[2] }, Accessor.TypeEnum.VEC3);
+            var iAccess = AddAccessor(accessors, iBuff, 0, Accessor.ComponentTypeEnum.UNSIGNED_SHORT, indices.Length / sizeof(ushort), new[] { (float)iMin }, new[] { (float)iMax }, Accessor.TypeEnum.SCALAR);
 
             var prim = new MeshPrimitive();
             prim.Indices = iAccess;
             prim.Material = materialId;
             prim.Mode = mode;
-            prim.Attributes = new Dictionary<string,int>{
+            prim.Attributes = new Dictionary<string, int>{
                 {"POSITION",vAccess}
             };
 
-            m.Primitives = new[]{prim};
-            
+            m.Primitives = new[] { prim };
+
             // Add mesh to gltf
             meshes.Add(m);
 
             var parentId = 0;
 
-            if(transform != null)
+            if (transform != null)
             {
                 var a = transform.XAxis;
                 var b = transform.YAxis;
@@ -454,7 +479,7 @@ namespace Elements.Serialization.glTF
             var node = new Node();
             node.Mesh = meshes.Count - 1;
             gltf.AddNode(nodes, node, parentId);
-            
+
             return meshes.Count - 1;
         }
 
@@ -479,7 +504,7 @@ namespace Elements.Serialization.glTF
             };
 
             var meshes = new List<glTFLoader.Schema.Mesh>();
-            var nodes = new List<glTFLoader.Schema.Node>{root};
+            var nodes = new List<glTFLoader.Schema.Node> { root };
 
             gltf.Scene = 0;
             var scene = new Scene();
@@ -494,7 +519,7 @@ namespace Elements.Serialization.glTF
             var materials = gltf.AddMaterials(new[] { BuiltInMaterials.Default, BuiltInMaterials.Edges, BuiltInMaterials.EdgesHighlighted },
                                               buffer,
                                               bufferViews);
-            
+
             var mesh = new Elements.Geometry.Mesh();
             solid.Tessellate(ref mesh);
 
@@ -510,13 +535,13 @@ namespace Elements.Serialization.glTF
             ushort imin; ushort imax;
             double[] uvmin; double[] uvmax;
 
-            
+
 
             mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
-                            out vmax, out vmin, out nmin, out nmax, out cmin, 
+                            out vmax, out vmin, out nmin, out nmax, out cmin,
                             out cmax, out imin, out imax, out uvmax, out uvmin);
 
-            
+
             var accessors = new List<Accessor>();
 
             gltf.AddTriangleMesh("mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
@@ -526,27 +551,27 @@ namespace Elements.Serialization.glTF
             var edgeCount = 0;
             var vertices = new List<Vector3>();
             var verticesHighlighted = new List<Vector3>();
-            foreach(var e in solid.Edges.Values)
+            foreach (var e in solid.Edges.Values)
             {
-                if(e.Left.Loop == null || e.Right.Loop == null)
+                if (e.Left.Loop == null || e.Right.Loop == null)
                 {
-                    verticesHighlighted.AddRange(new[]{e.Left.Vertex.Point, e.Right.Vertex.Point});
+                    verticesHighlighted.AddRange(new[] { e.Left.Vertex.Point, e.Right.Vertex.Point });
                 }
                 else
                 {
-                    vertices.AddRange(new[]{e.Left.Vertex.Point, e.Right.Vertex.Point});
+                    vertices.AddRange(new[] { e.Left.Vertex.Point, e.Right.Vertex.Point });
                 }
 
                 edgeCount++;
             }
 
-            if(vertices.Count > 0)
+            if (vertices.Count > 0)
             {
                 // Draw standard edges
                 AddLines(100000, vertices.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors, meshes, nodes);
             }
 
-            if(verticesHighlighted.Count > 0)
+            if (verticesHighlighted.Count > 0)
             {
                 // Draw highlighted edges
                 AddLines(100001, verticesHighlighted.ToArray(), gltf, materials[BuiltInMaterials.EdgesHighlighted.Name], buffer, bufferViews, accessors, meshes, nodes);
@@ -559,7 +584,7 @@ namespace Elements.Serialization.glTF
             gltf.BufferViews = bufferViews.ToArray();
             gltf.Accessors = accessors.ToArray();
             gltf.Nodes = nodes.ToArray();
-            if(meshes.Count > 0)
+            if (meshes.Count > 0)
             {
                 gltf.Meshes = meshes.ToArray();
             }
@@ -578,7 +603,7 @@ namespace Elements.Serialization.glTF
             }
 
             gltf.SaveBinaryModel(buffer.ToArray(), path);
-            return true; 
+            return true;
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
@@ -587,7 +612,8 @@ namespace Elements.Serialization.glTF
             var buffer = new List<byte>();
 
             var gltf = InitializeGlTF(model, buffer);
-            if (gltf == null) {
+            if (gltf == null)
+            {
                 return false;
             }
 
@@ -629,7 +655,7 @@ namespace Elements.Serialization.glTF
                 (float)q.X, (float)q.Y, (float)q.Z, (float)q.W
             };
 
-            var nodes = new List<glTFLoader.Schema.Node>{ root };
+            var nodes = new List<glTFLoader.Schema.Node> { root };
             var meshes = new List<glTFLoader.Schema.Mesh>();
 
             gltf.Scene = 0;
@@ -645,13 +671,18 @@ namespace Elements.Serialization.glTF
             var materialsToAdd = model.AllElementsOfType<Material>();
             var materials = gltf.AddMaterials(materialsToAdd.ToList(), buffer, bufferViews);
 
-            var elements = model.AllElementsOfType<GeometricElement>().Where(t=>t.GetType() != typeof(Opening));
-
-            foreach(var e in elements)
+            var elements = model.Elements.Where(e =>
             {
-                GetRenderDataForElement(e, gltf, materials, buffer, bufferViews, accessors, meshes, nodes);
+                return e.Value is GeometricElement || e.Value is Instance;
+            }).Select(e => e.Value);
+
+            var meshElementMap = new Dictionary<Guid, List<int>>();
+            foreach (var e in elements)
+            {
+                GetRenderDataForElement(e, gltf, materials, buffer, bufferViews, accessors, meshes, nodes, meshElementMap);
             }
-            if (buffer.Count == 0) {
+            if (buffer.Count == 0)
+            {
                 return null;
             }
 
@@ -661,40 +692,59 @@ namespace Elements.Serialization.glTF
             gltf.BufferViews = bufferViews.ToArray();
             gltf.Accessors = accessors.ToArray();
             gltf.Nodes = nodes.ToArray();
-            if(meshes.Count > 0) {
+            if (meshes.Count > 0)
+            {
                 gltf.Meshes = meshes.ToArray();
             }
 
             return gltf;
         }
 
-        private static void GetRenderDataForElement(GeometricElement e,
+        private static void GetRenderDataForElement(Element e,
                                                     Gltf gltf,
                                                     Dictionary<string, int> materials,
                                                     List<byte> buffer,
                                                     List<BufferView> bufferViews,
                                                     List<Accessor> accessors,
                                                     List<glTFLoader.Schema.Mesh> meshes,
-                                                    List<glTFLoader.Schema.Node> nodes)
+                                                    List<glTFLoader.Schema.Node> nodes,
+                                                    Dictionary<Guid, List<int>> meshElementMap)
         {
             var materialName = BuiltInMaterials.Default.Name;
 
-            materialName = e.Material.Name;
-
-            e.UpdateRepresentations();
-            if(e.Representation != null)
+            if (e is GeometricElement)
             {
-                foreach(var solidOp in e.Representation.SolidOperations)
+                var geom = (GeometricElement)e;
+                materialName = geom.Material.Name;
+
+                geom.UpdateRepresentations();
+                if (geom.Representation != null)
                 {
-                    var solid = solidOp.GetSolid();
-                    if(solid != null)
+                    foreach (var solidOp in geom.Representation.SolidOperations)
                     {
-                        ProcessSolid(solid, e.Transform, e.Id.ToString(), materialName, ref gltf, 
-                            ref materials, ref buffer, bufferViews, accessors, meshes, nodes);
+                        var solid = solidOp.GetSolid();
+                        if (solid != null)
+                        {
+                            var meshId = ProcessSolid(solid, geom.Transform, e.Id.ToString(), materialName, ref gltf,
+                                ref materials, ref buffer, bufferViews, accessors, meshes, nodes);
+                            if (!meshElementMap.ContainsKey(e.Id))
+                            {
+                                meshElementMap.Add(e.Id, new List<int>());
+                            }
+                            meshElementMap[e.Id].Add(meshId);
+                        }
                     }
                 }
             }
-            
+
+            if (e is Instance)
+            {
+                var i = (Instance)e;
+
+                // Lookup the corresponding mesh in the map.
+                AddInstanceMesh(gltf, nodes, meshElementMap[i.Parent.Id], i.Transform);
+            }
+
             if (e is ModelCurve)
             {
                 var mc = (ModelCurve)e;
@@ -704,9 +754,9 @@ namespace Elements.Serialization.glTF
             if (e is ModelPoints)
             {
                 var mp = (ModelPoints)e;
-                AddPoints(GetNextId(), mp.Locations, gltf, materials[mp.Material.Name], buffer, bufferViews, accessors, meshes, nodes, mp.Transform );
+                AddPoints(GetNextId(), mp.Locations, gltf, materials[mp.Material.Name], buffer, bufferViews, accessors, meshes, nodes, mp.Transform);
             }
-            
+
             if (e is ITessellate)
             {
                 var geo = (ITessellate)e;
@@ -770,7 +820,7 @@ namespace Elements.Serialization.glTF
             }
         }
 
-        private static void ProcessSolid(Solid solid,
+        private static int ProcessSolid(Solid solid,
                                          Transform t,
                                          string id,
                                          string materialName,
@@ -798,7 +848,7 @@ namespace Elements.Serialization.glTF
                             out vmax, out vmin, out nmin, out nmax, out cmin,
                             out cmax, out imin, out imax, out uvmax, out uvmin);
 
-            gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
+            return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
                                 indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
                                 imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, meshes, nodes, t);
         }
@@ -818,24 +868,24 @@ namespace Elements.Serialization.glTF
             var ushortSize = sizeof(ushort);
             var vBuff = new byte[vertices.Count * 3 * floatSize];
             // var indices = new byte[vertices.Count / 2 *  2 * ushortSize];
-            var indices = new byte[vertices.Count *  2 * ushortSize];
+            var indices = new byte[vertices.Count * 2 * ushortSize];
 
             var vi = 0;
             var ii = 0;
-            for(var i=0; i < vertices.Count; i++)
+            for (var i = 0; i < vertices.Count; i++)
             {
                 var v = vertices[i];
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.X), 0, vBuff, vi, floatSize);
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Y), 0, vBuff, vi + floatSize, floatSize);
-                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Z), 0, vBuff, vi +  2 * floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Z), 0, vBuff, vi + 2 * floatSize, floatSize);
                 vi += 3 * floatSize;
 
                 // On every even index, write a line segment.
                 // if(i % 2 == 0 && i < vertices.Count - 1)
-                if(i < vertices.Count - 1)
+                if (i < vertices.Count - 1)
                 {
                     System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)i), 0, indices, ii, ushortSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)(i+1)), 0, indices, ii + ushortSize, ushortSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)(i + 1)), 0, indices, ii + ushortSize, ushortSize);
                     ii += 2 * ushortSize;
                 }
             }
@@ -863,12 +913,12 @@ namespace Elements.Serialization.glTF
 
             var vi = 0;
             var ii = 0;
-            for(var i=0; i < vertices.Count; i++)
+            for (var i = 0; i < vertices.Count; i++)
             {
                 var v = vertices[i];
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.X), 0, vBuff, vi, floatSize);
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Y), 0, vBuff, vi + floatSize, floatSize);
-                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Z), 0, vBuff, vi +  2 * floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Z), 0, vBuff, vi + 2 * floatSize, floatSize);
                 vi += 3 * floatSize;
 
                 System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)i), 0, indices, ii, ushortSize);
