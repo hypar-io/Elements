@@ -160,5 +160,20 @@ namespace Elements.Geometry
             }
             return this.Center.Equals(other.Center) && this.StartAngle == other.StartAngle && this.EndAngle == other.EndAngle;
         }
+        
+        /// <summary>
+        /// Return the arc which is the complement of this arc.
+        /// </summary>
+        public Arc Complement()
+        {
+            var complementSpan = 360.0 - (this.EndAngle - this.StartAngle);
+            var newEnd = this.StartAngle;
+            var newStart = this.EndAngle;
+            if(newStart > newEnd)
+            {
+                newStart = newStart - 360.0;
+            }
+            return new Arc(this.Center, this.Radius, newStart, newEnd);
+        }
     }
 }

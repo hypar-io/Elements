@@ -72,5 +72,19 @@ namespace Hypar.Tests
             var arc1 = new Arc(Vector3.Origin, 5.0, 0.0, 180.0);
             var frames1 = arc.Frames(0.1, 0.1);
         }
+
+        [Fact]
+        public void Complement()
+        {
+            var arc = new Arc(Vector3.Origin, 1, 10, 20);
+            var comp = arc.Complement();
+            Assert.Equal(-340, comp.StartAngle);
+            Assert.Equal(10, comp.EndAngle);
+
+            arc = new Arc(Vector3.Origin, 1, -10, 10);
+            comp = arc.Complement();
+            Assert.Equal(-350, comp.StartAngle);
+            Assert.Equal(-10, comp.EndAngle);
+        }
     }
 }

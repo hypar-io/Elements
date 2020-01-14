@@ -92,6 +92,20 @@ namespace Elements.Tests
 			}
 		}
 
+		[Fact]
+		public void IntersectRay()
+		{
+			var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+			var ray2 = new Ray(new Vector3(5,-5), Vector3.YAxis);
+			ray1.Intersects(ray2, out Vector3 result);
+			Assert.True(result.Equals(new Vector3(5,0)));
+
+			ray2 = new Ray(new Vector3(5,-5), Vector3.YAxis.Negate());
+			Assert.False(ray1.Intersects(ray2, out result));
+
+			Assert.True(ray1.Intersects(ray2, out result, true));
+		}
+
 		private static Vector3 Center(Triangle t)
 		{
 			return new Vector3[]{t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position}.Average();

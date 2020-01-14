@@ -425,15 +425,7 @@ namespace Elements.Geometry
             for(var i=0; i<vertices.Count; i++)
             {
                 var a = vertices[i];
-                Vector3 b;
-                if(i == vertices.Count-1)
-                {
-                    b = vertices[0];
-                }
-                else
-                {
-                    b = vertices[i+1];
-                }
+                var b = i == vertices.Count - 1 ? vertices[0] : vertices[i+1];
                 lines[i] = new Line(a, b);
             }
             return lines;
@@ -587,6 +579,43 @@ namespace Elements.Geometry
             {
                 this.Vertices[i] = t.OfPoint(this.Vertices[i]);
             }
+        }
+        
+        /// <summary>
+        /// Fillet all corners on this polygon.
+        /// </summary>
+        /// <param name="radius">The fillet radius.</param>
+        /// <returns>A contour containing trimmed edge segments and fillets.</returns>
+        public Contour Fillet(double radius)
+        {
+            var curves = new List<Curve>();
+            Vector3 contourStart = new Vector3();
+            Vector3 contourEnd = new Vector3();
+            
+            var segs = this.Segments();
+            for(var i=0; i<segs.Length; i++)
+            {
+                var a = segs[i];
+                var b = i == segs.Length - 1 ? segs[0] : segs[i+1];
+                var fillet = a.Fillet(b, radius);
+                
+                var right = a.Direction().Cross(Vector3.ZAxis);
+                var dot = b.Direction().Dot(right);
+                var convex = dot <= 0.0;
+                if(i > 0)
+                {
+                    var l = new Line(contourEnd, convex ? fillet.Start : fillet.End);
+                    curves.Add(l);
+                }
+                else
+                {
+                    contourStart = convex ? fillet.Start : fillet.End;
+                }
+                contourEnd = convex ? fillet.End : fillet.Start;
+                curves.Add(fillet);
+            }
+            curves.Add(new Line(contourEnd, contourStart));
+            return new Contour(curves);
         }
 
         /// <summary>

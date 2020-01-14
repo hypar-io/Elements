@@ -95,6 +95,36 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Does this ray intersect the provided ray?
+        /// </summary>
+        /// <param name="ray">The ray to intersect.</param>
+        /// <param name="result">The location of intersection.</param>
+        /// <param name="ignoreRayDirection">If true, the direction of the rays will be ignored</param>
+        /// <returns>True if the rays intersect, otherwise false.</returns>
+        public bool Intersects(Ray ray, out Vector3 result, bool ignoreRayDirection = false)
+        {
+            var p1 = this.Origin;
+            var p2 = ray.Origin;
+            var d1 = this.Direction;
+            var d2 = ray.Direction;
+
+            if(d1.IsParallelTo(d2))
+            {
+                result = default(Vector3);
+                return false;
+            }
+
+            var t1 = (((p2-p1).Cross(d2)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(),2);
+            var t2 = (((p2-p1).Cross(d1)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(),2);
+            result = p1 + d1 * t1;
+            if(ignoreRayDirection)
+            {
+                return true;
+            }
+            return t1 >= 0 && t2 >= 0;
+        }
+
+        /// <summary>
         /// Is this ray equal to the provided ray?
         /// </summary>
         /// <param name="other">The ray to test.</param>

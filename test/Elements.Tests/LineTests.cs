@@ -99,5 +99,48 @@ namespace Elements.Geometry.Tests
             var segments1 = l.DivideByLength(1.1);
             Assert.Equal(5, segments1.Count);
         }
+
+        [Fact]
+        public void DivideByLengthFromCenter()
+        {
+            // 5 whole size panels.
+            var l = new Line(Vector3.Origin, new Vector3(5,0));
+            var segments = l.DivideByLengthFromCenter(1);
+            Assert.Equal(5, segments.Count);
+
+            // 3 whole size panels and two small end panels.
+            segments = l.DivideByLengthFromCenter(1.5);
+            Assert.Equal(5, segments.Count);
+            Assert.Equal(0.25, segments[0].Length());
+
+            // 1 panel.
+            segments = l.DivideByLengthFromCenter(6);
+            Assert.Equal(1, segments.Count);
+        }
+
+        [Fact]
+        public void Trim()
+        {
+            var l1 = new Line(Vector3.Origin, new Vector3(5,0));
+            var l2 = new Line(new Vector3(4,-2), new Vector3(4, 2));
+            var result = l1.TrimTo(l2);
+            Assert.Equal(4, result.Length());
+
+            var result1 = l1.TrimTo(l2, true);
+            Assert.Equal(1, result1.Length());
+        }
+
+        [Fact]
+        public void Extend()
+        {
+            var l1 = new Line(Vector3.Origin, new Vector3(5,0));
+            var l2 = new Line(new Vector3(6,-2), new Vector3(6, 2));
+            var result = l1.ExtendTo(l2);
+            Assert.Equal(6, result.Length());
+
+            l2 = new Line(new Vector3(-1, -2), new Vector3(-1, 2));
+            result = l1.ExtendTo(l2);
+            Assert.Equal(6, result.Length());
+        }
     }
 }

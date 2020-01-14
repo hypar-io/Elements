@@ -1,3 +1,4 @@
+using Elements.Serialization.glTF;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -678,6 +679,31 @@ namespace Elements.Geometry.Tests
             var newPolygon = (Polygon)JsonConvert.DeserializeObject<Polygon>(newJson);
 
             Assert.Equal(polygon.Vertices.Count, newPolygon.Vertices.Count);
+        }
+
+        [Fact]
+        public void Fillet()
+        {
+            var model = new Model();
+
+            var shape1 = Polygon.L(10, 10, 5);
+            var poly1 = shape1.Fillet(0.5).ToPolygon();
+            var mass1 = new Mass(poly1);
+            model.AddElement(mass1);
+
+            var t = new Transform(15, 0, 0);
+            var shape2 = Polygon.Ngon(3, 5);
+            var poly2 = shape2.Fillet(0.5).ToPolygon();
+            var mass2 = new Mass(poly2, transform: t);
+            model.AddElement(mass2);
+
+            var shape3 = Polygon.Star(5, 3, 5);
+            t = new Transform(30, 0, 0);
+            var poly3 = shape3.Fillet(0.5).ToPolygon();
+            var mass3 = new Mass(poly3, transform: t);
+            model.AddElement(mass3);
+
+            model.ToGlTF("Fillet.gltf", false);
         }
     }
 }

@@ -417,6 +417,33 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Check if two vectors are coplanar.
+        /// </summary>
+        /// <param name="b">The second vector.</param>
+        /// <param name="c">The third vector.</param>
+        /// <returns>True is the vectors are coplanar, otherwise false.</returns>
+        public double TripleProduct(Vector3 b, Vector3 c)
+        {
+            // https://en.wikipedia.org/wiki/Triple_product
+            var a = this;
+            var prod = a.Dot(b.Cross(c));
+            return prod;
+        }
+
+        /// <summary>
+        /// Get the closest point on the line from this point.
+        /// </summary>
+        /// <param name="line">The line on which to find the closest point.</param>
+        /// <returns>The closest point on the line from this point.</returns>
+        public Vector3 ClosestPointOn(Line line)
+        {
+            var dir = line.Direction();
+            var v = this - line.Start;
+            var d = v.Dot(dir);
+            return line.Start + dir * d;
+        }
+
+        /// <summary>
         /// Check whether three points are wound CCW in two dimensions.
         /// </summary>
         /// <param name="a">The first point.</param>

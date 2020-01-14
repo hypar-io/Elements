@@ -5,6 +5,15 @@
 - `Contour`
 - `Transform.Reflect(Vector3 n)`
 - `Instance`
+- `Vector3.ClosestPointOn(Line line)`
+- `Line.TrimTo(Line line)`
+- `Line.ExtendTo(Line line)`
+- `Line.Offset(double distance, bool flip = false)`
+- `Line.DivideByLengthFromCenter(double l)`
+- `Ray.Intersects(Ray ray, out Vector3 result, bool ignoreRayDirection)`
+- `Polygon.Fillet(double radius)`
+- `Arc.Complement()`
+- `Polygons.Star(double outerRadius, double innerRadius, int points)`
 
 ### Fixed
 - Fixed [#125](https://github.com/hypar-io/Hypar/issues/125).

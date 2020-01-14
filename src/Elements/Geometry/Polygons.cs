@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
@@ -15,10 +16,10 @@ namespace Elements.Geometry
         /// <returns>A rectangular Polygon centered around origin.</returns>
         public static Polygon Rectangle(double width, double height)
         {
-            var a = new Vector3( -width / 2, -height / 2);
-            var b = new Vector3( width / 2, -height / 2);
-            var c = new Vector3( width / 2, height / 2);
-            var d = new Vector3( -width / 2, height / 2);
+            var a = new Vector3(-width / 2, -height / 2);
+            var b = new Vector3(width / 2, -height / 2);
+            var c = new Vector3(width / 2, height / 2);
+            var d = new Vector3(-width / 2, height / 2);
 
             return new Polygon(new[] { a, b, c, d });
         }
@@ -93,23 +94,51 @@ namespace Elements.Geometry
         /// <param name="thickness">The thickness of the L.</param>
         /// <returns></returns>
         public static Polygon L(double width, double length, double thickness)
-        {   
-            if(thickness > length)
+        {
+            if (thickness > length)
             {
                 throw new ArgumentOutOfRangeException("The thickness cannot be greater than the length.");
             }
-            if(thickness > width)
+            if (thickness > width)
             {
                 throw new ArgumentOutOfRangeException("The thickness cannot be greater that the width.");
             }
-            
-            var a = new Vector3(0,0,0);
-            var b = new Vector3(width,0,0);
+
+            var a = new Vector3(0, 0, 0);
+            var b = new Vector3(width, 0, 0);
             var c = new Vector3(width, thickness, 0);
-            var d = new Vector3(thickness,thickness,0);
+            var d = new Vector3(thickness, thickness, 0);
             var e = new Vector3(thickness, length, 0);
-            var f = new Vector3(0,length,0);
-            return new Polygon(new[]{a,b,c,d,e,f});
+            var f = new Vector3(0, length, 0);
+            return new Polygon(new[] { a, b, c, d, e, f });
+        }
+
+        /// <summary>
+        /// Create a star.
+        /// </summary>
+        /// <param name="outerRadius">The outer radius.</param>
+        /// <param name="innerRadius">The inner radius.</param>
+        /// <param name="points">The number of points.</param>
+        /// <returns></returns>
+        public static Polygon Star(double outerRadius, double innerRadius, int points)
+        {
+            var c1 = new Circle(Vector3.Origin, innerRadius);
+            var c2 = new Circle(Vector3.Origin, outerRadius);
+            var verts = new List<Vector3>();
+            var count = points * 2;
+            for (var i = 0; i < count; i++)
+            {
+                var t = i * 1.0 / count;
+                if (i % 2 == 0)
+                {
+                    verts.Add(c2.PointAt(t));
+                }
+                else
+                {
+                    verts.Add(c1.PointAt(t));
+                }
+            }
+            return new Polygon(verts);
         }
     }
 }
