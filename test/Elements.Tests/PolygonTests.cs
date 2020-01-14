@@ -687,23 +687,24 @@ namespace Elements.Geometry.Tests
             var model = new Model();
 
             var shape1 = Polygon.L(10, 10, 5);
-            var poly1 = shape1.Fillet(0.5).ToPolygon();
+            var contour1 = shape1.Fillet(0.5);
+            var poly1 = contour1.ToPolygon();
             var mass1 = new Mass(poly1);
-            model.AddElement(mass1);
+            Assert.Equal(shape1.Segments().Count() * 2, contour1.Count());
 
             var t = new Transform(15, 0, 0);
             var shape2 = Polygon.Ngon(3, 5);
-            var poly2 = shape2.Fillet(0.5).ToPolygon();
+            var contour2 = shape2.Fillet(0.5);
+            var poly2 = contour2.ToPolygon();
             var mass2 = new Mass(poly2, transform: t);
-            model.AddElement(mass2);
+            Assert.Equal(shape2.Segments().Count() * 2, contour2.Count());
 
             var shape3 = Polygon.Star(5, 3, 5);
+            var contour3 = shape3.Fillet(0.5);
             t = new Transform(30, 0, 0);
-            var poly3 = shape3.Fillet(0.5).ToPolygon();
+            var poly3 = contour3.ToPolygon();
             var mass3 = new Mass(poly3, transform: t);
-            model.AddElement(mass3);
-
-            model.ToGlTF("Fillet.gltf", false);
+            Assert.Equal(shape3.Segments().Count() * 2, contour3.Count());
         }
     }
 }
