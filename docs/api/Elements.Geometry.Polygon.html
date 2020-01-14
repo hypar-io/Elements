@@ -655,6 +655,49 @@ Returns a list containing a representation of the perimeter of this Polygon if t
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.Object.Equals(System.Object)</span></div>
+  <a id="Elements_Geometry_Polygon_Fillet_" data-uid="Elements.Geometry.Polygon.Fillet*"></a>
+  <h4 id="Elements_Geometry_Polygon_Fillet_System_Double_" data-uid="Elements.Geometry.Polygon.Fillet(System.Double)">Fillet(Double)</h4>
+  <div class="markdown level1 summary"><p>Fillet all corners on this polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Contour Fillet(double radius)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td><p>The fillet radius.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Contour.html">Contour</a></td>
+        <td><p>A contour containing trimmed edge segments and fillets.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polygon_Frames_" data-uid="Elements.Geometry.Polygon.Frames*"></a>
   <h4 id="Elements_Geometry_Polygon_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
   <div class="markdown level1 summary"><p>Get the transforms used to transform a Profile extruded along this Polyline.</p>
@@ -1228,6 +1271,60 @@ Returns null if the two Polygons do not intersect.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Segments">Polyline.Segments()</a></div>
+  <a id="Elements_Geometry_Polygon_Star_" data-uid="Elements.Geometry.Polygon.Star*"></a>
+  <h4 id="Elements_Geometry_Polygon_Star_System_Double_System_Double_System_Int32_" data-uid="Elements.Geometry.Polygon.Star(System.Double,System.Double,System.Int32)">Star(Double, Double, Int32)</h4>
+  <div class="markdown level1 summary"><p>Create a star.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Polygon Star(double outerRadius, double innerRadius, int points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">outerRadius</span></td>
+        <td><p>The outer radius.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">innerRadius</span></td>
+        <td><p>The inner radius.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The number of points.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polygon_ToString_" data-uid="Elements.Geometry.Polygon.ToString*"></a>
   <h4 id="Elements_Geometry_Polygon_ToString" data-uid="Elements.Geometry.Polygon.ToString">ToString()</h4>
   <div class="markdown level1 summary"><p>The string representation of the Polygon.</p>

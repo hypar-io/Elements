@@ -593,6 +593,49 @@
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Vector3_ClosestPointOn_" data-uid="Elements.Geometry.Vector3.ClosestPointOn*"></a>
+  <h4 id="Elements_Geometry_Vector3_ClosestPointOn_Elements_Geometry_Line_" data-uid="Elements.Geometry.Vector3.ClosestPointOn(Elements.Geometry.Line)">ClosestPointOn(Line)</h4>
+  <div class="markdown level1 summary"><p>Get the closest point on the line from this point.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 ClosestPointOn(Line line)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>The line on which to find the closest point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>The closest point on the line from this point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Vector3_CompareTo_" data-uid="Elements.Geometry.Vector3.CompareTo*"></a>
   <h4 id="Elements_Geometry_Vector3_CompareTo_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.CompareTo(Elements.Geometry.Vector3)">CompareTo(Vector3)</h4>
   <div class="markdown level1 summary"><p>Implement IComparable interface.</p>
@@ -1270,6 +1313,55 @@ The distance will be negative when this vector lies
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.ValueType.ToString()</span></div>
+  <a id="Elements_Geometry_Vector3_TripleProduct_" data-uid="Elements.Geometry.Vector3.TripleProduct*"></a>
+  <h4 id="Elements_Geometry_Vector3_TripleProduct_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.TripleProduct(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">TripleProduct(Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Check if two vectors are coplanar.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double TripleProduct(Vector3 b, Vector3 c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second vector.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The third vector.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>True is the vectors are coplanar, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="operators">Operators
   </h3>
   <a id="Elements_Geometry_Vector3_op_Addition_" data-uid="Elements.Geometry.Vector3.op_Addition*"></a>

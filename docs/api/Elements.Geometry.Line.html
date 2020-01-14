@@ -338,7 +338,7 @@
   </table>
   <a id="Elements_Geometry_Line_DivideByLength_" data-uid="Elements.Geometry.Line.DivideByLength*"></a>
   <h4 id="Elements_Geometry_Line_DivideByLength_System_Double_System_Boolean_" data-uid="Elements.Geometry.Line.DivideByLength(System.Double,System.Boolean)">DivideByLength(Double, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Divide the line into as many segments of length l as possible.</p>
+  <div class="markdown level1 summary"><p>Divide the line into as many segments of the provided length as possible.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -365,6 +365,49 @@
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">removeShortSegments</span></td>
         <td><p>A flag indicating whether segments shorter than l should be removed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_DivideByLengthFromCenter_" data-uid="Elements.Geometry.Line.DivideByLengthFromCenter*"></a>
+  <h4 id="Elements_Geometry_Line_DivideByLengthFromCenter_System_Double_" data-uid="Elements.Geometry.Line.DivideByLengthFromCenter(System.Double)">DivideByLengthFromCenter(Double)</h4>
+  <div class="markdown level1 summary"><p>Divide the line into as many segments of the provided length as possible.
+Divisions will be centered along the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Line&gt; DivideByLengthFromCenter(double l)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">l</span></td>
+        <td><p>The length.</p>
 </td>
       </tr>
     </tbody>
@@ -423,6 +466,98 @@
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if the start and end points of the lines are equal, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
+  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Line_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Line)">ExtendTo(Line)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to the trimming curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(Line line)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>The curve to which to extend.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><p>A new line, or null if this line does not intersect the trimming line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Fillet_" data-uid="Elements.Geometry.Line.Fillet*"></a>
+  <h4 id="Elements_Geometry_Line_Fillet_Elements_Geometry_Line_System_Double_" data-uid="Elements.Geometry.Line.Fillet(Elements.Geometry.Line,System.Double)">Fillet(Line, Double)</h4>
+  <div class="markdown level1 summary"><p>Create a fillet arc between this line and the target.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Arc Fillet(Line target, double radius)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">target</span></td>
+        <td><p>The line with which to fillet.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td><p>The radius of the fillet.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></td>
+        <td><p>An arc, or null if no fillet can be calculated.</p>
 </td>
       </tr>
     </tbody>
@@ -571,6 +706,55 @@ false if the lines have coincident vertices or do not intersect.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <a id="Elements_Geometry_Line_Offset_" data-uid="Elements.Geometry.Line.Offset*"></a>
+  <h4 id="Elements_Geometry_Line_Offset_System_Double_System_Boolean_" data-uid="Elements.Geometry.Line.Offset(System.Double,System.Boolean)">Offset(Double, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Offset the line. The offset direction will be defined by
+Direction X Vector3.ZAxis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line Offset(double distance, bool flip)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The distance to offset.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">flip</span></td>
+        <td><p>Flip the offset direction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Line_PointAt_" data-uid="Elements.Geometry.Line.PointAt*"></a>
   <h4 id="Elements_Geometry_Line_PointAt_System_Double_" data-uid="Elements.Geometry.Line.PointAt(System.Double)">PointAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get a point along the line at parameter u.</p>
@@ -727,6 +911,55 @@ positive Z axis points along the curve.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
+  <a id="Elements_Geometry_Line_TrimTo_" data-uid="Elements.Geometry.Line.TrimTo*"></a>
+  <h4 id="Elements_Geometry_Line_TrimTo_Elements_Geometry_Line_System_Boolean_" data-uid="Elements.Geometry.Line.TrimTo(Elements.Geometry.Line,System.Boolean)">TrimTo(Line, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Trim this line to the trimming curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line TrimTo(Line line, bool flip = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>The curve to which to trim.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">flip</span></td>
+        <td><p>Should the trim direction be reversed?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><p>A new line, or null if this line does not intersect the trimming line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>

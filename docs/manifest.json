@@ -485,7 +485,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Arc.html",
-          "hash": "0Be0o74b9K9hzFElVJiCJA=="
+          "hash": "VKh2+G0rhEtxutyhnkfvWw=="
         }
       },
       "is_incremental": false,
@@ -521,7 +521,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Circle.html",
-          "hash": "GVUjaDl04+O+J8xB3ZjQOQ=="
+          "hash": "1Pd/CB1o/fltj5s10HqkcA=="
         }
       },
       "is_incremental": false,
@@ -629,7 +629,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Line.html",
-          "hash": "SjSO5mqDo3MhmX961RIjMA=="
+          "hash": "ZXSOzJtEK12wiQlUoUB1Nw=="
         }
       },
       "is_incremental": false,
@@ -677,7 +677,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "UW6HXJjyoFm3tlIZ1sUShA=="
+          "hash": "gHuknk9B+BRwL0UEMhOPig=="
         }
       },
       "is_incremental": false,
@@ -833,7 +833,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Ray.html",
-          "hash": "X9+RhB6fTHnCq6Wfc6nrnA=="
+          "hash": "/kcdJ7UOV+wiqZXtYzj0Vw=="
         }
       },
       "is_incremental": false,
@@ -917,7 +917,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Transform.html",
-          "hash": "VKGfbZ01h40DP9j4VBl+Xw=="
+          "hash": "DTQseNZi4GO+y7SPvxy1ZA=="
         }
       },
       "is_incremental": false,
@@ -953,7 +953,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Vector3.html",
-          "hash": "5qjH84F0EUU5vUgO3Cxp0w=="
+          "hash": "J1eTnQen8qhtbLHecI3LXw=="
         }
       },
       "is_incremental": false,
@@ -1555,10 +1555,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparAreaOutput.PNG",
+      "source_relative_path": "images/HyparAreaOutput.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparAreaOutput.PNG"
+          "relative_path": "images/HyparAreaOutput.png"
         }
       },
       "is_incremental": false,
@@ -1654,10 +1654,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparHeightInput2019.06.16.png",
+      "source_relative_path": "images/HyparHeightInput2020.01.07.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparHeightInput2019.06.16.png"
+          "relative_path": "images/HyparHeightInput2020.01.07.png"
         }
       },
       "is_incremental": false,
@@ -1665,10 +1665,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparHeightInputJSON2019.06.16.png",
+      "source_relative_path": "images/HyparHeightInputJSON2020.01.07.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparHeightInputJSON2019.06.16.png"
+          "relative_path": "images/HyparHeightInputJSON2020.01.07.png"
         }
       },
       "is_incremental": false,
@@ -1698,10 +1698,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparInitChange2019.06.16.png",
+      "source_relative_path": "images/HyparInitChange2020.01.07.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparInitChange2019.06.16.png"
+          "relative_path": "images/HyparInitChange2020.01.07.png"
         }
       },
       "is_incremental": false,
@@ -1720,10 +1720,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparInputs2019.06.16.png",
+      "source_relative_path": "images/HyparInputs2020.01.07.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparInputs2019.06.16.png"
+          "relative_path": "images/HyparInputs2020.01.07.png"
         }
       },
       "is_incremental": false,
@@ -1742,10 +1742,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparInputsClassJSON2019.06.16.png",
+      "source_relative_path": "images/HyparInputsClassJSON2020.01.07.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparInputsClassJSON2019.06.16.png"
+          "relative_path": "images/HyparInputsClassJSON2020.01.07.png"
         }
       },
       "is_incremental": false,
@@ -1786,10 +1786,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparJSONOutputs.PNG",
+      "source_relative_path": "images/HyparJSONOutputs.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparJSONOutputs.PNG"
+          "relative_path": "images/HyparJSONOutputs.png"
         }
       },
       "is_incremental": false,
@@ -1863,6 +1863,17 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "images/HyparOpenVSCode.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparOpenVSCode.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "images/HyparOptions2019.11.29.png",
       "output": {
         "resource": {
@@ -1885,10 +1896,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparOutputs2019.06.16.png",
+      "source_relative_path": "images/HyparOutputs2020.01.07.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparOutputs2019.06.16.png"
+          "relative_path": "images/HyparOutputs2020.01.07.png"
         }
       },
       "is_incremental": false,
@@ -1896,10 +1907,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparOutputsChanged.PNG",
+      "source_relative_path": "images/HyparOutputsChanged.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparOutputsChanged.PNG"
+          "relative_path": "images/HyparOutputsChanged.png"
         }
       },
       "is_incremental": false,
@@ -1911,17 +1922,6 @@
       "output": {
         "resource": {
           "relative_path": "images/HyparPublish2019.06.16.png"
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
-      "source_relative_path": "images/HyparSLN2019.06.16.png",
-      "output": {
-        "resource": {
-          "relative_path": "images/HyparSLN2019.06.16.png"
         }
       },
       "is_incremental": false,
@@ -2039,10 +2039,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparStarter20Height2019.06.16.png",
+      "source_relative_path": "images/HyparStarter20Height2020.01.07.png",
       "output": {
         "resource": {
-          "relative_path": "images/HyparStarter20Height2019.06.16.png"
+          "relative_path": "images/HyparStarter20Height2020.01.07.png"
         }
       },
       "is_incremental": false,
@@ -2072,17 +2072,6 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/HyparStarterFunctionError.png",
-      "output": {
-        "resource": {
-          "relative_path": "images/HyparStarterFunctionError.png"
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
       "source_relative_path": "images/HyparStarterFunctionFirstRun2019.11.29.png",
       "output": {
         "resource": {
@@ -2098,6 +2087,17 @@
       "output": {
         "resource": {
           "relative_path": "images/HyparStarterHeight2019.11.29.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/HyparVSCodeHome.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/HyparVSCodeHome.png"
         }
       },
       "is_incremental": false,
@@ -2142,7 +2142,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "VXj0qsRNrvTSgqIWlCAIVA=="
+          "hash": "n9C1NErDrGam5i+qfSFgTg=="
         }
       },
       "is_incremental": false,
@@ -2212,13 +2212,6 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
-          "skipped_file_count": 0
-        },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
@@ -2229,6 +2222,13 @@
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 3,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }

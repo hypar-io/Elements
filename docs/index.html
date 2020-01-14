@@ -88,7 +88,7 @@
 </li>
 <li><strong>VSCode</strong> (Windows, Mac OS, Linux) or any other C#-compatible code editor.
 <ul>
-<li>We strongly suggest using <strong>VSCode</strong>, because we make a very helpful Hypar Plugin for VSCode (see the next bullet). These instructions currently assume you're using Visual Studio Community 2019+, but the steps should be similar and we'll update this guide soon.
+<li>We strongly suggest using <strong>VSCode</strong>, because we make a very helpful Hypar Plugin for VSCode (see the next bullet).
 <ul>
 <li><a href="https://code.visualstudio.com/">Download VSCode</a></li>
 </ul>
@@ -150,8 +150,9 @@ Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.i
 <pre><code class="lang-bash">dotnet tool install -g hypar.cli
 </code></pre>
 <p><img src="images/HyparCLIinstall2019.06.16.PNG" alt=""></p>
+<p>Close and reopen the Command Prompt to finish the installation.</p>
 <p>Now you're ready to send your first function to Hypar. First use the command prompt cd (for &quot;<u>c</u>hange <u>d</u>irectory&quot;) command to navigate to the folder where you'd like to place your function project.</p>
-<p>Now try this in the same Windows Command Prompt:</p>
+<p>Try this in the Windows Command Prompt:</p>
 <pre><code class="lang-bash">hypar new
 </code></pre>
 <p><img src="images/HyparFunctionName2019.06.16.png" alt=""></p>
@@ -203,33 +204,31 @@ In the alternatives list, you can see that your function has actually run many t
 <p>The three files with names containing <strong>.g.cs</strong> are generated code files. You never need to edit these directly but it's important to know that the <strong>hypar init</strong> command generates them from the <strong>hypar.json</strong> file that we'll look at in a moment, because when you make changes to the <strong>hypar.json</strong> file you'll have to run <strong>hypar init</strong> again to update these files.</p>
 <p>These three files are what make your C# code compatible with Hypar services. They're kept separate so that your code won't become directly dependent on the Hypar platform but can easily take advantage of its services.</p>
 <p>After <strong>hypar init</strong> executes, there's some housekeeping that completes the local changes, then after you sign in the <strong>hypar new</strong> command uploads your new function.</p>
-<p>In the <strong>StarterFunction</strong> folder you'll see a matching <strong>StarterFunction.sln</strong> file.</p>
-<p><img src="images/HyparStarterFolder2019.06.16.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>Double click on <strong>StarterFunction.sln</strong> to open it in Visual Studio Community (VSC).</p>
-<p><img src="images/HyparSLN2019.06.16.png" alt=""></p>
-<p>Now use VSC to open the <strong>hypar.json</strong> file, and we'll look at how this configuration influences what you see when you work with a function on Hypar.</p>
-<p><strong>IMPORTANT:</strong>
-<strong>Do <u>not</u> use &quot;Add Existing Item&quot; to add the hypar.json to the project. VSC will silently make a copy and place it in the ./src folder, while the Hypar CLI will still read the original file. Just open the file to edit it when you need to.</strong></p>
+<p>Go back and open the StarterFunction directory in VSCode:</p>
+<p><img src="images/HyparOpenVSCode.png" alt=""></p>
+<p>VSCode will look like this, with all of the files in the left column:</p>
+<p><img src="images/HyparVSCodeHome.png" alt=""></p>
+<p>Now use Code to open the <strong>hypar.json</strong> file, and we'll look at how this configuration influences what you see when you work with a function on Hypar.</p>
 <p>The <strong>&quot;inputs&quot;</strong> section of the <strong>hypar.json</strong> determines what inputs you see for the uploaded function:</p>
-<p><img src="images/HyparInputs2019.06.16.png" alt=""></p>
+<p><img src="images/HyparInputs2020.01.07.png" alt=""></p>
 <p>The <strong>&quot;outputs&quot;</strong> section determines the values you see associated with each option:</p>
-<p><img src="images/HyparOutputs2019.06.16.png" alt=""></p>
+<p><img src="images/HyparOutputs2020.01.07.png" alt=""></p>
 <p>In the next exercise, we're going add a new <strong>Height</strong> input to this function.</p>
 <div style="page-break-after: always;"></div>
 <h3 id="adding-a-new-function-input">Adding a new function input</h3>
-<p>First, let's open the <strong>StarterFunctionInputs.g.cs</strong> file in VSC and look at the <strong>StarterFunctionInputs</strong> class to see how the <strong>hypar.json</strong> turns into code. Note how the corresponding entries become public class properties:</p>
-<p><img src="images/HyparInputsClassJSON2019.06.16.png" alt=""></p>
+<p>First, let's open the <strong>src/StarterFunctionInputs.g.cs</strong> file in Code and look at the <strong>StarterFunctionInputs</strong> class to see how the <strong>hypar.json</strong> turns into code. Note how the corresponding entries become public class properties:</p>
+<p><img src="images/HyparInputsClassJSON2020.01.07.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>Edit your <strong>hypar.json</strong> file to look like the one illustrated below. Copy the <strong>&quot;Width&quot;</strong> output and change the copy's <strong>name</strong> and <strong>description</strong> values to refer to <strong>&quot;Height&quot;</strong> and <strong>&quot;The height&quot;</strong> instead of <strong>&quot;Width&quot;</strong> and <strong>&quot;The width&quot;</strong>. VSC politely inserts a comma after the <strong>&quot;Width&quot;</strong> section's closing brace now that it's no longer the last input field:</p>
-<p><img src="images/HyparHeightInputJSON2019.06.16.png" alt=""></p>
+<p>Edit your <strong>hypar.json</strong> file to look like the one illustrated below. Copy the <strong>&quot;Width&quot;</strong> output and change the copy's <strong>name</strong> and <strong>description</strong> values to refer to <strong>&quot;Height&quot;</strong> and <strong>&quot;The height&quot;</strong> instead of <strong>&quot;Width&quot;</strong> and <strong>&quot;The width&quot;</strong>. Insert a comma after the <strong>&quot;Width&quot;</strong> section's closing brace now that it's no longer the last input field:</p>
+<p><img src="images/HyparHeightInputJSON2020.01.07.png" alt=""></p>
 <p>Save this file and open the command prompt again, using the cd command to change the current directory to your project folder. Then run <strong>hypar init</strong>:</p>
 <p><img src="images/HyparInitCommand2019.06.16.png" alt=""></p>
-<p><strong>hypar init</strong> reads the json file to understand how to regenerate the input and output class files as well as the function file. When you return to VSC, if the <strong>StarterFunctionInputs.g.cs</strong> file is still open, you'll see a warning that the file has been changed externally, which is what <strong>hypar init</strong> did when it rewrote the three <strong>.g.cs</strong> files. Select &quot;Yes to All&quot; if you get this warning, and open <strong>StarterFunctionInputs.g.cs</strong> to see what changed.</p>
+<p><strong>hypar init</strong> reads the json file to understand how to regenerate the input and output class files as well as the function file. Open <strong>StarterFunctionInputs.g.cs</strong> to see what changed.</p>
 <div style="page-break-after: always;"></div>
-<p><img src="images/HyparInitChange2019.06.16.png" alt=""></p>
+<p><img src="images/HyparInitChange2020.01.07.png" alt=""></p>
 <p>Now that we have this new entry for <strong>Height</strong>, we have to tell our function to use it. Open <strong>StarterFunction.cs</strong> and change the <strong>var height = 1.0;</strong> line to use the height input value instead:</p>
-<p><img src="images/HyparHeightInput2019.06.16.png" alt=""></p>
+<p><img src="images/HyparHeightInput2020.01.07.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>Now we have our new <strong>Height</strong> input. Let's send this up to Hypar using <strong>hypar publish</strong> and see how our function works now:</p>
 <p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
@@ -237,7 +236,7 @@ In the alternatives list, you can see that your function has actually run many t
 <p><img src="images/HyparStarterHeight2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>What if we wanted a maximum height of 20m? Let's go back to the <strong>hypar.json</strong> file and change the maximum for the input range:</p>
-<p><img src="images/HyparStarter20Height2019.06.16.png" alt=""></p>
+<p><img src="images/HyparStarter20Height2020.01.07.png" alt=""></p>
 <p>Save the file and run <strong>hypar publish</strong> again at the command prompt:</p>
 <p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
 <div style="page-break-after: always;"></div>
@@ -249,18 +248,14 @@ In the alternatives list, you can see that your function has actually run many t
 <p><img src="images/HyparOutput2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>What if we also wanted to display the area of our cube? For this exercise we'll add a new output to the <strong>hypar.json</strong> and calculate the result we need. Add these new lines to the <strong>hypar.json</strong>:</p>
-<p><img src="images/HyparJSONOutputs.PNG" alt=""></p>
+<p><img src="images/HyparJSONOutputs.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>Copy the <strong>&quot;Volume&quot;</strong> section down and change its <strong>&quot;name&quot;</strong> field to <strong>&quot;Area&quot;</strong> and its <strong>&quot;description&quot;</strong> to <strong>&quot;The area&quot;</strong>. After those changes, on the command line in the project folder run <strong>hypar init</strong>:</p>
 <p><img src="images/HyparInitCommand2019.06.16.png" alt=""></p>
-<p>Now in VSC let's see what changed. Open <strong>StarterFunctionOutputs.g.cs</strong> and you should see your new <strong>Area</strong> output under the <strong>Volume</strong> output:</p>
-<p><img src="images/HyparOutputsChanged.PNG" alt=""></p>
-<p>Also note that the <strong>StarterFunctionOutputs</strong> constructor at the bottom of the illustration has a new <strong>double area</strong> argument.</p>
-<div style="page-break-after: always;"></div>
-<p>That new argument is important when we open <strong>StarterFunction.cs</strong> in VSC and see that we now have an error condition:</p>
-<p><img src="images/HyparStarterFunctionError.png" alt=""></p>
-<p>That's because we're still calling <strong>StarterFunctionOutputs</strong> with just the <strong>volume</strong> output. We have to calculate and add the <strong>area</strong> output like this:</p>
-<p><img src="images/HyparAreaOutput.PNG" alt=""></p>
+<p>Now in Code let's see what changed. Open <strong>src/StarterFunctionOutputs.g.cs</strong> and you should see your new <strong>Area</strong> output under the <strong>Volume</strong> output:</p>
+<p><img src="images/HyparOutputsChanged.png" alt=""></p>
+<p>Also note that the <strong>StarterFunctionOutputs</strong> constructor at the bottom of the illustration has a new <strong>double area</strong> argument. Calculate and add the <strong>area</strong> output like this:</p>
+<p><img src="images/HyparAreaOutput.png" alt=""></p>
 <div style="page-break-after: always;"></div>
 <p>Once you've made that change and saved the file, publish the function to Hypar again:</p>
 <p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
