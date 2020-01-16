@@ -646,14 +646,16 @@ namespace Elements.Serialization.glTF
 
             var root = new Node();
 
-            root.Translation = new[] { 0.0f, 0.0f, 0.0f };
-            root.Scale = new[] { 1.0f, 1.0f, 1.0f };
+            var rootTransform = new Transform(model.Transform);
 
-            // Set Z up by rotating -90d around the X Axis
-            var q = new Quaternion(new Vector3(1, 0, 0), -Math.PI / 2);
-            root.Rotation = new[]{
-                (float)q.X, (float)q.Y, (float)q.Z, (float)q.W
-            };
+            // Rotate the transform for +Z up.
+            rootTransform.Rotate(new Vector3(1,0,0), -90.0);
+            var m = rootTransform.Matrix;
+            root.Matrix = new float[]{
+                (float)m.m11, (float)m.m21, (float)m.m31, 0f, 
+                (float)m.m12, (float)m.m22, (float)m.m32, 0f, 
+                (float)m.m31, (float)m.m32, (float)m.m33, 0f,
+                (float)m.tx, (float)m.ty, (float)m.tz, 1f};
 
             var nodes = new List<glTFLoader.Schema.Node> { root };
             var meshes = new List<glTFLoader.Schema.Mesh>();

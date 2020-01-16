@@ -1,6 +1,5 @@
 #pragma warning disable CS1591
 
-using Elements.GeoJSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Collections;
 using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
+using Elements.Geometry;
 
 namespace Elements
 {
@@ -22,7 +22,7 @@ namespace Elements
         /// </summary>
         public Model()
         {
-            this.Origin = new Position(0, 0);
+            this.Transform = new Transform();
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Elements
                 }
                 exportModel.AddElement(kvp.Value);
             }
-            exportModel.Origin = this.Origin;
+            exportModel.Transform = this.Transform;
             return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel);
         }
 
