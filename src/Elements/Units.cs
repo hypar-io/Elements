@@ -1,6 +1,6 @@
 using System;
 
-namespace Hypar.Elements
+namespace Elements
 {
     /// <summary>
     /// Unit conversions and utilities.
