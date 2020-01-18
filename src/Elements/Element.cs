@@ -1,6 +1,5 @@
 #pragma warning disable CS1591
 
-using System;
 using Elements.Serialization.JSON;
 
 namespace Elements
@@ -14,5 +13,6 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.Opening", typeof(Elements.Opening))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.WideFlangeProfile", typeof(Elements.Geometry.Profiles.WideFlangeProfile))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.HSSPipeProfile", typeof(Elements.Geometry.Profiles.HSSPipeProfile))]
+    [JsonInheritanceAttribute("Elements.ElementInstance", typeof(Elements.ElementInstance))]
     public abstract partial class Element{}
 }

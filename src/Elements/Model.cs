@@ -16,7 +16,7 @@ namespace Elements
     /// A container for elements, element types, materials, and profiles.
     /// </summary>
     public partial class Model
-    {
+    { 
         /// <summary>
         /// Construct an empty model.
         /// </summary>
@@ -36,12 +36,12 @@ namespace Elements
         /// added to the model's elements collection?</param>
         public void AddElement(Element element, bool gatherSubElements = true)
         {
-            if(element == null || this.Elements.ContainsKey(element.Id))
+            if (element == null || this.Elements.ContainsKey(element.Id))
             {
                 return;
             }
 
-            if(gatherSubElements)
+            if (gatherSubElements)
             {
                 // Look at all public properties of the element. 
                 // For all properties which inherit from element, add those
@@ -49,9 +49,9 @@ namespace Elements
                 // those elements will be read out and be available before 
                 // an attempt is made to deserialize the element itself.
                 var subElements = RecursiveGatherSubElements(element);
-                foreach(var e in subElements)
+                foreach (var e in subElements)
                 {
-                    if(!this.Elements.ContainsKey(e.Id))
+                    if (!this.Elements.ContainsKey(e.Id))
                     {
                         this.Elements.Add(e.Id, e);
                     }
@@ -59,7 +59,7 @@ namespace Elements
             }
             else
             {
-                if(!this.Elements.ContainsKey(element.Id))
+                if (!this.Elements.ContainsKey(element.Id))
                 {
                     this.Elements.Add(element.Id, element);
                 }
@@ -86,7 +86,7 @@ namespace Elements
         /// <param name="id">The identifier of the element.</param>
         /// <returns>An entity or null if no entity can be found 
         /// with the provided id.</returns>
-        public T GetElementOfType<T>(Guid id) where T: Element
+        public T GetElementOfType<T>(Guid id) where T : Element
         {
             if (this.Elements.ContainsKey(id))
             {
@@ -101,7 +101,7 @@ namespace Elements
         /// <param name="name"></param>
         /// <returns>An entity or null if no entity can be found 
         /// with the provided name.</returns>
-        public T GetElementByName<T>(string name) where T: Element
+        public T GetElementByName<T>(string name) where T : Element
         {
             var found = this.Elements.FirstOrDefault(e => e.Value.Name == name);
             if (found.Equals(new KeyValuePair<long, Element>()))
@@ -124,19 +124,19 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        public string ToJson() 
+        public string ToJson()
         {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
             // may have been null when originally added, and we need to ensure
             // that they have a value if they've been set since.
             var exportModel = new Model();
-            foreach(var kvp in this.Elements)
+            foreach (var kvp in this.Elements)
             {
                 // Some elements compute profiles and transforms
                 // during UpdateRepresentation. Call UpdateRepresentation
                 // here to ensure these values are correct in the JSON.
-                if(kvp.Value is GeometricElement)
+                if (kvp.Value is GeometricElement)
                 {
                     ((GeometricElement)kvp.Value).UpdateRepresentations();
                 }
@@ -154,8 +154,10 @@ namespace Elements
         public static Model FromJson(string json, List<string> errors = null)
         {
             errors = errors ?? new List<string>();
-            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings(){
-                Error = (sender, args)=>{
+            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
+            {
+                Error = (sender, args) =>
+                {
                     errors.Add(args.ErrorContext.Error.Message);
                     args.ErrorContext.Handled = true;
                 }
@@ -187,13 +189,13 @@ namespace Elements
         {
             var elements = new List<Element>();
 
-            if(obj == null)
+            if (obj == null)
             {
                 return elements;
             }
 
             var e = obj as Element;
-            if(e != null && Elements.ContainsKey(e.Id))
+            if (e != null && Elements.ContainsKey(e.Id))
             {
                 // Do nothing. The Element has already 
                 // been added. This assumes that that the sub-elements
@@ -206,17 +208,18 @@ namespace Elements
             // Ignore value types and strings
             // as they won't have properties that
             // could be elements.
-            if(!t.IsClass || t == typeof(string))
+            if (!t.IsClass || t == typeof(string))
             {
                 return elements;
             }
+
             t.GetCustomAttribute(typeof(JsonIgnoreAttribute));
             var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                         .Where(p=>p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null);
-            foreach(var p in props)
+                         .Where(p => p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null);
+            foreach (var p in props)
             {
-                var pValue = p.GetValue(obj,null);
-                if(pValue == null)
+                var pValue = p.GetValue(obj, null);
+                if (pValue == null)
                 {
                     continue;
                 }
@@ -228,13 +231,24 @@ namespace Elements
                     {
                         elements.AddRange(RecursiveGatherSubElements(item));
                     }
+                    continue;
                 }
-                else {
-                    elements.AddRange(RecursiveGatherSubElements(pValue));
+
+                // Get the properties dictionaries.
+                var dict = pValue as IDictionary<string,object>;
+                if(dict != null)
+                {
+                    foreach(var kvp in dict)
+                    {
+                        elements.AddRange(RecursiveGatherSubElements(kvp.Value));
+                    }
+                    continue;
                 }
+
+                elements.AddRange(RecursiveGatherSubElements(pValue));
             }
 
-            if(e != null)
+            if (e != null)
             {
                 elements.Add(e);
             }

@@ -14,18 +14,41 @@ namespace Elements.Serialization.IFC
     /// </summary>
     internal static class ElementsExtensions
     {
-        internal static List<IfcProduct> ToIfcProducts(this GeometricElement e, IfcRepresentationContext context, Document doc, Dictionary<string, IfcSurfaceStyle> styles)
+        internal static List<IfcProduct> ToIfcProducts(this Element e, IfcRepresentationContext context, Document doc, Dictionary<string, IfcSurfaceStyle> styles)
         {
             var products = new List<IfcProduct>();
 
-            e.UpdateRepresentations();
-
             IfcProductDefinitionShape shape = null;
-            var localPlacement = e.Transform.ToIfcLocalPlacement(doc);
+            GeometricElement geoElement = null;
+            Transform trans = null;
+            Guid id;
+             
+            if(e is ElementInstance)
+            {
+                // If we're using an element instance, get the transform
+                // and the id and use those to uniquely position and 
+                // identify the element.
+                var instance = (ElementInstance)e;
+                geoElement = instance.Parent;
+                id = instance.Id;
+                trans = instance.Transform;
+            }
+            else if(e is GeometricElement)
+            {
+                // If we've go a geometric element, use its properties as-is.
+                geoElement = (GeometricElement)e;
+                id = geoElement.Id;
+                trans = geoElement.Transform;
+            }
+
+            geoElement.UpdateRepresentations();
             
+            var localPlacement = trans.ToIfcLocalPlacement(doc);
+            doc.AddEntity(localPlacement);
+
             var geoms = new List<IfcRepresentationItem>();
 
-            foreach(var op in e.Representation.SolidOperations)
+            foreach(var op in geoElement.Representation.SolidOperations)
             {
                 IfcGeometricRepresentationItem geom = null;
                 if(op is Sweep)
@@ -51,13 +74,38 @@ namespace Elements.Serialization.IFC
                 doc.AddEntity(geom);
                 geoms.Add(geom);
             }
-            
+
             shape = ToIfcProductDefinitionShape(geoms, context, doc);
-
             doc.AddEntity(shape);
-            doc.AddEntity(localPlacement);
 
-            var product = ConvertElementToIfcProduct(e, localPlacement, shape);
+            // Can we use IfcMappedItem?
+            // https://forums.buildingsmart.org/t/can-tessellation-typed-representation-hold-items-from-another-group/1621
+            // var rep = new IfcShapeRepresentation(context, "Body", "Solids", geoms);
+            // doc.AddEntity(rep);
+            // var axisPt = Vector3.Origin.ToIfcCartesianPoint();
+            // doc.AddEntity(axisPt);
+            // var axis = new IfcAxis2Placement2D(axisPt);
+            // doc.AddEntity(axis);
+            // var repMap = new IfcRepresentationMap(new IfcAxis2Placement(axis), rep);
+            // doc.AddEntity(repMap);
+            // var x = trans.XAxis.ToIfcDirection();
+            // var y = trans.YAxis.ToIfcDirection();
+            // var z = trans.ZAxis.ToIfcDirection();
+            // var origin = trans.Origin.ToIfcCartesianPoint();
+            // var cart = new IfcCartesianTransformationOperator3D(x, y, origin, trans.XAxis.Length(), z);
+            // doc.AddEntity(x);
+            // doc.AddEntity(y);
+            // doc.AddEntity(z);
+            // doc.AddEntity(origin);
+            // doc.AddEntity(cart);
+            // var mappedItem = new IfcMappedItem(repMap, cart);
+            // doc.AddEntity(mappedItem);
+            // var shapeRep= new IfcShapeRepresentation(context, new List<IfcRepresentationItem>(){mappedItem});
+            // doc.AddEntity(shapeRep);
+            // shape = new IfcProductDefinitionShape(new List<IfcRepresentation>(){shapeRep});
+            // doc.AddEntity(shape);
+
+            var product = ConvertElementToIfcProduct(id, geoElement, localPlacement, shape);
             products.Add(product);
             doc.AddEntity(product);
 
@@ -83,14 +131,14 @@ namespace Elements.Serialization.IFC
             }
 
             IfcSurfaceStyle style = null;
-            if(styles.ContainsKey(e.Material.Name))
+            if(styles.ContainsKey(geoElement.Material.Name))
             {
-                style = styles[e.Material.Name];
+                style = styles[geoElement.Material.Name];
             }
             else
             {
-                style = e.Material.ToIfcSurfaceStyle(doc);
-                styles.Add(e.Material.Name, style);
+                style = geoElement.Material.ToIfcSurfaceStyle(doc);
+                styles.Add(geoElement.Material.Name, style);
             }
             foreach(var geom in geoms)
             {
@@ -102,9 +150,9 @@ namespace Elements.Serialization.IFC
             return products;
         }
 
-        private static IfcOpeningElement ToIfc(this Opening opening, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        private static IfcOpeningElement ToIfc(this Opening opening, Guid id, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(opening.Id),
+            var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(id),
                                                    null,
                                                    null,
                                                    null,
@@ -174,54 +222,54 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static IfcProduct ConvertElementToIfcProduct(GeometricElement element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        private static IfcProduct ConvertElementToIfcProduct(Guid id, GeometricElement element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             try
             {
                 IfcProduct e = null;
                 if(element is Beam)
                 {
-                    e = ((Beam)element).ToIfc(localPlacement, shape);
+                    e = ((Beam)element).ToIfc(id, localPlacement, shape);
                 }
                 if(element is Brace)
                 {
-                    e = ((Brace)element).ToIfc(localPlacement, shape);
+                    e = ((Brace)element).ToIfc(id, localPlacement, shape);
                 }
                 else if(element is Column)
                 {
-                    e = ((Column)element).ToIfc(localPlacement, shape);
+                    e = ((Column)element).ToIfc(id, localPlacement, shape);
                 }
                 else if (element is StandardWall)
                 {
-                    e = ((StandardWall)element).ToIfc(localPlacement, shape);
+                    e = ((StandardWall)element).ToIfc(id, localPlacement, shape);
                 }
                 else if (element is Wall)
                 {
-                    e = ((Wall)element).ToIfc(localPlacement, shape);
+                    e = ((Wall)element).ToIfc(id, localPlacement, shape);
                 }
                 else if (element is Floor)
                 {
-                    e = ((Floor)element).ToIfc(localPlacement, shape);
+                    e = ((Floor)element).ToIfc(id, localPlacement, shape);
                 }
                 else if (element is Space)
                 {
-                    e = ((Space)element).ToIfc(localPlacement, shape);
+                    e = ((Space)element).ToIfc(id, localPlacement, shape);
                 }
                 else if (element is Panel)
                 {
-                    e = ((Panel)element).ToIfc(localPlacement, shape);
+                    e = ((Panel)element).ToIfc(id, localPlacement, shape);
                 }
                 else if (element is Mass)
                 {
-                    e = ((Mass)element).ToIfc(localPlacement, shape);
+                    e = ((Mass)element).ToIfc(id, localPlacement, shape);
                 }
                 else if (element is Opening)
                 {
-                    e = ((Opening)element).ToIfc(localPlacement, shape);
+                    e = ((Opening)element).ToIfc(id, localPlacement, shape);
                 }
                 else
                 {
-                    e = element.ToIfc(localPlacement, shape);
+                    e = element.ToIfc(id, localPlacement, shape);
                 }
                 return e;
             }
@@ -351,9 +399,9 @@ namespace Elements.Serialization.IFC
             return shape;
         }
 
-        private static IfcBuildingElementProxy ToIfc(this GeometricElement element, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
+        private static IfcBuildingElementProxy ToIfc(this GeometricElement element, Guid id, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(element.Id),
+            var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(id),
                                                     null,
                                                     null,
                                                     null,
@@ -365,10 +413,10 @@ namespace Elements.Serialization.IFC
             return proxy;
         }
         
-        private static IfcSlab ToIfc(this Floor floor, 
+        private static IfcSlab ToIfc(this Floor floor, Guid id, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var slab = new IfcSlab(IfcGuid.ToIfcGuid(floor.Id), null, null, null, 
+            var slab = new IfcSlab(IfcGuid.ToIfcGuid(id), null, null, null, 
                 null, localPlacement, shape, null, IfcSlabTypeEnum.FLOOR);
             return slab;
         }
@@ -377,10 +425,10 @@ namespace Elements.Serialization.IFC
         // Can we make a generic method like ToIfc<TProduct>()? There are 
         // exceptions for which this won't work like IfcSpace.
 
-        private static IfcSpace ToIfc(this Space space, 
+        private static IfcSpace ToIfc(this Space space, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcSpace = new IfcSpace(IfcGuid.ToIfcGuid(space.Id),
+            var ifcSpace = new IfcSpace(IfcGuid.ToIfcGuid(id),
                                         null,
                                         null,
                                         null,
@@ -394,10 +442,10 @@ namespace Elements.Serialization.IFC
             return ifcSpace;
         }
 
-        private static IfcProduct ToIfc(this StandardWall wall, 
+        private static IfcProduct ToIfc(this StandardWall wall, Guid id, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcWall = new IfcWallStandardCase(IfcGuid.ToIfcGuid(wall.Id),
+            var ifcWall = new IfcWallStandardCase(IfcGuid.ToIfcGuid(id),
                                                   null,
                                                   wall.Name,
                                                   null,
@@ -409,10 +457,10 @@ namespace Elements.Serialization.IFC
             return ifcWall;
         }
 
-        private static IfcWall ToIfc(this Wall wall, 
+        private static IfcWall ToIfc(this Wall wall, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcWall = new IfcWall(IfcGuid.ToIfcGuid(wall.Id),
+            var ifcWall = new IfcWall(IfcGuid.ToIfcGuid(id),
                                       null,
                                       wall.Name,
                                       null,
@@ -432,34 +480,34 @@ namespace Elements.Serialization.IFC
             return ifcBeam;
         }
 
-        private static IfcColumn ToIfc(this Column column,
+        private static IfcColumn ToIfc(this Column column, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcColumn = new IfcColumn(IfcGuid.ToIfcGuid(column.Id), null,
+            var ifcColumn = new IfcColumn(IfcGuid.ToIfcGuid(id), null,
                 null, null, null, localPlacement, shape, null, IfcColumnTypeEnum.COLUMN);
             return ifcColumn;
         }
 
-        private static IfcMember ToIfc(this Brace column,
+        private static IfcMember ToIfc(this Brace column, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var member = new IfcMember(IfcGuid.ToIfcGuid(column.Id), null,
+            var member = new IfcMember(IfcGuid.ToIfcGuid(id), null,
                 null, null, null, localPlacement, shape, null, IfcMemberTypeEnum.NOTDEFINED);
             return member;
         }
 
-        private static IfcPlate ToIfc(this Panel panel,
+        private static IfcPlate ToIfc(this Panel panel, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var plate = new IfcPlate(IfcGuid.ToIfcGuid(panel.Id), null,
+            var plate = new IfcPlate(IfcGuid.ToIfcGuid(id), null,
                 null, null, null, localPlacement, shape, null, IfcPlateTypeEnum.NOTDEFINED);
             return plate;
         }
 
-        private static IfcBuildingElementProxy ToIfc(this Mass mass, 
+        private static IfcBuildingElementProxy ToIfc(this Mass mass, Guid id, 
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(mass.Id), null,
+            var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(id), null,
                 null, null, null, localPlacement, shape, null,IfcBuildingElementProxyTypeEnum.ELEMENT);
             return proxy;
         }

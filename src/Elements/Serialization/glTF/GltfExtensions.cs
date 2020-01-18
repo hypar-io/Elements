@@ -675,7 +675,7 @@ namespace Elements.Serialization.glTF
 
             var elements = model.Elements.Where(e =>
             {
-                return e.Value is GeometricElement || e.Value is Instance;
+                return e.Value is GeometricElement || e.Value is ElementInstance;
             }).Select(e => e.Value);
 
             var meshElementMap = new Dictionary<Guid, List<int>>();
@@ -739,9 +739,9 @@ namespace Elements.Serialization.glTF
                 }
             }
 
-            if (e is Instance)
+            if (e is ElementInstance)
             {
-                var i = (Instance)e;
+                var i = (ElementInstance)e;
 
                 // Lookup the corresponding mesh in the map.
                 AddInstanceMesh(gltf, nodes, meshElementMap[i.Parent.Id], i.Transform);

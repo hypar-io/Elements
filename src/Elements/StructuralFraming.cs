@@ -114,10 +114,10 @@ namespace Elements
             var profileTrans = new Transform();
             profileTrans.Rotate(profileTrans.ZAxis, this.Rotation);
             this.Representation.SolidOperations.Add(new Sweep(profileTrans.OfProfile(this.Profile),
-                                                              this.Curve,
-                                                              this.StartSetback,
-                                                              this.EndSetback,
-                                                              false));
+                                                            this.Curve,
+                                                            this.StartSetback,
+                                                            this.EndSetback,
+                                                            false));
         }
     }
 }

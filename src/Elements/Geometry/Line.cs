@@ -17,6 +17,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create a line of one unit length along the X axis.
+        /// </summary>
+        public Line()
+        {
+            this.Start = Vector3.Origin;
+            this.End = new Vector3(1,0,0);
+        }
+
+        /// <summary>
         /// Construct a line of length from a start along direction.
         /// </summary>
         /// <param name="start"></param>

@@ -4,7 +4,7 @@
 ### Added
 - `Contour`
 - `Transform.Reflect(Vector3 n)`
-- `Instance`
+- `ElementInstance`
 - `Vector3.ClosestPointOn(Line line)`
 - `Line.TrimTo(Line line)`
 - `Line.ExtendTo(Line line)`
