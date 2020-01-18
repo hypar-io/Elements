@@ -342,6 +342,51 @@ references:
   isSpec: "True"
   fullName: Elements.Element.Name
   nameWithType: Element.Name
+- uid: Elements.ElementInstance
+  name: ElementInstance
+  href: api/Elements.ElementInstance.html
+  commentId: T:Elements.ElementInstance
+  fullName: Elements.ElementInstance
+  nameWithType: ElementInstance
+- uid: Elements.ElementInstance.#ctor(Elements.GeometricElement,Elements.Geometry.Transform,System.String,System.Guid)
+  name: ElementInstance(GeometricElement, Transform, String, Guid)
+  href: api/Elements.ElementInstance.html#Elements_ElementInstance__ctor_Elements_GeometricElement_Elements_Geometry_Transform_System_String_System_Guid_
+  commentId: M:Elements.ElementInstance.#ctor(Elements.GeometricElement,Elements.Geometry.Transform,System.String,System.Guid)
+  fullName: Elements.ElementInstance.ElementInstance(Elements.GeometricElement, Elements.Geometry.Transform, System.String, System.Guid)
+  nameWithType: ElementInstance.ElementInstance(GeometricElement, Transform, String, Guid)
+- uid: Elements.ElementInstance.#ctor*
+  name: ElementInstance
+  href: api/Elements.ElementInstance.html#Elements_ElementInstance__ctor_
+  commentId: Overload:Elements.ElementInstance.#ctor
+  isSpec: "True"
+  fullName: Elements.ElementInstance.ElementInstance
+  nameWithType: ElementInstance.ElementInstance
+- uid: Elements.ElementInstance.Parent
+  name: Parent
+  href: api/Elements.ElementInstance.html#Elements_ElementInstance_Parent
+  commentId: P:Elements.ElementInstance.Parent
+  fullName: Elements.ElementInstance.Parent
+  nameWithType: ElementInstance.Parent
+- uid: Elements.ElementInstance.Parent*
+  name: Parent
+  href: api/Elements.ElementInstance.html#Elements_ElementInstance_Parent_
+  commentId: Overload:Elements.ElementInstance.Parent
+  isSpec: "True"
+  fullName: Elements.ElementInstance.Parent
+  nameWithType: ElementInstance.Parent
+- uid: Elements.ElementInstance.Transform
+  name: Transform
+  href: api/Elements.ElementInstance.html#Elements_ElementInstance_Transform
+  commentId: P:Elements.ElementInstance.Transform
+  fullName: Elements.ElementInstance.Transform
+  nameWithType: ElementInstance.Transform
+- uid: Elements.ElementInstance.Transform*
+  name: Transform
+  href: api/Elements.ElementInstance.html#Elements_ElementInstance_Transform_
+  commentId: Overload:Elements.ElementInstance.Transform
+  isSpec: "True"
+  fullName: Elements.ElementInstance.Transform
+  nameWithType: ElementInstance.Transform
 - uid: Elements.Floor
   name: Floor
   href: api/Elements.Floor.html
@@ -1188,6 +1233,19 @@ references:
   isSpec: "True"
   fullName: Elements.GeometricElement.GeometricElement
   nameWithType: GeometricElement.GeometricElement
+- uid: Elements.GeometricElement.CreateInstance(Elements.Geometry.Transform,System.String)
+  name: CreateInstance(Transform, String)
+  href: api/Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_
+  commentId: M:Elements.GeometricElement.CreateInstance(Elements.Geometry.Transform,System.String)
+  fullName: Elements.GeometricElement.CreateInstance(Elements.Geometry.Transform, System.String)
+  nameWithType: GeometricElement.CreateInstance(Transform, String)
+- uid: Elements.GeometricElement.CreateInstance*
+  name: CreateInstance
+  href: api/Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_
+  commentId: Overload:Elements.GeometricElement.CreateInstance
+  isSpec: "True"
+  fullName: Elements.GeometricElement.CreateInstance
+  nameWithType: GeometricElement.CreateInstance
 - uid: Elements.GeometricElement.Material
   name: Material
   href: api/Elements.GeometricElement.html#Elements_GeometricElement_Material
@@ -2503,6 +2561,12 @@ references:
   commentId: T:Elements.Geometry.Line
   fullName: Elements.Geometry.Line
   nameWithType: Line
+- uid: Elements.Geometry.Line.#ctor
+  name: Line()
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line__ctor
+  commentId: M:Elements.Geometry.Line.#ctor
+  fullName: Elements.Geometry.Line.Line()
+  nameWithType: Line.Line()
 - uid: Elements.Geometry.Line.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   name: Line(Vector3, Vector3)
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
@@ -9080,51 +9144,6 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vertex.UV
   nameWithType: Vertex.UV
-- uid: Elements.Instance
-  name: Instance
-  href: api/Elements.Instance.html
-  commentId: T:Elements.Instance
-  fullName: Elements.Instance
-  nameWithType: Instance
-- uid: Elements.Instance.#ctor(Elements.GeometricElement,Elements.Geometry.Transform,System.Guid,System.String)
-  name: Instance(GeometricElement, Transform, Guid, String)
-  href: api/Elements.Instance.html#Elements_Instance__ctor_Elements_GeometricElement_Elements_Geometry_Transform_System_Guid_System_String_
-  commentId: M:Elements.Instance.#ctor(Elements.GeometricElement,Elements.Geometry.Transform,System.Guid,System.String)
-  fullName: Elements.Instance.Instance(Elements.GeometricElement, Elements.Geometry.Transform, System.Guid, System.String)
-  nameWithType: Instance.Instance(GeometricElement, Transform, Guid, String)
-- uid: Elements.Instance.#ctor*
-  name: Instance
-  href: api/Elements.Instance.html#Elements_Instance__ctor_
-  commentId: Overload:Elements.Instance.#ctor
-  isSpec: "True"
-  fullName: Elements.Instance.Instance
-  nameWithType: Instance.Instance
-- uid: Elements.Instance.Parent
-  name: Parent
-  href: api/Elements.Instance.html#Elements_Instance_Parent
-  commentId: P:Elements.Instance.Parent
-  fullName: Elements.Instance.Parent
-  nameWithType: Instance.Parent
-- uid: Elements.Instance.Parent*
-  name: Parent
-  href: api/Elements.Instance.html#Elements_Instance_Parent_
-  commentId: Overload:Elements.Instance.Parent
-  isSpec: "True"
-  fullName: Elements.Instance.Parent
-  nameWithType: Instance.Parent
-- uid: Elements.Instance.Transform
-  name: Transform
-  href: api/Elements.Instance.html#Elements_Instance_Transform
-  commentId: P:Elements.Instance.Transform
-  fullName: Elements.Instance.Transform
-  nameWithType: Instance.Transform
-- uid: Elements.Instance.Transform*
-  name: Transform
-  href: api/Elements.Instance.html#Elements_Instance_Transform_
-  commentId: Overload:Elements.Instance.Transform
-  isSpec: "True"
-  fullName: Elements.Instance.Transform
-  nameWithType: Instance.Transform
 - uid: Elements.Interfaces
   name: Elements.Interfaces
   href: api/Elements.Interfaces.html
@@ -9368,15 +9387,15 @@ references:
   commentId: M:Elements.Model.#ctor
   fullName: Elements.Model.Model()
   nameWithType: Model.Model()
-- uid: Elements.Model.#ctor(Elements.GeoJSON.Position,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
-  name: Model(Position, IDictionary<Guid, Element>)
-  href: api/Elements.Model.html#Elements_Model__ctor_Elements_GeoJSON_Position_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__
-  commentId: M:Elements.Model.#ctor(Elements.GeoJSON.Position,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
-  name.vb: Model(Position, IDictionary(Of Guid, Element))
-  fullName: Elements.Model.Model(Elements.GeoJSON.Position, System.Collections.Generic.IDictionary<System.Guid, Elements.Element>)
-  fullName.vb: Elements.Model.Model(Elements.GeoJSON.Position, System.Collections.Generic.IDictionary(Of System.Guid, Elements.Element))
-  nameWithType: Model.Model(Position, IDictionary<Guid, Element>)
-  nameWithType.vb: Model.Model(Position, IDictionary(Of Guid, Element))
+- uid: Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name: Model(Transform, IDictionary<Guid, Element>)
+  href: api/Elements.Model.html#Elements_Model__ctor_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__
+  commentId: M:Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name.vb: Model(Transform, IDictionary(Of Guid, Element))
+  fullName: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary<System.Guid, Elements.Element>)
+  fullName.vb: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of System.Guid, Elements.Element))
+  nameWithType: Model.Model(Transform, IDictionary<Guid, Element>)
+  nameWithType.vb: Model.Model(Transform, IDictionary(Of Guid, Element))
 - uid: Elements.Model.#ctor*
   name: Model
   href: api/Elements.Model.html#Elements_Model__ctor_
@@ -9506,19 +9525,6 @@ references:
   fullName.vb: Elements.Model.GetElementOfType(Of T)(System.Guid)
   nameWithType: Model.GetElementOfType<T>(Guid)
   nameWithType.vb: Model.GetElementOfType(Of T)(Guid)
-- uid: Elements.Model.Origin
-  name: Origin
-  href: api/Elements.Model.html#Elements_Model_Origin
-  commentId: P:Elements.Model.Origin
-  fullName: Elements.Model.Origin
-  nameWithType: Model.Origin
-- uid: Elements.Model.Origin*
-  name: Origin
-  href: api/Elements.Model.html#Elements_Model_Origin_
-  commentId: Overload:Elements.Model.Origin
-  isSpec: "True"
-  fullName: Elements.Model.Origin
-  nameWithType: Model.Origin
 - uid: Elements.Model.ToIFC(System.String)
   name: ToIFC(String)
   href: api/Elements.Model.html#Elements_Model_ToIFC_System_String_
@@ -9545,6 +9551,19 @@ references:
   isSpec: "True"
   fullName: Elements.Model.ToJson
   nameWithType: Model.ToJson
+- uid: Elements.Model.Transform
+  name: Transform
+  href: api/Elements.Model.html#Elements_Model_Transform
+  commentId: P:Elements.Model.Transform
+  fullName: Elements.Model.Transform
+  nameWithType: Model.Transform
+- uid: Elements.Model.Transform*
+  name: Transform
+  href: api/Elements.Model.html#Elements_Model_Transform_
+  commentId: Overload:Elements.Model.Transform
+  isSpec: "True"
+  fullName: Elements.Model.Transform
+  nameWithType: Model.Transform
 - uid: Elements.ModelCurve
   name: ModelCurve
   href: api/Elements.ModelCurve.html

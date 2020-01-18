@@ -126,12 +126,12 @@
     <pre><code class="lang-csharp hljs">public Model()</code></pre>
   </div>
   <a id="Elements_Model__ctor_" data-uid="Elements.Model.#ctor*"></a>
-  <h4 id="Elements_Model__ctor_Elements_GeoJSON_Position_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__" data-uid="Elements.Model.#ctor(Elements.GeoJSON.Position,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})">Model(Position, IDictionary&lt;Guid, Element&gt;)</h4>
+  <h4 id="Elements_Model__ctor_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__" data-uid="Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})">Model(Transform, IDictionary&lt;Guid, Element&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Model(Position origin, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">public Model(Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -144,8 +144,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
-        <td><span class="parametername">origin</span></td>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
         <td></td>
       </tr>
       <tr>
@@ -181,14 +181,14 @@
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Model_Origin_" data-uid="Elements.Model.Origin*"></a>
-  <h4 id="Elements_Model_Origin" data-uid="Elements.Model.Origin">Origin</h4>
-  <div class="markdown level1 summary"><p>The origin of the model.</p>
+  <a id="Elements_Model_Transform_" data-uid="Elements.Model.Transform*"></a>
+  <h4 id="Elements_Model_Transform" data-uid="Elements.Model.Transform">Transform</h4>
+  <div class="markdown level1 summary"><p>The transform of the model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Position Origin { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -200,7 +200,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td></td>
       </tr>
     </tbody>
