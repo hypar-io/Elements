@@ -18,6 +18,7 @@
 ### Fixed
 - Fixed [#125](https://github.com/hypar-io/Hypar/issues/125).
 - Fixed one Transform constructor whose computed axes were not unit length, causing the transform to scale.
+- Topography is now written to IFC.
 
 ## 0.4.2
 ### Changed

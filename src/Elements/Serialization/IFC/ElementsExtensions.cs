@@ -48,35 +48,52 @@ namespace Elements.Serialization.IFC
 
             var geoms = new List<IfcRepresentationItem>();
 
-            foreach(var op in geoElement.Representation.SolidOperations)
+            if(geoElement is Topography)
             {
-                IfcGeometricRepresentationItem geom = null;
-                if(op is Sweep)
-                {
-                    var sweep = (Sweep)op;
-                    geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
-                    // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(e.Transform, doc);
-                }
-                else if(op is Extrude)
-                {
-                    var extrude = (Extrude)op;
-                    geom = extrude.ToIfcExtrudedAreaSolid(doc);
-                }
-                else if(op is Lamina)
-                {
-                    var lamina = (Lamina)op;
-                    geom = lamina.ToIfcShellBasedSurfaceModel(doc);
-                }
-                else
-                {
-                    throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
-                }
+                var topo = (Topography)geoElement;
+                var lengths = topo.Mesh.Vertices.Select(v=>v.Position.ToArray().Select(vi => new IfcLengthMeasure(vi)).ToList()).ToList();
+                var pts = new IfcCartesianPointList3D(lengths);
+                doc.AddEntity(pts);
+                var indices = topo.Mesh.Triangles.Select(t=>t.Vertices.Select(vx=>new IfcPositiveInteger(vx.Index + 1)).ToList()).ToList();
+                var idxs = new List<List<IfcPositiveInteger>>(indices);
+                var geom = new IfcTriangulatedFaceSet(pts, indices);
+                geom.Closed = false;
                 doc.AddEntity(geom);
                 geoms.Add(geom);
+                shape = ToIfcProductDefinitionShape(geoms, "Tessellation", context, doc);
             }
-
-            shape = ToIfcProductDefinitionShape(geoms, context, doc);
+            else
+            {
+                foreach(var op in geoElement.Representation.SolidOperations)
+                {
+                    IfcGeometricRepresentationItem geom = null;
+                    if(op is Sweep)
+                    {
+                        var sweep = (Sweep)op;
+                        geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
+                        // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(e.Transform, doc);
+                    }
+                    else if(op is Extrude)
+                    {
+                        var extrude = (Extrude)op;
+                        geom = extrude.ToIfcExtrudedAreaSolid(doc);
+                    }
+                    else if(op is Lamina)
+                    {
+                        var lamina = (Lamina)op;
+                        geom = lamina.ToIfcShellBasedSurfaceModel(doc);
+                    }
+                    else
+                    {
+                        throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
+                    }
+                    doc.AddEntity(geom);
+                    geoms.Add(geom);
+                }
+                shape = ToIfcProductDefinitionShape(geoms, "SolidModel", context, doc);
+            }
             doc.AddEntity(shape);
+            
 
             // Can we use IfcMappedItem?
             // https://forums.buildingsmart.org/t/can-tessellation-typed-representation-hold-items-from-another-group/1621
@@ -389,9 +406,9 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static IfcProductDefinitionShape ToIfcProductDefinitionShape(this List<IfcRepresentationItem> geoms, IfcRepresentationContext context, Document doc)
+        private static IfcProductDefinitionShape ToIfcProductDefinitionShape(this List<IfcRepresentationItem> geoms, string shapeType, IfcRepresentationContext context, Document doc)
         {
-            var rep = new IfcShapeRepresentation(context, "Body", "Solids", geoms);
+            var rep = new IfcShapeRepresentation(context, "Body", shapeType, geoms);
             var shape = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
 
             doc.AddEntity(rep);

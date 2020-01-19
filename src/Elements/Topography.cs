@@ -80,7 +80,7 @@ namespace Elements
                           double cellHeight,
                           double[] elevations,
                           int rowWidth,
-                          Material material = null) : base(null,
+                          Material material = null) : base(new Transform(),
                                                           material != null ? material : BuiltInMaterials.Topography,
                                                           null,
                                                           Guid.NewGuid(),

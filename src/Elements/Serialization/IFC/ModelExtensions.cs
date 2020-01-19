@@ -148,20 +148,19 @@ namespace Elements.Serialization.IFC
                 var t = e.GetType();
                 return (e is GeometricElement || e is ElementInstance) &&
                         t != typeof(ModelCurve) && 
-                        t != typeof(ModelPoints) && 
-                        t != typeof(Topography);
+                        t != typeof(ModelPoints);
                 }))
             {
-                // try
-                // {
+                try
+                {
                     products.AddRange(e.ToIfcProducts(context, ifc, styles));
-                // }
-                // catch(Exception ex)
-                // {
-                //     Console.WriteLine($"There was an error writing an element of type {e.GetType()} to IFC: " + ex.Message);
-                //     Console.WriteLine(ex.StackTrace);
-                //     continue;
-                // }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"There was an error writing an element of type {e.GetType()} to IFC: " + ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    continue;
+                }
             }
 
             var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), products, storey);
