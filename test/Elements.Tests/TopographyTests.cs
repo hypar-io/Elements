@@ -113,8 +113,8 @@ namespace Elements.Tests
         {
             this.Name = "MapboxTopography";
             
-            // 0 1
             // 2 3
+            // 0 1
 
             var maps = new[]{
                 "./Topography/Texture_f7c3dc2f-c47c-4638-a962-53ae31719cf5_0.jpg",
@@ -138,6 +138,8 @@ namespace Elements.Tests
             var zoom = 16;
             var selectedOrigin = TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
             var sampleSize = 4;
+            
+            var topographies = new Topography[maps.Length];
 
             for(var i=0; i<maps.Length; i++)
             {
@@ -166,8 +168,17 @@ namespace Elements.Tests
                     var material = new Material($"Topo_{i}", Colors.White, 0.0f, 0.0f, maps[i]);
                     var topography = new Topography(origin, tileSize, elevationData, material);                
                     this.Model.AddElement(topography);
+                    topographies[i] = topography;
                 }
             }
+
+            // 2 3
+            // 0 1
+
+            topographies[0].AverageEdges(topographies[1], Units.CardinalDirection.East);
+            topographies[0].AverageEdges(topographies[2], Units.CardinalDirection.North);
+            topographies[1].AverageEdges(topographies[3], Units.CardinalDirection.North);
+            topographies[2].AverageEdges(topographies[3], Units.CardinalDirection.East);
         }
 
         private static double GetTileSizeMeters(int zoom)

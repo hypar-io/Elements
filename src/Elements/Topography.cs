@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
@@ -83,17 +84,9 @@ namespace Elements
                                                           Guid.NewGuid(),
                                                           null)
         {
-            //    0 1 2 3
-            // 2  *-*-*-* width = 4
-            //    |3|4|5|
-            // 1  4-5-6-7 ei = x + y * (width - 1)
-            //    |0|1|2|
-            // 0  0-1-2-3
-
             this._mesh = new Mesh();
 
             this.Origin = origin;
-            
             this.Elevations = elevations;
             
             if (Math.Sqrt(elevations.Length) % 2 != 0)
@@ -101,7 +94,7 @@ namespace Elements
                 throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be a square.");
             }
 
-            this.RowWidth = (int)Math.Sqrt(elevations.Length) + 1;
+            this.RowWidth = (int)Math.Sqrt(elevations.Length);
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
 
@@ -111,18 +104,26 @@ namespace Elements
             {
                 for ( var x = 0; x < this.RowWidth; x++)
                 {
-                    var xShift = x == this.RowWidth - 1 ? x - 1 : x;
-                    var yShift = y == this.RowWidth - 1 ? y - 1 : y;
-                    var ei = xShift +  yShift * (this.RowWidth - 1);
+                    var ei = x +  y * this.RowWidth;
                     var el = this.Elevations[ei];
-
-                    var u = (double)x / (double)(this.RowWidth - 1);
-                    var v = (double)y / (double)(this.RowWidth - 1);
-                    var uv = new UV(u, v);
-                    this._mesh.AddVertex(origin + new Vector3(x * this.CellWidth, y * this.CellHeight, el), uv: uv);
                     _minElevation = Math.Min(_minElevation, el);
                     _maxElevation = Math.Max(_maxElevation, el);
 
+                    var u = (double)x / (double)(this.RowWidth - 1);
+                    var v = (double)y / (double)(this.RowWidth - 1);
+
+                    // Shrink the UV space slightly to avoid
+                    // visible edges on applied textures.
+                    var uvTol = 0.001;
+                    u = u == 0.0 ? uvTol : u;
+                    v = v == 0.0 ? uvTol : v;
+                    u = u == 1.0 ? 1 - uvTol : u;
+                    v = v == 1.0 ? 1 - uvTol : v;
+
+                    var uv = new UV(u, v);
+
+                    this._mesh.AddVertex(origin + new Vector3(x * this.CellWidth, y * this.CellHeight, el), uv: uv);
+                
                     if (y > 0 && x > 0)
                     {
                         var i = x + y * this.RowWidth;
@@ -141,6 +142,85 @@ namespace Elements
                     }
                 }
             }
+
+            this.Mesh.ComputeNormals();
+        }
+
+        /// <summary>
+        /// Average the vertex placement along the specified edge
+        /// of this topography with the vertex placement along the 
+        /// corresponding edge of a target topography.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="edgeToAverage"></param>
+        public void AverageEdges(Topography target, Units.CardinalDirection edgeToAverage)
+        {
+            if (this.RowWidth != target.RowWidth)
+            {
+                throw new ArgumentException("The specified topographies do not have the same number of vertices.");
+            }
+
+            Elements.Geometry.Vertex[] e1 = null;
+            Elements.Geometry.Vertex[] e2 = null;
+
+            switch(edgeToAverage)
+            {
+                case Units.CardinalDirection.North:
+                    e1 = this.GetEdgeVertices(Units.CardinalDirection.North);
+                    e2 = target.GetEdgeVertices(Units.CardinalDirection.South);
+                    break;
+                case Units.CardinalDirection.South:
+                    e1 = this.GetEdgeVertices(Units.CardinalDirection.South);
+                    e2 = target.GetEdgeVertices(Units.CardinalDirection.North);
+                    break;
+                case Units.CardinalDirection.East:
+                    e1 = this.GetEdgeVertices(Units.CardinalDirection.East);
+                    e2 = target.GetEdgeVertices(Units.CardinalDirection.West);
+                    break;
+                case Units.CardinalDirection.West:
+                    e1 = this.GetEdgeVertices(Units.CardinalDirection.West);
+                    e2 = target.GetEdgeVertices(Units.CardinalDirection.East);
+                    break;
+            }
+
+            for(var i = 0; i < e1.Length; i++)
+            {
+                var pos = e1[i].Position.Average(e2[i].Position);
+                e1[i].Position = pos;
+                e2[i].Position = pos;
+            }
+        }
+
+        /// <summary>
+        /// Get the vertices along the specified edge of a square topography.
+        /// </summary>
+        /// <param name="direction">The edge of vertices to return.</param>
+        /// <returns>A collection of vertices.</returns>
+        public Elements.Geometry.Vertex[] GetEdgeVertices(Units.CardinalDirection direction)
+        {
+            var range = Enumerable.Range(0, this.RowWidth);
+            var start = 0;
+            var increment = 1;
+            switch(direction)
+            {
+                case Units.CardinalDirection.North:
+                    start = this.Mesh.Vertices.Count - this.RowWidth;
+                    break;
+                case Units.CardinalDirection.South:
+                    start= 0;
+                    break;
+                case Units.CardinalDirection.East:
+                    start = this.RowWidth - 1;
+                    increment = this.RowWidth;
+                    break;
+                case Units.CardinalDirection.West:
+                    start = 0;
+                    increment = this.RowWidth;
+                    break;
+                default:
+                    return null;
+            }
+            return range.Select(i=>this.Mesh.Vertices[start + i * increment]).ToArray();
         }
 
         /// <summary>

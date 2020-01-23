@@ -14,6 +14,10 @@
 - `Polygon.Fillet(double radius)`
 - `Arc.Complement()`
 - `Polygons.Star(double outerRadius, double innerRadius, int points)`
+- `Units.CardinalDirections`
+- `Mesh.ComputeNormals`
+- `Topography.AverageEdges(Topography target, Units.CardinalDirection edgeToAverage)`
+- `Topography.GetEdgeVertices(Units.CardinalDirection direction)`
 
 ### Fixed
 - Fixed [#125](https://github.com/hypar-io/Hypar/issues/125).
