@@ -66,5 +66,28 @@ namespace Elements
         {
             return radians * 180.0 / Math.PI;
         }
+
+        /// <summary>
+        /// Cardinal directions.
+        /// </summary>
+        public enum CardinalDirection
+        {
+            /// <summary>
+            /// North
+            /// </summary>
+            North,
+            /// <summary>
+            /// South
+            /// </summary>
+            South,
+            /// <summary>
+            /// East
+            /// </summary>
+            East,
+            /// <summary>
+            /// West
+            /// </summary>
+            West
+        }
     }
 }
