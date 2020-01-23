@@ -133,6 +133,10 @@ namespace Elements.Geometry
         public Vector3 Normalized()
         {
             var length = Length();
+            if (length == 0)
+            {
+                return this;
+            }
             return new Vector3(X / length, Y / length, Z / length);
         }
 

@@ -70,92 +70,75 @@ namespace Elements
         /// Create a topography.
         /// </summary>
         /// <param name="origin">The origin of the topography.</param>
-        /// <param name="cellWidth">The width of each square "cell" of the topography.</param>
-        /// <param name="cellHeight">The height of each square "cell" of the topography.</param>
+        /// <param name="width">The width the topography. When constructed from a set of elevations, the
+        /// width and the length of the topography will be the same.</param>
         /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
-        /// <param name="rowWidth"></param>
         /// <param name="material">The topography's material.</param>
         public Topography(Vector3 origin,
-                          double cellWidth,
-                          double cellHeight,
+                          double width,
                           double[] elevations,
-                          int rowWidth,
                           Material material = null) : base(new Transform(),
                                                           material != null ? material : BuiltInMaterials.Topography,
                                                           null,
                                                           Guid.NewGuid(),
                                                           null)
         {
-            // Elevations a represented by *
-            // *-*-*-*
-            // |/|/|/|
-            // *-*-*-*
-            // |/|/|/|
-            // *-*-*-*
+            //    0 1 2 3
+            // 2  *-*-*-* width = 4
+            //    |3|4|5|
+            // 1  4-5-6-7 ei = x + y * (width - 1)
+            //    |0|1|2|
+            // 0  0-1-2-3
 
             this._mesh = new Mesh();
 
             this.Origin = origin;
-            this.CellWidth = cellWidth;
-            this.RowWidth = rowWidth;
-            this.CellHeight = cellHeight;
+            
             this.Elevations = elevations;
-
-            if (elevations.Length % (rowWidth + 1) != 0)
+            
+            if (Math.Sqrt(elevations.Length) % 2 != 0)
             {
-                throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be equally divisible by the width plus one, {rowWidth}.");
+                throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be a square.");
             }
 
-            var triangles = (Math.Sqrt(elevations.Length) - 1) * rowWidth * 2;
+            this.RowWidth = (int)Math.Sqrt(elevations.Length) + 1;
+            this.CellWidth = width / (this.RowWidth - 1);
+            this.CellHeight = this.CellWidth;
 
-            var x = 0;
-            var y = 0;
-            for (var i = 0; i < elevations.Length; i++)
+            var triangles = (Math.Sqrt(elevations.Length) - 1) * this.RowWidth * 2;
+
+            for (var y = 0; y < this.RowWidth; y++)
             {
-                var el = elevations[i];
-                var uv = new UV((double)x / (double)rowWidth, (double)y / (double)rowWidth);
-                this._mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv: uv);
-                _minElevation = Math.Min(_minElevation, el);
-                _maxElevation = Math.Max(_maxElevation, el);
+                for ( var x = 0; x < this.RowWidth; x++)
+                {
+                    var xShift = x == this.RowWidth - 1 ? x - 1 : x;
+                    var yShift = y == this.RowWidth - 1 ? y - 1 : y;
+                    var ei = xShift +  yShift * (this.RowWidth - 1);
+                    var el = this.Elevations[ei];
 
-                if (x == rowWidth)
-                {
-                    x = 0;
-                    y++;
-                }
-                else
-                {
-                    x++;
-                }
-            }
+                    var u = (double)x / (double)(this.RowWidth - 1);
+                    var v = (double)y / (double)(this.RowWidth - 1);
+                    var uv = new UV(u, v);
+                    this._mesh.AddVertex(origin + new Vector3(x * this.CellWidth, y * this.CellHeight, el), uv: uv);
+                    _minElevation = Math.Min(_minElevation, el);
+                    _maxElevation = Math.Max(_maxElevation, el);
 
-            x = 0;
-            y = 0;
-            for (var i = 0; i < elevations.Length; i++)
-            {
-                var v = this._mesh.Vertices[i];
-                if (x == rowWidth)
-                {
-                    x = 0;
-                    y++;
-                }
-                else
-                {
-                    if (y > 0)
+                    if (y > 0 && x > 0)
                     {
+                        var i = x + y * this.RowWidth;
+
                         // Top triangle
                         var a = this._mesh.Vertices[i];
-                        var b = this._mesh.Vertices[i - rowWidth];
-                        var c = this._mesh.Vertices[i - (rowWidth + 1)];
-                        this._mesh.AddTriangle(c, b, a);
+                        var b = this._mesh.Vertices[i - 1];
+                        var c = this._mesh.Vertices[i - this.RowWidth];
+                        var tt = this._mesh.AddTriangle(a, b, c);
 
                         // Bottom triangle
-                        var d = this._mesh.Vertices[i];
-                        var e = this._mesh.Vertices[i + 1];
-                        var f = this._mesh.Vertices[i - rowWidth];
-                        this._mesh.AddTriangle(f, e, d);
+                        var d = this._mesh.Vertices[i - 1];
+                        var e = this._mesh.Vertices[i - 1 - this.RowWidth];
+                        var f = this._mesh.Vertices[i - this.RowWidth];
+                        var tb = this._mesh.AddTriangle(d, e, f);
                     }
-                    x++;
                 }
             }
         }

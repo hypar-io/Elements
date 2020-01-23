@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using Elements.Geometry;
 using Newtonsoft.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -13,6 +15,10 @@ namespace Elements.Tests
     public class TopographyTests: ModelTest
     {
         private ITestOutputHelper _output;
+        private const double _earthRadius = 6378137;
+        private const double _originShift = 2 * Math.PI * _earthRadius / 2;
+        private const double _webMercMax = 20037508.342789244;
+
         public TopographyTests(ITestOutputHelper output)
         {
             this._output = output;
@@ -23,10 +29,10 @@ namespace Elements.Tests
         {
             this.Name = "TopographySimple";
             var elevations = new double[]{0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05, 0.2, 0.5, 0.6};
-            var colorizer = new Func<Triangle,Color>((t)=>{
+            var colorizer = new Func<Triangle,Elements.Geometry.Color>((t)=>{
                 return Colors.Green;
             });
-            var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 3);
+            var topo = new Topography(Vector3.Origin, 3, elevations);
             this.Model.AddElement(topo);
         }
 
@@ -102,17 +108,95 @@ namespace Elements.Tests
             }
         }
 
+        [Fact]
+        public void MapboxTopography()
+        {
+            this.Name = "MapboxTopography";
+            
+            // 0 1
+            // 2 3
+
+            var maps = new[]{
+                "./Topography/Texture_f7c3dc2f-c47c-4638-a962-53ae31719cf5_0.jpg",
+                "./Topography/Texture_df332cc3-62b0-42ac-9041-942e1fd985aa_1.jpg",
+                "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg",
+                "./Topography/Texture_aa1b1148-0563-4b9d-b1c0-7138024dc974_3.jpg"};
+            
+            var topos = new[]{
+                "./Topography/Topo_52f0cdf5-2d34-4e1c-927d-79fb5f2caf43_0.png",
+                "./Topography/Topo_5f21ae5e-eeef-4346-af16-860afdc0e829_1.png",
+                "./Topography/Topo_e056d328-5b7d-47d3-b6bc-42d6d245d8ec_2.png",
+                "./Topography/Topo_0a91fd8a-d887-40c2-a729-aac47441f9d8_3.png"};
+            
+            var tiles = new []{
+                new Tuple<int,int>(20,21),
+                new Tuple<int,int>(21,21),
+                new Tuple<int,int>(20,20),
+                new Tuple<int,int>(21,20),
+            };
+
+            var zoom = 16;
+            var selectedOrigin = TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
+            var sampleSize = 4;
+
+            for(var i=0; i<maps.Length; i++)
+            {
+                using(var map = Image.Load<Rgba32>(maps[i]))
+                using(var topo = Image.Load<Rgba32>(topos[i]))
+                {
+                    var size = (topo.Width / sampleSize);
+                    var elevationData = new double[(int)Math.Pow(size, 2)];
+
+                    var idx = 0;
+                    for (var y = 0; y < topo.Height; y += sampleSize)
+                    {
+                        for (var x = 0; x < topo.Width; x += sampleSize)
+                        {
+                            var c = topo[x, y];
+                            var height = -10000 + ((c.R * 256 * 256 + c.G * 256 + c.B) * 0.1);
+                            elevationData[idx] = height;
+                            idx++;
+                        }
+                    }
+
+                    var tileSize = GetTileSizeMeters(zoom);
+                    var rowSize = Math.Sqrt(elevationData.Length);
+                    var cellSize = tileSize / rowSize;
+                    var origin = TileIdToCenterWebMercator(tiles[i].Item1, tiles[i].Item2, zoom) - new Vector3(tileSize / 2.0, tileSize / 2.0) - selectedOrigin;
+                    var material = new Material($"Topo_{i}", Colors.White, 0.0f, 0.0f, maps[i]);
+                    var topography = new Topography(origin, tileSize, elevationData, material);                
+                    this.Model.AddElement(topography);
+                }
+            }
+        }
+
+        private static double GetTileSizeMeters(int zoom)
+        {
+            // Circumference of the earth divided by 2^zoom
+            return (2 * Math.PI * _earthRadius)/ Math.Pow(2,zoom);
+        }
+
+        private static Vector3 TileIdToCenterWebMercator(int x, int y, int zoom)
+        {
+            var tileCnt = Math.Pow(2, zoom);
+            var centerX = x + 0.5;
+            var centerY = y + 0.5;
+
+            centerX = ((centerX / tileCnt * 2) - 1) * _webMercMax;
+            centerY = (1 - (centerY / tileCnt * 2)) * _webMercMax;
+            return new Vector3(centerX, centerY);
+        }
+
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
         {
             // Read topo elevations
-            var w = 512/8 - 1;
             var data = JsonConvert.DeserializeObject<Dictionary<string,double[]>>(File.ReadAllText("./elevations.json"));
             var elevations = data["points"];
 
             // Compute the mapbox tile side lenth.
-            var d = (40075016.685578 / Math.Pow(2, 15))/w;
+            var tileSize = GetTileSizeMeters(15);
 
-            return new Topography(origin.Equals(default(Vector3)) ? origin : Vector3.Origin, d, d, elevations, w, material);
+            return new Topography(origin.Equals(default(Vector3)) ? origin : Vector3.Origin, tileSize, elevations, material);
         }
     }
 }

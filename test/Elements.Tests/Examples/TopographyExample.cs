@@ -21,10 +21,10 @@ namespace Elements.Tests.Examples
             var elevations = data["points"];
 
             // Compute the mapbox tile size.
-            var cellSize = (40075016.685578 / Math.Pow(2, 15))/w;
+            var tileSize = (40075016.685578 / Math.Pow(2, 15))/w;
 
             // Create a topography.
-            var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w);
+            var topo = new Topography(Vector3.Origin, tileSize, elevations);
             // </example>
 
             this.Model.AddElement(topo);

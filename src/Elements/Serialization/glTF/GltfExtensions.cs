@@ -146,14 +146,10 @@ namespace Elements.Serialization.glTF
 
                         var image = new glTFLoader.Schema.Image();
 
-                        // Flip the image vertically.
-                        // This is required for OpenGlES implementations
-                        // of glTF.
                         using (var ms = new MemoryStream())
                         {
                             using (var texImage = SixLabors.ImageSharp.Image.Load(material.Texture))
                             {
-                                texImage.Mutate(x => x.Flip(FlipMode.Vertical));
                                 texImage.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
                             }
                             var imageData = ms.ToArray();
