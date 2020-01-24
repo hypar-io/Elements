@@ -1,12 +1,17 @@
 using System;
 
-namespace Hypar.Elements
+namespace Elements
 {
     /// <summary>
     /// Unit conversions and utilities.
     /// </summary>
     public static class Units
     {
+        /// <summary>
+        /// Pi/2
+        /// </summary>
+        public const double PI_2 = Math.PI / 2;
+
         /// <summary>
         /// Convert from meters to feet.
         /// </summary>
@@ -65,6 +70,29 @@ namespace Hypar.Elements
         public static double RadiansToDegrees(double radians)
         {
             return radians * 180.0 / Math.PI;
+        }
+
+        /// <summary>
+        /// Cardinal directions.
+        /// </summary>
+        public enum CardinalDirection
+        {
+            /// <summary>
+            /// North
+            /// </summary>
+            North,
+            /// <summary>
+            /// South
+            /// </summary>
+            South,
+            /// <summary>
+            /// East
+            /// </summary>
+            East,
+            /// <summary>
+            /// West
+            /// </summary>
+            West
         }
     }
 }

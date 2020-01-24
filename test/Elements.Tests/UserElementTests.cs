@@ -22,6 +22,12 @@ namespace Elements.Tests
         /// </summary>
         public NumericProperty Length => new NumericProperty(this.CenterLine.Length(), NumericPropertyUnitType.Length);
 
+        internal TestUserElement(): base(null,
+                                            BuiltInMaterials.Default,
+                                            new Representation(new List<SolidOperation>()),
+                                            Guid.NewGuid(),
+                                            null){}
+
         public TestUserElement(Line centerLine,
                                Profile profile,
                                Material material = null,
@@ -35,6 +41,11 @@ namespace Elements.Tests
             this.CenterLine = centerLine;
             this.Profile = profile;
             this.SubElements = new List<Element>();
+        }
+
+        public override void UpdateRepresentations()
+        {
+            this.Representation.SolidOperations.Clear();
 
             var t = this.CenterLine.TransformAt(0);
             var x = new Line(t.Origin, t.Origin + t.XAxis * this.CenterLine.Length());

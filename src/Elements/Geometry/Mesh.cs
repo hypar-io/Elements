@@ -20,7 +20,7 @@ namespace Elements.Geometry
         /// The triangle's normal.
         /// </summary>
         /// <value></value>
-        public Vector3 Normal {get;}
+        public Vector3 Normal { get; }
 
         /// <summary>
         /// Create a triangle.
@@ -32,32 +32,49 @@ namespace Elements.Geometry
         {
             this.Vertices = new[] { a, b, c };
 
-            var ab = (b.Position-a.Position).Normalized();
-            var bc = (c.Position-a.Position).Normalized();
-            this.Normal = ab.Cross(bc).Normalized();
+            if (!a.Triangles.Contains(this))
+            {
+                a.Triangles.Add(this);
+            }
 
-            // Bend the normals for the associated vertices.
-            a.Normal = ((a.Normal + this.Normal) / 2.0).Normalized();
-            b.Normal = ((b.Normal + this.Normal) / 2.0).Normalized();
-            c.Normal = ((c.Normal + this.Normal) / 2.0).Normalized();
+            if (!b.Triangles.Contains(this))
+            {
+                b.Triangles.Add(this);
+            }
+
+            if (!c.Triangles.Contains(this))
+            {
+                c.Triangles.Add(this);
+            }
+
+            var ab = (b.Position - a.Position).Normalized();
+            var bc = (c.Position - a.Position).Normalized();
+            this.Normal = ab.Cross(bc).Normalized();
         }
 
         [JsonConstructor]
         internal Triangle(Vertex[] vertices)
         {
+            if (vertices.Length != 3)
+            {
+                throw new ArgumentException("Triangles can only be created with three vertices.");
+            }
+
             this.Vertices = vertices;
+            foreach (var v in vertices)
+            {
+                if (!v.Triangles.Contains(this))
+                {
+                    v.Triangles.Add(this);
+                }
+            }
+            var a = vertices[0];
+            var b = vertices[1];
+            var c = vertices[2];
 
-            var a = this.Vertices[0];
-            var b = this.Vertices[1];
-            var c = this.Vertices[2];
-            var ab = (b.Position-a.Position).Normalized();
-            var bc = (c.Position-a.Position).Normalized();
+            var ab = (b.Position - a.Position).Normalized();
+            var bc = (c.Position - a.Position).Normalized();
             this.Normal = ab.Cross(bc).Normalized();
-
-            // Bend the normals for the associated vertices.
-            a.Normal = ((a.Normal + this.Normal) / 2.0).Normalized();
-            b.Normal = ((b.Normal + this.Normal) / 2.0).Normalized();
-            c.Normal = ((c.Normal + this.Normal) / 2.0).Normalized();
         }
 
         /// <summary>
@@ -95,7 +112,7 @@ namespace Elements.Geometry
             return contour;
         }
     }
-    
+
     /// <summary>
     /// A UV texture coordinate.
     /// </summary>
@@ -104,13 +121,13 @@ namespace Elements.Geometry
         /// <summary>
         /// The U coordinate.
         /// </summary>
-        public double U{get;set;}
+        public double U { get; set; }
 
         /// <summary>
         /// The v coordinate.
         /// </summary>
-        public double V{get;set;}
-        
+        public double V { get; set; }
+
         /// <summary>
         /// Construct a UV.
         /// </summary>
@@ -131,18 +148,18 @@ namespace Elements.Geometry
         /// <summary>
         /// The position of the vertex.
         /// </summary>
-        public Vector3 Position { get; }
+        public Vector3 Position { get; set; }
 
         /// <summary>
         /// The vertex's normal.
         /// </summary>
         [JsonIgnore]
-        public Vector3 Normal { get; internal set; }
+        public Vector3 Normal { get; set; }
 
         /// <summary>
         /// The vertex's color.
         /// </summary>
-        public Color Color { get; internal set;}
+        public Color Color { get; set; }
 
         /// <summary>
         /// The index of the vertex within a mesh.
@@ -152,7 +169,12 @@ namespace Elements.Geometry
         /// <summary>
         /// The texture coordinate of the vertex.
         /// </summary>
-        public UV UV {get; set;}
+        public UV UV { get; set; }
+
+        /// <summary>
+        /// The triangles which contain this vertex.
+        /// </summary>
+        public List<Triangle> Triangles { get; } = new List<Triangle>();
 
         /// <summary>
         /// Create a vertex.
@@ -206,6 +228,23 @@ Triangles:{_triangles.Count}";
         }
 
         /// <summary>
+        /// Compute the vertex normals by averaging
+        /// the normals of the incident faces.
+        /// </summary>
+        public void ComputeNormals()
+        {
+            foreach (var v in this.Vertices)
+            {
+                var avg = new Vector3();
+                foreach (var t in v.Triangles)
+                {
+                    avg += t.Normal;
+                }
+                v.Normal = avg / v.Triangles.Count;
+            }
+        }
+
+        /// <summary>
         /// Get all buffers required for rendering.
         /// </summary>
         public void GetBuffers(out byte[] vertexBuffer, out byte[] indexBuffer,
@@ -220,9 +259,9 @@ Triangles:{_triangles.Count}";
             vertexBuffer = new byte[this._vertices.Count * floatSize * 3];
             normalBuffer = new byte[this._vertices.Count * floatSize * 3];
             indexBuffer = new byte[this._triangles.Count * ushortSize * 3];
-            uvBuffer = new byte[this._vertices.Count * floatSize *2];
+            uvBuffer = new byte[this._vertices.Count * floatSize * 2];
 
-            if(!this._vertices[0].Color.Equals(default(Color)))
+            if (!this._vertices[0].Color.Equals(default(Color)))
             {
                 colorBuffer = new byte[this._vertices.Count * floatSize * 3];
                 c_min = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
@@ -232,15 +271,15 @@ Triangles:{_triangles.Count}";
             {
                 colorBuffer = new byte[0];
                 c_min = new float[0];
-                c_max= new float[0];
+                c_max = new float[0];
             }
 
             v_max = new double[3] { double.MinValue, double.MinValue, double.MinValue };
             v_min = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             n_min = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             n_max = new double[3] { double.MinValue, double.MinValue, double.MinValue };
-            uv_max = new double[2] { double.MinValue, double.MinValue};
-            uv_min = new double[2] { double.MaxValue, double.MaxValue};
+            uv_max = new double[2] { double.MinValue, double.MinValue };
+            uv_min = new double[2] { double.MaxValue, double.MaxValue };
 
             index_max = ushort.MinValue;
             index_min = ushort.MaxValue;

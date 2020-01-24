@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
@@ -70,94 +71,150 @@ namespace Elements
         /// Create a topography.
         /// </summary>
         /// <param name="origin">The origin of the topography.</param>
-        /// <param name="cellWidth">The width of each square "cell" of the topography.</param>
-        /// <param name="cellHeight">The height of each square "cell" of the topography.</param>
+        /// <param name="width">The width the topography. When constructed from a set of elevations, the
+        /// width and the length of the topography will be the same.</param>
         /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
-        /// <param name="rowWidth"></param>
         /// <param name="material">The topography's material.</param>
         public Topography(Vector3 origin,
-                          double cellWidth,
-                          double cellHeight,
+                          double width,
                           double[] elevations,
-                          int rowWidth,
-                          Material material = null) : base(null,
+                          Material material = null) : base(new Transform(),
                                                           material != null ? material : BuiltInMaterials.Topography,
                                                           null,
                                                           Guid.NewGuid(),
                                                           null)
         {
-            // Elevations a represented by *
-            // *-*-*-*
-            // |/|/|/|
-            // *-*-*-*
-            // |/|/|/|
-            // *-*-*-*
-
             this._mesh = new Mesh();
 
             this.Origin = origin;
-            this.CellWidth = cellWidth;
-            this.RowWidth = rowWidth;
-            this.CellHeight = cellHeight;
             this.Elevations = elevations;
+            this.RowWidth = (int)Math.Sqrt(elevations.Length);
+            this.CellWidth = width / (this.RowWidth - 1);
+            this.CellHeight = this.CellWidth;
 
-            if (elevations.Length % (rowWidth + 1) != 0)
+            var triangles = (Math.Sqrt(elevations.Length) - 1) * this.RowWidth * 2;
+
+            for (var y = 0; y < this.RowWidth; y++)
             {
-                throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be equally divisible by the width plus one, {rowWidth}.");
-            }
-
-            var triangles = (Math.Sqrt(elevations.Length) - 1) * rowWidth * 2;
-
-            var x = 0;
-            var y = 0;
-            for (var i = 0; i < elevations.Length; i++)
-            {
-                var el = elevations[i];
-                var uv = new UV((double)x / (double)rowWidth, (double)y / (double)rowWidth);
-                this._mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv: uv);
-                _minElevation = Math.Min(_minElevation, el);
-                _maxElevation = Math.Max(_maxElevation, el);
-
-                if (x == rowWidth)
+                for ( var x = 0; x < this.RowWidth; x++)
                 {
-                    x = 0;
-                    y++;
-                }
-                else
-                {
-                    x++;
-                }
-            }
+                    var ei = x +  y * this.RowWidth;
+                    var el = this.Elevations[ei];
+                    _minElevation = Math.Min(_minElevation, el);
+                    _maxElevation = Math.Max(_maxElevation, el);
 
-            x = 0;
-            y = 0;
-            for (var i = 0; i < elevations.Length; i++)
-            {
-                var v = this._mesh.Vertices[i];
-                if (x == rowWidth)
-                {
-                    x = 0;
-                    y++;
-                }
-                else
-                {
-                    if (y > 0)
+                    var u = (double)x / (double)(this.RowWidth - 1);
+                    var v = (double)y / (double)(this.RowWidth - 1);
+
+                    // Shrink the UV space slightly to avoid
+                    // visible edges on applied textures.
+                    var uvTol = 0.001;
+                    u = u == 0.0 ? uvTol : u;
+                    v = v == 0.0 ? uvTol : v;
+                    u = u == 1.0 ? 1 - uvTol : u;
+                    v = v == 1.0 ? 1 - uvTol : v;
+
+                    var uv = new UV(u, v);
+
+                    this._mesh.AddVertex(origin + new Vector3(x * this.CellWidth, y * this.CellHeight, el), uv: uv);
+                
+                    if (y > 0 && x > 0)
                     {
+                        var i = x + y * this.RowWidth;
+
                         // Top triangle
                         var a = this._mesh.Vertices[i];
-                        var b = this._mesh.Vertices[i - rowWidth];
-                        var c = this._mesh.Vertices[i - (rowWidth + 1)];
-                        this._mesh.AddTriangle(c, b, a);
+                        var b = this._mesh.Vertices[i - 1];
+                        var c = this._mesh.Vertices[i - this.RowWidth];
+                        var tt = this._mesh.AddTriangle(a, b, c);
 
                         // Bottom triangle
-                        var d = this._mesh.Vertices[i];
-                        var e = this._mesh.Vertices[i + 1];
-                        var f = this._mesh.Vertices[i - rowWidth];
-                        this._mesh.AddTriangle(f, e, d);
+                        var d = this._mesh.Vertices[i - 1];
+                        var e = this._mesh.Vertices[i - 1 - this.RowWidth];
+                        var f = this._mesh.Vertices[i - this.RowWidth];
+                        var tb = this._mesh.AddTriangle(d, e, f);
                     }
-                    x++;
                 }
             }
+
+            this.Mesh.ComputeNormals();
+        }
+
+        /// <summary>
+        /// Average the vertex placement along the specified edge
+        /// of this topography with the vertex placement along the 
+        /// corresponding edge of a target topography.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="edgeToAverage"></param>
+        public void AverageEdges(Topography target, Units.CardinalDirection edgeToAverage)
+        {
+            if (this.RowWidth != target.RowWidth)
+            {
+                throw new ArgumentException("The specified topographies do not have the same number of vertices.");
+            }
+
+            Elements.Geometry.Vertex[] e1 = null;
+            Elements.Geometry.Vertex[] e2 = null;
+
+            switch(edgeToAverage)
+            {
+                case Units.CardinalDirection.North:
+                    e1 = this.GetEdgeVertices(Units.CardinalDirection.North);
+                    e2 = target.GetEdgeVertices(Units.CardinalDirection.South);
+                    break;
+                case Units.CardinalDirection.South:
+                    e1 = this.GetEdgeVertices(Units.CardinalDirection.South);
+                    e2 = target.GetEdgeVertices(Units.CardinalDirection.North);
+                    break;
+                case Units.CardinalDirection.East:
+                    e1 = this.GetEdgeVertices(Units.CardinalDirection.East);
+                    e2 = target.GetEdgeVertices(Units.CardinalDirection.West);
+                    break;
+                case Units.CardinalDirection.West:
+                    e1 = this.GetEdgeVertices(Units.CardinalDirection.West);
+                    e2 = target.GetEdgeVertices(Units.CardinalDirection.East);
+                    break;
+            }
+
+            for(var i = 0; i < e1.Length; i++)
+            {
+                var pos = e1[i].Position.Average(e2[i].Position);
+                e1[i].Position = pos;
+                e2[i].Position = pos;
+            }
+        }
+
+        /// <summary>
+        /// Get the vertices along the specified edge of a square topography.
+        /// </summary>
+        /// <param name="direction">The edge of vertices to return.</param>
+        /// <returns>A collection of vertices.</returns>
+        public Elements.Geometry.Vertex[] GetEdgeVertices(Units.CardinalDirection direction)
+        {
+            var range = Enumerable.Range(0, this.RowWidth);
+            var start = 0;
+            var increment = 1;
+            switch(direction)
+            {
+                case Units.CardinalDirection.North:
+                    start = this.Mesh.Vertices.Count - this.RowWidth;
+                    break;
+                case Units.CardinalDirection.South:
+                    start= 0;
+                    break;
+                case Units.CardinalDirection.East:
+                    start = this.RowWidth - 1;
+                    increment = this.RowWidth;
+                    break;
+                case Units.CardinalDirection.West:
+                    start = 0;
+                    increment = this.RowWidth;
+                    break;
+                default:
+                    return null;
+            }
+            return range.Select(i=>this.Mesh.Vertices[start + i * increment]).ToArray();
         }
 
         /// <summary>

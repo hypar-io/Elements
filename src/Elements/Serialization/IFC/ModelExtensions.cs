@@ -144,11 +144,11 @@ namespace Elements.Serialization.IFC
             
             var styles = new Dictionary<string, IfcSurfaceStyle>();
 
-            foreach(var e in model.AllElementsOfType<GeometricElement>().Where(e=>{
-                var t = e.GetType(); 
-                return t != typeof(ModelCurve) && 
-                        t != typeof(ModelPoints) && 
-                        t != typeof(Topography);
+            foreach(var e in model.Elements.Values.Where(e=>{
+                var t = e.GetType();
+                return (e is GeometricElement || e is ElementInstance) &&
+                        t != typeof(ModelCurve) && 
+                        t != typeof(ModelPoints);
                 }))
             {
                 try

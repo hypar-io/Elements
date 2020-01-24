@@ -62,7 +62,7 @@ namespace Elements.Tests
 					e++;
 				}
 			}
-			var topo = new Topography(Vector3.Origin, 1.0, 1.0, elevations, 4);
+			var topo = new Topography(Vector3.Origin, 4, elevations);
 			this.Model.AddElement(topo);
 
 			var modelPoints = new ModelPoints(new List<Vector3>(), new Material("begin", Colors.Blue));

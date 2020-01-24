@@ -1,5 +1,5 @@
 using Elements.Geometry;
-
+using Elements.Spatial;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -56,7 +56,7 @@ namespace Elements.GeoJSON
         /// </summary>
         public Vector3 ToVectorMeters()
         {
-            return new Vector3(MercatorProjection.lonToX(Longitude), MercatorProjection.latToY(Latitude));
+            return new Vector3(MercatorProjection.LonToX(Longitude), MercatorProjection.LatToY(Latitude));
         }
     }
 

@@ -4,7 +4,7 @@
 ### Added
 - `Contour`
 - `Transform.Reflect(Vector3 n)`
-- `Instance`
+- `ElementInstance`
 - `Vector3.ClosestPointOn(Line line)`
 - `Line.TrimTo(Line line)`
 - `Line.ExtendTo(Line line)`
@@ -14,10 +14,16 @@
 - `Polygon.Fillet(double radius)`
 - `Arc.Complement()`
 - `Polygons.Star(double outerRadius, double innerRadius, int points)`
+- `Units.CardinalDirections`
+- `Mesh.ComputeNormals`
+- `Topography.AverageEdges(Topography target, Units.CardinalDirection edgeToAverage)`
+- `Topography.GetEdgeVertices(Units.CardinalDirection direction)`
+- `WebMercatorProjection`
 
 ### Fixed
 - Fixed [#125](https://github.com/hypar-io/Hypar/issues/125).
 - Fixed one Transform constructor whose computed axes were not unit length, causing the transform to scale.
+- Topography is now written to IFC.
 
 ## 0.4.2
 ### Changed

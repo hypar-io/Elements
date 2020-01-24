@@ -201,15 +201,12 @@
     animate();
   </script><h5 id="Elements_Topography_examples"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Read topo elevations from a file.
-var w = 512/8 - 1;
 var data = JsonConvert.DeserializeObject&lt;Dictionary&lt;string,double[]&gt;&gt;(File.ReadAllText(&quot;./elevations.json&quot;));
 var elevations = data[&quot;points&quot;];
-
-// Compute the mapbox tile size.
-var cellSize = (40075016.685578 / Math.Pow(2, 15))/w;
+var tileSize = WebMercatorProjection.GetTileSizeMeters(15);
 
 // Create a topography.
-var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w);
+var topo = new Topography(Vector3.Origin, tileSize, elevations);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -232,6 +229,9 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w);
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -270,13 +270,13 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Topography__ctor_" data-uid="Elements.Topography.#ctor*"></a>
-  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_Elements_Material_" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,Elements.Material)">Topography(Vector3, Double, Double, Double[], Int32, Material)</h4>
+  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double___Elements_Material_" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material)">Topography(Vector3, Double, Double[], Material)</h4>
   <div class="markdown level1 summary"><p>Create a topography.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Topography(Vector3 origin, double cellWidth, double cellHeight, double[] elevations, int rowWidth, Material material = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Topography(Vector3 origin, double width, double[] elevations, Material material = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -296,14 +296,9 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w);
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">cellWidth</span></td>
-        <td><p>The width of each square &quot;cell&quot; of the topography.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">cellHeight</span></td>
-        <td><p>The height of each square &quot;cell&quot; of the topography.</p>
+        <td><span class="parametername">width</span></td>
+        <td><p>The width the topography. When constructed from a set of elevations, the
+width and the length of the topography will be the same.</p>
 </td>
       </tr>
       <tr>
@@ -311,11 +306,6 @@ var topo = new Topography(Vector3.Origin, cellSize, cellSize, elevations, w);
         <td><span class="parametername">elevations</span></td>
         <td><p>An array of elevation samples which will be converted to a square array of width.</p>
 </td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">rowWidth</span></td>
-        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Material.html">Material</a></td>
@@ -523,6 +513,82 @@ to convert the flat list into a square grid.</p>
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Topography_AverageEdges_" data-uid="Elements.Topography.AverageEdges*"></a>
+  <h4 id="Elements_Topography_AverageEdges_Elements_Topography_Elements_Units_CardinalDirection_" data-uid="Elements.Topography.AverageEdges(Elements.Topography,Elements.Units.CardinalDirection)">AverageEdges(Topography, Units.CardinalDirection)</h4>
+  <div class="markdown level1 summary"><p>Average the vertex placement along the specified edge
+of this topography with the vertex placement along the
+corresponding edge of a target topography.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AverageEdges(Topography target, Units.CardinalDirection edgeToAverage)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Topography.html">Topography</a></td>
+        <td><span class="parametername">target</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Units.CardinalDirection.html">Units.CardinalDirection</a></td>
+        <td><span class="parametername">edgeToAverage</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Topography_GetEdgeVertices_" data-uid="Elements.Topography.GetEdgeVertices*"></a>
+  <h4 id="Elements_Topography_GetEdgeVertices_Elements_Units_CardinalDirection_" data-uid="Elements.Topography.GetEdgeVertices(Elements.Units.CardinalDirection)">GetEdgeVertices(Units.CardinalDirection)</h4>
+  <div class="markdown level1 summary"><p>Get the vertices along the specified edge of a square topography.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vertex[] GetEdgeVertices(Units.CardinalDirection direction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Units.CardinalDirection.html">Units.CardinalDirection</a></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The edge of vertices to return.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a>[]</td>
+        <td><p>A collection of vertices.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Topography_Tessellate_" data-uid="Elements.Topography.Tessellate*"></a>
   <h4 id="Elements_Topography_Tessellate_Elements_Geometry_Mesh__" data-uid="Elements.Topography.Tessellate(Elements.Geometry.Mesh@)">Tessellate(ref Mesh)</h4>
   <div class="markdown level1 summary"><p>Tessellate the topography.</p>

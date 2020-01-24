@@ -1,3 +1,4 @@
+using System;
 using Elements.Geometry;
 
 namespace Elements
@@ -13,6 +14,17 @@ namespace Elements
         public virtual void UpdateRepresentations()
         {
             // Override in derived classes.
+        }
+
+        /// <summary>
+        /// Create an instance of this element.
+        /// Instances will point to the same 
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="name"></param>
+        public ElementInstance CreateInstance(Transform transform, string name)
+        {
+            return new ElementInstance(this, transform, name, Guid.NewGuid());
         }
     }
 }

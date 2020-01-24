@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class Units
+    <title>Class MercatorProjection
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class Units
+    <meta name="title" content="Class MercatorProjection
    | Hypar Docs ">
     <meta name="generator" content="docfx 2.48.1.0">
     
@@ -72,17 +72,17 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Hypar.Elements.Units">
+            <article class="content wrap" id="_content" data-uid="Elements.Spatial.MercatorProjection">
   
-  <h1 id="Hypar_Elements_Units" data-uid="Hypar.Elements.Units" class="text-break">Class Units
+  <h1 id="Elements_Spatial_MercatorProjection" data-uid="Elements.Spatial.MercatorProjection" class="text-break">Class MercatorProjection
   </h1>
-  <div class="markdown level0 summary"><p>Unit conversions and utilities.</p>
+  <div class="markdown level0 summary"><p>Methods for computing geographic coordinates using the Mercator projection.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Units</span></div>
+    <div class="level1"><span class="xref">MercatorProjection</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -108,22 +108,22 @@
       <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="Hypar.Elements.html">Hypar.Elements</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.html">Elements.Spatial</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
-  <h5 id="Hypar_Elements_Units_syntax">Syntax</h5>
+  <h5 id="Elements_Spatial_MercatorProjection_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class Units</code></pre>
+    <pre><code class="lang-csharp hljs">public static class MercatorProjection</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
-  <a id="Hypar_Elements_Units_DegreesToRadians_" data-uid="Hypar.Elements.Units.DegreesToRadians*"></a>
-  <h4 id="Hypar_Elements_Units_DegreesToRadians_System_Double_" data-uid="Hypar.Elements.Units.DegreesToRadians(System.Double)">DegreesToRadians(Double)</h4>
-  <div class="markdown level1 summary"><p>Convert from degrees to radians</p>
+  <a id="Elements_Spatial_MercatorProjection_LatToY_" data-uid="Elements.Spatial.MercatorProjection.LatToY*"></a>
+  <h4 id="Elements_Spatial_MercatorProjection_LatToY_System_Double_" data-uid="Elements.Spatial.MercatorProjection.LatToY(System.Double)">LatToY(Double)</h4>
+  <div class="markdown level1 summary"><p>Get the y coordinate, in meters, of the specified latitude.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static double DegreesToRadians(double degrees)</code></pre>
+    <pre><code class="lang-csharp hljs">public static double LatToY(double lat)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -137,7 +137,7 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">degrees</span></td>
+        <td><span class="parametername">lat</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -153,19 +153,18 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><p>The provided value converted to radians</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <a id="Hypar_Elements_Units_FeetToMeters_" data-uid="Hypar.Elements.Units.FeetToMeters*"></a>
-  <h4 id="Hypar_Elements_Units_FeetToMeters_System_Double_" data-uid="Hypar.Elements.Units.FeetToMeters(System.Double)">FeetToMeters(Double)</h4>
-  <div class="markdown level1 summary"><p>Convert from feet to meters.</p>
+  <a id="Elements_Spatial_MercatorProjection_LonToX_" data-uid="Elements.Spatial.MercatorProjection.LonToX*"></a>
+  <h4 id="Elements_Spatial_MercatorProjection_LonToX_System_Double_" data-uid="Elements.Spatial.MercatorProjection.LonToX(System.Double)">LonToX(Double)</h4>
+  <div class="markdown level1 summary"><p>Get the x coordinate, in meters, of the specified longitude.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static double FeetToMeters(double feet)</code></pre>
+    <pre><code class="lang-csharp hljs">public static double LonToX(double lon)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -179,7 +178,7 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">feet</span></td>
+        <td><span class="parametername">lon</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -195,19 +194,18 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><p>The provided value converted to meters.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <a id="Hypar_Elements_Units_InchesToMeters_" data-uid="Hypar.Elements.Units.InchesToMeters*"></a>
-  <h4 id="Hypar_Elements_Units_InchesToMeters_System_Double_" data-uid="Hypar.Elements.Units.InchesToMeters(System.Double)">InchesToMeters(Double)</h4>
-  <div class="markdown level1 summary"><p>Convert from inches to meters.</p>
+  <a id="Elements_Spatial_MercatorProjection_ToGeoCoord_" data-uid="Elements.Spatial.MercatorProjection.ToGeoCoord*"></a>
+  <h4 id="Elements_Spatial_MercatorProjection_ToGeoCoord_System_Double_System_Double_" data-uid="Elements.Spatial.MercatorProjection.ToGeoCoord(System.Double,System.Double)">ToGeoCoord(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the latitude and longitude of the specified x and y coordinates.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static double InchesToMeters(double inches)</code></pre>
+    <pre><code class="lang-csharp hljs">public static double[] ToGeoCoord(double x, double y)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -221,50 +219,12 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">inches</span></td>
-        <td><p>A value of inches.</p>
-</td>
+        <td><span class="parametername">x</span></td>
+        <td></td>
       </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><p>The provided value converted to meters.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Hypar_Elements_Units_MetersToFeet_" data-uid="Hypar.Elements.Units.MetersToFeet*"></a>
-  <h4 id="Hypar_Elements_Units_MetersToFeet_System_Double_" data-uid="Hypar.Elements.Units.MetersToFeet(System.Double)">MetersToFeet(Double)</h4>
-  <div class="markdown level1 summary"><p>Convert from meters to feet.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static double MetersToFeet(double meters)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">meters</span></td>
+        <td><span class="parametername">y</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -279,20 +239,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><p>The provided value converted to feet.</p>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td><p>An array of doubles containing the longitude and latitude in degrees.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <a id="Hypar_Elements_Units_MetersToInches_" data-uid="Hypar.Elements.Units.MetersToInches*"></a>
-  <h4 id="Hypar_Elements_Units_MetersToInches_System_Double_" data-uid="Hypar.Elements.Units.MetersToInches(System.Double)">MetersToInches(Double)</h4>
-  <div class="markdown level1 summary"><p>Convert from meters to inches.</p>
+  <a id="Elements_Spatial_MercatorProjection_ToPixel_" data-uid="Elements.Spatial.MercatorProjection.ToPixel*"></a>
+  <h4 id="Elements_Spatial_MercatorProjection_ToPixel_System_Double_System_Double_" data-uid="Elements.Spatial.MercatorProjection.ToPixel(System.Double,System.Double)">ToPixel(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the coordinates of the longitude and latitude.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static double MetersToInches(double meters)</code></pre>
+    <pre><code class="lang-csharp hljs">public static double[] ToPixel(double lon, double lat)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -306,7 +266,12 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">meters</span></td>
+        <td><span class="parametername">lon</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">lat</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -321,20 +286,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><p>The provided value converted to inches.</p>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td><p>An array of doubles containing the x, and y coordintes, in meters.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <a id="Hypar_Elements_Units_RadiansToDegrees_" data-uid="Hypar.Elements.Units.RadiansToDegrees*"></a>
-  <h4 id="Hypar_Elements_Units_RadiansToDegrees_System_Double_" data-uid="Hypar.Elements.Units.RadiansToDegrees(System.Double)">RadiansToDegrees(Double)</h4>
-  <div class="markdown level1 summary"><p>Convert from radians to degrees.</p>
+  <a id="Elements_Spatial_MercatorProjection_XToLon_" data-uid="Elements.Spatial.MercatorProjection.XToLon*"></a>
+  <h4 id="Elements_Spatial_MercatorProjection_XToLon_System_Double_" data-uid="Elements.Spatial.MercatorProjection.XToLon(System.Double)">XToLon(Double)</h4>
+  <div class="markdown level1 summary"><p>Get the longitude of the specified x coordinate.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static double RadiansToDegrees(double radians)</code></pre>
+    <pre><code class="lang-csharp hljs">public static double XToLon(double x)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -348,8 +313,9 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">radians</span></td>
-        <td></td>
+        <td><span class="parametername">x</span></td>
+        <td><p>The x coordinate.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -364,7 +330,50 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><p>The provided value converted to radians.</p>
+        <td><p>The longitude in degrees.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_MercatorProjection_YToLat_" data-uid="Elements.Spatial.MercatorProjection.YToLat*"></a>
+  <h4 id="Elements_Spatial_MercatorProjection_YToLat_System_Double_" data-uid="Elements.Spatial.MercatorProjection.YToLat(System.Double)">YToLat(Double)</h4>
+  <div class="markdown level1 summary"><p>Get the latitude of the specified y coordinate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static double YToLat(double y)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">y</span></td>
+        <td><p>The y coordinate.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>The latitude in degrees.</p>
 </td>
       </tr>
     </tbody>
