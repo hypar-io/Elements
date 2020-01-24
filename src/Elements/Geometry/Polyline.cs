@@ -2,6 +2,7 @@ using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using ClipperLib;
 
 namespace Elements.Geometry
 {
@@ -10,15 +11,18 @@ namespace Elements.Geometry
     /// </summary>
     public partial class Polyline : ICurve
     {
+
+        private const double scale = 1024.0;
+
         /// <summary>
         /// Calculate the length of the polygon.
         /// </summary>
         public override double Length()
         {
             var length = 0.0;
-            for(var i=0; i<this.Vertices.Count-1; i++)
+            for (var i = 0; i < this.Vertices.Count - 1; i++)
             {
-                length += this.Vertices[i].DistanceTo(this.Vertices[i+1]);
+                length += this.Vertices[i].DistanceTo(this.Vertices[i + 1]);
             }
             return length;
         }
@@ -104,7 +108,7 @@ namespace Elements.Geometry
             // to one of the vertices.
             Vector3 a = new Vector3();
             var isEqualToVertex = false;
-            foreach(var v in this.Vertices)
+            foreach (var v in this.Vertices)
             {
                 if (v.Equals(o))
                 {
@@ -229,9 +233,9 @@ namespace Elements.Geometry
         /// </summary>
         internal static void CheckSegmentLengthAndThrow(IList<Line> segments)
         {
-            foreach(var s in segments)
+            foreach (var s in segments)
             {
-                if(s.Length() == 0)
+                if (s.Length() == 0)
                 {
                     throw new ArgumentException("A segment fo the polyline has zero length.");
                 }
@@ -247,16 +251,16 @@ namespace Elements.Geometry
         {
             var segmentsTrans = new List<Line>();
 
-            foreach(var l in segments)
+            foreach (var l in segments)
             {
                 segmentsTrans.Add(t.OfLine(l));
             };
 
-            for(var i=0; i<segmentsTrans.Count; i++)
+            for (var i = 0; i < segmentsTrans.Count; i++)
             {
-                for(var j=0; j<segmentsTrans.Count; j++)
+                for (var j = 0; j < segmentsTrans.Count; j++)
                 {
-                    if(i == j)
+                    if (i == j)
                     {
                         // Don't check against itself.
                         continue;
@@ -300,12 +304,12 @@ namespace Elements.Geometry
             if (i == 0)
             {
                 b = this.Vertices[i + 1];
-                return new Transform(a, (a-b).Normalized());
+                return new Transform(a, (a - b).Normalized());
             }
             else if (i == this.Vertices.Count - 1)
             {
                 b = this.Vertices[i - 1];
-                return new Transform(a, (b-a).Normalized());
+                return new Transform(a, (b - a).Normalized());
             }
             else
             {
@@ -349,6 +353,52 @@ namespace Elements.Geometry
             }
             segmentIndex = this.Vertices.Count - 1;
             return this.End;
+        }
+
+         /// <summary>
+        /// Offset this polyline by the specified amount.
+        /// </summary>
+        /// <param name="offset">The amount to offset.</param>
+        /// <returns>A new closed Polygon offset in all directions by offset from the polyline.</returns>
+        public Polygon[] ClosedOffset(double offset)
+        {
+            var path = this.ToClipperPath();
+
+            var solution = new List<List<IntPoint>>();
+            var co = new ClipperOffset();
+            co.AddPath(path, JoinType.jtMiter, EndType.etOpenSquare);
+            co.Execute(ref solution, offset * scale);  // important, scale also used here
+
+            var result = new Polygon[solution.Count];
+            for(var i=0; i<result.Length; i++)
+            {
+                result[i] = solution[i].ToPolygon();
+            }
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// Polyline extension methods.
+    /// </summary>
+    internal static class PolylineExtensions
+    {
+
+        private const double scale = 1024.0;
+
+        /// <summary>
+        /// Construct a clipper path from a Polygon.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        internal static List<IntPoint> ToClipperPath(this Polyline p)
+        {
+            var path = new List<IntPoint>();
+            foreach (var v in p.Vertices)
+            {
+                path.Add(new IntPoint(v.X * scale, v.Y * scale));
+            }
+            return path;
         }
     }
 }
