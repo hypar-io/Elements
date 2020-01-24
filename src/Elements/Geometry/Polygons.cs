@@ -14,14 +14,9 @@ namespace Elements.Geometry
         /// <param name="width">The width of the rectangle.</param>
         /// <param name="height">The height of the rectangle.</param>
         /// <returns>A rectangular Polygon centered around origin.</returns>
-        public static Polygon Rectangle(double width, double height)
+        public static Rectangle Rectangle(double width, double height)
         {
-            var a = new Vector3(-width / 2, -height / 2);
-            var b = new Vector3(width / 2, -height / 2);
-            var c = new Vector3(width / 2, height / 2);
-            var d = new Vector3(-width / 2, height / 2);
-
-            return new Polygon(new[] { a, b, c, d });
+            return new Rectangle(width, height);
         }
 
         /// <summary>
@@ -30,14 +25,9 @@ namespace Elements.Geometry
         /// <param name="min">The minimum coordinate.</param>
         /// <param name="max">The maximum coordinate.</param>
         /// <returns>A rectangular Polygon with its lower left corner at min and its upper right corner at max.</returns>
-        public static Polygon Rectangle(Vector3 min, Vector3 max)
+        public static Rectangle Rectangle(Vector3 min, Vector3 max)
         {
-            var a = min;
-            var b = new Vector3(max.X, min.Y);
-            var c = max;
-            var d = new Vector3(min.X, max.Y);
-
-            return new Polygon(new[] { a, b, c, d });
+            return new Rectangle(min, max);
         }
 
         /// <summary>
