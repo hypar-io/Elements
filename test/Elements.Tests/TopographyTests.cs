@@ -111,8 +111,8 @@ namespace Elements.Tests
         {
             this.Name = "MapboxTopography";
             
-            // 2 3
             // 0 1
+            // 2 3
 
             var maps = new[]{
                 "./Topography/Texture_f7c3dc2f-c47c-4638-a962-53ae31719cf5_0.jpg",
@@ -127,11 +127,27 @@ namespace Elements.Tests
                 "./Topography/Topo_0a91fd8a-d887-40c2-a729-aac47441f9d8_3.png"};
             
             var tiles = new []{
-                new Tuple<int,int>(20,21),
-                new Tuple<int,int>(21,21),
                 new Tuple<int,int>(20,20),
                 new Tuple<int,int>(21,20),
+                new Tuple<int,int>(20,21),
+                new Tuple<int,int>(21,21),
             };
+
+            // Web Mercator Tiling (x,y)
+            // 0,0   1,0
+            // 0,1   1,1
+
+            // Image Coordinates (x,y)
+            // 0,0   1,0
+            // 0,1   1,1
+
+            // Image Texture coordinates (u,v)
+            // 0,1   1,1
+            // 0,0   1,0
+
+            // Mesh Coordinates
+            // 0,1   1,1
+            // 0,0   1,0
 
             var zoom = 16;
             var selectedOrigin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
@@ -141,14 +157,16 @@ namespace Elements.Tests
 
             for(var i=0; i<maps.Length; i++)
             {
-                using(var map = Image.Load<Rgba32>(maps[i]))
                 using(var topo = Image.Load<Rgba32>(topos[i]))
                 {
                     var size = topo.Width / sampleSize;
                     var elevationData = new double[(int)Math.Pow(size, 2)];
 
                     var idx = 0;
-                    for (var y = 0; y < topo.Height; y += sampleSize)
+                    // Read the rows in reverse order as images
+                    // start in the top left and meshes start
+                    // in the lower left.
+                    for (var y = topo.Width - 1; y >= 0; y -= sampleSize)
                     {
                         for (var x = 0; x < topo.Width; x += sampleSize)
                         {
@@ -168,12 +186,12 @@ namespace Elements.Tests
                 }
             }
 
+            // 1 2
             // 2 3
-            // 0 1
 
             topographies[0].AverageEdges(topographies[1], Units.CardinalDirection.East);
-            topographies[0].AverageEdges(topographies[2], Units.CardinalDirection.North);
-            topographies[1].AverageEdges(topographies[3], Units.CardinalDirection.North);
+            topographies[0].AverageEdges(topographies[2], Units.CardinalDirection.South);
+            topographies[1].AverageEdges(topographies[3], Units.CardinalDirection.South);
             topographies[2].AverageEdges(topographies[3], Units.CardinalDirection.East);
         }
 
