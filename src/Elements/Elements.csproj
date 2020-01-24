@@ -42,4 +42,7 @@
     <None Update="UV.jpg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MathUtils\" />
+  </ItemGroup>
 </Project>
