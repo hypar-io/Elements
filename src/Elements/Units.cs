@@ -8,6 +8,11 @@ namespace Elements
     public static class Units
     {
         /// <summary>
+        /// Pi/2
+        /// </summary>
+        public const double PI_2 = Math.PI / 2;
+
+        /// <summary>
         /// Convert from meters to feet.
         /// </summary>
         /// <param name="meters"></param>

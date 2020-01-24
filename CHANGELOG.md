@@ -18,6 +18,7 @@
 - `Mesh.ComputeNormals`
 - `Topography.AverageEdges(Topography target, Units.CardinalDirection edgeToAverage)`
 - `Topography.GetEdgeVertices(Units.CardinalDirection direction)`
+- `WebMercatorProjection`
 
 ### Fixed
 - Fixed [#125](https://github.com/hypar-io/Hypar/issues/125).

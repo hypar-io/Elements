@@ -88,12 +88,6 @@ namespace Elements
 
             this.Origin = origin;
             this.Elevations = elevations;
-            
-            if (Math.Sqrt(elevations.Length) % 2 != 0)
-            {
-                throw new ArgumentException($"The topography could not be created. The length of the elevations array, {elevations.Length}, must be a square.");
-            }
-
             this.RowWidth = (int)Math.Sqrt(elevations.Length);
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Spatial;
 using Newtonsoft.Json;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -15,9 +16,6 @@ namespace Elements.Tests
     public class TopographyTests: ModelTest
     {
         private ITestOutputHelper _output;
-        private const double _earthRadius = 6378137;
-        private const double _originShift = 2 * Math.PI * _earthRadius / 2;
-        private const double _webMercMax = 20037508.342789244;
 
         public TopographyTests(ITestOutputHelper output)
         {
@@ -28,7 +26,7 @@ namespace Elements.Tests
         public void Simple()
         {
             this.Name = "TopographySimple";
-            var elevations = new double[]{0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05, 0.2, 0.5, 0.6};
+            var elevations = new double[]{0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05};
             var colorizer = new Func<Triangle,Elements.Geometry.Color>((t)=>{
                 return Colors.Green;
             });
@@ -136,7 +134,7 @@ namespace Elements.Tests
             };
 
             var zoom = 16;
-            var selectedOrigin = TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
+            var selectedOrigin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
             var sampleSize = 4;
             
             var topographies = new Topography[maps.Length];
@@ -146,7 +144,7 @@ namespace Elements.Tests
                 using(var map = Image.Load<Rgba32>(maps[i]))
                 using(var topo = Image.Load<Rgba32>(topos[i]))
                 {
-                    var size = (topo.Width / sampleSize);
+                    var size = topo.Width / sampleSize;
                     var elevationData = new double[(int)Math.Pow(size, 2)];
 
                     var idx = 0;
@@ -161,10 +159,8 @@ namespace Elements.Tests
                         }
                     }
 
-                    var tileSize = GetTileSizeMeters(zoom);
-                    var rowSize = Math.Sqrt(elevationData.Length);
-                    var cellSize = tileSize / rowSize;
-                    var origin = TileIdToCenterWebMercator(tiles[i].Item1, tiles[i].Item2, zoom) - new Vector3(tileSize / 2.0, tileSize / 2.0) - selectedOrigin;
+                    var tileSize = WebMercatorProjection.GetTileSizeMeters(zoom);
+                    var origin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[i].Item1, tiles[i].Item2, zoom) - new Vector3(tileSize / 2.0, tileSize / 2.0) - selectedOrigin;
                     var material = new Material($"Topo_{i}", Colors.White, 0.0f, 0.0f, maps[i]);
                     var topography = new Topography(origin, tileSize, elevationData, material);                
                     this.Model.AddElement(topography);
@@ -181,23 +177,6 @@ namespace Elements.Tests
             topographies[2].AverageEdges(topographies[3], Units.CardinalDirection.East);
         }
 
-        private static double GetTileSizeMeters(int zoom)
-        {
-            // Circumference of the earth divided by 2^zoom
-            return (2 * Math.PI * _earthRadius)/ Math.Pow(2,zoom);
-        }
-
-        private static Vector3 TileIdToCenterWebMercator(int x, int y, int zoom)
-        {
-            var tileCnt = Math.Pow(2, zoom);
-            var centerX = x + 0.5;
-            var centerY = y + 0.5;
-
-            centerX = ((centerX / tileCnt * 2) - 1) * _webMercMax;
-            centerY = (1 - (centerY / tileCnt * 2)) * _webMercMax;
-            return new Vector3(centerX, centerY);
-        }
-
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
         {
             // Read topo elevations
@@ -205,7 +184,7 @@ namespace Elements.Tests
             var elevations = data["points"];
 
             // Compute the mapbox tile side lenth.
-            var tileSize = GetTileSizeMeters(15);
+            var tileSize = WebMercatorProjection.GetTileSizeMeters(15);
 
             return new Topography(origin.Equals(default(Vector3)) ? origin : Vector3.Origin, tileSize, elevations, material);
         }

@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Elements.Geometry;
 using Newtonsoft.Json;
 using Xunit;
+using Elements.Spatial;
 
 namespace Elements.Tests.Examples
 {
@@ -16,12 +16,9 @@ namespace Elements.Tests.Examples
             
             // <example>
             // Read topo elevations from a file.
-            var w = 512/8 - 1;
             var data = JsonConvert.DeserializeObject<Dictionary<string,double[]>>(File.ReadAllText("./elevations.json"));
             var elevations = data["points"];
-
-            // Compute the mapbox tile size.
-            var tileSize = (40075016.685578 / Math.Pow(2, 15))/w;
+            var tileSize = WebMercatorProjection.GetTileSizeMeters(15);
 
             // Create a topography.
             var topo = new Topography(Vector3.Origin, tileSize, elevations);
