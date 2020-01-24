@@ -861,90 +861,6 @@ references:
   isSpec: "True"
   fullName: Elements.GeoJSON.LineString.Coordinates
   nameWithType: LineString.Coordinates
-- uid: Elements.GeoJSON.MercatorProjection
-  name: MercatorProjection
-  href: api/Elements.GeoJSON.MercatorProjection.html
-  commentId: T:Elements.GeoJSON.MercatorProjection
-  fullName: Elements.GeoJSON.MercatorProjection
-  nameWithType: MercatorProjection
-- uid: Elements.GeoJSON.MercatorProjection.latToY(System.Double)
-  name: latToY(Double)
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_latToY_System_Double_
-  commentId: M:Elements.GeoJSON.MercatorProjection.latToY(System.Double)
-  fullName: Elements.GeoJSON.MercatorProjection.latToY(System.Double)
-  nameWithType: MercatorProjection.latToY(Double)
-- uid: Elements.GeoJSON.MercatorProjection.latToY*
-  name: latToY
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_latToY_
-  commentId: Overload:Elements.GeoJSON.MercatorProjection.latToY
-  isSpec: "True"
-  fullName: Elements.GeoJSON.MercatorProjection.latToY
-  nameWithType: MercatorProjection.latToY
-- uid: Elements.GeoJSON.MercatorProjection.lonToX(System.Double)
-  name: lonToX(Double)
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_lonToX_System_Double_
-  commentId: M:Elements.GeoJSON.MercatorProjection.lonToX(System.Double)
-  fullName: Elements.GeoJSON.MercatorProjection.lonToX(System.Double)
-  nameWithType: MercatorProjection.lonToX(Double)
-- uid: Elements.GeoJSON.MercatorProjection.lonToX*
-  name: lonToX
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_lonToX_
-  commentId: Overload:Elements.GeoJSON.MercatorProjection.lonToX
-  isSpec: "True"
-  fullName: Elements.GeoJSON.MercatorProjection.lonToX
-  nameWithType: MercatorProjection.lonToX
-- uid: Elements.GeoJSON.MercatorProjection.toGeoCoord(System.Double,System.Double)
-  name: toGeoCoord(Double, Double)
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_toGeoCoord_System_Double_System_Double_
-  commentId: M:Elements.GeoJSON.MercatorProjection.toGeoCoord(System.Double,System.Double)
-  fullName: Elements.GeoJSON.MercatorProjection.toGeoCoord(System.Double, System.Double)
-  nameWithType: MercatorProjection.toGeoCoord(Double, Double)
-- uid: Elements.GeoJSON.MercatorProjection.toGeoCoord*
-  name: toGeoCoord
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_toGeoCoord_
-  commentId: Overload:Elements.GeoJSON.MercatorProjection.toGeoCoord
-  isSpec: "True"
-  fullName: Elements.GeoJSON.MercatorProjection.toGeoCoord
-  nameWithType: MercatorProjection.toGeoCoord
-- uid: Elements.GeoJSON.MercatorProjection.toPixel(System.Double,System.Double)
-  name: toPixel(Double, Double)
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_toPixel_System_Double_System_Double_
-  commentId: M:Elements.GeoJSON.MercatorProjection.toPixel(System.Double,System.Double)
-  fullName: Elements.GeoJSON.MercatorProjection.toPixel(System.Double, System.Double)
-  nameWithType: MercatorProjection.toPixel(Double, Double)
-- uid: Elements.GeoJSON.MercatorProjection.toPixel*
-  name: toPixel
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_toPixel_
-  commentId: Overload:Elements.GeoJSON.MercatorProjection.toPixel
-  isSpec: "True"
-  fullName: Elements.GeoJSON.MercatorProjection.toPixel
-  nameWithType: MercatorProjection.toPixel
-- uid: Elements.GeoJSON.MercatorProjection.xToLon(System.Double)
-  name: xToLon(Double)
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_xToLon_System_Double_
-  commentId: M:Elements.GeoJSON.MercatorProjection.xToLon(System.Double)
-  fullName: Elements.GeoJSON.MercatorProjection.xToLon(System.Double)
-  nameWithType: MercatorProjection.xToLon(Double)
-- uid: Elements.GeoJSON.MercatorProjection.xToLon*
-  name: xToLon
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_xToLon_
-  commentId: Overload:Elements.GeoJSON.MercatorProjection.xToLon
-  isSpec: "True"
-  fullName: Elements.GeoJSON.MercatorProjection.xToLon
-  nameWithType: MercatorProjection.xToLon
-- uid: Elements.GeoJSON.MercatorProjection.yToLat(System.Double)
-  name: yToLat(Double)
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_yToLat_System_Double_
-  commentId: M:Elements.GeoJSON.MercatorProjection.yToLat(System.Double)
-  fullName: Elements.GeoJSON.MercatorProjection.yToLat(System.Double)
-  nameWithType: MercatorProjection.yToLat(Double)
-- uid: Elements.GeoJSON.MercatorProjection.yToLat*
-  name: yToLat
-  href: api/Elements.GeoJSON.MercatorProjection.html#Elements_GeoJSON_MercatorProjection_yToLat_
-  commentId: Overload:Elements.GeoJSON.MercatorProjection.yToLat
-  isSpec: "True"
-  fullName: Elements.GeoJSON.MercatorProjection.yToLat
-  nameWithType: MercatorProjection.yToLat
 - uid: Elements.GeoJSON.MultiLineString
   name: MultiLineString
   href: api/Elements.GeoJSON.MultiLineString.html
@@ -3317,6 +3233,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Mesh.Mesh
   nameWithType: Mesh.Mesh
+- uid: Elements.Geometry.Mesh.ComputeNormals
+  name: ComputeNormals()
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_ComputeNormals
+  commentId: M:Elements.Geometry.Mesh.ComputeNormals
+  fullName: Elements.Geometry.Mesh.ComputeNormals()
+  nameWithType: Mesh.ComputeNormals()
+- uid: Elements.Geometry.Mesh.ComputeNormals*
+  name: ComputeNormals
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_ComputeNormals_
+  commentId: Overload:Elements.Geometry.Mesh.ComputeNormals
+  isSpec: "True"
+  fullName: Elements.Geometry.Mesh.ComputeNormals
+  nameWithType: Mesh.ComputeNormals
 - uid: Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)
   name: GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____
@@ -9131,6 +9060,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vertex.Position
   nameWithType: Vertex.Position
+- uid: Elements.Geometry.Vertex.Triangles
+  name: Triangles
+  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Triangles
+  commentId: P:Elements.Geometry.Vertex.Triangles
+  fullName: Elements.Geometry.Vertex.Triangles
+  nameWithType: Vertex.Triangles
+- uid: Elements.Geometry.Vertex.Triangles*
+  name: Triangles
+  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Triangles_
+  commentId: Overload:Elements.Geometry.Vertex.Triangles
+  isSpec: "True"
+  fullName: Elements.Geometry.Vertex.Triangles
+  nameWithType: Vertex.Triangles
 - uid: Elements.Geometry.Vertex.UV
   name: UV
   href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_UV
@@ -10133,6 +10075,128 @@ references:
   isSpec: "True"
   fullName: Elements.Space.Volume
   nameWithType: Space.Volume
+- uid: Elements.Spatial
+  name: Elements.Spatial
+  href: api/Elements.Spatial.html
+  commentId: N:Elements.Spatial
+  fullName: Elements.Spatial
+  nameWithType: Elements.Spatial
+- uid: Elements.Spatial.MercatorProjection
+  name: MercatorProjection
+  href: api/Elements.Spatial.MercatorProjection.html
+  commentId: T:Elements.Spatial.MercatorProjection
+  fullName: Elements.Spatial.MercatorProjection
+  nameWithType: MercatorProjection
+- uid: Elements.Spatial.MercatorProjection.LatToY(System.Double)
+  name: LatToY(Double)
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_LatToY_System_Double_
+  commentId: M:Elements.Spatial.MercatorProjection.LatToY(System.Double)
+  fullName: Elements.Spatial.MercatorProjection.LatToY(System.Double)
+  nameWithType: MercatorProjection.LatToY(Double)
+- uid: Elements.Spatial.MercatorProjection.LatToY*
+  name: LatToY
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_LatToY_
+  commentId: Overload:Elements.Spatial.MercatorProjection.LatToY
+  isSpec: "True"
+  fullName: Elements.Spatial.MercatorProjection.LatToY
+  nameWithType: MercatorProjection.LatToY
+- uid: Elements.Spatial.MercatorProjection.LonToX(System.Double)
+  name: LonToX(Double)
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_LonToX_System_Double_
+  commentId: M:Elements.Spatial.MercatorProjection.LonToX(System.Double)
+  fullName: Elements.Spatial.MercatorProjection.LonToX(System.Double)
+  nameWithType: MercatorProjection.LonToX(Double)
+- uid: Elements.Spatial.MercatorProjection.LonToX*
+  name: LonToX
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_LonToX_
+  commentId: Overload:Elements.Spatial.MercatorProjection.LonToX
+  isSpec: "True"
+  fullName: Elements.Spatial.MercatorProjection.LonToX
+  nameWithType: MercatorProjection.LonToX
+- uid: Elements.Spatial.MercatorProjection.ToGeoCoord(System.Double,System.Double)
+  name: ToGeoCoord(Double, Double)
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_ToGeoCoord_System_Double_System_Double_
+  commentId: M:Elements.Spatial.MercatorProjection.ToGeoCoord(System.Double,System.Double)
+  fullName: Elements.Spatial.MercatorProjection.ToGeoCoord(System.Double, System.Double)
+  nameWithType: MercatorProjection.ToGeoCoord(Double, Double)
+- uid: Elements.Spatial.MercatorProjection.ToGeoCoord*
+  name: ToGeoCoord
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_ToGeoCoord_
+  commentId: Overload:Elements.Spatial.MercatorProjection.ToGeoCoord
+  isSpec: "True"
+  fullName: Elements.Spatial.MercatorProjection.ToGeoCoord
+  nameWithType: MercatorProjection.ToGeoCoord
+- uid: Elements.Spatial.MercatorProjection.ToPixel(System.Double,System.Double)
+  name: ToPixel(Double, Double)
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_ToPixel_System_Double_System_Double_
+  commentId: M:Elements.Spatial.MercatorProjection.ToPixel(System.Double,System.Double)
+  fullName: Elements.Spatial.MercatorProjection.ToPixel(System.Double, System.Double)
+  nameWithType: MercatorProjection.ToPixel(Double, Double)
+- uid: Elements.Spatial.MercatorProjection.ToPixel*
+  name: ToPixel
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_ToPixel_
+  commentId: Overload:Elements.Spatial.MercatorProjection.ToPixel
+  isSpec: "True"
+  fullName: Elements.Spatial.MercatorProjection.ToPixel
+  nameWithType: MercatorProjection.ToPixel
+- uid: Elements.Spatial.MercatorProjection.XToLon(System.Double)
+  name: XToLon(Double)
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_XToLon_System_Double_
+  commentId: M:Elements.Spatial.MercatorProjection.XToLon(System.Double)
+  fullName: Elements.Spatial.MercatorProjection.XToLon(System.Double)
+  nameWithType: MercatorProjection.XToLon(Double)
+- uid: Elements.Spatial.MercatorProjection.XToLon*
+  name: XToLon
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_XToLon_
+  commentId: Overload:Elements.Spatial.MercatorProjection.XToLon
+  isSpec: "True"
+  fullName: Elements.Spatial.MercatorProjection.XToLon
+  nameWithType: MercatorProjection.XToLon
+- uid: Elements.Spatial.MercatorProjection.YToLat(System.Double)
+  name: YToLat(Double)
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_YToLat_System_Double_
+  commentId: M:Elements.Spatial.MercatorProjection.YToLat(System.Double)
+  fullName: Elements.Spatial.MercatorProjection.YToLat(System.Double)
+  nameWithType: MercatorProjection.YToLat(Double)
+- uid: Elements.Spatial.MercatorProjection.YToLat*
+  name: YToLat
+  href: api/Elements.Spatial.MercatorProjection.html#Elements_Spatial_MercatorProjection_YToLat_
+  commentId: Overload:Elements.Spatial.MercatorProjection.YToLat
+  isSpec: "True"
+  fullName: Elements.Spatial.MercatorProjection.YToLat
+  nameWithType: MercatorProjection.YToLat
+- uid: Elements.Spatial.WebMercatorProjection
+  name: WebMercatorProjection
+  href: api/Elements.Spatial.WebMercatorProjection.html
+  commentId: T:Elements.Spatial.WebMercatorProjection
+  fullName: Elements.Spatial.WebMercatorProjection
+  nameWithType: WebMercatorProjection
+- uid: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Int32)
+  name: GetTileSizeMeters(Int32)
+  href: api/Elements.Spatial.WebMercatorProjection.html#Elements_Spatial_WebMercatorProjection_GetTileSizeMeters_System_Int32_
+  commentId: M:Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Int32)
+  fullName: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Int32)
+  nameWithType: WebMercatorProjection.GetTileSizeMeters(Int32)
+- uid: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters*
+  name: GetTileSizeMeters
+  href: api/Elements.Spatial.WebMercatorProjection.html#Elements_Spatial_WebMercatorProjection_GetTileSizeMeters_
+  commentId: Overload:Elements.Spatial.WebMercatorProjection.GetTileSizeMeters
+  isSpec: "True"
+  fullName: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters
+  nameWithType: WebMercatorProjection.GetTileSizeMeters
+- uid: Elements.Spatial.WebMercatorProjection.TileIdToCenterWebMercator(System.Int32,System.Int32,System.Int32)
+  name: TileIdToCenterWebMercator(Int32, Int32, Int32)
+  href: api/Elements.Spatial.WebMercatorProjection.html#Elements_Spatial_WebMercatorProjection_TileIdToCenterWebMercator_System_Int32_System_Int32_System_Int32_
+  commentId: M:Elements.Spatial.WebMercatorProjection.TileIdToCenterWebMercator(System.Int32,System.Int32,System.Int32)
+  fullName: Elements.Spatial.WebMercatorProjection.TileIdToCenterWebMercator(System.Int32, System.Int32, System.Int32)
+  nameWithType: WebMercatorProjection.TileIdToCenterWebMercator(Int32, Int32, Int32)
+- uid: Elements.Spatial.WebMercatorProjection.TileIdToCenterWebMercator*
+  name: TileIdToCenterWebMercator
+  href: api/Elements.Spatial.WebMercatorProjection.html#Elements_Spatial_WebMercatorProjection_TileIdToCenterWebMercator_
+  commentId: Overload:Elements.Spatial.WebMercatorProjection.TileIdToCenterWebMercator
+  isSpec: "True"
+  fullName: Elements.Spatial.WebMercatorProjection.TileIdToCenterWebMercator
+  nameWithType: WebMercatorProjection.TileIdToCenterWebMercator
 - uid: Elements.StandardWall
   name: StandardWall
   href: api/Elements.StandardWall.html
@@ -10333,15 +10397,15 @@ references:
   commentId: T:Elements.Topography
   fullName: Elements.Topography
   nameWithType: Topography
-- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,Elements.Material)
-  name: Topography(Vector3, Double, Double, Double[], Int32, Material)
-  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double___System_Int32_Elements_Material_
-  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double[],System.Int32,Elements.Material)
-  name.vb: Topography(Vector3, Double, Double, Double(), Int32, Material)
-  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double[], System.Int32, Elements.Material)
-  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double, System.Double(), System.Int32, Elements.Material)
-  nameWithType: Topography.Topography(Vector3, Double, Double, Double[], Int32, Material)
-  nameWithType.vb: Topography.Topography(Vector3, Double, Double, Double(), Int32, Material)
+- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material)
+  name: Topography(Vector3, Double, Double[], Material)
+  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double___Elements_Material_
+  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material)
+  name.vb: Topography(Vector3, Double, Double(), Material)
+  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double[], Elements.Material)
+  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double(), Elements.Material)
+  nameWithType: Topography.Topography(Vector3, Double, Double[], Material)
+  nameWithType.vb: Topography.Topography(Vector3, Double, Double(), Material)
 - uid: Elements.Topography.#ctor*
   name: Topography
   href: api/Elements.Topography.html#Elements_Topography__ctor_
@@ -10349,6 +10413,19 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.Topography
   nameWithType: Topography.Topography
+- uid: Elements.Topography.AverageEdges(Elements.Topography,Elements.Units.CardinalDirection)
+  name: AverageEdges(Topography, Units.CardinalDirection)
+  href: api/Elements.Topography.html#Elements_Topography_AverageEdges_Elements_Topography_Elements_Units_CardinalDirection_
+  commentId: M:Elements.Topography.AverageEdges(Elements.Topography,Elements.Units.CardinalDirection)
+  fullName: Elements.Topography.AverageEdges(Elements.Topography, Elements.Units.CardinalDirection)
+  nameWithType: Topography.AverageEdges(Topography, Units.CardinalDirection)
+- uid: Elements.Topography.AverageEdges*
+  name: AverageEdges
+  href: api/Elements.Topography.html#Elements_Topography_AverageEdges_
+  commentId: Overload:Elements.Topography.AverageEdges
+  isSpec: "True"
+  fullName: Elements.Topography.AverageEdges
+  nameWithType: Topography.AverageEdges
 - uid: Elements.Topography.CellHeight
   name: CellHeight
   href: api/Elements.Topography.html#Elements_Topography_CellHeight
@@ -10388,6 +10465,19 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.Elevations
   nameWithType: Topography.Elevations
+- uid: Elements.Topography.GetEdgeVertices(Elements.Units.CardinalDirection)
+  name: GetEdgeVertices(Units.CardinalDirection)
+  href: api/Elements.Topography.html#Elements_Topography_GetEdgeVertices_Elements_Units_CardinalDirection_
+  commentId: M:Elements.Topography.GetEdgeVertices(Elements.Units.CardinalDirection)
+  fullName: Elements.Topography.GetEdgeVertices(Elements.Units.CardinalDirection)
+  nameWithType: Topography.GetEdgeVertices(Units.CardinalDirection)
+- uid: Elements.Topography.GetEdgeVertices*
+  name: GetEdgeVertices
+  href: api/Elements.Topography.html#Elements_Topography_GetEdgeVertices_
+  commentId: Overload:Elements.Topography.GetEdgeVertices
+  isSpec: "True"
+  fullName: Elements.Topography.GetEdgeVertices
+  nameWithType: Topography.GetEdgeVertices
 - uid: Elements.Topography.MaxElevation
   name: MaxElevation
   href: api/Elements.Topography.html#Elements_Topography_MaxElevation
@@ -10482,6 +10572,126 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.UpdateRepresentations
   nameWithType: Topography.UpdateRepresentations
+- uid: Elements.Units
+  name: Units
+  href: api/Elements.Units.html
+  commentId: T:Elements.Units
+  fullName: Elements.Units
+  nameWithType: Units
+- uid: Elements.Units.CardinalDirection
+  name: Units.CardinalDirection
+  href: api/Elements.Units.CardinalDirection.html
+  commentId: T:Elements.Units.CardinalDirection
+  fullName: Elements.Units.CardinalDirection
+  nameWithType: Units.CardinalDirection
+- uid: Elements.Units.CardinalDirection.East
+  name: East
+  href: api/Elements.Units.CardinalDirection.html#Elements_Units_CardinalDirection_East
+  commentId: F:Elements.Units.CardinalDirection.East
+  fullName: Elements.Units.CardinalDirection.East
+  nameWithType: Units.CardinalDirection.East
+- uid: Elements.Units.CardinalDirection.North
+  name: North
+  href: api/Elements.Units.CardinalDirection.html#Elements_Units_CardinalDirection_North
+  commentId: F:Elements.Units.CardinalDirection.North
+  fullName: Elements.Units.CardinalDirection.North
+  nameWithType: Units.CardinalDirection.North
+- uid: Elements.Units.CardinalDirection.South
+  name: South
+  href: api/Elements.Units.CardinalDirection.html#Elements_Units_CardinalDirection_South
+  commentId: F:Elements.Units.CardinalDirection.South
+  fullName: Elements.Units.CardinalDirection.South
+  nameWithType: Units.CardinalDirection.South
+- uid: Elements.Units.CardinalDirection.West
+  name: West
+  href: api/Elements.Units.CardinalDirection.html#Elements_Units_CardinalDirection_West
+  commentId: F:Elements.Units.CardinalDirection.West
+  fullName: Elements.Units.CardinalDirection.West
+  nameWithType: Units.CardinalDirection.West
+- uid: Elements.Units.DegreesToRadians(System.Double)
+  name: DegreesToRadians(Double)
+  href: api/Elements.Units.html#Elements_Units_DegreesToRadians_System_Double_
+  commentId: M:Elements.Units.DegreesToRadians(System.Double)
+  fullName: Elements.Units.DegreesToRadians(System.Double)
+  nameWithType: Units.DegreesToRadians(Double)
+- uid: Elements.Units.DegreesToRadians*
+  name: DegreesToRadians
+  href: api/Elements.Units.html#Elements_Units_DegreesToRadians_
+  commentId: Overload:Elements.Units.DegreesToRadians
+  isSpec: "True"
+  fullName: Elements.Units.DegreesToRadians
+  nameWithType: Units.DegreesToRadians
+- uid: Elements.Units.FeetToMeters(System.Double)
+  name: FeetToMeters(Double)
+  href: api/Elements.Units.html#Elements_Units_FeetToMeters_System_Double_
+  commentId: M:Elements.Units.FeetToMeters(System.Double)
+  fullName: Elements.Units.FeetToMeters(System.Double)
+  nameWithType: Units.FeetToMeters(Double)
+- uid: Elements.Units.FeetToMeters*
+  name: FeetToMeters
+  href: api/Elements.Units.html#Elements_Units_FeetToMeters_
+  commentId: Overload:Elements.Units.FeetToMeters
+  isSpec: "True"
+  fullName: Elements.Units.FeetToMeters
+  nameWithType: Units.FeetToMeters
+- uid: Elements.Units.InchesToMeters(System.Double)
+  name: InchesToMeters(Double)
+  href: api/Elements.Units.html#Elements_Units_InchesToMeters_System_Double_
+  commentId: M:Elements.Units.InchesToMeters(System.Double)
+  fullName: Elements.Units.InchesToMeters(System.Double)
+  nameWithType: Units.InchesToMeters(Double)
+- uid: Elements.Units.InchesToMeters*
+  name: InchesToMeters
+  href: api/Elements.Units.html#Elements_Units_InchesToMeters_
+  commentId: Overload:Elements.Units.InchesToMeters
+  isSpec: "True"
+  fullName: Elements.Units.InchesToMeters
+  nameWithType: Units.InchesToMeters
+- uid: Elements.Units.MetersToFeet(System.Double)
+  name: MetersToFeet(Double)
+  href: api/Elements.Units.html#Elements_Units_MetersToFeet_System_Double_
+  commentId: M:Elements.Units.MetersToFeet(System.Double)
+  fullName: Elements.Units.MetersToFeet(System.Double)
+  nameWithType: Units.MetersToFeet(Double)
+- uid: Elements.Units.MetersToFeet*
+  name: MetersToFeet
+  href: api/Elements.Units.html#Elements_Units_MetersToFeet_
+  commentId: Overload:Elements.Units.MetersToFeet
+  isSpec: "True"
+  fullName: Elements.Units.MetersToFeet
+  nameWithType: Units.MetersToFeet
+- uid: Elements.Units.MetersToInches(System.Double)
+  name: MetersToInches(Double)
+  href: api/Elements.Units.html#Elements_Units_MetersToInches_System_Double_
+  commentId: M:Elements.Units.MetersToInches(System.Double)
+  fullName: Elements.Units.MetersToInches(System.Double)
+  nameWithType: Units.MetersToInches(Double)
+- uid: Elements.Units.MetersToInches*
+  name: MetersToInches
+  href: api/Elements.Units.html#Elements_Units_MetersToInches_
+  commentId: Overload:Elements.Units.MetersToInches
+  isSpec: "True"
+  fullName: Elements.Units.MetersToInches
+  nameWithType: Units.MetersToInches
+- uid: Elements.Units.PI_2
+  name: PI_2
+  href: api/Elements.Units.html#Elements_Units_PI_2
+  commentId: F:Elements.Units.PI_2
+  fullName: Elements.Units.PI_2
+  nameWithType: Units.PI_2
+- uid: Elements.Units.RadiansToDegrees(System.Double)
+  name: RadiansToDegrees(Double)
+  href: api/Elements.Units.html#Elements_Units_RadiansToDegrees_System_Double_
+  commentId: M:Elements.Units.RadiansToDegrees(System.Double)
+  fullName: Elements.Units.RadiansToDegrees(System.Double)
+  nameWithType: Units.RadiansToDegrees(Double)
+- uid: Elements.Units.RadiansToDegrees*
+  name: RadiansToDegrees
+  href: api/Elements.Units.html#Elements_Units_RadiansToDegrees_
+  commentId: Overload:Elements.Units.RadiansToDegrees
+  isSpec: "True"
+  fullName: Elements.Units.RadiansToDegrees
+  nameWithType: Units.RadiansToDegrees
 - uid: Elements.UserElement
   name: UserElement
   href: api/Elements.UserElement.html
@@ -11013,93 +11223,3 @@ references:
   isSpec: "True"
   fullName: Elements.Wall.UpdateRepresentations
   nameWithType: Wall.UpdateRepresentations
-- uid: Hypar.Elements
-  name: Hypar.Elements
-  href: api/Hypar.Elements.html
-  commentId: N:Hypar.Elements
-  fullName: Hypar.Elements
-  nameWithType: Hypar.Elements
-- uid: Hypar.Elements.Units
-  name: Units
-  href: api/Hypar.Elements.Units.html
-  commentId: T:Hypar.Elements.Units
-  fullName: Hypar.Elements.Units
-  nameWithType: Units
-- uid: Hypar.Elements.Units.DegreesToRadians(System.Double)
-  name: DegreesToRadians(Double)
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_DegreesToRadians_System_Double_
-  commentId: M:Hypar.Elements.Units.DegreesToRadians(System.Double)
-  fullName: Hypar.Elements.Units.DegreesToRadians(System.Double)
-  nameWithType: Units.DegreesToRadians(Double)
-- uid: Hypar.Elements.Units.DegreesToRadians*
-  name: DegreesToRadians
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_DegreesToRadians_
-  commentId: Overload:Hypar.Elements.Units.DegreesToRadians
-  isSpec: "True"
-  fullName: Hypar.Elements.Units.DegreesToRadians
-  nameWithType: Units.DegreesToRadians
-- uid: Hypar.Elements.Units.FeetToMeters(System.Double)
-  name: FeetToMeters(Double)
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_FeetToMeters_System_Double_
-  commentId: M:Hypar.Elements.Units.FeetToMeters(System.Double)
-  fullName: Hypar.Elements.Units.FeetToMeters(System.Double)
-  nameWithType: Units.FeetToMeters(Double)
-- uid: Hypar.Elements.Units.FeetToMeters*
-  name: FeetToMeters
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_FeetToMeters_
-  commentId: Overload:Hypar.Elements.Units.FeetToMeters
-  isSpec: "True"
-  fullName: Hypar.Elements.Units.FeetToMeters
-  nameWithType: Units.FeetToMeters
-- uid: Hypar.Elements.Units.InchesToMeters(System.Double)
-  name: InchesToMeters(Double)
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_InchesToMeters_System_Double_
-  commentId: M:Hypar.Elements.Units.InchesToMeters(System.Double)
-  fullName: Hypar.Elements.Units.InchesToMeters(System.Double)
-  nameWithType: Units.InchesToMeters(Double)
-- uid: Hypar.Elements.Units.InchesToMeters*
-  name: InchesToMeters
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_InchesToMeters_
-  commentId: Overload:Hypar.Elements.Units.InchesToMeters
-  isSpec: "True"
-  fullName: Hypar.Elements.Units.InchesToMeters
-  nameWithType: Units.InchesToMeters
-- uid: Hypar.Elements.Units.MetersToFeet(System.Double)
-  name: MetersToFeet(Double)
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_MetersToFeet_System_Double_
-  commentId: M:Hypar.Elements.Units.MetersToFeet(System.Double)
-  fullName: Hypar.Elements.Units.MetersToFeet(System.Double)
-  nameWithType: Units.MetersToFeet(Double)
-- uid: Hypar.Elements.Units.MetersToFeet*
-  name: MetersToFeet
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_MetersToFeet_
-  commentId: Overload:Hypar.Elements.Units.MetersToFeet
-  isSpec: "True"
-  fullName: Hypar.Elements.Units.MetersToFeet
-  nameWithType: Units.MetersToFeet
-- uid: Hypar.Elements.Units.MetersToInches(System.Double)
-  name: MetersToInches(Double)
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_MetersToInches_System_Double_
-  commentId: M:Hypar.Elements.Units.MetersToInches(System.Double)
-  fullName: Hypar.Elements.Units.MetersToInches(System.Double)
-  nameWithType: Units.MetersToInches(Double)
-- uid: Hypar.Elements.Units.MetersToInches*
-  name: MetersToInches
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_MetersToInches_
-  commentId: Overload:Hypar.Elements.Units.MetersToInches
-  isSpec: "True"
-  fullName: Hypar.Elements.Units.MetersToInches
-  nameWithType: Units.MetersToInches
-- uid: Hypar.Elements.Units.RadiansToDegrees(System.Double)
-  name: RadiansToDegrees(Double)
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_RadiansToDegrees_System_Double_
-  commentId: M:Hypar.Elements.Units.RadiansToDegrees(System.Double)
-  fullName: Hypar.Elements.Units.RadiansToDegrees(System.Double)
-  nameWithType: Units.RadiansToDegrees(Double)
-- uid: Hypar.Elements.Units.RadiansToDegrees*
-  name: RadiansToDegrees
-  href: api/Hypar.Elements.Units.html#Hypar_Elements_Units_RadiansToDegrees_
-  commentId: Overload:Hypar.Elements.Units.RadiansToDegrees
-  isSpec: "True"
-  fullName: Hypar.Elements.Units.RadiansToDegrees
-  nameWithType: Units.RadiansToDegrees

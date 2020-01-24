@@ -173,7 +173,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "EVFftqMJwh5SMoKOea9SLQ=="
+          "hash": "xg4qu999QXaaifK9dOqeMA=="
         }
       },
       "is_incremental": false,
@@ -385,18 +385,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Elements.GeoJSON.MercatorProjection.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.GeoJSON.MercatorProjection.html",
-          "hash": "FRabvLBZaU0OuGd472gQFw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/Elements.GeoJSON.MultiLineString.yml",
       "output": {
         ".html": {
@@ -473,7 +461,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.html",
-          "hash": "yHXsTI4gwareMd57A1XoZQ=="
+          "hash": "3DAKl3NDM0CCngIAULzupg=="
         }
       },
       "is_incremental": false,
@@ -665,7 +653,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Mesh.html",
-          "hash": "GbaXlT/g5bdjXfQBkaOzXw=="
+          "hash": "dAfXWJviIOodx9P2lbNspg=="
         }
       },
       "is_incremental": false,
@@ -989,7 +977,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Vertex.html",
-          "hash": "k2/jZFM6kqVOd6e7wEOZyQ=="
+          "hash": "IwA3i9dLmErhclYMoveo+w=="
         }
       },
       "is_incremental": false,
@@ -1225,6 +1213,42 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.MercatorProjection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.MercatorProjection.html",
+          "hash": "ecEt4nmmhlOQi8Y8cl+ctg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.WebMercatorProjection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.WebMercatorProjection.html",
+          "hash": "UYlV416YcA9RYap3j25t1Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.html",
+          "hash": "YyXMlITjnRODwgZIRDpdrg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Elements.StandardWall.yml",
       "output": {
         ".html": {
@@ -1253,7 +1277,31 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Topography.html",
-          "hash": "M/RNLPJ9hYGmpIIH/2sh1A=="
+          "hash": "w8EP2dMDPRxISALfWxZyqQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Units.CardinalDirection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Units.CardinalDirection.html",
+          "hash": "3iQOflxCvawTCrlqsdWobQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Units.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Units.html",
+          "hash": "ueFzB/UDKzibJakk836VsA=="
         }
       },
       "is_incremental": false,
@@ -1457,31 +1505,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.html",
-          "hash": "zxhEsSgpH0KW8nJOFrJthA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Hypar.Elements.Units.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Hypar.Elements.Units.html",
-          "hash": "cCd+hv5cwI0/zV3O5aK3IQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Hypar.Elements.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Hypar.Elements.html",
-          "hash": "TEi2xXEW2+04USyE262Miw=="
+          "hash": "W+pucO8r200sZYk3xT+/tw=="
         }
       },
       "is_incremental": false,
@@ -2212,11 +2236,10 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "ResourceDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
-          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 0,
+          "total_file_count": 110,
           "skipped_file_count": 0
         },
         "ConceptualDocumentProcessor": {
@@ -2225,10 +2248,11 @@
           "total_file_count": 3,
           "skipped_file_count": 0
         },
-        "ManagedReferenceDocumentProcessor": {
+        "ResourceDocumentProcessor": {
           "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 108,
+          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }
