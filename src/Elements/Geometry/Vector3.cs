@@ -473,10 +473,6 @@ namespace Elements.Geometry
         {
             //TODO: https://github.com/hypar-io/sdk/issues/54
             // Ensure that all triple products are equal to 0.
-            
-            // 2 or fewer, return true
-            if(points.Count < 3) return true;
-
             // a.Dot(b.Cross(c));
             var a = points[0];
             var b = points[1];
