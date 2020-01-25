@@ -178,6 +178,59 @@ namespace Elements.Spatial
         }
 
 
+        public void DivideByFixedLength(double length, FixedDivisionMode divisionMode, int sacrificialPanels = 0)
+        {
+            var lengthToFill = Domain.Length;
+            var maxPanelCount = (int)Math.Floor(lengthToFill / length) - sacrificialPanels;
+            if (maxPanelCount < 1) return;
+
+
+
+            var remainderSize = lengthToFill - maxPanelCount * length;
+            if (remainderSize < 0.01)
+            {
+                DivideByCount(maxPanelCount);
+                return;
+            }
+            switch (divisionMode)
+            {
+                case FixedDivisionMode.RemainderAtBothEnds:
+                    for (double i = remainderSize / 2.0; i < lengthToFill; i += length)
+                    {
+                        SplitAtPosition(i);
+                    }
+                    break;
+                case FixedDivisionMode.RemainderAtStart:
+                    for (double i = remainderSize; i < lengthToFill; i += length)
+                    {
+                        SplitAtPosition(i);
+                    }
+                    break;
+                case FixedDivisionMode.RemainderAtEnd:
+                    for (int i = 1; i < maxPanelCount + 1; i++)
+                    {
+                        SplitAtPosition(i * length);
+                    }
+                    break;
+                case FixedDivisionMode.RemainderNearMiddle:
+                    // assumes we must have at least 2 full-size panels
+                    int panelsOnLeft = maxPanelCount / 2; //integer division, on purpose
+                    //make left panels
+                    for (int i = 1; i <= panelsOnLeft; i++)
+                    {
+                        SplitAtPosition(i * length);
+                    }
+                    //make middle + right panels
+                    for (double i = panelsOnLeft * length + remainderSize; i < lengthToFill; i += length)
+                    {
+                        SplitAtPosition(i);
+                    }
+
+                    break;
+            }
+        }
+
+
 
         /// <summary>
         /// Retrieve the grid cell (as a Grid1d) at a length along the domain. 
@@ -301,5 +354,6 @@ namespace Elements.Spatial
         RemainderAtBothEnds,
         RemainderAtStart,
         RemainderAtEnd,
+        RemainderNearMiddle
     }
 }

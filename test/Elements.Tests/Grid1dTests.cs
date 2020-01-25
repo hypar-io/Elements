@@ -59,8 +59,43 @@ namespace Elements.Tests
             //var arcCellJson = JsonConvert.SerializeObject(arcCellGeometry);
             //File.WriteAllText("/Users/andrewheumann/Desktop/arc-cell-test.json", arcCellJson);
             Assert.Equal(9, arcCellGeometry.Count());
+        }
 
+
+        [Fact]
+        public void Grid1dFixedDivisions()
+        {
+            var length = 18.245354;
+            var panelTarget = 1.5;
+            var sacrificial = 1;
+            var inMiddle = new Grid1d(new Line(new Vector3(0, 0, 0), new Vector3(length, 0, 0)));
+            var atStart = new Grid1d(new Line(new Vector3(0, 1, 0), new Vector3(length, 1, 0)));
+            var atEnd = new Grid1d(new Line(new Vector3(0, 2, 0), new Vector3(length, 2, 0)));
+            var atBothEnds = new Grid1d(new Line(new Vector3(0, 3, 0), new Vector3(length, 3, 0)));
+            inMiddle.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderNearMiddle,sacrificial);
+            atStart.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtStart, sacrificial);
+            atEnd.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtEnd, sacrificial);
+            atBothEnds.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtBothEnds, sacrificial);
+            var cellGeo = new List<IEnumerable<Curve>>();
+            cellGeo.Add(inMiddle.GetCells().Select(cl => cl.GetCellGeometry()));
+            cellGeo.Add(atStart.GetCells().Select(cl => cl.GetCellGeometry()));
+            cellGeo.Add(atEnd.GetCells().Select(cl => cl.GetCellGeometry()));
+            cellGeo.Add(atBothEnds.GetCells().Select(cl => cl.GetCellGeometry()));
+            var json = JsonConvert.SerializeObject(cellGeo);
+            File.WriteAllText("/Users/andrewheumann/Desktop/fixedDivision-test.json", json);
 
         }
+
+        [Fact]
+        public void DivideAGridThatsTooSmall()
+        {
+            var grid1 = new Grid1d(1);
+            var grid2 = new Grid1d(1);
+            var grid3 = new Grid1d(1);
+            grid1.DivideByApproximateLength(6, EvenDivisionMode.RoundDown);
+            grid2.DivideByFixedLength(2, FixedDivisionMode.RemainderAtBothEnds);
+            grid3.DivideByFixedLength(1.5, FixedDivisionMode.RemainderAtStart);
+        }
+
     }
 }
