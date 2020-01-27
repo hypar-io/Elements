@@ -393,22 +393,12 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
         /// <returns>A new Polygon offset by offset.</returns>
-        public Polygon[] Offset(double offset)
+        ///
+        public override Polygon[] Offset(double offset, EndType endType = EndType.ClosedPolygon)
         {
-            var path = this.ToClipperPath();
-
-            var solution = new List<List<IntPoint>>();
-            var co = new ClipperOffset();
-            co.AddPath(path, JoinType.jtMiter, EndType.etClosedPolygon);
-            co.Execute(ref solution, offset * scale);  // important, scale also used here
-
-            var result = new Polygon[solution.Count];
-            for(var i=0; i<result.Length; i++)
-            {
-                result[i] = solution[i].ToPolygon();
-            }
-            return result;
+            return base.Offset(offset, endType);
         }
+
 
         /// <summary>
         /// Get a collection a lines representing each segment of this polyline.
