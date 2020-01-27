@@ -1,3 +1,4 @@
+using Elements.Geometry;
 using IFC;
 using STEP;
 using System;
@@ -22,7 +23,7 @@ namespace Elements.Serialization.IFC
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
-            foreach(var error in errors)
+            foreach (var error in errors)
             {
                 Console.WriteLine("***IFC ERROR***" + error.Message);
             }
@@ -35,15 +36,15 @@ namespace Elements.Serialization.IFC
             IEnumerable<IfcRelVoidsElement> ifcVoids = null;
             IEnumerable<IfcRelAssociatesMaterial> ifcMaterials = null;
 
-            if(idsToConvert != null && idsToConvert.Count > 0)
+            if (idsToConvert != null && idsToConvert.Count > 0)
             {
-                ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>().Where(i=>idsToConvert.Contains(i.GlobalId));
-                ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>().Where(i=>idsToConvert.Contains(i.GlobalId));
-                ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>().Where(i=>idsToConvert.Contains(i.GlobalId));
-                ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>().Where(i=>idsToConvert.Contains(i.GlobalId));
-                ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>().Where(i=>idsToConvert.Contains(i.GlobalId));
-                ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>().Where(i=>idsToConvert.Contains(i.GlobalId));
-                ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>().Where(i=>idsToConvert.Contains(i.GlobalId));
+                ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>().Where(i => idsToConvert.Contains(i.GlobalId));
+                ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>().Where(i => idsToConvert.Contains(i.GlobalId));
+                ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>().Where(i => idsToConvert.Contains(i.GlobalId));
+                ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>().Where(i => idsToConvert.Contains(i.GlobalId));
+                ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>().Where(i => idsToConvert.Contains(i.GlobalId));
+                ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>().Where(i => idsToConvert.Contains(i.GlobalId));
+                ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>().Where(i => idsToConvert.Contains(i.GlobalId));
             }
             else
             {
@@ -56,10 +57,10 @@ namespace Elements.Serialization.IFC
                 ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
             }
 
-            var slabs = ifcSlabs.Select(s => s.ToFloor(ifcVoids.Where(v=>v.RelatingBuildingElement == s).Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
+            var slabs = ifcSlabs.Select(s => s.ToFloor(ifcVoids.Where(v => v.RelatingBuildingElement == s).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
             var spaces = ifcSpaces.Select(sp => sp.ToSpace());
             var walls = ifcWalls.Select(w => w.ToWall(
-                ifcVoids.Where(v=>v.RelatingBuildingElement == w).Select(v=>v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
+                ifcVoids.Where(v => v.RelatingBuildingElement == w).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
             var beams = ifcBeams.Select(b => b.ToBeam());
             var columns = ifcColumns.Select(c => c.ToColumn());
 
@@ -72,7 +73,7 @@ namespace Elements.Serialization.IFC
 
             return model;
         }
-        
+
         /// <summary>
         /// Write the model to IFC.
         /// </summary>
@@ -80,7 +81,7 @@ namespace Elements.Serialization.IFC
         /// <param name="path">The path to the generated IFC STEP file.</param>
         internal static void ToIFC(Model model, string path)
         {
-            var ifc = new Document("Elements", "Elements", Environment.UserName, 
+            var ifc = new Document("Elements", "Elements", Environment.UserName,
                                     null, null, null, "Elements", null, null,
                                     null, null, null, null, null, null
                                     );
@@ -97,12 +98,12 @@ namespace Elements.Serialization.IFC
                                    null,
                                    null,
                                    IfcElementCompositionEnum.ELEMENT,
-                                   new IfcCompoundPlaneAngleMeasure(new List<int>{0,0}),
-                                   new IfcCompoundPlaneAngleMeasure(new List<int>{0,0}),
+                                   new IfcCompoundPlaneAngleMeasure(new List<int> { 0, 0 }),
+                                   new IfcCompoundPlaneAngleMeasure(new List<int> { 0, 0 }),
                                    0,
                                    null,
                                    null);
-            var projAggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), proj, new List<IfcObjectDefinition>{site});
+            var projAggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), proj, new List<IfcObjectDefinition> { site });
 
             // Add building and building storey
             var building = new IfcBuilding(IfcGuid.ToIfcGuid(Guid.NewGuid()),
@@ -127,10 +128,10 @@ namespace Elements.Serialization.IFC
                                                null,
                                                IfcElementCompositionEnum.ELEMENT,
                                                0);
-            var aggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), building, new List<IfcObjectDefinition>{storey});
-            
+            var aggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), building, new List<IfcObjectDefinition> { storey });
+
             // Aggregate the building into the site
-            var siteAggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), site, new List<IfcObjectDefinition>{building});
+            var siteAggregate = new IfcRelAggregates(IfcGuid.ToIfcGuid(Guid.NewGuid()), site, new List<IfcObjectDefinition> { building });
 
             ifc.AddEntity(site);
             ifc.AddEntity(projAggregate);
@@ -141,21 +142,57 @@ namespace Elements.Serialization.IFC
 
             var products = new List<IfcProduct>();
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
-            
-            var styles = new Dictionary<string, IfcSurfaceStyle>();
 
-            foreach(var e in model.Elements.Values.Where(e=>{
+            // IfcRelAssociatesMaterial
+            // IfcMaterialDefinitionRepresentation
+            // https://forums.buildingsmart.org/t/where-and-how-will-my-colors-be-saved-in-ifc/1806/12
+            var materials = new Dictionary<string, IfcMaterial>();
+            var styleAssignments = new Dictionary<string, List<IfcStyleAssignmentSelect>>();
+
+            var white = Colors.White.ToIfcColourRgb();
+            ifc.AddEntity(white);
+
+            // TODO: Fix color support in all applications.
+            // https://forums.buildingsmart.org/t/why-is-it-so-difficult-to-get-colors-to-show-up/2312/12
+            foreach (var m in model.AllElementsOfType<Material>())
+            {
+                var material = new IfcMaterial(m.Name, null, "Hypar");
+                materials.Add(m.Name, material);
+                ifc.AddEntity(material);
+
+                var color = m.Color.ToIfcColourRgb();
+                ifc.AddEntity(color);
+
+                var transparency = new IfcNormalisedRatioMeasure(1.0 - m.Color.Alpha);
+
+                var shading = new IfcSurfaceStyleShading(color, transparency);
+                ifc.AddEntity(shading);
+
+                var styles = new List<IfcSurfaceStyleElementSelect>{
+                    new IfcSurfaceStyleElementSelect(shading),
+                };
+                var surfaceStyle = new IfcSurfaceStyle(material.Name, IfcSurfaceSide.BOTH, styles);
+                ifc.AddEntity(surfaceStyle);
+
+                var styleAssign = new IfcStyleAssignmentSelect(surfaceStyle);
+                var assignments = new List<IfcStyleAssignmentSelect>(){styleAssign};
+                styleAssignments.Add(m.Name, assignments);
+            }
+
+
+            foreach (var e in model.Elements.Values.Where(e =>
+            {
                 var t = e.GetType();
                 return (e is GeometricElement || e is ElementInstance) &&
-                        t != typeof(ModelCurve) && 
+                        t != typeof(ModelCurve) &&
                         t != typeof(ModelPoints);
-                }))
+            }))
             {
                 try
                 {
-                    products.AddRange(e.ToIfcProducts(context, ifc, styles));
+                    products.AddRange(e.ToIfcProducts(context, ifc, styleAssignments));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine($"There was an error writing an element of type {e.GetType()} to IFC: " + ex.Message);
                     Console.WriteLine(ex.StackTrace);
@@ -166,7 +203,7 @@ namespace Elements.Serialization.IFC
             var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), products, storey);
             ifc.AddEntity(spatialRel);
 
-            if(File.Exists(path))
+            if (File.Exists(path))
             {
                 File.Delete(path);
             }
