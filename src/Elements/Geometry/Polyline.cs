@@ -12,7 +12,7 @@ namespace Elements.Geometry
     public partial class Polyline : ICurve
     {
 
-        private const double scale = 1024.0;
+        internal const double scale = 1024.0;
 
         /// <summary>
         /// Calculate the length of the polygon.
@@ -355,22 +355,36 @@ namespace Elements.Geometry
             return this.End;
         }
 
-         /// <summary>
+        /// <summary>
         /// Offset this polyline by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
         /// <returns>A new closed Polygon offset in all directions by offset from the polyline.</returns>
-        public Polygon[] ClosedOffset(double offset)
+        public virtual Polygon[] Offset(double offset, EndType endType)
         {
             var path = this.ToClipperPath();
 
             var solution = new List<List<IntPoint>>();
             var co = new ClipperOffset();
-            co.AddPath(path, JoinType.jtMiter, EndType.etOpenSquare);
+            ClipperLib.EndType clEndType;
+            switch (endType)
+            {
+                case EndType.Butt:
+                    clEndType = ClipperLib.EndType.etOpenButt;
+                    break;
+                case EndType.ClosedPolygon:
+                    clEndType = ClipperLib.EndType.etClosedPolygon;
+                    break;
+                case EndType.Square:
+                default:
+                    clEndType = ClipperLib.EndType.etOpenSquare;
+                    break;
+            }
+            co.AddPath(path, JoinType.jtMiter, clEndType);
             co.Execute(ref solution, offset * scale);  // important, scale also used here
 
             var result = new Polygon[solution.Count];
-            for(var i=0; i<result.Length; i++)
+            for (var i = 0; i < result.Length; i++)
             {
                 result[i] = solution[i].ToPolygon();
             }
@@ -383,9 +397,6 @@ namespace Elements.Geometry
     /// </summary>
     internal static class PolylineExtensions
     {
-
-        private const double scale = 1024.0;
-
         /// <summary>
         /// Construct a clipper path from a Polygon.
         /// </summary>
@@ -396,9 +407,28 @@ namespace Elements.Geometry
             var path = new List<IntPoint>();
             foreach (var v in p.Vertices)
             {
-                path.Add(new IntPoint(v.X * scale, v.Y * scale));
+                path.Add(new IntPoint(v.X * Polyline.scale, v.Y * Polyline.scale));
             }
             return path;
         }
+    }
+
+    /// <summary>
+    /// Offset end types
+    /// </summary>
+    public enum EndType
+    {
+        /// <summary>
+        /// Open ends are extended by the offset distance and squared off 
+        /// </summary>
+        Square,
+        /// <summary>
+        /// Ends are squared off with no extension
+        /// </summary>
+        Butt,
+        /// <summary>
+        /// If open, ends are joined and treated as a closed polygon
+        /// </summary>
+        ClosedPolygon,
     }
 }
