@@ -75,15 +75,13 @@ namespace Elements.Geometry
         /// <param name="polygons"></param>
         public BBox3(IList<Polygon> polygons)
         {
-            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
-            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
-
+            this.Min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
+            this.Max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
             foreach (var p in polygons)
             {
                 foreach (var v in p.Vertices)
                 {
-                    if (v < this.Min) this.Min = v;
-                    if (v > this.Max) this.Max = v;
+                    this.Extend(v);
                 }
             }
         }

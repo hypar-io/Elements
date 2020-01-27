@@ -59,5 +59,6 @@ namespace Elements.Geometry
             }
             return this.Normal.Equals(other.Normal) && this.Origin.Equals(other.Origin);
         }
+
     }
 }

@@ -72,7 +72,7 @@ namespace Elements.Tests
             var atStart = new Grid1d(new Line(new Vector3(0, 1, 0), new Vector3(length, 1, 0)));
             var atEnd = new Grid1d(new Line(new Vector3(0, 2, 0), new Vector3(length, 2, 0)));
             var atBothEnds = new Grid1d(new Line(new Vector3(0, 3, 0), new Vector3(length, 3, 0)));
-            inMiddle.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderNearMiddle,sacrificial);
+            inMiddle.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderNearMiddle, sacrificial);
             atStart.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtStart, sacrificial);
             atEnd.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtEnd, sacrificial);
             atBothEnds.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtBothEnds, sacrificial);
@@ -87,7 +87,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void DivideAGridThatsTooSmall()
+        public void Grid1dFixedWithRemainder()
         {
             var grid1 = new Grid1d(1);
             var grid2 = new Grid1d(1);
@@ -95,6 +95,20 @@ namespace Elements.Tests
             grid1.DivideByApproximateLength(6, EvenDivisionMode.RoundDown);
             grid2.DivideByFixedLength(2, FixedDivisionMode.RemainderAtBothEnds);
             grid3.DivideByFixedLength(1.5, FixedDivisionMode.RemainderAtStart);
+        }
+
+
+        [Fact]
+        public void DivideGridFromOrigin()
+        {
+            var grid1 = new Grid1d(10);
+            grid1.DivideByFixedLengthFromPosition(3, 5);
+            var cellGeo = grid1.GetCells().Select(c => c.GetCellGeometry());
+            Assert.Equal(4, cellGeo.Count());
+            Assert.Equal(2, cellGeo.Last().Length());
+            Assert.Equal(3, cellGeo.ToArray()[1].Length());
+            var json = JsonConvert.SerializeObject(cellGeo);
+            File.WriteAllText("/Users/andrewheumann/Desktop/divideFromPoint.json", json);
         }
 
     }

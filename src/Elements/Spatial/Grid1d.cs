@@ -24,7 +24,13 @@ namespace Elements.Spatial
         /// </summary>
         public bool IsSingleCell => Cells == null || Cells.Count == 0;
 
+
+
         private readonly Curve curve;
+
+        // we have to maintain an internal curve domain because subsequent subdivisions of a grid
+        // based on a curve retain the entire curve; this domain allows us to map from the subdivided
+        // domain back to the original curve.
         private Domain1d curveDomain;
 
         /// <summary>
@@ -58,6 +64,12 @@ namespace Elements.Spatial
             curveDomain = Domain;
         }
 
+        /// <summary>
+        /// This constructor is only for internal use by subdivision / split methods. 
+        /// </summary>
+        /// <param name="curve"></param>
+        /// <param name="domain"></param>
+        /// <param name="curveDomain"></param>
         private Grid1d(Curve curve, Domain1d domain, Domain1d curveDomain)
         {
             this.curve = curve;
@@ -117,6 +129,7 @@ namespace Elements.Spatial
                 Cells.RemoveAt(index);
                 Cells.InsertRange(index, newCells);
             }
+            OnTopLevelGridChange();
 
         }
 
@@ -148,6 +161,7 @@ namespace Elements.Spatial
 
             var newDomains = Domain.DivideByCount(n);
             Cells = new List<Grid1d>(newDomains.Select(d => new Grid1d(curve, d, curveDomain)));
+            OnTopLevelGridChange();
         }
 
 
@@ -177,7 +191,40 @@ namespace Elements.Spatial
             DivideByCount(roundedDivisions);
         }
 
+        /// <summary>
+        /// Divide a grid by constant length subdivisions, starting from a position. 
+        /// </summary>
+        /// <param name="length"></param>
+        /// <param name="position"></param>
+        public void DivideByFixedLengthFromPosition(double length, double position)
+        {
+            if (!Domain.Includes(position))
+            {
+                throw new Exception("Position is outside of the grid extents");
+            }
 
+            for (double p = position; Domain.Includes(p); p += length)
+            {
+                SplitAtPosition(p);
+            }
+
+            if (!Domain.Includes(position - length)) return;
+
+            for (double p = position - length; Domain.Includes(p); p -= length)
+            {
+                SplitAtPosition(p);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Divide a grid by constant length subdivisions, with a variable division mode to control how leftover
+        /// space is handled. 
+        /// </summary>
+        /// <param name="length">The division length</param>
+        /// <param name="divisionMode">How to handle leftover / partial remainder panels </param>
+        /// <param name="sacrificialPanels">How many full length panels to sacrifice to make remainder panels longer.</param>
         public void DivideByFixedLength(double length, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd, int sacrificialPanels = 0)
         {
             var lengthToFill = Domain.Length;
@@ -307,6 +354,10 @@ namespace Elements.Spatial
 
         }
 
+        /// <summary>
+        /// Retrieve geometric representation of a cell (currently just a line)
+        /// </summary>
+        /// <returns>A curve representing the extents of this grid / cell.</returns>
         public Curve GetCellGeometry()
         {
             if (curve == null)
@@ -315,7 +366,7 @@ namespace Elements.Spatial
                 return new Line(new Vector3(Domain.Min, 0, 0), new Vector3(Domain.Max, 0, 0));
             }
 
-            //TODO: support curved segments, and support distance-based rather than parameter-based sampling.
+            //TODO: support subcurve output / distance-based rather than parameter-based sampling.
 
             var t1 = Domain.Min.MapFromDomain(curveDomain);
             var t2 = Domain.Max.MapFromDomain(curveDomain);
@@ -326,6 +377,19 @@ namespace Elements.Spatial
             return new Line(x1.Origin, x2.Origin);
 
         }
+
+
+        #region Events
+        public delegate void Grid1dEventHandler(Grid1d sender, EventArgs e);
+
+        public event Grid1dEventHandler TopLevelGridChange;
+
+        protected virtual void OnTopLevelGridChange()
+        {
+            Grid1dEventHandler handler = TopLevelGridChange;
+            handler?.Invoke(this, new EventArgs());
+        }
+        #endregion
 
     }
 
@@ -370,4 +434,7 @@ namespace Elements.Spatial
         /// </summary>
         RemainderNearMiddle
     }
+
+
+
 }
