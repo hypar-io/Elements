@@ -157,7 +157,7 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="targetLength"></param>
         /// <param name="divisionMode"></param>
-        public void DivideByApproximateLength(double targetLength, EvenDivisionMode divisionMode)
+        public void DivideByApproximateLength(double targetLength, EvenDivisionMode divisionMode = EvenDivisionMode.Nearest)
         {
             var numDivisions = Domain.Length / targetLength;
             int roundedDivisions;
@@ -178,7 +178,7 @@ namespace Elements.Spatial
         }
 
 
-        public void DivideByFixedLength(double length, FixedDivisionMode divisionMode, int sacrificialPanels = 0)
+        public void DivideByFixedLength(double length, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd, int sacrificialPanels = 0)
         {
             var lengthToFill = Domain.Length;
             var maxPanelCount = (int)Math.Floor(lengthToFill / length) - sacrificialPanels;
@@ -348,12 +348,26 @@ namespace Elements.Spatial
         RoundDown
     }
 
-
+    /// <summary>
+    /// Different ways to handle the "remainder" when dividing an arbitrary length by a fixed size  
+    /// </summary>
     public enum FixedDivisionMode
     {
+        /// <summary>
+        /// Take the remainder and split it across both ends of the grid
+        /// </summary>
         RemainderAtBothEnds,
+        /// <summary>
+        /// Locate the remainder at the start of the grid
+        /// </summary>
         RemainderAtStart,
+        /// <summary>
+        /// Locate the remainder at the end of the grid
+        /// </summary>
         RemainderAtEnd,
+        /// <summary>
+        /// Locate the remainder at or near the middle of the grid.
+        /// </summary>
         RemainderNearMiddle
     }
 }

@@ -67,7 +67,7 @@ namespace Elements.Tests
         {
             var length = 18.245354;
             var panelTarget = 1.5;
-            var sacrificial = 1;
+            var sacrificial = 0;
             var inMiddle = new Grid1d(new Line(new Vector3(0, 0, 0), new Vector3(length, 0, 0)));
             var atStart = new Grid1d(new Line(new Vector3(0, 1, 0), new Vector3(length, 1, 0)));
             var atEnd = new Grid1d(new Line(new Vector3(0, 2, 0), new Vector3(length, 2, 0)));
