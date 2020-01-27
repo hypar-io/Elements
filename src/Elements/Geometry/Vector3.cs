@@ -471,6 +471,8 @@ namespace Elements.Geometry
         /// <param name="points"></param>
         public static bool AreCoplanar(this IList<Vector3> points)
         {
+            if (points.Count < 3) return true;
+
             //TODO: https://github.com/hypar-io/sdk/issues/54
             // Ensure that all triple products are equal to 0.
             // a.Dot(b.Cross(c));
