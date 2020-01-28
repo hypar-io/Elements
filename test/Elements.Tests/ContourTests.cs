@@ -7,11 +7,17 @@ namespace Elements.Tests
 {
     public class ContourTests : ModelTest
     {
-        [Fact]
+        public ContourTests()
+        {
+            this.GenerateIfc = false;
+        }
+
+        [Fact, Trait("Category", "Examples")]
         public void Contour()
         {
-            this.Name = "Contour";
+            this.Name = "Elements_Geometry_Contour";
 
+            // <example>
             var r = 1.0;
 
             // The reflection plane.
@@ -30,17 +36,10 @@ namespace Elements.Tests
             l2.ControlPoints.Reverse();
             var a2 = new Arc(new Vector3(0, 0), r, 90.0, 270.0);
 
-            var mc1 = new ModelCurve(l1);
-            var mc2 = new ModelCurve(l2);
-            var mc3 = new ModelCurve(a1);
-            var mc4 = new ModelCurve(a2);
-            this.Model.AddElements(new[]{mc1, mc2, mc3, mc4});
-
             var contour = new Contour(new List<Curve> { l1, a1, l2, a2 });
-            var mass = new Mass(new Profile(contour.ToPolygon()));
-            this.Model.AddElement(mass);
+            // </example>
 
-            this.Model.ToGlTF("Contour.gltf", false);
+            this.Model.AddElement(new ModelCurve(contour.ToPolygon()));
         }
     }
 }

@@ -53,6 +53,7 @@
           "Elements_**.glb",
           "Elements_Geometry_Arc.glb",
           "Elements_Geometry_Bezier.glb",
+          "Elements_Geometry_Contour.glb",
           "Elements_Geometry_Line.glb",
           "Elements_Geometry_Polygon.glb",
           "Elements_Geometry_Polyline.glb",
