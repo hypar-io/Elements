@@ -30,6 +30,7 @@
   window.addEventListener( 'resize', onWindowResize, false );
 
   camera.position.z = 5;
+  camera.position.y = 5;
 
   // Instantiate a loader
   var loader = new THREE.GLTFLoader();

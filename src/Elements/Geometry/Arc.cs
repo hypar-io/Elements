@@ -8,6 +8,9 @@ namespace Elements.Geometry
     /// <summary>
     /// An arc defined as a CCW rotation from the +X axis around a center between a start angle and an end angle.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/ArcTests.cs?name=example)]
+    /// </example>
     public partial class Arc : ICurve, IEquatable<Arc>
     {
         /// <summary>

@@ -79,6 +79,136 @@
   <div class="markdown level0 summary"><p>A planar continuous set of lines.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
+  <div id="model"></div>
+  <script type="text/javascript" src="../js/three.js"></script>
+  <script type="text/javascript" src="../js/GLTFLoader.js"></script>
+  <script type="text/javascript" src="../js/OrbitControls.js"></script>
+  <script>
+    var scene = new THREE.Scene();
+    var div = document.getElementById("model")
+    var camera = new THREE.PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize( div.clientWidth, div.clientHeight );
+    renderer.setClearColor( 0x000000, 0 );
+    div.appendChild( renderer.domElement );
+  
+    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+  
+    var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add( light );
+  
+    var axesHelper = new THREE.AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    var size = 100;
+    var divisions = 100;
+    var colorCenterLine = new THREE.Color( 0xa0a0a0 );
+    var colorGrid = new THREE.Color( 0xdbdbdb );
+    var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
+    scene.add( gridHelper );
+  
+    window.addEventListener( 'resize', onWindowResize, false );
+  
+    camera.position.z = 5;
+    camera.position.y = 5;
+  
+    // Instantiate a loader
+    var loader = new THREE.GLTFLoader();
+  
+    // Load a glTF resource
+    loader.load(
+      // resource URL
+      '../models/Elements_Geometry_Polyline.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+  
+        scene.add( gltf.scene );
+  
+        gltf.animations; // Array<THREE.AnimationClip>
+        gltf.scene; // THREE.Scene
+        gltf.scenes; // Array<THREE.Scene>
+        gltf.cameras; // Array<THREE.Camera>
+        gltf.asset; // Object
+  
+        fitCameraToObject(gltf.scene, 2.0, controls)
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+  
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+  
+      },
+      // called when loading has errors
+      function ( error ) {
+  
+        console.log( 'An error happened' );
+  
+      }
+    );
+  
+    var animate = function () {
+      requestAnimationFrame( animate );
+  
+      // cube.rotation.x += 0.01;
+      // cube.rotation.y += 0.01;
+  
+      renderer.render( scene, camera );
+    };
+  
+    function onWindowResize(){
+      var div = document.getElementById("model");
+      camera.aspect = div.clientWidth / div.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize( div.clientWidth, div.clientHeight );
+    };
+  
+    const fitCameraToObject = function ( object, offset, orbitControls ) {
+  
+      const boundingBox = new THREE.Box3();
+      boundingBox.setFromObject( object );
+  
+      const center = boundingBox.getCenter();
+      const size = boundingBox.getSize();
+  
+      // get the max side of the bounding box
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
+      const fov = this.camera.fov * ( Math.PI / 180 );
+      let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
+      
+      // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
+      // object filling the whole canvas
+      if( offset !== undefined && offset !== 0 ) cameraZ *= offset;
+  
+      camera.position.set( center.x, center.y, cameraZ );
+  
+      // set the far plane of the camera so that it easily encompasses the whole object
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
+  
+      this.camera.far = cameraToFarEdge * 3;
+      this.camera.updateProjectionMatrix();
+  
+      if ( orbitControls !== undefined ) {
+  
+        // set camera to rotate around center of loaded object
+        orbitControls.target = center;
+  
+        // prevent camera from zooming out far enough to create far plane cutoff
+        orbitControls.maxDistance = cameraToFarEdge * 2;
+      }
+    };
+  
+    animate();
+  </script><h5 id="Elements_Geometry_Polyline"><strong>Examples</strong></h5>
+  <pre><code class="lang-csharp" name="Main">var a = new Vector3();
+var b = new Vector3(10, 10);
+var c = new Vector3(20, 5);
+var d = new Vector3(25, 10);
+
+var pline = new Polyline(new[] { a, b, c, d });
+var offset = pline.Offset(1, EndType.Square);
+</code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
@@ -349,6 +479,54 @@
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <a id="Elements_Geometry_Polyline_Offset_" data-uid="Elements.Geometry.Polyline.Offset*"></a>
+  <h4 id="Elements_Geometry_Polyline_Offset_System_Double_Elements_Geometry_EndType_" data-uid="Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType)">Offset(Double, EndType)</h4>
+  <div class="markdown level1 summary"><p>Offset this polyline by the specified amount.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Polygon[] Offset(double offset, EndType endType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>The amount to offset.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.EndType.html">EndType</a></td>
+        <td><span class="parametername">endType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>[]</td>
+        <td><p>A new closed Polygon offset in all directions by offset from the polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_Plane_" data-uid="Elements.Geometry.Polyline.Plane*"></a>
   <h4 id="Elements_Geometry_Polyline_Plane" data-uid="Elements.Geometry.Polyline.Plane">Plane()</h4>
   <div class="markdown level1 summary"><p>Compute the Plane defined by the first three vertices of the Polygon.</p>

@@ -111,6 +111,7 @@
     window.addEventListener( 'resize', onWindowResize, false );
   
     camera.position.z = 5;
+    camera.position.y = 5;
   
     // Instantiate a loader
     var loader = new THREE.GLTFLoader();
@@ -199,7 +200,7 @@
     };
   
     animate();
-  </script><h5 id="Elements_ModelCurve_examples"><strong>Examples</strong></h5>
+  </script><h5 id="Elements_ModelCurve"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// A line
 var line = new Line(Vector3.Origin, new Vector3(5,5,5));
 
@@ -219,7 +220,6 @@ var f = new Vector3(5, 0, 5);
 var ctrlPts = new List&lt;Vector3&gt;{a,b,c,d,e,f};
 var bezier = new Bezier(ctrlPts);
 
-// Create model curves from the curves.
 var lineModelCurve = new ModelCurve(line, new Material(&quot;Red&quot;, Colors.Red));
 var arcModelCurve = new ModelCurve(arc, new Material(&quot;Orange&quot;, Colors.Orange), new Transform(5, 0, 0));
 var plineModelCurve = new ModelCurve(pline, new Material(&quot;Purple&quot;, Colors.Purple), new Transform(10, 0, 0));

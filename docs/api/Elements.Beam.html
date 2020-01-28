@@ -111,6 +111,7 @@
     window.addEventListener( 'resize', onWindowResize, false );
   
     camera.position.z = 5;
+    camera.position.y = 5;
   
     // Instantiate a loader
     var loader = new THREE.GLTFLoader();
@@ -199,7 +200,7 @@
     };
   
     animate();
-  </script><h5 id="Elements_Beam_examples"><strong>Examples</strong></h5>
+  </script><h5 id="Elements_Beam"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Create a framing type.
 var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
 

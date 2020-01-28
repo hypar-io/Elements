@@ -111,6 +111,7 @@
     window.addEventListener( 'resize', onWindowResize, false );
   
     camera.position.z = 5;
+    camera.position.y = 5;
   
     // Instantiate a loader
     var loader = new THREE.GLTFLoader();
@@ -199,7 +200,7 @@
     };
   
     animate();
-  </script><h5 id="Elements_Geometry_Transform_examples"><strong>Examples</strong></h5>
+  </script><h5 id="Elements_Geometry_Transform"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">var m1 = new Mass(Polygon.Rectangle(1.0, 1.0),1.0, new Material(&quot;yellow&quot;, Colors.Yellow));
 this.Model.AddElement(m1);
 

@@ -6,11 +6,18 @@ namespace Elements.Tests
 {
     public class ModelCurveTests : ModelTest
     {
-        [Fact]
-        public void ModelCurves()
+        public ModelCurveTests()
         {
-            this.Name = "ModelCurves";
+            this.GenerateIfc = false;
+        }
 
+        [Trait("Category","Examples")]
+        [Fact]
+        public void ModelCurve()
+        {
+            this.Name = "Elements_ModelCurve";
+
+            // <example>
             // A line
             var line = new Line(Vector3.Origin, new Vector3(5,5,5));
 
@@ -34,7 +41,8 @@ namespace Elements.Tests
             var arcModelCurve = new ModelCurve(arc, new Material("Orange", Colors.Orange), new Transform(5, 0, 0));
             var plineModelCurve = new ModelCurve(pline, new Material("Purple", Colors.Purple), new Transform(10, 0, 0));
             var bezierModelCurve = new ModelCurve(bezier, new Material("Green", Colors.Green), new Transform(15, 0, 0));
-            
+            // </example>
+
             this.Model.AddElements(new[]{lineModelCurve, arcModelCurve, plineModelCurve, bezierModelCurve});
         }
 

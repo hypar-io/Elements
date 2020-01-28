@@ -111,6 +111,7 @@
     window.addEventListener( 'resize', onWindowResize, false );
   
     camera.position.z = 5;
+    camera.position.y = 5;
   
     // Instantiate a loader
     var loader = new THREE.GLTFLoader();
@@ -199,7 +200,7 @@
     };
   
     animate();
-  </script><h5 id="Elements_Floor_examples"><strong>Examples</strong></h5>
+  </script><h5 id="Elements_Floor"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Create a floor with no elevation.
 var p = Polygon.L(10, 20, 5);
 var floor1 = new Floor(p, 0.1);

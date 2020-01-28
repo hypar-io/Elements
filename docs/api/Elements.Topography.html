@@ -111,6 +111,7 @@
     window.addEventListener( 'resize', onWindowResize, false );
   
     camera.position.z = 5;
+    camera.position.y = 5;
   
     // Instantiate a loader
     var loader = new THREE.GLTFLoader();
@@ -199,7 +200,7 @@
     };
   
     animate();
-  </script><h5 id="Elements_Topography_examples"><strong>Examples</strong></h5>
+  </script><h5 id="Elements_Topography"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Read topo elevations from a file.
 var data = JsonConvert.DeserializeObject&lt;Dictionary&lt;string,double[]&gt;&gt;(File.ReadAllText(&quot;./elevations.json&quot;));
 var elevations = data[&quot;points&quot;];

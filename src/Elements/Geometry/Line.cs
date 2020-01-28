@@ -6,6 +6,9 @@ namespace Elements.Geometry
     /// <summary>
     /// A linear curve between two points.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/LineTests.cs?name=example)]
+    /// </example>
     public partial class Line : Curve, IEquatable<Line>
     {
         /// <summary>

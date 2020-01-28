@@ -8,6 +8,9 @@ namespace Elements.Geometry
     /// <summary>
     /// A closed planar polygon.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/PolygonTests.cs?name=example)]
+    /// </example>
     public partial class Polygon : Polyline
     {
         private const double scale = 1024.0;
