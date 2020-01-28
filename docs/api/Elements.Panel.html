@@ -110,8 +110,7 @@
   
     window.addEventListener( 'resize', onWindowResize, false );
   
-    camera.position.z = 5;
-    camera.position.y = 5;
+    
   
     // Instantiate a loader
     var loader = new THREE.GLTFLoader();
@@ -149,10 +148,6 @@
   
     var animate = function () {
       requestAnimationFrame( animate );
-  
-      // cube.rotation.x += 0.01;
-      // cube.rotation.y += 0.01;
-  
       renderer.render( scene, camera );
     };
   
@@ -178,10 +173,12 @@
       
       // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
       // object filling the whole canvas
-      if( offset !== undefined && offset !== 0 ) cameraZ *= offset;
+      if( offset !== undefined && offset !== 0 ) {
+        cameraZ *= offset;
+      } 
   
       camera.position.set( center.x, center.y, cameraZ );
-  
+      
       // set the far plane of the camera so that it easily encompasses the whole object
       const minZ = boundingBox.min.z;
       const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
