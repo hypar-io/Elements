@@ -9,6 +9,9 @@ namespace Elements.Geometry
     /// <summary>
     /// A coplanar continuous set of lines.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/PolylineTests.cs?name=example)]
+    /// </example>
     public partial class Polyline : ICurve
     {
 

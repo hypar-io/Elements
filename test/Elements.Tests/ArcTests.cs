@@ -1,22 +1,28 @@
+using Elements;
 using Elements.Geometry;
+using Elements.Tests;
 using System;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Hypar.Tests
 {
-    public class ArcTests
+    public class ArcTests : ModelTest
     {
         ITestOutputHelper _output;
 
         public ArcTests(ITestOutputHelper output)
         {
             this._output = output;
+            this.GenerateIfc = false;
         }
 
-        [Fact]
+        [Fact, Trait("Category", "Examples")]
         public void Arc()
         {
+            this.Name = "Elements_Geometry_Arc";
+
+            // <example>
             var arc = new Arc(Vector3.Origin, 2.0, 0.0, 90.0);
             Assert.True(new Vector3(2, 0, 0).IsAlmostEqualTo(arc.Start));
             Assert.True(new Vector3(0, 2, 0).IsAlmostEqualTo(arc.End));
@@ -24,6 +30,10 @@ namespace Hypar.Tests
             var arc1 = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
             Assert.True(new Vector3(2, 0, 0).IsAlmostEqualTo(arc1.Start));
             Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
+            // </example>
+
+            this.Model.AddElement(new ModelCurve(arc, BuiltInMaterials.XAxis));
+            this.Model.AddElement(new ModelCurve(arc1, BuiltInMaterials.YAxis));
         }
 
         [Fact]

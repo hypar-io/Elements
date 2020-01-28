@@ -2354,6 +2354,30 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Curve.TransformAt
   nameWithType: Curve.TransformAt
+- uid: Elements.Geometry.EndType
+  name: EndType
+  href: api/Elements.Geometry.EndType.html
+  commentId: T:Elements.Geometry.EndType
+  fullName: Elements.Geometry.EndType
+  nameWithType: EndType
+- uid: Elements.Geometry.EndType.Butt
+  name: Butt
+  href: api/Elements.Geometry.EndType.html#Elements_Geometry_EndType_Butt
+  commentId: F:Elements.Geometry.EndType.Butt
+  fullName: Elements.Geometry.EndType.Butt
+  nameWithType: EndType.Butt
+- uid: Elements.Geometry.EndType.ClosedPolygon
+  name: ClosedPolygon
+  href: api/Elements.Geometry.EndType.html#Elements_Geometry_EndType_ClosedPolygon
+  commentId: F:Elements.Geometry.EndType.ClosedPolygon
+  fullName: Elements.Geometry.EndType.ClosedPolygon
+  nameWithType: EndType.ClosedPolygon
+- uid: Elements.Geometry.EndType.Square
+  name: Square
+  href: api/Elements.Geometry.EndType.html#Elements_Geometry_EndType_Square
+  commentId: F:Elements.Geometry.EndType.Square
+  fullName: Elements.Geometry.EndType.Square
+  nameWithType: EndType.Square
 - uid: Elements.Geometry.FrameType
   name: FrameType
   href: api/Elements.Geometry.FrameType.html
@@ -3631,12 +3655,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Ngon
   nameWithType: Polygon.Ngon
-- uid: Elements.Geometry.Polygon.Offset(System.Double)
-  name: Offset(Double)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Offset_System_Double_
-  commentId: M:Elements.Geometry.Polygon.Offset(System.Double)
-  fullName: Elements.Geometry.Polygon.Offset(System.Double)
-  nameWithType: Polygon.Offset(Double)
+- uid: Elements.Geometry.Polygon.Offset(System.Double,Elements.Geometry.EndType)
+  name: Offset(Double, EndType)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Offset_System_Double_Elements_Geometry_EndType_
+  commentId: M:Elements.Geometry.Polygon.Offset(System.Double,Elements.Geometry.EndType)
+  fullName: Elements.Geometry.Polygon.Offset(System.Double, Elements.Geometry.EndType)
+  nameWithType: Polygon.Offset(Double, EndType)
 - uid: Elements.Geometry.Polygon.Offset*
   name: Offset
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Offset_
@@ -3917,6 +3941,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.Length
   nameWithType: Polyline.Length
+- uid: Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType)
+  name: Offset(Double, EndType)
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Offset_System_Double_Elements_Geometry_EndType_
+  commentId: M:Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType)
+  fullName: Elements.Geometry.Polyline.Offset(System.Double, Elements.Geometry.EndType)
+  nameWithType: Polyline.Offset(Double, EndType)
+- uid: Elements.Geometry.Polyline.Offset*
+  name: Offset
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Offset_
+  commentId: Overload:Elements.Geometry.Polyline.Offset
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.Offset
+  nameWithType: Polyline.Offset
 - uid: Elements.Geometry.Polyline.Plane
   name: Plane()
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Plane

@@ -148,8 +148,13 @@ namespace Elements.Serialization.glTF
 
                         using (var ms = new MemoryStream())
                         {
+                            // Flip the texture image vertically
+                            // to align with OpenGL convention.
+                            // 0,1  1,1
+                            // 0,0  1,0
                             using (var texImage = SixLabors.ImageSharp.Image.Load(material.Texture))
                             {
+                                texImage.Mutate(x => x.Flip(FlipMode.Vertical));
                                 texImage.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
                             }
                             var imageData = ms.ToArray();
@@ -648,8 +653,8 @@ namespace Elements.Serialization.glTF
             rootTransform.Rotate(new Vector3(1,0,0), -90.0);
             var m = rootTransform.Matrix;
             root.Matrix = new float[]{
-                (float)m.m11, (float)m.m21, (float)m.m31, 0f, 
-                (float)m.m12, (float)m.m22, (float)m.m32, 0f, 
+                (float)m.m11, (float)m.m12, (float)m.m13, 0f, 
+                (float)m.m21, (float)m.m22, (float)m.m23, 0f, 
                 (float)m.m31, (float)m.m32, (float)m.m33, 0f,
                 (float)m.tx, (float)m.ty, (float)m.tz, 1f};
 

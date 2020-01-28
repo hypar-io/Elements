@@ -5,7 +5,7 @@
 <div class="markdown level0 conceptual">{{{conceptual}}}</div>
 {{#example.0}}
 {{>partials/view3D}}
-<h5 id="{{id}}_examples"><strong>{{__global.examples}}</strong></h5>
+<h5 id="{{id}}"><strong>{{__global.examples}}</strong></h5>
 {{/example.0}}
 {{#example}}
 {{{.}}}

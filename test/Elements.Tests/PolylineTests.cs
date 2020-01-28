@@ -1,18 +1,33 @@
+using Elements.Tests;
 using Xunit;
 
 namespace Elements.Geometry.Tests
 {
-    public class PolylineTests
+    public class PolylineTests: ModelTest
     {
-        [Fact]
-        public void Polyline_Construct()
+        public PolylineTests()
         {
+            this.GenerateIfc = false;
+        }
+
+        [Fact, Trait("Category", "Examples")]
+        public void Polyline()
+        {
+            this.Name = "Elements_Geometry_Polyline";
+
+            // <example>
             var a = new Vector3();
             var b = new Vector3(10, 10);
-            var c = new Vector3(3, 5);
-            var d = new Vector3(2, 1);
+            var c = new Vector3(20, 5);
+            var d = new Vector3(25, 10);
 
             var pline = new Polyline(new[] { a, b, c, d });
+            var offset = pline.Offset(1, EndType.Square);
+            // </example>
+
+            this.Model.AddElement(new ModelCurve(pline, BuiltInMaterials.XAxis));
+            this.Model.AddElement(new ModelCurve(offset[0], BuiltInMaterials.YAxis));
+
             Assert.Equal(4, pline.Vertices.Count);
             Assert.Equal(3, pline.Segments().Length);
         }
