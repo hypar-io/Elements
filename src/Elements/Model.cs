@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Serialization.IFC;
 using Elements.Geometry;
+using Elements.Validators;
 
 namespace Elements
 {
@@ -23,6 +24,23 @@ namespace Elements
         public Model()
         {
             this.Transform = new Transform();
+        }
+
+        /// <summary>
+        /// Construct a model.
+        /// </summary>
+        /// <param name="transform">The model's transform.</param>
+        /// <param name="elements">The model's elements.</param>
+        public Model(Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
+        {
+            var validator = Validator.Instance.GetFirstValidatorForType<Model>();
+            if(validator != null)
+            {
+                validator.Validate(new object[]{ @transform, @elements});
+            }
+        
+            this.Transform = @transform;
+            this.Elements = @elements;
         }
 
         /// <summary>

@@ -9,8 +9,7 @@
     "properties": {
         "Origin": {
             "description": "The origin of the model.",
-            "$ref": "https://hypar.io/Schemas/GeoJSON/Position.json",
-            "deprecated": true
+            "$ref": "https://hypar.io/Schemas/GeoJSON/Position.json"
         },
         "Transform": {
             "description": "The transform of the model.",
