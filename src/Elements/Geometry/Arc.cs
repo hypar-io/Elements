@@ -117,7 +117,7 @@ namespace Elements.Geometry
 
             // Parameter calculations.
             var angleSpan = this.EndAngle - this.StartAngle;
-            var partialAngleSpan = angleSpan - angleSpan * startSetback - angleSpan * endSetback;
+            var partialAngleSpan = Math.Abs(angleSpan - angleSpan * startSetback - angleSpan * endSetback);
             var parameterSpan = 1.0 - 1.0 * startSetback - 1.0 * endSetback;
 
             // Angle span: t

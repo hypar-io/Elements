@@ -20,8 +20,8 @@ namespace Hypar.Tests
         [Fact, Trait("Category", "Examples")]
         public void Arc()
         {
-            this.Name = "Elements.Geometry.Arc";
-            
+            this.Name = "Elements_Geometry_Arc";
+
             // <example>
             var arc = new Arc(Vector3.Origin, 2.0, 0.0, 90.0);
             Assert.True(new Vector3(2, 0, 0).IsAlmostEqualTo(arc.Start));
