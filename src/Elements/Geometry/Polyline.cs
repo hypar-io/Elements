@@ -14,8 +14,10 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polyline : ICurve
     {
-
-        internal const double scale = 1024.0;
+        /// <summary>
+        /// Scale used during clipper operations.
+        /// </summary>
+        internal const double CLIPPER_SCALE = 1024.0;
 
         /// <summary>
         /// Calculate the length of the polygon.
@@ -362,6 +364,7 @@ namespace Elements.Geometry
         /// Offset this polyline by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
+        /// <param name="endType">The closure type to use on the offset polygon.</param>
         /// <returns>A new closed Polygon offset in all directions by offset from the polyline.</returns>
         public virtual Polygon[] Offset(double offset, EndType endType)
         {
@@ -384,7 +387,7 @@ namespace Elements.Geometry
                     break;
             }
             co.AddPath(path, JoinType.jtMiter, clEndType);
-            co.Execute(ref solution, offset * scale);  // important, scale also used here
+            co.Execute(ref solution, offset * CLIPPER_SCALE);  // important, scale also used here
 
             var result = new Polygon[solution.Count];
             for (var i = 0; i < result.Length; i++)
@@ -410,7 +413,7 @@ namespace Elements.Geometry
             var path = new List<IntPoint>();
             foreach (var v in p.Vertices)
             {
-                path.Add(new IntPoint(v.X * Polyline.scale, v.Y * Polyline.scale));
+                path.Add(new IntPoint(v.X * Polyline.CLIPPER_SCALE, v.Y * Polyline.CLIPPER_SCALE));
             }
             return path;
         }

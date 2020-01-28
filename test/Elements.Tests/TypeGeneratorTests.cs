@@ -107,7 +107,7 @@ namespace Elements.Tests
             Assert.NotNull(anchorType.GetProperty("Location"));
 
             var ctors = mullionType.GetConstructors();
-            Assert.Equal(1, ctors.Length);
+            Assert.Single<ConstructorInfo>(ctors);
             var centerLine = new Line(new Vector3(0,0), new Vector3(5,5));
             var profile = new Profile(Polygon.Rectangle(0.1,0.1));
             // Profile @profile, Line @centerLine, NumericProperty @length, Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name

@@ -16,7 +16,7 @@ namespace Elements
     /// A container for elements, element types, materials, and profiles.
     /// </summary>
     public partial class Model
-    { 
+    {
         /// <summary>
         /// Construct an empty model.
         /// </summary>

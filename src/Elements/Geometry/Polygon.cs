@@ -13,8 +13,6 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polygon : Polyline
     {
-        private const double scale = 1024.0;
-
         /// <summary>
         /// Implicitly convert a polygon to a profile.
         /// </summary>
@@ -31,7 +29,7 @@ namespace Elements.Geometry
         public bool Contains(Vector3 vector)
         {
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
             {
                 return false;
@@ -74,7 +72,7 @@ namespace Elements.Geometry
         public bool Covers(Vector3 vector)
         {
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
             if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
             {
                 return false;
@@ -117,7 +115,7 @@ namespace Elements.Geometry
         public bool Disjoint(Vector3 vector)
         {
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
             {
                 return false;
@@ -188,7 +186,7 @@ namespace Elements.Geometry
         public bool Touches(Vector3 vector)
         {
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
             if (Clipper.PointInPolygon(intPoint, thisPath) != -1)
             {
                 return false;
@@ -395,6 +393,7 @@ namespace Elements.Geometry
         /// Offset this polygon by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
+        /// <param name="endType">The type of closure used for the offset polygon.</param>
         /// <returns>A new Polygon offset by offset.</returns>
         ///
         public override Polygon[] Offset(double offset, EndType endType = EndType.ClosedPolygon)

@@ -41,7 +41,7 @@ namespace Elements.Geometry.Tests
             var b = new Vector3(length, 0);
             var pline = new Polyline(new[] { a, b });
             var offsetResults = pline.Offset(offsetAmt, EndType.Square);
-            Assert.Equal(1, offsetResults.Length);
+            Assert.Single<Polygon>(offsetResults);
             var offsetResult = offsetResults[0];
             Assert.Equal(4, offsetResult.Vertices.Count);
             // offsets to a rectangle that's offsetAmt longer than the segment in

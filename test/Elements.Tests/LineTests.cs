@@ -127,7 +127,7 @@ namespace Elements.Geometry.Tests
 
             // 1 panel.
             segments = l.DivideByLengthFromCenter(6);
-            Assert.Equal(1, segments.Count);
+            Assert.Single<Line>(segments);
         }
 
         [Fact]

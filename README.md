@@ -47,8 +47,9 @@ We couldn't find anything quite right. So we started building this.
 - User-defined element schemas should perform as first class citizens in the system.
 
 ## Code Generation
-- Elements constructs its primitive types from schemas in the `/Schemas` directory. These schemas are provided as JSON schema. The generator mechanism can be found in the `/src/Generate` directory.
+- Elements constructs its primitive types from schemas in the `/Schemas` directory. These schemas are provided as JSON schema. 
 - Elements uses [NJsonSchema](https://github.com/RicoSuter/NJsonSchema) to generate C# classes from JSON schemas.
+- C# classes can be generated using the Hypar CLI's `hypar generate-types` command. For users of Visual Studio Code, the "CLI Generate Elements" task can be used.
 - The default collection type used is `System.Collections.Generic.IList`.
 - Generated classes are marked as `partial`. You can add constructors using a separate partial class, but remember that those constructors will not be available to other developers unless you share them in a library (ex: a NuGet package).
 - The custom class template for the code generator can be found in `/Generate/Templates`.

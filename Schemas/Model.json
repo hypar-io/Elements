@@ -7,6 +7,11 @@
     "type": "object",
     "required": ["Transform","Elements"],
     "properties": {
+        "Origin": {
+            "description": "The origin of the model.",
+            "$ref": "https://hypar.io/Schemas/GeoJSON/Position.json",
+            "deprecated": true
+        },
         "Transform": {
             "description": "The transform of the model.",
             "$ref": "https://hypar.io/Schemas/Geometry/Transform.json"
