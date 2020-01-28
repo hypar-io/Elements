@@ -7710,12 +7710,12 @@ references:
   commentId: T:Elements.Geometry.Solids.Extrude
   fullName: Elements.Geometry.Solids.Extrude
   nameWithType: Extrude
-- uid: Elements.Geometry.Solids.Extrude.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Vector3,System.Double,System.Boolean)
-  name: Extrude(Profile, Double, Vector3, Double, Boolean)
-  href: api/Elements.Geometry.Solids.Extrude.html#Elements_Geometry_Solids_Extrude__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Vector3_System_Double_System_Boolean_
-  commentId: M:Elements.Geometry.Solids.Extrude.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Vector3,System.Double,System.Boolean)
-  fullName: Elements.Geometry.Solids.Extrude.Extrude(Elements.Geometry.Profile, System.Double, Elements.Geometry.Vector3, System.Double, System.Boolean)
-  nameWithType: Extrude.Extrude(Profile, Double, Vector3, Double, Boolean)
+- uid: Elements.Geometry.Solids.Extrude.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Vector3,System.Boolean)
+  name: Extrude(Profile, Double, Vector3, Boolean)
+  href: api/Elements.Geometry.Solids.Extrude.html#Elements_Geometry_Solids_Extrude__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Vector3_System_Boolean_
+  commentId: M:Elements.Geometry.Solids.Extrude.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Vector3,System.Boolean)
+  fullName: Elements.Geometry.Solids.Extrude.Extrude(Elements.Geometry.Profile, System.Double, Elements.Geometry.Vector3, System.Boolean)
+  nameWithType: Extrude.Extrude(Profile, Double, Vector3, Boolean)
 - uid: Elements.Geometry.Solids.Extrude.#ctor*
   name: Extrude
   href: api/Elements.Geometry.Solids.Extrude.html#Elements_Geometry_Solids_Extrude__ctor_
@@ -9366,15 +9366,15 @@ references:
   commentId: M:Elements.Model.#ctor
   fullName: Elements.Model.Model()
   nameWithType: Model.Model()
-- uid: Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
-  name: Model(Transform, IDictionary<Guid, Element>)
-  href: api/Elements.Model.html#Elements_Model__ctor_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__
-  commentId: M:Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
-  name.vb: Model(Transform, IDictionary(Of Guid, Element))
-  fullName: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary<System.Guid, Elements.Element>)
-  fullName.vb: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of System.Guid, Elements.Element))
-  nameWithType: Model.Model(Transform, IDictionary<Guid, Element>)
-  nameWithType.vb: Model.Model(Transform, IDictionary(Of Guid, Element))
+- uid: Elements.Model.#ctor(Elements.GeoJSON.Position,Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name: Model(Position, Transform, IDictionary<Guid, Element>)
+  href: api/Elements.Model.html#Elements_Model__ctor_Elements_GeoJSON_Position_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__
+  commentId: M:Elements.Model.#ctor(Elements.GeoJSON.Position,Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name.vb: Model(Position, Transform, IDictionary(Of Guid, Element))
+  fullName: Elements.Model.Model(Elements.GeoJSON.Position, Elements.Geometry.Transform, System.Collections.Generic.IDictionary<System.Guid, Elements.Element>)
+  fullName.vb: Elements.Model.Model(Elements.GeoJSON.Position, Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of System.Guid, Elements.Element))
+  nameWithType: Model.Model(Position, Transform, IDictionary<Guid, Element>)
+  nameWithType.vb: Model.Model(Position, Transform, IDictionary(Of Guid, Element))
 - uid: Elements.Model.#ctor*
   name: Model
   href: api/Elements.Model.html#Elements_Model__ctor_
@@ -9504,6 +9504,19 @@ references:
   fullName.vb: Elements.Model.GetElementOfType(Of T)(System.Guid)
   nameWithType: Model.GetElementOfType<T>(Guid)
   nameWithType.vb: Model.GetElementOfType(Of T)(Guid)
+- uid: Elements.Model.Origin
+  name: Origin
+  href: api/Elements.Model.html#Elements_Model_Origin
+  commentId: P:Elements.Model.Origin
+  fullName: Elements.Model.Origin
+  nameWithType: Model.Origin
+- uid: Elements.Model.Origin*
+  name: Origin
+  href: api/Elements.Model.html#Elements_Model_Origin_
+  commentId: Overload:Elements.Model.Origin
+  isSpec: "True"
+  fullName: Elements.Model.Origin
+  nameWithType: Model.Origin
 - uid: Elements.Model.ToIFC(System.String)
   name: ToIFC(String)
   href: api/Elements.Model.html#Elements_Model_ToIFC_System_String_

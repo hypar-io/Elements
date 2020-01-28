@@ -8,6 +8,9 @@ namespace Elements
     /// Instances point to one instance of a type, but have
     /// individual ids and transforms.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/ElementInstanceTests.cs?name=example)]
+    /// </example>
     public class ElementInstance : Element
     {
         /// <summary>
@@ -23,7 +26,7 @@ namespace Elements
         /// <summary>
         /// Construct an element instance.
         /// </summary>
-        /// <param name="parent">The element from which this instance is derived.</param>
+        /// <param name="parent">The definition from which this instance is derived.</param>
         /// <param name="transform">The transform of the instance.</param>
         /// <param name="name">The name of the instance.</param>
         /// <param name="id">The id of the instance.</param>

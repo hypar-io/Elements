@@ -36,6 +36,17 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_ElementInstance.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_ElementInstance.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Floor.glb",
       "output": {
         "resource": {
@@ -323,7 +334,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ElementInstance.html",
-          "hash": "tc1fphqY+RoUlWLticDU1A=="
+          "hash": "rPiezBedhIqXA3mxkMK/VA=="
         }
       },
       "is_incremental": false,
@@ -755,7 +766,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "kwwFKmy5udOxrSiAzzRk+g=="
+          "hash": "8LO9uTURT4Y4c2CeGCWlFA=="
         }
       },
       "is_incremental": false,
@@ -767,7 +778,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polyline.html",
-          "hash": "Ga5uGsgfkcoeHhMptsqJXQ=="
+          "hash": "bSbArr5JNfDx/ISqOrzTqg=="
         }
       },
       "is_incremental": false,
@@ -935,7 +946,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Extrude.html",
-          "hash": "IT4QcUhPIYcLRt/FuHENMg=="
+          "hash": "X1s137zc3p+nxQcWLpM3Kg=="
         }
       },
       "is_incremental": false,
@@ -1127,7 +1138,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Model.html",
-          "hash": "wMB8eTvwjbBupQdVPYZE0w=="
+          "hash": "qlYG+J7AWBOH9dB6l6frrw=="
         }
       },
       "is_incremental": false,
@@ -2307,18 +2318,17 @@
         "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
-          "skipped_file_count": 0
-        },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 3,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
@@ -2327,10 +2337,11 @@
           "total_file_count": 111,
           "skipped_file_count": 0
         },
-        "ConceptualDocumentProcessor": {
+        "TocDocumentProcessor": {
           "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
-          "total_file_count": 3,
+          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }

@@ -14,6 +14,7 @@ namespace Hypar.Tests
         public BezierTests(ITestOutputHelper output)
         {
             this._output = output;
+            this.GenerateIfc = false;
         }
 
         [Fact, Trait("Category", "Examples")]

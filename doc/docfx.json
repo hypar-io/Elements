@@ -51,6 +51,7 @@
         "src": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/",
         "files": [
           "Elements_**.glb",
+          "Elements_ElementInstance.glb",
           "Elements_Geometry_Arc.glb",
           "Elements_Geometry_Bezier.glb",
           "Elements_Geometry_Contour.glb",
