@@ -12,6 +12,26 @@ namespace Elements.Tests
 {
     public class Grid1dTests : ModelTest
     {
+
+        [Fact]
+        public void AlreadySplitGridsThrowsExceptionWhenDividedByN()
+        {
+            var grid = new Grid1d();
+            grid.SplitAtParameter(0.25);
+            var ex = Assert.Throws<Exception>(() => grid.DivideByCount(10));
+            Assert.Equal("This grid already has subdivisions. Maybe you meant to select a subgrid to divide?", ex.Message);
+        }
+
+
+        [Fact]
+        public void DivideFromPosition()
+        {
+            var grid = new Grid1d(new Domain1d(-8, 8));
+            Assert.Throws<Exception>(() => grid.DivideByFixedLengthFromPosition(1, 10));
+            grid.DivideByFixedLengthFromPosition(4, 0);
+            Assert.Equal(4, grid.Cells.Count);
+        }
+
         [Fact]
         public void SplitGridAtParameters()
         {
@@ -109,6 +129,44 @@ namespace Elements.Tests
             Assert.Equal(3, cellGeo.ToArray()[1].Length());
             var json = JsonConvert.SerializeObject(cellGeo);
             File.WriteAllText("/Users/andrewheumann/Desktop/divideFromPoint.json", json);
+        }
+
+        [Fact]
+        public void DivideByPattern()
+        {
+            var grid = new Grid1d(new Domain1d(60, 78));
+            //var pattern = new List<(string, double)>
+            //{
+            //    ("Solid", 1),
+            //    ("Glazing", 3),
+            //    ("Fin", 0.2)
+            //};
+            var pattern = new List<double> { 1, 3, 0.2 };
+            grid.DivideByPattern(pattern, PatternMode.Cycle, FixedDivisionMode.RemainderAtBothEnds);
+            var cells = grid.GetCells();
+            var types = cells.Select(c => c.Type);
+
+            var result = new Dictionary<string, object>();
+            result.Add("Geometry", cells.Select(c => c.GetCellGeometry()));
+            result.Add("Types", types);
+            var json = JsonConvert.SerializeObject(result);
+            File.WriteAllText("/Users/andrewheumann/Desktop/divideByPattern.json", json);
+
+        }
+
+        [Fact]
+        public void PatternTooLongThrowsException()
+        {
+            var grid = new Grid1d(4);
+            var pattern = new List<(string, double)>
+            {
+                ("Solid", 1),
+                ("Glazing", 3),
+                ("Fin", 0.2)
+            };
+            Exception ex = Assert.Throws(typeof(Exception),() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
+
+            Assert.Equal("Pattern length exceeds grid length.", ex.Message);
         }
 
     }

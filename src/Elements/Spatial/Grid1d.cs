@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using Elements.Geometry;
 using Elements.MathUtils;
@@ -8,6 +9,12 @@ namespace Elements.Spatial
 {
     public class Grid1d
     {
+
+        /// <summary>
+        /// An optional type designation for this cell.  
+        /// </summary>
+        public string Type { get; set; }
+
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
@@ -25,7 +32,9 @@ namespace Elements.Spatial
         public bool IsSingleCell => Cells == null || Cells.Count == 0;
 
 
-
+        // The curve this was generated from, often a line.
+        // subdivided cells maintain the complete original curve,
+        // rather than a subcurve. 
         private readonly Curve curve;
 
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
@@ -45,7 +54,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Construct a 1D grid from a numerical domain. The geometry will be assumed to lie along the X axis.
         /// </summary>
-        /// <param name="domain"></param>
+        /// <param name="domain">The 1-dimensional domain for the grid extents.</param>
         public Grid1d(Domain1d domain)
         {
             Domain = domain;
@@ -56,7 +65,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Construct a 1D grid from a curve.
         /// </summary>
-        /// <param name="curve"></param>
+        /// <param name="curve">The curve from which to generate the grid.</param>
         public Grid1d(Curve curve)
         {
             this.curve = curve;
@@ -67,9 +76,9 @@ namespace Elements.Spatial
         /// <summary>
         /// This constructor is only for internal use by subdivision / split methods. 
         /// </summary>
-        /// <param name="curve"></param>
-        /// <param name="domain"></param>
-        /// <param name="curveDomain"></param>
+        /// <param name="curve">The entire curve of the parent grid</param>
+        /// <param name="domain">The domain of the new subdivided segment</param>
+        /// <param name="curveDomain">The entire domain of the parent grid's curve</param>
         private Grid1d(Curve curve, Domain1d domain, Domain1d curveDomain)
         {
             this.curve = curve;
@@ -78,9 +87,29 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Retrieve a cell by index
+        /// </summary>
+        /// <param name="i">The index</param>
+        /// <returns>A Grid1d representing the selected cell/segment.</returns>
+        public Grid1d this[int i]
+        {
+            get
+            {
+                if (Cells.Count <= i)
+                {
+                    return null;
+                }
+                else
+                {
+                    return Cells[i];
+                }
+            }
+        }
+
+        /// <summary>
         /// Split the grid at a normalized parameter from 0 to 1 along its domain. 
         /// </summary>
-        /// <param name="t"></param>
+        /// <param name="t">The parameter at which to split.</param>
         public void SplitAtParameter(double t)
         {
             var pos = t.MapToDomain(Domain);
@@ -90,7 +119,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Split the grid at a list of normalized parameters from 0 to 1 along its domain.
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">A list of parameters at which to split the grid.</param>
         public void SplitAtParameters(IEnumerable<double> parameters)
         {
             foreach (var t in parameters)
@@ -103,13 +132,8 @@ namespace Elements.Spatial
         /// Split the grid at a fixed position from the start or end
         /// </summary>
         /// <param name="pos">The length along the grid at which to split.</param>
-        /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
-        public void SplitAtPosition(double pos, bool fromEnd = false)
+        public void SplitAtPosition(double pos)
         {
-            if (fromEnd)
-            {
-                pos = Domain.Max - pos;
-            }
 
             if (IsSingleCell) // simple single split
             {
@@ -122,6 +146,8 @@ namespace Elements.Spatial
             }
             else
             {
+                // find the cell that should be split, split it, and replace it in the Cells list.
+                // Splits to already-split cells should not introduce a new level of hierarchy.
                 var index = FindCellIndexAtPosition(pos);
                 var cellToSplit = Cells[index];
                 cellToSplit.SplitAtPosition(pos);
@@ -134,15 +160,36 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Split a cell at a relative position measured from its domain start or end. 
+        /// </summary>
+        /// <param name="pos">The relative position at which to split.</param>
+        /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
+        public void SplitAtOffset(double pos, bool fromEnd = false)
+        {
+            pos = fromEnd ? Domain.Max - pos : Domain.Min + pos;
+            if (!Domain.Includes(pos))
+            {
+                if (Domain.Max.ApproximatelyEquals(pos) || Domain.Min.ApproximatelyEquals(pos))
+                {
+                    return;
+                }
+                throw new Exception("Offset position was beyond the grid's domain.");
+            }
+            SplitAtPosition(pos);
+        }
+
+
+
+        /// <summary>
         /// Split the grid at a list of fixed positions from the start or end
         /// </summary>
         /// <param name="positions">The lengths along the grid at which to split.</param>
         /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
-        public void SplitAtPositions(IEnumerable<double> positions, bool fromEnd = false)
+        public void SplitAtPositions(IEnumerable<double> positions)
         {
             foreach (var pos in positions)
             {
-                SplitAtPosition(pos, fromEnd);
+                SplitAtPosition(pos);
             }
         }
 
@@ -151,7 +198,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Divide the grid into N even subdivisions. Grids that are already subdivided will fail. 
         /// </summary>
-        /// <param name="n"></param>
+        /// <param name="n">Number of subdivisions</param>
         public void DivideByCount(int n)
         {
             if (!IsSingleCell)
@@ -167,10 +214,11 @@ namespace Elements.Spatial
 
 
         /// <summary>
-        /// Divide 
+        /// Divide a grid by an approximate length. The length will be adjusted to generate whole-number
+        /// subdivisions, governed by an optional DivisionMode.
         /// </summary>
-        /// <param name="targetLength"></param>
-        /// <param name="divisionMode"></param>
+        /// <param name="targetLength">The approximate length by which to divide the grid.</param>
+        /// <param name="divisionMode">Whether to permit any size cell, or only larger or smaller cells by rounding up or down.</param>
         public void DivideByApproximateLength(double targetLength, EvenDivisionMode divisionMode = EvenDivisionMode.Nearest)
         {
             var numDivisions = Domain.Length / targetLength;
@@ -194,8 +242,8 @@ namespace Elements.Spatial
         /// <summary>
         /// Divide a grid by constant length subdivisions, starting from a position. 
         /// </summary>
-        /// <param name="length"></param>
-        /// <param name="position"></param>
+        /// <param name="length">The length of subdivisions</param>
+        /// <param name="position">The position along the domain at which to begin subdividing.</param>
         public void DivideByFixedLengthFromPosition(double length, double position)
         {
             if (!Domain.Includes(position))
@@ -232,7 +280,6 @@ namespace Elements.Spatial
             if (maxPanelCount < 1) return;
 
 
-
             var remainderSize = lengthToFill - maxPanelCount * length;
             if (remainderSize < 0.01)
             {
@@ -244,19 +291,19 @@ namespace Elements.Spatial
                 case FixedDivisionMode.RemainderAtBothEnds:
                     for (double i = remainderSize / 2.0; i < lengthToFill; i += length)
                     {
-                        SplitAtPosition(i);
+                        SplitAtOffset(i);
                     }
                     break;
                 case FixedDivisionMode.RemainderAtStart:
                     for (double i = remainderSize; i < lengthToFill; i += length)
                     {
-                        SplitAtPosition(i);
+                        SplitAtOffset(i);
                     }
                     break;
                 case FixedDivisionMode.RemainderAtEnd:
                     for (int i = 1; i < maxPanelCount + 1; i++)
                     {
-                        SplitAtPosition(i * length);
+                        SplitAtOffset(i * length);
                     }
                     break;
                 case FixedDivisionMode.RemainderNearMiddle:
@@ -265,17 +312,134 @@ namespace Elements.Spatial
                     //make left panels
                     for (int i = 1; i <= panelsOnLeft; i++)
                     {
-                        SplitAtPosition(i * length);
+                        SplitAtOffset(i * length);
                     }
                     //make middle + right panels
                     for (double i = panelsOnLeft * length + remainderSize; i < lengthToFill; i += length)
                     {
-                        SplitAtPosition(i);
+                        SplitAtOffset(i);
                     }
 
                     break;
             }
         }
+
+        /// <summary>
+        /// Divide a grid by a pattern of lengths. Type names will be automatically generated, repetition will be governed by PatternMode,
+        /// and remainder handling will be governed by DivisionMode. 
+        /// </summary>
+        /// <param name="lengthPattern"></param>
+        /// <param name="patternMode"></param>
+        /// <param name="divisionMode"></param>
+        public void DivideByPattern(List<double> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
+        {
+            var patternwithNames = new List<(string typeName, double length)>();
+            for (int i = 0; i < lengthPattern.Count; i++)
+            {
+                patternwithNames.Add((MathExtensions.NumberToString(i), lengthPattern[i]));
+            }
+            DivideByPattern(patternwithNames, patternMode, divisionMode);
+        }
+
+        public void DivideByPattern(List<(string typeName, double length)> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
+        {
+            //a list of all the segments that fit in the grid
+            List<(string typeName, double length)> patternSegments = new List<(string, double)>();
+            switch (patternMode)
+            {
+                case PatternMode.None:
+                    patternSegments = lengthPattern;
+                    break;
+                case PatternMode.Cycle:
+                    Cycle(lengthPattern, patternSegments);
+                    break;
+                case PatternMode.Flip:
+                    if (lengthPattern.Count < 3)
+                    {
+                        Cycle(lengthPattern, patternSegments);
+                        break;
+                    }
+                    var flippedLengthPattern = new List<(string, double)>(lengthPattern);
+                    for (int i = lengthPattern.Count - 2; i > 0; i--)
+                    {
+                        flippedLengthPattern.Add(lengthPattern[i]);
+                    }
+                    Cycle(flippedLengthPattern, patternSegments);
+                    break;
+            }
+
+            var totalPatternLength = patternSegments.Select(s => s.length).Sum();
+            if (totalPatternLength > Domain.Length)
+            {
+                throw new Exception("Pattern length exceeds grid length.");
+            }
+
+            var remainderSize = Domain.Length - totalPatternLength;
+
+            switch (divisionMode)
+            {
+                case FixedDivisionMode.RemainderAtBothEnds:
+                    DivideWithPatternAndOffset(patternSegments, remainderSize / 2.0);
+                    break;
+                case FixedDivisionMode.RemainderAtStart:
+                    DivideWithPatternAndOffset(patternSegments, remainderSize);
+                    break;
+                case FixedDivisionMode.RemainderAtEnd:
+                    DivideWithPatternAndOffset(patternSegments, 0);
+                    break;
+                case FixedDivisionMode.RemainderNearMiddle:
+                    throw new Exception("Remainder Near Middle is not supported for Pattern-based subdivision.");
+            }
+
+        }
+
+        private void DivideWithPatternAndOffset(List<(string typeName, double length)> patternSegments, double offset)
+        {
+            double runningPosition = offset;
+            if (offset > 0)
+            {
+                SplitAtOffset(runningPosition);
+            }
+            for (int i = 0; i < patternSegments.Count; i++)
+            {
+                runningPosition += patternSegments[i].length;
+                SplitAtOffset(runningPosition);
+            }
+            for (int i = 0; i < patternSegments.Count; i++)
+            {
+                var cellOffset = offset > 0 ? 1 : 0;
+                Cells[i + cellOffset].Type = patternSegments[i].typeName;
+            }
+            // This is necessary because otherwise name changes don't propogate back to a parent 2d grid.
+            // TODO: find a better system than this to manage 1d/2d synchronization — this one involves
+            // a lot of unnecessary regeneration. 
+            OnTopLevelGridChange();
+
+        }
+
+        private void Cycle(List<(string typeName, double length)> lengthPattern, List<(string, double)> patternSegments)
+        {
+            var runningLength = 0.0;
+            int i = 0;
+            while (true)
+            {
+                var segmentToAdd = lengthPattern[i % lengthPattern.Count];
+                runningLength += segmentToAdd.length;
+                if (runningLength < Domain.Length)
+                {
+                    patternSegments.Add(segmentToAdd);
+
+                }
+                else
+                {
+                    break;
+                }
+                i++;
+            }
+        }
+
+
+
 
 
 
@@ -391,6 +555,22 @@ namespace Elements.Spatial
         }
         #endregion
 
+    }
+
+    public enum PatternMode
+    {
+        /// <summary>
+        /// No Repeat. For a pattern [A, B, C], split A, B, C panels, and treat the remaining length according to FixedDivisionMode settings.
+        /// </summary>
+        None,
+        /// <summary>
+        /// For a pattern [A, B, C], split at A, B, C, A, B, C, A...
+        /// </summary>
+        Cycle,
+        /// <summary>
+        /// For a pattern [A, B, C], split at A, B, C, B, A, B, C, B, A
+        /// </summary>
+        Flip,
     }
 
     /// <summary>

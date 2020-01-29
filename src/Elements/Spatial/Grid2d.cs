@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using Elements.MathUtils;
 
@@ -19,21 +20,49 @@ namespace Elements.Spatial
 
         private void TopLevelGridChange(Grid1d sender, EventArgs e)
         {
-            Cells = new List<Grid2d>();
+            Cells = new List<List<Grid2d>>();
             var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.Cells;
             var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.Cells;
-            foreach (var vCell in vCells)
+            foreach (var uCell in uCells)
             {
-                foreach (var uCell in uCells)
+                var column = new List<Grid2d>();
+                foreach (var vCell in vCells)
                 {
                     var newCell = new Grid2d(uCell.Domain, vCell.Domain);
+
+
+                    // Map type name from U and V type names. In most cases this
+                    // should only be one direction, so we inherit directly.
+                    if (uCell.Type != null && vCell.Type != null)
+                    {
+                        newCell.Type = $"{uCell.Type} / {vCell.Type}";
+                    }
+                    else if (uCell.Type != null)
+                    {
+                        newCell.Type = uCell.Type;
+                    }
+                    else if (vCell.Type != null)
+                    {
+                        newCell.Type = vCell.Type;
+                    }
+
                     newCell.fromGrid = fromGrid;
                     newCell.toGrid = toGrid;
                     newCell.boundariesInGridSpace = boundariesInGridSpace;
-                    Cells.Add(newCell);
+                    column.Add(newCell);
                 }
+                Cells.Add(column);
             }
         }
+
+        /// <summary>
+        /// An optional type designation for this cell.  
+        /// </summary>
+        public string Type
+        {
+            get; set;
+        }
+
 
         public Grid2d()
         {
@@ -92,37 +121,76 @@ namespace Elements.Spatial
         /// <returns></returns>
         public Grid2d FindCellAtPosition(double uPos, double vPos)
         {
-            var index = FindCellIndexAtPosition(uPos, vPos);
-            if (index < 0) return this;
-            return Cells[index];
+            (var uIndex, var vIndex) = FindCellIndexAtPosition(uPos, vPos);
+            if (uIndex < 0 || vIndex < 0) return this;
+            return Cells[uIndex][vIndex];
         }
 
-        private int FindCellIndexAtPosition(double uPos, double vPos)
+        private (int u, int v) FindCellIndexAtPosition(double uPos, double vPos)
         {
 
             //TODO: Optimize for smarter retrieval — via 2d indexing or something
-            for (int i = 0; i < Cells.Count; i++)
+            for (int u = 0; u < Cells.Count; u++)
             {
-                var cell = Cells[i];
-                if (cell.U.Domain.Includes(uPos) && cell.V.Domain.Includes(vPos))
+                if (Cells[u][0].U.Domain.Includes(uPos))
                 {
-                    return i;
+                    for (int v = 0; v < Cells[u].Count; v++)
+                    {
+                        var cell = Cells[u][v];
+                        if (cell.V.Domain.Includes(vPos))
+                        {
+                            return (u, v);
+                        }
+
+                    }
+
                 }
             }
-            return -1;
+            return (-1, -1);
+        }
+
+        public List<Grid2d> this[int i]
+        {
+            get
+            {
+                return Cells[i];
+            }
+        }
+
+        public Grid2d this[int u, int v]
+        {
+            get
+            {
+                return Cells[u][v];
+            }
+        }
+
+        public Grid2d this[(int u, int v) index]
+        {
+            get
+            {
+                return Cells[index.u][index.v];
+            }
         }
 
 
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
-        public List<Grid2d> Cells { get; private set; }
+        public List<List<Grid2d>> Cells { get; private set; }
 
+        public List<Grid2d> CellsFlat
+        {
+            get
+            {
+                return Cells.SelectMany(c => c).ToList();
+            }
+        }
 
         public List<Grid2d> GetCells()
         {
             List<Grid2d> resultCells = new List<Grid2d>();
-            foreach (var cell in Cells)
+            foreach (var cell in Cells.SelectMany(c => c))
             {
                 if (cell.IsSingleCell)
                 {
@@ -138,8 +206,44 @@ namespace Elements.Spatial
 
         public Curve GetCellGeometry()
         {
-            var baseRect = Polygon.Rectangle(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Max));
+            var baseRect = GetBaseRectangle();
             return fromGrid.OfPolygon(baseRect);
+        }
+
+        public Curve[] GetTrimmedCellGeometry()
+        {
+            if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
+            {
+                return new[] { GetCellGeometry() };
+            }
+            Polygon baseRect = GetBaseRectangle();
+            var trimmedRect = Polygon.BooleanTwoSets(new[] { baseRect }, boundariesInGridSpace, BooleanMode.Intersection);
+            if (trimmedRect != null && trimmedRect.Count() > 0)
+            {
+                return fromGrid.OfPolygons(trimmedRect);
+
+            }
+            return new Curve[0];
+        }
+
+        private Polygon GetBaseRectangle()
+        {
+            return Polygon.Rectangle(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Max));
+        }
+
+        public bool IsTrimmed()
+        {
+            if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
+            {
+                return false;
+            }
+
+            var baseRect = GetBaseRectangle();
+            var trimmedRect = Polygon.BooleanTwoSets(new[] { baseRect }, boundariesInGridSpace, BooleanMode.Intersection);
+            if (trimmedRect == null) return false;
+            var trimmedArea = trimmedRect.Select(r => r.Area()).Sum();
+            var baseRectArea = baseRect.Area();
+            return !trimmedArea.ApproximatelyEquals(baseRectArea, 0.001);
         }
 
         /// <summary>

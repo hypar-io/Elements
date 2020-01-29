@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+
 namespace Elements.MathUtils
 {
     public static class MathExtensions
@@ -12,7 +14,7 @@ namespace Elements.MathUtils
         /// <returns></returns>
         public static double MapBetweenDomains(this double value, Domain1d source, Domain1d target)
         {
-            return value.MapFromDomain(source).MapToDomain(target); 
+            return value.MapFromDomain(source).MapToDomain(target);
         }
 
         /// <summary>
@@ -35,6 +37,34 @@ namespace Elements.MathUtils
         public static double MapToDomain(this double value, Domain1d domain)
         {
             return value * domain.Length + domain.Min;
+        }
+
+
+        public static bool ApproximatelyEquals(this double value, double other, double tolerance = 0.01)
+        {
+            return Math.Abs(other - value) < tolerance;
+        }
+
+        /// <summary>
+        /// Create a string A, B, C, ... AA, AB ... from an int value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string NumberToString(int value)
+        {
+            // Modified from https://forums.asp.net/t/1419722.aspx?generate+a+sequence+of+letters+in+C+
+            StringBuilder sb = new StringBuilder();
+            value++; // (so that 0 = A)
+            do
+            {
+                value--;
+                int remainder = 0;
+                value = Math.DivRem(value, 26, out remainder);
+                sb.Insert(0, Convert.ToChar('A' + remainder));
+
+            } while (value > 0);
+
+            return sb.ToString();
         }
 
     }
