@@ -33,7 +33,6 @@ namespace Elements.Spatial
                 {
                     var newCell = new Grid2d(uCell.Domain, vCell.Domain);
 
-
                     // Map type name from U and V type names. In most cases this
                     // should only be one direction, so we inherit directly.
                     if (uCell.Type != null && vCell.Type != null)
@@ -191,7 +190,7 @@ namespace Elements.Spatial
         /// <returns>A list of the column of all cells with this u index.</returns>
         public List<Grid2d> GetColumnAtIndex(int u)
         {
-                return Cells[u];
+            return Cells[u];
         }
 
         /// <summary>

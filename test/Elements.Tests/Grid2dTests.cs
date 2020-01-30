@@ -19,15 +19,17 @@ namespace Elements.Tests
             grid.U.SplitAtPosition(2);
             grid.U.SplitAtPosition(7);
             grid.V.SplitAtPosition(5);
-            var col = grid.GetColumnAtIndex(1);
             var subGrid = grid[1, 0];
             subGrid.U.DivideByCount(5);
             var subGrid2 = grid[1, 1];
             subGrid2.V.DivideByFixedLengthFromPosition(0.5, 8);
 
-            var geo = grid.GetCells().Select(c => c.GetCellGeometry());
-            var json = JsonConvert.SerializeObject(geo);
-            File.WriteAllText("/Users/andrewheumann/Desktop/grid2dTest.json", json);
+            Assert.Equal(6, grid.Cells.Count);
+            Assert.Equal(19, grid.GetCells().Count);
+
+            //    var geo = grid.GetCells().Select(c => c.GetCellGeometry());
+            //    var json = JsonConvert.SerializeObject(geo);
+            //    File.WriteAllText("/Users/andrewheumann/Desktop/grid2dTest.json", json);
         }
 
 
@@ -59,8 +61,8 @@ namespace Elements.Tests
             var panelA = ("A", 1.0);
             var panelB = ("B", 0.5);
             var panelC = ("C", 1.5);
-            var pattern = new List<(string, double)> { panelA, panelB, panelC };
-            var pattern2 = new List<(string, double)> { panelB, panelA };
+            var pattern = new [] { panelA, panelB, panelC };
+            var pattern2 = new [] { panelB, panelA };
             var patterns = new[] { pattern, pattern2 };
 
             for (int index = 0; index < grid.CellsFlat.Count; index++)
@@ -83,6 +85,17 @@ namespace Elements.Tests
             var json = JsonConvert.SerializeObject(resultDict);
             File.WriteAllText($"/Users/andrewheumann/Desktop/grid2dRotatedTest.json", json);
 
+        }
+
+        [Fact]
+        public void GridInheritsNamesFromBothDirections()
+        {
+            var grid = new Grid2d(20, 20);
+            var uPattern = new[] { 1.0, 2.0, 3.0 };
+            var vPattern = new[] { ("Large", 5.0), ("Small", 1.0) };
+            grid.U.DivideByPattern(uPattern);
+            grid.V.DivideByPattern(vPattern);
+            Assert.Equal("B / Large", grid[1, 0].Type);
         }
     }
 }

@@ -14,6 +14,28 @@ namespace Elements.Tests
     {
 
         [Fact]
+        public void SplitAtOffset()
+        {
+            var grid = new Grid1d(30);
+            grid.SplitAtOffset(5);
+            grid.SplitAtOffset(5, true);
+            Assert.Equal(5, grid.Cells[0].Domain.Length);
+            Assert.Equal(20, grid.Cells[1].Domain.Length);
+            Assert.Equal(5, grid.Cells[2].Domain.Length);
+        }
+
+        [Fact]
+        public void SplitAtPositions()
+        {
+            var positions = new[] { 3.0, 8, 5, 4 };
+            var grid = new Grid1d(10);
+            grid.SplitAtPositions(positions);
+            Assert.Equal(5, grid.Cells.Count);
+            Assert.Equal(1, grid[1].Domain.Length);
+            grid.SplitAtPosition(8); // should do nothing but not throw an error
+        }
+
+        [Fact]
         public void AlreadySplitGridsThrowsExceptionWhenDividedByN()
         {
             var grid = new Grid1d();
@@ -49,7 +71,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void GridOnCurves()
+        public void GridFromCurves()
         {
             var a = Vector3.Origin;
             var b = new Vector3(5, 0, 1);
@@ -100,7 +122,7 @@ namespace Elements.Tests
             Assert.Equal(panelTarget, inMiddle.Cells.First().Domain.Length);
             Assert.Equal(panelTarget, inMiddle.Cells.Last().Domain.Length);
 
-            Assert.NotEqual(panelTarget, atStart.Cells.First().Domain.Length);  
+            Assert.NotEqual(panelTarget, atStart.Cells.First().Domain.Length);
             Assert.Equal(panelTarget, atStart.Cells.Last().Domain.Length);
 
             Assert.Equal(panelTarget, atEnd.Cells.First().Domain.Length);
@@ -151,23 +173,28 @@ namespace Elements.Tests
         [Fact]
         public void DivideByPattern()
         {
-            var grid = new Grid1d(new Domain1d(60, 78));
-            //var pattern = new List<(string, double)>
-            //{
-            //    ("Solid", 1),
-            //    ("Glazing", 3),
-            //    ("Fin", 0.2)
-            //};
-            var pattern = new List<double> { 1, 3, 0.2 };
+            var grid = new Grid1d(new Domain1d(60, 150));
+            var pattern = new List<(string typename, double length)>
+            {
+                ("Solid", 1),
+                ("Glazing", 3),
+                ("Fin", 0.2)
+            };
             grid.DivideByPattern(pattern, PatternMode.Cycle, FixedDivisionMode.RemainderAtBothEnds);
             var cells = grid.GetCells();
             var types = cells.Select(c => c.Type);
 
-            var result = new Dictionary<string, object>();
-            result.Add("Geometry", cells.Select(c => c.GetCellGeometry()));
-            result.Add("Types", types);
-            var json = JsonConvert.SerializeObject(result);
-            File.WriteAllText("/Users/andrewheumann/Desktop/divideByPattern.json", json);
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.Equal(pattern[i % pattern.Count].length, cells[i+1].Domain.Length, 3);
+                Assert.Equal(pattern[i % pattern.Count].typename, cells[i+1].Type);
+            }
+
+            //var result = new Dictionary<string, object>();
+            //result.Add("Geometry", cells.Select(c => c.GetCellGeometry()));
+            //result.Add("Types", types);
+            //var json = JsonConvert.SerializeObject(result);
+            //File.WriteAllText("/Users/andrewheumann/Desktop/divideByPattern.json", json);
 
         }
 

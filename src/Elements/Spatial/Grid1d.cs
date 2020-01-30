@@ -147,6 +147,10 @@ namespace Elements.Spatial
                     new Grid1d(curve, newDomains[1], curveDomain)
                 };
             }
+            else if (PositionIsAtCellEdge(pos)) // already split at this location
+            {
+                return;
+            }
             else
             {
                 // find the cell that should be split, split it, and replace it in the Cells list.
@@ -181,7 +185,7 @@ namespace Elements.Spatial
             SplitAtPosition(pos);
         }
 
-
+       
 
         /// <summary>
         /// Split the grid at a list of fixed positions from the start or end
@@ -333,7 +337,7 @@ namespace Elements.Spatial
         /// <param name="lengthPattern">A pattern of lengths to apply to the grid</param>
         /// <param name="patternMode">How to apply/repeat the pattern</param>
         /// <param name="divisionMode">How to handle leftover/remainder length</param>
-        public void DivideByPattern(List<double> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
+        public void DivideByPattern(IList<double> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
         {
             var patternwithNames = new List<(string typeName, double length)>();
             for (int i = 0; i < lengthPattern.Count; i++)
@@ -350,10 +354,10 @@ namespace Elements.Spatial
         /// <param name="lengthPattern">A pattern of lengths to apply to the grid</param>
         /// <param name="patternMode">How to apply/repeat the pattern</param>
         /// <param name="divisionMode">How to handle leftover/remainder length</param>
-        public void DivideByPattern(List<(string typeName, double length)> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
+        public void DivideByPattern(IList<(string typeName, double length)> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
         {
             //a list of all the segments that fit in the grid
-            List<(string typeName, double length)> patternSegments = new List<(string, double)>();
+            IList<(string typeName, double length)> patternSegments = new List<(string, double)>();
             switch (patternMode)
             {
                 case PatternMode.None:
@@ -408,7 +412,7 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="patternSegments"></param>
         /// <param name="offset"></param>
-        private void DivideWithPatternAndOffset(List<(string typeName, double length)> patternSegments, double offset)
+        private void DivideWithPatternAndOffset(IList<(string typeName, double length)> patternSegments, double offset)
         {
             double runningPosition = offset;
             if (offset > 0)
@@ -438,7 +442,7 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="lengthPattern"></param>
         /// <param name="patternSegments"></param>
-        private void Cycle(List<(string typeName, double length)> lengthPattern, List<(string, double)> patternSegments)
+        private void Cycle(IList<(string typeName, double length)> lengthPattern, IList<(string, double)> patternSegments)
         {
             var runningLength = 0.0;
             int i = 0;
@@ -477,6 +481,18 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Test if a given position lies nearly on the edge of a cell
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        private bool PositionIsAtCellEdge(double pos)
+        {
+            return Cells.Any(c =>
+            c.Domain.Max.ApproximatelyEquals(pos) ||
+            c.Domain.Min.ApproximatelyEquals(pos));
+        }
+
+        /// <summary>
         /// Retrieve the index of the grid cell at a length along the domain. If
         /// position is exactly on the edge, it returns the righthand cell index.
         /// </summary>
@@ -505,14 +521,14 @@ namespace Elements.Spatial
                 var edgeMatch = Cells.FirstOrDefault(c => c.Domain.Min == pos);
                 if (edgeMatch != null)
                 {
-                    return Cells.IndexOf(cellMatch);
+                    return Cells.IndexOf(edgeMatch);
                 }
                 // we must be at the last cell — but let's just make sure
                 var endMatch = Cells.FirstOrDefault(c => c.Domain.Max == pos);
 
                 if (endMatch != null)
                 {
-                    return Cells.IndexOf(cellMatch);
+                    return Cells.IndexOf(endMatch);
                 }
                 throw new Exception("Something went wrong finding a cell at this position");
             }
