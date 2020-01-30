@@ -34,6 +34,28 @@ namespace Elements.Tests
 
 
         [Fact]
+        public void TrimBehavior()
+        {
+            var polygonjson = "[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-14.371519985751306,\"Y\":-4.8816304299427005,\"Z\":0.0},{\"X\":-17.661873645682569,\"Y\":9.2555712951713573,\"Z\":0.0},{\"X\":12.965610421927806,\"Y\":9.2555712951713573,\"Z\":0.0},{\"X\":12.965610421927806,\"Y\":3.5538269529982784,\"Z\":0.0},{\"X\":6.4046991240848143,\"Y\":3.5538269529982784,\"Z\":0.0},{\"X\":1.3278034769444158,\"Y\":-4.8816304299427005,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-9.4508365123690652,\"Y\":0.20473478280229102,\"Z\":0.0},{\"X\":-1.8745460850979974,\"Y\":0.20473478280229102,\"Z\":0.0},{\"X\":-1.8745460850979974,\"Y\":5.4378426037008651,\"Z\":0.0},{\"X\":-9.4508365123690652,\"Y\":5.4378426037008651,\"Z\":0.0}]}]\r\n";
+            var polygons = JsonConvert.DeserializeObject<List<Polygon>>(polygonjson);
+            var grid = new Grid2d(polygons);
+            foreach (var pt in polygons[1].Vertices)
+            {
+                grid.SplitAtPoint(pt);
+            }
+            grid.CellsFlat.ForEach(c => c.U.DivideByApproximateLength(1.0, EvenDivisionMode.RoundDown));
+
+            var trimmedCells = grid.GetCells().Select(c => new Dictionary<string, object>
+            {
+                        {"TrimmedGeometry", c.GetTrimmedCellGeometry()},
+                        {"BaseRect", c.GetCellGeometry() },
+                        {"IsTrimmed", c.IsTrimmed()}
+                        });
+            var json = JsonConvert.SerializeObject(trimmedCells);
+            File.WriteAllText(@"C:\Users\andrew\Desktop\cells-trim-test.json", json);
+        }
+
+       [Fact]
         public void GridFromPolygon()
         {
             var a = new Vector3(0.03, 5.08);

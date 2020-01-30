@@ -376,7 +376,7 @@ namespace Elements.Spatial
             if (trimmedRect == null) return false;
             var trimmedArea = trimmedRect.Select(r => r.Area()).Sum();
             var baseRectArea = baseRect.Area();
-            return !trimmedArea.ApproximatelyEquals(baseRectArea, 0.001);
+            return !trimmedArea.ApproximatelyEquals(baseRectArea, 0.01);
         }
 
         #endregion
