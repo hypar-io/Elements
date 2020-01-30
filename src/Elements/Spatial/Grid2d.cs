@@ -11,51 +11,23 @@ namespace Elements.Spatial
     /// </summary>
     public class Grid2d
     {
+        #region Properties
 
-        private void InitializeUV(Domain1d uDomain, Domain1d vDomain)
-        {
-            U = new Grid1d(uDomain);
-            U.TopLevelGridChange += TopLevelGridChange;
-            V = new Grid1d(vDomain);
-            V.TopLevelGridChange += TopLevelGridChange;
+        /// <summary>
+        /// Returns true if this 1D Grid has no subdivisions / sub-grids. 
+        /// </summary>
+        public bool IsSingleCell => Cells == null || Cells.Count == 0;
 
-        }
 
-        private void TopLevelGridChange(Grid1d sender, EventArgs e)
-        {
-            Cells = new List<List<Grid2d>>();
-            var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.Cells;
-            var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.Cells;
-            foreach (var uCell in uCells)
-            {
-                var column = new List<Grid2d>();
-                foreach (var vCell in vCells)
-                {
-                    var newCell = new Grid2d(uCell.Domain, vCell.Domain);
+        /// <summary>
+        /// The 1d Grid along the U dimension
+        /// </summary>
+        public Grid1d U { get; private set; }
 
-                    // Map type name from U and V type names. In most cases this
-                    // should only be one direction, so we inherit directly.
-                    if (uCell.Type != null && vCell.Type != null)
-                    {
-                        newCell.Type = $"{uCell.Type} / {vCell.Type}";
-                    }
-                    else if (uCell.Type != null)
-                    {
-                        newCell.Type = uCell.Type;
-                    }
-                    else if (vCell.Type != null)
-                    {
-                        newCell.Type = vCell.Type;
-                    }
-
-                    newCell.fromGrid = fromGrid;
-                    newCell.toGrid = toGrid;
-                    newCell.boundariesInGridSpace = boundariesInGridSpace;
-                    column.Add(newCell);
-                }
-                Cells.Add(column);
-            }
-        }
+        /// <summary>
+        /// The 1d grid along the V dimension
+        /// </summary>
+        public Grid1d V { get; private set; }
 
         /// <summary>
         /// An optional type designation for this cell.  
@@ -64,6 +36,29 @@ namespace Elements.Spatial
         {
             get; set;
         }
+
+        #endregion
+
+        #region Private fields
+
+        /// <summary>
+        /// A transform from grid space to world space
+        /// </summary>
+        private Transform fromGrid = new Transform();
+
+        /// <summary>
+        /// A transform from world space to grid space
+        /// </summary>
+        private Transform toGrid = new Transform();
+
+        /// <summary>
+        /// Any boundary curves, transformed to grid space. 
+        /// </summary>
+        private IList<Polygon> boundariesInGridSpace;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Construct a Grid2d with default domain (0,0) to (1,1)
@@ -119,15 +114,16 @@ namespace Elements.Spatial
         /// <param name="t"></param>
         public Grid2d(IList<Polygon> boundaries, Transform t = null)
         {
+            if (t == null)
+            {
+                t = new Transform();
+            }
+
             if (!t.ZAxis.IsParallelTo(Vector3.ZAxis))
             {
                 throw new Exception("Currently transforms that are not parallel to the XY Plane are not supported.");
             }
 
-            if (t == null)
-            {
-                t = new Transform();
-            }
 
             toGrid = new Transform(t);
             t.Invert();
@@ -139,6 +135,68 @@ namespace Elements.Spatial
 
             InitializeUV(new Domain1d(bbox.Min.X, bbox.Max.X), new Domain1d(bbox.Min.Y, bbox.Max.Y));
         }
+
+        #endregion
+
+        #region Split Methods
+
+        /// <summary>
+        /// Split the grid at points in world space
+        /// </summary>
+        /// <param name="points">The points at which to split</param>
+        public void SplitAtPoints(IEnumerable<Vector3> points)
+        {
+            foreach(var point in points)
+            {
+                SplitAtPoint(point);
+            }
+        }
+
+        /// <summary>
+        /// Split the grid at positions in the grid's coordinate system
+        /// </summary>
+        /// <param name="positions">The positions at which to split, with X = U and Y = V. </param>
+        public void SplitAtPositions(IEnumerable<Vector3> positions)
+        {
+            foreach(var pos in positions)
+            {
+                SplitAtPosition(pos);
+            }
+        }
+
+        /// <summary>
+        /// Split the grid at a point in world space
+        /// </summary>
+        /// <param name="point">The point at which to split.</param>
+        public void SplitAtPoint(Vector3 point)
+        {
+            var ptTransformed = toGrid.OfPoint(point);
+            SplitAtPosition(ptTransformed);
+        }
+
+        /// <summary>
+        /// Split the grid at a position in the grid's coordinate system
+        /// </summary>
+        /// <param name="position">The position at which to split, with X = U and Y = V.</param>
+        public void SplitAtPosition(Vector3 position)
+        {
+            SplitAtPosition(position.X, position.Y);
+        }
+
+        /// <summary>
+        /// Split the grid at a position in the grid's coordinate system
+        /// </summary>
+        /// <param name="uPos">The U position</param>
+        /// <param name="vPos">The V position</param>
+        public void SplitAtPosition(double uPos, double vPos)
+        {
+            U.SplitAtPosition(uPos);
+            V.SplitAtPosition(vPos);
+        }
+
+        #endregion
+
+        #region Cell Retrieval
 
         /// <summary>
         /// Retrieve the grid cell (as a Grid1d) at a length along the U and V domains. 
@@ -297,14 +355,9 @@ namespace Elements.Spatial
             return new Curve[0];
         }
 
-        /// <summary>
-        /// Get the base rectangle of this cell in grid coordinates.
-        /// </summary>
-        /// <returns></returns>
-        private Polygon GetBaseRectangle()
-        {
-            return Polygon.Rectangle(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Max));
-        }
+        #endregion
+
+        #region Other Public Methods
 
         /// <summary>
         /// Test if the cell is trimmed by a boundary.
@@ -318,6 +371,7 @@ namespace Elements.Spatial
             }
 
             var baseRect = GetBaseRectangle();
+
             var trimmedRect = Polygon.BooleanTwoSets(new[] { baseRect }, boundariesInGridSpace, BooleanMode.Intersection);
             if (trimmedRect == null) return false;
             var trimmedArea = trimmedRect.Select(r => r.Area()).Sum();
@@ -325,25 +379,69 @@ namespace Elements.Spatial
             return !trimmedArea.ApproximatelyEquals(baseRectArea, 0.001);
         }
 
+        #endregion
+
+        #region Private Methods
+        private void InitializeUV(Domain1d uDomain, Domain1d vDomain)
+        {
+            U = new Grid1d(uDomain);
+            U.TopLevelGridChange += TopLevelGridChange;
+            V = new Grid1d(vDomain);
+            V.TopLevelGridChange += TopLevelGridChange;
+
+        }
+
         /// <summary>
-        /// Returns true if this 1D Grid has no subdivisions / sub-grids. 
+        /// Update the 2d grid cells of this grid when its U or V 1d cells change.
         /// </summary>
-        public bool IsSingleCell => Cells == null || Cells.Count == 0;
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TopLevelGridChange(Grid1d sender, EventArgs e)
+        {
+            Cells = new List<List<Grid2d>>();
+            var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.Cells;
+            var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.Cells;
+            foreach (var uCell in uCells)
+            {
+                var column = new List<Grid2d>();
+                foreach (var vCell in vCells)
+                {
+                    var newCell = new Grid2d(uCell.Domain, vCell.Domain);
 
+                    // Map type name from U and V type names. In most cases this
+                    // should only be one direction, so we inherit directly.
+                    if (uCell.Type != null && vCell.Type != null)
+                    {
+                        newCell.Type = $"{uCell.Type} / {vCell.Type}";
+                    }
+                    else if (uCell.Type != null)
+                    {
+                        newCell.Type = uCell.Type;
+                    }
+                    else if (vCell.Type != null)
+                    {
+                        newCell.Type = vCell.Type;
+                    }
+
+                    newCell.fromGrid = fromGrid;
+                    newCell.toGrid = toGrid;
+                    newCell.boundariesInGridSpace = boundariesInGridSpace;
+                    column.Add(newCell);
+                }
+                Cells.Add(column);
+            }
+        }
 
         /// <summary>
-        /// The 1d Grid along the U dimension
+        /// Get the base rectangle of this cell in grid coordinates.
         /// </summary>
-        public Grid1d U { get; private set; }
+        /// <returns></returns>
+        private Polygon GetBaseRectangle()
+        {
+            return Polygon.Rectangle(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Max));
+        }
 
-        /// <summary>
-        /// The 1d grid along the V dimension
-        /// </summary>
-        public Grid1d V { get; private set; }
+        #endregion
 
-
-        private Transform fromGrid = new Transform();
-        private Transform toGrid = new Transform();
-        private IList<Polygon> boundariesInGridSpace;
     }
 }

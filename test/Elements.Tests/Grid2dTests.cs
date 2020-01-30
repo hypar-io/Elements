@@ -88,6 +88,29 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void NestedGridFromPolygons()
+        {
+            var a = new Vector3(0.03, 5.08);
+            var b = new Vector3(4.28, 9.80);
+            var c = new Vector3(9.69, 9.50);
+            var d = new Vector3(9.63, 2.43);
+            var e = new Vector3(4.72, -0.86);
+            var f = new Vector3(1.78, -0.75);
+
+            var polygon = new Polygon(new[] { a, b, c, d, e, f });
+
+            var g = new Vector3(7.735064, 5.746821);
+            var h = new Vector3(6.233137, 7.248748);
+            var i = new Vector3(3.660163, 4.675775);
+            var j = new Vector3(5.162091, 3.173848);
+
+            var polygon2 = new Polygon(new[] { g, h, i, j });
+
+
+            var grid = new Grid2d(new[] { polygon, polygon2 });
+        }
+
+        [Fact]
         public void GridInheritsNamesFromBothDirections()
         {
             var grid = new Grid2d(20, 20);

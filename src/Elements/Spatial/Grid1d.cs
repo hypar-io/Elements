@@ -12,6 +12,7 @@ namespace Elements.Spatial
     /// </summary>
     public class Grid1d
     {
+        #region Properties
 
         /// <summary>
         /// An optional type designation for this cell.  
@@ -34,6 +35,9 @@ namespace Elements.Spatial
         /// </summary>
         public bool IsSingleCell => Cells == null || Cells.Count == 0;
 
+        #endregion
+
+        #region Private fields
 
         // The curve this was generated from, often a line.
         // subdivided cells maintain the complete original curve,
@@ -44,6 +48,10 @@ namespace Elements.Spatial
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
         // domain back to the original curve.
         private Domain1d curveDomain;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Default constructor with optional length parameter
@@ -89,25 +97,10 @@ namespace Elements.Spatial
             Domain = domain;
         }
 
-        /// <summary>
-        /// Retrieve a cell by index
-        /// </summary>
-        /// <param name="i">The index</param>
-        /// <returns>A Grid1d representing the selected cell/segment.</returns>
-        public Grid1d this[int i]
-        {
-            get
-            {
-                if (Cells.Count <= i)
-                {
-                    return null;
-                }
-                else
-                {
-                    return Cells[i];
-                }
-            }
-        }
+        #endregion
+
+        #region Split Methods
+
 
         /// <summary>
         /// Split the grid at a normalized parameter from 0 to 1 along its domain. 
@@ -185,8 +178,6 @@ namespace Elements.Spatial
             SplitAtPosition(pos);
         }
 
-       
-
         /// <summary>
         /// Split the grid at a list of fixed positions from the start or end
         /// </summary>
@@ -199,7 +190,9 @@ namespace Elements.Spatial
             }
         }
 
+        #endregion
 
+        #region Divide Methods
 
         /// <summary>
         /// Divide the grid into N even subdivisions. Grids that are already subdivided will fail. 
@@ -269,8 +262,6 @@ namespace Elements.Spatial
                 SplitAtPosition(p);
             }
         }
-
-
 
         /// <summary>
         /// Divide a grid by constant length subdivisions, with a variable division mode to control how leftover
@@ -463,10 +454,29 @@ namespace Elements.Spatial
             }
         }
 
+        #endregion
 
+        #region Cell Retrieval
 
-
-
+        /// <summary>
+        /// Retrieve a cell by index
+        /// </summary>
+        /// <param name="i">The index</param>
+        /// <returns>A Grid1d representing the selected cell/segment.</returns>
+        public Grid1d this[int i]
+        {
+            get
+            {
+                if (Cells.Count <= i)
+                {
+                    return null;
+                }
+                else
+                {
+                    return Cells[i];
+                }
+            }
+        }
 
         /// <summary>
         /// Retrieve the grid cell (as a Grid1d) at a length along the domain. 
@@ -478,18 +488,6 @@ namespace Elements.Spatial
             var index = FindCellIndexAtPosition(pos);
             if (index < 0) return this;
             return Cells[index];
-        }
-
-        /// <summary>
-        /// Test if a given position lies nearly on the edge of a cell
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        private bool PositionIsAtCellEdge(double pos)
-        {
-            return Cells.Any(c =>
-            c.Domain.Max.ApproximatelyEquals(pos) ||
-            c.Domain.Min.ApproximatelyEquals(pos));
         }
 
         /// <summary>
@@ -581,6 +579,23 @@ namespace Elements.Spatial
 
         }
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Test if a given position lies nearly on the edge of a cell
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        private bool PositionIsAtCellEdge(double pos)
+        {
+            return Cells.Any(c =>
+            c.Domain.Max.ApproximatelyEquals(pos) ||
+            c.Domain.Min.ApproximatelyEquals(pos));
+        }
+
+        #endregion
 
         #region Events
         /// <summary>
@@ -608,6 +623,8 @@ namespace Elements.Spatial
 
     }
 
+    #region Enums
+
     /// <summary>
     /// Methods for repeating a pattern of lengths or types
     /// </summary>
@@ -626,7 +643,7 @@ namespace Elements.Spatial
         /// </summary>
         Flip,
     }
-
+  
     /// <summary>
     /// Describe how a target length should be treated 
     /// </summary>
@@ -669,6 +686,6 @@ namespace Elements.Spatial
         RemainderNearMiddle
     }
 
-
+    #endregion
 
 }
