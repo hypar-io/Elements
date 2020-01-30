@@ -219,7 +219,13 @@ namespace Elements.Geometry
         }
 
 
-
+        /// <summary>
+        /// Apply a boolean operation (Union, Difference, Intersection, or XOr) to two lists of Polygons.
+        /// </summary>
+        /// <param name="subjectPolygons">Polygons to clip</param>
+        /// <param name="clippingPolygons">Polygons with which to clip</param>
+        /// <param name="mode">The operation to apply: Union, Difference, Intersection, or XOr</param>
+        /// <returns></returns>
         public static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode mode)
         {
             var subjectPaths = subjectPolygons.Select(s => s.ToClipperPath()).ToList();
@@ -668,11 +674,26 @@ namespace Elements.Geometry
         }
     }
 
+    /// <summary>
+    /// Mode to apply a boolean operation
+    /// </summary>
     public enum BooleanMode
     {
+        /// <summary>
+        /// A and not B
+        /// </summary>
         Difference,
+        /// <summary>
+        /// A or B
+        /// </summary>
         Union,
+        /// <summary>
+        /// A and B
+        /// </summary>
         Intersection,
+        /// <summary>
+        /// Exclusive or — either A or B but not both. 
+        /// </summary>
         XOr
     }
 

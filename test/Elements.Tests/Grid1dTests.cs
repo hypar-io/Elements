@@ -43,8 +43,8 @@ namespace Elements.Tests
             subCell.Cells[3].DivideByApproximateLength(1.2, EvenDivisionMode.Nearest);
             var allCells = grid.GetCells();
             var cellGeometry = allCells.Select(c => c.GetCellGeometry());
-            var cellJson = JsonConvert.SerializeObject(cellGeometry);
-            File.WriteAllText("/Users/andrewheumann/Desktop/cell-test.json", cellJson);
+            //var cellJson = JsonConvert.SerializeObject(cellGeometry);
+            //File.WriteAllText("/Users/andrewheumann/Desktop/cell-test.json", cellJson);
             Assert.Equal(11, allCells.Count);
         }
 
@@ -85,8 +85,8 @@ namespace Elements.Tests
         [Fact]
         public void Grid1dFixedDivisions()
         {
-            var length = 18.245354;
-            var panelTarget = 1.5;
+            var length = 10;
+            var panelTarget = 3;
             var sacrificial = 0;
             var inMiddle = new Grid1d(new Line(new Vector3(0, 0, 0), new Vector3(length, 0, 0)));
             var atStart = new Grid1d(new Line(new Vector3(0, 1, 0), new Vector3(length, 1, 0)));
@@ -96,27 +96,44 @@ namespace Elements.Tests
             atStart.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtStart, sacrificial);
             atEnd.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtEnd, sacrificial);
             atBothEnds.DivideByFixedLength(panelTarget, FixedDivisionMode.RemainderAtBothEnds, sacrificial);
-            var cellGeo = new List<IEnumerable<Curve>>();
-            cellGeo.Add(inMiddle.GetCells().Select(cl => cl.GetCellGeometry()));
-            cellGeo.Add(atStart.GetCells().Select(cl => cl.GetCellGeometry()));
-            cellGeo.Add(atEnd.GetCells().Select(cl => cl.GetCellGeometry()));
-            cellGeo.Add(atBothEnds.GetCells().Select(cl => cl.GetCellGeometry()));
-            var json = JsonConvert.SerializeObject(cellGeo);
-            File.WriteAllText("/Users/andrewheumann/Desktop/fixedDivision-test.json", json);
+
+            Assert.Equal(panelTarget, inMiddle.Cells.First().Domain.Length);
+            Assert.Equal(panelTarget, inMiddle.Cells.Last().Domain.Length);
+
+            Assert.NotEqual(panelTarget, atStart.Cells.First().Domain.Length);  
+            Assert.Equal(panelTarget, atStart.Cells.Last().Domain.Length);
+
+            Assert.Equal(panelTarget, atEnd.Cells.First().Domain.Length);
+            Assert.NotEqual(panelTarget, atEnd.Cells.Last().Domain.Length);
+
+            Assert.NotEqual(panelTarget, atBothEnds.Cells.First().Domain.Length);
+            Assert.NotEqual(panelTarget, atBothEnds.Cells.Last().Domain.Length);
+
+            //var cellGeo = new List<IEnumerable<Curve>>();
+            //cellGeo.Add(inMiddle.GetCells().Select(cl => cl.GetCellGeometry()));
+            //cellGeo.Add(atStart.GetCells().Select(cl => cl.GetCellGeometry()));
+            //cellGeo.Add(atEnd.GetCells().Select(cl => cl.GetCellGeometry()));
+            //cellGeo.Add(atBothEnds.GetCells().Select(cl => cl.GetCellGeometry()));
+            //var json = JsonConvert.SerializeObject(cellGeo);
+            //File.WriteAllText("/Users/andrewheumann/Desktop/fixedDivision-test.json", json);
 
         }
 
         [Fact]
-        public void Grid1dFixedWithRemainder()
+        public void Grid1dApproximateLength()
         {
-            var grid1 = new Grid1d(1);
-            var grid2 = new Grid1d(1);
-            var grid3 = new Grid1d(1);
-            grid1.DivideByApproximateLength(6, EvenDivisionMode.RoundDown);
-            grid2.DivideByFixedLength(2, FixedDivisionMode.RemainderAtBothEnds);
-            grid3.DivideByFixedLength(1.5, FixedDivisionMode.RemainderAtStart);
-        }
+            var grid1 = new Grid1d(10.5);
+            var grid2 = new Grid1d(10.5);
+            var grid3 = new Grid1d(10.2);
+            grid1.DivideByApproximateLength(6, EvenDivisionMode.Nearest);
+            Assert.Equal(2, grid1.Cells.Count);
 
+            grid2.DivideByApproximateLength(4, EvenDivisionMode.RoundUp);
+            Assert.Equal(3, grid2.Cells.Count);
+
+            grid3.DivideByApproximateLength(1, EvenDivisionMode.RoundDown);
+            Assert.Equal(10, grid3.Cells.Count);
+        }
 
         [Fact]
         public void DivideGridFromOrigin()
@@ -164,7 +181,7 @@ namespace Elements.Tests
                 ("Glazing", 3),
                 ("Fin", 0.2)
             };
-            Exception ex = Assert.Throws(typeof(Exception),() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
+            Exception ex = Assert.Throws<Exception>(() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
 
             Assert.Equal("Pattern length exceeds grid length.", ex.Message);
         }

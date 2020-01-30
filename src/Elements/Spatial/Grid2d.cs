@@ -6,6 +6,9 @@ using Elements.MathUtils;
 
 namespace Elements.Spatial
 {
+    /// <summary>
+    /// Represents a 2-dimensional grid which can be subdivided 
+    /// </summary>
     public class Grid2d
     {
 
@@ -63,25 +66,41 @@ namespace Elements.Spatial
             get; set;
         }
 
-
+        /// <summary>
+        /// Construct a Grid2d with default domain (0,0) to (1,1)
+        /// </summary>
         public Grid2d()
         {
             InitializeUV(new Domain1d(), new Domain1d());
         }
 
+        /// <summary>
+        /// Construct a 2d grid with two 1d domains
+        /// </summary>
+        /// <param name="uDomain">The domain along the U axis</param>
+        /// <param name="vDomain">The domain along the V axis</param>
         private Grid2d(Domain1d uDomain, Domain1d vDomain)
         {
             InitializeUV(uDomain, vDomain);
         }
 
+
+        /// <summary>
+        /// Construct a Grid2d with specified dimensions for the U and V direction.
+        /// </summary>
+        /// <param name="uDimension">The size along the U axis</param>
+        /// <param name="vDimension">The size along the V axis</param>
         public Grid2d(double uDimension, double vDimension)
         {
             InitializeUV(new Domain1d(0, uDimension), new Domain1d(0, vDimension));
         }
 
         /// <summary>
-        /// Create a Grid2d from a polygon and optional Transform. If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
-        /// Currently only transforms parallel to the world XY are supported. 
+        /// Create a Grid2d from a polygon and optional Transform.
+        /// If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
+        /// Currently only transforms parallel to the world XY are supported.
+        /// The polygon's bounding box parallel to the supplied transform will be
+        /// used as the grid extents. 
         /// </summary>
         /// <param name="boundary"></param>
         /// <param name="t">A transform representing the </param>
@@ -90,6 +109,15 @@ namespace Elements.Spatial
 
         }
 
+        /// <summary>
+        /// Create a Grid2d from a list of boundary polygons and an optional transform.
+        /// If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
+        /// Currently only transforms parallel to the world XY are supported.
+        /// The polygons' bounding box parallel to the supplied transform will be
+        /// used as the grid extents.
+        /// </summary>
+        /// <param name="boundaries"></param>
+        /// <param name="t"></param>
         public Grid2d(IList<Polygon> boundaries, Transform t = null)
         {
             if (!t.ZAxis.IsParallelTo(Vector3.ZAxis))
@@ -126,10 +154,17 @@ namespace Elements.Spatial
             return Cells[uIndex][vIndex];
         }
 
+        /// <summary>
+        /// Retrieve the U and V indices of a given cell at a position in grid space.
+        /// This is used to map between position and indices.
+        /// </summary>
+        /// <param name="uPos"></param>
+        /// <param name="vPos"></param>
+        /// <returns></returns>
         private (int u, int v) FindCellIndexAtPosition(double uPos, double vPos)
         {
 
-            //TODO: Optimize for smarter retrieval — via 2d indexing or something
+            //TODO: Optimize for smarter retrieval — via indexing or something
             for (int u = 0; u < Cells.Count; u++)
             {
                 if (Cells[u][0].U.Domain.Includes(uPos))
@@ -149,27 +184,48 @@ namespace Elements.Spatial
             return (-1, -1);
         }
 
-        public List<Grid2d> this[int i]
+        /// <summary>
+        /// Get a list of all the top-level cells at a given u index.
+        /// </summary>
+        /// <param name="u">The u index</param>
+        /// <returns>A list of the column of all cells with this u index.</returns>
+        public List<Grid2d> GetColumnAtIndex(int u)
         {
-            get
-            {
-                return Cells[i];
-            }
+                return Cells[u];
         }
 
+        /// <summary>
+        /// Get a list of all the top-level cells at a given v index.
+        /// </summary>
+        /// <param name="v">The v index</param>
+        /// <returns>A list of the row of all cells with this v index.</returns>
+        public List<Grid2d> GetRowAtIndex(int v)
+        {
+            return Cells.Select(c => c[v]).ToList();
+        }
+
+        /// <summary>
+        /// Retrieve a single top-level cell at the specified [u,v] indices.
+        /// </summary>
+        /// <param name="u">The U index</param>
+        /// <param name="v">The V index</param>
+        /// <returns>The cell at these indices</returns>
+        public Grid2d GetCellAtIndices(int u, int v)
+        {
+            return Cells[u][v];
+        }
+
+        /// <summary>
+        /// Retrieve a single top-level cell at the specified [u,v] indices.
+        /// </summary>
+        /// <param name="u">The U index</param>
+        /// <param name="v">The V index</param>
+        /// <returns>The cell at these indices</returns>
         public Grid2d this[int u, int v]
         {
             get
             {
                 return Cells[u][v];
-            }
-        }
-
-        public Grid2d this[(int u, int v) index]
-        {
-            get
-            {
-                return Cells[index.u][index.v];
             }
         }
 
@@ -179,6 +235,9 @@ namespace Elements.Spatial
         /// </summary>
         public List<List<Grid2d>> Cells { get; private set; }
 
+        /// <summary>
+        /// A flat list of all the top-level cells in this grid. To get child cells as well, use Grid2d.GetCells() instead.
+        /// </summary>
         public List<Grid2d> CellsFlat
         {
             get
@@ -187,6 +246,10 @@ namespace Elements.Spatial
             }
         }
 
+        /// <summary>
+        /// Recursively retrieve all bottom-level cells from this grid.
+        /// </summary>
+        /// <returns>A list of all bottom-level cells in the grid.</returns>
         public List<Grid2d> GetCells()
         {
             List<Grid2d> resultCells = new List<Grid2d>();
@@ -204,12 +267,21 @@ namespace Elements.Spatial
             return resultCells;
         }
 
+        /// <summary>
+        /// Get a rectangular polygon representing this untrimmed cell boundary.
+        /// </summary>
+        /// <returns>A rectangle representing this cell in world coordinates.</returns>
         public Curve GetCellGeometry()
         {
             var baseRect = GetBaseRectangle();
             return fromGrid.OfPolygon(baseRect);
         }
 
+        /// <summary>
+        /// Get a list of polygons representing this cell boundary, trimmed by any polygon boundary.
+        /// If the cell falls completely outside of the boundary, an empty array will be returned.
+        /// </summary>
+        /// <returns>Curves representing this cell in world coordinates.</returns>
         public Curve[] GetTrimmedCellGeometry()
         {
             if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
@@ -226,11 +298,19 @@ namespace Elements.Spatial
             return new Curve[0];
         }
 
+        /// <summary>
+        /// Get the base rectangle of this cell in grid coordinates.
+        /// </summary>
+        /// <returns></returns>
         private Polygon GetBaseRectangle()
         {
             return Polygon.Rectangle(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Max));
         }
 
+        /// <summary>
+        /// Test if the cell is trimmed by a boundary.
+        /// </summary>
+        /// <returns>True if the cell is trimmed by the grid boundary.</returns>
         public bool IsTrimmed()
         {
             if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)

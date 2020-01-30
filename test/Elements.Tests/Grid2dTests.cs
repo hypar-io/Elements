@@ -19,7 +19,7 @@ namespace Elements.Tests
             grid.U.SplitAtPosition(2);
             grid.U.SplitAtPosition(7);
             grid.V.SplitAtPosition(5);
-            var col = grid[1];
+            var col = grid.GetColumnAtIndex(1);
             var subGrid = grid[1, 0];
             subGrid.U.DivideByCount(5);
             var subGrid2 = grid[1, 1];

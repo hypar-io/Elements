@@ -1,17 +1,35 @@
 ﻿using System;
 namespace Elements.MathUtils
 {
+    /// <summary>
+    /// Represents a 1 dimensional interval or domain.
+    /// </summary>
     public struct Domain1d
     {
+        /// <summary>
+        /// Construct a 1D Domain
+        /// </summary>
+        /// <param name="min">The lower bound</param>
+        /// <param name="max">The upper bound</param>
         public Domain1d(double min = 0.0, double max = 1.0)
         {
             Min = min;
             Max = max;
         }
 
+        /// <summary>
+        /// The lower bound of the domain
+        /// </summary>
         public double Min { get; }
+        /// <summary>
+        /// The upper bound of the domain
+        /// </summary>
         public double Max { get; }
 
+        /// <summary>
+        /// The length of the domain — Max-Min. Note that for non-increasing
+        /// domains this value can be negative.
+        /// </summary>
         public double Length => Max - Min;
 
         internal bool IsIncreasing()
@@ -22,31 +40,35 @@ namespace Elements.MathUtils
         /// <summary>
         /// Returns true if pos is within the domain (exclusive of its ends)
         /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        internal bool Includes(double pos)
+        /// <param name="value">The value to test</param>
+        /// <returns>True if the value is within the domain</returns>
+        internal bool Includes(double value)
         {
             if (IsIncreasing())
             {
-                return pos < Max && pos > Min;
+                return value < Max && value > Min;
             }
             else
             {
-                return pos < Min && pos < Max;
+                return value < Min && value < Max;
             }
         }
 
+        /// <summary>
+        /// Convert to string of the form "From Min to Max"
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return $"From {Min} To {Max}";
+            return $"From {Min} to {Max}";
         }
 
 
         /// <summary>
         /// Split domain into two at a position within its extents. Positions at the domain's ends will be rejected.
         /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
+        /// <param name="pos">The position value at which to split the domain.</param>
+        /// <returns>An array of 2 1d domains split at the designated position.</returns>
         public Domain1d[] SplitAt(double pos)
         {
             if (!Includes(pos))
@@ -58,6 +80,11 @@ namespace Elements.MathUtils
 
         }
 
+        /// <summary>
+        /// Split a domain evenly into N subdomains.
+        /// </summary>
+        /// <param name="n">The number of domains</param>
+        /// <returns>An array of N equally-sized subdomains.</returns>
         public Domain1d[] DivideByCount(int n)
         {
             if (n < 2)

@@ -7,6 +7,9 @@ using Elements.MathUtils;
 
 namespace Elements.Spatial
 {
+    /// <summary>
+    /// Represents a "1-dimensional grid", akin to a number line that can be subdivided.
+    /// </summary>
     public class Grid1d
     {
 
@@ -184,8 +187,7 @@ namespace Elements.Spatial
         /// Split the grid at a list of fixed positions from the start or end
         /// </summary>
         /// <param name="positions">The lengths along the grid at which to split.</param>
-        /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
-        public void SplitAtPositions(IEnumerable<double> positions)
+         public void SplitAtPositions(IEnumerable<double> positions)
         {
             foreach (var pos in positions)
             {
@@ -328,9 +330,9 @@ namespace Elements.Spatial
         /// Divide a grid by a pattern of lengths. Type names will be automatically generated, repetition will be governed by PatternMode,
         /// and remainder handling will be governed by DivisionMode. 
         /// </summary>
-        /// <param name="lengthPattern"></param>
-        /// <param name="patternMode"></param>
-        /// <param name="divisionMode"></param>
+        /// <param name="lengthPattern">A pattern of lengths to apply to the grid</param>
+        /// <param name="patternMode">How to apply/repeat the pattern</param>
+        /// <param name="divisionMode">How to handle leftover/remainder length</param>
         public void DivideByPattern(List<double> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
         {
             var patternwithNames = new List<(string typeName, double length)>();
@@ -341,6 +343,13 @@ namespace Elements.Spatial
             DivideByPattern(patternwithNames, patternMode, divisionMode);
         }
 
+        /// <summary>
+        /// Divide a grid by a pattern of named lengths. Repetition will be governed by PatternMode,
+        /// and remainder handling will be governed by DivisionMode. 
+        /// </summary>
+        /// <param name="lengthPattern">A pattern of lengths to apply to the grid</param>
+        /// <param name="patternMode">How to apply/repeat the pattern</param>
+        /// <param name="divisionMode">How to handle leftover/remainder length</param>
         public void DivideByPattern(List<(string typeName, double length)> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
         {
             //a list of all the segments that fit in the grid
@@ -393,6 +402,12 @@ namespace Elements.Spatial
 
         }
 
+
+        /// <summary>
+        /// Divide by a list of named lengths and an offset from start, used by the DivideByPattern function.
+        /// </summary>
+        /// <param name="patternSegments"></param>
+        /// <param name="offset"></param>
         private void DivideWithPatternAndOffset(List<(string typeName, double length)> patternSegments, double offset)
         {
             double runningPosition = offset;
@@ -417,6 +432,12 @@ namespace Elements.Spatial
 
         }
 
+
+        /// <summary>
+        /// Populate a list of pattern segments by repeating a pattern up to the length of the grid domain. 
+        /// </summary>
+        /// <param name="lengthPattern"></param>
+        /// <param name="patternSegments"></param>
         private void Cycle(List<(string typeName, double length)> lengthPattern, List<(string, double)> patternSegments)
         {
             var runningLength = 0.0;
@@ -446,8 +467,8 @@ namespace Elements.Spatial
         /// <summary>
         /// Retrieve the grid cell (as a Grid1d) at a length along the domain. 
         /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
+        /// <param name="pos">The position in the grid's domain to find</param>
+        /// <returns>The cell at this position, if found, or this grid if it is a single cell.</returns>
         public Grid1d FindCellAtPosition(double pos)
         {
             var index = FindCellIndexAtPosition(pos);
@@ -456,10 +477,11 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Retrieve the index of the grid cell at a length along the domain. 
+        /// Retrieve the index of the grid cell at a length along the domain. If
+        /// position is exactly on the edge, it returns the righthand cell index.
         /// </summary>
         /// <param name="pos"></param>
-        /// <returns></returns>
+        /// <returns>The index of the first cell </returns>
         private int FindCellIndexAtPosition(double pos)
         {
             if (!Domain.Includes(pos))
@@ -471,7 +493,7 @@ namespace Elements.Spatial
             {
                 return -1;
             }
-
+           
             else
             {
                 var cellMatch = Cells.FirstOrDefault(c => c.Domain.Includes(pos));
@@ -500,6 +522,7 @@ namespace Elements.Spatial
         /// Retrieve all grid segment cells recursively.
         /// For just top-level cells, get the Cells property.
         /// </summary>
+        /// <returns>A list of all the bottom-level cells / child cells of this grid.</returns>
         public List<Grid1d> GetCells()
         {
             List<Grid1d> resultCells = new List<Grid1d>();
@@ -544,10 +567,22 @@ namespace Elements.Spatial
 
 
         #region Events
+        /// <summary>
+        /// Handler for a grid event
+        /// </summary>
+        /// <param name="sender">The Grid1d that spawned this event</param>
+        /// <param name="e">Event args</param>
         public delegate void Grid1dEventHandler(Grid1d sender, EventArgs e);
 
+
+        /// <summary>
+        /// Fired when the cells of this grid change
+        /// </summary>
         public event Grid1dEventHandler TopLevelGridChange;
 
+        /// <summary>
+        /// Fired when the cells of this grid change
+        /// </summary>
         protected virtual void OnTopLevelGridChange()
         {
             Grid1dEventHandler handler = TopLevelGridChange;
@@ -557,6 +592,9 @@ namespace Elements.Spatial
 
     }
 
+    /// <summary>
+    /// Methods for repeating a pattern of lengths or types
+    /// </summary>
     public enum PatternMode
     {
         /// <summary>

@@ -3,6 +3,9 @@ using System.Text;
 
 namespace Elements.MathUtils
 {
+    /// <summary>
+    /// Extension and utility methods for mathematical operations. 
+    /// </summary>
     public static class MathExtensions
     {
         /// <summary>
@@ -22,7 +25,7 @@ namespace Elements.MathUtils
         /// </summary>
         /// <param name="value">The value to map</param>
         /// <param name="domain">The domain to map from.</param>
-        /// <returns></returns>
+        /// <returns>(value - domain.Min) / domain.Length</returns>
         public static double MapFromDomain(this double value, Domain1d domain)
         {
             return (value - domain.Min) / domain.Length;
@@ -33,13 +36,19 @@ namespace Elements.MathUtils
         /// </summary>
         /// <param name="value">The value to map.</param>
         /// <param name="domain">The domain to map to.</param>
-        /// <returns></returns>
+        /// <returns>value * domain.Length + domain.Min</returns>
         public static double MapToDomain(this double value, Domain1d domain)
         {
             return value * domain.Length + domain.Min;
         }
 
-
+        /// <summary>
+        /// Test if two values are approximately equal to each other with an optional tolerance value.
+        /// </summary>
+        /// <param name="value">The first value to test</param>
+        /// <param name="other">The other value to test</param>
+        /// <param name="tolerance">The threshold for equality</param>
+        /// <returns>True if |other - value| &lt; tolerance</returns>
         public static bool ApproximatelyEquals(this double value, double other, double tolerance = 0.01)
         {
             return Math.Abs(other - value) < tolerance;
@@ -48,8 +57,8 @@ namespace Elements.MathUtils
         /// <summary>
         /// Create a string A, B, C, ... AA, AB ... from an int value
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">The value to turn into a character string</param>
+        /// <returns>A string of Upper-case characters e.g. 1=A, 2=B, 27=AA</returns>
         public static string NumberToString(int value)
         {
             // Modified from https://forums.asp.net/t/1419722.aspx?generate+a+sequence+of+letters+in+C+
