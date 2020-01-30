@@ -143,11 +143,16 @@ namespace Elements.Serialization.IFC
             var products = new List<IfcProduct>();
             var context = ifc.AllInstancesOfType<IfcGeometricRepresentationContext>().FirstOrDefault();
 
+            // #32= IFCGEOMETRICREPRESENTATIONSUBCONTEXT('Body','Model',*,*,*,*,#28,$,.MODEL_VIEW.,$);
+            context = new IfcGeometricRepresentationSubContext("Body","Model", null, null, null, null, context, null, IfcGeometricProjectionEnum.MODEL_VIEW, null);
+            ifc.AddEntity(context);
+
             // IfcRelAssociatesMaterial
             // IfcMaterialDefinitionRepresentation
             // https://forums.buildingsmart.org/t/where-and-how-will-my-colors-be-saved-in-ifc/1806/12
             var materials = new Dictionary<string, IfcMaterial>();
             var styleAssignments = new Dictionary<string, List<IfcStyleAssignmentSelect>>();
+            var presentationStyleAssignments = new Dictionary<string, IfcPresentationStyleAssignment>();
 
             var white = Colors.White.ToIfcColourRgb();
             ifc.AddEntity(white);
@@ -156,27 +161,44 @@ namespace Elements.Serialization.IFC
             // https://forums.buildingsmart.org/t/why-is-it-so-difficult-to-get-colors-to-show-up/2312/12
             foreach (var m in model.AllElementsOfType<Material>())
             {
-                var material = new IfcMaterial(m.Name, null, "Hypar");
-                materials.Add(m.Name, material);
-                ifc.AddEntity(material);
-
                 var color = m.Color.ToIfcColourRgb();
                 ifc.AddEntity(color);
 
                 var transparency = new IfcNormalisedRatioMeasure(1.0 - m.Color.Alpha);
 
-                var shading = new IfcSurfaceStyleShading(color, transparency);
+                // var shading = new IfcSurfaceStyleShading(color, transparency);
+                var shading = new IfcSurfaceStyleRendering(color, IfcReflectanceMethodEnum.PHONG);
                 ifc.AddEntity(shading);
 
                 var styles = new List<IfcSurfaceStyleElementSelect>{
                     new IfcSurfaceStyleElementSelect(shading),
                 };
-                var surfaceStyle = new IfcSurfaceStyle(material.Name, IfcSurfaceSide.BOTH, styles);
+                var surfaceStyle = new IfcSurfaceStyle(m.Name, IfcSurfaceSide.BOTH, styles);
                 ifc.AddEntity(surfaceStyle);
 
+                // A stand-alone styled item.
                 var styleAssign = new IfcStyleAssignmentSelect(surfaceStyle);
                 var assignments = new List<IfcStyleAssignmentSelect>(){styleAssign};
                 styleAssignments.Add(m.Name, assignments);
+                var styledItem = new IfcStyledItem(assignments);
+                ifc.AddEntity(styledItem);
+
+                // A style item using a presentation style assignment
+                // This is deprecated in IFC4, but it's worth a try.
+                // var styleAssignment =new IfcPresentationStyleAssignment(new List<IfcPresentationStyleSelect>(){new IfcPresentationStyleSelect(surfaceStyle)});
+                // ifc.AddEntity(styleAssignment);
+                // presentationStyleAssignments.Add(m.Name, styleAssignment);
+
+                var material = new IfcMaterial(m.Name, null, "Hypar");
+                materials.Add(m.Name, material);
+                ifc.AddEntity(material);
+
+                // https://standards.buildingsmart.org/IFC/RELEASE/IFC4_1/FINAL/HTML/
+                var styledRep = new IfcStyledRepresentation(context, new List<IfcRepresentationItem>(){styledItem});
+                ifc.AddEntity(styledRep);
+                var matDefRep = new IfcMaterialDefinitionRepresentation(new List<IfcRepresentation>(){styledRep}, material);
+                ifc.AddEntity(matDefRep);
+                material.HasRepresentation = new List<IfcMaterialDefinitionRepresentation>(){matDefRep};
             }
 
 
@@ -190,7 +212,7 @@ namespace Elements.Serialization.IFC
             {
                 try
                 {
-                    products.AddRange(e.ToIfcProducts(context, ifc, styleAssignments));
+                    products.AddRange(e.ToIfcProducts(context, ifc, styleAssignments, materials, presentationStyleAssignments));
                 }
                 catch (Exception ex)
                 {
