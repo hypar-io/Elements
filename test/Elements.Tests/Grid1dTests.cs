@@ -33,6 +33,7 @@ namespace Elements.Tests
             Assert.Equal(5, grid.Cells.Count);
             Assert.Equal(1, grid[1].Domain.Length);
             grid.SplitAtPosition(8); // should do nothing but not throw an error
+            Assert.Equal(5, grid.Cells.Count);
         }
 
         [Fact]
@@ -65,8 +66,6 @@ namespace Elements.Tests
             subCell.Cells[3].DivideByApproximateLength(1.2, EvenDivisionMode.Nearest);
             var allCells = grid.GetCells();
             var cellGeometry = allCells.Select(c => c.GetCellGeometry());
-            //var cellJson = JsonConvert.SerializeObject(cellGeometry);
-            //File.WriteAllText("/Users/andrewheumann/Desktop/cell-test.json", cellJson);
             Assert.Equal(11, allCells.Count);
         }
 
@@ -86,8 +85,6 @@ namespace Elements.Tests
             var grid = new Grid1d(bezier1);
             grid.DivideByApproximateLength(0.5, EvenDivisionMode.RoundUp);
             var cellGeometry = grid.GetCells().Select(cl => cl.GetCellGeometry());
-            //var cellJson = JsonConvert.SerializeObject(cellGeometry);
-            //File.WriteAllText("/Users/andrewheumann/Desktop/bz-cell-test.json", cellJson);
             Assert.Equal(25, cellGeometry.Count());
 
 
@@ -98,8 +95,6 @@ namespace Elements.Tests
             arcGrid.DivideByApproximateLength(1, EvenDivisionMode.RoundDown);
             arcGrid.Cells[1].DivideByCount(4);
             var arcCellGeometry = arcGrid.GetCells().Select(cl => cl.GetCellGeometry());
-            //var arcCellJson = JsonConvert.SerializeObject(arcCellGeometry);
-            //File.WriteAllText("/Users/andrewheumann/Desktop/arc-cell-test.json", arcCellJson);
             Assert.Equal(9, arcCellGeometry.Count());
         }
 
@@ -130,15 +125,6 @@ namespace Elements.Tests
 
             Assert.NotEqual(panelTarget, atBothEnds.Cells.First().Domain.Length);
             Assert.NotEqual(panelTarget, atBothEnds.Cells.Last().Domain.Length);
-
-            //var cellGeo = new List<IEnumerable<Curve>>();
-            //cellGeo.Add(inMiddle.GetCells().Select(cl => cl.GetCellGeometry()));
-            //cellGeo.Add(atStart.GetCells().Select(cl => cl.GetCellGeometry()));
-            //cellGeo.Add(atEnd.GetCells().Select(cl => cl.GetCellGeometry()));
-            //cellGeo.Add(atBothEnds.GetCells().Select(cl => cl.GetCellGeometry()));
-            //var json = JsonConvert.SerializeObject(cellGeo);
-            //File.WriteAllText("/Users/andrewheumann/Desktop/fixedDivision-test.json", json);
-
         }
 
         [Fact]
@@ -166,8 +152,8 @@ namespace Elements.Tests
             Assert.Equal(4, cellGeo.Count());
             Assert.Equal(2, cellGeo.Last().Length());
             Assert.Equal(3, cellGeo.ToArray()[1].Length());
-            var json = JsonConvert.SerializeObject(cellGeo);
-            File.WriteAllText("/Users/andrewheumann/Desktop/divideFromPoint.json", json);
+            //var json = JsonConvert.SerializeObject(cellGeo);
+            //File.WriteAllText("/Users/andrewheumann/Desktop/divideFromPoint.json", json);
         }
 
         [Fact]
@@ -189,13 +175,6 @@ namespace Elements.Tests
                 Assert.Equal(pattern[i % pattern.Count].length, cells[i+1].Domain.Length, 3);
                 Assert.Equal(pattern[i % pattern.Count].typename, cells[i+1].Type);
             }
-
-            //var result = new Dictionary<string, object>();
-            //result.Add("Geometry", cells.Select(c => c.GetCellGeometry()));
-            //result.Add("Types", types);
-            //var json = JsonConvert.SerializeObject(result);
-            //File.WriteAllText("/Users/andrewheumann/Desktop/divideByPattern.json", json);
-
         }
 
         [Fact]

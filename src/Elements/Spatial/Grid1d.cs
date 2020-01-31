@@ -131,6 +131,18 @@ namespace Elements.Spatial
         public void SplitAtPosition(double pos)
         {
 
+            if (!Domain.Includes(pos))
+            {
+                if (PositionIsAtCellEdge(pos)) // already split at this location
+                {
+                    return;
+                }
+                else
+                {
+                    throw new Exception("Cannot split at position outside of cell domain.");
+                }
+
+            }
             if (IsSingleCell) // simple single split
             {
                 var newDomains = Domain.SplitAt(pos);
@@ -140,16 +152,16 @@ namespace Elements.Spatial
                     new Grid1d(curve, newDomains[1], curveDomain)
                 };
             }
-            else if (PositionIsAtCellEdge(pos)) // already split at this location
-            {
-                return;
-            }
             else
             {
                 // find the cell that should be split, split it, and replace it in the Cells list.
                 // Splits to already-split cells should not introduce a new level of hierarchy.
                 var index = FindCellIndexAtPosition(pos);
                 var cellToSplit = Cells[index];
+                if (cellToSplit.PositionIsAtCellEdge(pos))
+                {
+                    return;
+                }
                 cellToSplit.SplitAtPosition(pos);
                 var newCells = cellToSplit.Cells;
                 Cells.RemoveAt(index);
@@ -182,7 +194,7 @@ namespace Elements.Spatial
         /// Split the grid at a list of fixed positions from the start or end
         /// </summary>
         /// <param name="positions">The lengths along the grid at which to split.</param>
-         public void SplitAtPositions(IEnumerable<double> positions)
+        public void SplitAtPositions(IEnumerable<double> positions)
         {
             foreach (var pos in positions)
             {
@@ -507,7 +519,7 @@ namespace Elements.Spatial
             {
                 return -1;
             }
-           
+
             else
             {
                 var cellMatch = Cells.FirstOrDefault(c => c.Domain.Includes(pos));
@@ -590,6 +602,10 @@ namespace Elements.Spatial
         /// <returns></returns>
         private bool PositionIsAtCellEdge(double pos)
         {
+            if (IsSingleCell)
+            {
+                return pos.ApproximatelyEquals(Domain.Max) || pos.ApproximatelyEquals(Domain.Min);
+            }
             return Cells.Any(c =>
             c.Domain.Max.ApproximatelyEquals(pos) ||
             c.Domain.Min.ApproximatelyEquals(pos));
@@ -643,7 +659,7 @@ namespace Elements.Spatial
         /// </summary>
         Flip,
     }
-  
+
     /// <summary>
     /// Describe how a target length should be treated 
     /// </summary>

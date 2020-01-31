@@ -24,12 +24,8 @@ namespace Elements.Tests
             var subGrid2 = grid[1, 1];
             subGrid2.V.DivideByFixedLengthFromPosition(0.5, 8);
 
-            Assert.Equal(6, grid.Cells.Count);
+            Assert.Equal(6, grid.CellsFlat.Count);
             Assert.Equal(19, grid.GetCells().Count);
-
-            //    var geo = grid.GetCells().Select(c => c.GetCellGeometry());
-            //    var json = JsonConvert.SerializeObject(geo);
-            //    File.WriteAllText("/Users/andrewheumann/Desktop/grid2dTest.json", json);
         }
 
 
@@ -46,66 +42,66 @@ namespace Elements.Tests
             grid.CellsFlat.ForEach(c => c.U.DivideByApproximateLength(1.0, EvenDivisionMode.RoundDown));
 
             var trimmedCells = grid.GetCells().Select(c => new Dictionary<string, object>
-            {
-                        {"TrimmedGeometry", c.GetTrimmedCellGeometry()},
-                        {"BaseRect", c.GetCellGeometry() },
-                        {"IsTrimmed", c.IsTrimmed()}
-                        });
-            var json = JsonConvert.SerializeObject(trimmedCells);
-            File.WriteAllText(@"C:\Users\andrew\Desktop\cells-trim-test.json", json);
+                {
+                    {"TrimmedGeometry", c.GetTrimmedCellGeometry()},
+                    {"BaseRect", c.GetCellGeometry() },
+                    {"IsTrimmed", c.IsTrimmed()}
+                }
+            );
+            Assert.Equal(87, trimmedCells.Count());
+            Assert.Equal(16, trimmedCells.Count(c => (bool)c["IsTrimmed"]));
         }
 
-       [Fact]
+        [Fact]
         public void GridFromPolygon()
         {
-            var a = new Vector3(0.03, 5.08);
-            var b = new Vector3(4.28, 9.80);
-            var c = new Vector3(9.69, 9.50);
-            var d = new Vector3(9.63, 2.43);
-            var e = new Vector3(4.72, -0.86);
-            var f = new Vector3(1.78, -0.75);
-
-            var polygon = new Polygon(new[] { a, b, c, d, e, f });
-
-            var g = new Vector3(7.735064, 5.746821);
-            var h = new Vector3(6.233137, 7.248748);
-            var i = new Vector3(3.660163, 4.675775);
-            var j = new Vector3(5.162091, 3.173848);
-
-            var polygon2 = new Polygon(new[] { g, h, i, j });
-
-
-
-            var alignment = new Transform();
-            alignment.Rotate(Vector3.ZAxis, 45);
-            var grid = new Grid2d(new[] { polygon, polygon2 }, alignment);
-            grid.U.DivideByCount(10);
-            var panelA = ("A", 1.0);
-            var panelB = ("B", 0.5);
-            var panelC = ("C", 1.5);
-            var pattern = new [] { panelA, panelB, panelC };
-            var pattern2 = new [] { panelB, panelA };
-            var patterns = new[] { pattern, pattern2 };
-
-            for (int index = 0; index < grid.CellsFlat.Count; index++)
+            for (int rotation = 0; rotation < 360; rotation += 10)
             {
-                var vDomain = grid.CellsFlat[index].V.Domain;
-                var start = 0.1.MapToDomain(vDomain);
-                grid.CellsFlat[index].V.DivideByPattern(patterns[index % patterns.Count()], PatternMode.Cycle, FixedDivisionMode.RemainderAtBothEnds);
+                var a = new Vector3(0.03, 5.08);
+                var b = new Vector3(4.28, 9.80);
+                var c = new Vector3(9.69, 9.50);
+                var d = new Vector3(9.63, 2.43);
+                var e = new Vector3(4.72, -0.86);
+                var f = new Vector3(1.78, -0.75);
+
+                var polygon = new Polygon(new[] { a, b, c, d, e, f });
+
+                var g = new Vector3(7.735064, 5.746821);
+                var h = new Vector3(6.233137, 7.248748);
+                var i = new Vector3(3.660163, 4.675775);
+                var j = new Vector3(5.162091, 3.173848);
+
+                var polygon2 = new Polygon(new[] { g, h, i, j });
+
+
+
+                var alignment = new Transform();
+                alignment.Rotate(Vector3.ZAxis, 45);
+                var grid = new Grid2d(new[] { polygon, polygon2 }, alignment);
+                grid.U.DivideByCount(10);
+                var panelA = ("A", 1.0);
+                var panelB = ("B", 0.5);
+                var panelC = ("C", 1.5);
+                var pattern = new[] { panelA, panelB, panelC };
+                var pattern2 = new[] { panelB, panelA };
+                var patterns = new[] { pattern, pattern2 };
+
+                for (int index = 0; index < grid.CellsFlat.Count; index++)
+                {
+                    var vDomain = grid.CellsFlat[index].V.Domain;
+                    var start = 0.1.MapToDomain(vDomain);
+                    grid.CellsFlat[index].V.DivideByPattern(patterns[index % patterns.Count()], PatternMode.Cycle, FixedDivisionMode.RemainderAtBothEnds);
+                }
+                var cells = grid.GetCells();
+                var geo = cells.Select(cl => cl.GetTrimmedCellGeometry());
+                var types = cells.Select(cl => cl.Type);
+                var trimmed = cells.Select(cl => cl.IsTrimmed());
+
             }
-            var cells = grid.GetCells();
-            var geo = cells.Select(cl => cl.GetTrimmedCellGeometry());
-            var types = cells.Select(cl => cl.Type);
-            var trimmed = cells.Select(cl => cl.IsTrimmed());
 
-            var resultDict = new Dictionary<string, object>();
-            resultDict["Input Polygon"] = polygon;
-            resultDict["Geometry"] = geo;
-            resultDict["Types"] = types;
-            resultDict["Trimmed"] = trimmed;
+            //Test verifies no exceptions are thrown at any rotation
 
-            var json = JsonConvert.SerializeObject(resultDict);
-            File.WriteAllText($"/Users/andrewheumann/Desktop/grid2dRotatedTest.json", json);
+           
 
         }
 
@@ -141,6 +137,12 @@ namespace Elements.Tests
             grid.U.DivideByPattern(uPattern);
             grid.V.DivideByPattern(vPattern);
             Assert.Equal("B / Large", grid[1, 0].Type);
+        }
+
+        [Fact]
+        public void InvalidSourceDomain()
+        {
+            var ex = Assert.ThrowsAny<Exception>(() => new Grid2d(0, 5));
         }
     }
 }
