@@ -160,8 +160,7 @@ namespace Elements.Validators
             var profile = (Profile)args[0];
             var height = (double)args[1];
             var direction = (Vector3)args[2];
-            var rotation = (double)args[3];
-            var isVoid = (bool)args[4];
+            var isVoid = (bool)args[3];
 
             if(direction.Length() == 0)
             {

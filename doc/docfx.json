@@ -50,7 +50,17 @@
       {
         "src": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/",
         "files": [
-          "Elements_**.glb"
+          "Elements_**.glb",
+          "Elements_ElementInstance.glb",
+          "Elements_Geometry_Arc.glb",
+          "Elements_Geometry_Bezier.glb",
+          "Elements_Geometry_Contour.glb",
+          "Elements_Geometry_Line.glb",
+          "Elements_Geometry_Polygon.glb",
+          "Elements_Geometry_Polyline.glb",
+          "Elements_Geometry_Transform.glb",
+          "Elements_ModelCurve.glb",
+          "Elements_ModelPoints.glb"
         ],
         "dest": "models"
       }

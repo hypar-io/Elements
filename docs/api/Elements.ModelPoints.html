@@ -110,7 +110,7 @@
   
     window.addEventListener( 'resize', onWindowResize, false );
   
-    camera.position.z = 5;
+    
   
     // Instantiate a loader
     var loader = new THREE.GLTFLoader();
@@ -148,10 +148,6 @@
   
     var animate = function () {
       requestAnimationFrame( animate );
-  
-      // cube.rotation.x += 0.01;
-      // cube.rotation.y += 0.01;
-  
       renderer.render( scene, camera );
     };
   
@@ -177,10 +173,12 @@
       
       // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
       // object filling the whole canvas
-      if( offset !== undefined && offset !== 0 ) cameraZ *= offset;
+      if( offset !== undefined && offset !== 0 ) {
+        cameraZ *= offset;
+      } 
   
       camera.position.set( center.x, center.y, cameraZ );
-  
+      
       // set the far plane of the camera so that it easily encompasses the whole object
       const minZ = boundingBox.min.z;
       const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
@@ -199,17 +197,17 @@
     };
   
     animate();
-  </script><h5 id="Elements_ModelPoints_examples"><strong>Examples</strong></h5>
+  </script><h5 id="Elements_ModelPoints"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Create some point locations.
 var pts = new List&lt;Vector3&gt;();
-for(var x=0; x&lt;25; x++)
+for (var x = 0; x &lt; 25; x++)
 {
-    for(var y=0; y&lt;25; y++)
+    for (var y = 0; y &lt; 25; y++)
     {
-        for(var z=0; z&lt;25; z++)
-        {   
+        for (var z = 0; z &lt; 25; z++)
+        {
             // Add points to the object.
-            pts.Add(new Vector3(x,y,z));
+            pts.Add(new Vector3(x, y, z));
         }
     }
 }
@@ -217,7 +215,6 @@ for(var x=0; x&lt;25; x++)
 // Create a model points object.
 var pink = new Material(&quot;pink&quot;, Colors.Pink);
 var modelPoints = new ModelPoints(pts, pink);
-
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>

@@ -130,7 +130,7 @@ namespace Elements
                 return;
             }
             this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, 0.0, false));
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
     }
 }

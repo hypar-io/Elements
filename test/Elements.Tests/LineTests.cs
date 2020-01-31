@@ -1,16 +1,28 @@
 using System;
+using Elements.Tests;
 using Xunit;
 
 namespace Elements.Geometry.Tests
 {
-    public class LineTests
+    public class LineTests : ModelTest
     {
-        [Fact]
-        public void Example()
+        public LineTests()
         {
+            this.GenerateIfc = false;
+        }
+
+        [Fact, Trait("Category", "Examples")]
+        public void LineExample()
+        {
+            this.Name = "Elements_Geometry_Line";
+
+            // <example>
             var a = new Vector3();
             var b = new Vector3(5,5,5);
             var l = new Line(a,b);
+            // </example>
+
+            this.Model.AddElement(new ModelCurve(l));
         }
 
         [Fact]
@@ -115,7 +127,7 @@ namespace Elements.Geometry.Tests
 
             // 1 panel.
             segments = l.DivideByLengthFromCenter(6);
-            Assert.Equal(1, segments.Count);
+            Assert.Single<Line>(segments);
         }
 
         [Fact]

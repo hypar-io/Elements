@@ -8,6 +8,9 @@ namespace Elements.Geometry
     /// <summary>
     /// A continguous set of curves.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/ContourTests.cs?name=example)]
+    /// </example>
     public class Contour : IEnumerable<Curve>
     {
         private List<Curve> _curves = new List<Curve>();

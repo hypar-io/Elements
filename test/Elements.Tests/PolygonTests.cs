@@ -1,20 +1,34 @@
-using Elements.Serialization.glTF;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using Xunit;
 using Xunit.Abstractions;
 using Newtonsoft.Json;
+using Elements.Tests;
 
 namespace Elements.Geometry.Tests
 {
-    public class PolygonTests
+    public class PolygonTests : ModelTest
     {
         private readonly ITestOutputHelper _output;
 
         public PolygonTests(ITestOutputHelper output)
         {
             this._output = output;
+            this.GenerateIfc = false;
+        }
+
+        [Fact, Trait("Category","Examples")]
+        public void PolygonConstruct()
+        {
+            this.Name = "Elements_Geometry_Polygon";
+
+            // <example>
+            // Create a polygon.
+            var star = Polygon.Star(5, 3, 5);
+            // </example>
+
+            this.Model.AddElement(new ModelCurve(star));
         }
 
         [Fact]

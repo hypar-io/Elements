@@ -8,10 +8,11 @@ namespace Elements.Geometry
     /// <summary>
     /// A closed planar polygon.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/PolygonTests.cs?name=example)]
+    /// </example>
     public partial class Polygon : Polyline
     {
-        private const double scale = 1024.0;
-
         /// <summary>
         /// Implicitly convert a polygon to a profile.
         /// </summary>
@@ -28,7 +29,7 @@ namespace Elements.Geometry
         public bool Contains(Vector3 vector)
         {
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
             {
                 return false;
@@ -71,7 +72,7 @@ namespace Elements.Geometry
         public bool Covers(Vector3 vector)
         {
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
             if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
             {
                 return false;
@@ -114,7 +115,7 @@ namespace Elements.Geometry
         public bool Disjoint(Vector3 vector)
         {
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
             {
                 return false;
@@ -185,7 +186,7 @@ namespace Elements.Geometry
         public bool Touches(Vector3 vector)
         {
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * scale, vector.Y * scale);
+            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
             if (Clipper.PointInPolygon(intPoint, thisPath) != -1)
             {
                 return false;
@@ -437,23 +438,14 @@ namespace Elements.Geometry
         /// Offset this polygon by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
+        /// <param name="endType">The type of closure used for the offset polygon.</param>
         /// <returns>A new Polygon offset by offset.</returns>
-        public Polygon[] Offset(double offset)
+        ///
+        public override Polygon[] Offset(double offset, EndType endType = EndType.ClosedPolygon)
         {
-            var path = this.ToClipperPath();
-
-            var solution = new List<List<IntPoint>>();
-            var co = new ClipperOffset();
-            co.AddPath(path, JoinType.jtMiter, EndType.etClosedPolygon);
-            co.Execute(ref solution, offset * scale);  // important, scale also used here
-
-            var result = new Polygon[solution.Count];
-            for (var i = 0; i < result.Length; i++)
-            {
-                result[i] = solution[i].ToPolygon();
-            }
-            return result;
+            return base.Offset(offset, endType);
         }
+
 
         /// <summary>
         /// Get a collection a lines representing each segment of this polyline.

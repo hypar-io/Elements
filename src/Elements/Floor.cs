@@ -121,7 +121,7 @@ namespace Elements
                 }
             }
             this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, 0, false));
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
         }
     }
 }

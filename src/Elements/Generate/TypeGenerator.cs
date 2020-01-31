@@ -285,7 +285,14 @@ namespace Elements.Generate
             {
                 file = file.Replace("System.Collections.Generic.IDictionary<string, Element>", "System.Collections.Generic.IDictionary<Guid, Element>");
                 file = file.Replace("System.Collections.Generic.Dictionary<string, Element>", "System.Collections.Generic.Dictionary<Guid, Element>");
+                file = file.Replace("public Position Origin { get; set; }", "[Obsolete(\"Use Transform instead.\")]\n\t\tpublic Position Origin { get; set; }");
             }
+            // Convert some classes to structs.
+            else if(typeName == "Color" || typeName == "Vector3")
+            {
+                file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
+            }
+            
             
             return file;
         }

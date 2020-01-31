@@ -26,6 +26,9 @@ namespace Elements.Geometry
     /// <summary>
     /// A Bezier curve.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/BezierTests.cs?name=example)]
+    /// </example>
     public class Bezier : Curve
     {
         private int _samples = 50;

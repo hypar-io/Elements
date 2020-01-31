@@ -9,13 +9,17 @@ namespace Elements.Tests
         [Fact]
         public void Instance()
         {
-            this.Name = "ElementInstance";
+            this.Name = "Elements_ElementInstance";
             
+            // <example>
+            // Create a test user element.
             var profile = new Profile(Polygon.Rectangle(1.0, 1.0));
             var material = new Material("yellow", Colors.Yellow);
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
             var testUserElement = new TestUserElement(line, profile, material);
             
+            // Create instances of that element
+            // with varied transforms.
             var attractor = new Vector3(30, 20);
             for (var x = 0.0; x < 50; x += 1.5)
             {
@@ -31,6 +35,7 @@ namespace Elements.Tests
                     this.Model.AddElement(instance);
                 }
             }
+            // </example>
         }
     }
 }

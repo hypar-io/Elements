@@ -113,7 +113,7 @@ namespace Elements
             this.Representation.SolidOperations.Clear();
 
             // Transform the wall profile to be "standing up".
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, z, 0.0, false));
+            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, z, false));
         }
     }
 }

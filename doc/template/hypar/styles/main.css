@@ -20,11 +20,11 @@ a {
 }
 
 body {
-    background-color: var(--hy-co-pale-green)
+    background-color: white;
 }
 
 body .toc {
-    background-color: var(--hy-co-pale-green)
+    background-color: white;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -52,7 +52,7 @@ li {
 }
 
 .navbar {
-    background: var(--hy-co-dark-blue);
+    background: var(--hy-co-pink);
     min-height: 40px;
 }
 
@@ -66,7 +66,7 @@ li {
 }
 
 #navbar > ul > li > a {
-    color: var(--hy-co-pink)
+    color: var(--hy-co-pale-green);
 }
 
 p {
@@ -78,12 +78,12 @@ pre {
 }
 
 .sidefilter {
-    background: var(--hy-co-pale-green);
+    background: white;
     border: none
 }
 
 .sidetoc {
-    background: var(--hy-co-pale-green);
+    background: white;
     border: none
 }
 
@@ -103,11 +103,11 @@ th {
 .title {
     margin: 0px;
     padding: 15px;
-    color: var(--hy-co-pale-green)
+    color: var(--hy-co-pink)
 }
 
 .toc {
-    background: var(--hy-co-pale-green)
+    background: white;
 }
 
 #toc > ul > li.active.in > a{
