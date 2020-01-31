@@ -152,8 +152,6 @@ namespace Elements.Tests
             Assert.Equal(4, cellGeo.Count());
             Assert.Equal(2, cellGeo.Last().Length());
             Assert.Equal(3, cellGeo.ToArray()[1].Length());
-            //var json = JsonConvert.SerializeObject(cellGeo);
-            //File.WriteAllText("/Users/andrewheumann/Desktop/divideFromPoint.json", json);
         }
 
         [Fact]

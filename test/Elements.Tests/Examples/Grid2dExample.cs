@@ -37,7 +37,6 @@ namespace Elements.Tests.Examples
 
             // Create model curves from all subdivided cells of the grid
             var modelCurves = grid.GetCells().Select(c => new ModelCurve(c.GetCellGeometry()));
-
             // </example>
 
             Model.AddElement(floor);

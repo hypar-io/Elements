@@ -6,7 +6,7 @@ namespace Elements.MathUtils
     /// <summary>
     /// Extension and utility methods for mathematical operations. 
     /// </summary>
-    public static class MathExtensions
+    public static class DomainExtensions
     {
         /// <summary>
         /// Map/Scale a value from one domain to another. 3 mapped from (2,4) to (10, 20) would be 15.
@@ -53,28 +53,5 @@ namespace Elements.MathUtils
         {
             return Math.Abs(other - value) < tolerance;
         }
-
-        /// <summary>
-        /// Create a string A, B, C, ... AA, AB ... from an int value
-        /// </summary>
-        /// <param name="value">The value to turn into a character string</param>
-        /// <returns>A string of Upper-case characters e.g. 1=A, 2=B, 27=AA</returns>
-        public static string NumberToString(int value)
-        {
-            // Modified from https://forums.asp.net/t/1419722.aspx?generate+a+sequence+of+letters+in+C+
-            StringBuilder sb = new StringBuilder();
-            value++; // (so that 0 = A)
-            do
-            {
-                value--;
-                int remainder = 0;
-                value = Math.DivRem(value, 26, out remainder);
-                sb.Insert(0, Convert.ToChar('A' + remainder));
-
-            } while (value > 0);
-
-            return sb.ToString();
-        }
-
     }
 }

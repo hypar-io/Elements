@@ -10,6 +10,9 @@ namespace Elements.Spatial
     /// <summary>
     /// Represents a "1-dimensional grid", akin to a number line that can be subdivided.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/Grid1dExample.cs?name=example)]
+    /// </example>
     public class Grid1d
     {
         #region Properties
@@ -127,13 +130,13 @@ namespace Elements.Spatial
         /// <summary>
         /// Split the grid at a fixed position from the start or end
         /// </summary>
-        /// <param name="pos">The length along the grid at which to split.</param>
-        public void SplitAtPosition(double pos)
+        /// <param name="position">The length along the grid at which to split.</param>
+        public void SplitAtPosition(double position)
         {
 
-            if (!Domain.Includes(pos))
+            if (!Domain.Includes(position))
             {
-                if (PositionIsAtCellEdge(pos)) // already split at this location
+                if (PositionIsAtCellEdge(position)) // already split at this location
                 {
                     return;
                 }
@@ -145,7 +148,7 @@ namespace Elements.Spatial
             }
             if (IsSingleCell) // simple single split
             {
-                var newDomains = Domain.SplitAt(pos);
+                var newDomains = Domain.SplitAt(position);
                 Cells = new List<Grid1d>
                 {
                     new Grid1d(curve, newDomains[0], curveDomain),
@@ -156,13 +159,13 @@ namespace Elements.Spatial
             {
                 // find the cell that should be split, split it, and replace it in the Cells list.
                 // Splits to already-split cells should not introduce a new level of hierarchy.
-                var index = FindCellIndexAtPosition(pos);
+                var index = FindCellIndexAtPosition(position);
                 var cellToSplit = Cells[index];
-                if (cellToSplit.PositionIsAtCellEdge(pos))
+                if (cellToSplit.PositionIsAtCellEdge(position))
                 {
                     return;
                 }
-                cellToSplit.SplitAtPosition(pos);
+                cellToSplit.SplitAtPosition(position);
                 var newCells = cellToSplit.Cells;
                 Cells.RemoveAt(index);
                 Cells.InsertRange(index, newCells);
@@ -174,20 +177,20 @@ namespace Elements.Spatial
         /// <summary>
         /// Split a cell at a relative position measured from its domain start or end. 
         /// </summary>
-        /// <param name="pos">The relative position at which to split.</param>
+        /// <param name="position">The relative position at which to split.</param>
         /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
-        public void SplitAtOffset(double pos, bool fromEnd = false)
+        public void SplitAtOffset(double position, bool fromEnd = false)
         {
-            pos = fromEnd ? Domain.Max - pos : Domain.Min + pos;
-            if (!Domain.Includes(pos))
+            position = fromEnd ? Domain.Max - position : Domain.Min + position;
+            if (!Domain.Includes(position))
             {
-                if (Domain.Max.ApproximatelyEquals(pos) || Domain.Min.ApproximatelyEquals(pos))
+                if (Domain.Max.ApproximatelyEquals(position) || Domain.Min.ApproximatelyEquals(position))
                 {
                     return;
                 }
                 throw new Exception("Offset position was beyond the grid's domain.");
             }
-            SplitAtPosition(pos);
+            SplitAtPosition(position);
         }
 
         /// <summary>
@@ -345,7 +348,7 @@ namespace Elements.Spatial
             var patternwithNames = new List<(string typeName, double length)>();
             for (int i = 0; i < lengthPattern.Count; i++)
             {
-                patternwithNames.Add((MathExtensions.NumberToString(i), lengthPattern[i]));
+                patternwithNames.Add((StringExtensions.NumberToString(i), lengthPattern[i]));
             }
             DivideByPattern(patternwithNames, patternMode, divisionMode);
         }

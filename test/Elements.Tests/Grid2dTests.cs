@@ -28,7 +28,6 @@ namespace Elements.Tests
             Assert.Equal(19, grid.GetCells().Count);
         }
 
-
         [Fact]
         public void TrimBehavior()
         {
@@ -53,7 +52,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void GridFromPolygon()
+        public void NoExceptionsThrownWithAnyRotation()
         {
             for (int rotation = 0; rotation < 360; rotation += 10)
             {
@@ -72,8 +71,6 @@ namespace Elements.Tests
                 var j = new Vector3(5.162091, 3.173848);
 
                 var polygon2 = new Polygon(new[] { g, h, i, j });
-
-
 
                 var alignment = new Transform();
                 alignment.Rotate(Vector3.ZAxis, 45);
@@ -96,13 +93,8 @@ namespace Elements.Tests
                 var geo = cells.Select(cl => cl.GetTrimmedCellGeometry());
                 var types = cells.Select(cl => cl.Type);
                 var trimmed = cells.Select(cl => cl.IsTrimmed());
-
             }
-
             //Test verifies no exceptions are thrown at any rotation
-
-           
-
         }
 
         [Fact]

@@ -9,6 +9,9 @@ namespace Elements.Spatial
     /// <summary>
     /// Represents a 2-dimensional grid which can be subdivided 
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/Grid2dExample.cs?name=example)]
+    /// </example>
     public class Grid2d
     {
         #region Properties
@@ -121,7 +124,7 @@ namespace Elements.Spatial
 
             if (!t.ZAxis.IsParallelTo(Vector3.ZAxis))
             {
-                throw new Exception("Currently transforms that are not parallel to the XY Plane are not supported.");
+                throw new ArgumentException("Currently transforms that are not parallel to the XY Plane are not supported.");
             }
 
 
@@ -186,12 +189,12 @@ namespace Elements.Spatial
         /// <summary>
         /// Split the grid at a position in the grid's coordinate system
         /// </summary>
-        /// <param name="uPos">The U position</param>
-        /// <param name="vPos">The V position</param>
-        public void SplitAtPosition(double uPos, double vPos)
+        /// <param name="uPosition">The U position</param>
+        /// <param name="vPosition">The V position</param>
+        public void SplitAtPosition(double uPosition, double vPosition)
         {
-            U.SplitAtPosition(uPos);
-            V.SplitAtPosition(vPos);
+            U.SplitAtPosition(uPosition);
+            V.SplitAtPosition(vPosition);
         }
 
         #endregion
@@ -201,12 +204,12 @@ namespace Elements.Spatial
         /// <summary>
         /// Retrieve the grid cell (as a Grid1d) at a length along the U and V domains. 
         /// </summary>
-        /// <param name="uPos">U position</param>
-        /// <param name="vPos">V Position</param>
+        /// <param name="uPosition">U Position</param>
+        /// <param name="vPosition">V Position</param>
         /// <returns></returns>
-        public Grid2d FindCellAtPosition(double uPos, double vPos)
+        public Grid2d FindCellAtPosition(double uPosition, double vPosition)
         {
-            (var uIndex, var vIndex) = FindCellIndexAtPosition(uPos, vPos);
+            (var uIndex, var vIndex) = FindCellIndexAtPosition(uPosition, vPosition);
             if (uIndex < 0 || vIndex < 0) return this;
             return Cells[uIndex][vIndex];
         }
@@ -215,21 +218,21 @@ namespace Elements.Spatial
         /// Retrieve the U and V indices of a given cell at a position in grid space.
         /// This is used to map between position and indices.
         /// </summary>
-        /// <param name="uPos"></param>
-        /// <param name="vPos"></param>
+        /// <param name="uPosition"></param>
+        /// <param name="vPosition"></param>
         /// <returns></returns>
-        private (int u, int v) FindCellIndexAtPosition(double uPos, double vPos)
+        private (int u, int v) FindCellIndexAtPosition(double uPosition, double vPosition)
         {
 
             //TODO: Optimize for smarter retrieval — via indexing or something
             for (int u = 0; u < Cells.Count; u++)
             {
-                if (Cells[u][0].U.Domain.Includes(uPos))
+                if (Cells[u][0].U.Domain.Includes(uPosition))
                 {
                     for (int v = 0; v < Cells[u].Count; v++)
                     {
                         var cell = Cells[u][v];
-                        if (cell.V.Domain.Includes(vPos))
+                        if (cell.V.Domain.Includes(vPosition))
                         {
                             return (u, v);
                         }
