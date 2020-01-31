@@ -2,36 +2,10 @@
 namespace Elements.MathUtils
 {
     /// <summary>
-    /// Represents a 1 dimensional interval or domain.
+    /// A 1 dimensional interval or domain.
     /// </summary>
     public struct Domain1d
     {
-        /// <summary>
-        /// Construct a 1D Domain
-        /// </summary>
-        /// <param name="min">The lower bound</param>
-        /// <param name="max">The upper bound</param>
-        public Domain1d(double min = 0.0, double max = 1.0)
-        {
-            Min = min;
-            Max = max;
-        }
-
-        /// <summary>
-        /// The lower bound of the domain
-        /// </summary>
-        public double Min { get; }
-        /// <summary>
-        /// The upper bound of the domain
-        /// </summary>
-        public double Max { get; }
-
-        /// <summary>
-        /// The length of the domain — Max-Min. Note that for non-increasing
-        /// domains this value can be negative.
-        /// </summary>
-        public double Length => Max - Min;
-
         internal bool IsIncreasing()
         {
             return Max > Min;
@@ -52,6 +26,33 @@ namespace Elements.MathUtils
             {
                 return value < Min && value < Max;
             }
+        }
+
+        /// <summary>
+        /// The lower bound of the domain
+        /// </summary>
+        public double Min { get; }
+
+        /// <summary>
+        /// The upper bound of the domain
+        /// </summary>
+        public double Max { get; }
+
+        /// <summary>
+        /// The length of the domain — Max-Min. Note that for non-increasing
+        /// domains this value can be negative.
+        /// </summary>
+        public double Length => Max - Min;
+
+        /// <summary>
+        /// Construct a 1D Domain
+        /// </summary>
+        /// <param name="min">The lower bound</param>
+        /// <param name="max">The upper bound</param>
+        public Domain1d(double min = 0.0, double max = 1.0)
+        {
+            Min = min;
+            Max = max;
         }
 
         /// <summary>
