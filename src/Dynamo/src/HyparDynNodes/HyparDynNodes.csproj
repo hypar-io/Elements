@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DynamoVisualProgramming.Core" Version="2.5.0.7432">
+      <Private>False</Private>
+    </PackageReference>
+    <PackageReference Include="DynamoVisualProgramming.DynamoServices" Version="2.5.0.7432">
+      <Private>False</Private>
+    </PackageReference>
+    <PackageReference Include="Hypar.Elements" Version="0.4.4.2"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="RevitAPI">
+      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitNodes">
+      <HintPath>C:\Program Files\Autodesk\Revit 2020\AddIns\DynamoForRevit\Revit\RevitNodes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitServices">
+      <HintPath>C:\Program Files\Autodesk\Revit 2020\AddIns\DynamoForRevit\Revit\RevitServices.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Revit\RevitHyparTools\RevitHyparTools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <NodeLibraries Include="$(TargetDir)publish\*.*" />
+  </ItemGroup>
+
+
+  <Target Name="BuildPackage" AfterTargets="Publish">
+    <RemoveDir Directories="..\..\deploy\HyparDyn\bin\" />     
+    <Copy SourceFiles="@(NodeLibraries)" DestinationFolder="..\..\deploy\HyparDyn\bin\" ContinueOnError="true" />
+  </Target>
+
+</Project>
