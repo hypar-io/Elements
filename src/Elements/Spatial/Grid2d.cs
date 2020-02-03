@@ -349,7 +349,7 @@ namespace Elements.Spatial
                 return new[] { GetCellGeometry() };
             }
             Polygon baseRect = GetBaseRectangle();
-            var trimmedRect = Polygon.BooleanTwoSets(new[] { baseRect }, boundariesInGridSpace, BooleanMode.Intersection);
+            var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
             if (trimmedRect != null && trimmedRect.Count() > 0)
             {
                 return fromGrid.OfPolygons(trimmedRect);
