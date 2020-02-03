@@ -219,6 +219,56 @@ namespace Elements.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Constructs the geometric difference between two sets of polygons.
+        /// </summary>
+        /// <param name="firstSet">First set of polygons</param>
+        /// <param name="secondSet">Second set of polygons</param>
+        /// <returns>Returns a list of Polygons representing the subtraction of the second set of polygons from the first set.</returns>
+        public static IList<Polygon> Difference(IList<Polygon> firstSet, IList<Polygon> secondSet)
+        {
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Difference);
+        }
+
+        /// <summary>
+        /// Constructs the geometric union of two sets of polygons.
+        /// </summary>
+        /// <param name="firstSet">First set of polygons</param>
+        /// <param name="secondSet">Second set of polygons</param>
+        /// <returns>Returns a list of Polygons representing the union of both sets of polygons.</returns>
+        public static IList<Polygon> Union(IList<Polygon> firstSet, IList<Polygon> secondSet)
+        {
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Union);
+        }
+
+        /// <summary>
+        /// Returns Polygons representing the symmetric difference between two sets of polygons.
+        /// </summary>
+        /// <param name="firstSet">First set of polygons</param>
+        /// <param name="secondSet">Second set of polygons</param>
+        /// <returns>
+        /// Returns a list of Polygons representing the symmetric difference of these two sets of polygons.
+        /// Returns a representation of all polygons if they do not intersect.
+        /// </returns>
+        public static IList<Polygon> XOR(IList<Polygon> firstSet, IList<Polygon> secondSet)
+        {
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.XOr);
+        }
+
+        /// <summary>
+        /// Constructs the Polygon intersections between two sets of polygons.
+        /// </summary>
+        /// <param name="firstSet">First set of polygons</param>
+        /// <param name="secondSet">Second set of polygons</param>
+        /// <returns>
+        /// Returns a list of Polygons representing the intersection of the first set of Polygons with the second set.
+        /// Returns null if the Polygons do not intersect.
+        /// </returns>
+        public static IList<Polygon> Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet)
+        {
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Intersection);
+        }
+
 
         /// <summary>
         /// Apply a boolean operation (Union, Difference, Intersection, or XOr) to two lists of Polygons.
@@ -227,7 +277,7 @@ namespace Elements.Geometry
         /// <param name="clippingPolygons">Polygons with which to clip</param>
         /// <param name="mode">The operation to apply: Union, Difference, Intersection, or XOr</param>
         /// <returns></returns>
-        public static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode mode)
+        private static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode mode)
         {
             var subjectPaths = subjectPolygons.Select(s => s.ToClipperPath()).ToList();
             var clipPaths = clippingPolygons.Select(s => s.ToClipperPath()).ToList();

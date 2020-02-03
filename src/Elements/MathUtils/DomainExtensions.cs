@@ -43,15 +43,26 @@ namespace Elements.MathUtils
         }
 
         /// <summary>
-        /// Test if two values are approximately equal to each other with an optional tolerance value.
+        /// Test if two values are approximately equal to each other with a tolerance value.
         /// </summary>
         /// <param name="value">The first value to test</param>
         /// <param name="other">The other value to test</param>
         /// <param name="tolerance">The threshold for equality</param>
         /// <returns>True if |other - value| &lt; tolerance</returns>
-        public static bool ApproximatelyEquals(this double value, double other, double tolerance = 0.01)
+        public static bool ApproximatelyEquals(this double value, double other, double tolerance)
         {
             return Math.Abs(other - value) < tolerance;
+        }
+
+        /// <summary>
+        /// Test if two values are approximately equal to each other, using default tolerance.
+        /// </summary>
+        /// <param name="value">The first value to test</param>
+        /// <param name="other">The other value to test</param>
+        /// <returns>True if |other - value| &lt; tolerance</returns>
+        public static bool ApproximatelyEquals(this double value, double other)
+        {
+            return ApproximatelyEquals(value, other, Geometry.Vector3.Epsilon);
         }
     }
 }
