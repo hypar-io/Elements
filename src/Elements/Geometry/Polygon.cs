@@ -116,7 +116,7 @@ namespace Elements.Geometry
             var solution = new List<List<IntPoint>>();
             clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
             clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
-            clipper.Execute(ClipType.ctIntersection, solution);
+            clipper.Execute(ClipType.ctUnion, solution);
             if (solution.Count != 1)
             {
                 return false;
