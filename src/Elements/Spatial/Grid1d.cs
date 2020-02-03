@@ -172,6 +172,10 @@ namespace Elements.Spatial
                 }
                 else // otherwise, we split it AND split its parent
                 {
+                    if (cellToSplit.PositionIsAtCellEdge(position)) 
+                    {
+                        return;
+                    }
                     var newDomains = cellToSplit.Domain.SplitAt(position);
                     var cellsToInsert = new List<Grid1d>
                     {
@@ -182,7 +186,7 @@ namespace Elements.Spatial
                     cellsToInsert.ForEach(c => c.Cells = new List<Grid1d>());
                     Cells.InsertRange(index, cellsToInsert);
                     // The split of "cellToSplit" could have resulted in any number of new cells;
-                    // and these need to be reallocated to the correct parent. 
+                    // these need to be reallocated to the correct parent. 
                     var childrenToReallocate = cellToSplit.Cells;
                     foreach (var child in childrenToReallocate)
                     {
@@ -534,11 +538,11 @@ namespace Elements.Spatial
         /// Retrieve the index of the grid cell at a length along the domain. If
         /// position is exactly on the edge, it returns the righthand cell index.
         /// </summary>
-        /// <param name="pos"></param>
-        /// <returns>The index of the first cell </returns>
-        private int FindCellIndexAtPosition(double pos)
+        /// <param name="position"></param>
+        /// <returns>Returns the index of the first cell. </returns>
+        private int FindCellIndexAtPosition(double position)
         {
-            if (!Domain.Includes(pos))
+            if (!Domain.Includes(position))
             {
                 throw new Exception("Position was outside the domain of the grid");
             }
@@ -550,26 +554,24 @@ namespace Elements.Spatial
 
             else
             {
-                var cellMatch = Cells.FirstOrDefault(c => c.Domain.Includes(pos));
-                if (cellMatch != null)
+                var domainsSequence = DomainsToSequence();
+                for (int i = 0; i < domainsSequence.Count - 1; i++)
                 {
-                    return Cells.IndexOf(cellMatch);
+                    if (position <= domainsSequence[i + 1])
+                    {
+                        return i;
+                    }
                 }
-                //if we are searching right at a cell boundary, return the one to the right;
-                var edgeMatch = Cells.FirstOrDefault(c => c.Domain.Min == pos);
-                if (edgeMatch != null)
-                {
-                    return Cells.IndexOf(edgeMatch);
-                }
-                // we must be at the last cell — but let's just make sure
-                var endMatch = Cells.FirstOrDefault(c => c.Domain.Max == pos);
-
-                if (endMatch != null)
-                {
-                    return Cells.IndexOf(endMatch);
-                }
-                throw new Exception("Something went wrong finding a cell at this position");
+                return Cells.Count - 1; // default to last cell 
             }
+
+        }
+
+
+        private List<double> DomainsToSequence()
+        {
+            //assumes that cells are always properly ordered...
+            return Cells.Select(c => c.Domain.Min).Union(new[] { Cells.Last().Domain.Max }).ToList();
         }
 
         /// <summary>
@@ -630,18 +632,7 @@ namespace Elements.Spatial
         /// <returns></returns>
         private bool PositionIsAtCellEdge(double pos)
         {
-            if (IsSingleCell)
-            {
-                return pos.ApproximatelyEquals(Domain.Max) || pos.ApproximatelyEquals(Domain.Min);
-            }
-            var topLevelAtEdge = Cells.Any(c =>
-            c.Domain.Max.ApproximatelyEquals(pos) ||
-            c.Domain.Min.ApproximatelyEquals(pos));
-            return topLevelAtEdge;
-            //if (topLevelAtEdge) return true;
-
-            //var cellAtPosition = FindCellAtPosition(pos);
-
+            return pos.ApproximatelyEquals(Domain.Max) || pos.ApproximatelyEquals(Domain.Min);
         }
 
         #endregion
