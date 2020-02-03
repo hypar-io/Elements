@@ -157,18 +157,45 @@ namespace Elements.Spatial
             }
             else
             {
-                // find the cell that should be split, split it, and replace it in the Cells list.
-                // Splits to already-split cells should not introduce a new level of hierarchy.
+                // find this-level cell to split
                 var index = FindCellIndexAtPosition(position);
                 var cellToSplit = Cells[index];
-                if (cellToSplit.PositionIsAtCellEdge(position))
-                {
-                    return;
-                }
+                var isSingleCell = cellToSplit.IsSingleCell;
                 cellToSplit.SplitAtPosition(position);
-                var newCells = cellToSplit.Cells;
-                Cells.RemoveAt(index);
-                Cells.InsertRange(index, newCells);
+
+                if (isSingleCell) // if we're splitting a cell with no children, we replace it directly with the split cells
+                {
+                    var replacementCells = cellToSplit.Cells;
+                    if (replacementCells == null) return; // if we tried to split but hit an edge, for instance
+                    Cells.RemoveAt(index);
+                    Cells.InsertRange(index, replacementCells);
+                }
+                else // otherwise, we split it AND split its parent
+                {
+                    var newDomains = cellToSplit.Domain.SplitAt(position);
+                    var cellsToInsert = new List<Grid1d>
+                    {
+                        new Grid1d(curve, newDomains[0], curveDomain),
+                        new Grid1d(curve, newDomains[1], curveDomain)
+                    };
+                    Cells.RemoveAt(index);
+                    cellsToInsert.ForEach(c => c.Cells = new List<Grid1d>());
+                    Cells.InsertRange(index, cellsToInsert);
+                    // The split of "cellToSplit" could have resulted in any number of new cells;
+                    // and these need to be reallocated to the correct parent. 
+                    var childrenToReallocate = cellToSplit.Cells;
+                    foreach (var child in childrenToReallocate)
+                    {
+                        if (child.Domain.Max <= position) // left of position
+                        {
+                            cellsToInsert[0].Cells.Add(child);
+                        }
+                        else // right of position
+                        {
+                            cellsToInsert[1].Cells.Add(child);
+                        }
+                    }
+                }
             }
             OnTopLevelGridChange();
 
@@ -224,8 +251,6 @@ namespace Elements.Spatial
             Cells = new List<Grid1d>(newDomains.Select(d => new Grid1d(curve, d, curveDomain)));
             OnTopLevelGridChange();
         }
-
-
 
         /// <summary>
         /// Divide a grid by an approximate length. The length will be adjusted to generate whole-number
@@ -609,9 +634,14 @@ namespace Elements.Spatial
             {
                 return pos.ApproximatelyEquals(Domain.Max) || pos.ApproximatelyEquals(Domain.Min);
             }
-            return Cells.Any(c =>
+            var topLevelAtEdge = Cells.Any(c =>
             c.Domain.Max.ApproximatelyEquals(pos) ||
             c.Domain.Min.ApproximatelyEquals(pos));
+            return topLevelAtEdge;
+            //if (topLevelAtEdge) return true;
+
+            //var cellAtPosition = FindCellAtPosition(pos);
+
         }
 
         #endregion

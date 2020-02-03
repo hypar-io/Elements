@@ -375,7 +375,7 @@ namespace Elements.Spatial
 
             var baseRect = GetBaseRectangle();
 
-            var trimmedRect = Polygon.BooleanTwoSets(new[] { baseRect }, boundariesInGridSpace, BooleanMode.Intersection);
+            var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
             if (trimmedRect == null) return false;
             var trimmedArea = trimmedRect.Select(r => r.Area()).Sum();
             var baseRectArea = baseRect.Area();

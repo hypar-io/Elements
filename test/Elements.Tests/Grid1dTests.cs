@@ -170,8 +170,8 @@ namespace Elements.Tests
 
             for (int i = 0; i < 10; i++)
             {
-                Assert.Equal(pattern[i % pattern.Count].length, cells[i+1].Domain.Length, 3);
-                Assert.Equal(pattern[i % pattern.Count].typename, cells[i+1].Type);
+                Assert.Equal(pattern[i % pattern.Count].length, cells[i + 1].Domain.Length, 3);
+                Assert.Equal(pattern[i % pattern.Count].typename, cells[i + 1].Type);
             }
         }
 
@@ -188,6 +188,29 @@ namespace Elements.Tests
             Exception ex = Assert.Throws<Exception>(() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
 
             Assert.Equal("Pattern length exceeds grid length.", ex.Message);
+        }
+
+        [Fact]
+        public void TryToSplitButAlreadySplitAtLowerLevel()
+        {
+            //var grid = new Grid1d(100);
+            //grid.DivideByCount(2); //now split at 50
+            //grid[1].SplitAtParameter(0.5); // splitting child cell at halfway mark = 75 on the parent
+            //grid.SplitAtPosition(75); // should silently do nothing.
+            //Assert.Equal(3, grid.GetCells().Count);
+
+            var grid2 = new Grid1d(256);
+            grid2.DivideByCount(2); //split at 128
+            grid2[0].DivideByCount(2); // split at 64
+            grid2[0][0].DivideByCount(2); // split at 32
+            grid2[0][0][0].DivideByCount(2); // split at 16
+            grid2.SplitAtPosition(32);
+            Assert.Equal(5, grid2.GetCells().Count);
+            Assert.Equal(3, grid2.Cells.Count);
+            Assert.Equal(1, grid2[0].Cells.Count);
+            Assert.Equal(2, grid2[1].Cells.Count);
+            Assert.Equal(1, grid2[0][0].Cells.Count);
+            Assert.Equal(2, grid2[0][0][0].Cells.Count);
         }
 
     }
