@@ -2,7 +2,7 @@
   "Uuid": "3c9a5bd3-0e97-40cb-aa3a-3c253e1a7d6b",
   "IsCustomNode": false,
   "Description": null,
-  "Name": "WallFromWall",
+  "Name": "FloorFromFloor",
   "ElementResolver": {
     "ResolutionMap": {}
   },
