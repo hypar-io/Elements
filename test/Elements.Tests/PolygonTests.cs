@@ -194,6 +194,7 @@ namespace Elements.Geometry.Tests
                 }
             );
             Assert.True(p1.Covers(v1));
+            Assert.True(p1.Covers(p2.Reversed()));
             Assert.True(p3.Covers(v2));
             Assert.False(p3.Covers(v1));
             Assert.True(p1.Covers(p3));
