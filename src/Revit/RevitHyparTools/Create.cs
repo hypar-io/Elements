@@ -14,7 +14,7 @@ namespace RevitHyparTools
     {
         public static Elements.Wall WallFromRevitWall(Revit.Wall wall) {
             //TODO this is a non-functioning placeholder method.  
-            throw NotImplementedException();
+            throw new NotImplementedException();
             var profile = new Elements.Geometry.Profile(ElemGeom.Polygon.Rectangle(6,600), new List<ElemGeom.Polygon>(), Guid.NewGuid(), $"Wall-{wall.Id.IntegerValue}");
             var height = wall.LookupParameter("Unconnected Height").AsDouble();
 
@@ -43,7 +43,7 @@ namespace RevitHyparTools
         {
             var polygons = f.GetEdgesAsCurveLoops().Select(cL => CurveLoopToPolygon(cL));
 
-            Dictionary<Polygon, List<Polygon>> polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
+            var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
 
             var profiles = polygonLoopDict.Select(kvp => new ElemGeom.Profile(kvp.Key, kvp.Value, Guid.NewGuid(), "Floor Profile"));
             return profiles.ToArray();
@@ -76,16 +76,17 @@ namespace RevitHyparTools
 
         private static Polygon CurveLoopToPolygon(CurveLoop cL)
         {
-            return new ElemGeom.Polygon(cL.Select(l => l.GetEndPoint(0).ToVec3()).ToList());
+            return new ElemGeom.Polygon(cL.Select(l => l.GetEndPoint(0).ToVector3()).ToList());
         }
 
         private static PlanarFace[] GetMostLikelyTopFacesOfSolid(Solid solid) {
             var faces = new List<PlanarFace>();
             foreach(PlanarFace face in solid.Faces) {
-                faces.Add(face);
+                if (face.FaceNormal.AngleTo(XYZ.BasisZ) < 0.5 )
+                {
+                    faces.Add(face);
+                }
             }
-            var angles = faces.Select(f => f.FaceNormal.AngleTo(XYZ.BasisZ));
-            faces = faces.Where(f => f.FaceNormal.AngleTo(XYZ.BasisZ) < 0.5 ).ToList();
             return faces.ToArray();
         }
     }

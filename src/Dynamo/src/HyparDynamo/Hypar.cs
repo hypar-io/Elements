@@ -1,30 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Windows;
-using Elements;
 using Elements.Serialization.glTF;
-using Elements.Geometry;
-
-
-using Revit.Elements;
 using RevitServices.Persistence;
 
 
-namespace HyparDyn
+namespace HyparDynamo.Hypar
 {
-    public class Hypar  
+    public class Wall
     {
-        private Hypar() {}
+        private Wall() {}
 
         /// <summary>
         /// gets the walls
         /// </summary>
         /// <param name="wall">The walls to be exported</param>
         /// <returns name="Hypar.Wall">The Hypar Wall element </param>
-        public static Elements.Wall ConvertRevitWall(Revit.Elements.Wall incomingWall) {
+        public static Elements.Wall FromRevitWall( Revit.Elements.Wall incomingWall) {
             var r_Wall = (Autodesk.Revit.DB.Wall)incomingWall.InternalElement;
 
             // wrapped exception catching to deliver more meaningful message in Dynamo
@@ -35,8 +26,11 @@ namespace HyparDyn
                 throw new Exception(ex.Message);
             }
         }
+    }
 
-        public static Elements.Floor[] ConvertRevitFloor(Revit.Elements.Floor incomingFloor) {
+    public class Floor {
+        private Floor() {}
+        public static Elements.Floor[] FromRevitFloor(Revit.Elements.Floor incomingFloor) {
             var r_Floor = (Autodesk.Revit.DB.Floor)incomingFloor.InternalElement;
             
             // wrapped exception catching to deliver more meaningful message in Dynamo
@@ -47,22 +41,33 @@ namespace HyparDyn
                 throw new Exception(ex.Message);
             }
         }
+    }
 
+    public class Column {
+        private Column() {}
         public static string ConvertRevitColumn(Revit.Elements.Element column) {
-            return "";
+            throw new NotImplementedException("Conversion of Revit columns is not yet supported.");
+        }
+    }
+    public class Model {
+        private Model() {}
+
+        public static void WriteGlb(string filePath, Elements.Model model) {
+            try {
+                model.ToGlTF(filePath);
+            }
+            catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public static void WriteGlb(string filePath, Model model) {
-            model.ToGlTF(filePath);
-        }
-
-        public static Model ModelFromElements(object[] elements) {
-            var mdl = new Model();
+        public static Elements.Model ModelFromElements(object[] elements) {
+            var model = new Elements.Model();
             var elems = elements.Cast<Elements.Element>().Where(e => e != null);
             
-            mdl.AddElements(elems);
+            model.AddElements(elems);
 
-            return mdl;
+            return model;
         }
     }
 }

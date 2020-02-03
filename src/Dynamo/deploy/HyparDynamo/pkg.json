@@ -1,7 +1,7 @@
 {
  "license": "MIT",
  "file_hash": null,
- "name": "Hypar",
+ "name": "Hypar Dynamo",
  "version": "0.0.1",
  "description": "Work with Hypar Elements in Dynamo",
  "group": "",
@@ -15,5 +15,5 @@
  "repository_url": "",
  "contains_binaries": true,
  "node_libraries": [ 
-    "HyparDynNodes, Version=1.0.0, Culture=neutral, PublicKeyToken=null"] 
+    "HyparDynamo, Version=1.0.0, Culture=neutral, PublicKeyToken=null"] 
 }

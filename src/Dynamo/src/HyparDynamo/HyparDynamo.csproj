@@ -39,8 +39,17 @@
 
 
   <Target Name="BuildPackage" AfterTargets="Publish">
-    <RemoveDir Directories="..\..\deploy\HyparDyn\bin\" />     
-    <Copy SourceFiles="@(NodeLibraries)" DestinationFolder="..\..\deploy\HyparDyn\bin\" ContinueOnError="true" />
+    <RemoveDir Directories="..\..\deploy\HyparDynamo\bin\" />     
+    <Copy SourceFiles="@(NodeLibraries)" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
+    <Copy SourceFiles=".\HyparDynamo_DynamoCustomization.xml" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
+  </Target>
+
+  <ItemGroup>
+    <DynamoPackage Include="$(ProjectDir)..\..\deploy\HyparDynamo\**\*.*" />
+  </ItemGroup>
+  <Target Name="Deploy" AfterTargets="BuildPackage">
+    <RemoveDir Directories="$(AppData)\Dynamo\Dynamo Revit\2.3\packages\HyparDynamo\"/>
+    <Copy SourceFiles="@(DynamoPackage)" DestinationFiles="@(DynamoPackage->'$(AppData)\Dynamo\Dynamo Revit\2.3\packages\HyparDynamo\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>
 
 </Project>

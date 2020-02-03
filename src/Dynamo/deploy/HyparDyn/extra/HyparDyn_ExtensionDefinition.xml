@@ -1,4 +1,0 @@
-<ExtensionDefinition>
-  <AssemblyPath>../bin/HyparDynExtension.dll</AssemblyPath>
-  <TypeName>HyparDyn.HyparExtension</TypeName>
-</ExtensionDefinition>
