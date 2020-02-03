@@ -62,7 +62,7 @@ namespace Elements.MathUtils
         /// <returns>True if |other - value| &lt; tolerance</returns>
         public static bool ApproximatelyEquals(this double value, double other)
         {
-            return ApproximatelyEquals(value, other, Geometry.Vector3.Epsilon);
+            return ApproximatelyEquals(value, other, Geometry.Vector3.EPSILON);
         }
     }
 }
