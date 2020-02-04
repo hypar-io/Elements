@@ -16,8 +16,7 @@ namespace Elements.Tests
             var profile = new Profile(Polygon.Rectangle(1.0, 1.0));
             var material = new Material("yellow", Colors.Yellow);
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
-            var testUserElement = new TestUserElement(line, profile, material);
-            testUserElement.IsElementDefintion = true;
+            var testUserElement = new TestUserElement(line, profile, material, true);
 
             // Create instances of that element
             // with varied transforms.

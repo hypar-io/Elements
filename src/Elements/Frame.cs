@@ -30,6 +30,7 @@ namespace Elements
         /// <param name="material">The frame's material.</param>
         /// <param name="transform">The frame's transform.</param>
         /// <param name="representation">The frame's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the frame.</param>
         /// <param name="name">The name of the frame.</param>
         public Frame(Polygon curve,
@@ -38,10 +39,12 @@ namespace Elements
                      Material material = null,
                      Transform transform = null,
                      Representation representation = null,
+                     bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) : base(transform != null ? transform : new Transform(),
                                                 material != null ? material : BuiltInMaterials.Default,
                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                isElementDefinition,
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
         {

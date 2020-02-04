@@ -739,7 +739,7 @@ namespace Elements.Serialization.glTF
                             }
                             meshElementMap[e.Id].Add(meshId);
 
-                            if(!e.IsElementDefintion)
+                            if(!geom.IsElementDefinition)
                             {
                                 CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
                             }
@@ -826,9 +826,11 @@ namespace Elements.Serialization.glTF
                                      cmax,
                                      null,
                                      meshes);
-                if(!e.IsElementDefintion)
+
+                var geom = (GeometricElement)e;
+                if(!geom.IsElementDefinition)
                 {
-                    CreateNodeForMesh(gltf, meshId, nodes, ((GeometricElement)e).Transform);
+                    CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace Elements
         /// <param name="name">The name of this element instance.</param>
         public ElementInstance CreateInstance(Transform transform, string name)
         {
-            if(!this.IsElementDefintion)
+            if(!this.IsElementDefinition)
             {
                 throw new Exception($"An instance cannot be created of the type {this.GetType().Name} because it is not marked as an element definition. Set the IsElementDefinition flag to true.");
             }

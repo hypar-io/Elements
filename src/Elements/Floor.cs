@@ -46,6 +46,7 @@ namespace Elements
         /// <param name="transform">The floor's transform. Create a transform with a Z coordinate for the origin, to define the elevation of the floor.</param>
         /// <param name="material">The floor's material.</param>
         /// <param name="representation">The floor's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The floor's id.</param>
         /// <param name="name">The floor's name.</param>
         public Floor(Profile profile,
@@ -53,10 +54,12 @@ namespace Elements
                      Transform transform = null,
                      Material material = null,
                      Representation representation = null,
+                     bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) : base(transform != null ? transform : new Transform(),
                                                 material != null ? material : BuiltInMaterials.Concrete,
                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                isElementDefinition,
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
         {

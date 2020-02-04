@@ -81,6 +81,7 @@ namespace Elements
                           Material material = null) : base(new Transform(),
                                                           material != null ? material : BuiltInMaterials.Topography,
                                                           null,
+                                                          false,
                                                           Guid.NewGuid(),
                                                           null)
         {

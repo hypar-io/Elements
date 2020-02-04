@@ -25,16 +25,19 @@ namespace Elements.Tests
         internal TestUserElement(): base(null,
                                             BuiltInMaterials.Default,
                                             new Representation(new List<SolidOperation>()),
+                                            false,
                                             Guid.NewGuid(),
                                             null){}
 
         public TestUserElement(Line centerLine,
                                Profile profile,
                                Material material = null,
+                               bool isElementDefinition = false,
                                Guid id = default(Guid),
                                string name = null) : base(new Transform(),
                                                           material = material != null ? material : BuiltInMaterials.Default,
                                                           new Representation(new List<SolidOperation>()),
+                                                          isElementDefinition,
                                                           id = id != default(Guid) ? id : Guid.NewGuid(),
                                                           name)
         {

@@ -27,13 +27,16 @@ namespace Elements
         /// <param name="width">The width of the opening.</param>
         /// <param name="height">The height of the opening.</param>
         /// <param name="transform">The opening's transform.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         public Opening(double x,
                        double y,
                        double width,
                        double height,
-                       Transform transform = null) : base(transform = transform != null ? transform : new Transform(),
+                       Transform transform = null,
+                       bool isElementDefinition = false) : base(transform = transform != null ? transform : new Transform(),
                                                           BuiltInMaterials.Void,
                                                           new Representation(new List<SolidOperation>()),
+                                                          isElementDefinition,
                                                           Guid.NewGuid(),
                                                           null)
         {
@@ -48,12 +51,15 @@ namespace Elements
         /// <param name="x">The distance along the x to transform the profile.</param>
         /// <param name="y">The distance along the y to transform the profile.</param>
         /// <param name="transform">The opening's transform.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         public Opening(Polygon perimeter,
                        double x = 0.0,
                        double y = 0.0,
-                       Transform transform = null) : base(transform = transform != null ? transform : new Transform(),
+                       Transform transform = null,
+                       bool isElementDefinition = false) : base(transform = transform != null ? transform : new Transform(),
                                                           BuiltInMaterials.Void,
                                                           new Representation(new List<SolidOperation>()),
+                                                          isElementDefinition,
                                                           Guid.NewGuid(),
                                                           null)
         {
@@ -68,6 +74,7 @@ namespace Elements
         /// <param name="depth">The depth of the opening's extrusion.</param>
         /// <param name="transform">The opening's transform.</param>
         /// <param name="representation">The opening's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the opening.</param>
         /// <param name="name">The name of the opening.</param>
         [JsonConstructor]
@@ -75,10 +82,12 @@ namespace Elements
                        double depth,
                        Transform transform = null,
                        Representation representation = null,
+                       bool isElementDefinition = false,
                        Guid id = default(Guid),
                        string name = null) : base(transform != null ? transform : new Transform(),
                                                   BuiltInMaterials.Void,
                                                   representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                  isElementDefinition,
                                                   id != default(Guid) ? id : Guid.NewGuid(),
                                                   name)
         {

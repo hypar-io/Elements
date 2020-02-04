@@ -26,6 +26,7 @@ namespace Elements
         /// <param name="material">The panel's material</param>
         /// <param name="transform">The panel's transform.</param>
         /// <param name="representation">The panel's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the panel.</param>
         /// <param name="name">The name of the panel.</param>
         /// <exception>Thrown when the provided perimeter points are not coplanar.</exception>
@@ -33,10 +34,12 @@ namespace Elements
                      Material material = null,
                      Transform transform = null,
                      Representation representation = null,
+                     bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) : base(transform != null ? transform : new Transform(),
                                                 material != null ? material : BuiltInMaterials.Concrete,
                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                isElementDefinition,
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
         {

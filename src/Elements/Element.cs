@@ -15,10 +15,5 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.ElementInstance", typeof(Elements.ElementInstance))]
     public abstract partial class Element
     {
-        /// <summary>
-        /// When true, this element will act as a defintion for other 
-        /// element instances, and will not appear in visual output.
-        /// </summary>
-        public bool IsElementDefintion { get; set;}
     }
 }

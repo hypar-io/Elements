@@ -279,20 +279,26 @@ namespace Elements.Generate
                 file = file.Insert(start, $"[UserElement]\n\t");
             }
 
-            // JSON schema only allows us to generate Dictionary<string,Element>
-            // so we replace those entries here with Dictionary<Guid,Element>
             if(typeName == "Model")
             {
+                // JSON schema only allows us to generate Dictionary<string,Element>
+                // Replace those entries here with Dictionary<Guid,Element>.
                 file = file.Replace("System.Collections.Generic.IDictionary<string, Element>", "System.Collections.Generic.IDictionary<Guid, Element>");
                 file = file.Replace("System.Collections.Generic.Dictionary<string, Element>", "System.Collections.Generic.Dictionary<Guid, Element>");
+
+                // Obsolete the origin property on Model.
                 file = file.Replace("public Position Origin { get; set; }", "[Obsolete(\"Use Transform instead.\")]\n\t\tpublic Position Origin { get; set; }");
+            }
+            else if(typeName == "GeometricElement")
+            {
+                // Make IsElementDefinition private.
+                file = file.Replace("public bool IsElementDefinition { get; set; }", "public bool IsElementDefinition { get; }");
             }
             // Convert some classes to structs.
             else if(typeName == "Color" || typeName == "Vector3")
             {
                 file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
             }
-            
             
             return file;
         }

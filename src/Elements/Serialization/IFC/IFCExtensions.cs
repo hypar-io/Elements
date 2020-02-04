@@ -40,6 +40,7 @@ namespace Elements.Serialization.IFC
                                           0.0,
                                           0.0,
                                           elementTransform,
+                                          false,
                                           IfcGuid.FromIfcGUID(beam.GlobalId),
                                           beam.Name);
                     return result; 
@@ -62,7 +63,17 @@ namespace Elements.Serialization.IFC
             {
                 var solidTransform = solid.Position.ToTransform();
                 var c = solid.SweptArea.ToCurve();
-                var result = new Column(solidTransform.Origin, (IfcLengthMeasure)solid.Depth, new Profile((Polygon)c), BuiltInMaterials.Steel, elementTransform, 0.0, 0.0, 0.0, IfcGuid.FromIfcGUID(column.GlobalId), column.Name);
+                var result = new Column(solidTransform.Origin,
+                                        (IfcLengthMeasure)solid.Depth,
+                                        new Profile((Polygon)c),
+                                        BuiltInMaterials.Steel,
+                                        elementTransform,
+                                        0.0,
+                                        0.0,
+                                        0.0,
+                                        false,
+                                        IfcGuid.FromIfcGUID(column.GlobalId),
+                                        column.Name);
                 return result;
             }
             return null;
@@ -90,7 +101,7 @@ namespace Elements.Serialization.IFC
                 transform.Concatenate(solid.Position.ToTransform());
                 var pline = (IfcPolyline)profileDef.OuterCurve;
                 var outline = pline.ToPolygon(true);
-                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, material, transform, null, IfcGuid.FromIfcGUID(space.GlobalId), space.Name);
+                var result = new Space(new Profile(outline), (IfcLengthMeasure)solid.Depth, material, transform, null, false, IfcGuid.FromIfcGUID(space.GlobalId), space.Name);
                 return result;
             }
             else if (foundSolid.GetType() == typeof(IfcFacetedBrep))
@@ -108,7 +119,7 @@ namespace Elements.Serialization.IFC
                         newSolid.AddFace(poly);
                     }
                 }
-                var result = new Space(newSolid, transform, null, Guid.NewGuid(), space.Name);
+                var result = new Space(newSolid, transform, null, false, Guid.NewGuid(), space.Name);
 
                 return result;
             }
@@ -145,7 +156,7 @@ namespace Elements.Serialization.IFC
 
             solidTransform.Concatenate(transform);
             var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth, 
-                solidTransform, BuiltInMaterials.Concrete, null, IfcGuid.FromIfcGUID(slab.GlobalId));
+                solidTransform, BuiltInMaterials.Concrete, null, false, IfcGuid.FromIfcGUID(slab.GlobalId));
 
             floor.Openings.AddRange(openings.Select(o=>o.ToOpening()));
 
@@ -200,6 +211,7 @@ namespace Elements.Serialization.IFC
                                           null,
                                           transform,
                                           null,
+                                          false,
                                           IfcGuid.FromIfcGUID(wall.GlobalId),
                                           wall.Name);
                     return result;
@@ -223,6 +235,7 @@ namespace Elements.Serialization.IFC
                                              (IfcLengthMeasure)s.Depth,
                                              solidTransform,
                                              null,
+                                             false,
                                              IfcGuid.FromIfcGUID(opening.GlobalId));
                 return newOpening;
             }
