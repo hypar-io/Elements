@@ -16,27 +16,27 @@ namespace Elements
         /// <summary>
         /// The element from which this instance is derived.
         /// </summary>
-        public GeometricElement Parent { get; }
+        public GeometricElement BaseDefinition { get; }
 
         /// <summary>
         /// The transform of the instance.
         /// </summary>
         public Transform Transform { get; }
-        
+
         /// <summary>
         /// Construct an element instance.
         /// </summary>
-        /// <param name="parent">The definition from which this instance is derived.</param>
+        /// <param name="baseDefinition">The definition from which this instance is derived.</param>
         /// <param name="transform">The transform of the instance.</param>
         /// <param name="name">The name of the instance.</param>
         /// <param name="id">The id of the instance.</param>
-        public ElementInstance(GeometricElement parent,
+        public ElementInstance(GeometricElement baseDefinition,
                                Transform transform,
                                string name = null,
-                               Guid id = default(Guid)) : base (id == default(Guid) ? Guid.NewGuid() : id, name)
+                               Guid id = default(Guid)) : base(id == default(Guid) ? Guid.NewGuid() : id, name)
         {
-            this.Parent = parent;
+            this.BaseDefinition = baseDefinition;
             this.Transform = transform;
         }
-    } 
+    }
 }

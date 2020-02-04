@@ -13,5 +13,12 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.WideFlangeProfile", typeof(Elements.Geometry.Profiles.WideFlangeProfile))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.HSSPipeProfile", typeof(Elements.Geometry.Profiles.HSSPipeProfile))]
     [JsonInheritanceAttribute("Elements.ElementInstance", typeof(Elements.ElementInstance))]
-    public abstract partial class Element{}
+    public abstract partial class Element
+    {
+        /// <summary>
+        /// When true, this element will act as a defintion for other 
+        /// element instances, and will not appear in visual output.
+        /// </summary>
+        public bool IsElementDefintion { get; set;}
+    }
 }

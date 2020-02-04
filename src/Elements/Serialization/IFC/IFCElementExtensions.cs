@@ -34,7 +34,7 @@ namespace Elements.Serialization.IFC
                 // and the id and use those to uniquely position and 
                 // identify the element.
                 var instance = (ElementInstance)e;
-                geoElement = instance.Parent;
+                geoElement = instance.BaseDefinition;
                 id = instance.Id;
                 trans = instance.Transform;
             }

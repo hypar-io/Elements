@@ -18,12 +18,17 @@ namespace Elements
 
         /// <summary>
         /// Create an instance of this element.
-        /// Instances will point to the same 
+        /// Instances will point to the same instance of an element.
         /// </summary>
-        /// <param name="transform"></param>
-        /// <param name="name"></param>
+        /// <param name="transform">The transform for this element instance.</param>
+        /// <param name="name">The name of this element instance.</param>
         public ElementInstance CreateInstance(Transform transform, string name)
         {
+            if(!this.IsElementDefintion)
+            {
+                throw new Exception($"An instance cannot be created of the type {this.GetType().Name} because it is not marked as an element definition. Set the IsElementDefinition flag to true.");
+            }
+
             return new ElementInstance(this, transform, name, Guid.NewGuid());
         }
     }

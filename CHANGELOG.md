@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5
+### Added
+- `Element.IsElementDefinition`
+
 ## 0.4.4
 ### Added
 - `Contour`

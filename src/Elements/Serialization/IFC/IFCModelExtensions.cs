@@ -206,6 +206,7 @@ namespace Elements.Serialization.IFC
             {
                 var t = e.GetType();
                 return (e is GeometricElement || e is ElementInstance) &&
+                        !e.IsElementDefintion &&
                         t != typeof(ModelCurve) &&
                         t != typeof(ModelPoints);
             }))

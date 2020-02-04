@@ -322,9 +322,7 @@ namespace Elements.Serialization.glTF
                                             float[] cMin,
                                             float[] cMax,
                                             int? parent_index,
-                                            List<glTFLoader.Schema.Mesh> meshes,
-                                            List<glTFLoader.Schema.Node> nodes,
-                                            Transform transform = null)
+                                            List<glTFLoader.Schema.Mesh> meshes)
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
@@ -381,6 +379,11 @@ namespace Elements.Serialization.glTF
             // Add mesh to gltf
             meshes.Add(m);
 
+            return meshes.Count - 1;
+        }
+
+        private static int CreateNodeForMesh(Gltf gltf, int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
+        {
             var parentId = 0;
 
             if (transform != null)
@@ -403,10 +406,9 @@ namespace Elements.Serialization.glTF
 
             // Add mesh node to gltf
             var node = new Node();
-            node.Mesh = meshes.Count - 1;
-            gltf.AddNode(nodes, node, parentId);
-
-            return meshes.Count - 1;
+            node.Mesh = meshId;
+            var nodeId = gltf.AddNode(nodes, node, parentId);
+            return nodeId;
         }
 
         internal static int AddLineLoop(this Gltf gltf,
@@ -536,8 +538,6 @@ namespace Elements.Serialization.glTF
             ushort imin; ushort imax;
             double[] uvmin; double[] uvmax;
 
-
-
             mesh.GetBuffers(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin,
                             out cmax, out imin, out imax, out uvmax, out uvmin);
@@ -545,10 +545,12 @@ namespace Elements.Serialization.glTF
 
             var accessors = new List<Accessor>();
 
-            gltf.AddTriangleMesh("mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
+            var meshId = gltf.AddTriangleMesh("mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
                                         indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
-                                        imin, imax, uvmin, uvmax, materials[BuiltInMaterials.Default.Name], cmin, cmax, null, meshes, nodes, null);
+                                        imin, imax, uvmin, uvmax, materials[BuiltInMaterials.Default.Name], cmin, cmax, null, meshes);
 
+            CreateNodeForMesh(gltf, meshId, nodes, null);
+            
             var edgeCount = 0;
             var vertices = new List<Vector3>();
             var verticesHighlighted = new List<Vector3>();
@@ -714,6 +716,7 @@ namespace Elements.Serialization.glTF
                                                     Dictionary<Guid, List<int>> meshElementMap)
         {
             var materialName = BuiltInMaterials.Default.Name;
+            int meshId = -1;
 
             if (e is GeometricElement)
             {
@@ -728,13 +731,18 @@ namespace Elements.Serialization.glTF
                         var solid = solidOp.GetSolid();
                         if (solid != null)
                         {
-                            var meshId = ProcessSolid(solid, geom.Transform, e.Id.ToString(), materialName, ref gltf,
-                                ref materials, ref buffer, bufferViews, accessors, meshes, nodes);
+                            meshId = ProcessSolid(solid, e.Id.ToString(), materialName, ref gltf,
+                                ref materials, ref buffer, bufferViews, accessors, meshes);
                             if (!meshElementMap.ContainsKey(e.Id))
                             {
                                 meshElementMap.Add(e.Id, new List<int>());
                             }
                             meshElementMap[e.Id].Add(meshId);
+
+                            if(!e.IsElementDefintion)
+                            {
+                                CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
+                            }
                         }
                     }
                 }
@@ -745,7 +753,7 @@ namespace Elements.Serialization.glTF
                 var i = (ElementInstance)e;
 
                 // Lookup the corresponding mesh in the map.
-                AddInstanceMesh(gltf, nodes, meshElementMap[i.Parent.Id], i.Transform);
+                AddInstanceMesh(gltf, nodes, meshElementMap[i.BaseDefinition.Id], i.Transform);
             }
 
             if (e is ModelCurve)
@@ -796,7 +804,7 @@ namespace Elements.Serialization.glTF
 
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.
-                gltf.AddTriangleMesh(e.Id + "_mesh",
+                meshId = gltf.AddTriangleMesh(e.Id + "_mesh",
                                      buffer,
                                      bufferViews,
                                      accessors,
@@ -817,14 +825,15 @@ namespace Elements.Serialization.glTF
                                      cmin,
                                      cmax,
                                      null,
-                                     meshes,
-                                     nodes,
-                                     ((GeometricElement)e).Transform);
+                                     meshes);
+                if(!e.IsElementDefintion)
+                {
+                    CreateNodeForMesh(gltf, meshId, nodes, ((GeometricElement)e).Transform);
+                }
             }
         }
 
         private static int ProcessSolid(Solid solid,
-                                         Transform t,
                                          string id,
                                          string materialName,
                                          ref Gltf gltf,
@@ -832,8 +841,7 @@ namespace Elements.Serialization.glTF
                                          ref List<byte> buffer,
                                          List<BufferView> bufferViews,
                                          List<Accessor> accessors,
-                                         List<glTFLoader.Schema.Mesh> meshes,
-                                         List<glTFLoader.Schema.Node> nodes)
+                                         List<glTFLoader.Schema.Mesh> meshes)
         {
             byte[] vertexBuffer;
             byte[] normalBuffer;
@@ -853,7 +861,7 @@ namespace Elements.Serialization.glTF
 
             return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
                                 indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
-                                imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, meshes, nodes, t);
+                                imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, meshes);
         }
 
         private static void AddLines(long id,
