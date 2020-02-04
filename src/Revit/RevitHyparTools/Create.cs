@@ -82,7 +82,7 @@ namespace RevitHyparTools
         private static PlanarFace[] GetMostLikelyTopFacesOfSolid(Solid solid) {
             var faces = new List<PlanarFace>();
             foreach(PlanarFace face in solid.Faces) {
-                if (face.FaceNormal.AngleTo(XYZ.BasisZ) < 0.5 )
+                if (face.FaceNormal.DotProduct(XYZ.BasisZ) > 0.85 && face.FaceNormal.DotProduct(XYZ.BasisZ) <= 1)
                 {
                     faces.Add(face);
                 }
