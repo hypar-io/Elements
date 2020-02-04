@@ -2,7 +2,7 @@
 
 ## 0.5
 ### Added
-- `Element.IsElementDefinition`
+- `GeometricElement.IsElementDefinition`
 
 ## 0.4.4
 ### Added
