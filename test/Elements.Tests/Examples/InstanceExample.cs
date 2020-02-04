@@ -12,10 +12,10 @@ namespace Elements.Tests.Examples
 
             // <example>
             // Create a mass type from which to create instances.
-            var m = new Mass(new Profile(Polygon.Rectangle(1.0, 1.0)), 1.5);
+            var m = new Mass(new Profile(Polygon.Rectangle(1.0, 1.0)), 1.5, isElementDefinition: true);
 
             var j = 1.0;
-            var count = 20;
+            var count = 10;
             for (var i = 0.0; i < 360.0; i += 360.0 / (double)count)
             {
                 var t = new Transform();
