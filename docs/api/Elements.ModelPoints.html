@@ -235,6 +235,9 @@ var modelPoints = new ModelPoints(pts, pink);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a>
     </div>
     <div>
@@ -277,13 +280,13 @@ var modelPoints = new ModelPoints(pts, pink);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_ModelPoints__ctor_" data-uid="Elements.ModelPoints.#ctor*"></a>
-  <h4 id="Elements_ModelPoints__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Guid_System_String_" data-uid="Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)">ModelPoints(IList&lt;Vector3&gt;, Material, Transform, Guid, String)</h4>
+  <h4 id="Elements_ModelPoints__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">ModelPoints(IList&lt;Vector3&gt;, Material, Transform, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a collection of points.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = null, Transform transform = null, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -311,6 +314,12 @@ var modelPoints = new ModelPoints(pts, pink);
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td><span class="parametername">transform</span></td>
         <td><p>The model curve's transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
 </td>
       </tr>
       <tr>
