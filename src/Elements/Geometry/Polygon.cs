@@ -576,6 +576,7 @@ namespace Elements.Geometry
         /// Test if this polygon has the same vertex count and shape as another, within tolerance.
         /// </summary>
         /// <param name="other">The other polygon.</param>
+        /// <param name="tolerance">The optional tolerance value to use. If not supplied, the global tolerance will be used.</param>
         /// <returns></returns>
         public bool IsAlmostEqualTo(Polygon other, double tolerance = Vector3.EPSILON)
         {

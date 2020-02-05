@@ -3,6 +3,9 @@ using System.Text;
 
 namespace Elements
 {
+    /// <summary>
+    /// String utilities and extension methods. 
+    /// </summary>
     public static class StringExtensions
     {
         /// <summary>

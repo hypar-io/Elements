@@ -85,6 +85,11 @@ namespace Elements
 
         }
 
+        /// <summary>
+        /// Test if a position is within global tolerance of the domain boundary.
+        /// </summary>
+        /// <param name="position">The position to test.</param>
+        /// <returns>True if the position is within tolerance of the domain Min or Max.</returns>
         public bool IsCloseToBoundary(double position)
         {
             return position.ApproximatelyEquals(Max) || position.ApproximatelyEquals(Min);
