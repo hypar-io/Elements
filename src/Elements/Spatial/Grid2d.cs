@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using Elements.MathUtils;
 
 namespace Elements.Spatial
 {
@@ -224,7 +223,8 @@ namespace Elements.Spatial
         private (int u, int v) FindCellIndexAtPosition(double uPosition, double vPosition)
         {
 
-            //TODO: Optimize for smarter retrieval — via indexing or something
+            // TODO: Optimize for smarter retrieval — via indexing or something.
+            // Consider https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.binarysearch?view=netframework-4.8
             for (int u = 0; u < Cells.Count; u++)
             {
                 if (Cells[u][0].U.Domain.Includes(uPosition))
@@ -376,10 +376,9 @@ namespace Elements.Spatial
             var baseRect = GetBaseRectangle();
 
             var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
-            if (trimmedRect == null) return false;
-            var trimmedArea = trimmedRect.Select(r => r.Area()).Sum();
-            var baseRectArea = baseRect.Area();
-            return !trimmedArea.ApproximatelyEquals(baseRectArea, 0.01);
+            if (trimmedRect == null || trimmedRect.Count > 1 || trimmedRect.Count < 1) return false;
+            return !trimmedRect[0].IsAlmostEqualTo(baseRect, 1 / Polyline.CLIPPER_SCALE);
+            //TODO: decide if clipper_scale should be adjusted to reflect global tolerance settings so that 1 / polyline.clipper_scale = vector3.epsilon.
         }
 
         #endregion

@@ -20,6 +20,24 @@ namespace Elements.Geometry
         public static implicit operator Profile(Polygon p) => new Profile(p);
 
         /// <summary>
+        /// The normal of this polygon, according to Newell's Method.
+        /// </summary>
+        /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
+        public Vector3 Normal()
+        {
+            var normal = new Vector3();
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                var p0 = Vertices[i];
+                var p1 = Vertices[(i + 1) % Vertices.Count];
+                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
+                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
+                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
+            }
+            return normal.Normalized();
+        }
+
+        /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
@@ -555,6 +573,55 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Test if this polygon has the same vertex count and shape as another, within tolerance.
+        /// </summary>
+        /// <param name="other">The other polygon.</param>
+        /// <returns></returns>
+        public bool IsAlmostEqualTo(Polygon other, double tolerance = Vector3.EPSILON)
+        {
+            var otherVertices = other.Vertices;
+            if (otherVertices.Count != Vertices.Count) return false;
+            //ensure winding is consistent
+            if (other.Normal().Dot(Normal()) < 0)
+            {
+                otherVertices = other.Vertices.Reverse().ToList();
+            }
+
+            var firstVertex = Vertices[0];
+            var distance = double.MaxValue;
+            //find index of closest vertex to this 0 vertex
+            int indexOffset = -1;
+            for (int i = 0; i < otherVertices.Count; i++)
+            {
+                Vector3 otherVertex = otherVertices[i];
+                var thisDistance = firstVertex.DistanceTo(otherVertex);
+                if (thisDistance < distance)
+                {
+                    distance = thisDistance;
+                    indexOffset = i;
+                }
+            }
+
+            // rounding errors could occur in X and Y, so the max distance tolerance is the linear tolerance * sqrt(2).
+            var distanceTolerance = Math.Sqrt(2) * tolerance; 
+
+            if (distance > distanceTolerance) return false;
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                var thisVertex = Vertices[i];
+                var otherVertex = otherVertices[(i + indexOffset) % otherVertices.Count];
+                if (thisVertex.DistanceTo(otherVertex) > distanceTolerance)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
+
+        /// <summary>
         /// Get the hash code for the polygon.
         /// </summary>
         /// <returns></returns>
@@ -744,7 +811,7 @@ namespace Elements.Geometry
     /// </summary>
     internal static class PolygonExtensions
     {
-        private const double scale = 1024.0;
+        private const double scale = Polyline.CLIPPER_SCALE;
 
         /// <summary>
         /// Construct a clipper path from a Polygon.

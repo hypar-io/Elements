@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
-using Elements.MathUtils;
 using Elements.Spatial;
 using Newtonsoft.Json;
 using Xunit;
@@ -185,9 +184,9 @@ namespace Elements.Tests
                 ("Glazing", 3),
                 ("Fin", 0.2)
             };
-            Exception ex = Assert.Throws<Exception>(() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
+            Exception ex = Assert.Throws<ArgumentException>(() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
 
-            Assert.Equal("Pattern length exceeds grid length.", ex.Message);
+            Assert.Equal("The grid could not be constructed. Pattern length exceeds grid length.", ex.Message);
         }
 
         [Fact]

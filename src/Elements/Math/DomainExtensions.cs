@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Elements.MathUtils
+namespace Elements
 {
     /// <summary>
     /// Extension and utility methods for mathematical operations. 
@@ -45,8 +45,8 @@ namespace Elements.MathUtils
         /// <summary>
         /// Test if two values are approximately equal to each other with a tolerance value.
         /// </summary>
-        /// <param name="value">The first value to test</param>
-        /// <param name="other">The other value to test</param>
+        /// <param name="value">The first value to test.</param>
+        /// <param name="other">The other value to test.</param>
         /// <param name="tolerance">The threshold for equality</param>
         /// <returns>True if |other - value| &lt; tolerance</returns>
         public static bool ApproximatelyEquals(this double value, double other, double tolerance)
@@ -57,8 +57,8 @@ namespace Elements.MathUtils
         /// <summary>
         /// Test if two values are approximately equal to each other, using default tolerance.
         /// </summary>
-        /// <param name="value">The first value to test</param>
-        /// <param name="other">The other value to test</param>
+        /// <param name="value">The first value to test.</param>
+        /// <param name="other">The other value to test.</param>
         /// <returns>True if |other - value| &lt; tolerance</returns>
         public static bool ApproximatelyEquals(this double value, double other)
         {

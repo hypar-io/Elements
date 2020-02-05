@@ -10,9 +10,9 @@ namespace Elements.Geometry
     public partial struct Vector3 : IComparable<Vector3>, IEquatable<Vector3>
     {
         /// <summary>
-        /// A tolerance for comparison operations of 1e-9.
+        /// A tolerance for comparison operations of 1e-5.
         /// </summary>
-        public const double EPSILON = 1e-9;
+        public const double EPSILON = 1e-5;
 
         private static Vector3 _xAxis = new Vector3(1, 0, 0);
         private static Vector3 _yAxis = new Vector3(0, 1, 0);

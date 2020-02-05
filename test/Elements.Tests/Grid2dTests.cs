@@ -6,7 +6,6 @@ using Xunit;
 using Newtonsoft.Json;
 using Elements.Geometry;
 using System.Collections.Generic;
-using Elements.MathUtils;
 
 namespace Elements.Tests
 {
@@ -46,9 +45,9 @@ namespace Elements.Tests
                     {"BaseRect", c.GetCellGeometry() },
                     {"IsTrimmed", c.IsTrimmed()}
                 }
-            );
+            ); 
             Assert.Equal(87, trimmedCells.Count());
-            Assert.Equal(16, trimmedCells.Count(c => (bool)c["IsTrimmed"]));
+            Assert.Equal(18, trimmedCells.Count(c => (bool)c["IsTrimmed"]));
         }
 
         [Fact]

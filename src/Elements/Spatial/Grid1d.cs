@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Elements.Geometry;
-using Elements.MathUtils;
 
 namespace Elements.Spatial
 {
@@ -134,17 +133,13 @@ namespace Elements.Spatial
         public void SplitAtPosition(double position)
         {
 
+            if (PositionIsAtCellEdge(position)) // already split at this location
+            {
+                return;
+            }
             if (!Domain.Includes(position))
             {
-                if (PositionIsAtCellEdge(position)) // already split at this location
-                {
-                    return;
-                }
-                else
-                {
-                    throw new Exception("Cannot split at position outside of cell domain.");
-                }
-
+                throw new ArgumentException("Cannot split at position outside of cell domain.");
             }
             if (IsSingleCell) // simple single split
             {
@@ -172,7 +167,7 @@ namespace Elements.Spatial
                 }
                 else // otherwise, we split it AND split its parent
                 {
-                    if (cellToSplit.PositionIsAtCellEdge(position)) 
+                    if (cellToSplit.PositionIsAtCellEdge(position))
                     {
                         return;
                     }
@@ -419,7 +414,7 @@ namespace Elements.Spatial
             var totalPatternLength = patternSegments.Select(s => s.length).Sum();
             if (totalPatternLength > Domain.Length)
             {
-                throw new Exception("Pattern length exceeds grid length.");
+                throw new ArgumentException("The grid could not be constructed. Pattern length exceeds grid length.");
             }
 
             var remainderSize = Domain.Length - totalPatternLength;

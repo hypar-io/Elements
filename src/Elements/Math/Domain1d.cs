@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Elements.MathUtils
+namespace Elements
 {
     /// <summary>
     /// A 1 dimensional interval or domain.
@@ -47,8 +47,8 @@ namespace Elements.MathUtils
         /// <summary>
         /// Construct a 1D Domain
         /// </summary>
-        /// <param name="min">The lower bound</param>
-        /// <param name="max">The upper bound</param>
+        /// <param name="min">The lower bound of the domain.</param>
+        /// <param name="max">The upper bound of the domain.</param>
         public Domain1d(double min = 0.0, double max = 1.0)
         {
             Min = min;
