@@ -109,7 +109,7 @@ namespace Elements.Geometry
             var up = Vector3.ZAxis;
             Vector3 x = Vector3.XAxis; // Vector3: Convert to XAxis
 
-            // Check if the provided parameter is zual
+            // Check if the provided parameter is equal
             // to one of the vertices.
             Vector3 a = new Vector3();
             var isEqualToVertex = false;
