@@ -49,7 +49,7 @@ namespace Elements.Tests
         public void DivideFromPosition()
         {
             var grid = new Grid1d(new Domain1d(-8, 8));
-            Assert.Throws<Exception>(() => grid.DivideByFixedLengthFromPosition(1, 10));
+            Assert.Throws<ArgumentException>(() => grid.DivideByFixedLengthFromPosition(1, 10));
             grid.DivideByFixedLengthFromPosition(4, 0);
             Assert.Equal(4, grid.Cells.Count);
         }

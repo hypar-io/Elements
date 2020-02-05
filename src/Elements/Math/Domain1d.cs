@@ -68,17 +68,26 @@ namespace Elements
         /// <summary>
         /// Split domain into two at a position within its extents. Positions at the domain's ends will be rejected.
         /// </summary>
-        /// <param name="pos">The position value at which to split the domain.</param>
+        /// <param name="position">The position value at which to split the domain.</param>
         /// <returns>An array of 2 1d domains split at the designated position.</returns>
-        public Domain1d[] SplitAt(double pos)
+        public Domain1d[] SplitAt(double position)
         {
-            if (!Includes(pos))
+            if(IsCloseToBoundary(position))
             {
-                throw new Exception($"The position {pos} was not within the Grid's domain: {ToString()}");
+                throw new ArgumentException($"The position {position} was too close to the domain boundary.");
+            } 
+            if (!Includes(position))
+            {
+                throw new ArgumentException($"The position {position} was not within the Grid's domain: {ToString()}");
             }
 
-            return new Domain1d[] { new Domain1d(Min, pos), new Domain1d(pos, Max) };
+            return new Domain1d[] { new Domain1d(Min, position), new Domain1d(position, Max) };
 
+        }
+
+        public bool IsCloseToBoundary(double position)
+        {
+            return position.ApproximatelyEquals(Max) || position.ApproximatelyEquals(Min);
         }
 
         /// <summary>
@@ -88,6 +97,10 @@ namespace Elements
         /// <returns>An array of N equally-sized subdomains.</returns>
         public Domain1d[] DivideByCount(int n)
         {
+            if(n <= 0)
+            {
+                throw new ArgumentException($"Unable to divide domain into {n} divisions.");
+            }
             if (n < 2)
             {
                 return new Domain1d[] { this };

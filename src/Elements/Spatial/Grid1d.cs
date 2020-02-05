@@ -135,7 +135,7 @@ namespace Elements.Spatial
 
             if (PositionIsAtCellEdge(position)) // already split at this location
             {
-                return;
+                return; // swallow silently.
             }
             if (!Domain.Includes(position))
             {
@@ -169,7 +169,7 @@ namespace Elements.Spatial
                 {
                     if (cellToSplit.PositionIsAtCellEdge(position))
                     {
-                        return;
+                        return; //swallow silently
                     }
                     var newDomains = cellToSplit.Domain.SplitAt(position);
                     var cellsToInsert = new List<Grid1d>
@@ -208,12 +208,12 @@ namespace Elements.Spatial
         public void SplitAtOffset(double position, bool fromEnd = false)
         {
             position = fromEnd ? Domain.Max - position : Domain.Min + position;
+            if (PositionIsAtCellEdge(position))
+            {
+                return; // this should be swallowed silently rather than left for Domain.Includes to handle.  
+            }
             if (!Domain.Includes(position))
             {
-                if (Domain.Max.ApproximatelyEquals(position) || Domain.Min.ApproximatelyEquals(position))
-                {
-                    return;
-                }
                 throw new Exception("Offset position was beyond the grid's domain.");
             }
             SplitAtPosition(position);
@@ -241,6 +241,10 @@ namespace Elements.Spatial
         /// <param name="n">Number of subdivisions</param>
         public void DivideByCount(int n)
         {
+            if (n <= 0)
+            {
+                throw new ArgumentException($"Unable to divide by {n}.");
+            }
             if (!IsSingleCell)
             {
                 throw new Exception("This grid already has subdivisions. Maybe you meant to select a subgrid to divide?");
@@ -259,6 +263,10 @@ namespace Elements.Spatial
         /// <param name="divisionMode">Whether to permit any size cell, or only larger or smaller cells by rounding up or down.</param>
         public void DivideByApproximateLength(double targetLength, EvenDivisionMode divisionMode = EvenDivisionMode.Nearest)
         {
+            if(targetLength <= Vector3.EPSILON)
+            {
+                throw new ArgumentException($"Unable to divide. Target Length {targetLength} is too small.");
+            }
             var numDivisions = Domain.Length / targetLength;
             int roundedDivisions;
             switch (divisionMode)
@@ -286,7 +294,11 @@ namespace Elements.Spatial
         {
             if (!Domain.Includes(position))
             {
-                throw new Exception("Position is outside of the grid extents");
+                throw new ArgumentException($"Position {position} is outside of the grid extents: {Domain}");
+            }
+            if (length < Vector3.EPSILON)
+            {
+                throw new ArgumentException($"Length {length} is smaller than tolerance.");
             }
 
             for (double p = position; Domain.Includes(p); p += length)
@@ -311,6 +323,10 @@ namespace Elements.Spatial
         /// <param name="sacrificialPanels">How many full length panels to sacrifice to make remainder panels longer.</param>
         public void DivideByFixedLength(double length, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd, int sacrificialPanels = 0)
         {
+            if (length <= Vector3.EPSILON)
+            {
+                throw new ArgumentException($"Unable to divide by length {length}: smaller than tolerance.");
+            }
             var lengthToFill = Domain.Length;
             var maxPanelCount = (int)Math.Floor(lengthToFill / length) - sacrificialPanels;
             if (maxPanelCount < 1) return;
@@ -386,6 +402,10 @@ namespace Elements.Spatial
         /// <param name="divisionMode">How to handle leftover/remainder length</param>
         public void DivideByPattern(IList<(string typeName, double length)> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
         {
+            if(lengthPattern.Any(p => p.length <= Vector3.EPSILON))
+            {
+                throw new ArgumentException("One or more of the pattern segments is too small.");
+            }
             //a list of all the segments that fit in the grid
             IList<(string typeName, double length)> patternSegments = new List<(string, double)>();
             switch (patternMode)
@@ -627,7 +647,7 @@ namespace Elements.Spatial
         /// <returns></returns>
         private bool PositionIsAtCellEdge(double pos)
         {
-            return pos.ApproximatelyEquals(Domain.Max) || pos.ApproximatelyEquals(Domain.Min);
+            return Domain.IsCloseToBoundary(pos);
         }
 
         #endregion
