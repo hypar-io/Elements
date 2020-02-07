@@ -47,9 +47,9 @@ namespace Elements.Geometry
                 c.Triangles.Add(this);
             }
 
-            var ab = (b.Position - a.Position).Normalized();
-            var bc = (c.Position - a.Position).Normalized();
-            this.Normal = ab.Cross(bc).Normalized();
+            var ab = (b.Position - a.Position).Unitized();
+            var bc = (c.Position - a.Position).Unitized();
+            this.Normal = ab.Cross(bc).Unitized();
         }
 
         [JsonConstructor]
@@ -72,9 +72,9 @@ namespace Elements.Geometry
             var b = vertices[1];
             var c = vertices[2];
 
-            var ab = (b.Position - a.Position).Normalized();
-            var bc = (c.Position - a.Position).Normalized();
-            this.Normal = ab.Cross(bc).Normalized();
+            var ab = (b.Position - a.Position).Unitized();
+            var bc = (c.Position - a.Position).Unitized();
+            this.Normal = ab.Cross(bc).Unitized();
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ Triangles:{_triangles.Count}";
                 {
                     avg += t.Normal;
                 }
-                v.Normal = avg / v.Triangles.Count;
+                v.Normal = (avg / v.Triangles.Count).Unitized();
             }
         }
 
@@ -367,7 +367,7 @@ Triangles:{_triangles.Count}";
             // Calculate the face normal
             var v1 = b.Position - a.Position;
             var v2 = c.Position - a.Position;
-            var n = v1.Cross(v2).Normalized();
+            var n = v1.Cross(v2).Unitized();
             if (Double.IsNaN(n.X) || Double.IsNaN(n.Y) || Double.IsNaN(n.Z))
             {
                 Debug.WriteLine("Degenerate triangle found.");
