@@ -169,11 +169,11 @@ namespace Elements.Geometry
         /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfVector(Vector3 vector)
         {
-            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, Vector3.Origin);
+            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, this.Origin);
             return new Vector3(
-                vector.X*m.XAxis.X + vector.Y*YAxis.X + vector.Z*ZAxis.X,
-                vector.X*m.XAxis.Y + vector.Y*YAxis.Y + vector.Z*ZAxis.Y,
-                vector.X*m.XAxis.Z + vector.Y*YAxis.Z + vector.Z*ZAxis.Z
+                vector.X*m.XAxis.X + vector.Y*YAxis.X + vector.Z*ZAxis.X + this.Origin.X,
+                vector.X*m.XAxis.Y + vector.Y*YAxis.Y + vector.Z*ZAxis.Y + this.Origin.Y,
+                vector.X*m.XAxis.Z + vector.Y*YAxis.Z + vector.Z*ZAxis.Z + this.Origin.Z
             );
         }
 
