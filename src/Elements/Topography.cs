@@ -96,9 +96,9 @@ namespace Elements
 
             for (var y = 0; y < this.RowWidth; y++)
             {
-                for ( var x = 0; x < this.RowWidth; x++)
+                for (var x = 0; x < this.RowWidth; x++)
                 {
-                    var ei = x +  y * this.RowWidth;
+                    var ei = x + y * this.RowWidth;
                     var el = this.Elevations[ei];
                     _minElevation = Math.Min(_minElevation, el);
                     _maxElevation = Math.Max(_maxElevation, el);
@@ -117,7 +117,7 @@ namespace Elements
                     var uv = new UV(u, v);
 
                     this._mesh.AddVertex(origin + new Vector3(x * this.CellWidth, y * this.CellHeight, el), uv: uv);
-                
+
                     if (y > 0 && x > 0)
                     {
                         var i = x + y * this.RowWidth;
@@ -157,7 +157,7 @@ namespace Elements
             Elements.Geometry.Vertex[] e1 = null;
             Elements.Geometry.Vertex[] e2 = null;
 
-            switch(edgeToAverage)
+            switch (edgeToAverage)
             {
                 case Units.CardinalDirection.North:
                     e1 = this.GetEdgeVertices(Units.CardinalDirection.North);
@@ -177,7 +177,7 @@ namespace Elements
                     break;
             }
 
-            for(var i = 0; i < e1.Length; i++)
+            for (var i = 0; i < e1.Length; i++)
             {
                 var pos = e1[i].Position.Average(e2[i].Position);
                 e1[i].Position = pos;
@@ -195,13 +195,13 @@ namespace Elements
             var range = Enumerable.Range(0, this.RowWidth);
             var start = 0;
             var increment = 1;
-            switch(direction)
+            switch (direction)
             {
                 case Units.CardinalDirection.North:
                     start = this.Mesh.Vertices.Count - this.RowWidth;
                     break;
                 case Units.CardinalDirection.South:
-                    start= 0;
+                    start = 0;
                     break;
                 case Units.CardinalDirection.East:
                     start = this.RowWidth - 1;
@@ -214,7 +214,7 @@ namespace Elements
                 default:
                     return null;
             }
-            return range.Select(i=>this.Mesh.Vertices[start + i * increment]).ToArray();
+            return range.Select(i => this.Mesh.Vertices[start + i * increment]).ToArray();
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace Elements
                 var area = t.Area();
                 if (area == 0.0 ||
                     double.IsNaN(area) ||
-                    area < Vector3.Epsilon ||
+                    area < Vector3.EPSILON ||
                     t.Normal.IsNaN())
                 {
                     this._mesh.Triangles.RemoveAt(i);
@@ -397,7 +397,7 @@ namespace Elements
                     //start inside
                     //end outside
                     //add intersection
-                    if(new Line(start, end).Intersects(p, out Vector3 result))
+                    if (new Line(start, end).Intersects(p, out Vector3 result))
                     {
                         output.Add(start);
                         output.Add(result);
@@ -412,7 +412,7 @@ namespace Elements
                     //start outside
                     //end inside
                     //add intersection
-                    if(new Line(start, end).Intersects(p, out Vector3 result))
+                    if (new Line(start, end).Intersects(p, out Vector3 result))
                     {
                         output.Add(result);
                     }

@@ -18,7 +18,7 @@ namespace Elements.Geometry.Tests
             this.GenerateIfc = false;
         }
 
-        [Fact, Trait("Category","Examples")]
+        [Fact, Trait("Category", "Examples")]
         public void PolygonConstruct()
         {
             this.Name = "Elements_Geometry_Polygon";
@@ -523,7 +523,7 @@ namespace Elements.Geometry.Tests
             var b = new Vector3(2, 5);
             var c = new Vector3(-3, 5);
 
-            var plinew = new Polygon(new[]{a,b,c});
+            var plinew = new Polygon(new[] { a, b, c });
             var offset = plinew.Offset(0.2);
 
             Assert.True(offset.Length == 1);
@@ -539,7 +539,7 @@ namespace Elements.Geometry.Tests
             var e = new Vector3(-5, 5);
             var f = new Vector3(-5, 0);
 
-            var plinew = new Polygon(new[]{a,b,c,d,e,f});
+            var plinew = new Polygon(new[] { a, b, c, d, e, f });
             var offset = plinew.Offset(-0.5);
             Assert.Equal(2, offset.Count());
         }
@@ -548,10 +548,10 @@ namespace Elements.Geometry.Tests
         public void Construct()
         {
             var a = new Vector3();
-            var b = new Vector3(1,0);
-            var c = new Vector3(1,1);
-            var d = new Vector3(0,1);
-            var p = new Polygon(new[]{a,b,c,d});
+            var b = new Vector3(1, 0);
+            var c = new Vector3(1, 1);
+            var d = new Vector3(0, 1);
+            var p = new Polygon(new[] { a, b, c, d });
             Assert.Equal(4, p.Segments().Count());
         }
 
@@ -561,14 +561,14 @@ namespace Elements.Geometry.Tests
             var a = Polygon.Rectangle(1.0, 1.0);
             Assert.Equal(1.0, a.Area());
 
-            var b = Polygon.Rectangle(2.0,2.0);
+            var b = Polygon.Rectangle(2.0, 2.0);
             Assert.Equal(4.0, b.Area());
 
             var p1 = Vector3.Origin;
             var p2 = Vector3.XAxis;
             var p3 = new Vector3(1.0, 1.0);
             var p4 = new Vector3(0.0, 1.0);
-            var pp = new Polygon(new[]{p1,p2,p3,p4});
+            var pp = new Polygon(new[] { p1, p2, p3, p4 });
             Assert.Equal(1.0, pp.Area());
         }
 
@@ -576,10 +576,10 @@ namespace Elements.Geometry.Tests
         public void Length()
         {
             var a = new Vector3();
-            var b = new Vector3(1,0);
-            var c = new Vector3(1,1);
-            var d = new Vector3(0,1);
-            var p = new Polygon(new[]{a,b,c,d});
+            var b = new Vector3(1, 0);
+            var c = new Vector3(1, 1);
+            var d = new Vector3(0, 1);
+            var p = new Polygon(new[] { a, b, c, d });
             Assert.Equal(4, p.Length());
         }
 
@@ -587,15 +587,15 @@ namespace Elements.Geometry.Tests
         public void PointAt()
         {
             var a = new Vector3();
-            var b = new Vector3(1,0);
-            var c = new Vector3(1,1);
-            var d = new Vector3(0,1);
-            var p = new Polygon(new[]{a,b,c,d});
+            var b = new Vector3(1, 0);
+            var c = new Vector3(1, 1);
+            var d = new Vector3(0, 1);
+            var p = new Polygon(new[] { a, b, c, d });
             Assert.Equal(4, p.Segments().Count());
             Assert.Equal(new Vector3(1.0, 1.0), p.PointAt(0.5));
 
-            var r = Polygon.Rectangle(2,2);
-            Assert.Equal(new Vector3(1,1,0), r.PointAt(0.5));
+            var r = Polygon.Rectangle(2, 2);
+            Assert.Equal(new Vector3(1, 1, 0), r.PointAt(0.5));
         }
 
         [Fact]
@@ -608,7 +608,7 @@ namespace Elements.Geometry.Tests
             var e = new Vector3(-5, 5);
             var f = new Vector3(-5, 0);
 
-            var plinew = new Polygon(new[]{a,b,c,d,e,f});
+            var plinew = new Polygon(new[] { a, b, c, d, e, f });
             var offset = plinew.Offset(-0.5);
             Assert.Equal(2, offset.Count());
         }
@@ -617,7 +617,7 @@ namespace Elements.Geometry.Tests
         public void SameVertices_ThrowsException()
         {
             var a = new Vector3();
-            Assert.Throws<ArgumentException>(()=>new Polygon(new[]{a,a,a}));
+            Assert.Throws<ArgumentException>(() => new Polygon(new[] { a, a, a }));
         }
 
         [Fact]
@@ -630,8 +630,8 @@ namespace Elements.Geometry.Tests
             Assert.Equal(a.Vertices.Reverse(), b.Vertices);
             var t = new Transform();
             var c = t.OfPolygon(a);
-            var l = new Line(Vector3.Origin, new Vector3(0.0,0.5,0.5));
-            var transforms = l.Frames(0.0,0.0);
+            var l = new Line(Vector3.Origin, new Vector3(0.0, 0.5, 0.5));
+            var transforms = l.Frames(0.0, 0.0);
 
             _output.WriteLine("Transforms:");
             _output.WriteLine(transforms[0].ToString());
@@ -640,7 +640,7 @@ namespace Elements.Geometry.Tests
 
             var start = transforms[0].OfPolygon(a);
             var end = transforms[1].OfPolygon(b);
-            
+
             _output.WriteLine("Polygons:");
             _output.WriteLine(start.ToString());
             _output.WriteLine(end.ToString());
@@ -664,9 +664,9 @@ namespace Elements.Geometry.Tests
         public void Planar()
         {
             var a = Vector3.Origin;
-            var b = new Vector3(5,0,0);
-            var c = new Vector3(5,0,5);
-            var p = new Polygon(new[]{a,b,c});
+            var b = new Vector3(5, 0, 0);
+            var c = new Vector3(5, 0, 5);
+            var p = new Polygon(new[] { a, b, c });
         }
 
         [Fact]
@@ -686,7 +686,7 @@ namespace Elements.Geometry.Tests
             }
             ";
             var polygon = JsonConvert.DeserializeObject<Polygon>(json);
-            
+
             // We've created a new Polygon, which will have a discriminator
             // because it was created using the JsonInheritanceConverter.
             var newJson = JsonConvert.SerializeObject(polygon);
@@ -719,6 +719,34 @@ namespace Elements.Geometry.Tests
             var poly3 = contour3.ToPolygon();
             var mass3 = new Mass(poly3, transform: t);
             Assert.Equal(shape3.Segments().Count() * 2, contour3.Count());
+        }
+
+       
+        [Fact]
+        public void PolygonIsAlmostEqualAfterBoolean()
+        {
+            var innerPolygon = new Polygon(new[]
+            {
+                new Vector3(-0.81453490602472578, 0.20473478280229102),
+                new Vector3(0.2454762730485458, 0.20473478280229102),
+                new Vector3(0.2454762730485458, 5.4378426037008651),
+                new Vector3(-0.81453490602472578, 5.4378426037008651)
+            });
+
+            var outerPolygon = new Polygon(new[]
+            {
+                new Vector3(-14.371519985751306, -4.8816304299427005),
+                new Vector3(-17.661873645682569, 9.2555712951713573),
+                new Vector3(12.965610421927806, 9.2555712951713573),
+                new Vector3(12.965610421927806, 3.5538269529982784),
+                new Vector3(6.4046991240848143, 3.5538269529982784),
+                new Vector3(1.3278034769444158, -4.8816304299427005)
+            });
+
+            var intersection = innerPolygon.Intersection(outerPolygon);
+
+            Assert.True(intersection[0].IsAlmostEqualTo(innerPolygon, 1 / Polyline.CLIPPER_SCALE));
+            //TODO: decide if clipper_scale should be adjusted to reflect global tolerance settings so that 1 / polyline.clipper_scale = vector3.epsilon.
         }
     }
 }

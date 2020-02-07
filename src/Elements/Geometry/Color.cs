@@ -45,5 +45,14 @@ namespace Elements.Geometry
         {
             return this.Red == other.Red && this.Blue == other.Blue && this.Green == other.Green && this.Alpha == other.Alpha;
         }
+
+        /// <summary>
+        /// Converts this color to a string.
+        /// </summary>
+        /// <returns>Returns a string representation of the form "R: r, G: g, B: b, A: a".</returns>
+        public override string ToString()
+        {
+            return $"R:{Red:0.00}, G:{Green:0.00}, B:{Blue:0.00}, A: {Alpha:0.00}";
+        }
     }
 }

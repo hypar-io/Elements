@@ -25,7 +25,7 @@ namespace Elements.Geometry
         public Line()
         {
             this.Start = Vector3.Origin;
-            this.End = new Vector3(1,0,0);
+            this.End = new Vector3(1, 0, 0);
         }
 
         /// <summary>
@@ -167,14 +167,14 @@ namespace Elements.Geometry
         {
             var a = Vector3.CCW(this.Start, this.End, l.Start) * Vector3.CCW(this.Start, this.End, l.End);
             var b = Vector3.CCW(l.Start, l.End, this.Start) * Vector3.CCW(l.Start, l.End, this.End);
-            if (IsAlmostZero(a) || a > Vector3.Epsilon) return false;
-            if (IsAlmostZero(b) || b > Vector3.Epsilon) return false;
+            if (IsAlmostZero(a) || a > Vector3.EPSILON) return false;
+            if (IsAlmostZero(b) || b > Vector3.EPSILON) return false;
             return true;
         }
 
         private bool IsAlmostZero(double a)
         {
-            return Math.Abs(a) < Vector3.Epsilon;
+            return Math.Abs(a) < Vector3.EPSILON;
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace Elements.Geometry
             }
             return lines;
         }
-        
+
 
         /// <summary>
         /// Divide the line into as many segments of the provided length as possible.
@@ -244,34 +244,34 @@ namespace Elements.Geometry
             var lines = new List<Line>();
 
             var localLength = this.Length();
-            if(localLength <= l)
+            if (localLength <= l)
             {
                 lines.Add(this);
-                return lines; 
+                return lines;
             }
 
-            var divs = (int)(localLength/l);
+            var divs = (int)(localLength / l);
             var span = divs * l;
-            var halfSpan = span/2;
+            var halfSpan = span / 2;
             var mid = this.PointAt(0.5);
             var dir = this.Direction();
             var start = mid - dir * halfSpan;
             var end = mid + dir * halfSpan;
-            if(!this.Start.IsAlmostEqualTo(start))
+            if (!this.Start.IsAlmostEqualTo(start))
             {
                 lines.Add(new Line(this.Start, start));
             }
-            for(var i=0; i<divs; i++)
+            for (var i = 0; i < divs; i++)
             {
                 var p1 = start + (i * l) * dir;
                 var p2 = p1 + dir * l;
                 lines.Add(new Line(p1, p2));
             }
-            if(!this.End.IsAlmostEqualTo(end))
+            if (!this.End.IsAlmostEqualTo(end))
             {
                 lines.Add(new Line(end, this.End));
             }
-        
+
             return lines;
         }
 
@@ -343,7 +343,7 @@ namespace Elements.Geometry
 
             return null;
         }
-        
+
         /// <summary>
         /// Extend this line to the trimming curve.
         /// </summary>
@@ -353,12 +353,12 @@ namespace Elements.Geometry
         {
             var d1 = this.Direction();
             var d2 = line.Direction();
-            
+
             // Extend the line and trim in one direction.
             var d3 = this.Start + d1 * 1000000;
             var temp = new Line(this.Start, d3);
             var trim = temp.TrimTo(line);
-            if(trim != null)
+            if (trim != null)
             {
                 return trim;
             }
@@ -384,10 +384,10 @@ namespace Elements.Geometry
             {
                 throw new Exception("The fillet could not be created. The lines are parallel");
             }
-            
+
             var r1 = new Ray(this.Start, d1);
             var r2 = new Ray(target.Start, d2);
-            if(!r1.Intersects(r2, out Vector3 result, true))
+            if (!r1.Intersects(r2, out Vector3 result, true))
             {
                 return null;
             }
@@ -398,11 +398,11 @@ namespace Elements.Geometry
             var newD2 = (target.PointAt(0.5) - result).Normalized();
 
             var theta = newD1.AngleTo(newD2) * Math.PI / 180.0;
-            var halfTheta = theta/2.0;
+            var halfTheta = theta / 2.0;
             var h = radius / Math.Sin(halfTheta);
             var centerVec = newD1.Average(newD2).Normalized();
             var arcCenter = result + centerVec * h;
-            
+
             // Find the closest points from the arc
             // center to the adjacent curves.
             var p1 = arcCenter.ClosestPointOn(this);
@@ -411,9 +411,9 @@ namespace Elements.Geometry
             // Find the angle of both segments relative to the fillet arc.
             // ATan2 assumes the origin, so correct the coordinates
             // by the offset of the center of the arc.
-            var angle1 = Math.Atan2(p1.Y - arcCenter.Y, p1.X - arcCenter.X) * 180.0/Math.PI;
-            var angle2 = Math.Atan2(p2.Y - arcCenter.Y, p2.X - arcCenter.X) * 180.0/Math.PI;
-            
+            var angle1 = Math.Atan2(p1.Y - arcCenter.Y, p1.X - arcCenter.X) * 180.0 / Math.PI;
+            var angle2 = Math.Atan2(p2.Y - arcCenter.Y, p2.X - arcCenter.X) * 180.0 / Math.PI;
+
             // ATan2 will provide negative angles in the "lower" quadrants
             // Ensure that these values are 180d -> 360d
             angle1 = (angle1 + 360) % 360;
@@ -431,7 +431,7 @@ namespace Elements.Geometry
             // Get the complimentary arc and choose
             // the shorter of the two arcs.
             var complement = arc.Complement();
-            if(arc.Length() < complement.Length())
+            if (arc.Length() < complement.Length())
             {
                 return arc;
             }
