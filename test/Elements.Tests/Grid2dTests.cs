@@ -134,8 +134,6 @@ namespace Elements.Tests
                 {"U Lines", uLines },
                 {"V Lines", vLines }
             };
-            var json = JsonConvert.SerializeObject(dict);
-            File.WriteAllText("/Users/andrewheumann/Desktop/Separators-2.json", json);
 
         }
 
@@ -169,8 +167,6 @@ namespace Elements.Tests
                 { "U", uLines },
                 { "V", vLines }
             };
-            var json = JsonConvert.SerializeObject(dict);
-            File.WriteAllText("/Users/andrewheumann/Desktop/Separators.json", json);
         }
     }
 }
