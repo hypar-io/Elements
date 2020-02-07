@@ -94,8 +94,8 @@ namespace Elements.Geometry
                 // Project up onto the ortho plane
                 var p = new Plane(origin, z);
                 var test = Vector3.ZAxis.Project(p);
-                x = test.Cross(z).Normalized();
-                y = x.Cross(z.Negate()).Normalized(); 
+                x = test.Cross(z).Unitized();
+                y = x.Cross(z.Negate()).Unitized(); 
             }
             
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
@@ -121,9 +121,9 @@ namespace Elements.Geometry
         /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis, double rotation = 0.0)
         {
-            var x = xAxis.Normalized();
-            var z = zAxis.Normalized();
-            var y = z.Cross(x).Normalized();
+            var x = xAxis.Unitized();
+            var z = zAxis.Unitized();
+            var y = z.Cross(x).Unitized();
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
         }

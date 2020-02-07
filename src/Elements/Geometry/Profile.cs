@@ -122,15 +122,15 @@ namespace Elements.Geometry
         private Transform ComputeTransform()
         {
             var v = this.Perimeter.Vertices.ToList();
-            var x = (v[0] - v[1]).Normalized();
+            var x = (v[0] - v[1]).Unitized();
             var i = 2;
-            var b = (v[i] - v[1]).Normalized();
+            var b = (v[i] - v[1]).Unitized();
 
             // Solve for parallel vectors
             while (b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negate()))
             {
                 i++;
-                b = (v[i] - v[1]).Normalized();
+                b = (v[i] - v[1]).Unitized();
             }
             var z = x.Cross(b);
             return new Transform(v[0], x, z);

@@ -129,7 +129,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Return a new vector which is the unitized version of this vector.
         /// </summary>
-        public Vector3 Normalized()
+        public Vector3 Unitized()
         {
             var length = Length();
             if (length == 0)
@@ -367,7 +367,7 @@ namespace Elements.Geometry
         /// <returns>A point on the plane.</returns>
         public Vector3 ProjectAlong(Vector3 v, Plane p)
         {
-            var x = ((p.Origin - this).Dot(p.Normal)) / p.Normal.Dot(v.Normalized());
+            var x = ((p.Origin - this).Dot(p.Normal)) / p.Normal.Dot(v.Unitized());
             return this + x * v;
         }
 
@@ -505,7 +505,7 @@ namespace Elements.Geometry
         {
             var a = new Vector3(points[1].X - points[0].X,
                                 points[1].Y - points[0].Y,
-                                points[1].Z - points[0].Z).Normalized();
+                                points[1].Z - points[0].Z).Unitized();
 
             // We need to search for a second vector that is not colinear 
             // with the first. If all the vectors are tried, and one isn't
@@ -516,7 +516,7 @@ namespace Elements.Geometry
             {
                 b = new Vector3(points[i].X - points[1].X,
                             points[i].Y - points[1].Y,
-                            points[i].Z - points[1].Z).Normalized();
+                            points[i].Z - points[1].Z).Unitized();
                 var dot = b.Dot(a);
                 if(dot > -1 && dot < 1)
                 {
@@ -560,7 +560,7 @@ namespace Elements.Geometry
             for (var i = 0; i < shrink.Length; i++)
             {
                 var p = points[i];
-                shrink[i] = p + (avg - p).Normalized() * distance;
+                shrink[i] = p + (avg - p).Unitized() * distance;
             }
             return shrink;
         }
