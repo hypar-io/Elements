@@ -13,7 +13,7 @@
             "$ref": "https://hypar.io/Schemas/Geometry/Polygon.json"
         },
         "Voids": {
-            "type": ["null","array"],
+            "type": "array",
             "description": "A collection of Polygons representing voids in the profile.",
             "items": {
                 "$ref": "https://hypar.io/Schemas/Geometry/Polygon.json"
