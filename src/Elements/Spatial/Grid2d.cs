@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Geometry.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements.Spatial
 {
@@ -148,7 +150,7 @@ namespace Elements.Spatial
         /// <param name="points">The points at which to split</param>
         public void SplitAtPoints(IEnumerable<Vector3> points)
         {
-            foreach(var point in points)
+            foreach (var point in points)
             {
                 SplitAtPoint(point);
             }
@@ -160,7 +162,7 @@ namespace Elements.Spatial
         /// <param name="positions">The positions at which to split, with X = U and Y = V. </param>
         public void SplitAtPositions(IEnumerable<Vector3> positions)
         {
-            foreach(var pos in positions)
+            foreach (var pos in positions)
             {
                 SplitAtPosition(pos);
             }
@@ -298,12 +300,55 @@ namespace Elements.Spatial
         /// <summary>
         /// A flat list of all the top-level cells in this grid. To get child cells as well, use Grid2d.GetCells() instead.
         /// </summary>
+        [JsonIgnoreAttribute]
         public List<Grid2d> CellsFlat
         {
             get
             {
+                if (Cells == null) return new List<Grid2d>();
                 return Cells.SelectMany(c => c).ToList();
             }
+        }
+
+        /// <summary>
+        /// Get the top-level lines separating cells from one another.
+        /// </summary>
+        /// <param name="direction">The grid direction in which you want to get separators. </param>
+        /// <param name="trimmed">If true, lines will be trimmed by the boundary, if present. </param>
+        /// <returns>The lines between cells, running parallel to the grid direction selected. </returns>
+        public List<ICurve> GetCellSeparators(GridDirection direction)
+        {
+            var lines = new List<ICurve>();
+            var points = new List<Vector3>();
+            Curve otherDirection = null;
+            //TODO: make this more robust to other base curves. add support for arbitrary base curves to grid2d axes.
+            switch (direction)
+            {
+                case GridDirection.U:
+                    points = V.GetCellSeparators(true).Select(p => new Vector3(U.Domain.Min, p.X, 0)).ToList();
+                    otherDirection = new Line(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Min));
+                    break;
+                case GridDirection.V:
+                    points = U.GetCellSeparators(true).Select(p => new Vector3(p.X, V.Domain.Min, 0)).ToList(); ;
+                    otherDirection = new Line(new Vector3(U.Domain.Min, V.Domain.Min, 0), new Vector3(U.Domain.Min, V.Domain.Max, 0));
+                    break;
+            }
+            if (!(otherDirection is Line))
+            {
+                throw new Exception("Only grids with straight-line axes are currently supported.");
+            }
+            var originVec = otherDirection.PointAt(0);
+            foreach (var point in points)
+            {
+                var displacement = new Transform(point - originVec);
+                lines.Add(fromGrid.OfLine(displacement.OfLine(otherDirection as Line)));
+                //TODO: support other curve types.
+            }
+
+            //TODO: add support for trimmed lines
+
+            return lines;
+
         }
 
         /// <summary>
@@ -312,6 +357,10 @@ namespace Elements.Spatial
         /// <returns>A list of all bottom-level cells in the grid.</returns>
         public List<Grid2d> GetCells()
         {
+            if(IsSingleCell)
+            {
+                return new List<Grid2d> { this };
+            }
             List<Grid2d> resultCells = new List<Grid2d>();
             foreach (var cell in Cells.SelectMany(c => c))
             {
@@ -390,7 +439,6 @@ namespace Elements.Spatial
             U.TopLevelGridChange += TopLevelGridChange;
             V = new Grid1d(vDomain);
             V.TopLevelGridChange += TopLevelGridChange;
-
         }
 
         /// <summary>
@@ -400,6 +448,10 @@ namespace Elements.Spatial
         /// <param name="e"></param>
         private void TopLevelGridChange(Grid1d sender, EventArgs e)
         {
+            if(CellsFlat.Any(c => !c.IsSingleCell))
+            {
+                throw new Exception("You are trying to modify the U / V dimensions of a grid that already has subdivisions. This is not allowed.");
+            }
             Cells = new List<List<Grid2d>>();
             var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.Cells;
             var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.Cells;
@@ -445,5 +497,11 @@ namespace Elements.Spatial
 
         #endregion
 
+    }
+
+    public enum GridDirection
+    {
+        U,
+        V
     }
 }

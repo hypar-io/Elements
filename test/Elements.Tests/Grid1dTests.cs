@@ -69,6 +69,22 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void GetSeparators()
+        {
+            var grid = new Grid1d(100);
+            grid.DivideByCount(5);
+            var pts = grid.GetCellSeparators();
+            Assert.Equal(6, pts.Count);
+            Assert.Equal(pts[0], new Vector3(0, 0, 0));
+            Assert.Equal(pts[1], new Vector3(20, 0, 0));
+            Assert.Equal(pts[5], new Vector3(100, 0, 0));
+
+            grid[1].DivideByCount(3);
+            var pts2 = grid.GetCellSeparators(true);
+            Assert.Equal(8, pts2.Count);
+        }
+
+        [Fact]
         public void GridFromCurves()
         {
             var a = Vector3.Origin;

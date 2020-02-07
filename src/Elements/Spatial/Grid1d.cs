@@ -583,10 +583,28 @@ namespace Elements.Spatial
         }
 
 
-        private List<double> DomainsToSequence()
+        private List<double> DomainsToSequence(bool recursive = false)
         {
-            //assumes that cells are always properly ordered...
-            return Cells.Select(c => c.Domain.Min).Union(new[] { Cells.Last().Domain.Max }).ToList();
+            if(IsSingleCell)
+            {
+                return new List<double> { Domain.Min, Domain.Max };
+            }
+            var cells = recursive ? GetCells() : Cells;
+            return cells.Select(c => c.Domain.Min).Union(new[] { Cells.Last().Domain.Max }).ToList();
+        }
+
+
+        /// <summary>
+        /// Get the points at the ends and in-between all cells. 
+        /// </summary>
+        /// <param name="recursive">If true, separators will be retrieved from child cells as well.</param>
+        /// <returns>A list of Vector3d points representing the boundaries between cells.</returns>
+        public List<Vector3> GetCellSeparators(bool recursive = false)
+        {
+            var values = DomainsToSequence(recursive);
+            var t = values.Select(v => v.MapFromDomain(curveDomain));
+            var pts = t.Select(t0 => curve.TransformAt(t0).Origin).ToList();
+            return pts;
         }
 
         /// <summary>

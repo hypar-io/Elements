@@ -45,7 +45,7 @@ namespace Elements.Tests
                     {"BaseRect", c.GetCellGeometry() },
                     {"IsTrimmed", c.IsTrimmed()}
                 }
-            ); 
+            );
             Assert.Equal(87, trimmedCells.Count());
             Assert.Equal(18, trimmedCells.Count(c => (bool)c["IsTrimmed"]));
         }
@@ -97,7 +97,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void NestedGridFromPolygons()
+        public void SeparatorsFromNestedGridFromPolygons()
         {
             var a = new Vector3(0.03, 5.08);
             var b = new Vector3(4.28, 9.80);
@@ -115,8 +115,28 @@ namespace Elements.Tests
 
             var polygon2 = new Polygon(new[] { g, h, i, j });
 
+            var orientation = new Transform();
+            orientation.Rotate(Vector3.ZAxis, 15);
 
-            var grid = new Grid2d(new[] { polygon, polygon2 });
+            var grid = new Grid2d(new[] { polygon, polygon2 }, orientation);
+            grid.U.DivideByCount(3);
+            grid.V.SplitAtParameter(0.5);
+            grid[1, 0].V.DivideByCount(5);
+            var cells = grid.GetCells();
+            var geo = cells.Select(cl => cl.GetTrimmedCellGeometry());
+            var types = cells.Select(cl => cl.Type);
+            var trimmed = cells.Select(cl => cl.IsTrimmed());
+            var uLines = grid.GetCellSeparators(GridDirection.U);
+            var vLines = grid.GetCellSeparators(GridDirection.V);
+            var dict = new Dictionary<string, object>
+            {
+                {"Cell Geometry", geo },
+                {"U Lines", uLines },
+                {"V Lines", vLines }
+            };
+            var json = JsonConvert.SerializeObject(dict);
+            File.WriteAllText("/Users/andrewheumann/Desktop/Separators-2.json", json);
+
         }
 
         [Fact]
@@ -134,6 +154,23 @@ namespace Elements.Tests
         public void InvalidSourceDomain()
         {
             var ex = Assert.ThrowsAny<Exception>(() => new Grid2d(0, 5));
+        }
+
+        [Fact]
+        public void GetSeparators()
+        {
+            var grid = new Grid2d(20, 50);
+            grid.U.DivideByCount(5);
+            grid.V.DivideByFixedLength(8);
+            var uLines = grid.GetCellSeparators(GridDirection.U);
+            var vLines = grid.GetCellSeparators(GridDirection.V);
+            var dict = new Dictionary<string, object>
+            {
+                { "U", uLines },
+                { "V", vLines }
+            };
+            var json = JsonConvert.SerializeObject(dict);
+            File.WriteAllText("/Users/andrewheumann/Desktop/Separators.json", json);
         }
     }
 }
