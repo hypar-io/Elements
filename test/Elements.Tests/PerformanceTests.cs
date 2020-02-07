@@ -11,6 +11,7 @@ namespace Elements.Tests
         public void GlTFWriteTest()
         {
             this.Name = "Performance_Edges";
+            this.GenerateIfc = false;
 
             var sw = new Stopwatch();
             sw.Start();
