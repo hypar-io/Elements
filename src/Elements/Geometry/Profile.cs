@@ -7,7 +7,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public partial class Profile : Element
+    public partial class Profile : Element, IEquatable<Profile>
     {
         /// <summary>
         /// Construct a profile.
@@ -151,6 +151,26 @@ namespace Elements.Geometry
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Is this profile equal to the provided profile?
+        /// </summary>
+        /// <param name="other">The other profile.</param>
+        public bool Equals(Profile other)
+        {
+            if(this.Voids.Count != other.Voids.Count)
+            {
+                return false;
+            }
+            for(var i=0; i<this.Voids.Count; i++)
+            {
+                if(!this.Voids[i].Equals(other.Voids[i]))
+                {
+                    return false;
+                }
+            }
+            return this.Perimeter.Equals(other.Perimeter);
         }
     }
 }

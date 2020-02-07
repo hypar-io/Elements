@@ -12,7 +12,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../test/Elements.Tests/PolylineTests.cs?name=example)]
     /// </example>
-    public partial class Polyline : ICurve
+    public partial class Polyline : ICurve, IEquatable<Polyline>
     {
         /// <summary>
         /// Scale used during clipper operations.
@@ -395,6 +395,27 @@ namespace Elements.Geometry
                 result[i] = solution[i].ToPolygon();
             }
             return result;
+        }
+
+        /// <summary>
+        /// Does this polyline equal the provided polyline?
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Polyline other)
+        {
+            if(this.Vertices.Count != other.Vertices.Count)
+            {
+                return false;
+            }
+            for(var i=0; i<Vertices.Count; i++)
+            {
+                if(!this.Vertices[i].Equals(other.Vertices[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
