@@ -314,7 +314,6 @@ namespace Elements.Spatial
         /// Get the top-level lines separating cells from one another.
         /// </summary>
         /// <param name="direction">The grid direction in which you want to get separators. </param>
-        /// <param name="trimmed">If true, lines will be trimmed by the boundary, if present. </param>
         /// <returns>The lines between cells, running parallel to the grid direction selected. </returns>
         public List<ICurve> GetCellSeparators(GridDirection direction)
         {
@@ -499,9 +498,18 @@ namespace Elements.Spatial
 
     }
 
+    /// <summary>
+    /// A direction/dimension on a 2d grid.
+    /// </summary>
     public enum GridDirection
     {
+        /// <summary>
+        /// The U Direction
+        /// </summary>
         U,
+        /// <summary>
+        /// The V Direction
+        /// </summary>
         V
     }
 }
