@@ -100,6 +100,9 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
@@ -139,13 +142,13 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Opening__ctor_" data-uid="Elements.Opening.#ctor*"></a>
-  <h4 id="Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform)">Opening(Polygon, Double, Double, Transform)</h4>
+  <h4 id="Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)">Opening(Polygon, Double, Double, Transform, Boolean)</h4>
   <div class="markdown level1 summary"><p>Create a polygonal opening.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Opening(Polygon perimeter, double x = 0, double y = 0, Transform transform = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Opening(Polygon perimeter, double x = 0, double y = 0, Transform transform = null, bool isElementDefinition = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -181,16 +184,22 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
         <td><p>The opening's transform.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <a id="Elements_Opening__ctor_" data-uid="Elements.Opening.#ctor*"></a>
-  <h4 id="Elements_Opening__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)">Opening(Profile, Double, Transform, Representation, Guid, String)</h4>
+  <h4 id="Elements_Opening__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Opening(Profile, Double, Transform, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create an opening.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Opening(Profile profile, double depth, Transform transform = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Opening(Profile profile, double depth, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -227,6 +236,12 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
 </td>
       </tr>
       <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
+</td>
+      </tr>
+      <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the opening.</p>
@@ -241,13 +256,13 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
     </tbody>
   </table>
   <a id="Elements_Opening__ctor_" data-uid="Elements.Opening.#ctor*"></a>
-  <h4 id="Elements_Opening__ctor_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Transform_" data-uid="Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform)">Opening(Double, Double, Double, Double, Transform)</h4>
+  <h4 id="Elements_Opening__ctor_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_" data-uid="Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)">Opening(Double, Double, Double, Double, Transform, Boolean)</h4>
   <div class="markdown level1 summary"><p>Create a rectangular opening.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Opening(double x, double y, double width, double height, Transform transform = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Opening(double x, double y, double width, double height, Transform transform = null, bool isElementDefinition = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -287,6 +302,12 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td><span class="parametername">transform</span></td>
         <td><p>The opening's transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
 </td>
       </tr>
     </tbody>

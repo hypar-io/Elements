@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5
+### Added
+- `GeometricElement.IsElementDefinition`
+
 ## 0.4.4
 ### Added
 - `Contour`

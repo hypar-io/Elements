@@ -30,6 +30,7 @@ namespace Elements
         /// <param name="material">The material of the wall.</param>
         /// <param name="transform">An option transform for the wall.</param>
         /// <param name="representation">The wall's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the wall.</param>
         /// <param name="name">The name of the wall.</param>
         [JsonConstructor]
@@ -38,10 +39,12 @@ namespace Elements
                       Material material = null,
                       Transform transform = null,
                       Representation representation = null,
+                      bool isElementDefinition = false,
                       Guid id = default(Guid),
                       string name = null) : base(transform != null ? transform : new Transform(),
                                                  material != null ? material : BuiltInMaterials.Concrete,
                                                  representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                 isElementDefinition,
                                                  id != default(Guid) ? id : Guid.NewGuid(),
                                                  name)
         {
@@ -71,19 +74,34 @@ namespace Elements
         /// <param name="transform"></param>
         /// <param name="material"></param>
         /// <param name="representation"></param>
-        /// <returns></returns>
-        protected Wall(Transform transform, Material material, Representation representation, Guid id, string name) : base(transform, material, representation, id, name){}
+        /// <param name="isElementDefinition">Is this an element definition?</param>
+        protected Wall(Transform transform,
+                       Material material,
+                       Representation representation,
+                       bool isElementDefinition = false,
+                       Guid id = default(Guid),
+                       string name = null) : base(transform,
+                                           material,
+                                           representation,
+                                           isElementDefinition,
+                                           id == default(Guid) ? Guid.NewGuid() : id,
+                                           name)
+        {}
 
         /// <summary>
         /// Construct a wall from geometry.
         /// </summary>
         /// <param name="geometry">The geometry of the wall.</param>
         /// <param name="transform">The wall's Transform.</param>
-        internal Wall(Solid geometry, Transform transform = null): base(transform != null ? transform : new Transform(),
-                                                                        BuiltInMaterials.Default,
-                                                                        new Representation(new List<SolidOperation>()),
-                                                                        Guid.NewGuid(),
-                                                                        null)
+        /// <param name="isElementDefinition">Is this an element definition?</param>
+        internal Wall(Solid geometry,
+                      Transform transform = null,
+                      bool isElementDefinition = false) : base(transform != null ? transform : new Transform(),
+                                                         BuiltInMaterials.Default,
+                                                         new Representation(new List<SolidOperation>()),
+                                                         isElementDefinition,
+                                                         Guid.NewGuid(),
+                                                         null)
         {
             if (geometry == null)
             {

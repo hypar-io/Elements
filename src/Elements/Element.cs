@@ -13,5 +13,7 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.WideFlangeProfile", typeof(Elements.Geometry.Profiles.WideFlangeProfile))]
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.HSSPipeProfile", typeof(Elements.Geometry.Profiles.HSSPipeProfile))]
     [JsonInheritanceAttribute("Elements.ElementInstance", typeof(Elements.ElementInstance))]
-    public abstract partial class Element{}
+    public abstract partial class Element
+    {
+    }
 }

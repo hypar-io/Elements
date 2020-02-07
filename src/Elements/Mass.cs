@@ -42,6 +42,7 @@ namespace Elements
         /// <param name="material">The mass' material. The default is the built in mass material.</param>
         /// <param name="transform">The mass' transform.</param>
         /// <param name="representation">The mass' representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the mass.</param>
         /// <param name="name">The name of the mass.</param>
         public Mass(Profile profile,
@@ -49,10 +50,12 @@ namespace Elements
                     Material material = null,
                     Transform transform = null,
                     Representation representation = null,
+                    bool isElementDefinition = false,
                     Guid id = default(Guid),
                     string name = null) : base(transform != null ? transform : new Transform(),
                                                material != null ? material : BuiltInMaterials.Mass,
                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                               isElementDefinition,
                                                id != default(Guid) ? id : Guid.NewGuid(),
                                                name)
         {

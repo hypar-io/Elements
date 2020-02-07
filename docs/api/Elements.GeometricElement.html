@@ -135,12 +135,12 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_GeometricElement__ctor_" data-uid="Elements.GeometricElement.#ctor*"></a>
-  <h4 id="Elements_GeometricElement__ctor_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.GeometricElement.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)">GeometricElement(Transform, Material, Representation, Guid, String)</h4>
+  <h4 id="Elements_GeometricElement__ctor_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.GeometricElement.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">GeometricElement(Transform, Material, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GeometricElement(Transform transform, Material material, Representation representation, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public GeometricElement(Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -168,6 +168,11 @@
         <td></td>
       </tr>
       <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td></td>
+      </tr>
+      <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td></td>
@@ -181,6 +186,30 @@
   </table>
   <h3 id="properties">Properties
   </h3>
+  <a id="Elements_GeometricElement_IsElementDefinition_" data-uid="Elements.GeometricElement.IsElementDefinition*"></a>
+  <h4 id="Elements_GeometricElement_IsElementDefinition" data-uid="Elements.GeometricElement.IsElementDefinition">IsElementDefinition</h4>
+  <div class="markdown level1 summary"><p>When true, this element will act as the base defintion for element instances, and will not appear in visual output.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsElementDefinition { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_GeometricElement_Material_" data-uid="Elements.GeometricElement.Material*"></a>
   <h4 id="Elements_GeometricElement_Material" data-uid="Elements.GeometricElement.Material">Material</h4>
   <div class="markdown level1 summary"><p>The element's material.</p>
@@ -258,7 +287,7 @@
   <a id="Elements_GeometricElement_CreateInstance_" data-uid="Elements.GeometricElement.CreateInstance*"></a>
   <h4 id="Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_" data-uid="Elements.GeometricElement.CreateInstance(Elements.Geometry.Transform,System.String)">CreateInstance(Transform, String)</h4>
   <div class="markdown level1 summary"><p>Create an instance of this element.
-Instances will point to the same</p>
+Instances will point to the same instance of an element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -278,12 +307,14 @@ Instances will point to the same</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td><span class="parametername">transform</span></td>
-        <td></td>
+        <td><p>The transform for this element instance.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td></td>
+        <td><p>The name of this element instance.</p>
+</td>
       </tr>
     </tbody>
   </table>

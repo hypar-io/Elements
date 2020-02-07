@@ -225,6 +225,9 @@ var panel = new Panel(new Polygon(new []{a,b,c,d}), BuiltInMaterials.Glass);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
@@ -264,13 +267,13 @@ var panel = new Panel(new Polygon(new []{a,b,c,d}), BuiltInMaterials.Glass);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Panel__ctor_" data-uid="Elements.Panel.#ctor*"></a>
-  <h4 id="Elements_Panel__ctor_Elements_Geometry_Polygon_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)">Panel(Polygon, Material, Transform, Representation, Guid, String)</h4>
+  <h4 id="Elements_Panel__ctor_Elements_Geometry_Polygon_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Panel(Polygon, Material, Transform, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a panel.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Panel(Polygon perimeter, Material material = null, Transform transform = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Panel(Polygon perimeter, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -304,6 +307,12 @@ var panel = new Panel(new Polygon(new []{a,b,c,d}), BuiltInMaterials.Glass);
         <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
         <td><span class="parametername">representation</span></td>
         <td><p>The panel's representation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
 </td>
       </tr>
       <tr>

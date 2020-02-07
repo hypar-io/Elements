@@ -21,6 +21,11 @@
             "description": "The element's representation.",
             "$ref": "https://hypar.io/Schemas/Geometry/Representation.json"
         },
+        "IsElementDefinition": {
+            "description": "When true, this element will act as the base defintion for element instances, and will not appear in visual output.",
+            "type": "boolean",
+            "default": false
+        },
         "discriminator": {
             "type": "string"
         }
