@@ -34,6 +34,7 @@ namespace Elements
         /// <param name="material">The space's material.</param>
         /// <param name="transform">The space's transform.</param>
         /// <param name="representation">The space's represenation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
         /// <exception>Thrown when the height is less than or equal to 0.0.</exception>
@@ -43,10 +44,12 @@ namespace Elements
                      Material material = null,
                      Transform transform = null,
                      Representation representation = null,
+                     bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) : base(transform = transform != null ? transform : new Transform(),
                                                 material = material != null ? material : BuiltInMaterials.Mass,
                                                 representation = representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                isElementDefinition,
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
         {
@@ -71,15 +74,18 @@ namespace Elements
         /// <param name="geometry">The solid which will be used to define the space.</param>
         /// <param name="transform">The transform of the space.</param>
         /// <param name="material">The space's material.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
         internal Space(Solid geometry,
                        Transform transform = null,
                        Material material = null,
+                       bool isElementDefinition = false,
                        Guid id = default(Guid),
                        string name = null) : base(transform != null ? transform : new Transform(),
                                                   material != null ? material : BuiltInMaterials.Mass,
                                                   new Representation(new List<SolidOperation>()),
+                                                  isElementDefinition,
                                                   id != default(Guid) ? id : Guid.NewGuid(),
                                                   name)
         {

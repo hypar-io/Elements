@@ -19,6 +19,7 @@ namespace Elements
         /// <param name="endSetback">The setback of the brace's geometry at the end.</param>
         /// <param name="rotation">An optional rotation of the beam's profile around its axis.</param>
         /// <param name="transform">The brace's transform.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The brace's id.</param>
         /// <param name="name">The brace's name.</param>
         public Brace(Curve curve,
@@ -28,8 +29,20 @@ namespace Elements
                      double endSetback = 0.0,
                      double rotation = 0.0,
                      Transform transform = null,
+                     bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) 
-            : base(curve, profile, material, startSetback, endSetback, rotation, transform, null, id, name){}
+            : base(curve,
+                   profile,
+                   material,
+                   startSetback,
+                   endSetback,
+                   rotation,
+                   transform,
+                   null,
+                   isElementDefinition,
+                   id,
+                   name)
+        {}
     }
 }

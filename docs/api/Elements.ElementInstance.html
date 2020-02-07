@@ -204,7 +204,7 @@ individual ids and transforms.</p>
 var profile = new Profile(Polygon.Rectangle(1.0, 1.0));
 var material = new Material(&quot;yellow&quot;, Colors.Yellow);
 var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
-var testUserElement = new TestUserElement(line, profile, material);
+var testUserElement = new TestUserElement(line, profile, material, true);
 
 // Create instances of that element
 // with varied transforms.
@@ -275,7 +275,7 @@ for (var x = 0.0; x &lt; 50; x += 1.5)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ElementInstance(GeometricElement parent, Transform transform, string name = null, Guid id = default(Guid))</code></pre>
+    <pre><code class="lang-csharp hljs">public ElementInstance(GeometricElement baseDefinition, Transform transform, string name = null, Guid id = default(Guid))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -289,7 +289,7 @@ for (var x = 0.0; x &lt; 50; x += 1.5)
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></td>
-        <td><span class="parametername">parent</span></td>
+        <td><span class="parametername">baseDefinition</span></td>
         <td><p>The definition from which this instance is derived.</p>
 </td>
       </tr>
@@ -315,14 +315,14 @@ for (var x = 0.0; x &lt; 50; x += 1.5)
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_ElementInstance_Parent_" data-uid="Elements.ElementInstance.Parent*"></a>
-  <h4 id="Elements_ElementInstance_Parent" data-uid="Elements.ElementInstance.Parent">Parent</h4>
+  <a id="Elements_ElementInstance_BaseDefinition_" data-uid="Elements.ElementInstance.BaseDefinition*"></a>
+  <h4 id="Elements_ElementInstance_BaseDefinition" data-uid="Elements.ElementInstance.BaseDefinition">BaseDefinition</h4>
   <div class="markdown level1 summary"><p>The element from which this instance is derived.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GeometricElement Parent { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public GeometricElement BaseDefinition { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

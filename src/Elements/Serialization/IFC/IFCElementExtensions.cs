@@ -17,9 +17,7 @@ namespace Elements.Serialization.IFC
         internal static List<IfcProduct> ToIfcProducts(this Element e,
                                                        IfcRepresentationContext context,
                                                        Document doc,
-                                                       Dictionary<string, List<IfcStyleAssignmentSelect>> styleAssignments,
-                                                       Dictionary<string, IfcMaterial> materials,
-                                                       Dictionary<string, IfcPresentationStyleAssignment> presentationStyleAssignments)
+                                                       Dictionary<string, List<IfcStyleAssignmentSelect>> styleAssignments)
         {
             var products = new List<IfcProduct>();
 
@@ -34,7 +32,7 @@ namespace Elements.Serialization.IFC
                 // and the id and use those to uniquely position and 
                 // identify the element.
                 var instance = (ElementInstance)e;
-                geoElement = instance.Parent;
+                geoElement = instance.BaseDefinition;
                 id = instance.Id;
                 trans = instance.Transform;
             }
@@ -50,8 +48,6 @@ namespace Elements.Serialization.IFC
             
             var localPlacement = trans.ToIfcLocalPlacement(doc);
             doc.AddEntity(localPlacement);
-            
-            var styleData = styleAssignments[geoElement.Material.Name];
 
             var geoms = new List<IfcRepresentationItem>();
 
@@ -94,17 +90,6 @@ namespace Elements.Serialization.IFC
                     {
                         throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
                     }
-
-                    // Attach the styled item.
-                    var styledItem = new IfcStyledItem(geom, styleData, null);
-                    doc.AddEntity(styledItem);
-                    geom.StyledByItem = new List<IfcStyledItem>(){styledItem};
-
-                    // Attach the styled item by way of a presentation style
-                    // This is deprecated.
-                    // var styledItem2 =new IfcStyledItem(geom, new List<IfcStyleAssignmentSelect>(){new IfcStyleAssignmentSelect(presentationStyleAssignments[geoElement.Material.Name])}, null);
-                    // doc.AddEntity(styledItem2);
-
                     doc.AddEntity(geom);
                     geoms.Add(geom);
                 }
@@ -144,10 +129,6 @@ namespace Elements.Serialization.IFC
             products.Add(product);
             doc.AddEntity(product);
 
-            // Attach the material to the product
-            var matRel = new IfcRelAssociatesMaterial(IfcGuid.ToIfcGuid(Guid.NewGuid()), new List<IfcDefinitionSelect>(){new IfcDefinitionSelect(product)}, new IfcMaterialSelect(materials[geoElement.Material.Name]));
-            doc.AddEntity(matRel);
-
             var ifcOpenings = doc.AllEntities.Where(ent=>ent.GetType() == typeof(IfcOpeningElement)).Cast<IfcOpeningElement>();
 
             // If the element has openings, make opening relationships in
@@ -168,6 +149,13 @@ namespace Elements.Serialization.IFC
                     }
                 }
             }
+
+            foreach(var geom in geoms)
+            {
+                var styledItem = new IfcStyledItem(geom, styleAssignments[geoElement.Material.Name], null);
+                doc.AddEntity(styledItem);
+            }
+
             return products;
         }
 
@@ -430,7 +418,7 @@ namespace Elements.Serialization.IFC
                                                     localPlacement,
                                                     shape,
                                                     null,
-                                                    IfcBuildingElementProxyTypeEnum.NOTDEFINED);
+                                                    IfcBuildingElementProxyTypeEnum.ELEMENT);
             return proxy;
         }
         

@@ -239,6 +239,9 @@ wall.Openings.AddRange(openings);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
@@ -278,13 +281,13 @@ wall.Openings.AddRange(openings);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_StandardWall__ctor_" data-uid="Elements.StandardWall.#ctor*"></a>
-  <h4 id="Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_" data-uid="Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)">StandardWall(Line, Double, Double, Material, Transform, Representation, Guid, String)</h4>
+  <h4 id="Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">StandardWall(Line, Double, Double, Material, Transform, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a wall along a line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public StandardWall(Line centerLine, double thickness, double height, Material material = null, Transform transform = null, Representation representation = null, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public StandardWall(Line centerLine, double thickness, double height, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -331,6 +334,12 @@ This transform will be concatenated to the transform created to describe the wal
         <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
         <td><span class="parametername">representation</span></td>
         <td><p>The wall's representation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
 </td>
       </tr>
       <tr>

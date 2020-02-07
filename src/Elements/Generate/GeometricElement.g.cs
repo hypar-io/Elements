@@ -25,18 +25,19 @@ namespace Elements
     public partial class GeometricElement : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        public GeometricElement(Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name)
+        public GeometricElement(Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
             : base(id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @transform, @material, @representation, @id, @name});
+                validator.Validate(new object[]{ @transform, @material, @representation, @isElementDefinition, @id, @name});
             }
         
             this.Transform = @transform;
             this.Material = @material;
             this.Representation = @representation;
+            this.IsElementDefinition = @isElementDefinition;
         }
     
         /// <summary>The element's transform.</summary>
@@ -50,6 +51,10 @@ namespace Elements
         /// <summary>The element's representation.</summary>
         [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.AllowNull)]
         public Representation Representation { get; set; }
+    
+        /// <summary>When true, this element will act as the base defintion for element instances, and will not appear in visual output.</summary>
+        [Newtonsoft.Json.JsonProperty("IsElementDefinition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsElementDefinition { get; } = false;
     
     
     }

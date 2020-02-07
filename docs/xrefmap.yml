@@ -13,12 +13,12 @@ references:
   commentId: T:Elements.Beam
   fullName: Elements.Beam
   nameWithType: Beam
-- uid: Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Guid,System.String)
-  name: Beam(Curve, Profile, Material, Double, Double, Double, Transform, Guid, String)
-  href: api/Elements.Beam.html#Elements_Beam__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Guid_System_String_
-  commentId: M:Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Guid,System.String)
-  fullName: Elements.Beam.Beam(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Guid, System.String)
-  nameWithType: Beam.Beam(Curve, Profile, Material, Double, Double, Double, Transform, Guid, String)
+- uid: Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  name: Beam(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)
+  href: api/Elements.Beam.html#Elements_Beam__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Beam.Beam(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
+  nameWithType: Beam.Beam(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)
 - uid: Elements.Beam.#ctor*
   name: Beam
   href: api/Elements.Beam.html#Elements_Beam__ctor_
@@ -32,12 +32,12 @@ references:
   commentId: T:Elements.Brace
   fullName: Elements.Brace
   nameWithType: Brace
-- uid: Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Guid,System.String)
-  name: Brace(Curve, Profile, Material, Double, Double, Double, Transform, Guid, String)
-  href: api/Elements.Brace.html#Elements_Brace__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Guid_System_String_
-  commentId: M:Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Guid,System.String)
-  fullName: Elements.Brace.Brace(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Guid, System.String)
-  nameWithType: Brace.Brace(Curve, Profile, Material, Double, Double, Double, Transform, Guid, String)
+- uid: Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  name: Brace(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)
+  href: api/Elements.Brace.html#Elements_Brace__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Brace.Brace(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
+  nameWithType: Brace.Brace(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)
 - uid: Elements.Brace.#ctor*
   name: Brace
   href: api/Elements.Brace.html#Elements_Brace__ctor_
@@ -258,12 +258,12 @@ references:
   commentId: T:Elements.Column
   fullName: Elements.Column
   nameWithType: Column
-- uid: Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Guid,System.String)
-  name: Column(Vector3, Double, Profile, Material, Transform, Double, Double, Double, Guid, String)
-  href: api/Elements.Column.html#Elements_Column__ctor_Elements_Geometry_Vector3_System_Double_Elements_Geometry_Profile_Elements_Material_Elements_Geometry_Transform_System_Double_System_Double_System_Double_System_Guid_System_String_
-  commentId: M:Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Guid,System.String)
-  fullName: Elements.Column.Column(Elements.Geometry.Vector3, System.Double, Elements.Geometry.Profile, Elements.Material, Elements.Geometry.Transform, System.Double, System.Double, System.Double, System.Guid, System.String)
-  nameWithType: Column.Column(Vector3, Double, Profile, Material, Transform, Double, Double, Double, Guid, String)
+- uid: Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Boolean,System.Guid,System.String)
+  name: Column(Vector3, Double, Profile, Material, Transform, Double, Double, Double, Boolean, Guid, String)
+  href: api/Elements.Column.html#Elements_Column__ctor_Elements_Geometry_Vector3_System_Double_Elements_Geometry_Profile_Elements_Material_Elements_Geometry_Transform_System_Double_System_Double_System_Double_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Column.Column(Elements.Geometry.Vector3, System.Double, Elements.Geometry.Profile, Elements.Material, Elements.Geometry.Transform, System.Double, System.Double, System.Double, System.Boolean, System.Guid, System.String)
+  nameWithType: Column.Column(Vector3, Double, Profile, Material, Transform, Double, Double, Double, Boolean, Guid, String)
 - uid: Elements.Column.#ctor*
   name: Column
   href: api/Elements.Column.html#Elements_Column__ctor_
@@ -361,19 +361,19 @@ references:
   isSpec: "True"
   fullName: Elements.ElementInstance.ElementInstance
   nameWithType: ElementInstance.ElementInstance
-- uid: Elements.ElementInstance.Parent
-  name: Parent
-  href: api/Elements.ElementInstance.html#Elements_ElementInstance_Parent
-  commentId: P:Elements.ElementInstance.Parent
-  fullName: Elements.ElementInstance.Parent
-  nameWithType: ElementInstance.Parent
-- uid: Elements.ElementInstance.Parent*
-  name: Parent
-  href: api/Elements.ElementInstance.html#Elements_ElementInstance_Parent_
-  commentId: Overload:Elements.ElementInstance.Parent
+- uid: Elements.ElementInstance.BaseDefinition
+  name: BaseDefinition
+  href: api/Elements.ElementInstance.html#Elements_ElementInstance_BaseDefinition
+  commentId: P:Elements.ElementInstance.BaseDefinition
+  fullName: Elements.ElementInstance.BaseDefinition
+  nameWithType: ElementInstance.BaseDefinition
+- uid: Elements.ElementInstance.BaseDefinition*
+  name: BaseDefinition
+  href: api/Elements.ElementInstance.html#Elements_ElementInstance_BaseDefinition_
+  commentId: Overload:Elements.ElementInstance.BaseDefinition
   isSpec: "True"
-  fullName: Elements.ElementInstance.Parent
-  nameWithType: ElementInstance.Parent
+  fullName: Elements.ElementInstance.BaseDefinition
+  nameWithType: ElementInstance.BaseDefinition
 - uid: Elements.ElementInstance.Transform
   name: Transform
   href: api/Elements.ElementInstance.html#Elements_ElementInstance_Transform
@@ -393,12 +393,12 @@ references:
   commentId: T:Elements.Floor
   fullName: Elements.Floor
   nameWithType: Floor
-- uid: Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Floor(Profile, Double, Transform, Material, Representation, Guid, String)
-  href: api/Elements.Floor.html#Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Floor.Floor(Elements.Geometry.Profile, System.Double, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Floor.Floor(Profile, Double, Transform, Material, Representation, Guid, String)
+- uid: Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Floor(Profile, Double, Transform, Material, Representation, Boolean, Guid, String)
+  href: api/Elements.Floor.html#Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Floor.Floor(Elements.Geometry.Profile, System.Double, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Floor.Floor(Profile, Double, Transform, Material, Representation, Boolean, Guid, String)
 - uid: Elements.Floor.#ctor*
   name: Floor
   href: api/Elements.Floor.html#Elements_Floor__ctor_
@@ -516,12 +516,12 @@ references:
   commentId: T:Elements.Frame
   fullName: Elements.Frame
   nameWithType: Frame
-- uid: Elements.Frame.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Frame(Polygon, Profile, Double, Material, Transform, Representation, Guid, String)
-  href: api/Elements.Frame.html#Elements_Frame__ctor_Elements_Geometry_Polygon_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Frame.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Frame.Frame(Elements.Geometry.Polygon, Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Frame.Frame(Polygon, Profile, Double, Material, Transform, Representation, Guid, String)
+- uid: Elements.Frame.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Frame(Polygon, Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.Frame.html#Elements_Frame__ctor_Elements_Geometry_Polygon_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Frame.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Frame.Frame(Elements.Geometry.Polygon, Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Frame.Frame(Polygon, Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Frame.#ctor*
   name: Frame
   href: api/Elements.Frame.html#Elements_Frame__ctor_
@@ -1136,12 +1136,12 @@ references:
   commentId: T:Elements.GeometricElement
   fullName: Elements.GeometricElement
   nameWithType: GeometricElement
-- uid: Elements.GeometricElement.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
-  name: GeometricElement(Transform, Material, Representation, Guid, String)
-  href: api/Elements.GeometricElement.html#Elements_GeometricElement__ctor_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.GeometricElement.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.GeometricElement.GeometricElement(Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: GeometricElement.GeometricElement(Transform, Material, Representation, Guid, String)
+- uid: Elements.GeometricElement.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: GeometricElement(Transform, Material, Representation, Boolean, Guid, String)
+  href: api/Elements.GeometricElement.html#Elements_GeometricElement__ctor_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.GeometricElement.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.GeometricElement.GeometricElement(Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: GeometricElement.GeometricElement(Transform, Material, Representation, Boolean, Guid, String)
 - uid: Elements.GeometricElement.#ctor*
   name: GeometricElement
   href: api/Elements.GeometricElement.html#Elements_GeometricElement__ctor_
@@ -1162,6 +1162,19 @@ references:
   isSpec: "True"
   fullName: Elements.GeometricElement.CreateInstance
   nameWithType: GeometricElement.CreateInstance
+- uid: Elements.GeometricElement.IsElementDefinition
+  name: IsElementDefinition
+  href: api/Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition
+  commentId: P:Elements.GeometricElement.IsElementDefinition
+  fullName: Elements.GeometricElement.IsElementDefinition
+  nameWithType: GeometricElement.IsElementDefinition
+- uid: Elements.GeometricElement.IsElementDefinition*
+  name: IsElementDefinition
+  href: api/Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition_
+  commentId: Overload:Elements.GeometricElement.IsElementDefinition
+  isSpec: "True"
+  fullName: Elements.GeometricElement.IsElementDefinition
+  nameWithType: GeometricElement.IsElementDefinition
 - uid: Elements.GeometricElement.Material
   name: Material
   href: api/Elements.GeometricElement.html#Elements_GeometricElement_Material
@@ -9154,12 +9167,12 @@ references:
   commentId: T:Elements.Mass
   fullName: Elements.Mass
   nameWithType: Mass
-- uid: Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Mass(Profile, Double, Material, Transform, Representation, Guid, String)
-  href: api/Elements.Mass.html#Elements_Mass__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Mass.Mass(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Mass.Mass(Profile, Double, Material, Transform, Representation, Guid, String)
+- uid: Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Mass(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.Mass.html#Elements_Mass__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Mass.Mass(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Mass.Mass(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Mass.#ctor*
   name: Mass
   href: api/Elements.Mass.html#Elements_Mass__ctor_
@@ -9375,6 +9388,15 @@ references:
   fullName.vb: Elements.Model.Model(Elements.GeoJSON.Position, Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of System.Guid, Elements.Element))
   nameWithType: Model.Model(Position, Transform, IDictionary<Guid, Element>)
   nameWithType.vb: Model.Model(Position, Transform, IDictionary(Of Guid, Element))
+- uid: Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name: Model(Transform, IDictionary<Guid, Element>)
+  href: api/Elements.Model.html#Elements_Model__ctor_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__
+  commentId: M:Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name.vb: Model(Transform, IDictionary(Of Guid, Element))
+  fullName: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary<System.Guid, Elements.Element>)
+  fullName.vb: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of System.Guid, Elements.Element))
+  nameWithType: Model.Model(Transform, IDictionary<Guid, Element>)
+  nameWithType.vb: Model.Model(Transform, IDictionary(Of Guid, Element))
 - uid: Elements.Model.#ctor*
   name: Model
   href: api/Elements.Model.html#Elements_Model__ctor_
@@ -9562,12 +9584,12 @@ references:
   commentId: T:Elements.ModelCurve
   fullName: Elements.ModelCurve
   nameWithType: ModelCurve
-- uid: Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: ModelCurve(Curve, Material, Transform, Representation, Guid, String)
-  href: api/Elements.ModelCurve.html#Elements_ModelCurve__ctor_Elements_Geometry_Curve_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.ModelCurve.ModelCurve(Elements.Geometry.Curve, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: ModelCurve.ModelCurve(Curve, Material, Transform, Representation, Guid, String)
+- uid: Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: ModelCurve(Curve, Material, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.ModelCurve.html#Elements_ModelCurve__ctor_Elements_Geometry_Curve_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.ModelCurve.ModelCurve(Elements.Geometry.Curve, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: ModelCurve.ModelCurve(Curve, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.ModelCurve.#ctor*
   name: ModelCurve
   href: api/Elements.ModelCurve.html#Elements_ModelCurve__ctor_
@@ -9613,15 +9635,15 @@ references:
   commentId: T:Elements.ModelPoints
   fullName: Elements.ModelPoints
   nameWithType: ModelPoints
-- uid: Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)
-  name: ModelPoints(IList<Vector3>, Material, Transform, Guid, String)
-  href: api/Elements.ModelPoints.html#Elements_ModelPoints__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Guid_System_String_
-  commentId: M:Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)
-  name.vb: ModelPoints(IList(Of Vector3), Material, Transform, Guid, String)
-  fullName: Elements.ModelPoints.ModelPoints(System.Collections.Generic.IList<Elements.Geometry.Vector3>, Elements.Material, Elements.Geometry.Transform, System.Guid, System.String)
-  fullName.vb: Elements.ModelPoints.ModelPoints(System.Collections.Generic.IList(Of Elements.Geometry.Vector3), Elements.Material, Elements.Geometry.Transform, System.Guid, System.String)
-  nameWithType: ModelPoints.ModelPoints(IList<Vector3>, Material, Transform, Guid, String)
-  nameWithType.vb: ModelPoints.ModelPoints(IList(Of Vector3), Material, Transform, Guid, String)
+- uid: Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  name: ModelPoints(IList<Vector3>, Material, Transform, Boolean, Guid, String)
+  href: api/Elements.ModelPoints.html#Elements_ModelPoints__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  name.vb: ModelPoints(IList(Of Vector3), Material, Transform, Boolean, Guid, String)
+  fullName: Elements.ModelPoints.ModelPoints(System.Collections.Generic.IList<Elements.Geometry.Vector3>, Elements.Material, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
+  fullName.vb: Elements.ModelPoints.ModelPoints(System.Collections.Generic.IList(Of Elements.Geometry.Vector3), Elements.Material, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
+  nameWithType: ModelPoints.ModelPoints(IList<Vector3>, Material, Transform, Boolean, Guid, String)
+  nameWithType.vb: ModelPoints.ModelPoints(IList(Of Vector3), Material, Transform, Boolean, Guid, String)
 - uid: Elements.ModelPoints.#ctor*
   name: ModelPoints
   href: api/Elements.ModelPoints.html#Elements_ModelPoints__ctor_
@@ -9648,24 +9670,24 @@ references:
   commentId: T:Elements.Opening
   fullName: Elements.Opening
   nameWithType: Opening
-- uid: Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform)
-  name: Opening(Polygon, Double, Double, Transform)
-  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_
-  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform)
-  fullName: Elements.Opening.Opening(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Geometry.Transform)
-  nameWithType: Opening.Opening(Polygon, Double, Double, Transform)
-- uid: Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Opening(Profile, Double, Transform, Representation, Guid, String)
-  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Opening.Opening(Elements.Geometry.Profile, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Opening.Opening(Profile, Double, Transform, Representation, Guid, String)
-- uid: Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform)
-  name: Opening(Double, Double, Double, Double, Transform)
-  href: api/Elements.Opening.html#Elements_Opening__ctor_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Transform_
-  commentId: M:Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform)
-  fullName: Elements.Opening.Opening(System.Double, System.Double, System.Double, System.Double, Elements.Geometry.Transform)
-  nameWithType: Opening.Opening(Double, Double, Double, Double, Transform)
+- uid: Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)
+  name: Opening(Polygon, Double, Double, Transform, Boolean)
+  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_
+  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)
+  fullName: Elements.Opening.Opening(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean)
+  nameWithType: Opening.Opening(Polygon, Double, Double, Transform, Boolean)
+- uid: Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Opening(Profile, Double, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Opening.Opening(Elements.Geometry.Profile, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Opening.Opening(Profile, Double, Transform, Representation, Boolean, Guid, String)
+- uid: Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)
+  name: Opening(Double, Double, Double, Double, Transform, Boolean)
+  href: api/Elements.Opening.html#Elements_Opening__ctor_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_
+  commentId: M:Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)
+  fullName: Elements.Opening.Opening(System.Double, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean)
+  nameWithType: Opening.Opening(Double, Double, Double, Double, Transform, Boolean)
 - uid: Elements.Opening.#ctor*
   name: Opening
   href: api/Elements.Opening.html#Elements_Opening__ctor_
@@ -9705,12 +9727,12 @@ references:
   commentId: T:Elements.Panel
   fullName: Elements.Panel
   nameWithType: Panel
-- uid: Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Panel(Polygon, Material, Transform, Representation, Guid, String)
-  href: api/Elements.Panel.html#Elements_Panel__ctor_Elements_Geometry_Polygon_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Panel.Panel(Elements.Geometry.Polygon, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Panel.Panel(Polygon, Material, Transform, Representation, Guid, String)
+- uid: Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Panel(Polygon, Material, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.Panel.html#Elements_Panel__ctor_Elements_Geometry_Polygon_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Panel.Panel(Elements.Geometry.Polygon, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Panel.Panel(Polygon, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Panel.#ctor*
   name: Panel
   href: api/Elements.Panel.html#Elements_Panel__ctor_
@@ -10034,12 +10056,12 @@ references:
   commentId: T:Elements.Space
   fullName: Elements.Space
   nameWithType: Space
-- uid: Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Space(Profile, Double, Material, Transform, Representation, Guid, String)
-  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Space.Space(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Space.Space(Profile, Double, Material, Transform, Representation, Guid, String)
+- uid: Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Space(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Space.Space(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Space.Space(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Space.#ctor*
   name: Space
   href: api/Elements.Space.html#Elements_Space__ctor_
@@ -10253,12 +10275,12 @@ references:
   commentId: T:Elements.StandardWall
   fullName: Elements.StandardWall
   nameWithType: StandardWall
-- uid: Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: StandardWall(Line, Double, Double, Material, Transform, Representation, Guid, String)
-  href: api/Elements.StandardWall.html#Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.StandardWall.StandardWall(Elements.Geometry.Line, System.Double, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: StandardWall.StandardWall(Line, Double, Double, Material, Transform, Representation, Guid, String)
+- uid: Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: StandardWall(Line, Double, Double, Material, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.StandardWall.html#Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.StandardWall.StandardWall(Elements.Geometry.Line, System.Double, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: StandardWall.StandardWall(Line, Double, Double, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.StandardWall.#ctor*
   name: StandardWall
   href: api/Elements.StandardWall.html#Elements_StandardWall__ctor_
@@ -10324,12 +10346,12 @@ references:
   commentId: T:Elements.StructuralFraming
   fullName: Elements.StructuralFraming
   nameWithType: StructuralFraming
-- uid: Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Representation, Guid, String)
-  href: api/Elements.StructuralFraming.html#Elements_StructuralFraming__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.StructuralFraming.StructuralFraming(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: StructuralFraming.StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Representation, Guid, String)
+- uid: Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.StructuralFraming.html#Elements_StructuralFraming__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.StructuralFraming.StructuralFraming(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: StructuralFraming.StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.StructuralFraming.#ctor*
   name: StructuralFraming
   href: api/Elements.StructuralFraming.html#Elements_StructuralFraming__ctor_
@@ -11215,18 +11237,18 @@ references:
   commentId: T:Elements.Wall
   fullName: Elements.Wall
   nameWithType: Wall
-- uid: Elements.Wall.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Wall(Profile, Double, Material, Transform, Representation, Guid, String)
-  href: api/Elements.Wall.html#Elements_Wall__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Wall.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Wall.Wall(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Wall.Wall(Profile, Double, Material, Transform, Representation, Guid, String)
-- uid: Elements.Wall.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
-  name: Wall(Transform, Material, Representation, Guid, String)
-  href: api/Elements.Wall.html#Elements_Wall__ctor_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Guid_System_String_
-  commentId: M:Elements.Wall.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Guid,System.String)
-  fullName: Elements.Wall.Wall(Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Guid, System.String)
-  nameWithType: Wall.Wall(Transform, Material, Representation, Guid, String)
+- uid: Elements.Wall.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Wall(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.Wall.html#Elements_Wall__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Wall.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Wall.Wall(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Wall.Wall(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
+- uid: Elements.Wall.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Wall(Transform, Material, Representation, Boolean, Guid, String)
+  href: api/Elements.Wall.html#Elements_Wall__ctor_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Wall.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Wall.Wall(Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Wall.Wall(Transform, Material, Representation, Boolean, Guid, String)
 - uid: Elements.Wall.#ctor*
   name: Wall
   href: api/Elements.Wall.html#Elements_Wall__ctor_

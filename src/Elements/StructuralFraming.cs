@@ -46,6 +46,7 @@ namespace Elements
         /// <param name="rotation">An optional rotation in degrees of the transform around its z axis.</param>
         /// <param name="transform">The element's Transform.</param>
         /// <param name="representation">The structural framing's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The structural framing's id.</param>
         /// <param name="name">The structural framing's name.</param>
         public StructuralFraming(Curve curve,
@@ -56,10 +57,12 @@ namespace Elements
                                  double rotation = 0.0,
                                  Transform transform = null,
                                  Representation representation = null,
+                                 bool isElementDefinition = false,
                                  Guid id = default(Guid),
                                  string name = null) : base(transform != null ? transform : new Transform(),
                                                             material != null ? material : BuiltInMaterials.Steel,
                                                             representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                            isElementDefinition,
                                                             id != default(Guid) ? id : Guid.NewGuid(),
                                                             name)
         {

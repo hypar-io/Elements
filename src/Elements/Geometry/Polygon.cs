@@ -81,6 +81,23 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Calculates whether this polygon is configured clockwise.
+        /// </summary>
+        /// <returns>True if this polygon is oriented clockwise.</returns>
+        public bool IsClockWise()
+        {
+            // https://en.wikipedia.org/wiki/Shoelace_formula
+            var sum = 0.0;
+            for (int i = 0; i < this.Vertices.Count; i++)
+            {
+                var point = this.Vertices[i];
+                var nextPoint = this.Vertices[(i + 1) % this.Vertices.Count];
+                sum += (nextPoint.X - point.X) * (nextPoint.Y + point.Y);
+            }
+            return sum > 0;
+        }
+
+        /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
@@ -111,16 +128,19 @@ namespace Elements.Geometry
             {
                 return false;
             }
+            if (this.IsClockWise() != polygon.IsClockWise()) {
+                polygon = polygon.Reversed();
+            }
             var clipper = new Clipper();
             var solution = new List<List<IntPoint>>();
             clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
             clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
-            clipper.Execute(ClipType.ctIntersection, solution);
+            clipper.Execute(ClipType.ctUnion, solution);
             if (solution.Count != 1)
             {
                 return false;
             }
-            return solution.First().ToPolygon().Area() == polygon.ToClipperPath().ToPolygon().Area();
+            return Math.Abs(solution.First().ToPolygon().Area() - this.ToClipperPath().ToPolygon().Area()) <= 0.0001;
         }
 
         /// <summary>

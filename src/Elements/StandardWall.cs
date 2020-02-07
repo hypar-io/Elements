@@ -41,6 +41,7 @@ namespace Elements
         /// <param name="transform">The transform of the wall.
         /// This transform will be concatenated to the transform created to describe the wall in 2D.</param>
         /// <param name="representation">The wall's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the wall.</param>
         /// <param name="name">The name of the wall.</param>
         /// <exception>Thrown when the height of the wall is less than or equal to zero.</exception>
@@ -51,10 +52,12 @@ namespace Elements
                             Material material = null,
                             Transform transform = null,
                             Representation representation = null,
+                            bool isElementDefinition = false,
                             Guid id = default(Guid),
                             string name = null) : base(transform != null ? transform : new Transform(),
                                                        material != null ? material : BuiltInMaterials.Concrete,
                                                        representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                       isElementDefinition,
                                                        id != default(Guid) ? id : Guid.NewGuid(),
                                                        name)
         {
