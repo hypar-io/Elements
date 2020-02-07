@@ -577,14 +577,15 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="other">The other polygon.</param>
         /// <param name="tolerance">The optional tolerance value to use. If not supplied, the global tolerance will be used.</param>
+        /// <param name="ignoreWinding">If true, polygons with opposite winding will be considered as equal.</param>
         /// <returns></returns>
-        public bool IsAlmostEqualTo(Polygon other, double tolerance = Vector3.EPSILON)
+        public bool IsAlmostEqualTo(Polygon other, double tolerance = Vector3.EPSILON, bool ignoreWinding = false)
         {
             var otherVertices = other.Vertices;
             if (otherVertices.Count != Vertices.Count) return false;
-            //ensure winding is consistent
-            if (other.Normal().Dot(Normal()) < 0)
+            if (ignoreWinding && other.Normal().Dot(Normal()) < 0)
             {
+                //ensure winding is consistent
                 otherVertices = other.Vertices.Reverse().ToList();
             }
 
@@ -604,7 +605,7 @@ namespace Elements.Geometry
             }
 
             // rounding errors could occur in X and Y, so the max distance tolerance is the linear tolerance * sqrt(2).
-            var distanceTolerance = Math.Sqrt(2) * tolerance; 
+            var distanceTolerance = Math.Sqrt(2) * tolerance;
 
             if (distance > distanceTolerance) return false;
 
