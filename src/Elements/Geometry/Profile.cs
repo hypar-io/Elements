@@ -13,7 +13,7 @@ namespace Elements.Geometry
         /// Construct a profile.
         /// </summary>
         /// <param name="perimeter">The perimeter of the profile.</param>
-        public Profile(Polygon perimeter): base(Guid.NewGuid(), null)
+        public Profile(Polygon perimeter) : base(Guid.NewGuid(), null)
         {
             this.Perimeter = perimeter;
         }
@@ -25,7 +25,8 @@ namespace Elements.Geometry
         /// <param name="singleVoid">A void in the profile.</param>
         public Profile(Polygon perimeter,
                        Polygon singleVoid) :
-            this(perimeter, new[] { singleVoid }, Guid.NewGuid(), null){}
+            this(perimeter, new[] { singleVoid }, Guid.NewGuid(), null)
+        { }
 
         /// <summary>
         /// Get a new profile which is the reverse of this profile.
@@ -59,12 +60,12 @@ namespace Elements.Geometry
         public void Transform(Transform t)
         {
             this.Perimeter.Transform(t);
-            if(this.Voids == null)
+            if (this.Voids == null)
             {
                 return;
             }
-            
-            for(var i=0; i<this.Voids.Count; i++)
+
+            for (var i = 0; i < this.Voids.Count; i++)
             {
                 this.Voids[i].Transform(t);
             }
@@ -73,7 +74,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Default constructor for profile.
         /// </summary>
-        protected Profile(string name): base(Guid.NewGuid(), name){}
+        protected Profile(string name) : base(Guid.NewGuid(), name) { }
 
         /// <summary>
         ///  Conduct a clip operation on this profile.
@@ -86,9 +87,9 @@ namespace Elements.Geometry
             {
                 clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             }
-            if(additionalHoles != null)
+            if (additionalHoles != null)
             {
-                clipper.AddPaths(additionalHoles.Select(h=>h.Perimeter.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+                clipper.AddPaths(additionalHoles.Select(h => h.Perimeter.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             }
             var solution = new List<List<ClipperLib.IntPoint>>();
             var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
@@ -126,15 +127,15 @@ namespace Elements.Geometry
             var b = (v[i] - v[1]).Normalized();
 
             // Solve for parallel vectors
-            while(b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negate()))
+            while (b.IsAlmostEqualTo(x) || b.IsAlmostEqualTo(x.Negate()))
             {
                 i++;
                 b = (v[i] - v[1]).Normalized();
-            } 
+            }
             var z = x.Cross(b);
             return new Transform(v[0], x, z);
         }
-        
+
         private bool IsPlanar()
         {
             var t = ComputeTransform();
@@ -143,7 +144,7 @@ namespace Elements.Geometry
             foreach (var v in vertices)
             {
                 var d = v.DistanceTo(p);
-                if (Math.Abs(d) > Vector3.Epsilon)
+                if (Math.Abs(d) > Vector3.EPSILON)
                 {
                     Console.WriteLine($"Out of plane distance: {d}.");
                     return false;

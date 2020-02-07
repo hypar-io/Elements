@@ -5,7 +5,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An infinite ray starting at origin and pointing towards direction.
     /// </summary>
-    public class Ray: IEquatable<Ray>
+    public class Ray : IEquatable<Ray>
     {
         /// <summary>
         /// The origin of the ray.
@@ -34,7 +34,7 @@ namespace Elements.Geometry
         /// <param name="tri">The triangle to intersect.</param>
         /// <param name="result">The intersection result.</param>
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the type and location of intersection.</returns>
-        public bool Intersects(Triangle tri, out Vector3 result) 
+        public bool Intersects(Triangle tri, out Vector3 result)
         {
             result = default(Vector3);
 
@@ -48,31 +48,35 @@ namespace Elements.Geometry
             double a, f, u, v;
 
             a = edge1.Dot(h);
-            if (a > -Vector3.Epsilon && a < Vector3.Epsilon) {
+            if (a > -Vector3.EPSILON && a < Vector3.EPSILON)
+            {
                 return false;    // This ray is parallel to this triangle.
             }
             f = 1.0 / a;
             u = f * (s.Dot(h));
-            if (u < 0.0 || u > 1.0) {
+            if (u < 0.0 || u > 1.0)
+            {
                 return false;
             }
             var q = s.Cross(edge1);
             v = f * this.Direction.Dot(q);
-            if (v < 0.0 || u + v > 1.0) {
+            if (v < 0.0 || u + v > 1.0)
+            {
                 return false;
             }
             // At this stage we can compute t to find out where the intersection point is on the line.
             double t = f * edge2.Dot(q);
-            if (t > Vector3.Epsilon && t < 1/Vector3.Epsilon) // ray intersection
+            if (t > Vector3.EPSILON && t < 1 / Vector3.EPSILON) // ray intersection
             {
                 result = this.Origin + this.Direction * t;
                 return true;
-            } else // This means that there is a line intersection but not a ray intersection.
+            }
+            else // This means that there is a line intersection but not a ray intersection.
             {
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Does this ray intersect the provided topography?
         /// </summary>
@@ -108,16 +112,16 @@ namespace Elements.Geometry
             var d1 = this.Direction;
             var d2 = ray.Direction;
 
-            if(d1.IsParallelTo(d2))
+            if (d1.IsParallelTo(d2))
             {
                 result = default(Vector3);
                 return false;
             }
 
-            var t1 = (((p2-p1).Cross(d2)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(),2);
-            var t2 = (((p2-p1).Cross(d1)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(),2);
+            var t1 = (((p2 - p1).Cross(d2)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(), 2);
+            var t2 = (((p2 - p1).Cross(d1)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(), 2);
             result = p1 + d1 * t1;
-            if(ignoreRayDirection)
+            if (ignoreRayDirection)
             {
                 return true;
             }
@@ -131,7 +135,7 @@ namespace Elements.Geometry
         /// <returns>Returns true if the two rays are equal, otherwise false.</returns>
         public bool Equals(Ray other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }

@@ -10,9 +10,9 @@ namespace Elements.Geometry
     public partial struct Vector3 : IComparable<Vector3>, IEquatable<Vector3>
     {
         /// <summary>
-        /// A tolerance for comparison operations of 1e-9.
+        /// A tolerance for comparison operations of 1e-5.
         /// </summary>
-        public static double Epsilon = 1e-9;
+        public const double EPSILON = 1e-5;
 
         private static Vector3 _xAxis = new Vector3(1, 0, 0);
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
@@ -316,9 +316,9 @@ namespace Elements.Geometry
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
         public bool IsAlmostEqualTo(Vector3 v)
         {
-            if (Math.Abs(this.X - v.X) < Epsilon &&
-                Math.Abs(this.Y - v.Y) < Epsilon &&
-                Math.Abs(this.Z - v.Z) < Epsilon)
+            if (Math.Abs(this.X - v.X) < EPSILON &&
+                Math.Abs(this.Y - v.Y) < EPSILON &&
+                Math.Abs(this.Z - v.Z) < EPSILON)
             {
                 return true;
             }
@@ -417,7 +417,7 @@ namespace Elements.Geometry
         /// <returns>True if this vector's components are all less than Epsilon.</returns>
         public bool IsZero()
         {
-            return Math.Abs(this.X) < Vector3.Epsilon && Math.Abs(this.Y) < Vector3.Epsilon && Math.Abs(this.Z) < Vector3.Epsilon;
+            return Math.Abs(this.X) < Vector3.EPSILON && Math.Abs(this.Y) < Vector3.EPSILON && Math.Abs(this.Z) < Vector3.EPSILON;
         }
 
         /// <summary>
@@ -486,7 +486,7 @@ namespace Elements.Geometry
                 var d = points[i];
                 var cd = d - a;
                 var tp = ab.Dot(ac.Cross(cd));
-                if (Math.Abs(tp) > Vector3.Epsilon)
+                if (Math.Abs(tp) > Vector3.EPSILON)
                 {
                     return false;
                 }
