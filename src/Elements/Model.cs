@@ -34,11 +34,11 @@ namespace Elements
         public Model(Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Model>();
-            if(validator != null)
+            if (validator != null)
             {
-                validator.Validate(new object[]{ @transform, @elements});
+                validator.Validate(new object[] { @transform, @elements });
             }
-        
+
             this.Transform = @transform;
             this.Elements = @elements;
         }
@@ -142,7 +142,7 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        public string ToJson()
+        public string ToJson(bool indent = false)
         {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
@@ -161,7 +161,8 @@ namespace Elements
                 exportModel.AddElement(kvp.Value);
             }
             exportModel.Transform = this.Transform;
-            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel);
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
         }
 
         /// <summary>
@@ -253,10 +254,10 @@ namespace Elements
                 }
 
                 // Get the properties dictionaries.
-                var dict = pValue as IDictionary<string,object>;
-                if(dict != null)
+                var dict = pValue as IDictionary<string, object>;
+                if (dict != null)
                 {
-                    foreach(var kvp in dict)
+                    foreach (var kvp in dict)
                     {
                         elements.AddRange(RecursiveGatherSubElements(kvp.Value));
                     }
