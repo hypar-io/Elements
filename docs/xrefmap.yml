@@ -297,6 +297,174 @@ references:
   isSpec: "True"
   fullName: Elements.Column.Location
   nameWithType: Column.Location
+- uid: Elements.Domain1d
+  name: Domain1d
+  href: api/Elements.Domain1d.html
+  commentId: T:Elements.Domain1d
+  fullName: Elements.Domain1d
+  nameWithType: Domain1d
+- uid: Elements.Domain1d.#ctor(System.Double,System.Double)
+  name: Domain1d(Double, Double)
+  href: api/Elements.Domain1d.html#Elements_Domain1d__ctor_System_Double_System_Double_
+  commentId: M:Elements.Domain1d.#ctor(System.Double,System.Double)
+  fullName: Elements.Domain1d.Domain1d(System.Double, System.Double)
+  nameWithType: Domain1d.Domain1d(Double, Double)
+- uid: Elements.Domain1d.#ctor*
+  name: Domain1d
+  href: api/Elements.Domain1d.html#Elements_Domain1d__ctor_
+  commentId: Overload:Elements.Domain1d.#ctor
+  isSpec: "True"
+  fullName: Elements.Domain1d.Domain1d
+  nameWithType: Domain1d.Domain1d
+- uid: Elements.Domain1d.DivideByCount(System.Int32)
+  name: DivideByCount(Int32)
+  href: api/Elements.Domain1d.html#Elements_Domain1d_DivideByCount_System_Int32_
+  commentId: M:Elements.Domain1d.DivideByCount(System.Int32)
+  fullName: Elements.Domain1d.DivideByCount(System.Int32)
+  nameWithType: Domain1d.DivideByCount(Int32)
+- uid: Elements.Domain1d.DivideByCount*
+  name: DivideByCount
+  href: api/Elements.Domain1d.html#Elements_Domain1d_DivideByCount_
+  commentId: Overload:Elements.Domain1d.DivideByCount
+  isSpec: "True"
+  fullName: Elements.Domain1d.DivideByCount
+  nameWithType: Domain1d.DivideByCount
+- uid: Elements.Domain1d.IsCloseToBoundary(System.Double)
+  name: IsCloseToBoundary(Double)
+  href: api/Elements.Domain1d.html#Elements_Domain1d_IsCloseToBoundary_System_Double_
+  commentId: M:Elements.Domain1d.IsCloseToBoundary(System.Double)
+  fullName: Elements.Domain1d.IsCloseToBoundary(System.Double)
+  nameWithType: Domain1d.IsCloseToBoundary(Double)
+- uid: Elements.Domain1d.IsCloseToBoundary*
+  name: IsCloseToBoundary
+  href: api/Elements.Domain1d.html#Elements_Domain1d_IsCloseToBoundary_
+  commentId: Overload:Elements.Domain1d.IsCloseToBoundary
+  isSpec: "True"
+  fullName: Elements.Domain1d.IsCloseToBoundary
+  nameWithType: Domain1d.IsCloseToBoundary
+- uid: Elements.Domain1d.Length
+  name: Length
+  href: api/Elements.Domain1d.html#Elements_Domain1d_Length
+  commentId: P:Elements.Domain1d.Length
+  fullName: Elements.Domain1d.Length
+  nameWithType: Domain1d.Length
+- uid: Elements.Domain1d.Length*
+  name: Length
+  href: api/Elements.Domain1d.html#Elements_Domain1d_Length_
+  commentId: Overload:Elements.Domain1d.Length
+  isSpec: "True"
+  fullName: Elements.Domain1d.Length
+  nameWithType: Domain1d.Length
+- uid: Elements.Domain1d.Max
+  name: Max
+  href: api/Elements.Domain1d.html#Elements_Domain1d_Max
+  commentId: P:Elements.Domain1d.Max
+  fullName: Elements.Domain1d.Max
+  nameWithType: Domain1d.Max
+- uid: Elements.Domain1d.Max*
+  name: Max
+  href: api/Elements.Domain1d.html#Elements_Domain1d_Max_
+  commentId: Overload:Elements.Domain1d.Max
+  isSpec: "True"
+  fullName: Elements.Domain1d.Max
+  nameWithType: Domain1d.Max
+- uid: Elements.Domain1d.Min
+  name: Min
+  href: api/Elements.Domain1d.html#Elements_Domain1d_Min
+  commentId: P:Elements.Domain1d.Min
+  fullName: Elements.Domain1d.Min
+  nameWithType: Domain1d.Min
+- uid: Elements.Domain1d.Min*
+  name: Min
+  href: api/Elements.Domain1d.html#Elements_Domain1d_Min_
+  commentId: Overload:Elements.Domain1d.Min
+  isSpec: "True"
+  fullName: Elements.Domain1d.Min
+  nameWithType: Domain1d.Min
+- uid: Elements.Domain1d.SplitAt(System.Double)
+  name: SplitAt(Double)
+  href: api/Elements.Domain1d.html#Elements_Domain1d_SplitAt_System_Double_
+  commentId: M:Elements.Domain1d.SplitAt(System.Double)
+  fullName: Elements.Domain1d.SplitAt(System.Double)
+  nameWithType: Domain1d.SplitAt(Double)
+- uid: Elements.Domain1d.SplitAt*
+  name: SplitAt
+  href: api/Elements.Domain1d.html#Elements_Domain1d_SplitAt_
+  commentId: Overload:Elements.Domain1d.SplitAt
+  isSpec: "True"
+  fullName: Elements.Domain1d.SplitAt
+  nameWithType: Domain1d.SplitAt
+- uid: Elements.Domain1d.ToString
+  name: ToString()
+  href: api/Elements.Domain1d.html#Elements_Domain1d_ToString
+  commentId: M:Elements.Domain1d.ToString
+  fullName: Elements.Domain1d.ToString()
+  nameWithType: Domain1d.ToString()
+- uid: Elements.Domain1d.ToString*
+  name: ToString
+  href: api/Elements.Domain1d.html#Elements_Domain1d_ToString_
+  commentId: Overload:Elements.Domain1d.ToString
+  isSpec: "True"
+  fullName: Elements.Domain1d.ToString
+  nameWithType: Domain1d.ToString
+- uid: Elements.DomainExtensions
+  name: DomainExtensions
+  href: api/Elements.DomainExtensions.html
+  commentId: T:Elements.DomainExtensions
+  fullName: Elements.DomainExtensions
+  nameWithType: DomainExtensions
+- uid: Elements.DomainExtensions.ApproximatelyEquals(System.Double,System.Double,System.Double)
+  name: ApproximatelyEquals(Double, Double, Double)
+  href: api/Elements.DomainExtensions.html#Elements_DomainExtensions_ApproximatelyEquals_System_Double_System_Double_System_Double_
+  commentId: M:Elements.DomainExtensions.ApproximatelyEquals(System.Double,System.Double,System.Double)
+  fullName: Elements.DomainExtensions.ApproximatelyEquals(System.Double, System.Double, System.Double)
+  nameWithType: DomainExtensions.ApproximatelyEquals(Double, Double, Double)
+- uid: Elements.DomainExtensions.ApproximatelyEquals*
+  name: ApproximatelyEquals
+  href: api/Elements.DomainExtensions.html#Elements_DomainExtensions_ApproximatelyEquals_
+  commentId: Overload:Elements.DomainExtensions.ApproximatelyEquals
+  isSpec: "True"
+  fullName: Elements.DomainExtensions.ApproximatelyEquals
+  nameWithType: DomainExtensions.ApproximatelyEquals
+- uid: Elements.DomainExtensions.MapBetweenDomains(System.Double,Elements.Domain1d,Elements.Domain1d)
+  name: MapBetweenDomains(Double, Domain1d, Domain1d)
+  href: api/Elements.DomainExtensions.html#Elements_DomainExtensions_MapBetweenDomains_System_Double_Elements_Domain1d_Elements_Domain1d_
+  commentId: M:Elements.DomainExtensions.MapBetweenDomains(System.Double,Elements.Domain1d,Elements.Domain1d)
+  fullName: Elements.DomainExtensions.MapBetweenDomains(System.Double, Elements.Domain1d, Elements.Domain1d)
+  nameWithType: DomainExtensions.MapBetweenDomains(Double, Domain1d, Domain1d)
+- uid: Elements.DomainExtensions.MapBetweenDomains*
+  name: MapBetweenDomains
+  href: api/Elements.DomainExtensions.html#Elements_DomainExtensions_MapBetweenDomains_
+  commentId: Overload:Elements.DomainExtensions.MapBetweenDomains
+  isSpec: "True"
+  fullName: Elements.DomainExtensions.MapBetweenDomains
+  nameWithType: DomainExtensions.MapBetweenDomains
+- uid: Elements.DomainExtensions.MapFromDomain(System.Double,Elements.Domain1d)
+  name: MapFromDomain(Double, Domain1d)
+  href: api/Elements.DomainExtensions.html#Elements_DomainExtensions_MapFromDomain_System_Double_Elements_Domain1d_
+  commentId: M:Elements.DomainExtensions.MapFromDomain(System.Double,Elements.Domain1d)
+  fullName: Elements.DomainExtensions.MapFromDomain(System.Double, Elements.Domain1d)
+  nameWithType: DomainExtensions.MapFromDomain(Double, Domain1d)
+- uid: Elements.DomainExtensions.MapFromDomain*
+  name: MapFromDomain
+  href: api/Elements.DomainExtensions.html#Elements_DomainExtensions_MapFromDomain_
+  commentId: Overload:Elements.DomainExtensions.MapFromDomain
+  isSpec: "True"
+  fullName: Elements.DomainExtensions.MapFromDomain
+  nameWithType: DomainExtensions.MapFromDomain
+- uid: Elements.DomainExtensions.MapToDomain(System.Double,Elements.Domain1d)
+  name: MapToDomain(Double, Domain1d)
+  href: api/Elements.DomainExtensions.html#Elements_DomainExtensions_MapToDomain_System_Double_Elements_Domain1d_
+  commentId: M:Elements.DomainExtensions.MapToDomain(System.Double,Elements.Domain1d)
+  fullName: Elements.DomainExtensions.MapToDomain(System.Double, Elements.Domain1d)
+  nameWithType: DomainExtensions.MapToDomain(Double, Domain1d)
+- uid: Elements.DomainExtensions.MapToDomain*
+  name: MapToDomain
+  href: api/Elements.DomainExtensions.html#Elements_DomainExtensions_MapToDomain_
+  commentId: Overload:Elements.DomainExtensions.MapToDomain
+  isSpec: "True"
+  fullName: Elements.DomainExtensions.MapToDomain
+  nameWithType: DomainExtensions.MapToDomain
 - uid: Elements.Element
   name: Element
   href: api/Elements.Element.html
@@ -1681,6 +1849,36 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Bezier.VelocityAt
   nameWithType: Bezier.VelocityAt
+- uid: Elements.Geometry.BooleanMode
+  name: BooleanMode
+  href: api/Elements.Geometry.BooleanMode.html
+  commentId: T:Elements.Geometry.BooleanMode
+  fullName: Elements.Geometry.BooleanMode
+  nameWithType: BooleanMode
+- uid: Elements.Geometry.BooleanMode.Difference
+  name: Difference
+  href: api/Elements.Geometry.BooleanMode.html#Elements_Geometry_BooleanMode_Difference
+  commentId: F:Elements.Geometry.BooleanMode.Difference
+  fullName: Elements.Geometry.BooleanMode.Difference
+  nameWithType: BooleanMode.Difference
+- uid: Elements.Geometry.BooleanMode.Intersection
+  name: Intersection
+  href: api/Elements.Geometry.BooleanMode.html#Elements_Geometry_BooleanMode_Intersection
+  commentId: F:Elements.Geometry.BooleanMode.Intersection
+  fullName: Elements.Geometry.BooleanMode.Intersection
+  nameWithType: BooleanMode.Intersection
+- uid: Elements.Geometry.BooleanMode.Union
+  name: Union
+  href: api/Elements.Geometry.BooleanMode.html#Elements_Geometry_BooleanMode_Union
+  commentId: F:Elements.Geometry.BooleanMode.Union
+  fullName: Elements.Geometry.BooleanMode.Union
+  nameWithType: BooleanMode.Union
+- uid: Elements.Geometry.BooleanMode.XOr
+  name: XOr
+  href: api/Elements.Geometry.BooleanMode.html#Elements_Geometry_BooleanMode_XOr
+  commentId: F:Elements.Geometry.BooleanMode.XOr
+  fullName: Elements.Geometry.BooleanMode.XOr
+  nameWithType: BooleanMode.XOr
 - uid: Elements.Geometry.Circle
   name: Circle
   href: api/Elements.Geometry.Circle.html
@@ -1816,6 +2014,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Color.ToArray
   nameWithType: Color.ToArray
+- uid: Elements.Geometry.Color.ToString
+  name: ToString()
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_ToString
+  commentId: M:Elements.Geometry.Color.ToString
+  fullName: Elements.Geometry.Color.ToString()
+  nameWithType: Color.ToString()
+- uid: Elements.Geometry.Color.ToString*
+  name: ToString
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_ToString_
+  commentId: Overload:Elements.Geometry.Color.ToString
+  isSpec: "True"
+  fullName: Elements.Geometry.Color.ToString
+  nameWithType: Color.ToString
 - uid: Elements.Geometry.Colors
   name: Colors
   href: api/Elements.Geometry.Colors.html
@@ -3525,6 +3736,15 @@ references:
   fullName.vb: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
   nameWithType: Polygon.Difference(IList<Polygon>)
   nameWithType.vb: Polygon.Difference(IList(Of Polygon))
+- uid: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name: Difference(IList<Polygon>, IList<Polygon>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name.vb: Difference(IList(Of Polygon), IList(Of Polygon))
+  fullName: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
+  nameWithType: Polygon.Difference(IList<Polygon>, IList<Polygon>)
+  nameWithType.vb: Polygon.Difference(IList(Of Polygon), IList(Of Polygon))
 - uid: Elements.Geometry.Polygon.Difference*
   name: Difference
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_
@@ -3609,6 +3829,15 @@ references:
   commentId: M:Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon)
   fullName: Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon)
   nameWithType: Polygon.Intersection(Polygon)
+- uid: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name: Intersection(IList<Polygon>, IList<Polygon>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name.vb: Intersection(IList(Of Polygon), IList(Of Polygon))
+  fullName: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
+  nameWithType: Polygon.Intersection(IList<Polygon>, IList<Polygon>)
+  nameWithType.vb: Polygon.Intersection(IList(Of Polygon), IList(Of Polygon))
 - uid: Elements.Geometry.Polygon.Intersection*
   name: Intersection
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_
@@ -3629,6 +3858,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Intersects
   nameWithType: Polygon.Intersects
+- uid: Elements.Geometry.Polygon.IsAlmostEqualTo(Elements.Geometry.Polygon,System.Double,System.Boolean)
+  name: IsAlmostEqualTo(Polygon, Double, Boolean)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_IsAlmostEqualTo_Elements_Geometry_Polygon_System_Double_System_Boolean_
+  commentId: M:Elements.Geometry.Polygon.IsAlmostEqualTo(Elements.Geometry.Polygon,System.Double,System.Boolean)
+  fullName: Elements.Geometry.Polygon.IsAlmostEqualTo(Elements.Geometry.Polygon, System.Double, System.Boolean)
+  nameWithType: Polygon.IsAlmostEqualTo(Polygon, Double, Boolean)
+- uid: Elements.Geometry.Polygon.IsAlmostEqualTo*
+  name: IsAlmostEqualTo
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_IsAlmostEqualTo_
+  commentId: Overload:Elements.Geometry.Polygon.IsAlmostEqualTo
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.IsAlmostEqualTo
+  nameWithType: Polygon.IsAlmostEqualTo
+- uid: Elements.Geometry.Polygon.IsClockWise
+  name: IsClockWise()
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_IsClockWise
+  commentId: M:Elements.Geometry.Polygon.IsClockWise
+  fullName: Elements.Geometry.Polygon.IsClockWise()
+  nameWithType: Polygon.IsClockWise()
+- uid: Elements.Geometry.Polygon.IsClockWise*
+  name: IsClockWise
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_IsClockWise_
+  commentId: Overload:Elements.Geometry.Polygon.IsClockWise
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.IsClockWise
+  nameWithType: Polygon.IsClockWise
 - uid: Elements.Geometry.Polygon.L(System.Double,System.Double,System.Double)
   name: L(Double, Double, Double)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_L_System_Double_System_Double_System_Double_
@@ -3668,6 +3923,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Ngon
   nameWithType: Polygon.Ngon
+- uid: Elements.Geometry.Polygon.Normal
+  name: Normal()
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Normal
+  commentId: M:Elements.Geometry.Polygon.Normal
+  fullName: Elements.Geometry.Polygon.Normal()
+  nameWithType: Polygon.Normal()
+- uid: Elements.Geometry.Polygon.Normal*
+  name: Normal
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Normal_
+  commentId: Overload:Elements.Geometry.Polygon.Normal
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.Normal
+  nameWithType: Polygon.Normal
 - uid: Elements.Geometry.Polygon.Offset(System.Double,Elements.Geometry.EndType)
   name: Offset(Double, EndType)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Offset_System_Double_Elements_Geometry_EndType_
@@ -3844,6 +4112,15 @@ references:
   fullName.vb: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
   nameWithType: Polygon.Union(IList<Polygon>)
   nameWithType.vb: Polygon.Union(IList(Of Polygon))
+- uid: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name: Union(IList<Polygon>, IList<Polygon>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name.vb: Union(IList(Of Polygon), IList(Of Polygon))
+  fullName: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
+  nameWithType: Polygon.Union(IList<Polygon>, IList<Polygon>)
+  nameWithType.vb: Polygon.Union(IList(Of Polygon), IList(Of Polygon))
 - uid: Elements.Geometry.Polygon.Union*
   name: Union
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_
@@ -3857,6 +4134,15 @@ references:
   commentId: M:Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon)
   fullName: Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon)
   nameWithType: Polygon.XOR(Polygon)
+- uid: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name: XOR(IList<Polygon>, IList<Polygon>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name.vb: XOR(IList(Of Polygon), IList(Of Polygon))
+  fullName: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
+  nameWithType: Polygon.XOR(IList<Polygon>, IList<Polygon>)
+  nameWithType.vb: Polygon.XOR(IList(Of Polygon), IList(Of Polygon))
 - uid: Elements.Geometry.Polygon.XOR*
   name: XOR
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_
@@ -3928,6 +4214,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.End
   nameWithType: Polyline.End
+- uid: Elements.Geometry.Polyline.Equals(Elements.Geometry.Polyline)
+  name: Equals(Polyline)
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Equals_Elements_Geometry_Polyline_
+  commentId: M:Elements.Geometry.Polyline.Equals(Elements.Geometry.Polyline)
+  fullName: Elements.Geometry.Polyline.Equals(Elements.Geometry.Polyline)
+  nameWithType: Polyline.Equals(Polyline)
+- uid: Elements.Geometry.Polyline.Equals*
+  name: Equals
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Equals_
+  commentId: Overload:Elements.Geometry.Polyline.Equals
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.Equals
+  nameWithType: Polyline.Equals
 - uid: Elements.Geometry.Polyline.Frames(System.Double,System.Double)
   name: Frames(Double, Double)
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Frames_System_Double_System_Double_
@@ -4124,6 +4423,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Area
   nameWithType: Profile.Area
+- uid: Elements.Geometry.Profile.Equals(Elements.Geometry.Profile)
+  name: Equals(Profile)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Equals_Elements_Geometry_Profile_
+  commentId: M:Elements.Geometry.Profile.Equals(Elements.Geometry.Profile)
+  fullName: Elements.Geometry.Profile.Equals(Elements.Geometry.Profile)
+  nameWithType: Profile.Equals(Profile)
+- uid: Elements.Geometry.Profile.Equals*
+  name: Equals
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Equals_
+  commentId: Overload:Elements.Geometry.Profile.Equals
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Equals
+  nameWithType: Profile.Equals
 - uid: Elements.Geometry.Profile.Perimeter
   name: Perimeter
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Perimeter
@@ -8574,12 +8886,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.Dot
   nameWithType: Vector3.Dot
-- uid: Elements.Geometry.Vector3.Epsilon
-  name: Epsilon
-  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Epsilon
-  commentId: F:Elements.Geometry.Vector3.Epsilon
-  fullName: Elements.Geometry.Vector3.Epsilon
-  nameWithType: Vector3.Epsilon
+- uid: Elements.Geometry.Vector3.EPSILON
+  name: EPSILON
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_EPSILON
+  commentId: F:Elements.Geometry.Vector3.EPSILON
+  fullName: Elements.Geometry.Vector3.EPSILON
+  nameWithType: Vector3.EPSILON
 - uid: Elements.Geometry.Vector3.Equals(Elements.Geometry.Vector3)
   name: Equals(Vector3)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Equals_Elements_Geometry_Vector3_
@@ -8684,19 +8996,6 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.Negate
   nameWithType: Vector3.Negate
-- uid: Elements.Geometry.Vector3.Normalized
-  name: Normalized()
-  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Normalized
-  commentId: M:Elements.Geometry.Vector3.Normalized
-  fullName: Elements.Geometry.Vector3.Normalized()
-  nameWithType: Vector3.Normalized()
-- uid: Elements.Geometry.Vector3.Normalized*
-  name: Normalized
-  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Normalized_
-  commentId: Overload:Elements.Geometry.Vector3.Normalized
-  isSpec: "True"
-  fullName: Elements.Geometry.Vector3.Normalized
-  nameWithType: Vector3.Normalized
 - uid: Elements.Geometry.Vector3.op_Addition(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   name: Addition(Vector3, Vector3)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_op_Addition_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
@@ -8872,6 +9171,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.TripleProduct
   nameWithType: Vector3.TripleProduct
+- uid: Elements.Geometry.Vector3.Unitized
+  name: Unitized()
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Unitized
+  commentId: M:Elements.Geometry.Vector3.Unitized
+  fullName: Elements.Geometry.Vector3.Unitized()
+  nameWithType: Vector3.Unitized()
+- uid: Elements.Geometry.Vector3.Unitized*
+  name: Unitized
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Unitized_
+  commentId: Overload:Elements.Geometry.Vector3.Unitized
+  isSpec: "True"
+  fullName: Elements.Geometry.Vector3.Unitized
+  nameWithType: Vector3.Unitized
 - uid: Elements.Geometry.Vector3.X
   name: X
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_X
@@ -9552,12 +9864,12 @@ references:
   isSpec: "True"
   fullName: Elements.Model.ToIFC
   nameWithType: Model.ToIFC
-- uid: Elements.Model.ToJson
-  name: ToJson()
-  href: api/Elements.Model.html#Elements_Model_ToJson
-  commentId: M:Elements.Model.ToJson
-  fullName: Elements.Model.ToJson()
-  nameWithType: Model.ToJson()
+- uid: Elements.Model.ToJson(System.Boolean)
+  name: ToJson(Boolean)
+  href: api/Elements.Model.html#Elements_Model_ToJson_System_Boolean_
+  commentId: M:Elements.Model.ToJson(System.Boolean)
+  fullName: Elements.Model.ToJson(System.Boolean)
+  nameWithType: Model.ToJson(Boolean)
 - uid: Elements.Model.ToJson*
   name: ToJson
   href: api/Elements.Model.html#Elements_Model_ToJson_
@@ -9915,12 +10227,12 @@ references:
   commentId: T:Elements.Serialization.glTF.GltfExtensions
   fullName: Elements.Serialization.glTF.GltfExtensions
   nameWithType: GltfExtensions
-- uid: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
-  name: ToBase64String(Model)
-  href: api/Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToBase64String_Elements_Model_
-  commentId: M:Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
-  fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model)
-  nameWithType: GltfExtensions.ToBase64String(Model)
+- uid: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model,System.Boolean)
+  name: ToBase64String(Model, Boolean)
+  href: api/Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToBase64String_Elements_Model_System_Boolean_
+  commentId: M:Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model,System.Boolean)
+  fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model, System.Boolean)
+  nameWithType: GltfExtensions.ToBase64String(Model, Boolean)
 - uid: Elements.Serialization.glTF.GltfExtensions.ToBase64String*
   name: ToBase64String
   href: api/Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToBase64String_
@@ -9928,12 +10240,12 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.glTF.GltfExtensions.ToBase64String
   nameWithType: GltfExtensions.ToBase64String
-- uid: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean)
-  name: ToGlTF(Model, String, Boolean)
-  href: api/Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_String_System_Boolean_
-  commentId: M:Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean)
-  fullName: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model, System.String, System.Boolean)
-  nameWithType: GltfExtensions.ToGlTF(Model, String, Boolean)
+- uid: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean,System.Boolean)
+  name: ToGlTF(Model, String, Boolean, Boolean)
+  href: api/Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_String_System_Boolean_System_Boolean_
+  commentId: M:Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean,System.Boolean)
+  fullName: Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model, System.String, System.Boolean, System.Boolean)
+  nameWithType: GltfExtensions.ToGlTF(Model, String, Boolean, Boolean)
 - uid: Elements.Serialization.glTF.GltfExtensions.ToGlTF*
   name: ToGlTF
   href: api/Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToGlTF_
@@ -10153,6 +10465,717 @@ references:
   commentId: N:Elements.Spatial
   fullName: Elements.Spatial
   nameWithType: Elements.Spatial
+- uid: Elements.Spatial.EvenDivisionMode
+  name: EvenDivisionMode
+  href: api/Elements.Spatial.EvenDivisionMode.html
+  commentId: T:Elements.Spatial.EvenDivisionMode
+  fullName: Elements.Spatial.EvenDivisionMode
+  nameWithType: EvenDivisionMode
+- uid: Elements.Spatial.EvenDivisionMode.Nearest
+  name: Nearest
+  href: api/Elements.Spatial.EvenDivisionMode.html#Elements_Spatial_EvenDivisionMode_Nearest
+  commentId: F:Elements.Spatial.EvenDivisionMode.Nearest
+  fullName: Elements.Spatial.EvenDivisionMode.Nearest
+  nameWithType: EvenDivisionMode.Nearest
+- uid: Elements.Spatial.EvenDivisionMode.RoundDown
+  name: RoundDown
+  href: api/Elements.Spatial.EvenDivisionMode.html#Elements_Spatial_EvenDivisionMode_RoundDown
+  commentId: F:Elements.Spatial.EvenDivisionMode.RoundDown
+  fullName: Elements.Spatial.EvenDivisionMode.RoundDown
+  nameWithType: EvenDivisionMode.RoundDown
+- uid: Elements.Spatial.EvenDivisionMode.RoundUp
+  name: RoundUp
+  href: api/Elements.Spatial.EvenDivisionMode.html#Elements_Spatial_EvenDivisionMode_RoundUp
+  commentId: F:Elements.Spatial.EvenDivisionMode.RoundUp
+  fullName: Elements.Spatial.EvenDivisionMode.RoundUp
+  nameWithType: EvenDivisionMode.RoundUp
+- uid: Elements.Spatial.FixedDivisionMode
+  name: FixedDivisionMode
+  href: api/Elements.Spatial.FixedDivisionMode.html
+  commentId: T:Elements.Spatial.FixedDivisionMode
+  fullName: Elements.Spatial.FixedDivisionMode
+  nameWithType: FixedDivisionMode
+- uid: Elements.Spatial.FixedDivisionMode.RemainderAtBothEnds
+  name: RemainderAtBothEnds
+  href: api/Elements.Spatial.FixedDivisionMode.html#Elements_Spatial_FixedDivisionMode_RemainderAtBothEnds
+  commentId: F:Elements.Spatial.FixedDivisionMode.RemainderAtBothEnds
+  fullName: Elements.Spatial.FixedDivisionMode.RemainderAtBothEnds
+  nameWithType: FixedDivisionMode.RemainderAtBothEnds
+- uid: Elements.Spatial.FixedDivisionMode.RemainderAtEnd
+  name: RemainderAtEnd
+  href: api/Elements.Spatial.FixedDivisionMode.html#Elements_Spatial_FixedDivisionMode_RemainderAtEnd
+  commentId: F:Elements.Spatial.FixedDivisionMode.RemainderAtEnd
+  fullName: Elements.Spatial.FixedDivisionMode.RemainderAtEnd
+  nameWithType: FixedDivisionMode.RemainderAtEnd
+- uid: Elements.Spatial.FixedDivisionMode.RemainderAtStart
+  name: RemainderAtStart
+  href: api/Elements.Spatial.FixedDivisionMode.html#Elements_Spatial_FixedDivisionMode_RemainderAtStart
+  commentId: F:Elements.Spatial.FixedDivisionMode.RemainderAtStart
+  fullName: Elements.Spatial.FixedDivisionMode.RemainderAtStart
+  nameWithType: FixedDivisionMode.RemainderAtStart
+- uid: Elements.Spatial.FixedDivisionMode.RemainderNearMiddle
+  name: RemainderNearMiddle
+  href: api/Elements.Spatial.FixedDivisionMode.html#Elements_Spatial_FixedDivisionMode_RemainderNearMiddle
+  commentId: F:Elements.Spatial.FixedDivisionMode.RemainderNearMiddle
+  fullName: Elements.Spatial.FixedDivisionMode.RemainderNearMiddle
+  nameWithType: FixedDivisionMode.RemainderNearMiddle
+- uid: Elements.Spatial.Grid1d
+  name: Grid1d
+  href: api/Elements.Spatial.Grid1d.html
+  commentId: T:Elements.Spatial.Grid1d
+  fullName: Elements.Spatial.Grid1d
+  nameWithType: Grid1d
+- uid: Elements.Spatial.Grid1d.#ctor(Elements.Domain1d)
+  name: Grid1d(Domain1d)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d__ctor_Elements_Domain1d_
+  commentId: M:Elements.Spatial.Grid1d.#ctor(Elements.Domain1d)
+  fullName: Elements.Spatial.Grid1d.Grid1d(Elements.Domain1d)
+  nameWithType: Grid1d.Grid1d(Domain1d)
+- uid: Elements.Spatial.Grid1d.#ctor(Elements.Geometry.Curve)
+  name: Grid1d(Curve)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d__ctor_Elements_Geometry_Curve_
+  commentId: M:Elements.Spatial.Grid1d.#ctor(Elements.Geometry.Curve)
+  fullName: Elements.Spatial.Grid1d.Grid1d(Elements.Geometry.Curve)
+  nameWithType: Grid1d.Grid1d(Curve)
+- uid: Elements.Spatial.Grid1d.#ctor(System.Double)
+  name: Grid1d(Double)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d__ctor_System_Double_
+  commentId: M:Elements.Spatial.Grid1d.#ctor(System.Double)
+  fullName: Elements.Spatial.Grid1d.Grid1d(System.Double)
+  nameWithType: Grid1d.Grid1d(Double)
+- uid: Elements.Spatial.Grid1d.#ctor*
+  name: Grid1d
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d__ctor_
+  commentId: Overload:Elements.Spatial.Grid1d.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.Grid1d
+  nameWithType: Grid1d.Grid1d
+- uid: Elements.Spatial.Grid1d.Cells
+  name: Cells
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Cells
+  commentId: P:Elements.Spatial.Grid1d.Cells
+  fullName: Elements.Spatial.Grid1d.Cells
+  nameWithType: Grid1d.Cells
+- uid: Elements.Spatial.Grid1d.Cells*
+  name: Cells
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Cells_
+  commentId: Overload:Elements.Spatial.Grid1d.Cells
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.Cells
+  nameWithType: Grid1d.Cells
+- uid: Elements.Spatial.Grid1d.DivideByApproximateLength(System.Double,Elements.Spatial.EvenDivisionMode)
+  name: DivideByApproximateLength(Double, EvenDivisionMode)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByApproximateLength_System_Double_Elements_Spatial_EvenDivisionMode_
+  commentId: M:Elements.Spatial.Grid1d.DivideByApproximateLength(System.Double,Elements.Spatial.EvenDivisionMode)
+  fullName: Elements.Spatial.Grid1d.DivideByApproximateLength(System.Double, Elements.Spatial.EvenDivisionMode)
+  nameWithType: Grid1d.DivideByApproximateLength(Double, EvenDivisionMode)
+- uid: Elements.Spatial.Grid1d.DivideByApproximateLength*
+  name: DivideByApproximateLength
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByApproximateLength_
+  commentId: Overload:Elements.Spatial.Grid1d.DivideByApproximateLength
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.DivideByApproximateLength
+  nameWithType: Grid1d.DivideByApproximateLength
+- uid: Elements.Spatial.Grid1d.DivideByCount(System.Int32)
+  name: DivideByCount(Int32)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByCount_System_Int32_
+  commentId: M:Elements.Spatial.Grid1d.DivideByCount(System.Int32)
+  fullName: Elements.Spatial.Grid1d.DivideByCount(System.Int32)
+  nameWithType: Grid1d.DivideByCount(Int32)
+- uid: Elements.Spatial.Grid1d.DivideByCount*
+  name: DivideByCount
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByCount_
+  commentId: Overload:Elements.Spatial.Grid1d.DivideByCount
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.DivideByCount
+  nameWithType: Grid1d.DivideByCount
+- uid: Elements.Spatial.Grid1d.DivideByFixedLength(System.Double,Elements.Spatial.FixedDivisionMode,System.Int32)
+  name: DivideByFixedLength(Double, FixedDivisionMode, Int32)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByFixedLength_System_Double_Elements_Spatial_FixedDivisionMode_System_Int32_
+  commentId: M:Elements.Spatial.Grid1d.DivideByFixedLength(System.Double,Elements.Spatial.FixedDivisionMode,System.Int32)
+  fullName: Elements.Spatial.Grid1d.DivideByFixedLength(System.Double, Elements.Spatial.FixedDivisionMode, System.Int32)
+  nameWithType: Grid1d.DivideByFixedLength(Double, FixedDivisionMode, Int32)
+- uid: Elements.Spatial.Grid1d.DivideByFixedLength*
+  name: DivideByFixedLength
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByFixedLength_
+  commentId: Overload:Elements.Spatial.Grid1d.DivideByFixedLength
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.DivideByFixedLength
+  nameWithType: Grid1d.DivideByFixedLength
+- uid: Elements.Spatial.Grid1d.DivideByFixedLengthFromPosition(System.Double,System.Double)
+  name: DivideByFixedLengthFromPosition(Double, Double)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByFixedLengthFromPosition_System_Double_System_Double_
+  commentId: M:Elements.Spatial.Grid1d.DivideByFixedLengthFromPosition(System.Double,System.Double)
+  fullName: Elements.Spatial.Grid1d.DivideByFixedLengthFromPosition(System.Double, System.Double)
+  nameWithType: Grid1d.DivideByFixedLengthFromPosition(Double, Double)
+- uid: Elements.Spatial.Grid1d.DivideByFixedLengthFromPosition*
+  name: DivideByFixedLengthFromPosition
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByFixedLengthFromPosition_
+  commentId: Overload:Elements.Spatial.Grid1d.DivideByFixedLengthFromPosition
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.DivideByFixedLengthFromPosition
+  nameWithType: Grid1d.DivideByFixedLengthFromPosition
+- uid: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList{System.Double},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
+  name: DivideByPattern(IList<Double>, PatternMode, FixedDivisionMode)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByPattern_System_Collections_Generic_IList_System_Double__Elements_Spatial_PatternMode_Elements_Spatial_FixedDivisionMode_
+  commentId: M:Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList{System.Double},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
+  name.vb: DivideByPattern(IList(Of Double), PatternMode, FixedDivisionMode)
+  fullName: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList<System.Double>, Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
+  fullName.vb: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList(Of System.Double), Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
+  nameWithType: Grid1d.DivideByPattern(IList<Double>, PatternMode, FixedDivisionMode)
+  nameWithType.vb: Grid1d.DivideByPattern(IList(Of Double), PatternMode, FixedDivisionMode)
+- uid: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList{System.ValueTuple{System.String,System.Double}},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
+  name: DivideByPattern(IList<(String typeName, Double length)>, PatternMode, FixedDivisionMode)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByPattern_System_Collections_Generic_IList_System_ValueTuple_System_String_System_Double___Elements_Spatial_PatternMode_Elements_Spatial_FixedDivisionMode_
+  commentId: M:Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList{System.ValueTuple{System.String,System.Double}},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
+  name.vb: DivideByPattern(IList(Of (typeName As String, length As Double)), PatternMode, FixedDivisionMode)
+  fullName: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList<System.ValueTuple<System.String, System.Double>>, Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
+  fullName.vb: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList(Of System.ValueTuple(Of System.String, System.Double)), Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
+  nameWithType: Grid1d.DivideByPattern(IList<(String typeName, Double length)>, PatternMode, FixedDivisionMode)
+  nameWithType.vb: Grid1d.DivideByPattern(IList(Of (typeName As String, length As Double)), PatternMode, FixedDivisionMode)
+- uid: Elements.Spatial.Grid1d.DivideByPattern*
+  name: DivideByPattern
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByPattern_
+  commentId: Overload:Elements.Spatial.Grid1d.DivideByPattern
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.DivideByPattern
+  nameWithType: Grid1d.DivideByPattern
+- uid: Elements.Spatial.Grid1d.Domain
+  name: Domain
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Domain
+  commentId: P:Elements.Spatial.Grid1d.Domain
+  fullName: Elements.Spatial.Grid1d.Domain
+  nameWithType: Grid1d.Domain
+- uid: Elements.Spatial.Grid1d.Domain*
+  name: Domain
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Domain_
+  commentId: Overload:Elements.Spatial.Grid1d.Domain
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.Domain
+  nameWithType: Grid1d.Domain
+- uid: Elements.Spatial.Grid1d.FindCellAtPosition(System.Double)
+  name: FindCellAtPosition(Double)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_FindCellAtPosition_System_Double_
+  commentId: M:Elements.Spatial.Grid1d.FindCellAtPosition(System.Double)
+  fullName: Elements.Spatial.Grid1d.FindCellAtPosition(System.Double)
+  nameWithType: Grid1d.FindCellAtPosition(Double)
+- uid: Elements.Spatial.Grid1d.FindCellAtPosition*
+  name: FindCellAtPosition
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_FindCellAtPosition_
+  commentId: Overload:Elements.Spatial.Grid1d.FindCellAtPosition
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.FindCellAtPosition
+  nameWithType: Grid1d.FindCellAtPosition
+- uid: Elements.Spatial.Grid1d.GetCellGeometry
+  name: GetCellGeometry()
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_GetCellGeometry
+  commentId: M:Elements.Spatial.Grid1d.GetCellGeometry
+  fullName: Elements.Spatial.Grid1d.GetCellGeometry()
+  nameWithType: Grid1d.GetCellGeometry()
+- uid: Elements.Spatial.Grid1d.GetCellGeometry*
+  name: GetCellGeometry
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_GetCellGeometry_
+  commentId: Overload:Elements.Spatial.Grid1d.GetCellGeometry
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.GetCellGeometry
+  nameWithType: Grid1d.GetCellGeometry
+- uid: Elements.Spatial.Grid1d.GetCells
+  name: GetCells()
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_GetCells
+  commentId: M:Elements.Spatial.Grid1d.GetCells
+  fullName: Elements.Spatial.Grid1d.GetCells()
+  nameWithType: Grid1d.GetCells()
+- uid: Elements.Spatial.Grid1d.GetCells*
+  name: GetCells
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_GetCells_
+  commentId: Overload:Elements.Spatial.Grid1d.GetCells
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.GetCells
+  nameWithType: Grid1d.GetCells
+- uid: Elements.Spatial.Grid1d.GetCellSeparators(System.Boolean)
+  name: GetCellSeparators(Boolean)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_GetCellSeparators_System_Boolean_
+  commentId: M:Elements.Spatial.Grid1d.GetCellSeparators(System.Boolean)
+  fullName: Elements.Spatial.Grid1d.GetCellSeparators(System.Boolean)
+  nameWithType: Grid1d.GetCellSeparators(Boolean)
+- uid: Elements.Spatial.Grid1d.GetCellSeparators*
+  name: GetCellSeparators
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_GetCellSeparators_
+  commentId: Overload:Elements.Spatial.Grid1d.GetCellSeparators
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.GetCellSeparators
+  nameWithType: Grid1d.GetCellSeparators
+- uid: Elements.Spatial.Grid1d.Grid1dEventHandler
+  name: Grid1d.Grid1dEventHandler
+  href: api/Elements.Spatial.Grid1d.Grid1dEventHandler.html
+  commentId: T:Elements.Spatial.Grid1d.Grid1dEventHandler
+  fullName: Elements.Spatial.Grid1d.Grid1dEventHandler
+  nameWithType: Grid1d.Grid1dEventHandler
+- uid: Elements.Spatial.Grid1d.IsSingleCell
+  name: IsSingleCell
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_IsSingleCell
+  commentId: P:Elements.Spatial.Grid1d.IsSingleCell
+  fullName: Elements.Spatial.Grid1d.IsSingleCell
+  nameWithType: Grid1d.IsSingleCell
+- uid: Elements.Spatial.Grid1d.IsSingleCell*
+  name: IsSingleCell
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_IsSingleCell_
+  commentId: Overload:Elements.Spatial.Grid1d.IsSingleCell
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.IsSingleCell
+  nameWithType: Grid1d.IsSingleCell
+- uid: Elements.Spatial.Grid1d.Item(System.Int32)
+  name: Item[Int32]
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Item_System_Int32_
+  commentId: P:Elements.Spatial.Grid1d.Item(System.Int32)
+  name.vb: Item(Int32)
+  fullName: Elements.Spatial.Grid1d.Item[System.Int32]
+  fullName.vb: Elements.Spatial.Grid1d.Item(System.Int32)
+  nameWithType: Grid1d.Item[Int32]
+  nameWithType.vb: Grid1d.Item(Int32)
+- uid: Elements.Spatial.Grid1d.Item*
+  name: Item
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Item_
+  commentId: Overload:Elements.Spatial.Grid1d.Item
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.Item
+  nameWithType: Grid1d.Item
+- uid: Elements.Spatial.Grid1d.OnTopLevelGridChange
+  name: OnTopLevelGridChange()
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_OnTopLevelGridChange
+  commentId: M:Elements.Spatial.Grid1d.OnTopLevelGridChange
+  fullName: Elements.Spatial.Grid1d.OnTopLevelGridChange()
+  nameWithType: Grid1d.OnTopLevelGridChange()
+- uid: Elements.Spatial.Grid1d.OnTopLevelGridChange*
+  name: OnTopLevelGridChange
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_OnTopLevelGridChange_
+  commentId: Overload:Elements.Spatial.Grid1d.OnTopLevelGridChange
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.OnTopLevelGridChange
+  nameWithType: Grid1d.OnTopLevelGridChange
+- uid: Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean)
+  name: SplitAtOffset(Double, Boolean)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffset_System_Double_System_Boolean_
+  commentId: M:Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean)
+  fullName: Elements.Spatial.Grid1d.SplitAtOffset(System.Double, System.Boolean)
+  nameWithType: Grid1d.SplitAtOffset(Double, Boolean)
+- uid: Elements.Spatial.Grid1d.SplitAtOffset*
+  name: SplitAtOffset
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffset_
+  commentId: Overload:Elements.Spatial.Grid1d.SplitAtOffset
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.SplitAtOffset
+  nameWithType: Grid1d.SplitAtOffset
+- uid: Elements.Spatial.Grid1d.SplitAtParameter(System.Double)
+  name: SplitAtParameter(Double)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtParameter_System_Double_
+  commentId: M:Elements.Spatial.Grid1d.SplitAtParameter(System.Double)
+  fullName: Elements.Spatial.Grid1d.SplitAtParameter(System.Double)
+  nameWithType: Grid1d.SplitAtParameter(Double)
+- uid: Elements.Spatial.Grid1d.SplitAtParameter*
+  name: SplitAtParameter
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtParameter_
+  commentId: Overload:Elements.Spatial.Grid1d.SplitAtParameter
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.SplitAtParameter
+  nameWithType: Grid1d.SplitAtParameter
+- uid: Elements.Spatial.Grid1d.SplitAtParameters(System.Collections.Generic.IEnumerable{System.Double})
+  name: SplitAtParameters(IEnumerable<Double>)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtParameters_System_Collections_Generic_IEnumerable_System_Double__
+  commentId: M:Elements.Spatial.Grid1d.SplitAtParameters(System.Collections.Generic.IEnumerable{System.Double})
+  name.vb: SplitAtParameters(IEnumerable(Of Double))
+  fullName: Elements.Spatial.Grid1d.SplitAtParameters(System.Collections.Generic.IEnumerable<System.Double>)
+  fullName.vb: Elements.Spatial.Grid1d.SplitAtParameters(System.Collections.Generic.IEnumerable(Of System.Double))
+  nameWithType: Grid1d.SplitAtParameters(IEnumerable<Double>)
+  nameWithType.vb: Grid1d.SplitAtParameters(IEnumerable(Of Double))
+- uid: Elements.Spatial.Grid1d.SplitAtParameters*
+  name: SplitAtParameters
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtParameters_
+  commentId: Overload:Elements.Spatial.Grid1d.SplitAtParameters
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.SplitAtParameters
+  nameWithType: Grid1d.SplitAtParameters
+- uid: Elements.Spatial.Grid1d.SplitAtPosition(System.Double)
+  name: SplitAtPosition(Double)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPosition_System_Double_
+  commentId: M:Elements.Spatial.Grid1d.SplitAtPosition(System.Double)
+  fullName: Elements.Spatial.Grid1d.SplitAtPosition(System.Double)
+  nameWithType: Grid1d.SplitAtPosition(Double)
+- uid: Elements.Spatial.Grid1d.SplitAtPosition*
+  name: SplitAtPosition
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPosition_
+  commentId: Overload:Elements.Spatial.Grid1d.SplitAtPosition
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.SplitAtPosition
+  nameWithType: Grid1d.SplitAtPosition
+- uid: Elements.Spatial.Grid1d.SplitAtPositions(System.Collections.Generic.IEnumerable{System.Double})
+  name: SplitAtPositions(IEnumerable<Double>)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPositions_System_Collections_Generic_IEnumerable_System_Double__
+  commentId: M:Elements.Spatial.Grid1d.SplitAtPositions(System.Collections.Generic.IEnumerable{System.Double})
+  name.vb: SplitAtPositions(IEnumerable(Of Double))
+  fullName: Elements.Spatial.Grid1d.SplitAtPositions(System.Collections.Generic.IEnumerable<System.Double>)
+  fullName.vb: Elements.Spatial.Grid1d.SplitAtPositions(System.Collections.Generic.IEnumerable(Of System.Double))
+  nameWithType: Grid1d.SplitAtPositions(IEnumerable<Double>)
+  nameWithType.vb: Grid1d.SplitAtPositions(IEnumerable(Of Double))
+- uid: Elements.Spatial.Grid1d.SplitAtPositions*
+  name: SplitAtPositions
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPositions_
+  commentId: Overload:Elements.Spatial.Grid1d.SplitAtPositions
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.SplitAtPositions
+  nameWithType: Grid1d.SplitAtPositions
+- uid: Elements.Spatial.Grid1d.TopLevelGridChange
+  name: TopLevelGridChange
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_TopLevelGridChange
+  commentId: E:Elements.Spatial.Grid1d.TopLevelGridChange
+  fullName: Elements.Spatial.Grid1d.TopLevelGridChange
+  nameWithType: Grid1d.TopLevelGridChange
+- uid: Elements.Spatial.Grid1d.Type
+  name: Type
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Type
+  commentId: P:Elements.Spatial.Grid1d.Type
+  fullName: Elements.Spatial.Grid1d.Type
+  nameWithType: Grid1d.Type
+- uid: Elements.Spatial.Grid1d.Type*
+  name: Type
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Type_
+  commentId: Overload:Elements.Spatial.Grid1d.Type
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.Type
+  nameWithType: Grid1d.Type
+- uid: Elements.Spatial.Grid2d
+  name: Grid2d
+  href: api/Elements.Spatial.Grid2d.html
+  commentId: T:Elements.Spatial.Grid2d
+  fullName: Elements.Spatial.Grid2d
+  nameWithType: Grid2d
+- uid: Elements.Spatial.Grid2d.#ctor
+  name: Grid2d()
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor
+  commentId: M:Elements.Spatial.Grid2d.#ctor
+  fullName: Elements.Spatial.Grid2d.Grid2d()
+  nameWithType: Grid2d.Grid2d()
+- uid: Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Transform)
+  name: Grid2d(Polygon, Transform)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Geometry_Polygon_Elements_Geometry_Transform_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Transform)
+  fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Polygon, Elements.Geometry.Transform)
+  nameWithType: Grid2d.Grid2d(Polygon, Transform)
+- uid: Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)
+  name: Grid2d(IList<Polygon>, Transform)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)
+  name.vb: Grid2d(IList(Of Polygon), Transform)
+  fullName: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Geometry.Transform)
+  fullName.vb: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Transform)
+  nameWithType: Grid2d.Grid2d(IList<Polygon>, Transform)
+  nameWithType.vb: Grid2d.Grid2d(IList(Of Polygon), Transform)
+- uid: Elements.Spatial.Grid2d.#ctor(System.Double,System.Double)
+  name: Grid2d(Double, Double)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Double_System_Double_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(System.Double,System.Double)
+  fullName: Elements.Spatial.Grid2d.Grid2d(System.Double, System.Double)
+  nameWithType: Grid2d.Grid2d(Double, Double)
+- uid: Elements.Spatial.Grid2d.#ctor*
+  name: Grid2d
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_
+  commentId: Overload:Elements.Spatial.Grid2d.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.Grid2d
+  nameWithType: Grid2d.Grid2d
+- uid: Elements.Spatial.Grid2d.Cells
+  name: Cells
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_Cells
+  commentId: P:Elements.Spatial.Grid2d.Cells
+  fullName: Elements.Spatial.Grid2d.Cells
+  nameWithType: Grid2d.Cells
+- uid: Elements.Spatial.Grid2d.Cells*
+  name: Cells
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_Cells_
+  commentId: Overload:Elements.Spatial.Grid2d.Cells
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.Cells
+  nameWithType: Grid2d.Cells
+- uid: Elements.Spatial.Grid2d.CellsFlat
+  name: CellsFlat
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_CellsFlat
+  commentId: P:Elements.Spatial.Grid2d.CellsFlat
+  fullName: Elements.Spatial.Grid2d.CellsFlat
+  nameWithType: Grid2d.CellsFlat
+- uid: Elements.Spatial.Grid2d.CellsFlat*
+  name: CellsFlat
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_CellsFlat_
+  commentId: Overload:Elements.Spatial.Grid2d.CellsFlat
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.CellsFlat
+  nameWithType: Grid2d.CellsFlat
+- uid: Elements.Spatial.Grid2d.FindCellAtPosition(System.Double,System.Double)
+  name: FindCellAtPosition(Double, Double)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_FindCellAtPosition_System_Double_System_Double_
+  commentId: M:Elements.Spatial.Grid2d.FindCellAtPosition(System.Double,System.Double)
+  fullName: Elements.Spatial.Grid2d.FindCellAtPosition(System.Double, System.Double)
+  nameWithType: Grid2d.FindCellAtPosition(Double, Double)
+- uid: Elements.Spatial.Grid2d.FindCellAtPosition*
+  name: FindCellAtPosition
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_FindCellAtPosition_
+  commentId: Overload:Elements.Spatial.Grid2d.FindCellAtPosition
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.FindCellAtPosition
+  nameWithType: Grid2d.FindCellAtPosition
+- uid: Elements.Spatial.Grid2d.GetCellAtIndices(System.Int32,System.Int32)
+  name: GetCellAtIndices(Int32, Int32)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetCellAtIndices_System_Int32_System_Int32_
+  commentId: M:Elements.Spatial.Grid2d.GetCellAtIndices(System.Int32,System.Int32)
+  fullName: Elements.Spatial.Grid2d.GetCellAtIndices(System.Int32, System.Int32)
+  nameWithType: Grid2d.GetCellAtIndices(Int32, Int32)
+- uid: Elements.Spatial.Grid2d.GetCellAtIndices*
+  name: GetCellAtIndices
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetCellAtIndices_
+  commentId: Overload:Elements.Spatial.Grid2d.GetCellAtIndices
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.GetCellAtIndices
+  nameWithType: Grid2d.GetCellAtIndices
+- uid: Elements.Spatial.Grid2d.GetCellGeometry
+  name: GetCellGeometry()
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetCellGeometry
+  commentId: M:Elements.Spatial.Grid2d.GetCellGeometry
+  fullName: Elements.Spatial.Grid2d.GetCellGeometry()
+  nameWithType: Grid2d.GetCellGeometry()
+- uid: Elements.Spatial.Grid2d.GetCellGeometry*
+  name: GetCellGeometry
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetCellGeometry_
+  commentId: Overload:Elements.Spatial.Grid2d.GetCellGeometry
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.GetCellGeometry
+  nameWithType: Grid2d.GetCellGeometry
+- uid: Elements.Spatial.Grid2d.GetCells
+  name: GetCells()
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetCells
+  commentId: M:Elements.Spatial.Grid2d.GetCells
+  fullName: Elements.Spatial.Grid2d.GetCells()
+  nameWithType: Grid2d.GetCells()
+- uid: Elements.Spatial.Grid2d.GetCells*
+  name: GetCells
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetCells_
+  commentId: Overload:Elements.Spatial.Grid2d.GetCells
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.GetCells
+  nameWithType: Grid2d.GetCells
+- uid: Elements.Spatial.Grid2d.GetCellSeparators(Elements.Spatial.GridDirection)
+  name: GetCellSeparators(GridDirection)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetCellSeparators_Elements_Spatial_GridDirection_
+  commentId: M:Elements.Spatial.Grid2d.GetCellSeparators(Elements.Spatial.GridDirection)
+  fullName: Elements.Spatial.Grid2d.GetCellSeparators(Elements.Spatial.GridDirection)
+  nameWithType: Grid2d.GetCellSeparators(GridDirection)
+- uid: Elements.Spatial.Grid2d.GetCellSeparators*
+  name: GetCellSeparators
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetCellSeparators_
+  commentId: Overload:Elements.Spatial.Grid2d.GetCellSeparators
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.GetCellSeparators
+  nameWithType: Grid2d.GetCellSeparators
+- uid: Elements.Spatial.Grid2d.GetColumnAtIndex(System.Int32)
+  name: GetColumnAtIndex(Int32)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetColumnAtIndex_System_Int32_
+  commentId: M:Elements.Spatial.Grid2d.GetColumnAtIndex(System.Int32)
+  fullName: Elements.Spatial.Grid2d.GetColumnAtIndex(System.Int32)
+  nameWithType: Grid2d.GetColumnAtIndex(Int32)
+- uid: Elements.Spatial.Grid2d.GetColumnAtIndex*
+  name: GetColumnAtIndex
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetColumnAtIndex_
+  commentId: Overload:Elements.Spatial.Grid2d.GetColumnAtIndex
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.GetColumnAtIndex
+  nameWithType: Grid2d.GetColumnAtIndex
+- uid: Elements.Spatial.Grid2d.GetRowAtIndex(System.Int32)
+  name: GetRowAtIndex(Int32)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetRowAtIndex_System_Int32_
+  commentId: M:Elements.Spatial.Grid2d.GetRowAtIndex(System.Int32)
+  fullName: Elements.Spatial.Grid2d.GetRowAtIndex(System.Int32)
+  nameWithType: Grid2d.GetRowAtIndex(Int32)
+- uid: Elements.Spatial.Grid2d.GetRowAtIndex*
+  name: GetRowAtIndex
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetRowAtIndex_
+  commentId: Overload:Elements.Spatial.Grid2d.GetRowAtIndex
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.GetRowAtIndex
+  nameWithType: Grid2d.GetRowAtIndex
+- uid: Elements.Spatial.Grid2d.GetTrimmedCellGeometry
+  name: GetTrimmedCellGeometry()
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetTrimmedCellGeometry
+  commentId: M:Elements.Spatial.Grid2d.GetTrimmedCellGeometry
+  fullName: Elements.Spatial.Grid2d.GetTrimmedCellGeometry()
+  nameWithType: Grid2d.GetTrimmedCellGeometry()
+- uid: Elements.Spatial.Grid2d.GetTrimmedCellGeometry*
+  name: GetTrimmedCellGeometry
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_GetTrimmedCellGeometry_
+  commentId: Overload:Elements.Spatial.Grid2d.GetTrimmedCellGeometry
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.GetTrimmedCellGeometry
+  nameWithType: Grid2d.GetTrimmedCellGeometry
+- uid: Elements.Spatial.Grid2d.IsSingleCell
+  name: IsSingleCell
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_IsSingleCell
+  commentId: P:Elements.Spatial.Grid2d.IsSingleCell
+  fullName: Elements.Spatial.Grid2d.IsSingleCell
+  nameWithType: Grid2d.IsSingleCell
+- uid: Elements.Spatial.Grid2d.IsSingleCell*
+  name: IsSingleCell
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_IsSingleCell_
+  commentId: Overload:Elements.Spatial.Grid2d.IsSingleCell
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.IsSingleCell
+  nameWithType: Grid2d.IsSingleCell
+- uid: Elements.Spatial.Grid2d.IsTrimmed
+  name: IsTrimmed()
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_IsTrimmed
+  commentId: M:Elements.Spatial.Grid2d.IsTrimmed
+  fullName: Elements.Spatial.Grid2d.IsTrimmed()
+  nameWithType: Grid2d.IsTrimmed()
+- uid: Elements.Spatial.Grid2d.IsTrimmed*
+  name: IsTrimmed
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_IsTrimmed_
+  commentId: Overload:Elements.Spatial.Grid2d.IsTrimmed
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.IsTrimmed
+  nameWithType: Grid2d.IsTrimmed
+- uid: Elements.Spatial.Grid2d.Item(System.Int32,System.Int32)
+  name: Item[Int32, Int32]
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_Item_System_Int32_System_Int32_
+  commentId: P:Elements.Spatial.Grid2d.Item(System.Int32,System.Int32)
+  name.vb: Item(Int32, Int32)
+  fullName: Elements.Spatial.Grid2d.Item[System.Int32, System.Int32]
+  fullName.vb: Elements.Spatial.Grid2d.Item(System.Int32, System.Int32)
+  nameWithType: Grid2d.Item[Int32, Int32]
+  nameWithType.vb: Grid2d.Item(Int32, Int32)
+- uid: Elements.Spatial.Grid2d.Item*
+  name: Item
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_Item_
+  commentId: Overload:Elements.Spatial.Grid2d.Item
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.Item
+  nameWithType: Grid2d.Item
+- uid: Elements.Spatial.Grid2d.SplitAtPoint(Elements.Geometry.Vector3)
+  name: SplitAtPoint(Vector3)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPoint_Elements_Geometry_Vector3_
+  commentId: M:Elements.Spatial.Grid2d.SplitAtPoint(Elements.Geometry.Vector3)
+  fullName: Elements.Spatial.Grid2d.SplitAtPoint(Elements.Geometry.Vector3)
+  nameWithType: Grid2d.SplitAtPoint(Vector3)
+- uid: Elements.Spatial.Grid2d.SplitAtPoint*
+  name: SplitAtPoint
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPoint_
+  commentId: Overload:Elements.Spatial.Grid2d.SplitAtPoint
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.SplitAtPoint
+  nameWithType: Grid2d.SplitAtPoint
+- uid: Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name: SplitAtPoints(IEnumerable<Vector3>)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name.vb: SplitAtPoints(IEnumerable(Of Vector3))
+  fullName: Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
+  nameWithType: Grid2d.SplitAtPoints(IEnumerable<Vector3>)
+  nameWithType.vb: Grid2d.SplitAtPoints(IEnumerable(Of Vector3))
+- uid: Elements.Spatial.Grid2d.SplitAtPoints*
+  name: SplitAtPoints
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPoints_
+  commentId: Overload:Elements.Spatial.Grid2d.SplitAtPoints
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.SplitAtPoints
+  nameWithType: Grid2d.SplitAtPoints
+- uid: Elements.Spatial.Grid2d.SplitAtPosition(Elements.Geometry.Vector3)
+  name: SplitAtPosition(Vector3)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPosition_Elements_Geometry_Vector3_
+  commentId: M:Elements.Spatial.Grid2d.SplitAtPosition(Elements.Geometry.Vector3)
+  fullName: Elements.Spatial.Grid2d.SplitAtPosition(Elements.Geometry.Vector3)
+  nameWithType: Grid2d.SplitAtPosition(Vector3)
+- uid: Elements.Spatial.Grid2d.SplitAtPosition(System.Double,System.Double)
+  name: SplitAtPosition(Double, Double)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPosition_System_Double_System_Double_
+  commentId: M:Elements.Spatial.Grid2d.SplitAtPosition(System.Double,System.Double)
+  fullName: Elements.Spatial.Grid2d.SplitAtPosition(System.Double, System.Double)
+  nameWithType: Grid2d.SplitAtPosition(Double, Double)
+- uid: Elements.Spatial.Grid2d.SplitAtPosition*
+  name: SplitAtPosition
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPosition_
+  commentId: Overload:Elements.Spatial.Grid2d.SplitAtPosition
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.SplitAtPosition
+  nameWithType: Grid2d.SplitAtPosition
+- uid: Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name: SplitAtPositions(IEnumerable<Vector3>)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPositions_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name.vb: SplitAtPositions(IEnumerable(Of Vector3))
+  fullName: Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
+  nameWithType: Grid2d.SplitAtPositions(IEnumerable<Vector3>)
+  nameWithType.vb: Grid2d.SplitAtPositions(IEnumerable(Of Vector3))
+- uid: Elements.Spatial.Grid2d.SplitAtPositions*
+  name: SplitAtPositions
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPositions_
+  commentId: Overload:Elements.Spatial.Grid2d.SplitAtPositions
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.SplitAtPositions
+  nameWithType: Grid2d.SplitAtPositions
+- uid: Elements.Spatial.Grid2d.Type
+  name: Type
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_Type
+  commentId: P:Elements.Spatial.Grid2d.Type
+  fullName: Elements.Spatial.Grid2d.Type
+  nameWithType: Grid2d.Type
+- uid: Elements.Spatial.Grid2d.Type*
+  name: Type
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_Type_
+  commentId: Overload:Elements.Spatial.Grid2d.Type
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.Type
+  nameWithType: Grid2d.Type
+- uid: Elements.Spatial.Grid2d.U
+  name: U
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_U
+  commentId: P:Elements.Spatial.Grid2d.U
+  fullName: Elements.Spatial.Grid2d.U
+  nameWithType: Grid2d.U
+- uid: Elements.Spatial.Grid2d.U*
+  name: U
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_U_
+  commentId: Overload:Elements.Spatial.Grid2d.U
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.U
+  nameWithType: Grid2d.U
+- uid: Elements.Spatial.Grid2d.V
+  name: V
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_V
+  commentId: P:Elements.Spatial.Grid2d.V
+  fullName: Elements.Spatial.Grid2d.V
+  nameWithType: Grid2d.V
+- uid: Elements.Spatial.Grid2d.V*
+  name: V
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_V_
+  commentId: Overload:Elements.Spatial.Grid2d.V
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid2d.V
+  nameWithType: Grid2d.V
+- uid: Elements.Spatial.GridDirection
+  name: GridDirection
+  href: api/Elements.Spatial.GridDirection.html
+  commentId: T:Elements.Spatial.GridDirection
+  fullName: Elements.Spatial.GridDirection
+  nameWithType: GridDirection
+- uid: Elements.Spatial.GridDirection.U
+  name: U
+  href: api/Elements.Spatial.GridDirection.html#Elements_Spatial_GridDirection_U
+  commentId: F:Elements.Spatial.GridDirection.U
+  fullName: Elements.Spatial.GridDirection.U
+  nameWithType: GridDirection.U
+- uid: Elements.Spatial.GridDirection.V
+  name: V
+  href: api/Elements.Spatial.GridDirection.html#Elements_Spatial_GridDirection_V
+  commentId: F:Elements.Spatial.GridDirection.V
+  fullName: Elements.Spatial.GridDirection.V
+  nameWithType: GridDirection.V
 - uid: Elements.Spatial.MercatorProjection
   name: MercatorProjection
   href: api/Elements.Spatial.MercatorProjection.html
@@ -10237,6 +11260,30 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.MercatorProjection.YToLat
   nameWithType: MercatorProjection.YToLat
+- uid: Elements.Spatial.PatternMode
+  name: PatternMode
+  href: api/Elements.Spatial.PatternMode.html
+  commentId: T:Elements.Spatial.PatternMode
+  fullName: Elements.Spatial.PatternMode
+  nameWithType: PatternMode
+- uid: Elements.Spatial.PatternMode.Cycle
+  name: Cycle
+  href: api/Elements.Spatial.PatternMode.html#Elements_Spatial_PatternMode_Cycle
+  commentId: F:Elements.Spatial.PatternMode.Cycle
+  fullName: Elements.Spatial.PatternMode.Cycle
+  nameWithType: PatternMode.Cycle
+- uid: Elements.Spatial.PatternMode.Flip
+  name: Flip
+  href: api/Elements.Spatial.PatternMode.html#Elements_Spatial_PatternMode_Flip
+  commentId: F:Elements.Spatial.PatternMode.Flip
+  fullName: Elements.Spatial.PatternMode.Flip
+  nameWithType: PatternMode.Flip
+- uid: Elements.Spatial.PatternMode.None
+  name: None
+  href: api/Elements.Spatial.PatternMode.html#Elements_Spatial_PatternMode_None
+  commentId: F:Elements.Spatial.PatternMode.None
+  fullName: Elements.Spatial.PatternMode.None
+  nameWithType: PatternMode.None
 - uid: Elements.Spatial.WebMercatorProjection
   name: WebMercatorProjection
   href: api/Elements.Spatial.WebMercatorProjection.html
@@ -10340,6 +11387,25 @@ references:
   isSpec: "True"
   fullName: Elements.StandardWall.UpdateRepresentations
   nameWithType: StandardWall.UpdateRepresentations
+- uid: Elements.StringExtensions
+  name: StringExtensions
+  href: api/Elements.StringExtensions.html
+  commentId: T:Elements.StringExtensions
+  fullName: Elements.StringExtensions
+  nameWithType: StringExtensions
+- uid: Elements.StringExtensions.NumberToString(System.Int32)
+  name: NumberToString(Int32)
+  href: api/Elements.StringExtensions.html#Elements_StringExtensions_NumberToString_System_Int32_
+  commentId: M:Elements.StringExtensions.NumberToString(System.Int32)
+  fullName: Elements.StringExtensions.NumberToString(System.Int32)
+  nameWithType: StringExtensions.NumberToString(Int32)
+- uid: Elements.StringExtensions.NumberToString*
+  name: NumberToString
+  href: api/Elements.StringExtensions.html#Elements_StringExtensions_NumberToString_
+  commentId: Overload:Elements.StringExtensions.NumberToString
+  isSpec: "True"
+  fullName: Elements.StringExtensions.NumberToString
+  nameWithType: StringExtensions.NumberToString
 - uid: Elements.StructuralFraming
   name: StructuralFraming
   href: api/Elements.StructuralFraming.html

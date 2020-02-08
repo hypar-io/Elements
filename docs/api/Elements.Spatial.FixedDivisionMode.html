@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Namespace Elements.Spatial
+    <title>Enum FixedDivisionMode
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Namespace Elements.Spatial
+    <meta name="title" content="Enum FixedDivisionMode
    | Hypar Docs ">
     <meta name="generator" content="docfx 2.48.1.0">
     
@@ -72,46 +72,52 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Elements.Spatial">
+            <article class="content wrap" id="_content" data-uid="Elements.Spatial.FixedDivisionMode">
   
-  <h1 id="Elements_Spatial" data-uid="Elements.Spatial" class="text-break">Namespace Elements.Spatial
+  
+  <h1 id="Elements_Spatial_FixedDivisionMode" data-uid="Elements.Spatial.FixedDivisionMode" class="text-break">Enum FixedDivisionMode
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Different ways to handle the &quot;remainder&quot; when dividing an arbitrary length by a fixed size</p>
+</div>
   <div class="markdown level0 conceptual"></div>
-  <div class="markdown level0 remarks"></div>
-    <h3 id="classes">Classes
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.html">Elements.Spatial</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Spatial_FixedDivisionMode_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public enum FixedDivisionMode</code></pre>
+  </div>
+  <h3 id="fields">Fields
   </h3>
-      <h4><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></h4>
-      <section><p>Represents a &quot;1-dimensional grid&quot;, akin to a number line that can be subdivided.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a></h4>
-      <section><p>Represents a 2-dimensional grid which can be subdivided</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.MercatorProjection.html">MercatorProjection</a></h4>
-      <section><p>Methods for computing geographic coordinates using the Mercator projection.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.WebMercatorProjection.html">WebMercatorProjection</a></h4>
-      <section><p>Methods for computing web mercator projection tiles and coordinates.</p>
-</section>
-    <h3 id="enums">Enums
-  </h3>
-      <h4><a class="xref" href="Elements.Spatial.EvenDivisionMode.html">EvenDivisionMode</a></h4>
-      <section><p>Describe how a target length should be treated</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.FixedDivisionMode.html">FixedDivisionMode</a></h4>
-      <section><p>Different ways to handle the &quot;remainder&quot; when dividing an arbitrary length by a fixed size</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.GridDirection.html">GridDirection</a></h4>
-      <section><p>A direction/dimension on a 2d grid.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.PatternMode.html">PatternMode</a></h4>
-      <section><p>Methods for repeating a pattern of lengths or types</p>
-</section>
-    <h3 id="delegates">Delegates
-  </h3>
-      <h4><a class="xref" href="Elements.Spatial.Grid1d.Grid1dEventHandler.html">Grid1d.Grid1dEventHandler</a></h4>
-      <section><p>Handler for a grid event</p>
-</section>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    <thead>
+    <tbody>
+      <tr>
+        <td id="Elements_Spatial_FixedDivisionMode_RemainderAtBothEnds">RemainderAtBothEnds</td>
+        <td><p>Take the remainder and split it across both ends of the grid</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Elements_Spatial_FixedDivisionMode_RemainderAtEnd">RemainderAtEnd</td>
+        <td><p>Locate the remainder at the end of the grid</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Elements_Spatial_FixedDivisionMode_RemainderAtStart">RemainderAtStart</td>
+        <td><p>Locate the remainder at the start of the grid</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Elements_Spatial_FixedDivisionMode_RemainderNearMiddle">RemainderNearMiddle</td>
+        <td><p>Locate the remainder at or near the middle of the grid.</p>
+</td>
+      </tr>
+    </tbody>
+  </thead></thead></table>
 </article>
           </div>
           

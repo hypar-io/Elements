@@ -87,6 +87,10 @@
       <div class="level3"><a class="xref" href="Elements.Geometry.Profiles.HSSPipeProfile.html">HSSPipeProfile</a></div>
       <div class="level3"><a class="xref" href="Elements.Geometry.Profiles.WideFlangeProfile.html">WideFlangeProfile</a></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -121,7 +125,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Profile_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Profile : Element</code></pre>
+    <pre><code class="lang-csharp hljs">public class Profile : Element, IEquatable&lt;Profile&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -327,6 +331,48 @@
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Profile_Equals_" data-uid="Elements.Geometry.Profile.Equals*"></a>
+  <h4 id="Elements_Geometry_Profile_Equals_Elements_Geometry_Profile_" data-uid="Elements.Geometry.Profile.Equals(Elements.Geometry.Profile)">Equals(Profile)</h4>
+  <div class="markdown level1 summary"><p>Is this profile equal to the provided profile?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(Profile other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The other profile.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Profile_Reversed_" data-uid="Elements.Geometry.Profile.Reversed*"></a>
   <h4 id="Elements_Geometry_Profile_Reversed" data-uid="Elements.Geometry.Profile.Reversed">Reversed()</h4>
   <div class="markdown level1 summary"><p>Get a new profile which is the reverse of this profile.</p>
@@ -378,6 +424,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
 </article>
           </div>
           

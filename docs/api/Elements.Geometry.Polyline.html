@@ -104,9 +104,9 @@
     var size = 100;
     var divisions = 100;
     var colorCenterLine = new THREE.Color( 0xa0a0a0 );
-    var colorGrid = new THREE.Color( 0xdbdbdb );
-    var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
-    scene.add( gridHelper );
+    // var colorGrid = new THREE.Color( 0xdbdbdb );
+    // var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
+    // scene.add( gridHelper );
   
     window.addEventListener( 'resize', onWindowResize, false );
   
@@ -216,6 +216,7 @@ var offset = pline.Offset(1, EndType.Square);
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -245,7 +246,7 @@ var offset = pline.Offset(1, EndType.Square);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Polyline_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ICurve</code></pre>
+    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ICurve, IEquatable&lt;Polyline&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -398,6 +399,47 @@ var offset = pline.Offset(1, EndType.Square);
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Equals_" data-uid="Elements.Geometry.Polyline.Equals*"></a>
+  <h4 id="Elements_Geometry_Polyline_Equals_Elements_Geometry_Polyline_" data-uid="Elements.Geometry.Polyline.Equals(Elements.Geometry.Polyline)">Equals(Polyline)</h4>
+  <div class="markdown level1 summary"><p>Does this polyline equal the provided polyline?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(Polyline other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -719,6 +761,9 @@ var offset = pline.Offset(1, EndType.Square);
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
 </article>
           </div>
