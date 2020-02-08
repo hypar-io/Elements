@@ -4,6 +4,7 @@
 ### Added
 - `GeometricElement.IsElementDefinition`
 - A `drawEdges` optional parameter to `Model.ToGlTF(...)` to enable edge rendering.
+- `Polyline` and `Profile` now implement `IEquatable`.
 
 ### Changed
 - `Vector.Normalized()` is now `Vector.Unitized()`
