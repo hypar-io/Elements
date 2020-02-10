@@ -48,11 +48,6 @@ namespace Elements.Tests
             );
             Assert.Equal(87, trimmedCells.Count());
             Assert.Equal(18, trimmedCells.Count(c => (bool)c["IsTrimmed"]));
-            var output = new Dictionary<string, object>
-            {
-                {"Polygons", polygons },
-                {"Cells", trimmedCells }
-            };
         }
 
         [Fact]
