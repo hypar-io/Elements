@@ -48,6 +48,28 @@ namespace Elements.Tests
             );
             Assert.Equal(87, trimmedCells.Count());
             Assert.Equal(18, trimmedCells.Count(c => (bool)c["IsTrimmed"]));
+            var output = new Dictionary<string, object>
+            {
+                {"Polygons", polygons },
+                {"Cells", trimmedCells }
+            };
+            File.WriteAllText("/Users/andrewheumann/Desktop/CellTest.json", JsonConvert.SerializeObject(output));
+        }
+
+        [Fact]
+        public void RotationOfTransform()
+        {
+            var rectangle = Polygon.Rectangle(10, 6);
+            var rotation = new Transform(Vector3.Origin, 30); //30 degree rotation
+            var rotatedRectangle = rotation.OfPolygon(rectangle);
+            var grid = new Grid2d(rotatedRectangle, rotation);
+            grid.U.DivideByCount(20);
+            grid.V.DivideByCount(12);
+            var output = grid.GetCells().Select(c => c.GetTrimmedCellGeometry());
+            File.WriteAllText("/Users/andrewheumann/Desktop/rotationCheck.json", JsonConvert.SerializeObject(output));
+            Assert.Equal(0.5, grid[5, 5].U.Domain.Length, 3);
+            Assert.Equal(0.5, grid[5, 5].V.Domain.Length, 3);
+
         }
 
         [Fact]

@@ -100,8 +100,8 @@ namespace Elements.Spatial
         /// The polygon's bounding box parallel to the supplied transform will be
         /// used as the grid extents. 
         /// </summary>
-        /// <param name="boundary"></param>
-        /// <param name="t">A transform representing the </param>
+        /// <param name="boundary">The external boundary of this grid system.</param>
+        /// <param name="t">A transform representing the alignment of the grid.</param>
         public Grid2d(Polygon boundary, Transform t = null) : this(new Polygon[] { boundary }, t)
         {
 
@@ -114,8 +114,8 @@ namespace Elements.Spatial
         /// The polygons' bounding box parallel to the supplied transform will be
         /// used as the grid extents.
         /// </summary>
-        /// <param name="boundaries"></param>
-        /// <param name="t"></param>
+        /// <param name="boundaries">The external boundaries of this grid system.</param>
+        /// <param name="t">A transform representing the alignment of the grid.</param>
         public Grid2d(IList<Polygon> boundaries, Transform t = null)
         {
             if (t == null)
@@ -129,9 +129,9 @@ namespace Elements.Spatial
             }
 
 
-            toGrid = new Transform(t);
-            t.Invert();
             fromGrid = new Transform(t);
+            t.Invert();
+            toGrid = new Transform(t);
 
             var transformedBoundaries = toGrid.OfPolygons(boundaries);
             boundariesInGridSpace = transformedBoundaries;
