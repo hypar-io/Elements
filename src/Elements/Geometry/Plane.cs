@@ -19,9 +19,9 @@ namespace Elements.Geometry
         public Plane(Vector3 a, Vector3 b, Vector3 c)
         {
             this.Origin = a;
-            var ab = (b-a).Normalized();
-            var bc = (c-a).Normalized();
-            this.Normal = ab.Cross(bc).Normalized();
+            var ab = (b-a).Unitized();
+            var bc = (c-a).Unitized();
+            this.Normal = ab.Cross(bc).Unitized();
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Elements.Geometry
                 throw new ArgumentException("The plane could not be created. The points must not be coincident.");
             }
             this.Origin = origin;
-            this.Normal = (points[0]-points[1]).Normalized().Cross((points[2] - points[0]).Normalized());
+            this.Normal = (points[0]-points[1]).Unitized().Cross((points[2] - points[0]).Unitized());
         }
 
         /// <summary>

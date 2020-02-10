@@ -7,12 +7,12 @@ namespace Elements.Tests
 {
     public class PerformanceTests : ModelTest
     {
-        [Fact(Skip="Performance")]
+        [Fact]
         public void GlTFWriteTest()
         {
             this.Name = "Performance_Edges";
+            this.GenerateIfc = false;
 
-            // Create 3000 masses
             var sw = new Stopwatch();
             sw.Start();
             
@@ -22,14 +22,15 @@ namespace Elements.Tests
 
             var profile = new Profile(Polygon.Rectangle(w,l));
 
-            // Create 3600 masses.
+            var mass = new Mass(profile, 1, BuiltInMaterials.Mass, isElementDefinition: true);
+            this.Model.AddElement(mass);
+
             for(var i=0; i<dim;i++)
             {
                 for(var j=0; j<dim; j++)
                 {
-                    // Console.WriteLine($"Creating mass {i},{j}");
-                    var mass = new Mass(profile, 1, BuiltInMaterials.Mass, new Transform(new Vector3(w*i, l*j)));
-                    this.Model.AddElement(mass);
+                    var instance = mass.CreateInstance(new Transform(new Vector3(w*i, l*j)), $"i_j");
+                    this.Model.AddElement(instance);
                 }
             }
 

@@ -479,7 +479,7 @@ namespace Elements.Geometry.Solids
                 var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
                 var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
                 var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
-                var n = (b-a).Cross(c-a).Normalized();
+                var n = (b-a).Cross(c-a).Unitized();
 
                 for (var j = 0; j < tess.Vertices.Length; j++)
                 {
@@ -618,7 +618,7 @@ namespace Elements.Geometry.Solids
         {
             for (var i = 0; i < transforms.Length - 1; i++)
             {
-                var v = (transforms[i + 1].Origin - transforms[i].Origin).Normalized();
+                var v = (transforms[i + 1].Origin - transforms[i].Origin).Unitized();
                 openEdge = SweepEdgesBetweenPlanes(openEdge, v, transforms[i + 1].XY());
             }
             return openEdge;

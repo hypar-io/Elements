@@ -1,8 +1,17 @@
 # Changelog
 
-## 0.5
+## 0.5.1
 ### Added
 - `GeometricElement.IsElementDefinition`
+- A `drawEdges` optional parameter to `Model.ToGlTF(...)` to enable edge rendering.
+- `Polyline` and `Profile` now implement `IEquatable`.
+
+### Changed
+- `Vector.Normalized()` is now `Vector.Unitized()`
+
+### Fixed
+- Fixed an error with `Transform.OfVector(...)` where the translation of the transform was not applied.
+- Fixed an error where `Mesh.ComputeNormals(...)` was not set to a unitized vector.
 
 ## 0.4.4
 ### Added

@@ -85,6 +85,10 @@
     <div class="level2"><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></div>
     <div class="level3"><span class="xref">HSSPipeProfile</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -101,6 +105,9 @@
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Profile.html#Elements_Geometry_Profile_Transform_Elements_Geometry_Transform_">Profile.Transform(Transform)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Profile.html#Elements_Geometry_Profile_Equals_Elements_Geometry_Profile_">Profile.Equals(Profile)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -134,7 +141,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Profiles_HSSPipeProfile_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class HSSPipeProfile : Profile</code></pre>
+    <pre><code class="lang-csharp hljs">public class HSSPipeProfile : Profile, IEquatable&lt;Profile&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -392,6 +399,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
 </article>
           </div>
           

@@ -66,7 +66,7 @@ namespace Elements.Geometry
         public override Transform TransformAt(double u)
         {
             var p = PointAt(u);
-            var x = (p-this.Center).Normalized();
+            var x = (p-this.Center).Unitized();
             var y = Vector3.ZAxis;
             return new Transform(p, x, x.Cross(y));
         }
