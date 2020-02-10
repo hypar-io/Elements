@@ -78,7 +78,7 @@ namespace Elements.Tests
             }
 
             Assert.Equal(2, model.Elements.Count);
-            Assert.Equal(3, errors.Count);
+            Assert.Equal(2, errors.Count);
         }
 
         /// <summary>
