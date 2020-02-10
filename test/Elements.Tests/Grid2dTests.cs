@@ -53,7 +53,6 @@ namespace Elements.Tests
                 {"Polygons", polygons },
                 {"Cells", trimmedCells }
             };
-            File.WriteAllText("/Users/andrewheumann/Desktop/CellTest.json", JsonConvert.SerializeObject(output));
         }
 
         [Fact]
@@ -65,8 +64,6 @@ namespace Elements.Tests
             var grid = new Grid2d(rotatedRectangle, rotation);
             grid.U.DivideByCount(20);
             grid.V.DivideByCount(12);
-            var output = grid.GetCells().Select(c => c.GetTrimmedCellGeometry());
-            File.WriteAllText("/Users/andrewheumann/Desktop/rotationCheck.json", JsonConvert.SerializeObject(output));
             Assert.Equal(0.5, grid[5, 5].U.Domain.Length, 3);
             Assert.Equal(0.5, grid[5, 5].V.Domain.Length, 3);
 
