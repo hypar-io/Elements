@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+### Fixed
+- `Grid2d` constructors accepting a Transform interpreted the transform incorrectly.
+
 ## 0.5.1
 ### Added
 - `Grid1d`

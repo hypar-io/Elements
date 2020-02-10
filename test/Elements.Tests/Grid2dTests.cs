@@ -51,6 +51,19 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void RotationOfTransform()
+        {
+            var rectangle = Polygon.Rectangle(10, 6);
+            var rotation = new Transform(Vector3.Origin, 30); //30 degree rotation
+            var rotatedRectangle = rotation.OfPolygon(rectangle);
+            var grid = new Grid2d(rotatedRectangle, rotation);
+            grid.U.DivideByCount(20);
+            grid.V.DivideByCount(12);
+            Assert.Equal(0.5, grid[5, 5].U.Domain.Length, 3);
+            Assert.Equal(0.5, grid[5, 5].V.Domain.Length, 3);
+        }
+
+        [Fact]
         public void NoExceptionsThrownWithAnyRotation()
         {
             for (int rotation = 0; rotation < 360; rotation += 10)

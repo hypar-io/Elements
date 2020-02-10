@@ -100,9 +100,9 @@ namespace Elements.Spatial
         /// The polygon's bounding box parallel to the supplied transform will be
         /// used as the grid extents. 
         /// </summary>
-        /// <param name="boundary"></param>
-        /// <param name="t">A transform representing the </param>
-        public Grid2d(Polygon boundary, Transform t = null) : this(new Polygon[] { boundary }, t)
+        /// <param name="boundary">The external boundary of this grid system.</param>
+        /// <param name="transform">A transform representing the alignment of the grid.</param>
+        public Grid2d(Polygon boundary, Transform transform = null) : this(new Polygon[] { boundary }, transform)
         {
 
         }
@@ -114,24 +114,24 @@ namespace Elements.Spatial
         /// The polygons' bounding box parallel to the supplied transform will be
         /// used as the grid extents.
         /// </summary>
-        /// <param name="boundaries"></param>
-        /// <param name="t"></param>
-        public Grid2d(IList<Polygon> boundaries, Transform t = null)
+        /// <param name="boundaries">The external boundaries of this grid system.</param>
+        /// <param name="transform">A transform representing the alignment of the grid.</param>
+        public Grid2d(IList<Polygon> boundaries, Transform transform = null)
         {
-            if (t == null)
+            if (transform == null)
             {
-                t = new Transform();
+                transform = new Transform();
             }
 
-            if (!t.ZAxis.IsParallelTo(Vector3.ZAxis))
+            if (!transform.ZAxis.IsParallelTo(Vector3.ZAxis))
             {
                 throw new ArgumentException("Currently transforms that are not parallel to the XY Plane are not supported.");
             }
 
 
-            toGrid = new Transform(t);
-            t.Invert();
-            fromGrid = new Transform(t);
+            fromGrid = new Transform(transform);
+            toGrid = new Transform(transform);
+            toGrid.Invert();
 
             var transformedBoundaries = toGrid.OfPolygons(boundaries);
             boundariesInGridSpace = transformedBoundaries;
