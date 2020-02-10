@@ -222,7 +222,7 @@ namespace Elements.Geometry
         /// <param name="u">A parameter between 0.0 and 1.0.</param>
         public Vector3 TangentAt(double u)
         {
-            return VelocityAt(u).Normalized();
+            return VelocityAt(u).Unitized();
         }
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace Elements.Geometry
         {
             var V = VelocityAt(u);
             var Q = AccelerationAt(u);
-            return V.Cross(Q).Cross(V).Normalized();
+            return V.Cross(Q).Cross(V).Unitized();
         }
 
         /// <summary>

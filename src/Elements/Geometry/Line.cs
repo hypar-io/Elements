@@ -37,7 +37,7 @@ namespace Elements.Geometry
         public Line(Vector3 start, Vector3 direction, double length)
         {
             this.Start = start;
-            this.End = start + direction.Normalized() * length;
+            this.End = start + direction.Unitized() * length;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), (this.Start - this.End).Normalized());
+            return new Transform(PointAt(u), (this.Start - this.End).Unitized());
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Direction()
         {
-            return (this.End - this.Start).Normalized();
+            return (this.End - this.Start).Unitized();
         }
 
         /// <summary>
@@ -394,13 +394,13 @@ namespace Elements.Geometry
 
             // Construct new vectors that both
             // point away from the projected intersection
-            var newD1 = (this.PointAt(0.5) - result).Normalized();
-            var newD2 = (target.PointAt(0.5) - result).Normalized();
+            var newD1 = (this.PointAt(0.5) - result).Unitized();
+            var newD2 = (target.PointAt(0.5) - result).Unitized();
 
             var theta = newD1.AngleTo(newD2) * Math.PI / 180.0;
             var halfTheta = theta / 2.0;
             var h = radius / Math.Sin(halfTheta);
-            var centerVec = newD1.Average(newD2).Normalized();
+            var centerVec = newD1.Average(newD2).Unitized();
             var arcCenter = result + centerVec * h;
 
             // Find the closest points from the arc

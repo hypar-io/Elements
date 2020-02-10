@@ -1,6 +1,7 @@
 #pragma warning disable CS1591
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry.Profiles
@@ -133,7 +134,7 @@ namespace Elements.Geometry.Profiles
                                                                 verticalAlignment,
                                                                 horizontalAlignment,
                                                                 verticalOffset,
-                                                                horizontalOffset), null, id, name)
+                                                                horizontalOffset), new List<Polygon>(), id, name)
         {
             this.bf = bf;
             this.d = d;

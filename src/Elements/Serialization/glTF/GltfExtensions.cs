@@ -42,13 +42,14 @@ namespace Elements.Serialization.glTF
         /// <param name="model">The model to serialize.</param>
         /// <param name="path">The output path.</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
-        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true)
+        /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
+        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true, bool drawEdges = true)
         {
             if (model.Elements.Count > 0)
             {
                 if (useBinarySerialization)
                 {
-                    if (SaveGlb(model, path))
+                    if (SaveGlb(model, path, drawEdges))
                     {
                         return;
                     }
@@ -56,7 +57,7 @@ namespace Elements.Serialization.glTF
                 }
                 else
                 {
-                    if (SaveGltf(model, path))
+                    if (SaveGltf(model, path, drawEdges))
                     {
                         return;
                     }
@@ -72,11 +73,11 @@ namespace Elements.Serialization.glTF
         /// Convert the Model to a base64 encoded string.
         /// </summary>
         /// <returns>A Base64 string representing the Model.</returns>
-        public static string ToBase64String(this Model model)
+        public static string ToBase64String(this Model model, bool drawEdges = true)
         {
             var buffer = new List<byte>();
             var tmp = Path.GetTempFileName();
-            var gltf = InitializeGlTF(model, buffer);
+            var gltf = InitializeGlTF(model, buffer, drawEdges);
             if (gltf == null)
             {
                 return "";
@@ -571,13 +572,13 @@ namespace Elements.Serialization.glTF
             if (vertices.Count > 0)
             {
                 // Draw standard edges
-                AddLines(100000, vertices.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors, meshes, nodes);
+                AddLines(100000, vertices.ToArray(), gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors, meshes, nodes, false);
             }
 
             if (verticesHighlighted.Count > 0)
             {
                 // Draw highlighted edges
-                AddLines(100001, verticesHighlighted.ToArray(), gltf, materials[BuiltInMaterials.EdgesHighlighted.Name], buffer, bufferViews, accessors, meshes, nodes);
+                AddLines(100001, verticesHighlighted.ToArray(), gltf, materials[BuiltInMaterials.EdgesHighlighted.Name], buffer, bufferViews, accessors, meshes, nodes, false);
             }
 
             var buff = new glTFLoader.Schema.Buffer();
@@ -596,10 +597,10 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGlb(Model model, string path)
+        private static bool SaveGlb(Model model, string path, bool drawEdges = true)
         {
             var buffer = new List<byte>();
-            var gltf = InitializeGlTF(model, buffer);
+            var gltf = InitializeGlTF(model, buffer, drawEdges);
             if (gltf == null)
             {
                 return false;
@@ -610,11 +611,11 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGltf(Model model, string path)
+        private static bool SaveGltf(Model model, string path, bool drawEdges = true)
         {
             var buffer = new List<byte>();
 
-            var gltf = InitializeGlTF(model, buffer);
+            var gltf = InitializeGlTF(model, buffer, drawEdges);
             if (gltf == null)
             {
                 return false;
@@ -638,7 +639,7 @@ namespace Elements.Serialization.glTF
             return true;
         }
 
-        private static Gltf InitializeGlTF(Model model, List<byte> buffer)
+        private static Gltf InitializeGlTF(Model model, List<byte> buffer, bool drawEdges = true)
         {
             var gltf = new Gltf();
             var asset = new Asset();
@@ -673,22 +674,60 @@ namespace Elements.Serialization.glTF
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
 
-            var materialsToAdd = model.AllElementsOfType<Material>();
-            var materials = gltf.AddMaterials(materialsToAdd.ToList(), buffer, bufferViews);
+            var materialsToAdd = model.AllElementsOfType<Material>().ToList();
+            materialsToAdd.Add(BuiltInMaterials.Edges);
+            var materials = gltf.AddMaterials(materialsToAdd, buffer, bufferViews);
 
             var elements = model.Elements.Where(e =>
             {
                 return e.Value is GeometricElement || e.Value is ElementInstance;
             }).Select(e => e.Value);
 
+            // Lines are stored in a list of lists
+            // according to the max available index size.
+            var lines = new List<List<Vector3>>();
+            var currLines = new List<Vector3>();
+            lines.Add(currLines);
+
             var meshElementMap = new Dictionary<Guid, List<int>>();
             foreach (var e in elements)
             {
-                GetRenderDataForElement(e, gltf, materials, buffer, bufferViews, accessors, meshes, nodes, meshElementMap);
+                // Check if we'll overrun the index size
+                // for the current line array. If so,
+                // create a new line array.
+                if(currLines.Count * 2 > ushort.MaxValue)
+                {
+                    currLines = new List<Vector3>();
+                    lines.Add(currLines);
+                }
+
+                GetRenderDataForElement(e,
+                                        gltf,
+                                        materials,
+                                        buffer,
+                                        bufferViews,
+                                        accessors,
+                                        meshes,
+                                        nodes,
+                                        meshElementMap,
+                                        currLines,
+                                        drawEdges);
             }
             if (buffer.Count == 0)
             {
                 return null;
+            }
+
+            if (drawEdges && lines.Count() > 0)
+            {
+                foreach(var lineSet in lines)
+                {
+                    if(lineSet.Count == 0)
+                    {
+                        continue;
+                    }
+                    AddLines(GetNextId(), lineSet, gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors, meshes, nodes, false);
+                }
             }
 
             var buff = new glTFLoader.Schema.Buffer();
@@ -713,7 +752,9 @@ namespace Elements.Serialization.glTF
                                                     List<Accessor> accessors,
                                                     List<glTFLoader.Schema.Mesh> meshes,
                                                     List<glTFLoader.Schema.Node> nodes,
-                                                    Dictionary<Guid, List<int>> meshElementMap)
+                                                    Dictionary<Guid, List<int>> meshElementMap,
+                                                    List<Vector3> lines,
+                                                    bool drawEdges)
         {
             var materialName = BuiltInMaterials.Default.Name;
             int meshId = -1;
@@ -731,8 +772,18 @@ namespace Elements.Serialization.glTF
                         var solid = solidOp.GetSolid();
                         if (solid != null)
                         {
-                            meshId = ProcessSolid(solid, e.Id.ToString(), materialName, ref gltf,
-                                ref materials, ref buffer, bufferViews, accessors, meshes);
+                            meshId = ProcessSolid(solid,
+                                                  e.Id.ToString(),
+                                                  materialName,
+                                                  ref gltf,
+                                                  ref materials,
+                                                  ref buffer,
+                                                  bufferViews,
+                                                  accessors,
+                                                  meshes,
+                                                  lines,
+                                                  geom.IsElementDefinition ? false : drawEdges,
+                                                  geom.Transform);
                             if (!meshElementMap.ContainsKey(e.Id))
                             {
                                 meshElementMap.Add(e.Id, new List<int>());
@@ -754,12 +805,32 @@ namespace Elements.Serialization.glTF
 
                 // Lookup the corresponding mesh in the map.
                 AddInstanceMesh(gltf, nodes, meshElementMap[i.BaseDefinition.Id], i.Transform);
+
+                if(drawEdges)
+                {
+                    // Get the edges for the solid
+                    var geom = i.BaseDefinition;
+                    if(geom.Representation != null)
+                    {
+                        foreach(var solidOp in geom.Representation.SolidOperations)
+                        {
+                            var solid = solidOp.GetSolid();
+                            if (solid != null)
+                            {
+                                foreach (var edge in solid.Edges.Values)
+                                {
+                                    lines.AddRange(new[] { i.Transform.OfVector(edge.Left.Vertex.Point), i.Transform.OfVector(edge.Right.Vertex.Point) });
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             if (e is ModelCurve)
             {
                 var mc = (ModelCurve)e;
-                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materials[mc.Material.Name], buffer, bufferViews, accessors, meshes, nodes, mc.Transform);
+                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materials[mc.Material.Name], buffer, bufferViews, accessors, meshes, nodes, true, mc.Transform);
             }
 
             if (e is ModelPoints)
@@ -843,7 +914,10 @@ namespace Elements.Serialization.glTF
                                          ref List<byte> buffer,
                                          List<BufferView> bufferViews,
                                          List<Accessor> accessors,
-                                         List<glTFLoader.Schema.Mesh> meshes)
+                                         List<glTFLoader.Schema.Mesh> meshes,
+                                         List<Vector3> lines,
+                                         bool drawEdges,
+                                         Transform t = null)
         {
             byte[] vertexBuffer;
             byte[] normalBuffer;
@@ -861,6 +935,21 @@ namespace Elements.Serialization.glTF
                             out vmax, out vmin, out nmin, out nmax, out cmin,
                             out cmax, out imin, out imax, out uvmax, out uvmin);
 
+            if(drawEdges)
+            {
+                foreach (var edge in solid.Edges.Values)
+                {
+                    if(t != null)
+                    {
+                        lines.AddRange(new[] { t.OfVector(edge.Left.Vertex.Point), t.OfVector(edge.Right.Vertex.Point) });
+                    }
+                    else
+                    {
+                        lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
+                    }
+                }
+            }
+
             return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
                                 indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
                                 imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, meshes);
@@ -875,12 +964,12 @@ namespace Elements.Serialization.glTF
                                      List<Accessor> accessors,
                                      List<glTFLoader.Schema.Mesh> meshes,
                                      List<glTFLoader.Schema.Node> nodes,
+                                     bool lineLoop,
                                      Transform t = null)
         {
             var floatSize = sizeof(float);
             var ushortSize = sizeof(ushort);
             var vBuff = new byte[vertices.Count * 3 * floatSize];
-            // var indices = new byte[vertices.Count / 2 *  2 * ushortSize];
             var indices = new byte[vertices.Count * 2 * ushortSize];
 
             var vi = 0;
@@ -893,9 +982,8 @@ namespace Elements.Serialization.glTF
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Z), 0, vBuff, vi + 2 * floatSize, floatSize);
                 vi += 3 * floatSize;
 
-                // On every even index, write a line segment.
-                // if(i % 2 == 0 && i < vertices.Count - 1)
-                if (i < vertices.Count - 1)
+                var write = lineLoop ? (i < vertices.Count - 1) : (i % 2 == 0 && i < vertices.Count - 1);
+                if(write)
                 {
                     System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)i), 0, indices, ii, ushortSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)(i + 1)), 0, indices, ii + ushortSize, ushortSize);

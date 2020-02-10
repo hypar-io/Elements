@@ -189,7 +189,7 @@ namespace Elements.Generate
                     {
                         Console.WriteLine(d.ToString());
                     }
-                    throw new Exception("There was an error creating and assembly for the user defined types. See the console for more information.");
+                    throw new Exception("There was an error creating an assembly for the user defined types. See the console for more information.");
                 }
             }
             return assembly;
@@ -288,11 +288,6 @@ namespace Elements.Generate
 
                 // Obsolete the origin property on Model.
                 file = file.Replace("public Position Origin { get; set; }", "[Obsolete(\"Use Transform instead.\")]\n\t\tpublic Position Origin { get; set; }");
-            }
-            else if(typeName == "GeometricElement")
-            {
-                // Make IsElementDefinition private.
-                file = file.Replace("public bool IsElementDefinition { get; set; }", "public bool IsElementDefinition { get; }");
             }
             // Convert some classes to structs.
             else if(typeName == "Color" || typeName == "Vector3")

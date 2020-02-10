@@ -42,8 +42,9 @@ namespace Elements.Geometry
         public Polygon Perimeter { get; set; }
     
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
-        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.AllowNull)]
-        public IList<Polygon> Voids { get; set; }
+        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public IList<Polygon> Voids { get; set; } = new List<Polygon>();
     
     
     }

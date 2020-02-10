@@ -94,8 +94,8 @@ namespace Elements.Geometry
                 // Project up onto the ortho plane
                 var p = new Plane(origin, z);
                 var test = Vector3.ZAxis.Project(p);
-                x = test.Cross(z).Normalized();
-                y = x.Cross(z.Negate()).Normalized(); 
+                x = test.Cross(z).Unitized();
+                y = x.Cross(z.Negate()).Unitized(); 
             }
             
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
@@ -121,9 +121,9 @@ namespace Elements.Geometry
         /// <param name="rotation">An optional rotation in degrees around the transform's z axis.</param>
         public Transform(Vector3 origin, Vector3 xAxis, Vector3 zAxis, double rotation = 0.0)
         {
-            var x = xAxis.Normalized();
-            var z = zAxis.Normalized();
-            var y = z.Cross(x).Normalized();
+            var x = xAxis.Unitized();
+            var z = zAxis.Unitized();
+            var y = z.Cross(x).Unitized();
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
         }
@@ -169,11 +169,11 @@ namespace Elements.Geometry
         /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfVector(Vector3 vector)
         {
-            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, Vector3.Origin);
+            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, this.Origin);
             return new Vector3(
-                vector.X*m.XAxis.X + vector.Y*YAxis.X + vector.Z*ZAxis.X,
-                vector.X*m.XAxis.Y + vector.Y*YAxis.Y + vector.Z*ZAxis.Y,
-                vector.X*m.XAxis.Z + vector.Y*YAxis.Z + vector.Z*ZAxis.Z
+                vector.X*m.XAxis.X + vector.Y*YAxis.X + vector.Z*ZAxis.X + this.Origin.X,
+                vector.X*m.XAxis.Y + vector.Y*YAxis.Y + vector.Z*ZAxis.Y + this.Origin.Y,
+                vector.X*m.XAxis.Z + vector.Y*YAxis.Z + vector.Z*ZAxis.Z + this.Origin.Z
             );
         }
 

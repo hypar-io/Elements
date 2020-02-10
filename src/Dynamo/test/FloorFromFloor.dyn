@@ -377,6 +377,66 @@
       ],
       "Replication": "Auto",
       "Description": "Column.FromRevitColumn (column: Element): string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "HyparDynamo.Hypar.Model.WriteJson@string,var",
+      "Id": "8f1f7b08e47b40049966be6981419fa6",
+      "Inputs": [
+        {
+          "Id": "70641fb35acf4edfad901ef2b1d93f71",
+          "Name": "filePath",
+          "Description": "string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "1d6e0a9576c94c30a375f193e99bf46a",
+          "Name": "model",
+          "Description": "var",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "39370f4bfd624dcc993a4fb23e6de327",
+          "Name": "void",
+          "Description": "void",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Model.WriteJson (filePath: string, model: var): void"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.Filename, CoreNodeModels",
+      "HintPath": "C:\\Users\\Eric Wassail\\source\\Elements\\src\\Dynamo\\test\\RevitToDynamoToHypar.json",
+      "InputValue": ".\\RevitToDynamoToHypar.json",
+      "NodeType": "ExtensionNode",
+      "Id": "f73f15b237a74f01b3df349058c3ed4b",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "67277948f87b40e8af5b58b6735c96bd",
+          "Name": "",
+          "Description": "Filename",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows you to select a file on the system to get its filename"
     }
   ],
   "Connectors": [
@@ -429,6 +489,16 @@
       "Start": "3defde2d0bd04056863fed2f4e8aef20",
       "End": "bee99355f7cf4c9783ab9cc815cb2d51",
       "Id": "25c2b97b280045e3b1d27cc0026d206b"
+    },
+    {
+      "Start": "3defde2d0bd04056863fed2f4e8aef20",
+      "End": "1d6e0a9576c94c30a375f193e99bf46a",
+      "Id": "bc920d7a78d840efaeac3e34c578ea03"
+    },
+    {
+      "Start": "67277948f87b40e8af5b58b6735c96bd",
+      "End": "70641fb35acf4edfad901ef2b1d93f71",
+      "Id": "55d901ee4731484d82e4907f5514a954"
     }
   ],
   "Dependencies": [],
@@ -442,7 +512,8 @@
         "274c7fb51b26441e9140637c820d82e3",
         "0f2680a18b6a4251a74e71a8cb4d73bb",
         "e316758480dc4822b74633be22e7cc72",
-        "4318c517b5264e44925ed521a5da3fd0"
+        "4318c517b5264e44925ed521a5da3fd0",
+        "8f1f7b08e47b40049966be6981419fa6"
       ]
     }
   ],
@@ -477,7 +548,7 @@
         "IsSetAsOutput": false,
         "Excluded": false,
         "X": 1574.7530031381373,
-        "Y": 599.15290167883416
+        "Y": 495.00359464118537
       },
       {
         "ShowGeometry": true,
@@ -598,6 +669,26 @@
         "Excluded": false,
         "X": 1056.853452654288,
         "Y": 998.829013768326
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Model.WriteJson",
+        "Id": "8f1f7b08e47b40049966be6981419fa6",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1904.9263813894281,
+        "Y": 896.03229513376357
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "File Path",
+        "Id": "f73f15b237a74f01b3df349058c3ed4b",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1612.6794527523436,
+        "Y": 931.60082279178062
       }
     ],
     "Annotations": [],

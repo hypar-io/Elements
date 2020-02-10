@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Serialization.glTF;
+using Elements.Serialization.JSON;
 using RevitServices.Persistence;
 
 
@@ -48,6 +49,15 @@ namespace HyparDynamo.Hypar
     }
     public static class Model {
 
+        public static void WriteJson(string filePath, Elements.Model model) {
+            try {
+                var json = model.ToJson();
+                System.IO.File.WriteAllText(filePath, json);
+            }
+            catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
         public static void WriteGlb(string filePath, Elements.Model model) {
             try {
                 model.ToGlTF(filePath);
@@ -60,7 +70,7 @@ namespace HyparDynamo.Hypar
         public static Elements.Model ModelFromElements(IList<object> elements) {
             var model = new Elements.Model();
             var elems = elements.Cast<Elements.Element>().Where(e => e != null);
-            
+
             model.AddElements(elems);
 
             return model;

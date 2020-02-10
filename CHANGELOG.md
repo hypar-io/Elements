@@ -1,8 +1,26 @@
 # Changelog
 
-## 0.5
+## 0.5.1
 ### Added
+- `Grid1d`
+- `Grid2d`
+- `Domain1d` 
 - `GeometricElement.IsElementDefinition`
+- A `drawEdges` optional parameter to `Model.ToGlTF(...)` to enable edge rendering.
+- `Polyline` and `Profile` now implement `IEquatable`.
+- `Polygon.Union(IList<Polygon> firstSet, IList<Polygon> secondSet)` 
+- `Polygon.Difference(IList<Polygon> firstSet, IList<Polygon> secondSet)` 
+- `Polygon.XOR(IList<Polygon> firstSet, IList<Polygon> secondSet)` 
+- `Polygon.Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet)` 
+
+### Changed
+- `Vector.Normalized()` is now `Vector.Unitized()`
+- `Color.ToString()` now returns a useful description
+
+### Fixed
+- Fixed an error with `Transform.OfVector(...)` where the translation of the transform was not applied.
+- Fixed an error where `Mesh.ComputeNormals(...)` was not set to a unitized vector.
+- Fixed an error with `BBox3`'s solver for Polygons
 
 ## 0.4.4
 ### Added

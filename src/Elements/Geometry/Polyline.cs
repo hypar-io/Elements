@@ -12,7 +12,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../test/Elements.Tests/PolylineTests.cs?name=example)]
     /// </example>
-    public partial class Polyline : ICurve
+    public partial class Polyline : ICurve, IEquatable<Polyline>
     {
         /// <summary>
         /// Scale used during clipper operations.
@@ -296,7 +296,7 @@ namespace Elements.Geometry
             // Create transforms at 'miter' planes.
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-            var x = (b - a).Normalized().Average((c - a).Normalized()).Negate();
+            var x = (b - a).Unitized().Average((c - a).Unitized()).Negate();
             var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
 
             return new Transform(this.Vertices[i], x, x.Cross(up));
@@ -309,19 +309,19 @@ namespace Elements.Geometry
             if (i == 0)
             {
                 b = this.Vertices[i + 1];
-                return new Transform(a, (a - b).Normalized());
+                return new Transform(a, (a - b).Unitized());
             }
             else if (i == this.Vertices.Count - 1)
             {
                 b = this.Vertices[i - 1];
-                return new Transform(a, (b - a).Normalized());
+                return new Transform(a, (b - a).Unitized());
             }
             else
             {
                 b = this.Vertices[i - 1];
                 c = this.Vertices[i + 1];
-                var v1 = (b - a).Normalized();
-                var v2 = (c - a).Normalized();
+                var v1 = (b - a).Unitized();
+                var v2 = (c - a).Unitized();
                 x = v1.Average(v2).Negate();
                 var up = v2.Cross(v1);
                 return new Transform(this.Vertices[i], x, up.Cross(x));
@@ -395,6 +395,27 @@ namespace Elements.Geometry
                 result[i] = solution[i].ToPolygon();
             }
             return result;
+        }
+
+        /// <summary>
+        /// Does this polyline equal the provided polyline?
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Polyline other)
+        {
+            if(this.Vertices.Count != other.Vertices.Count)
+            {
+                return false;
+            }
+            for(var i=0; i<Vertices.Count; i++)
+            {
+                if(!this.Vertices[i].Equals(other.Vertices[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
