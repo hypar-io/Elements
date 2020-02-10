@@ -159,15 +159,18 @@ namespace Elements.Geometry
         /// <param name="other">The other profile.</param>
         public bool Equals(Profile other)
         {
-            if(this.Voids.Count != other.Voids.Count)
+            if((this.Voids != null && other.Voids != null))
             {
-                return false;
-            }
-            for(var i=0; i<this.Voids.Count; i++)
-            {
-                if(!this.Voids[i].Equals(other.Voids[i]))
+                if(this.Voids.Count != other.Voids.Count)
                 {
                     return false;
+                }
+                for(var i=0; i<this.Voids.Count; i++)
+                {
+                    if(!this.Voids[i].Equals(other.Voids[i]))
+                    {
+                        return false;
+                    }
                 }
             }
             return this.Perimeter.Equals(other.Perimeter);
