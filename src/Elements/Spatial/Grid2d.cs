@@ -130,8 +130,8 @@ namespace Elements.Spatial
 
 
             fromGrid = new Transform(t);
-            t.Invert();
             toGrid = new Transform(t);
+            toGrid.Invert();
 
             var transformedBoundaries = toGrid.OfPolygons(boundaries);
             boundariesInGridSpace = transformedBoundaries;

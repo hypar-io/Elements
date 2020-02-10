@@ -61,7 +61,6 @@ namespace Elements.Tests
             grid.V.DivideByCount(12);
             Assert.Equal(0.5, grid[5, 5].U.Domain.Length, 3);
             Assert.Equal(0.5, grid[5, 5].V.Domain.Length, 3);
-
         }
 
         [Fact]
