@@ -15,12 +15,14 @@ namespace HyparDynamo.Hypar
         /// </summary>
         /// <param name="wall">The walls to be exported</param>
         /// <returns name="Hypar.Wall">The Hypar Wall element </param>
-        public static Elements.Wall FromRevitWall( this Revit.Elements.Wall RevitWall) {
+        public static Elements.Wall[] FromRevitWall( this Revit.Elements.Wall RevitWall) 
+        {
             var r_Wall = (Autodesk.Revit.DB.Wall)RevitWall.InternalElement;
 
             // wrapped exception catching to deliver more meaningful message in Dynamo
-            try {
-                return RevitHyparTools.Create.WallFromRevitWall(r_Wall);
+            try 
+            {
+                return RevitHyparTools.Create.WallsFromRevitWall(r_Wall, DocumentManager.Instance.CurrentDBDocument);
             }
             catch (Exception ex) {
                 throw new Exception(ex.Message);
@@ -49,12 +51,15 @@ namespace HyparDynamo.Hypar
     }
     public static class Model {
 
-        public static void WriteJson(string filePath, Elements.Model model) {
-            try {
+        public static void WriteJson(string filePath, Elements.Model model)
+        {
+            try
+            {
                 var json = model.ToJson();
                 System.IO.File.WriteAllText(filePath, json);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }

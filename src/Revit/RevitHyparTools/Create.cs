@@ -10,18 +10,9 @@ using Revit = Autodesk.Revit.DB;
 
 namespace RevitHyparTools
 {
-    public static class Create
+    public static partial class Create
     {
-        public static Elements.Wall WallFromRevitWall(Revit.Wall wall) {
-            //TODO this is a non-functioning placeholder method.  
-            throw new NotImplementedException();
-            var profile = new Elements.Geometry.Profile(ElemGeom.Polygon.Rectangle(6,600), new List<ElemGeom.Polygon>(), Guid.NewGuid(), $"Wall-{wall.Id.IntegerValue}");
-            var height = wall.LookupParameter("Unconnected Height").AsDouble();
 
-            var hWall = new Elements.Wall(profile,height);
-            return hWall;
-        }
-        
         public static Elements.Floor[] FloorsFromRevitFloor(Revit.Document doc, Revit.Floor floor)
         {
             var profiles = GetProfilesOfTopFacesOfFloor(doc, floor);

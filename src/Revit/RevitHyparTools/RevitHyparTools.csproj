@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hypar.Elements" Version="0.4.4.2"/>
     <PackageReference Include="GeometryEx" Version="2.27.0"/>
   </ItemGroup>
 
@@ -16,4 +15,7 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Elements\Elements.csproj" />
+  </ItemGroup>
 </Project>
