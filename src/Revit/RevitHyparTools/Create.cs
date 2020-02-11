@@ -12,14 +12,26 @@ namespace RevitHyparTools
 {
     public static partial class Create
     {
-
-        public static Elements.Floor[] FloorsFromRevitFloor(Revit.Document doc, Revit.Floor floor)
+        public static Elements.Floor[] FloorsFromRevitFloor(Revit.Document doc, Revit.Floor revitFloor)
         {
-            var profiles = GetProfilesOfTopFacesOfFloor(doc, floor);
+            var profiles = GetProfilesOfTopFacesOfFloor(doc, revitFloor);
+            var thickness = revitFloor.LookupParameter("Thickness")?.AsDouble();
 
-            var floors = profiles.Select(p => new Elements.Floor(p, 1));
+            var floors = new List<Elements.Floor>();
+            foreach(var profile in profiles) 
+            {
+                var zMove = profile.Perimeter.Vertices.Max(v => v.Z);
+                var transform = new ElemGeom.Transform(0,0,-zMove);
+                
+                var zeroedProfile = transform.OfProfile(profile);
+
+                transform.Invert();
+                var floor = new Elements.Floor(zeroedProfile, thickness.HasValue ? thickness.Value : 1, transform);
+                floors.Add(floor);
+            }
             return floors.ToArray();
         }
+
 
         private static ElemGeom.Profile[] GetProfilesOfTopFacesOfFloor(Document doc, Floor floor)
         {
