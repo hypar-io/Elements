@@ -1,11 +1,12 @@
+<!-- [![IMAGE ALT TEXT](https://hypar.io/videos/elements+functions+and+workflows.png)](https://hypar.io/videos/elements+functions+and+workflows.mp4 "Elements Functions and Workflows") -->
+<video width="100%" controls>
+  <source src="https://hypar.io/videos/elements+functions+and+workflows.mp4" type="video/mp4">
+</video>
+
 # Getting Started with Hypar
 Hypar is a cloud platform for generating buildings that makes it easy to publish, distribute, and maintain your building design logic. Rather than requiring web development skills to scale and deliver your design logic, Hypar lets you concentrate on what you want to get done while the platform creates the interface for your audience and provides computation, visualization, delivery, interoperability, and access control for your functions.
 
-By uploading a function to Hypar you can produce multiple options for a building problem in just a few seconds, and combine them with other people's functions to create rich, realistic designs:
-
-![](./images/HyparIntro.png)
-
-In this introduction to Hypar, we'll work with a much simpler function that generates masses of variable dimensions.
+By uploading a function to Hypar you can produce multiple options for a building problem in just a few seconds, and combine them with other people's functions to create rich, realistic designs. In this introduction to Hypar, we'll work with a much simpler function that generates masses of variable dimensions.
 
 <div style="page-break-after: always;"></div>
 

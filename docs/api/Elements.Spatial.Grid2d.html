@@ -278,7 +278,7 @@ used as the grid extents.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Grid2d(Polygon boundary, Transform t = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Grid2d(Polygon boundary, Transform transform = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -293,12 +293,13 @@ used as the grid extents.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">boundary</span></td>
-        <td></td>
+        <td><p>The external boundary of this grid system.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">t</span></td>
-        <td><p>A transform representing the</p>
+        <td><span class="parametername">transform</span></td>
+        <td><p>A transform representing the alignment of the grid.</p>
 </td>
       </tr>
     </tbody>
@@ -314,7 +315,7 @@ used as the grid extents.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Grid2d(IList&lt;Polygon&gt; boundaries, Transform t = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Grid2d(IList&lt;Polygon&gt; boundaries, Transform transform = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -329,12 +330,14 @@ used as the grid extents.</p>
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">boundaries</span></td>
-        <td></td>
+        <td><p>The external boundaries of this grid system.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">t</span></td>
-        <td></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>A transform representing the alignment of the grid.</p>
+</td>
       </tr>
     </tbody>
   </table>
