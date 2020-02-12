@@ -5,6 +5,8 @@ using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
 using RevitServices.Persistence;
 
+using Hypar.Revit;
+
 
 namespace HyparDynamo.Hypar
 {
@@ -15,14 +17,14 @@ namespace HyparDynamo.Hypar
         /// </summary>
         /// <param name="wall">The walls to be exported</param>
         /// <returns name="Hypar.Wall">The Hypar Wall element </param>
-        public static Elements.Wall[] FromRevitWall( this Revit.Elements.Wall RevitWall) 
+        public static Elements.WallByProfile[] FromRevitWall( this Revit.Elements.Wall RevitWall) 
         {
             var r_Wall = (Autodesk.Revit.DB.Wall)RevitWall.InternalElement;
 
             // wrapped exception catching to deliver more meaningful message in Dynamo
             try 
             {
-                return RevitHyparTools.Create.WallsFromRevitWall(r_Wall, DocumentManager.Instance.CurrentDBDocument);
+                return Create.WallsFromRevitWall(r_Wall, DocumentManager.Instance.CurrentDBDocument);
             }
             catch (Exception ex) {
                 throw new Exception(ex.Message);
@@ -36,7 +38,7 @@ namespace HyparDynamo.Hypar
             
             // wrapped exception catching to deliver more meaningful message in Dynamo
             try {
-                return RevitHyparTools.Create.FloorsFromRevitFloor(DocumentManager.Instance.CurrentDBDocument, r_Floor);
+                return Create.FloorsFromRevitFloor(DocumentManager.Instance.CurrentDBDocument, r_Floor);
             }
             catch (Exception ex) {
                 throw new Exception(ex.Message);

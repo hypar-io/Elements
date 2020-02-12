@@ -3,17 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
+using Elements;
 using Elements.Geometry;
 using GeometryEx;
 using ElemGeom = Elements.Geometry;
 
-using Revit = Autodesk.Revit.DB;
+using ADSK = Autodesk.Revit.DB;
 
-namespace RevitHyparTools
+namespace Hypar.Revit
 {
     public static partial class Create
     {
-        public static Elements.Wall[] WallsFromRevitWall(Revit.Wall wall, Document doc)
+        public static Elements.WallByProfile[] WallsFromRevitWall(ADSK.Wall wall, Document doc)
         {
 
             var side_faces = HostObjectUtils.GetSideFaces(wall, ShellLayerType.Interior);
@@ -29,12 +30,12 @@ namespace RevitHyparTools
             }
 
             var wallPlane = wallFace as PlanarFace;
-            var profiles = GetProfilesOfFace(wallPlane);
+            var profiles = Utils.GetProfilesOfFace(wallPlane);
 
             var centerline = (wall.Location as LocationCurve).Curve;
             var line = new ElemGeom.Line(centerline.GetEndPoint(0).ToVector3(), centerline.GetEndPoint(1).ToVector3());
 
-            var walls = profiles.Select(p => new WallByProfile(line, p, wall.Width));
+            var walls = profiles.Select(p => new WallByProfile(p, wall.Width, line ));
             return walls.ToArray();
         }
     }
