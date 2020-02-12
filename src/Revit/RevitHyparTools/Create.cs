@@ -6,14 +6,14 @@ using Elements.Geometry;
 using GeometryEx;
 using ElemGeom = Elements.Geometry;
 
-using Revit = Autodesk.Revit.DB;
+using ADSK = Autodesk.Revit.DB;
 
-namespace RevitHyparTools
+namespace Hypar.Revit
 {
     public static partial class Create
     {
 
-        public static Elements.Floor[] FloorsFromRevitFloor(Revit.Document doc, Revit.Floor floor)
+        public static Elements.Floor[] FloorsFromRevitFloor(ADSK.Document doc, ADSK.Floor floor)
         {
             var profiles = GetProfilesOfTopFacesOfFloor(doc, floor);
 

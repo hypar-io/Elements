@@ -7,13 +7,13 @@ using Elements.Geometry;
 using GeometryEx;
 using ElemGeom = Elements.Geometry;
 
-using Revit = Autodesk.Revit.DB;
+using ADSK = Autodesk.Revit.DB;
 
-namespace RevitHyparTools
+namespace Hypar.Revit
 {
     public static partial class Create
     {
-        public static Elements.Wall[] WallsFromRevitWall(Revit.Wall wall, Document doc)
+        public static Elements.Wall[] WallsFromRevitWall(ADSK.Wall wall, Document doc)
         {
 
             var side_faces = HostObjectUtils.GetSideFaces(wall, ShellLayerType.Interior);
