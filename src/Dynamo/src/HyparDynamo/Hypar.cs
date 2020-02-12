@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
+using Hypar.Revit;
 using RevitServices.Persistence;
 
 
@@ -22,7 +23,7 @@ namespace HyparDynamo.Hypar
             // wrapped exception catching to deliver more meaningful message in Dynamo
             try 
             {
-                return RevitHyparTools.Create.WallsFromRevitWall(r_Wall, DocumentManager.Instance.CurrentDBDocument);
+                return Create.WallsFromRevitWall(r_Wall, DocumentManager.Instance.CurrentDBDocument);
             }
             catch (Exception ex) {
                 throw new Exception(ex.Message);
@@ -36,7 +37,7 @@ namespace HyparDynamo.Hypar
             
             // wrapped exception catching to deliver more meaningful message in Dynamo
             try {
-                return RevitHyparTools.Create.FloorsFromRevitFloor(DocumentManager.Instance.CurrentDBDocument, r_Floor);
+                return Create.FloorsFromRevitFloor(DocumentManager.Instance.CurrentDBDocument, r_Floor);
             }
             catch (Exception ex) {
                 throw new Exception(ex.Message);

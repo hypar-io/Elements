@@ -1,7 +1,7 @@
 using Autodesk.Revit.DB;
 using Elements.Geometry;
 
-namespace RevitHyparTools 
+namespace Hypar.Revit 
 {
     public static class RevitExtensions {
         public static Vector3 ToVector3(this XYZ xyz) {
