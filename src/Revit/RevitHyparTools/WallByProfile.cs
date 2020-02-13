@@ -18,7 +18,7 @@ namespace Hypar.Revit {
                              Transform transform = null,
                              Representation representation = null,
                              bool isElementDefinition = false,
-                             Guid id = default,
+                             Guid id = default(Guid),
                              string name = null) : base(transform != null ? transform : new Transform(),
                                                  material != null ? material : BuiltInMaterials.Concrete,
                                                  representation != null ? representation : new Representation(new List<SolidOperation>()),
