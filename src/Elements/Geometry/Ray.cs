@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry.Solids;
 
 namespace Elements.Geometry
@@ -82,11 +84,11 @@ namespace Elements.Geometry
         /// Does this ray intersect with the provided SolidOperation?
         /// </summary>
         /// <param name="solidOp">The SolidOperation to intersect with.</param>
-        /// <param name="result">The intersection result.</param>
+        /// <param name="result">The list of intersection results, ordered by distance from the ray origin.</param>
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
-        public bool Intersects(SolidOperation solidOp, out Vector3 result)
+        public bool Intersects(SolidOperation solidOp, out List<Vector3> result)
         {
-            var intersects = Intersects(solidOp.GetSolid(), out Vector3 tempResult);
+            var intersects = Intersects(solidOp.GetSolid(), out List<Vector3> tempResult);
             result = tempResult;
             return intersects;
         }
@@ -97,26 +99,20 @@ namespace Elements.Geometry
         /// <param name="solid">The Solid to intersect with.</param>
         /// <param name="result">The intersection result.</param>
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
-        internal bool Intersects(Solid solid, out Vector3 result)
+        internal bool Intersects(Solid solid, out List<Vector3> result)
         {
-            var distanceToClosestResult = double.MaxValue;
             var faces = solid.Faces;
             var intersects = false;
-            var finalResult = default(Vector3);
+            List<Vector3> results = new List<Vector3>();
             foreach (var face in faces)
             {
                 if (Intersects(face.Value, out Vector3 tempResult))
                 {
                     intersects = true;
-                    var newDistance = Origin.DistanceTo(tempResult);
-                    if (newDistance < distanceToClosestResult)
-                    {
-                        distanceToClosestResult = newDistance;
-                        finalResult = tempResult;
-                    }
+                    results.Add(tempResult);
                 }
             }
-            result = finalResult;
+            result = results.OrderBy(r => r.DistanceTo(Origin)).ToList();
             return intersects;
         }
 
@@ -137,7 +133,7 @@ namespace Elements.Geometry
                 transformFromPolygon.Invert();
                 var transformedPolygon = transformFromPolygon.OfPolygon(boundaryPolygon);
                 var transformedIntersection = transformFromPolygon.OfVector(intersection);
-                if(transformedPolygon.Contains(transformedIntersection))
+                if (transformedPolygon.Contains(transformedIntersection))
                 {
                     result = intersection;
                     return true;
@@ -156,22 +152,40 @@ namespace Elements.Geometry
         /// If true, check the intersection result for the location of the intersection.</returns>
         public bool Intersects(Plane plane, out Vector3 result)
         {
-            // adapted from https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
-            var l0 = Origin;
-            var l = Direction;
-            var p0 = plane.Origin;
-            var n = plane.Normal;
-            var denom = n.Dot(l);
-            if (Math.Abs(denom) < Vector3.EPSILON)
-            {
-                result = default(Vector3);
+            var doesIntersect = Intersects(plane, out Vector3 resultVector, out _);
+            result = resultVector;
+            return doesIntersect;
+        }
+
+        /// <summary>
+        /// Does this ray intersect the provided plane?
+        /// </summary>
+        /// <param name="plane">The Plane to intersect with.</param>
+        /// <param name="result">The intersection result.</param>
+        /// <returns>True if an intersection occurs, otherwise false — this can occur if the ray is very close to parallel to the plane.
+        /// If true, check the intersection result for the location of the intersection.</returns>
+        public bool Intersects(Plane plane, out Vector3 result, out double t)
+        {
+            result = default(Vector3);
+            t = double.NaN;
+            var d = Direction;
+
+            // Test for perpendicular.
+            if (plane.Normal.Dot(d) == 0)
+            { 
                 return false;
             }
-            var p0l0 = p0 - l0;
-            var t = p0l0.Dot(n) / denom;
-            result = Origin + t * l;
-            return t >= Vector3.EPSILON;
+            t = (plane.Normal.Dot(plane.Origin) - plane.Normal.Dot(Origin)) / plane.Normal.Dot(d);
 
+
+            // If t < 0, the point of intersection is behind
+            // the start of the ray.
+            if (t < 0)
+            {
+                return false;
+            }
+            result = Origin + d * t;
+            return true;
         }
 
         /// <summary>

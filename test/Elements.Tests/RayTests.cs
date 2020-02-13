@@ -106,27 +106,63 @@ namespace Elements.Tests
             var extrude = new solids.Extrude(polygon, 10, new Vector3(1, 1, 1), false);
 
             var ray = new Ray(new Vector3(-2, 0, 3), new Vector3(2, 1, 0));
-            var doesIntersect = ray.Intersects(extrude, out Vector3 result);
+            var doesIntersect = ray.Intersects(extrude, out List<Vector3> result);
             Assert.True(doesIntersect);
-            Assert.Equal(new Vector3(4, 3, 3), result);
-
-            //right along the edge of two faces
-            var ray2 = new Ray(new Vector3(6, 6, 6), new Vector3(1, 1, 1));
-            var doesIntersect2 = ray2.Intersects(extrude, out Vector3 result2);
-            Assert.False(doesIntersect2);
-
-            //far off
-            var ray3 = new Ray(new Vector3(6, 6, 0), new Vector3(1, 0,0));
-            var doesIntersect3 = ray3.Intersects(extrude, out Vector3 result3);
-            Assert.False(doesIntersect3);
-
-            //inside
-            var ray4 = new Ray(new Vector3(3, 3, 2), new Vector3(0,1, 0));
-            var doesIntersect4 = ray4.Intersects(extrude, out Vector3 result4);
-            Assert.True(doesIntersect4);
-            Assert.Equal(new Vector3(3, 5, 2), result4);
+            Assert.Equal(new Vector3(4, 3, 3), result[0]);
 
         }
+
+        [Fact]
+        public void RayDoesNotIntersectWhenPointingAwayFromSolid()
+        {
+            var polygon = new Polygon(new[]
+         {
+                new Vector3(0,0,0),
+                new Vector3(4,0,0),
+                new Vector3(0,4,0)
+            });
+            var extrude = new solids.Extrude(polygon, 10, new Vector3(1, 1, 1), false);
+
+            var ray = new Ray(new Vector3(6, 6, 0), new Vector3(1, 0, 0));
+            var doesIntersect = ray.Intersects(extrude, out List<Vector3> result3);
+            Assert.False(doesIntersect);
+        }
+
+        [Fact]
+        public void RayDoesNotIntersectAlongEdge()
+        {
+            var polygon = new Polygon(new[]
+          {
+                new Vector3(0,0,0),
+                new Vector3(4,0,0),
+                new Vector3(0,4,0)
+            });
+            var extrude = new solids.Extrude(polygon, 10, new Vector3(1, 1, 1), false);
+
+            var ray2 = new Ray(new Vector3(6, 6, 6), new Vector3(1, 1, 1));
+            var doesIntersect2 = ray2.Intersects(extrude, out List<Vector3> result2);
+            Assert.False(doesIntersect2);
+
+        }
+
+        [Fact]
+        public void RayIntersectsFromInsideSolid()
+        {
+            var polygon = new Polygon(new[]
+          {
+                new Vector3(0,0,0),
+                new Vector3(4,0,0),
+                new Vector3(0,4,0)
+            });
+            var extrude = new solids.Extrude(polygon, 10, new Vector3(1, 1, 1), false);
+
+            var ray = new Ray(new Vector3(3, 3, 2), new Vector3(0, 1, 0));
+            var doesIntersect = ray.Intersects(extrude, out List<Vector3> result);
+            Assert.True(doesIntersect);
+            Assert.Equal(new Vector3(3, 5, 2), result[0]);
+        }
+
+
 
         [Fact]
         public void IntersectRay()

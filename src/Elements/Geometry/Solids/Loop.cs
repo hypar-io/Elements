@@ -40,7 +40,6 @@ namespace Elements.Geometry.Solids
             }
         }
 
-        //
         public Polygon ToPolygon()
         {
             return new Polygon(
