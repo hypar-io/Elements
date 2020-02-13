@@ -143,7 +143,7 @@ namespace Elements.Geometry
                     return true;
                 }
             }
-            result = default;
+            result = default(Vector3);
             return false;
         }
 
@@ -164,7 +164,7 @@ namespace Elements.Geometry
             var denom = n.Dot(l);
             if (Math.Abs(denom) < Vector3.EPSILON)
             {
-                result = default;
+                result = default(Vector3);
                 return false;
             }
             var p0l0 = p0 - l0;
