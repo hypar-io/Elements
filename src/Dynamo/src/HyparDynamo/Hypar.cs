@@ -11,10 +11,10 @@ namespace HyparDynamo.Hypar
     public static class Wall
     {
         /// <summary>
-        /// gets the walls
+        /// Convert Revit walls to Elements.WallsByProfiles for use in Hypar models
         /// </summary>
-        /// <param name="wall">The walls to be exported</param>
-        /// <returns name="Hypar.Wall">The Hypar Wall element </param>
+        /// <param name="RevitWall">The walls to be exported</param>
+        /// <returns name="WallByProfile">The Hypar walls</param>
         public static Elements.WallByProfile[] FromRevitWall( this Revit.Elements.Wall RevitWall) 
         {
             var r_Wall = (Autodesk.Revit.DB.Wall)RevitWall.InternalElement;
@@ -31,6 +31,11 @@ namespace HyparDynamo.Hypar
     }
 
     public static class Floor {
+        /// <summary>
+        /// Convert Revit walls to Elements.Floors for use in Hypar models
+        /// </summary>
+        /// <param name="RevitFloor">The floors to be exported</param>
+        /// <returns name="Floor">The Hypar floors</param>
         public static Elements.Floor[] FromRevitFloor(this Revit.Elements.Floor RevitFloor) {
             var r_Floor = (Autodesk.Revit.DB.Floor)RevitFloor.InternalElement;
             
