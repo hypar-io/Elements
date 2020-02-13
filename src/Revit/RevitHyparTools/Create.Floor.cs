@@ -24,7 +24,9 @@ namespace Hypar.Revit
                 var zeroedProfile = transform.OfProfile(profile);
 
                 transform.Invert();
-                var floor = new Elements.Floor(zeroedProfile, thickness.HasValue ? thickness.Value : 1, transform);
+                var floor = new Elements.Floor(zeroedProfile,
+                                               thickness.HasValue ? thickness.Value * Utils.FT_TO_METER_FACTOR : Utils.FT_TO_METER_FACTOR,
+                                               transform);
                 floors.Add(floor);
             }
             return floors.ToArray();
@@ -34,7 +36,7 @@ namespace Hypar.Revit
         {
             var geom = floor.get_Geometry(new Options());
             var topFaces = geom.Cast<Solid>().Where(g => g != null).SelectMany(g => Utils.GetMostLikelyTopFacesOfSolid(g));
-            var profiles = topFaces.SelectMany(f => Utils.GetProfilesOfFace(f));
+            var profiles = topFaces.SelectMany(f => Utils.GetScaledProfilesOfFace(f));
 
             return profiles.ToArray();
         }

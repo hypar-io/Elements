@@ -8,15 +8,23 @@ namespace Hypar.Revit
 {
     public static class Utils
     {
+        public const double FT_TO_METER_FACTOR = 0.3048;
+        public static Elements.Geometry.Profile ScaleProfileFtToMeters(Elements.Geometry.Profile profile) {
+            var transform = new Elements.Geometry.Transform();
+            transform.Scale(FT_TO_METER_FACTOR);
+            profile.Transform(transform);
+            return new Elements.Geometry.Profile(profile.Perimeter, profile.Voids, Guid.NewGuid(), profile.Name);
+        }
 
-        public static Elements.Geometry.Profile[] GetProfilesOfFace(PlanarFace f)
+        public static Elements.Geometry.Profile[] GetScaledProfilesOfFace(PlanarFace f)
         {
             var polygons = f.GetEdgesAsCurveLoops().Select(cL => CurveLoopToPolygon(cL));
 
             var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
 
             var profiles = polygonLoopDict.Select(kvp => new Elements.Geometry.Profile(kvp.Key, kvp.Value, Guid.NewGuid(), "Revit Profile"));
-            return profiles.ToArray();
+            var scaledProfiles = profiles.Select(p => Utils.ScaleProfileFtToMeters(p));
+            return scaledProfiles.ToArray();
         }
 
         public static Dictionary<Polygon, List<Polygon>> MatchOuterLoopPolygonsWithInnerHoles(IEnumerable<Polygon> polygons)
