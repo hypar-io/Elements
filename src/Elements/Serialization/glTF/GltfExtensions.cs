@@ -676,11 +676,14 @@ namespace Elements.Serialization.glTF
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
             materialsToAdd.Add(BuiltInMaterials.Edges);
+            materialsToAdd.Add(BuiltInMaterials.Default);
             var materials = gltf.AddMaterials(materialsToAdd, buffer, bufferViews);
 
             var elements = model.Elements.Where(e =>
             {
-                return e.Value is GeometricElement || e.Value is ElementInstance;
+                return e.Value is GeometricElement || 
+                e.Value is ElementInstance ||
+                e.Value is ITessellate;
             }).Select(e => e.Value);
 
             // Lines are stored in a list of lists
