@@ -14,6 +14,28 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Analysis_AnalysisMesh.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Analysis_AnalysisMesh.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Analysis_ColorScale.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Analysis_ColorScale.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Beam.glb",
       "output": {
         "resource": {
@@ -272,7 +294,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "SIGF4zgbL+BNN8XsD4CWqQ=="
+          "hash": "E+HOHwrx85CdZrzhIKiWfQ=="
         }
       },
       "is_incremental": false,
@@ -285,6 +307,42 @@
         ".html": {
           "relative_path": "Types.html",
           "hash": "llmD+5TksUiiTnHU8Lq1XQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Analysis.AnalysisMesh.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Analysis.AnalysisMesh.html",
+          "hash": "PSHEXF7dvKBMl+qfkjBAKQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Analysis.ColorScale.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Analysis.ColorScale.html",
+          "hash": "y4CMBk28NA9bDvf/lh18og=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Analysis.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Analysis.html",
+          "hash": "r0LLkBBKbQWl6aNLYKJrgw=="
         }
       },
       "is_incremental": false,
@@ -596,7 +654,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeometricElement.html",
-          "hash": "YiO2CcElssZWfF5iPL98Dw=="
+          "hash": "dyengE/Dicxn69QVaa+9xQ=="
         }
       },
       "is_incremental": false,
@@ -668,7 +726,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Color.html",
-          "hash": "Sny53ttIgvTOmJOK8PAuNA=="
+          "hash": "FKxjIFwbxgdwnhN7XaT+gA=="
         }
       },
       "is_incremental": false,
@@ -2486,16 +2544,16 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 125,
+          "skipped_file_count": 0
+        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 3,
-          "skipped_file_count": 0
-        },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 122,
           "skipped_file_count": 0
         }
       }

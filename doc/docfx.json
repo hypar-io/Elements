@@ -60,7 +60,9 @@
           "Elements_Geometry_Polyline.glb",
           "Elements_Geometry_Transform.glb",
           "Elements_ModelCurve.glb",
-          "Elements_ModelPoints.glb"
+          "Elements_ModelPoints.glb",
+          "Elements_Analysis_AnalysisMesh.glb",
+          "Elements_Analysis_ColorScale.glb"
         ],
         "dest": "models"
       }
