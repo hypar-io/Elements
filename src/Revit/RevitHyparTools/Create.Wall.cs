@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
 using Elements;
 using Elements.Geometry;
-using GeometryEx;
 using ElemGeom = Elements.Geometry;
 
 using ADSK = Autodesk.Revit.DB;
@@ -34,11 +32,12 @@ namespace Hypar.Revit
             var centerline = (wall.Location as LocationCurve).Curve;
             var line = new ElemGeom.Line(centerline.GetEndPoint(0).ToVector3(), centerline.GetEndPoint(1).ToVector3());
 
-            var walls = profiles.Select(p => new WallByProfile(ReverseProfile(p), wall.Width, line ));
+            var walls = profiles.Select(p => new WallByProfile(ReverseProfile(p), wall.Width, line));
             return walls.ToArray();
         }
 
-        private static ElemGeom.Profile ReverseProfile(ElemGeom.Profile profile) {
+        private static ElemGeom.Profile ReverseProfile(ElemGeom.Profile profile)
+        {
             var perimeter = profile.Perimeter.Reversed();
             var voids = profile.Voids.Select(v => v.Reversed());
 

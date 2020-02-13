@@ -4,9 +4,11 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Elements.Geometry;
 
-namespace Hypar.Revit {
-    public static class Utils {
-        
+namespace Hypar.Revit
+{
+    public static class Utils
+    {
+
         public static Elements.Geometry.Profile[] GetProfilesOfFace(PlanarFace f)
         {
             var polygons = f.GetEdgesAsCurveLoops().Select(cL => CurveLoopToPolygon(cL));
@@ -47,9 +49,11 @@ namespace Hypar.Revit {
             return new Polygon(cL.Select(l => l.GetEndPoint(0).ToVector3()).ToList());
         }
 
-        public static PlanarFace[] GetMostLikelyTopFacesOfSolid(Solid solid) {
+        public static PlanarFace[] GetMostLikelyTopFacesOfSolid(Solid solid)
+        {
             var faces = new List<PlanarFace>();
-            foreach(PlanarFace face in solid.Faces) {
+            foreach (PlanarFace face in solid.Faces)
+            {
                 if (face.FaceNormal.DotProduct(XYZ.BasisZ) > 0.85 && face.FaceNormal.DotProduct(XYZ.BasisZ) <= 1)
                 {
                     faces.Add(face);

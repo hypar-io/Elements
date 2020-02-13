@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
 using Elements.Geometry;
-using GeometryEx;
 using ElemGeom = Elements.Geometry;
 
 using ADSK = Autodesk.Revit.DB;
@@ -18,11 +16,11 @@ namespace Hypar.Revit
             var thickness = revitFloor.LookupParameter("Thickness")?.AsDouble();
 
             var floors = new List<Elements.Floor>();
-            foreach(var profile in profiles) 
+            foreach (var profile in profiles)
             {
                 var zMove = profile.Perimeter.Vertices.Max(v => v.Z);
-                var transform = new ElemGeom.Transform(0,0,-zMove);
-                
+                var transform = new ElemGeom.Transform(0, 0, -zMove);
+
                 var zeroedProfile = transform.OfProfile(profile);
 
                 transform.Invert();
@@ -32,15 +30,13 @@ namespace Hypar.Revit
             return floors.ToArray();
         }
 
-
         private static ElemGeom.Profile[] GetProfilesOfTopFacesOfFloor(Document doc, Floor floor)
         {
             var geom = floor.get_Geometry(new Options());
-            var topFaces = geom.Cast<Solid>().Where(g => g!=null).SelectMany(g => Utils.GetMostLikelyTopFacesOfSolid(g));
+            var topFaces = geom.Cast<Solid>().Where(g => g != null).SelectMany(g => Utils.GetMostLikelyTopFacesOfSolid(g));
             var profiles = topFaces.SelectMany(f => Utils.GetProfilesOfFace(f));
 
             return profiles.ToArray();
         }
-
     }
 }
