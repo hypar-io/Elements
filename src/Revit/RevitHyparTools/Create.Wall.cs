@@ -32,7 +32,7 @@ namespace Hypar.Revit
             var centerline = (wall.Location as LocationCurve).Curve;
             var line = new ElemGeom.Line(centerline.GetEndPoint(0).ToVector3(), centerline.GetEndPoint(1).ToVector3());
 
-            var walls = profiles.Select(p => new WallByProfile(ReverseProfile(p),
+            var walls = profiles.Select(p => new WallByProfile(p,
                                                                wall.Width * Utils.FT_TO_METER_FACTOR,
                                                                line));
             return walls.ToArray();
