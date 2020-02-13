@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry.Solids
 {
@@ -10,12 +11,12 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// The Face to which this Loop corresponds.
         /// </summary>
-        public Face Face{get; set;}
+        public Face Face { get; set; }
 
         /// <summary>
         /// A collection of HalfEdges which comprise the Loop.
         /// </summary>
-        public List<HalfEdge> Edges {get;}
+        public List<HalfEdge> Edges { get; }
 
         /// <summary>
         /// Construct a Loop.
@@ -32,11 +33,19 @@ namespace Elements.Geometry.Solids
         public Loop(HalfEdge[] edges)
         {
             this.Edges = new List<HalfEdge>();
-            foreach(var e in edges)
+            foreach (var e in edges)
             {
                 this.Edges.Add(e);
                 e.Loop = this;
             }
+        }
+
+        //
+        public Polygon ToPolygon()
+        {
+            return new Polygon(
+                Edges.Select(e => e.Vertex.Point).ToList()
+            );
         }
 
         /// <summary>
@@ -67,7 +76,7 @@ namespace Elements.Geometry.Solids
         public void InsertEdgeAfter(HalfEdge target, HalfEdge newEdge)
         {
             var idx = this.Edges.IndexOf(target);
-            this.Edges.Insert(idx+1, newEdge);
+            this.Edges.Insert(idx + 1, newEdge);
             newEdge.Loop = this;
         }
 
