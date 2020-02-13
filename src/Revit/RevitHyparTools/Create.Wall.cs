@@ -17,7 +17,7 @@ namespace Hypar.Revit
         public static Elements.WallByProfile[] WallsFromRevitWall(ADSK.Wall wall, Document doc)
         {
 
-            var side_faces = HostObjectUtils.GetSideFaces(wall, ShellLayerType.Interior);
+            var side_faces = HostObjectUtils.GetSideFaces(wall, ShellLayerType.Exterior);
             if (side_faces.Count != 1)
             {
                 throw new InvalidOperationException($"This wall has ${(side_faces.Count < 1 ? "not enough" : "too many")} interior faces");
@@ -35,8 +35,15 @@ namespace Hypar.Revit
             var centerline = (wall.Location as LocationCurve).Curve;
             var line = new ElemGeom.Line(centerline.GetEndPoint(0).ToVector3(), centerline.GetEndPoint(1).ToVector3());
 
-            var walls = profiles.Select(p => new WallByProfile(p, wall.Width, line ));
+            var walls = profiles.Select(p => new WallByProfile(ReverseProfile(p), wall.Width, line ));
             return walls.ToArray();
+        }
+
+        private static ElemGeom.Profile ReverseProfile(ElemGeom.Profile profile) {
+            var perimeter = profile.Perimeter.Reversed();
+            var voids = profile.Voids.Select(v => v.Reversed());
+
+            return new ElemGeom.Profile(perimeter, voids.ToList(), Guid.NewGuid(), "");
         }
     }
 }

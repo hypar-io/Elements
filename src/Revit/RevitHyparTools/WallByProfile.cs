@@ -19,14 +19,16 @@ namespace Elements {
             this.Profile = @profile;
             this.Thickness = @thickness;
             this.Centerline = @centerline;
-                   }
+        }
 
         public override void UpdateRepresentations() {
             this.Representation.SolidOperations.Clear();
-            // The wall is a simple extrusion of the profile
-            // var midpoint = Centerline.PointAt(0.5);
-            // var direction = new Line(midpoint, midpoint.Project(Profile.Perimeter.Plane())).Direction();
-            var direction = Profile.Perimeter.Normal();
+
+            // to ensure the correct direction, we find the direction form a point on the polygon to the vertical plane of the centerline
+            var point = Profile.Perimeter.Vertices.First();
+            var centerPlane = new Plane( Centerline.Start, Centerline.End, Centerline.End+Vector3.ZAxis );
+            var direction = new Line( point, point.Project(centerPlane) ).Direction();
+        
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, direction, false));
         }
     }

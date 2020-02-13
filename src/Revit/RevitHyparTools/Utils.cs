@@ -13,7 +13,7 @@ namespace Hypar.Revit {
 
             var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
 
-            var profiles = polygonLoopDict.Select(kvp => new Elements.Geometry.Profile(kvp.Key, kvp.Value, Guid.NewGuid(), "Floor Profile"));
+            var profiles = polygonLoopDict.Select(kvp => new Elements.Geometry.Profile(kvp.Key, kvp.Value, Guid.NewGuid(), "Revit Profile"));
             return profiles.ToArray();
         }
 

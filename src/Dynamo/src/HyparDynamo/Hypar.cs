@@ -2,12 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Serialization.glTF;
-using Elements.Serialization.JSON;
+// using Elements.Serialization.JSON;
 using Hypar.Revit;
 using RevitServices.Persistence;
-
-using Hypar.Revit;
-
 
 namespace HyparDynamo.Hypar
 {
