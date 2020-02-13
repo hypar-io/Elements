@@ -54,5 +54,46 @@ namespace Elements.Geometry
         {
             return $"R:{Red:0.00}, G:{Green:0.00}, B:{Blue:0.00}, A: {Alpha:0.00}";
         }
+
+        /// <summary>
+        /// Linearly interpolate between this color and the provide color.
+        /// </summary>
+        /// <param name="other">The other color.</param>
+        /// <param name="t">A value between 0.0 and 1.0.</param>
+        /// <returns></returns>
+        public Color Lerp(Color other, double t)
+        {
+            return (1 - t) * this + t * other;
+        }
+
+        /// <summary>
+        /// Multiply two colors.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        public static Color operator *(Color a, Color b)
+        {
+            return new Color(a.Red * b.Red, a.Green * b.Green, a.Blue * b.Blue, a.Alpha * b.Alpha);
+        }
+
+        /// <summary>
+        /// Multiply a color and a scalar.
+        /// </summary>
+        /// <param name="a">The color.</param>
+        /// <param name="t">The scalar.</param>
+        public static Color operator *(double t, Color a)
+        {
+            return new Color(a.Red * t, a.Green * t, a.Blue * t, a.Alpha * t);
+        }
+
+        /// <summary>
+        /// Add two colors.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        public static Color operator +(Color a, Color b)
+        {
+            return new Color(a.Red + b.Red, a.Green + b.Green, a.Blue + b.Blue, a.Alpha + b.Alpha);
+        }
     }
 }
