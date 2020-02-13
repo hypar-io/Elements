@@ -129,7 +129,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void RayDoesNotIntersectAlongEdge()
+        public void RayIntersectsAlongEdge()
         {
             var polygon = new Polygon(new[]
           {
@@ -141,7 +141,7 @@ namespace Elements.Tests
 
             var ray2 = new Ray(new Vector3(6, 6, 6), new Vector3(1, 1, 1));
             var doesIntersect2 = ray2.Intersects(extrude, out List<Vector3> result2);
-            Assert.False(doesIntersect2);
+            Assert.True(doesIntersect2);
 
         }
 
@@ -149,7 +149,7 @@ namespace Elements.Tests
         public void RayIntersectsFromInsideSolid()
         {
             var polygon = new Polygon(new[]
-          {
+            {
                 new Vector3(0,0,0),
                 new Vector3(4,0,0),
                 new Vector3(0,4,0)
@@ -162,6 +162,39 @@ namespace Elements.Tests
             Assert.Equal(new Vector3(3, 5, 2), result[0]);
         }
 
+        [Fact]
+        public void RayIntersectsSolidAtVertex()
+        {
+            var polygon = new Polygon(new[]
+            {
+                new Vector3(0,0,0),
+                new Vector3(4,0,0),
+                new Vector3(0,4,0)
+            });
+            var extrude = new solids.Extrude(polygon, 10, new Vector3(1, 1, 1), false);
+
+            var ray = new Ray(new Vector3(4, 0, 0), new Vector3(1, 0, 0));
+            var doesIntersect = ray.Intersects(extrude, out List<Vector3> result);
+            Assert.True(doesIntersect);
+            Assert.Equal(new Vector3(4, 0, 0), result[0]);
+
+        }
+
+        [Fact]
+        public void RayIntersectsWhenOriginLiesOnFace()
+        {
+            var polygon = new Polygon(new[]
+            {
+                new Vector3(0,0,0),
+                new Vector3(4,0,0),
+                new Vector3(0,4,0)
+            });
+            var extrude = new solids.Extrude(polygon, 10, new Vector3(1, 1, 1), false);
+            var ray = new Ray(new Vector3(2.88675, 4.88675, 2.88675), new Vector3(-1, 0, 1));
+            var doesIntersect = ray.Intersects(extrude, out List<Vector3> result);
+            Assert.True(doesIntersect);
+            Assert.Equal(ray.Origin, result[0]);
+        }
 
 
         [Fact]

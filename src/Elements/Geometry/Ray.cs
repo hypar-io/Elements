@@ -133,7 +133,7 @@ namespace Elements.Geometry
                 transformFromPolygon.Invert();
                 var transformedPolygon = transformFromPolygon.OfPolygon(boundaryPolygon);
                 var transformedIntersection = transformFromPolygon.OfVector(intersection);
-                if (transformedPolygon.Contains(transformedIntersection))
+                if (transformedPolygon.Contains(transformedIntersection) || transformedPolygon.Touches(transformedIntersection))
                 {
                     result = intersection;
                     return true;
