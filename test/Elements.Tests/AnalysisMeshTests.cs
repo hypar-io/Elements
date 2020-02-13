@@ -19,7 +19,7 @@ namespace Elements.Tests
             var move = new Transform(3,7,0);
             var perimeter = perimeter1.Union(move.OfPolygon(perimeter2));
 
-            // Construct an mass from which we will measure
+            // Construct a mass from which we will measure
             // distance to the analysis mesh's cells.
             var attractor = new Vector3(10,5);
             var mass = new Mass(Polygon.Rectangle(1,1));
