@@ -6,29 +6,32 @@ using Elements.Geometry;
 using GeometryEx;
 using ElemGeom = Elements.Geometry;
 
-using Revit = Autodesk.Revit.DB;
+using ADSK = Autodesk.Revit.DB;
 
-namespace RevitHyparTools
+namespace Hypar.Revit
 {
-    public static class Create
+    public static partial class Create
     {
-        public static Elements.Wall WallFromRevitWall(Revit.Wall wall) {
-            //TODO this is a non-functioning placeholder method.  
-            throw new NotImplementedException();
-            var profile = new Elements.Geometry.Profile(ElemGeom.Polygon.Rectangle(6,600), new List<ElemGeom.Polygon>(), Guid.NewGuid(), $"Wall-{wall.Id.IntegerValue}");
-            var height = wall.LookupParameter("Unconnected Height").AsDouble();
-
-            var hWall = new Elements.Wall(profile,height);
-            return hWall;
-        }
-        
-        public static Elements.Floor[] FloorsFromRevitFloor(Revit.Document doc, Revit.Floor floor)
+        public static Elements.Floor[] FloorsFromRevitFloor(ADSK.Document doc, ADSK.Floor floor)
         {
-            var profiles = GetProfilesOfTopFacesOfFloor(doc, floor);
+            var profiles = GetProfilesOfTopFacesOfFloor(doc, revitFloor);
+            var thickness = revitFloor.LookupParameter("Thickness")?.AsDouble();
 
-            var floors = profiles.Select(p => new Elements.Floor(p, 1));
+            var floors = new List<Elements.Floor>();
+            foreach(var profile in profiles) 
+            {
+                var zMove = profile.Perimeter.Vertices.Max(v => v.Z);
+                var transform = new ElemGeom.Transform(0,0,-zMove);
+                
+                var zeroedProfile = transform.OfProfile(profile);
+
+                transform.Invert();
+                var floor = new Elements.Floor(zeroedProfile, thickness.HasValue ? thickness.Value : 1, transform);
+                floors.Add(floor);
+            }
             return floors.ToArray();
         }
+
 
         private static ElemGeom.Profile[] GetProfilesOfTopFacesOfFloor(Document doc, Floor floor)
         {

@@ -9,5 +9,6 @@ The Zero-Touch node library is mostly a simple wrapper around the [RevitHyparToo
 
 Testing
 To test these nodes:
-- Run the `deploy/deployForTesting.sh` bash script.  It basically removes the old package, runs `dotnet publish` and then copies the newly created package (found in the "deploy" folder) to the Dynamo Revit 2.3 packages folder.
-- Open Revit2020, open Dynamo, and test the nodes.  Optionally you may simply open the graph found in the "test" folder adjacent to "src" which contains sample dynamo graphs.
+- run `dotnet publish`
+- Open Revit2020, open Dynamo, and test the nodes.  
+- Option to test the `dyn` files found in the "test" folder adjacent to "src".
