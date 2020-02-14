@@ -19,13 +19,16 @@ namespace Hypar.Revit
             foreach (var profile in profiles)
             {
                 var zMove = profile.Perimeter.Vertices.Max(v => v.Z);
-                var transform = new ElemGeom.Transform(0, 0, -zMove);
+                var transform = new ElemGeom.Transform(0, 0, -zMove / Utils.FT_TO_METER_FACTOR );
 
                 var zeroedProfile = transform.OfProfile(profile);
 
                 transform.Invert();
+                var floorThickness = thickness.HasValue ? thickness.Value * Utils.FT_TO_METER_FACTOR : Utils.FT_TO_METER_FACTOR;
+                // there appears to be a differen
+                transform.Move(new Vector3(0,0,-floorThickness));
                 var floor = new Elements.Floor(zeroedProfile,
-                                               thickness.HasValue ? thickness.Value * Utils.FT_TO_METER_FACTOR : Utils.FT_TO_METER_FACTOR,
+                                               floorThickness,
                                                transform);
                 floors.Add(floor);
             }

@@ -13,9 +13,18 @@ namespace Hypar.Revit
             var transform = new Elements.Geometry.Transform();
             transform.Scale(FT_TO_METER_FACTOR);
             profile.Transform(transform);
+            
             return new Elements.Geometry.Profile(profile.Perimeter, profile.Voids, Guid.NewGuid(), profile.Name);
         }
+        public static Elements.Geometry.Profile ReverseProfile(Elements.Geometry.Profile profile)
+        {
+            var perimeter = profile.Perimeter.Reversed();
+            var voids = profile.Voids.Select(v => v.Reversed());
 
+            return new Elements.Geometry.Profile(perimeter, voids.ToList(), Guid.NewGuid(), "");
+        }
+
+        // Revit stores lengths in ft, but Hypar's standard is meters, so we need to scale the faces when we convert them to profiles
         public static Elements.Geometry.Profile[] GetScaledProfilesOfFace(PlanarFace f)
         {
             var polygons = f.GetEdgesAsCurveLoops().Select(cL => CurveLoopToPolygon(cL));
@@ -23,8 +32,15 @@ namespace Hypar.Revit
             var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
 
             var profiles = polygonLoopDict.Select(kvp => new Elements.Geometry.Profile(kvp.Key, kvp.Value, Guid.NewGuid(), "Revit Profile"));
-            var scaledProfiles = profiles.Select(p => Utils.ScaleProfileFtToMeters(p));
+            var scaledProfiles = profiles.Select(p => ScaleProfileFtToMeters(p));
             return scaledProfiles.ToArray();
+        }
+
+        internal static Elements.Geometry.Line ScaleLineFtToMeters(Elements.Geometry.Line line)
+        {
+            var transform = new Elements.Geometry.Transform();
+            transform.Scale(FT_TO_METER_FACTOR);
+            return transform.OfLine(line);
         }
 
         public static Dictionary<Polygon, List<Polygon>> MatchOuterLoopPolygonsWithInnerHoles(IEnumerable<Polygon> polygons)

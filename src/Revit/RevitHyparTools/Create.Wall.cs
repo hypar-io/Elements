@@ -31,19 +31,14 @@ namespace Hypar.Revit
 
             var centerline = (wall.Location as LocationCurve).Curve;
             var line = new ElemGeom.Line(centerline.GetEndPoint(0).ToVector3(), centerline.GetEndPoint(1).ToVector3());
+            line = Utils.ScaleLineFtToMeters(line);
+            
 
-            var walls = profiles.Select(p => new WallByProfile(p,
+            var walls = profiles.Select(p => new WallByProfile(Utils.ReverseProfile(p),
                                                                wall.Width * Utils.FT_TO_METER_FACTOR,
                                                                line));
             return walls.ToArray();
         }
 
-        private static ElemGeom.Profile ReverseProfile(ElemGeom.Profile profile)
-        {
-            var perimeter = profile.Perimeter.Reversed();
-            var voids = profile.Voids.Select(v => v.Reversed());
-
-            return new ElemGeom.Profile(perimeter, voids.ToList(), Guid.NewGuid(), "");
-        }
     }
 }
