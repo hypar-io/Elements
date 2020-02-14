@@ -134,27 +134,14 @@ namespace Elements.Geometry
         /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
         public bool Intersects(Plane p, out Vector3 result)
         {
+            var rayIntersects = new Ray(Start, Direction()).Intersects(p, out Vector3 location, out double t);
+            if(rayIntersects && t <= Length())
+            {
+                result = location;
+                return true;
+            }
             result = default(Vector3);
-
-            var d = this.Direction();
-
-            // Test for perpendicular.
-            if (p.Normal.Dot(d) == 0)
-            {
-                return false;
-            }
-            var t = (p.Normal.Dot(p.Origin) - p.Normal.Dot(this.Start)) / p.Normal.Dot(d);
-
-            // If t > the length of the line, the point
-            // of intersection is past the end of the line.
-            // If t < 0, the point of intersection is behind
-            // the start of the line.
-            if (t > this.Length() || t < 0)
-            {
-                return false;
-            }
-            result = this.Start + d * t;
-            return true;
+            return false;
         }
 
         /// <summary>
