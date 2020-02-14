@@ -47,9 +47,9 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void Involute_Transform_Inverse() 
+        public void Involutary_Transform_Inverse() 
         {
-            // our library should handle involute matrices well
+            // our library should handle involutary matrices well
             // https://en.wikipedia.org/wiki/Involutory_matrix 
             var origin = new Vector3(0, 0);
             var xAxis = new Vector3(-1, 0, 0);
