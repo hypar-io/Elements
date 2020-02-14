@@ -93,7 +93,6 @@ namespace Elements.Tests
             }
         }
 
-
         [Fact]
         public void RayIntersectsSolidOperation()
         {
@@ -196,7 +195,6 @@ namespace Elements.Tests
             Assert.Equal(ray.Origin, result[0]);
         }
 
-
         [Fact]
         public void IntersectRay()
         {
@@ -215,7 +213,6 @@ namespace Elements.Tests
         {
             return new Vector3[] { t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position }.Average();
         }
-
 
         private static ModelCurve ModelCurveFromRay(Ray r)
         {
