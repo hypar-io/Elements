@@ -46,6 +46,22 @@ namespace Elements.Tests
             Assert.Equal(0.5, vt.Z);
         }
 
+        [Fact]
+        public void Involute_Transform_Inverse() 
+        {
+            // our library should handle involute matrices well
+            // https://en.wikipedia.org/wiki/Involutory_matrix 
+            var origin = new Vector3(0, 0);
+            var xAxis = new Vector3(-1, 0, 0);
+            var zAxis = new Vector3(0, 1, 0);
+            var transform = new Transform(origin, xAxis, zAxis);
+
+            var inverted = new Transform(transform);
+            inverted.Invert();
+
+            Assert.Equal(transform, inverted);
+        }
+
 
         [Fact]
         public void Transform_ScaleAboutPoint()
