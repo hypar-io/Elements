@@ -25,7 +25,7 @@ namespace Hypar.Revit
 
                 transform.Invert();
                 var floorThickness = thickness.HasValue ? Elements.Units.FeetToMeters(thickness.Value): Elements.Units.FeetToMeters(1);
-                // there appears to be a differen
+                // Revit floors are extrusions down, and currently Hypar floors are extrusions up, so we also much move by the floor thickness
                 transform.Move(new Vector3(0,0,-floorThickness));
                 var floor = new Elements.Floor(zeroedProfile,
                                                floorThickness,

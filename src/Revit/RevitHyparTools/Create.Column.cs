@@ -16,7 +16,6 @@ namespace RevitHyparTools {
 
             var geom = column.get_Geometry(new Options());
 
-
             return new Elements.Column(Vector3.Origin, 10, Polygon.Rectangle(1,2));
         }
     }
