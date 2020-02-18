@@ -1,5 +1,13 @@
 # Changelog
 
+### 0.6.0
+## Added
+- `ColorScale`
+- `AnalysisMesh`
+
+## Fixed
+- Fix #253
+
 ## 0.5.2
 ### Fixed
 - `Grid2d` constructors accepting a Transform interpreted the transform incorrectly.
