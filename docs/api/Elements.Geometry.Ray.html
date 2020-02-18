@@ -249,6 +249,111 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
+  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)">Intersects(Plane, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Does this ray intersect the provided plane?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane plane, out Vector3 result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The Plane to intersect with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The intersection result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection occurs, otherwise false — this can occur if the ray is very close to parallel to the plane.
+If true, check the intersection result for the location of the intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
+  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__System_Double__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Double@)">Intersects(Plane, out Vector3, out Double)</h4>
+  <div class="markdown level1 summary"><p>Does this ray intersect the provided plane?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane plane, out Vector3 result, out double t)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The Plane to intersect with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The intersection result.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">t</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection occurs, otherwise false — this can occur if the ray is very close to parallel to the plane.
+If true, check the intersection result for the location of the intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
   <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Ray_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray,Elements.Geometry.Vector3@,System.Boolean)">Intersects(Ray, out Vector3, Boolean)</h4>
   <div class="markdown level1 summary"><p>Does this ray intersect the provided ray?</p>
 </div>
@@ -299,6 +404,55 @@
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if the rays intersect, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
+  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Solids_SolidOperation_System_Collections_Generic_List_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,System.Collections.Generic.List{Elements.Geometry.Vector3}@)">Intersects(SolidOperation, out List&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Does this ray intersect with the provided SolidOperation?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(SolidOperation solidOp, out List&lt;Vector3&gt; result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Solids.SolidOperation.html">SolidOperation</a></td>
+        <td><span class="parametername">solidOp</span></td>
+        <td><p>The SolidOperation to intersect with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The list of intersection results, ordered by distance from the ray origin.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</p>
 </td>
       </tr>
     </tbody>

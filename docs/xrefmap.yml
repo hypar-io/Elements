@@ -8139,6 +8139,24 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Ray.Equals
   nameWithType: Ray.Equals
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
+  name: Intersects(Plane, out Vector3)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
+  name.vb: Intersects(Plane, ByRef Vector3)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, out Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3)
+  nameWithType: Ray.Intersects(Plane, out Vector3)
+  nameWithType.vb: Ray.Intersects(Plane, ByRef Vector3)
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Double@)
+  name: Intersects(Plane, out Vector3, out Double)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__System_Double__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Double@)
+  name.vb: Intersects(Plane, ByRef Vector3, ByRef Double)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, out Elements.Geometry.Vector3, out System.Double)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3, ByRef System.Double)
+  nameWithType: Ray.Intersects(Plane, out Vector3, out Double)
+  nameWithType.vb: Ray.Intersects(Plane, ByRef Vector3, ByRef Double)
 - uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray,Elements.Geometry.Vector3@,System.Boolean)
   name: Intersects(Ray, out Vector3, Boolean)
   href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Ray_Elements_Geometry_Vector3__System_Boolean_
@@ -8148,6 +8166,15 @@ references:
   fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray, ByRef Elements.Geometry.Vector3, System.Boolean)
   nameWithType: Ray.Intersects(Ray, out Vector3, Boolean)
   nameWithType.vb: Ray.Intersects(Ray, ByRef Vector3, Boolean)
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
+  name: Intersects(SolidOperation, out List<Vector3>)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Solids_SolidOperation_System_Collections_Generic_List_Elements_Geometry_Vector3___
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
+  name.vb: Intersects(SolidOperation, ByRef List(Of Vector3))
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation, out System.Collections.Generic.List<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation, ByRef System.Collections.Generic.List(Of Elements.Geometry.Vector3))
+  nameWithType: Ray.Intersects(SolidOperation, out List<Vector3>)
+  nameWithType.vb: Ray.Intersects(SolidOperation, ByRef List(Of Vector3))
 - uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.Vector3@)
   name: Intersects(Triangle, out Vector3)
   href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Triangle_Elements_Geometry_Vector3__

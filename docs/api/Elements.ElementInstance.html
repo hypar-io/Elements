@@ -204,7 +204,10 @@ individual ids and transforms.</p>
 var profile = new Profile(Polygon.Rectangle(1.0, 1.0));
 var material = new Material(&quot;yellow&quot;, Colors.Yellow);
 var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
-var testUserElement = new TestUserElement(line, profile, material, true);
+
+// Set the isElementDefinition parameter to true,
+// so the element is considered an instance definition.
+var testUserElement = new TestUserElement(line, profile, material, isElementDefinition: true);
 
 // Create instances of that element
 // with varied transforms.
