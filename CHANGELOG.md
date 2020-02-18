@@ -4,6 +4,7 @@
 ## Added
 - `ColorScale`
 - `AnalysisMesh`
+- `Ray.Intersects(...)` for `Plane`, `Face`, `Solid`, and `SolidOperation`
 
 ## Fixed
 - Fix #253
