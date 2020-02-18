@@ -267,7 +267,7 @@ namespace Elements.Spatial
             {
                 throw new ArgumentException($"Unable to divide. Target Length {targetLength} is too small.");
             }
-            var numDivisions = Domain.Length / targetLength;
+            var numDivisions = Math.Max(1, Domain.Length / targetLength);
             int roundedDivisions;
             switch (divisionMode)
             {

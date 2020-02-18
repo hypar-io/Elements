@@ -429,7 +429,7 @@ namespace Elements.Geometry
         /// </summary>
         public double Determinant()
         {
-            return m11 * (m22 * m33 - m22 * m32)
+            return m11 * (m22 * m33 - m23 * m32)
                 + m12 * (m23 * m31 - m21 * m33)
                 + m13 * (m21 * m32 - m22 * m31);
         }
