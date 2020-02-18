@@ -10,7 +10,8 @@ namespace HyparDynamo.Hypar
     public static class Wall
     {
         /// <summary>
-        /// Convert Revit walls to Elements.WallsByProfiles for use in Hypar models
+        /// Convert a Revit wall to Elements.WallByProfile(s) for use in Hypar models.
+        /// Sometimes a single wall in Revit needs to be converted to multiple Hypar walls.
         /// </summary>
         /// <param name="RevitWall">The walls to be exported.</param>
         /// <returns name="WallByProfile">The Hypar walls.</param>
@@ -33,7 +34,8 @@ namespace HyparDynamo.Hypar
     public static class Floor
     {
         /// <summary>
-        /// Convert Revit floor to Elements.Floors for use in Hypar models
+        /// Convert a Revit floor to Elements.Floor(s) for use in Hypar models.
+        /// Sometimes a single floor in Revit needs to be converted to multiple Hypar floors.
         /// </summary>
         /// <param name="revitFloor">The floor to be exported.</param>
         /// <returns name="floor">The Hypar floors.</param>
@@ -62,7 +64,6 @@ namespace HyparDynamo.Hypar
     }
     public static class Model
     {
-
         public static void WriteJson(string filePath, Elements.Model model)
         {
             try

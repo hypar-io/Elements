@@ -26,15 +26,18 @@ namespace Hypar.Revit
             }
 
             var wallPlane = wallFace as PlanarFace;
-            var profiles = Utils.GetScaledProfilesOfFace(wallPlane);
+            var profiles = wallPlane.GetProfiles();
 
             var centerline = (wall.Location as LocationCurve).Curve;
+
             var line = new ElemGeom.Line(centerline.GetEndPoint(0).ToVector3(), centerline.GetEndPoint(1).ToVector3());
-            line = Utils.ScaleLineFtToMeters(line);
-            
-            var walls = profiles.Select(p => new WallByProfile(Utils.ReverseProfile(p),
+            var transform = new Elements.Geometry.Transform();
+            transform.Scale(Elements.Units.FeetToMeters(1));
+            var scaledLine = transform.OfLine(line);
+
+            var walls = profiles.Select(p => new WallByProfile(p.Reverse(),
                                                                Elements.Units.FeetToMeters(wall.Width),
-                                                               line));
+                                                               scaledLine));
             return walls.ToArray();
         }
 

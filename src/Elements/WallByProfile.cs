@@ -7,6 +7,9 @@ using Elements.Geometry.Solids;
 namespace Elements {
     public partial class WallByProfile 
     {
+        /// <summary>
+        /// Create a wall requiring only the profile, thickness and centerline.
+        /// </summary>
         public WallByProfile(Profile @profile, double @thickness, Line @centerline, Transform @transform=null, Material @material=null, Representation @representation=null, bool @isElementDefinition=false)
             : base(transform != null ? transform : new Transform(),
                    material != null ? material : BuiltInMaterials.Concrete,
@@ -20,6 +23,7 @@ namespace Elements {
             this.Centerline = @centerline;
         }
 
+        /// <summary>Update the geometric representation of this wall.</summary>
         public override void UpdateRepresentations() {
             this.Representation.SolidOperations.Clear();
 
