@@ -11,7 +11,7 @@ namespace Elements.Spatial
     /// Represents a 2-dimensional grid which can be subdivided 
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/Grid2dExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/Grid2dTests.cs?name=example)]
     /// </example>
     public class Grid2d
     {

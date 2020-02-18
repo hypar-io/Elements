@@ -10,7 +10,7 @@ namespace Elements.Spatial
     /// Represents a "1-dimensional grid", akin to a number line that can be subdivided.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/Grid1dExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/Grid1dTests.cs?name=example)]
     /// </example>
     public class Grid1d
     {

@@ -11,7 +11,7 @@ namespace Elements
     /// An extruded region of occupiable space.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/SpaceExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/SpaceTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class Space : GeometricElement

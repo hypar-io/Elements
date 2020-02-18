@@ -13,7 +13,7 @@ namespace Elements
     /// A topographic mesh defined by an array of elevation values.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/TopographyExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/TopographyTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class Topography : GeometricElement, ITessellate

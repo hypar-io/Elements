@@ -146,7 +146,6 @@ namespace Elements.Serialization.IFC
             // IfcRelAssociatesMaterial
             // IfcMaterialDefinitionRepresentation
             // https://forums.buildingsmart.org/t/where-and-how-will-my-colors-be-saved-in-ifc/1806/12
-            var materials = new Dictionary<string, IfcMaterial>();
             var styleAssignments = new Dictionary<string, List<IfcStyleAssignmentSelect>>();
 
             var white = Colors.White.ToIfcColourRgb();
@@ -157,7 +156,6 @@ namespace Elements.Serialization.IFC
             foreach (var m in model.AllElementsOfType<Material>())
             {
                 var material = new IfcMaterial(m.Name, null, "Hypar");
-                materials.Add(m.Name, material);
                 ifc.AddEntity(material);
 
                 var color = m.Color.ToIfcColourRgb();

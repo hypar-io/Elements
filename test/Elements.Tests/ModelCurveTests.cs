@@ -11,8 +11,7 @@ namespace Elements.Tests
             this.GenerateIfc = false;
         }
 
-        [Trait("Category","Examples")]
-        [Fact]
+        [Fact, Trait("Category","Examples")]
         public void ModelCurve()
         {
             this.Name = "Elements_ModelCurve";

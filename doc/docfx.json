@@ -62,7 +62,17 @@
           "Elements_ModelCurve.glb",
           "Elements_ModelPoints.glb",
           "Elements_Analysis_AnalysisMesh.glb",
-          "Elements_Analysis_ColorScale.glb"
+          "Elements_Analysis_ColorScale.glb",
+          "Elements_Column.glb",
+          "Elements_Beam.glb",
+          "Elements_Floor.glb",
+          "Elements_Spatial_Grid1d.glb",
+          "Elements_Mass.glb",
+          "Elements_ModelCurve.glb",
+          "Elements_Panel.glb",
+          "Elements_Space.glb",
+          "Elements_Topography.glb",
+          "Elements_StandardWall.glb"
         ],
         "dest": "models"
       }

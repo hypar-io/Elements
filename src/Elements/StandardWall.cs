@@ -11,7 +11,7 @@ namespace Elements
     /// A wall defined by a planar curve, a height, and a thickness.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/StandardWallExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/WallTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class StandardWall : Wall, IHasOpenings
