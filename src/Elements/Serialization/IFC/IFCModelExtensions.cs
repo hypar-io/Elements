@@ -147,7 +147,7 @@ namespace Elements.Serialization.IFC
             // IfcRelAssociatesMaterial
             // IfcMaterialDefinitionRepresentation
             // https://forums.buildingsmart.org/t/where-and-how-will-my-colors-be-saved-in-ifc/1806/12
-            var styleAssignments = new Dictionary<string, List<IfcStyleAssignmentSelect>>();
+            var styleAssignments = new Dictionary<Guid, List<IfcStyleAssignmentSelect>>();
 
             var white = Colors.White.ToIfcColourRgb();
             ifc.AddEntity(white);
@@ -175,7 +175,7 @@ namespace Elements.Serialization.IFC
 
                 var styleAssign = new IfcStyleAssignmentSelect(surfaceStyle);
                 var assignments = new List<IfcStyleAssignmentSelect>(){styleAssign};
-                styleAssignments.Add(m.Name, assignments);
+                styleAssignments.Add(m.Id, assignments);
             }
 
 
