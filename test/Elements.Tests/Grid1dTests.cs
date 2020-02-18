@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.IO;
 using Elements.Spatial;
-using Newtonsoft.Json;
 using Xunit;
 using Elements.Geometry;
 using System.Collections.Generic;
@@ -222,11 +220,10 @@ namespace Elements.Tests
             grid2.SplitAtPosition(32);
             Assert.Equal(5, grid2.GetCells().Count);
             Assert.Equal(3, grid2.Cells.Count);
-            Assert.Equal(1, grid2[0].Cells.Count);
+            Assert.Single(grid2[0].Cells);
             Assert.Equal(2, grid2[1].Cells.Count);
-            Assert.Equal(1, grid2[0][0].Cells.Count);
+            Assert.Single(grid2[0][0].Cells);
             Assert.Equal(2, grid2[0][0][0].Cells.Count);
         }
-
     }
 }
