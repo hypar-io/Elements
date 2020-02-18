@@ -6,7 +6,8 @@ using Newtonsoft.Json;
 namespace Elements.Analysis
 {
     /// <summary>
-    /// A set of discrete colors.
+    /// A range of colors interpolated between
+    /// a number of key values.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../test/Elements.Tests/ColorScaleTests.cs?name=example)]
@@ -31,7 +32,7 @@ namespace Elements.Analysis
         /// <summary>
         /// Construct a color scale.
         /// </summary>
-        /// <param name="colors">The colors which define the color scale's key values.</param>
+        /// <param name="colors">The color scale's key values.</param>
         /// <param name="colorCount">The number of colors in the final color scale
         /// These values will be interpolated between the provided colors.</param>
         public ColorScale(List<Color> colors, int colorCount)
@@ -68,6 +69,10 @@ namespace Elements.Analysis
         /// <returns>A color.</returns>
         public Color GetColorForValue(double t)
         {
+            if(t < 0.0 || t > 1.0)
+            {
+                throw new ArgumentException("The value of t must be between 0.0 and 1.0");
+            }
             var index = (int)Math.Floor(t * (this.Colors.Count - 1));
             return this.Colors[index];
         }
