@@ -1,3 +1,4 @@
+using Elements.Analysis;
 using Elements.Geometry;
 using IFC;
 using STEP;
@@ -181,9 +182,11 @@ namespace Elements.Serialization.IFC
             foreach (var e in model.Elements.Values.Where(e =>
             {
                 var t = e.GetType();
-                return ((e is GeometricElement && !((GeometricElement)e).IsElementDefinition) || e is ElementInstance) &&
+                return ((e is GeometricElement && 
+                        !((GeometricElement)e).IsElementDefinition) || e is ElementInstance) &&
                         t != typeof(ModelCurve) &&
-                        t != typeof(ModelPoints);
+                        t != typeof(ModelPoints) &&
+                        t != typeof(AnalysisMesh);
             }))
             {
                 try
