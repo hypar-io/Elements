@@ -63,6 +63,10 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Color Lerp(Color other, double t)
         {
+            if(t < 0 || t > 1)
+            {
+                throw new ArgumentException("The value of t must be between 0.0 and 1.0.");
+            }
             return (1 - t) * this + t * other;
         }
 
@@ -74,10 +78,10 @@ namespace Elements.Geometry
         /// <param name="b">The second color.</param>
         public static Color operator *(Color a, Color b)
         {
-            return new Color(Math.Max(1, a.Red * b.Red),
-                             Math.Max(1, a.Green * b.Green),
-                             Math.Max(1, a.Blue * b.Blue),
-                             Math.Max(1, a.Alpha * b.Alpha));
+            return new Color(Math.Min(1, a.Red * b.Red),
+                             Math.Min(1, a.Green * b.Green),
+                             Math.Min(1, a.Blue * b.Blue),
+                             Math.Min(1, a.Alpha * b.Alpha));
         }
 
         /// <summary>
@@ -92,10 +96,10 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("The value of t must be greater than 0.0.");
             }
-            return new Color(Math.Max(1, a.Red * t),
-                             Math.Max(1, a.Green * t),
-                             Math.Max(1, a.Blue * t),
-                             Math.Max(1, a.Alpha * t));
+            return new Color(Math.Min(1, a.Red * t),
+                             Math.Min(1, a.Green * t),
+                             Math.Min(1, a.Blue * t),
+                             Math.Min(1, a.Alpha * t));
         }
 
         /// <summary>
@@ -106,10 +110,10 @@ namespace Elements.Geometry
         /// <param name="b">The second color.</param>
         public static Color operator +(Color a, Color b)
         {
-            return new Color(Math.Max(1, a.Red + b.Red),
-                             Math.Max(1, a.Green + b.Green),
-                             Math.Max(1, a.Blue + b.Blue),
-                             Math.Max(1, a.Alpha + b.Alpha));
+            return new Color(Math.Min(1, a.Red + b.Red),
+                             Math.Min(1, a.Green + b.Green),
+                             Math.Min(1, a.Blue + b.Blue),
+                             Math.Min(1, a.Alpha + b.Alpha));
         }
     }
 }
