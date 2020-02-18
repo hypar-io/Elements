@@ -8,7 +8,7 @@ namespace Elements.Tests
 {
     public class AnalysisMeshTests : ModelTest
     {
-        [Fact, Trait("Category","Examples")]
+        [Fact, Trait("Category", "Examples")]
         public void AnalysisMesh()
         {
             this.Name = "Elements_Analysis_AnalysisMesh";
