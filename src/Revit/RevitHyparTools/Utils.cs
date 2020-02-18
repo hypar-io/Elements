@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Autodesk.Revit.DB;
 using Elements.Geometry;
@@ -8,13 +9,12 @@ namespace Hypar.Revit
 {
     public static class Utils
     {
-        public const double FT_TO_METER_FACTOR = 0.3048;
         public static Elements.Geometry.Profile ScaleProfileFtToMeters(Elements.Geometry.Profile profile) {
             var transform = new Elements.Geometry.Transform();
-            transform.Scale(FT_TO_METER_FACTOR);
-            profile.Transform(transform);
+            transform.Scale(Elements.Units.FeetToMeters(1));
+            var transformedProfile = transform.OfProfile(profile);
             
-            return new Elements.Geometry.Profile(profile.Perimeter, profile.Voids, Guid.NewGuid(), profile.Name);
+            return new Elements.Geometry.Profile(transformedProfile.Perimeter, transformedProfile.Voids, Guid.NewGuid(), transformedProfile.Name);
         }
         public static Elements.Geometry.Profile ReverseProfile(Elements.Geometry.Profile profile)
         {
@@ -27,7 +27,7 @@ namespace Hypar.Revit
         // Revit stores lengths in ft, but Hypar's standard is meters, so we need to scale the faces when we convert them to profiles
         public static Elements.Geometry.Profile[] GetScaledProfilesOfFace(PlanarFace f)
         {
-            var polygons = f.GetEdgesAsCurveLoops().Select(cL => CurveLoopToPolygon(cL));
+            var polygons = f.GetEdgesAsCurveLoops().Select(cL => cL.ToPolygon());
 
             var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
 
@@ -39,7 +39,7 @@ namespace Hypar.Revit
         internal static Elements.Geometry.Line ScaleLineFtToMeters(Elements.Geometry.Line line)
         {
             var transform = new Elements.Geometry.Transform();
-            transform.Scale(FT_TO_METER_FACTOR);
+            transform.Scale(Elements.Units.FeetToMeters(1));
             return transform.OfLine(line);
         }
 
@@ -68,17 +68,19 @@ namespace Hypar.Revit
             return polygonLoopDict;
         }
 
-        public static Polygon CurveLoopToPolygon(CurveLoop cL)
-        {
-            return new Polygon(cL.Select(l => l.GetEndPoint(0).ToVector3()).ToList());
-        }
 
-        public static PlanarFace[] GetMostLikelyTopFacesOfSolid(Solid solid)
+        /// <summary>
+        /// Analyzes all of the PlanarFaces of a Revit solid and returns those that 
+        /// face "up" within a certain threshold.
+        /// </summary>
+        /// <param name="solid">The revit Solid</param>
+        /// <param name="verticalThreshold">The angle (in degrees) that represents the threshold for a face to be considered facing up.  A completely horizontal face will have an angle of 0.  A face that does not face up or down at all will have an angle of 90.</param>
+        public static PlanarFace[] GetMostLikelyTopFacesOfSolid(Solid solid, double verticalThreshold = 30)
         {
             var faces = new List<PlanarFace>();
             foreach (PlanarFace face in solid.Faces)
             {
-                if (face.FaceNormal.DotProduct(XYZ.BasisZ) > 0.85 && face.FaceNormal.DotProduct(XYZ.BasisZ) <= 1)
+                if (face.FaceNormal.DotProduct(XYZ.BasisZ) > Math.Cos(Elements.Units.DegreesToRadians(verticalThreshold)) && face.FaceNormal.DotProduct(XYZ.BasisZ) <= 1)
                 {
                     faces.Add(face);
                 }

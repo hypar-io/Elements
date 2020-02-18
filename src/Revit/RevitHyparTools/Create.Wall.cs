@@ -13,7 +13,6 @@ namespace Hypar.Revit
     {
         public static Elements.WallByProfile[] WallsFromRevitWall(ADSK.Wall wall, Document doc)
         {
-
             var side_faces = HostObjectUtils.GetSideFaces(wall, ShellLayerType.Exterior);
             if (side_faces.Count != 1)
             {
@@ -33,9 +32,8 @@ namespace Hypar.Revit
             var line = new ElemGeom.Line(centerline.GetEndPoint(0).ToVector3(), centerline.GetEndPoint(1).ToVector3());
             line = Utils.ScaleLineFtToMeters(line);
             
-
             var walls = profiles.Select(p => new WallByProfile(Utils.ReverseProfile(p),
-                                                               wall.Width * Utils.FT_TO_METER_FACTOR,
+                                                               Elements.Units.FeetToMeters(wall.Width),
                                                                line));
             return walls.ToArray();
         }

@@ -12,11 +12,11 @@ namespace HyparDynamo.Hypar
         /// <summary>
         /// Convert Revit walls to Elements.WallsByProfiles for use in Hypar models
         /// </summary>
-        /// <param name="RevitWall">The walls to be exported</param>
-        /// <returns name="WallByProfile">The Hypar walls</param>
-        public static Elements.WallByProfile[] FromRevitWall(this Revit.Elements.Wall RevitWall)
+        /// <param name="RevitWall">The walls to be exported.</param>
+        /// <returns name="WallByProfile">The Hypar walls.</param>
+        public static Elements.WallByProfile[] FromRevitWall(this Revit.Elements.Wall revitWall)
         {
-            var r_Wall = (Autodesk.Revit.DB.Wall)RevitWall.InternalElement;
+            var r_Wall = (Autodesk.Revit.DB.Wall)revitWall.InternalElement;
 
             // wrapped exception catching to deliver more meaningful message in Dynamo
             try
@@ -33,13 +33,13 @@ namespace HyparDynamo.Hypar
     public static class Floor
     {
         /// <summary>
-        /// Convert Revit walls to Elements.Floors for use in Hypar models
+        /// Convert Revit floor to Elements.Floors for use in Hypar models
         /// </summary>
-        /// <param name="RevitFloor">The floors to be exported</param>
-        /// <returns name="Floor">The Hypar floors</param>
-        public static Elements.Floor[] FromRevitFloor(this Revit.Elements.Floor RevitFloor)
+        /// <param name="revitFloor">The floor to be exported.</param>
+        /// <returns name="floor">The Hypar floors.</param>
+        public static Elements.Floor[] FromRevitFloor(this Revit.Elements.Floor revitFloor)
         {
-            var r_Floor = (Autodesk.Revit.DB.Floor)RevitFloor.InternalElement;
+            var r_Floor = (Autodesk.Revit.DB.Floor)revitFloor.InternalElement;
 
             // wrapped exception catching to deliver more meaningful message in Dynamo
             try
@@ -87,7 +87,7 @@ namespace HyparDynamo.Hypar
             }
         }
 
-        public static Elements.Model ModelFromElements(IList<object> elements)
+        public static Elements.Model FromElements(IList<object> elements)
         {
             var model = new Elements.Model();
             var elems = elements.Cast<Elements.Element>().Where(e => e != null);

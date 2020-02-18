@@ -9,7 +9,7 @@ namespace Elements {
     {
         public WallByProfile(Profile @profile, double @thickness, Line @centerline, Transform @transform=null, Material @material=null, Representation @representation=null, bool @isElementDefinition=false)
             : base(transform != null ? transform : new Transform(),
-                   material != null ? material : BuiltInMaterials.Default,
+                   material != null ? material : BuiltInMaterials.Concrete,
                    representation != null ? representation: new Representation(new List<SolidOperation>()),
                    isElementDefinition,
                    Guid.NewGuid() ,
