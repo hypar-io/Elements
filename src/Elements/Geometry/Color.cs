@@ -56,7 +56,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Linearly interpolate between this color and the provide color.
+        /// Linearly interpolate between this color and the other color.
         /// </summary>
         /// <param name="other">The other color.</param>
         /// <param name="t">A value between 0.0 and 1.0.</param>
@@ -68,32 +68,45 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Multiply two colors.
+        /// Resulting values will be clamped in the range of 0.0 to 1.0.
         /// </summary>
         /// <param name="a">The first color.</param>
         /// <param name="b">The second color.</param>
         public static Color operator *(Color a, Color b)
         {
-            return new Color(a.Red * b.Red, a.Green * b.Green, a.Blue * b.Blue, a.Alpha * b.Alpha);
+            return new Color(Math.Max(1, a.Red * b.Red),
+                             Math.Max(1, a.Green * b.Green),
+                             Math.Max(1, a.Blue * b.Blue),
+                             Math.Max(1, a.Alpha * b.Alpha));
         }
 
         /// <summary>
         /// Multiply a color and a scalar.
+        /// Resulting values will be clamped in the range of 0.0 to 1.0.
         /// </summary>
         /// <param name="a">The color.</param>
         /// <param name="t">The scalar.</param>
         public static Color operator *(double t, Color a)
         {
+            if(t < 0)
+            {
+                throw new ArgumentException("The value of t must be greater than 0.0.");
+            }
             return new Color(a.Red * t, a.Green * t, a.Blue * t, a.Alpha * t);
         }
 
         /// <summary>
         /// Add two colors.
+        /// Resulting values will be clamped in the range of 0.0 to 1.0.
         /// </summary>
         /// <param name="a">The first color.</param>
         /// <param name="b">The second color.</param>
         public static Color operator +(Color a, Color b)
         {
-            return new Color(a.Red + b.Red, a.Green + b.Green, a.Blue + b.Blue, a.Alpha + b.Alpha);
+            return new Color(Math.Max(1, a.Red + b.Red),
+                             Math.Max(1, a.Green + b.Green),
+                             Math.Max(1, a.Blue + b.Blue),
+                             Math.Max(1, a.Alpha + b.Alpha));
         }
     }
 }

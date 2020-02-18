@@ -681,9 +681,7 @@ namespace Elements.Serialization.glTF
 
             var elements = model.Elements.Where(e =>
             {
-                return e.Value is GeometricElement || 
-                e.Value is ElementInstance ||
-                e.Value is ITessellate;
+                return e.Value is GeometricElement || e.Value is ElementInstance;
             }).Select(e => e.Value);
 
             // Lines are stored in a list of lists

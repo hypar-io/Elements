@@ -31,7 +31,7 @@ namespace Elements.Tests
             // segments of approximate length 3
             grid[2].DivideByApproximateLength(3);
 
-            //Take the fourth grid segment and subdivide it by a repeating pattern
+            // Take the fourth grid segment and subdivide it by a repeating pattern
             var pattern = new[] { 1.0, 1.5 };
             grid[3].DivideByPattern(pattern);
 
