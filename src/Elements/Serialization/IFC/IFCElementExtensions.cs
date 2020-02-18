@@ -17,7 +17,7 @@ namespace Elements.Serialization.IFC
         internal static List<IfcProduct> ToIfcProducts(this Element e,
                                                        IfcRepresentationContext context,
                                                        Document doc,
-                                                       Dictionary<string, List<IfcStyleAssignmentSelect>> styleAssignments)
+                                                       Dictionary<Guid, List<IfcStyleAssignmentSelect>> styleAssignments)
         {
             var products = new List<IfcProduct>();
 
@@ -152,7 +152,7 @@ namespace Elements.Serialization.IFC
 
             foreach(var geom in geoms)
             {
-                var styledItem = new IfcStyledItem(geom, styleAssignments[geoElement.Material.Name], null);
+                var styledItem = new IfcStyledItem(geom, styleAssignments[geoElement.Material.Id], null);
                 doc.AddEntity(styledItem);
             }
 
