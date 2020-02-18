@@ -9,7 +9,7 @@ namespace Elements
     /// A zero-thickness planar element defined by a perimeter.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/PanelExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/PanelTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class Panel : GeometricElement

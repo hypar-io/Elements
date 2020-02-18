@@ -1,5 +1,14 @@
 # Changelog
 
+### 0.6.0
+## Added
+- `ColorScale`
+- `AnalysisMesh`
+- `Ray.Intersects(...)` for `Plane`, `Face`, `Solid`, and `SolidOperation`
+
+## Fixed
+- Fix #253
+
 ## 0.5.2
 ### Fixed
 - `Grid2d` constructors accepting a Transform interpreted the transform incorrectly.

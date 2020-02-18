@@ -1,3 +1,4 @@
+using Elements.Analysis;
 using Elements.Geometry;
 using IFC;
 using STEP;
@@ -146,7 +147,6 @@ namespace Elements.Serialization.IFC
             // IfcRelAssociatesMaterial
             // IfcMaterialDefinitionRepresentation
             // https://forums.buildingsmart.org/t/where-and-how-will-my-colors-be-saved-in-ifc/1806/12
-            var materials = new Dictionary<string, IfcMaterial>();
             var styleAssignments = new Dictionary<string, List<IfcStyleAssignmentSelect>>();
 
             var white = Colors.White.ToIfcColourRgb();
@@ -157,7 +157,6 @@ namespace Elements.Serialization.IFC
             foreach (var m in model.AllElementsOfType<Material>())
             {
                 var material = new IfcMaterial(m.Name, null, "Hypar");
-                materials.Add(m.Name, material);
                 ifc.AddEntity(material);
 
                 var color = m.Color.ToIfcColourRgb();
@@ -183,9 +182,11 @@ namespace Elements.Serialization.IFC
             foreach (var e in model.Elements.Values.Where(e =>
             {
                 var t = e.GetType();
-                return ((e is GeometricElement && !((GeometricElement)e).IsElementDefinition) || e is ElementInstance) &&
+                return ((e is GeometricElement && 
+                        !((GeometricElement)e).IsElementDefinition) || e is ElementInstance) &&
                         t != typeof(ModelCurve) &&
-                        t != typeof(ModelPoints);
+                        t != typeof(ModelPoints) &&
+                        t != typeof(AnalysisMesh);
             }))
             {
                 try

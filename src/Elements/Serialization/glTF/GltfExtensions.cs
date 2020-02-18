@@ -676,6 +676,7 @@ namespace Elements.Serialization.glTF
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
             materialsToAdd.Add(BuiltInMaterials.Edges);
+            materialsToAdd.Add(BuiltInMaterials.Default);
             var materials = gltf.AddMaterials(materialsToAdd, buffer, bufferViews);
 
             var elements = model.Elements.Where(e =>

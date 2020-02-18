@@ -7,6 +7,26 @@ namespace Elements.Tests
 {
     public class WallTests : ModelTest
     {
+        [Fact, Trait("Category", "Examples")]
+        public void Example()
+        {
+            this.Name = "Elements_StandardWall";
+            // <example>
+            // Create a wall.
+            var line = new Line(new Vector3(0, 0, 0), new Vector3(10, 10, 0));
+            var wall = new StandardWall(line, 0.1, 3.0);
+
+            // Create some openings.
+            var openings = new List<Opening>(){
+                new Opening(1.0, 2.0, 1.0, 1.0),
+                new Opening(3.0, 1.0, 1.0, 2.0)
+            };
+            wall.Openings.AddRange(openings);
+            // </example>
+
+            this.Model.AddElement(wall);
+        }
+
         [Fact]
         public void WallWithAddedOpenings()
         {

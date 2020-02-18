@@ -1,4 +1,5 @@
 using ClipperLib;
+using LibTessDotNet.Double;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -869,6 +870,18 @@ namespace Elements.Geometry
         public static IList<Polygon> Reversed(this IList<Polygon> polygons)
         {
             return polygons.Select(p => p.Reversed()).ToArray();
+        }
+
+        internal static ContourVertex[] ToContourVertexArray(this Polygon poly)
+        {
+            var contour = new List<ContourVertex>();
+            foreach(var vert in poly.Vertices)
+            {
+                var cv = new ContourVertex();
+                cv.Position = new Vec3 { X = vert.X, Y = vert.Y, Z = vert.Z };
+                contour.Add(cv);
+            }
+            return contour.ToArray();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Elements
     /// A floor is a horizontal element defined by a profile.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/FloorExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/FloorTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class Floor : GeometricElement, IHasOpenings

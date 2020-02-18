@@ -10,7 +10,7 @@ namespace Elements
     /// An extruded volume.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/Examples/MassExample.cs?name=example)]
+    /// [!code-csharp[Main](../../test/Elements.Tests/MassTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class Mass : GeometricElement

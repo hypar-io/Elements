@@ -146,7 +146,7 @@ namespace Elements.Validators
 
             if(red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
             {
-                throw new ArgumentOutOfRangeException("All components must have a value less than 1.0.");
+                throw new ArgumentOutOfRangeException("All components must have a value less than or equal to 1.0.");
             }
         }
     }

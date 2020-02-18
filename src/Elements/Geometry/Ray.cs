@@ -162,6 +162,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="plane">The Plane to intersect with.</param>
         /// <param name="result">The intersection result.</param>
+        /// <param name="t"></param>
         /// <returns>True if an intersection occurs, otherwise false — this can occur if the ray is very close to parallel to the plane.
         /// If true, check the intersection result for the location of the intersection.</returns>
         public bool Intersects(Plane plane, out Vector3 result, out double t)
@@ -176,7 +177,6 @@ namespace Elements.Geometry
                 return false;
             }
             t = (plane.Normal.Dot(plane.Origin) - plane.Normal.Dot(Origin)) / plane.Normal.Dot(d);
-
 
             // If t < 0, the point of intersection is behind
             // the start of the ray.

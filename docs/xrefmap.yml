@@ -7,6 +7,159 @@ references:
   commentId: N:Elements
   fullName: Elements
   nameWithType: Elements
+- uid: Elements.Analysis
+  name: Elements.Analysis
+  href: api/Elements.Analysis.html
+  commentId: N:Elements.Analysis
+  fullName: Elements.Analysis
+  nameWithType: Elements.Analysis
+- uid: Elements.Analysis.AnalysisMesh
+  name: AnalysisMesh
+  href: api/Elements.Analysis.AnalysisMesh.html
+  commentId: T:Elements.Analysis.AnalysisMesh
+  fullName: Elements.Analysis.AnalysisMesh
+  nameWithType: AnalysisMesh
+- uid: Elements.Analysis.AnalysisMesh.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Analysis.ColorScale,System.Func{Elements.Geometry.Vector3,System.Double},System.Guid,System.String)
+  name: AnalysisMesh(Polygon, Double, Double, ColorScale, Func<Vector3, Double>, Guid, String)
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Analysis_ColorScale_System_Func_Elements_Geometry_Vector3_System_Double__System_Guid_System_String_
+  commentId: M:Elements.Analysis.AnalysisMesh.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Analysis.ColorScale,System.Func{Elements.Geometry.Vector3,System.Double},System.Guid,System.String)
+  name.vb: AnalysisMesh(Polygon, Double, Double, ColorScale, Func(Of Vector3, Double), Guid, String)
+  fullName: Elements.Analysis.AnalysisMesh.AnalysisMesh(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Analysis.ColorScale, System.Func<Elements.Geometry.Vector3, System.Double>, System.Guid, System.String)
+  fullName.vb: Elements.Analysis.AnalysisMesh.AnalysisMesh(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Analysis.ColorScale, System.Func(Of Elements.Geometry.Vector3, System.Double), System.Guid, System.String)
+  nameWithType: AnalysisMesh.AnalysisMesh(Polygon, Double, Double, ColorScale, Func<Vector3, Double>, Guid, String)
+  nameWithType.vb: AnalysisMesh.AnalysisMesh(Polygon, Double, Double, ColorScale, Func(Of Vector3, Double), Guid, String)
+- uid: Elements.Analysis.AnalysisMesh.#ctor*
+  name: AnalysisMesh
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh__ctor_
+  commentId: Overload:Elements.Analysis.AnalysisMesh.#ctor
+  isSpec: "True"
+  fullName: Elements.Analysis.AnalysisMesh.AnalysisMesh
+  nameWithType: AnalysisMesh.AnalysisMesh
+- uid: Elements.Analysis.AnalysisMesh.ColorScale
+  name: ColorScale
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_ColorScale
+  commentId: P:Elements.Analysis.AnalysisMesh.ColorScale
+  fullName: Elements.Analysis.AnalysisMesh.ColorScale
+  nameWithType: AnalysisMesh.ColorScale
+- uid: Elements.Analysis.AnalysisMesh.ColorScale*
+  name: ColorScale
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_ColorScale_
+  commentId: Overload:Elements.Analysis.AnalysisMesh.ColorScale
+  isSpec: "True"
+  fullName: Elements.Analysis.AnalysisMesh.ColorScale
+  nameWithType: AnalysisMesh.ColorScale
+- uid: Elements.Analysis.AnalysisMesh.Perimeter
+  name: Perimeter
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Perimeter
+  commentId: P:Elements.Analysis.AnalysisMesh.Perimeter
+  fullName: Elements.Analysis.AnalysisMesh.Perimeter
+  nameWithType: AnalysisMesh.Perimeter
+- uid: Elements.Analysis.AnalysisMesh.Perimeter*
+  name: Perimeter
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Perimeter_
+  commentId: Overload:Elements.Analysis.AnalysisMesh.Perimeter
+  isSpec: "True"
+  fullName: Elements.Analysis.AnalysisMesh.Perimeter
+  nameWithType: AnalysisMesh.Perimeter
+- uid: Elements.Analysis.AnalysisMesh.Tessellate(Elements.Geometry.Mesh@)
+  name: Tessellate(ref Mesh)
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Tessellate_Elements_Geometry_Mesh__
+  commentId: M:Elements.Analysis.AnalysisMesh.Tessellate(Elements.Geometry.Mesh@)
+  name.vb: Tessellate(ByRef Mesh)
+  fullName: Elements.Analysis.AnalysisMesh.Tessellate(ref Elements.Geometry.Mesh)
+  fullName.vb: Elements.Analysis.AnalysisMesh.Tessellate(ByRef Elements.Geometry.Mesh)
+  nameWithType: AnalysisMesh.Tessellate(ref Mesh)
+  nameWithType.vb: AnalysisMesh.Tessellate(ByRef Mesh)
+- uid: Elements.Analysis.AnalysisMesh.Tessellate*
+  name: Tessellate
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Tessellate_
+  commentId: Overload:Elements.Analysis.AnalysisMesh.Tessellate
+  isSpec: "True"
+  fullName: Elements.Analysis.AnalysisMesh.Tessellate
+  nameWithType: AnalysisMesh.Tessellate
+- uid: Elements.Analysis.AnalysisMesh.ULength
+  name: ULength
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_ULength
+  commentId: P:Elements.Analysis.AnalysisMesh.ULength
+  fullName: Elements.Analysis.AnalysisMesh.ULength
+  nameWithType: AnalysisMesh.ULength
+- uid: Elements.Analysis.AnalysisMesh.ULength*
+  name: ULength
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_ULength_
+  commentId: Overload:Elements.Analysis.AnalysisMesh.ULength
+  isSpec: "True"
+  fullName: Elements.Analysis.AnalysisMesh.ULength
+  nameWithType: AnalysisMesh.ULength
+- uid: Elements.Analysis.AnalysisMesh.VLength
+  name: VLength
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_VLength
+  commentId: P:Elements.Analysis.AnalysisMesh.VLength
+  fullName: Elements.Analysis.AnalysisMesh.VLength
+  nameWithType: AnalysisMesh.VLength
+- uid: Elements.Analysis.AnalysisMesh.VLength*
+  name: VLength
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_VLength_
+  commentId: Overload:Elements.Analysis.AnalysisMesh.VLength
+  isSpec: "True"
+  fullName: Elements.Analysis.AnalysisMesh.VLength
+  nameWithType: AnalysisMesh.VLength
+- uid: Elements.Analysis.ColorScale
+  name: ColorScale
+  href: api/Elements.Analysis.ColorScale.html
+  commentId: T:Elements.Analysis.ColorScale
+  fullName: Elements.Analysis.ColorScale
+  nameWithType: ColorScale
+- uid: Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color})
+  name: ColorScale(List<Color>)
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__
+  commentId: M:Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color})
+  name.vb: ColorScale(List(Of Color))
+  fullName: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List<Elements.Geometry.Color>)
+  fullName.vb: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List(Of Elements.Geometry.Color))
+  nameWithType: ColorScale.ColorScale(List<Color>)
+  nameWithType.vb: ColorScale.ColorScale(List(Of Color))
+- uid: Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Int32)
+  name: ColorScale(List<Color>, Int32)
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Int32_
+  commentId: M:Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Int32)
+  name.vb: ColorScale(List(Of Color), Int32)
+  fullName: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List<Elements.Geometry.Color>, System.Int32)
+  fullName.vb: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List(Of Elements.Geometry.Color), System.Int32)
+  nameWithType: ColorScale.ColorScale(List<Color>, Int32)
+  nameWithType.vb: ColorScale.ColorScale(List(Of Color), Int32)
+- uid: Elements.Analysis.ColorScale.#ctor*
+  name: ColorScale
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_
+  commentId: Overload:Elements.Analysis.ColorScale.#ctor
+  isSpec: "True"
+  fullName: Elements.Analysis.ColorScale.ColorScale
+  nameWithType: ColorScale.ColorScale
+- uid: Elements.Analysis.ColorScale.Colors
+  name: Colors
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale_Colors
+  commentId: P:Elements.Analysis.ColorScale.Colors
+  fullName: Elements.Analysis.ColorScale.Colors
+  nameWithType: ColorScale.Colors
+- uid: Elements.Analysis.ColorScale.Colors*
+  name: Colors
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale_Colors_
+  commentId: Overload:Elements.Analysis.ColorScale.Colors
+  isSpec: "True"
+  fullName: Elements.Analysis.ColorScale.Colors
+  nameWithType: ColorScale.Colors
+- uid: Elements.Analysis.ColorScale.GetColorForValue(System.Double)
+  name: GetColorForValue(Double)
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale_GetColorForValue_System_Double_
+  commentId: M:Elements.Analysis.ColorScale.GetColorForValue(System.Double)
+  fullName: Elements.Analysis.ColorScale.GetColorForValue(System.Double)
+  nameWithType: ColorScale.GetColorForValue(Double)
+- uid: Elements.Analysis.ColorScale.GetColorForValue*
+  name: GetColorForValue
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale_GetColorForValue_
+  commentId: Overload:Elements.Analysis.ColorScale.GetColorForValue
+  isSpec: "True"
+  fullName: Elements.Analysis.ColorScale.GetColorForValue
+  nameWithType: ColorScale.GetColorForValue
 - uid: Elements.Beam
   name: Beam
   href: api/Elements.Beam.html
@@ -1988,6 +2141,51 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Color.Green
   nameWithType: Color.Green
+- uid: Elements.Geometry.Color.Lerp(Elements.Geometry.Color,System.Double)
+  name: Lerp(Color, Double)
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_Lerp_Elements_Geometry_Color_System_Double_
+  commentId: M:Elements.Geometry.Color.Lerp(Elements.Geometry.Color,System.Double)
+  fullName: Elements.Geometry.Color.Lerp(Elements.Geometry.Color, System.Double)
+  nameWithType: Color.Lerp(Color, Double)
+- uid: Elements.Geometry.Color.Lerp*
+  name: Lerp
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_Lerp_
+  commentId: Overload:Elements.Geometry.Color.Lerp
+  isSpec: "True"
+  fullName: Elements.Geometry.Color.Lerp
+  nameWithType: Color.Lerp
+- uid: Elements.Geometry.Color.op_Addition(Elements.Geometry.Color,Elements.Geometry.Color)
+  name: Addition(Color, Color)
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_op_Addition_Elements_Geometry_Color_Elements_Geometry_Color_
+  commentId: M:Elements.Geometry.Color.op_Addition(Elements.Geometry.Color,Elements.Geometry.Color)
+  fullName: Elements.Geometry.Color.Addition(Elements.Geometry.Color, Elements.Geometry.Color)
+  nameWithType: Color.Addition(Color, Color)
+- uid: Elements.Geometry.Color.op_Addition*
+  name: Addition
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_op_Addition_
+  commentId: Overload:Elements.Geometry.Color.op_Addition
+  isSpec: "True"
+  fullName: Elements.Geometry.Color.Addition
+  nameWithType: Color.Addition
+- uid: Elements.Geometry.Color.op_Multiply(Elements.Geometry.Color,Elements.Geometry.Color)
+  name: Multiply(Color, Color)
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_op_Multiply_Elements_Geometry_Color_Elements_Geometry_Color_
+  commentId: M:Elements.Geometry.Color.op_Multiply(Elements.Geometry.Color,Elements.Geometry.Color)
+  fullName: Elements.Geometry.Color.Multiply(Elements.Geometry.Color, Elements.Geometry.Color)
+  nameWithType: Color.Multiply(Color, Color)
+- uid: Elements.Geometry.Color.op_Multiply(System.Double,Elements.Geometry.Color)
+  name: Multiply(Double, Color)
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_op_Multiply_System_Double_Elements_Geometry_Color_
+  commentId: M:Elements.Geometry.Color.op_Multiply(System.Double,Elements.Geometry.Color)
+  fullName: Elements.Geometry.Color.Multiply(System.Double, Elements.Geometry.Color)
+  nameWithType: Color.Multiply(Double, Color)
+- uid: Elements.Geometry.Color.op_Multiply*
+  name: Multiply
+  href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_op_Multiply_
+  commentId: Overload:Elements.Geometry.Color.op_Multiply
+  isSpec: "True"
+  fullName: Elements.Geometry.Color.Multiply
+  nameWithType: Color.Multiply
 - uid: Elements.Geometry.Color.Red
   name: Red
   href: api/Elements.Geometry.Color.html#Elements_Geometry_Color_Red
@@ -7941,6 +8139,24 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Ray.Equals
   nameWithType: Ray.Equals
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
+  name: Intersects(Plane, out Vector3)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
+  name.vb: Intersects(Plane, ByRef Vector3)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, out Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3)
+  nameWithType: Ray.Intersects(Plane, out Vector3)
+  nameWithType.vb: Ray.Intersects(Plane, ByRef Vector3)
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Double@)
+  name: Intersects(Plane, out Vector3, out Double)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__System_Double__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Double@)
+  name.vb: Intersects(Plane, ByRef Vector3, ByRef Double)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, out Elements.Geometry.Vector3, out System.Double)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3, ByRef System.Double)
+  nameWithType: Ray.Intersects(Plane, out Vector3, out Double)
+  nameWithType.vb: Ray.Intersects(Plane, ByRef Vector3, ByRef Double)
 - uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray,Elements.Geometry.Vector3@,System.Boolean)
   name: Intersects(Ray, out Vector3, Boolean)
   href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Ray_Elements_Geometry_Vector3__System_Boolean_
@@ -7950,6 +8166,15 @@ references:
   fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray, ByRef Elements.Geometry.Vector3, System.Boolean)
   nameWithType: Ray.Intersects(Ray, out Vector3, Boolean)
   nameWithType.vb: Ray.Intersects(Ray, ByRef Vector3, Boolean)
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
+  name: Intersects(SolidOperation, out List<Vector3>)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Solids_SolidOperation_System_Collections_Generic_List_Elements_Geometry_Vector3___
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
+  name.vb: Intersects(SolidOperation, ByRef List(Of Vector3))
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation, out System.Collections.Generic.List<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation, ByRef System.Collections.Generic.List(Of Elements.Geometry.Vector3))
+  nameWithType: Ray.Intersects(SolidOperation, out List<Vector3>)
+  nameWithType.vb: Ray.Intersects(SolidOperation, ByRef List(Of Vector3))
 - uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.Vector3@)
   name: Intersects(Triangle, out Vector3)
   href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Triangle_Elements_Geometry_Vector3__

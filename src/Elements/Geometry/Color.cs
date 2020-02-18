@@ -54,5 +54,66 @@ namespace Elements.Geometry
         {
             return $"R:{Red:0.00}, G:{Green:0.00}, B:{Blue:0.00}, A: {Alpha:0.00}";
         }
+
+        /// <summary>
+        /// Linearly interpolate between this color and the other color.
+        /// </summary>
+        /// <param name="other">The other color.</param>
+        /// <param name="t">A value between 0.0 and 1.0.</param>
+        /// <returns></returns>
+        public Color Lerp(Color other, double t)
+        {
+            if(t < 0 || t > 1)
+            {
+                throw new ArgumentException("The value of t must be between 0.0 and 1.0.");
+            }
+            return (1 - t) * this + t * other;
+        }
+
+        /// <summary>
+        /// Multiply two colors.
+        /// Resulting values will be clamped in the range of 0.0 to 1.0.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        public static Color operator *(Color a, Color b)
+        {
+            return new Color(Math.Min(1, a.Red * b.Red),
+                             Math.Min(1, a.Green * b.Green),
+                             Math.Min(1, a.Blue * b.Blue),
+                             Math.Min(1, a.Alpha * b.Alpha));
+        }
+
+        /// <summary>
+        /// Multiply a color and a scalar.
+        /// Resulting values will be clamped in the range of 0.0 to 1.0.
+        /// </summary>
+        /// <param name="a">The color.</param>
+        /// <param name="t">The scalar.</param>
+        public static Color operator *(double t, Color a)
+        {
+            if(t < 0)
+            {
+                throw new ArgumentException("The value of t must be greater than 0.0.");
+            }
+            return new Color(Math.Min(1, a.Red * t),
+                             Math.Min(1, a.Green * t),
+                             Math.Min(1, a.Blue * t),
+                             Math.Min(1, a.Alpha * t));
+        }
+
+        /// <summary>
+        /// Add two colors.
+        /// Resulting values will be clamped in the range of 0.0 to 1.0.
+        /// </summary>
+        /// <param name="a">The first color.</param>
+        /// <param name="b">The second color.</param>
+        public static Color operator +(Color a, Color b)
+        {
+            return new Color(Math.Min(1, a.Red + b.Red),
+                             Math.Min(1, a.Green + b.Green),
+                             Math.Min(1, a.Blue + b.Blue),
+                             Math.Min(1, a.Alpha + b.Alpha));
+        }
     }
 }
