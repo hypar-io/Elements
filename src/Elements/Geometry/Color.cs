@@ -92,7 +92,10 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("The value of t must be greater than 0.0.");
             }
-            return new Color(a.Red * t, a.Green * t, a.Blue * t, a.Alpha * t);
+            return new Color(Math.Max(1, a.Red * t),
+                             Math.Max(1, a.Green * t),
+                             Math.Max(1, a.Blue * t),
+                             Math.Max(1, a.Alpha * t));
         }
 
         /// <summary>
