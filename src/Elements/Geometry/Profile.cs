@@ -77,9 +77,8 @@ namespace Elements.Geometry
         {
             var transform = new Elements.Geometry.Transform();
             transform.Scale(amount);
-            var transformedProfile = transform.OfProfile(this);
 
-            return new Elements.Geometry.Profile(transformedProfile.Perimeter, transformedProfile.Voids, Guid.NewGuid(), transformedProfile.Name);
+            return transform.OfProfile(this);
         }
 
         /// <summary>

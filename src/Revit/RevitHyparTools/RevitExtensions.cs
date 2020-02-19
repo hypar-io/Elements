@@ -6,24 +6,45 @@ using Elements.Geometry;
 
 namespace Hypar.Revit
 {
-    public static class RevitExtensions
+    internal static class RevitExtensions
     {
-        public static Vector3 ToVector3(this XYZ xyz)
+        /// <summary>
+        /// Convert the Revit XYZ to an Elements Vector3, with an option to scale the 
+        /// Vector3 from feet to meters.  This scaling should be done with any XYZ that represents
+        /// a geometric property, but should maybe be avoided for other vectors.
+        /// </summary>
+        internal static Vector3 ToVector3(this XYZ xyz, bool scaleToMeters = false)
         {
-            return new Vector3(xyz.X, xyz.Y, xyz.Z);
-        }
-        public static Polygon ToPolygon(this CurveLoop curveLoop)
-        {
-            return new Polygon(curveLoop.Select(l => l.GetEndPoint(0).ToVector3()).ToList());
+            var scale = 1.0;
+            if (scaleToMeters)
+            {
+                scale = Elements.Units.FeetToMeters(1);
+            }
+            return new Vector3(xyz.X, xyz.Y, xyz.Z) * scale;
         }
 
         /// <summary>
-        /// Analyzes all of the PlanarFaces of a Revit solid and returns those that 
+        /// Retrieve all of the Element.Geometry.Profiles that describe the Revit PlanarFace
+        /// Soemtimes a single PlanarFace in Revit and actually multiple "faces" should be translated into multiple Element Profiles
+        /// </summary>
+        internal static Elements.Geometry.Profile[] GetProfiles(this PlanarFace face)
+        {
+            var polygons = face.GetEdgesAsCurveLoops().Select(cL => cL.ToPolygon());
+
+            var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
+
+            var profiles = polygonLoopDict.Select(kvp => new Elements.Geometry.Profile(kvp.Key, kvp.Value, Guid.NewGuid(), "Revit Profile"));
+            var scaledProfiles = profiles.Select(p => p.Scale(Elements.Units.FeetToMeters(1)));
+            return scaledProfiles.ToArray();
+        }
+
+        /// <summary>
+        /// Analyze all of the PlanarFaces of a Revit solid and returns those that 
         /// face "up" within a certain threshold.
         /// </summary>
         /// <param name="solid">The revit Solid</param>
         /// <param name="verticalThreshold">The angle (in degrees) that represents the threshold for a face to be considered facing up.  A completely horizontal face will have an angle of 0.  A face that does not face up or down at all will have an angle of 90.</param>
-        public static PlanarFace[] GetMostLikelyTopFaces(this Solid solid, double verticalThreshold = 30)
+        private static PlanarFace[] GetMostLikelyTopFaces(this Solid solid, double verticalThreshold = 30)
         {
             var faces = new List<PlanarFace>();
             foreach (PlanarFace face in solid.Faces)
@@ -36,15 +57,9 @@ namespace Hypar.Revit
             return faces.ToArray();
         }
 
-        public static Elements.Geometry.Profile[] GetProfiles(this PlanarFace face)
+        private static Polygon ToPolygon(this CurveLoop curveLoop)
         {
-            var polygons = face.GetEdgesAsCurveLoops().Select(cL => cL.ToPolygon());
-
-            var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
-
-            var profiles = polygonLoopDict.Select(kvp => new Elements.Geometry.Profile(kvp.Key, kvp.Value, Guid.NewGuid(), "Revit Profile"));
-            var scaledProfiles = profiles.Select(p => p.Scale(Elements.Units.FeetToMeters(1)));
-            return scaledProfiles.ToArray();
+            return new Polygon(curveLoop.Select(l => l.GetEndPoint(0).ToVector3()).ToList());
         }
 
         private static Dictionary<Polygon, List<Polygon>> MatchOuterLoopPolygonsWithInnerHoles(IEnumerable<Polygon> polygons)
