@@ -31,7 +31,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a new profile which is the reverse of this profile.
         /// </summary>
-        public Profile Reversed()
+        public Profile Reverse()
         {
             Polygon[] voids = null;
             if (this.Voids != null)
@@ -69,6 +69,16 @@ namespace Elements.Geometry
             {
                 this.Voids[i].Transform(t);
             }
+        }
+        /// <summary>
+        /// Return a new profile that is this profile scaled about the origin by the desired amount.
+        /// </summary>
+        public Elements.Geometry.Profile Scale(double amount)
+        {
+            var transform = new Elements.Geometry.Transform();
+            transform.Scale(amount);
+
+            return transform.OfProfile(this);
         }
 
         /// <summary>
@@ -159,15 +169,15 @@ namespace Elements.Geometry
         /// <param name="other">The other profile.</param>
         public bool Equals(Profile other)
         {
-            if((this.Voids != null && other.Voids != null))
+            if ((this.Voids != null && other.Voids != null))
             {
-                if(this.Voids.Count != other.Voids.Count)
+                if (this.Voids.Count != other.Voids.Count)
                 {
                     return false;
                 }
-                for(var i=0; i<this.Voids.Count; i++)
+                for (var i = 0; i < this.Voids.Count; i++)
                 {
-                    if(!this.Voids[i].Equals(other.Voids[i]))
+                    if (!this.Voids[i].Equals(other.Voids[i]))
                     {
                         return false;
                     }
