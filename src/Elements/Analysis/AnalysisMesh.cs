@@ -4,6 +4,7 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Spatial;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
 
 namespace Elements.Analysis
 {
@@ -18,6 +19,19 @@ namespace Elements.Analysis
     {
         private Grid2d _grid;
         private Func<Vector3, double> _analyze;
+
+        private List<Tuple<Polygon, double>> _results;
+        private double _min;
+        private double _max;
+        
+        /// <summary>
+        /// The total number of analysis locations.
+        /// </summary>
+        [JsonIgnore]
+        public double TotalAnalysisLocations
+        {
+            get { return this._results != null ? this._results.Count : 0; }
+        }
 
         /// <summary>
         /// The length of the cells in the u direction.
@@ -88,14 +102,44 @@ namespace Elements.Analysis
         /// <summary>
         /// Tessellate the analysis mesh.
         /// </summary>
-        /// <param name="mesh">The mesh into which the analytical cells will be drawn.</param>
+        /// <param name="mesh"></param>
         public void Tessellate(ref Mesh mesh)
         {
-            var results = new List<double>();
-            var cells = new List<Polygon>();
+            var span = this._max - this._min;
+            for (var i = 0; i < this._results.Count; i++)
+            {
+                var cell = this._results[i].Item1;
+                var result = this._results[i].Item2;
 
-            var min = double.MaxValue;
-            var max = double.MinValue;
+                var tess = new Tess();
+                tess.NoEmptyPolygons = true;
+                tess.AddContour(cell.ToContourVertexArray());
+                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+
+                for (var j = 0; j < tess.ElementCount; j++)
+                {
+                    var a = tess.Vertices[tess.Elements[j * 3]].Position.ToVector3();
+                    var b = tess.Vertices[tess.Elements[j * 3 + 1]].Position.ToVector3();
+                    var c = tess.Vertices[tess.Elements[j * 3 + 2]].Position.ToVector3();
+
+                    var color = this.ColorScale.GetColorForValue((result - this._min) / span);
+
+                    var v1 = mesh.AddVertex(a, new UV(), color: color);
+                    var v2 = mesh.AddVertex(b, new UV(), color: color);
+                    var v3 = mesh.AddVertex(c, new UV(), color: color);
+                    mesh.AddTriangle(v1, v2, v3);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Compute a value for each grid cell.
+        /// </summary>
+        public void Analyze()
+        {
+            this._results = new List<Tuple<Polygon, double>>();
+            this._min = double.MaxValue;
+            this._max = double.MinValue;
 
             var flatCells = this._grid.CellsFlat;
 
@@ -111,36 +155,9 @@ namespace Elements.Analysis
                 {
                     var center = innerCell.Centroid();
                     var result = this._analyze(center);
-                    results.Add(result);
-                    cells.Add(innerCell);
-                    min = Math.Min(min, result);
-                    max = Math.Max(max, result);
-                }
-            }
-
-            var span = max - min;
-            for (var i = 0; i < cells.Count; i++)
-            {
-                var cell = cells[i];
-                var result = results[i];
-
-                var tess = new Tess();
-                tess.NoEmptyPolygons = true;
-                tess.AddContour(cell.ToContourVertexArray());
-                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-
-                for (var j = 0; j < tess.ElementCount; j++)
-                {
-                    var a = tess.Vertices[tess.Elements[j * 3]].Position.ToVector3();
-                    var b = tess.Vertices[tess.Elements[j * 3 + 1]].Position.ToVector3();
-                    var c = tess.Vertices[tess.Elements[j * 3 + 2]].Position.ToVector3();
-
-                    var color = this.ColorScale.GetColorForValue((result - min) / span);
-
-                    var v1 = mesh.AddVertex(a, new UV(), color: color);
-                    var v2 = mesh.AddVertex(b, new UV(), color: color);
-                    var v3 = mesh.AddVertex(c, new UV(), color: color);
-                    mesh.AddTriangle(v1, v2, v3);
+                    this._results.Add(new Tuple<Polygon, double>(innerCell, result));
+                    this._min = Math.Min(this._min, result);
+                    this._max = Math.Max(this._max, result);
                 }
             }
         }
