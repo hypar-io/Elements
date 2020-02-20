@@ -19,10 +19,15 @@
     if(validator != null)
     {
         {% assign skipComma = true -%}
-validator.Validate(new object[]{ {% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}@{{ property.Name | lowercamelcase }}{% endfor -%} });
+validator.PreConstruct(new object[]{ {% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}@{{ property.Name | lowercamelcase }}{% endfor -%} });
     }
 
 {% for property in Properties -%}
     this.{{property.PropertyName}} = @{{property.Name | lowercamelcase}};
 {% endfor -%}
+
+    if(validator != null)
+    {
+        validator.PostConstruct(this);
+    }
 }

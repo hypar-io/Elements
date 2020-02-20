@@ -11,7 +11,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Arc);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             //Vector3 @center, double @radius, double @startAngle, double @endAngle
             var center = (Vector3)args[0];
@@ -40,7 +45,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Line);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var start= (Vector3)args[0];
             var end = (Vector3)args[1];
@@ -56,7 +66,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Profile);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var perimeter = (Polygon)args[0];
             if (perimeter != null && !perimeter.Vertices.AreCoplanar())
@@ -70,7 +85,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Material);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var red = (Color)args[0];
             var specularFactor = (double)args[1];
@@ -94,7 +114,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Plane);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var origin = (Vector3)args[0];
             var normal = (Vector3)args[1];
@@ -110,7 +135,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Vector3);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var x = (double)args[0];
             var y = (double)args[1];
@@ -132,7 +162,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Color);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var red = (double)args[0];
             var green = (double)args[1];
@@ -155,7 +190,14 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Extrude);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            var extrude = (Extrude)obj;
+            extrude.PropertyChanged += (sender, args) => { extrude._solid = extrude.GetSolid(); };
+            extrude._solid = extrude.GetSolid();
+        }
+
+        public void PreConstruct(object[] args)
         {
             var profile = (Profile)args[0];
             var height = (double)args[1];
@@ -169,11 +211,50 @@ namespace Elements.Validators
         }
     }
 
+    public class SweepValidator : IValidator
+    {
+        public Type ValidatesType => typeof(Sweep);
+
+        public void PostConstruct(object obj)
+        {
+            var sweep = (Sweep)obj;
+            sweep.PropertyChanged += (sender, args) => { sweep._solid = sweep.GetSolid(); };
+            sweep._solid = sweep.GetSolid();
+        }
+
+        public void PreConstruct(object[] args)
+        {
+            return;
+        }
+    }
+
+    public class LaminaValidator : IValidator
+    {
+        public Type ValidatesType => typeof(Lamina);
+
+        public void PostConstruct(object obj)
+        {
+            var lamina = (Lamina)obj;
+            lamina.PropertyChanged += (sender, args) => { lamina._solid = lamina.GetSolid(); };
+            lamina._solid = lamina.GetSolid();
+        }
+
+        public void PreConstruct(object[] args)
+        {
+            return;
+        }
+    }
+
     public class MatrixValidator : IValidator
     {
         public Type ValidatesType => typeof(Matrix);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var components = (IList<double>)args[0];
             if(components.Count != 12)
@@ -187,7 +268,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Polyline);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var vertices = (IList<Vector3>)args[0];
 
@@ -205,7 +291,12 @@ namespace Elements.Validators
     {
         public Type ValidatesType => typeof(Polygon);
 
-        public void Validate(object[] args)
+        public void PostConstruct(object obj)
+        {
+            return;
+        }
+
+        public void PreConstruct(object[] args)
         {
             var vertices = (IList<Vector3>)args[0];
 
