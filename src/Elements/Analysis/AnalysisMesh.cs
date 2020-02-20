@@ -20,7 +20,7 @@ namespace Elements.Analysis
         private Grid2d _grid;
         private Func<Vector3, double> _analyze;
 
-        private List<Tuple<Polygon, double>> _results;
+        private List<(Polygon cell, double result)> _results;
         private double _min;
         private double _max;
         
@@ -105,11 +105,16 @@ namespace Elements.Analysis
         /// <param name="mesh"></param>
         public void Tessellate(ref Mesh mesh)
         {
+            if(this._results == null || this._results.Count == 0)
+            {
+                return;
+            }
+            
             var span = this._max - this._min;
             for (var i = 0; i < this._results.Count; i++)
             {
-                var cell = this._results[i].Item1;
-                var result = this._results[i].Item2;
+                var cell = this._results[i].cell;
+                var result = this._results[i].result;
 
                 var tess = new Tess();
                 tess.NoEmptyPolygons = true;
@@ -137,7 +142,7 @@ namespace Elements.Analysis
         /// </summary>
         public void Analyze()
         {
-            this._results = new List<Tuple<Polygon, double>>();
+            this._results = new List<(Polygon cell, double result)>();
             this._min = double.MaxValue;
             this._max = double.MinValue;
 
@@ -155,7 +160,7 @@ namespace Elements.Analysis
                 {
                     var center = innerCell.Centroid();
                     var result = this._analyze(center);
-                    this._results.Add(new Tuple<Polygon, double>(innerCell, result));
+                    this._results.Add((innerCell, result));
                     this._min = Math.Min(this._min, result);
                     this._max = Math.Max(this._max, result);
                 }
