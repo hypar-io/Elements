@@ -206,7 +206,7 @@ namespace Elements.Tests
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
                 var beam = new Beam(line, profile, BuiltInMaterials.Steel);
                 beam.UpdateRepresentations();
-                beam.Representation.SolidOperations.First().GetSolid().Tessellate(ref mesh);
+                beam.Representation.SolidOperations.First().Solid.Tessellate(ref mesh);
                 x += 2.0;
                 if (x > 20.0)
                 {
