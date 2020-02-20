@@ -15,11 +15,7 @@ namespace Hypar.Revit
         /// </summary>
         internal static Vector3 ToVector3(this XYZ xyz, bool scaleToMeters = false)
         {
-            var scale = 1.0;
-            if (scaleToMeters)
-            {
-                scale = Elements.Units.FeetToMeters(1);
-            }
+            var scale = scaleToMeters ? Elements.Units.FeetToMeters(1) : 1.0;
             return new Vector3(xyz.X, xyz.Y, xyz.Z) * scale;
         }
 
@@ -34,7 +30,7 @@ namespace Hypar.Revit
             var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
 
             var profiles = polygonLoopDict.Select(kvp => new Elements.Geometry.Profile(kvp.Key, kvp.Value, Guid.NewGuid(), "Revit Profile"));
-            var scaledProfiles = profiles.Select(p => p.Scale(Elements.Units.FeetToMeters(1)));
+            var scaledProfiles = profiles.Select(p => p);
             return scaledProfiles.ToArray();
         }
 
@@ -57,9 +53,9 @@ namespace Hypar.Revit
             return faces.ToArray();
         }
 
-        private static Polygon ToPolygon(this CurveLoop curveLoop)
+        private static Polygon ToPolygon(this CurveLoop curveLoop, bool scaleToMeters = false)
         {
-            return new Polygon(curveLoop.Select(l => l.GetEndPoint(0).ToVector3()).ToList());
+            return new Polygon(curveLoop.Select(l => l.GetEndPoint(0).ToVector3(scaleToMeters)).ToList());
         }
 
         private static Dictionary<Polygon, List<Polygon>> MatchOuterLoopPolygonsWithInnerHoles(IEnumerable<Polygon> polygons)
