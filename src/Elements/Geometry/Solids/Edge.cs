@@ -3,7 +3,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A Solid Edge.
     /// </summary>
-    internal class Edge
+    public class Edge
     {
         /// <summary>
         /// The Id of the Edge.
