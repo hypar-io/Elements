@@ -249,7 +249,6 @@ namespace Elements.Tests
             var grid = new Grid2d(polygon);
             grid.U.DivideByPattern(new double[] { 1, 2 });
             grid.V.DivideByCount(10);
-            File.WriteAllText("/Users/andrewheumann/Desktop/cellsInSpace2.json", JsonConvert.SerializeObject(grid.GetCells().SelectMany(c => c.GetTrimmedCellGeometry())));
             Assert.Equal(80, grid.GetCells().Count());
         }
     }
