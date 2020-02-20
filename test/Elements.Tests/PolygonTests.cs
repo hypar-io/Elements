@@ -647,8 +647,8 @@ namespace Elements.Geometry.Tests
             _output.WriteLine(end.ToString());
             _output.WriteLine("");
 
-            var n1 = start.Plane().Normal;
-            var n2 = end.Plane().Normal;
+            var n1 = start.Plane();
+            var n2 = end.Plane();
 
             _output.WriteLine("Normals:");
             _output.WriteLine(n1.ToString());
@@ -656,7 +656,7 @@ namespace Elements.Geometry.Tests
             _output.WriteLine("");
 
             // Check that the start and end have opposing normals.
-            var dot = n1.Dot(n2);
+            var dot = n1.Normal.Dot(n2.Normal);
             _output.WriteLine(dot.ToString());
             Assert.Equal(-1.0, dot, 5);
         }
