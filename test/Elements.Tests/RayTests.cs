@@ -1,13 +1,23 @@
 using System;
 using System.Collections.Generic;
+using Elements.Analysis;
 using Elements.Geometry;
 using solids = Elements.Geometry.Solids;
 using Xunit;
+using Xunit.Abstractions;
+using System.Diagnostics;
 
 namespace Elements.Tests
 {
     public class RayTests : ModelTest
     {
+        private ITestOutputHelper _output;
+
+        public RayTests(ITestOutputHelper output)
+        {
+            this._output = output;
+        }
+        
         [Fact]
         public void TriangleIntersection()
         {
@@ -207,6 +217,51 @@ namespace Elements.Tests
             Assert.False(ray1.Intersects(ray2, out result));
 
             Assert.True(ray1.Intersects(ray2, out result, true));
+        }
+
+        [Fact]
+        public void RayShadowTest()
+        {
+            this.Name = "RayShadowTest";
+            
+            var outer = Polygon.Rectangle(3,3);
+            var inner = Polygon.Rectangle(1.5,1.5);
+
+            var mass = new Mass(new Profile(outer, inner.Reversed()), 2);
+            mass.Transform.Move(new Vector3(0,0,5));
+            mass.UpdateRepresentations();
+
+            var light = new Vector3(7,7,10);
+            var colorScale = new ColorScale(new List<Color> { Colors.White, Colors.Darkgray });
+            var analyze = new Func<Vector3, double>((v) => {
+                var ray = new Ray(v, (light - v).Unitized());
+                var solidOp = mass.Representation.SolidOperations[0];
+                if(ray.Intersects(solidOp, out List<Vector3> results))
+                {
+                    var hit = results[results.Count - 1];
+                    if(!v.Equals(hit))
+                    {
+                        var hitLine = new ModelCurve(new Line(light, hit), BuiltInMaterials.XAxis);
+                        this.Model.AddElement(hitLine);
+                    }
+                    return 1.0;
+                }
+                return 0.0;
+            });
+
+            var sw = new Stopwatch();
+            sw.Start();
+            var analysisMesh = new AnalysisMesh(Polygon.Rectangle(10, 10), 0.5, 0.5, colorScale, analyze);
+            sw.Stop();
+            this._output.WriteLine($"Analysis mesh constructed in {sw.Elapsed.TotalMilliseconds}ms.");
+            sw.Reset();
+
+            sw.Start();
+            analysisMesh.Analyze();
+            sw.Stop();
+            this._output.WriteLine($"Shot {analysisMesh.TotalAnalysisLocations} rays in {sw.Elapsed.TotalMilliseconds}ms.");
+
+            this.Model.AddElements(new Element[]{mass, analysisMesh});
         }
 
         private static Vector3 Center(Triangle t)
