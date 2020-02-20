@@ -31,13 +31,18 @@ namespace Elements
             var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @transform, @material, @representation, @isElementDefinition, @id, @name});
+                validator.PreConstruct(new object[]{ @transform, @material, @representation, @isElementDefinition, @id, @name});
             }
         
             this.Transform = @transform;
             this.Material = @material;
             this.Representation = @representation;
             this.IsElementDefinition = @isElementDefinition;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The element's transform.</summary>

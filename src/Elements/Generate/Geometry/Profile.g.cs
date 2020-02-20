@@ -30,11 +30,16 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Profile>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @perimeter, @voids, @id, @name});
+                validator.PreConstruct(new object[]{ @perimeter, @voids, @id, @name});
             }
         
             this.Perimeter = @perimeter;
             this.Voids = @voids;
+
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The perimeter of the profile.</summary>

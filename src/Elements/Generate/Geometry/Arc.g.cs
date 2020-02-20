@@ -30,13 +30,18 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Arc>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @center, @radius, @startAngle, @endAngle});
+                validator.PreConstruct(new object[]{ @center, @radius, @startAngle, @endAngle});
             }
         
             this.Center = @center;
             this.Radius = @radius;
             this.StartAngle = @startAngle;
             this.EndAngle = @endAngle;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The center of the arc.</summary>

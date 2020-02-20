@@ -30,9 +30,14 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Curve>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ });
+                validator.PreConstruct(new object[]{ });
             }
         
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
     

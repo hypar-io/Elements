@@ -29,10 +29,15 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Transform>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @matrix});
+                validator.PreConstruct(new object[]{ @matrix});
             }
         
             this.Matrix = @matrix;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The transform's matrix.</summary>

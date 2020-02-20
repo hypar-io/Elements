@@ -30,10 +30,15 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Polyline>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @vertices});
+                validator.PreConstruct(new object[]{ @vertices});
             }
         
             this.Vertices = @vertices;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The vertices of the polygon.</summary>

@@ -29,13 +29,18 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Color>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @red, @green, @blue, @alpha});
+                validator.PreConstruct(new object[]{ @red, @green, @blue, @alpha});
             }
         
             this.Red = @red;
             this.Green = @green;
             this.Blue = @blue;
             this.Alpha = @alpha;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The red component of the color between 0.0 and 1.0.</summary>

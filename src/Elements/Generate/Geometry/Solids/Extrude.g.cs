@@ -21,8 +21,12 @@ namespace Elements.Geometry.Solids
 
     /// <summary>An extrusion of a profile, in a direction, to a height.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Extrude : SolidOperation
+    public partial class Extrude : SolidOperation, System.ComponentModel.INotifyPropertyChanged
     {
+        private Profile _profile;
+        private double _height;
+        private Vector3 _direction;
+    
         [Newtonsoft.Json.JsonConstructor]
         public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid)
             : base(isVoid)
@@ -30,27 +34,74 @@ namespace Elements.Geometry.Solids
             var validator = Validator.Instance.GetFirstValidatorForType<Extrude>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @profile, @height, @direction, @isVoid});
+                validator.PreConstruct(new object[]{ @profile, @height, @direction, @isVoid});
             }
         
             this.Profile = @profile;
             this.Height = @height;
             this.Direction = @direction;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The id of the profile to extrude.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Profile Profile { get; set; }
+        public Profile Profile
+        {
+            get { return _profile; }
+            set 
+            {
+                if (_profile != value)
+                {
+                    _profile = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The height of the extrusion.</summary>
         [Newtonsoft.Json.JsonProperty("Height", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
-        public double Height { get; set; }
+        public double Height
+        {
+            get { return _height; }
+            set 
+            {
+                if (_height != value)
+                {
+                    _height = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The direction in which to extrude.</summary>
         [Newtonsoft.Json.JsonProperty("Direction", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Direction { get; set; }
+        public Vector3 Direction
+        {
+            get { return _direction; }
+            set 
+            {
+                if (_direction != value)
+                {
+                    _direction = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }
