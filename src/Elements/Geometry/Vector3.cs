@@ -271,6 +271,26 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Are the two vectors the same within Epsilon?
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static bool operator ==(Vector3 a, Vector3 b)
+        {
+            return a.Equals(b);
+        }
+
+        /// <summary>
+        /// Are the two vectors not the same within Epsilon?
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static bool operator !=(Vector3 a, Vector3 b)
+        {
+            return !a.Equals(b);
+        }
+
+        /// <summary>
         /// Determine whether this vector is parallel to v.
         /// </summary>
         /// <param name="v">The vector to compare to this vector.</param>
