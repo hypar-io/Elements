@@ -1,3 +1,4 @@
+using System;
 using Elements.Geometry.Solids;
 
 namespace Elements.Geometry
@@ -23,7 +24,17 @@ namespace Elements.Geometry
                 return _instance;
             }
         }
-        
+
+        /// <summary>
+        /// Create a solid from a mesh.
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns>A solid.</returns>
+        public Solid CreateMeshSolid(Mesh mesh)
+        {
+            return Solid.CreateMesh(mesh);
+        }
+
         /// <summary>
         /// Create a sweep along a curve.
         /// </summary>
