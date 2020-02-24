@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 
@@ -18,7 +19,6 @@ namespace Elements.Validators
 
         public void PreConstruct(object[] args)
         {
-            //Vector3 @center, double @radius, double @startAngle, double @endAngle
             var center = (Vector3)args[0];
             var radius = (double)args[1];
             var startAngle = (double)args[2];
@@ -92,11 +92,19 @@ namespace Elements.Validators
 
         public void PreConstruct(object[] args)
         {
-            var red = (Color)args[0];
+            var color = (Color)args[0];
             var specularFactor = (double)args[1];
             var glossinessFactor = (double)args[2];
-            var id = (Guid)args[3];
-            var name = (string)args[4];
+            var unlit = (bool)args[3];
+            var texture = (string)args[4];
+            var doubleSided = (bool)args[5];
+            var id = (Guid)args[6];
+            var name = (string)args[7];
+
+            if(texture != null && !File.Exists(texture))
+            {
+                throw new FileNotFoundException("The material could not be created. The specified texture does not exist.");
+            }
             
             if(specularFactor < 0.0 || glossinessFactor < 0.0)
             {
@@ -193,8 +201,8 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var extrude = (Extrude)obj;
-            extrude.PropertyChanged += (sender, args) => { extrude._solid = extrude.GetSolid(); };
-            extrude._solid = extrude.GetSolid();
+            extrude.PropertyChanged += (sender, args) => { extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction); };
+            extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction);;
         }
 
         public void PreConstruct(object[] args)
@@ -218,8 +226,8 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var sweep = (Sweep)obj;
-            sweep.PropertyChanged += (sender, args) => { sweep._solid = sweep.GetSolid(); };
-            sweep._solid = sweep.GetSolid();
+            sweep.PropertyChanged += (sender, args) => { sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback);; };
+            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback);;
         }
 
         public void PreConstruct(object[] args)
@@ -235,8 +243,8 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var lamina = (Lamina)obj;
-            lamina.PropertyChanged += (sender, args) => { lamina._solid = lamina.GetSolid(); };
-            lamina._solid = lamina.GetSolid();
+            lamina.PropertyChanged += (sender, args) => { lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);; };
+            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);;
         }
 
         public void PreConstruct(object[] args)

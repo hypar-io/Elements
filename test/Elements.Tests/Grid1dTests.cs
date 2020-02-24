@@ -49,7 +49,7 @@ namespace Elements.Tests
             foreach (var wallLine in lines)
             {
                 var color = new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1.0);
-                walls.Add(new StandardWall(wallLine, 0.1, 3.0, new Material(color, 0, 0, Guid.NewGuid(), color.ToString())));
+                walls.Add(new StandardWall(wallLine, 0.1, 3.0, new Material(color, 0, 0, false, null, false, Guid.NewGuid(), color.ToString())));
             }
 
             // Create rectangles from top-level grid cells
