@@ -97,6 +97,8 @@ namespace Elements.Analysis
 
             this._grid.U.DivideByApproximateLength(this.ULength);
             this._grid.V.DivideByApproximateLength(this.VLength);
+
+            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
         }
 
         /// <summary>

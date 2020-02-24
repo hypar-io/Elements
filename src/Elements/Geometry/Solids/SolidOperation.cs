@@ -22,14 +22,5 @@ namespace Elements.Geometry.Solids
         {
             get {return _solid;}
         }
-
-        /// <summary>
-        /// Get the updated solid for this operation.
-        /// </summary>
-        internal virtual Solid GetSolid()
-        {
-            // Override in derived classes.
-            return null;
-        }
     }
 }

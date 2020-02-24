@@ -69,7 +69,7 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Lamina(this.Perimeter));
+            this.Representation.SolidOperations.Add(new Lamina(this.Perimeter, false));
         }
     }
 }
