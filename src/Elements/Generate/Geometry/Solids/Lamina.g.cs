@@ -21,8 +21,10 @@ namespace Elements.Geometry.Solids
 
     /// <summary>A zero-thickness solid defined by a profile.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class Lamina : SolidOperation
+    public partial class Lamina : SolidOperation, System.ComponentModel.INotifyPropertyChanged
     {
+        private Polygon _perimeter;
+    
         [Newtonsoft.Json.JsonConstructor]
         public Lamina(Polygon @perimeter, bool @isVoid)
             : base(isVoid)
@@ -30,16 +32,41 @@ namespace Elements.Geometry.Solids
             var validator = Validator.Instance.GetFirstValidatorForType<Lamina>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @perimeter, @isVoid});
+                validator.PreConstruct(new object[]{ @perimeter, @isVoid});
             }
         
             this.Perimeter = @perimeter;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The perimeter.</summary>
         [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Polygon Perimeter { get; set; }
+        public Polygon Perimeter
+        {
+            get { return _perimeter; }
+            set 
+            {
+                if (_perimeter != value)
+                {
+                    _perimeter = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

@@ -1,4 +1,5 @@
 using Elements.Serialization.JSON;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
 {
@@ -10,6 +11,18 @@ namespace Elements.Geometry.Solids
     [JsonInheritanceAttribute("Elements.Geometry.Solids.Lamina", typeof(Lamina))]
     public abstract partial class SolidOperation
     {
+        internal Solid _solid;
+
+        /// <summary>
+        /// The solid operation's solid. To update this
+        /// cached representation, call GetSolid().
+        /// </summary>
+        [JsonIgnore]
+        public Solid Solid
+        {
+            get {return _solid;}
+        }
+
         /// <summary>
         /// Get the updated solid for this operation.
         /// </summary>

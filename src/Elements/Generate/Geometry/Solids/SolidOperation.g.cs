@@ -30,10 +30,15 @@ namespace Elements.Geometry.Solids
             var validator = Validator.Instance.GetFirstValidatorForType<SolidOperation>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @isVoid});
+                validator.PreConstruct(new object[]{ @isVoid});
             }
         
             this.IsVoid = @isVoid;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>Is the solid operation a void operation?</summary>

@@ -36,7 +36,7 @@ namespace Elements
             var validator = Validator.Instance.GetFirstValidatorForType<Model>();
             if (validator != null)
             {
-                validator.Validate(new object[] { @transform, @elements });
+                validator.PreConstruct(new object[] { @transform, @elements });
             }
 
             this.Transform = @transform;

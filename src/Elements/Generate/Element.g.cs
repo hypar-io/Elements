@@ -30,11 +30,16 @@ namespace Elements
             var validator = Validator.Instance.GetFirstValidatorForType<Element>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @id, @name});
+                validator.PreConstruct(new object[]{ @id, @name});
             }
         
             this.Id = @id;
             this.Name = @name;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>A unique id.</summary>

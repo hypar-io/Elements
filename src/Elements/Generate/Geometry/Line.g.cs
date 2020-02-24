@@ -30,11 +30,16 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Line>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @start, @end});
+                validator.PreConstruct(new object[]{ @start, @end});
             }
         
             this.Start = @start;
             this.End = @end;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The start of the line.</summary>

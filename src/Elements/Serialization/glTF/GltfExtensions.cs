@@ -682,7 +682,7 @@ namespace Elements.Serialization.glTF
             var elements = model.Elements.Where(e =>
             {
                 return e.Value is GeometricElement || e.Value is ElementInstance;
-            }).Select(e => e.Value);
+            }).Select(e => e.Value).ToList();
 
             // Lines are stored in a list of lists
             // according to the max available index size.
@@ -770,10 +770,9 @@ namespace Elements.Serialization.glTF
                 {
                     foreach (var solidOp in geom.Representation.SolidOperations)
                     {
-                        var solid = solidOp.GetSolid();
-                        if (solid != null)
+                        if (solidOp.Solid != null)
                         {
-                            meshId = ProcessSolid(solid,
+                            meshId = ProcessSolid(solidOp.Solid,
                                                   e.Id.ToString(),
                                                   materialName,
                                                   ref gltf,
@@ -815,10 +814,9 @@ namespace Elements.Serialization.glTF
                     {
                         foreach(var solidOp in geom.Representation.SolidOperations)
                         {
-                            var solid = solidOp.GetSolid();
-                            if (solid != null)
+                            if (solidOp.Solid != null)
                             {
-                                foreach (var edge in solid.Edges.Values)
+                                foreach (var edge in solidOp.Solid.Edges.Values)
                                 {
                                     lines.AddRange(new[] { i.Transform.OfVector(edge.Left.Vertex.Point), i.Transform.OfVector(edge.Right.Vertex.Point) });
                                 }

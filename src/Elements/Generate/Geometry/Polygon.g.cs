@@ -30,9 +30,14 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Polygon>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @vertices});
+                validator.PreConstruct(new object[]{ @vertices});
             }
         
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
     

@@ -30,12 +30,17 @@ namespace Elements
             var validator = Validator.Instance.GetFirstValidatorForType<Material>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @color, @specularFactor, @glossinessFactor, @id, @name});
+                validator.PreConstruct(new object[]{ @color, @specularFactor, @glossinessFactor, @id, @name});
             }
         
             this.Color = @color;
             this.SpecularFactor = @specularFactor;
             this.GlossinessFactor = @glossinessFactor;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The material's color.</summary>

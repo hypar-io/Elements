@@ -29,11 +29,16 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Plane>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @origin, @normal});
+                validator.PreConstruct(new object[]{ @origin, @normal});
             }
         
             this.Origin = @origin;
             this.Normal = @normal;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The origin of the plane.</summary>

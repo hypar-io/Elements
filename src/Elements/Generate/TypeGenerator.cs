@@ -24,7 +24,7 @@ namespace Elements.Generate
         public string Generate(JsonSchema schema, string typeNameHint, IEnumerable<string> reservedTypeNames)
         {
             // Console.WriteLine(typeNameHint + ":" + schema.InheritedSchema ?? "none");
-            if(schema.IsEnumeration)
+            if (schema.IsEnumeration)
             {
                 return typeNameHint;
             }
@@ -70,7 +70,7 @@ namespace Elements.Generate
 
         private const string NAMESPACE_PROPERTY = "x-namespace";
         private static string[] _coreTypeNames;
-        
+
         /// <summary>
         /// Generate a user-defined type in a .cs file from a schema.
         /// </summary>
@@ -82,19 +82,19 @@ namespace Elements.Generate
             var schema = GetSchema(uri);
 
             string ns;
-            if(!GetNamespace(schema, out ns))
+            if (!GetNamespace(schema, out ns))
             {
                 return;
             }
 
             var typeName = schema.Title;
             var filePath = Path.Combine(outputBaseDir, GetFileNameFromTypeName(typeName));
-            if(_coreTypeNames == null)
+            if (_coreTypeNames == null)
             {
                 _coreTypeNames = GetCoreTypeNames();
             }
-            var localExcludes = _coreTypeNames.Where(n=>n != typeName).ToArray();
-            
+            var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
+
             WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, localExcludes);
         }
 
@@ -108,26 +108,26 @@ namespace Elements.Generate
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
             var code = new List<string>();
-            foreach(var uri in uris)
+            foreach (var uri in uris)
             {
                 try
                 {
                     var schema = GetSchema(uri);
 
                     string ns;
-                    if(!GetNamespace(schema, out ns))
+                    if (!GetNamespace(schema, out ns))
                     {
                         return null;
                     }
 
                     var typeName = schema.Title;
-                    if(_coreTypeNames == null)
+                    if (_coreTypeNames == null)
                     {
                         _coreTypeNames = GetCoreTypeNames();
                     }
-                    var localExcludes = _coreTypeNames.Where(n=>n != typeName).ToArray();
+                    var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
 
-                    var csharp = WriteTypeFromSchema(schema, typeName, ns,  true, localExcludes);
+                    var csharp = WriteTypeFromSchema(schema, typeName, ns, true, localExcludes);
                     code.Add(csharp);
                 }
                 catch
@@ -141,11 +141,11 @@ namespace Elements.Generate
                                                  kind: Microsoft.CodeAnalysis.SourceCodeKind.Regular,
                                                  documentationMode: Microsoft.CodeAnalysis.DocumentationMode.Diagnose);
             var syntaxTrees = new List<Microsoft.CodeAnalysis.SyntaxTree>();
-            foreach(var cs in code)
+            foreach (var cs in code)
             {
                 var tree = CSharpSyntaxTree.ParseText(cs, options);
                 syntaxTrees.Add(tree);
-                
+
             }
 
             var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
@@ -173,19 +173,19 @@ namespace Elements.Generate
                                                        syntaxTrees,
                                                        defaultReferences,
                                                        compileOptions);
-            
+
             Assembly assembly = null;
-            using(var ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 var emitResult = compilation.Emit(ms);
-                if(emitResult.Success)
+                if (emitResult.Success)
                 {
                     ms.Seek(0, SeekOrigin.Begin);
                     assembly = Assembly.Load(ms.ToArray());
                 }
                 else
                 {
-                    foreach(var d in emitResult.Diagnostics)
+                    foreach (var d in emitResult.Diagnostics)
                     {
                         Console.WriteLine(d.ToString());
                     }
@@ -201,13 +201,13 @@ namespace Elements.Generate
         /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
         public static void GenerateElementTypes(string outputBaseDir)
         {
-            var typeNames = _hyparSchemas.Select(u=>u.Split(new[]{"/"}, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToList();
+            var typeNames = _hyparSchemas.Select(u => u.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToList();
 
-            foreach(var uri in _hyparSchemas)
+            foreach (var uri in _hyparSchemas)
             {
-                var split = uri.Split(new[]{"/"}, StringSplitOptions.RemoveEmptyEntries).Skip(3);
-                var outDir = Path.Combine(outputBaseDir, string.Join("/", split.Take(split.Count()-1)).TrimEnd('.'));
-                if(!Directory.Exists(outDir))
+                var split = uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Skip(3);
+                var outDir = Path.Combine(outputBaseDir, string.Join("/", split.Take(split.Count() - 1)).TrimEnd('.'));
+                if (!Directory.Exists(outDir))
                 {
                     Directory.CreateDirectory(outDir);
                 }
@@ -218,7 +218,7 @@ namespace Elements.Generate
 
         private static string[] GetCoreTypeNames()
         {
-            return _hyparSchemas.Select(u=>u.Split(new[]{"/"}, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToArray();
+            return _hyparSchemas.Select(u => u.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToArray();
         }
 
         private static string GetFileNameFromTypeName(string typeName)
@@ -228,27 +228,27 @@ namespace Elements.Generate
 
         private static JsonSchema GetSchema(string uri)
         {
-            if(uri.StartsWith("http://") || uri.StartsWith("https://"))
+            if (uri.StartsWith("http://") || uri.StartsWith("https://"))
             {
-                return Task.Run(()=>JsonSchema.FromUrlAsync(uri)).Result;;
+                return Task.Run(() => JsonSchema.FromUrlAsync(uri)).Result; ;
             }
             else
             {
                 var path = Path.GetFullPath(Path.Combine(System.Environment.CurrentDirectory, uri));
-                if(!File.Exists(path))
+                if (!File.Exists(path))
                 {
                     throw new Exception($"The specified schema, {uri}, can not be found as a relative file or a url.");
                 }
-                return Task.Run(()=> JsonSchema.FromJsonAsync(File.ReadAllText(path))).Result;;
+                return Task.Run(() => JsonSchema.FromJsonAsync(File.ReadAllText(path))).Result; ;
             }
         }
 
         private static bool GetNamespace(JsonSchema schema, out string @namespace)
         {
-            if(!schema.ExtensionData.ContainsKey(NAMESPACE_PROPERTY))
+            if (!schema.ExtensionData.ContainsKey(NAMESPACE_PROPERTY))
             {
                 Console.WriteLine($"The provided schema does not contain the required 'x-namespace' property.");
-                @namespace  = null;
+                @namespace = null;
                 return false;
             }
             @namespace = (string)schema.ExtensionData[NAMESPACE_PROPERTY];
@@ -258,20 +258,28 @@ namespace Elements.Generate
         private static string WriteTypeFromSchema(JsonSchema schema, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
             var templates = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "./Templates"));
-            
-            var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings(){
-                Namespace = ns, 
+
+            var structTypes = new[] { "Color", "Vector3" };
+
+            // A limited set of the solid operation types. This will be used
+            // to add INotifyPropertyChanged logic, so we don't add the
+            // base class SolidOperation, or the Import class.
+            var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina"};
+
+            var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings()
+            {
+                Namespace = ns,
                 ArrayType = "IList",
                 ArrayInstanceType = "List",
-                ExcludedTypeNames = excludedTypes == null ? new string[]{} : excludedTypes,
+                ExcludedTypeNames = excludedTypes == null ? new string[] { } : excludedTypes,
                 TemplateDirectory = templates,
                 GenerateJsonMethods = false,
-                ClassStyle = CSharpClassStyle.Poco, // Use pocos but with constructors. 
+                ClassStyle = solidOpTypes.Contains(typeName) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
                 TypeNameGenerator = new ElementsTypeNameGenerator()
             });
             var file = generator.GenerateFile();
 
-            if(isUserElement)
+            if (isUserElement)
             {
                 // Insert the UserElement attribute directly before
                 // 'public partial class <typeName>'
@@ -279,7 +287,7 @@ namespace Elements.Generate
                 file = file.Insert(start, $"[UserElement]\n\t");
             }
 
-            if(typeName == "Model")
+            if (typeName == "Model")
             {
                 // JSON schema only allows us to generate Dictionary<string,Element>
                 // Replace those entries here with Dictionary<Guid,Element>.
@@ -290,11 +298,11 @@ namespace Elements.Generate
                 file = file.Replace("public Position Origin { get; set; }", "[Obsolete(\"Use Transform instead.\")]\n\t\tpublic Position Origin { get; set; }");
             }
             // Convert some classes to structs.
-            else if(typeName == "Color" || typeName == "Vector3")
+            else if (structTypes.Contains(typeName))
             {
                 file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
             }
-            
+
             return file;
         }
 

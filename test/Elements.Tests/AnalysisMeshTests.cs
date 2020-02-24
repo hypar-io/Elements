@@ -37,6 +37,7 @@ namespace Elements.Tests
             var colorScale = new ColorScale(new List<Color>(){Colors.Cyan, Colors.Purple, Colors.Orange}, 10);
 
             var analysisMesh = new AnalysisMesh(perimeter, 0.2, 0.2, colorScale, analyze);
+            analysisMesh.Analyze();
             // </example>
 
             this.Model.AddElement(analysisMesh);

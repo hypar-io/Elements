@@ -3,7 +3,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A Solid Vertex.
     /// </summary>
-    internal class Vertex
+    public class Vertex
     {
         /// <summary>
         /// The Id of the Vertex.

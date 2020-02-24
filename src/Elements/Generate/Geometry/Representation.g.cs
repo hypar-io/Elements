@@ -29,10 +29,15 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Representation>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @solidOperations});
+                validator.PreConstruct(new object[]{ @solidOperations});
             }
         
             this.SolidOperations = @solidOperations;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>A collection of solid operations.</summary>

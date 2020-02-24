@@ -29,11 +29,16 @@ namespace Elements.GeoJSON
             var validator = Validator.Instance.GetFirstValidatorForType<Position>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @latitude, @longitude});
+                validator.PreConstruct(new object[]{ @latitude, @longitude});
             }
         
             this.Latitude = @latitude;
             this.Longitude = @longitude;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The latitude in decimal degrees.</summary>
