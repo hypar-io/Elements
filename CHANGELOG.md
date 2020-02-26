@@ -1,5 +1,16 @@
 # Changelog
 
+### 0.6.2
+## Added
+- `Material.Unlit`
+- `Material.DoubleSided`
+
+## Removed
+- `SolidOperation.GetSolid()`.
+
+## Fixed
+- #262
+
 ### 0.6.0
 ## Added
 - `ColorScale`

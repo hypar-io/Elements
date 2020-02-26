@@ -10,12 +10,6 @@ namespace Elements
     public partial class Material : Element
     {
         /// <summary>
-        /// A relative file path to an image file to be used as a texture.
-        /// The image data will be packed into the glTF's buffer.
-        /// </summary>
-        public string Texture { get; }
-
-        /// <summary>
         /// Construct a material.
         /// </summary>
         /// <param name="name">The name of the material.</param>
@@ -33,23 +27,27 @@ namespace Elements
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
         /// <param name="texture">A relative path to a jpg or png image file to be used as a texture.</param>
+        /// <param name="unlit">Is this material affected by lights?</param>
+        /// <param name="doubleSided">Is this material to be rendered from both sides?</param>
         /// <param name="id">The id of the material.</param>
         /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
         public Material(string name,
                         Color color,
-                        float specularFactor = 0.1f,
-                        float glossinessFactor = 0.1f,
+                        double specularFactor = 0.1,
+                        double glossinessFactor = 0.1,
                         string texture = null,
+                        bool unlit = false,
+                        bool doubleSided = false,
                         Guid id = default(Guid)) :
             this(color,
                  specularFactor,
                  glossinessFactor,
+                 unlit,
+                 texture,
+                 doubleSided,
                  id != default(Guid) ? id : Guid.NewGuid(),
-                 name)
-        {
-            this.Texture = texture;
-        }
+                 name){}
 
         /// <summary>
         /// Is this material equal to the provided material?

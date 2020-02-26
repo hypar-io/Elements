@@ -32,7 +32,7 @@ namespace Elements
             var validator = Validator.Instance.GetFirstValidatorForType<WallByProfile>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @profile, @thickness, @centerline, @transform, @material, @representation, @isElementDefinition, @id, @name});
+                validator.PreConstruct(new object[]{ @profile, @thickness, @centerline, @transform, @material, @representation, @isElementDefinition, @id, @name});
             }
         
             this.Profile = @profile;

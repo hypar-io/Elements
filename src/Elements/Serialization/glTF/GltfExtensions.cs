@@ -116,16 +116,25 @@ namespace Elements.Serialization.glTF
                 m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness();
                 m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
-                m.DoubleSided = false;
+                m.DoubleSided = material.DoubleSided;
                 m.Name = material.Name;
 
-                m.Extensions = new Dictionary<string, object>{
-                    {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
-                        {"diffuseFactor", new[]{material.Color.Red,material.Color.Green,material.Color.Blue,material.Color.Alpha}},
-                        {"specularFactor", new[]{material.SpecularFactor, material.SpecularFactor, material.SpecularFactor}},
-                        {"glossinessFactor", material.GlossinessFactor}
-                    }}
-                };
+                if (material.Unlit)
+                {
+                    m.Extensions = new Dictionary<string, object>{
+                        {"KHR_materials_unlit", new Dictionary<string, object>{}}
+                    };
+                }
+                else
+                {
+                    m.Extensions = new Dictionary<string, object>{
+                        {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
+                            {"diffuseFactor", new[]{material.Color.Red,material.Color.Green,material.Color.Blue,material.Color.Alpha}},
+                            {"specularFactor", new[]{material.SpecularFactor, material.SpecularFactor, material.SpecularFactor}},
+                            {"glossinessFactor", material.GlossinessFactor}
+                        }}
+                    };
+                }
 
                 if (material.Texture != null)
                 {
@@ -551,7 +560,7 @@ namespace Elements.Serialization.glTF
                                         imin, imax, uvmin, uvmax, materials[BuiltInMaterials.Default.Name], cmin, cmax, null, meshes);
 
             CreateNodeForMesh(gltf, meshId, nodes, null);
-            
+
             var edgeCount = 0;
             var vertices = new List<Vector3>();
             var verticesHighlighted = new List<Vector3>();
@@ -653,11 +662,11 @@ namespace Elements.Serialization.glTF
             var rootTransform = new Transform(model.Transform);
 
             // Rotate the transform for +Z up.
-            rootTransform.Rotate(new Vector3(1,0,0), -90.0);
+            rootTransform.Rotate(new Vector3(1, 0, 0), -90.0);
             var m = rootTransform.Matrix;
             root.Matrix = new float[]{
-                (float)m.m11, (float)m.m12, (float)m.m13, 0f, 
-                (float)m.m21, (float)m.m22, (float)m.m23, 0f, 
+                (float)m.m11, (float)m.m12, (float)m.m13, 0f,
+                (float)m.m21, (float)m.m22, (float)m.m23, 0f,
                 (float)m.m31, (float)m.m32, (float)m.m33, 0f,
                 (float)m.tx, (float)m.ty, (float)m.tz, 1f};
 
@@ -669,14 +678,19 @@ namespace Elements.Serialization.glTF
             scene.Nodes = new[] { 0 };
             gltf.Scenes = new[] { scene };
 
-            gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
+            gltf.ExtensionsUsed = new[] {
+                "KHR_materials_pbrSpecularGlossiness",
+                "KHR_materials_unlit"
+            };
 
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
-            materialsToAdd.Add(BuiltInMaterials.Edges);
-            materialsToAdd.Add(BuiltInMaterials.Default);
+            if(drawEdges)
+            {   
+                materialsToAdd.Add(BuiltInMaterials.Edges);
+            }
             var materials = gltf.AddMaterials(materialsToAdd, buffer, bufferViews);
 
             var elements = model.Elements.Where(e =>
@@ -696,7 +710,7 @@ namespace Elements.Serialization.glTF
                 // Check if we'll overrun the index size
                 // for the current line array. If so,
                 // create a new line array.
-                if(currLines.Count * 2 > ushort.MaxValue)
+                if (currLines.Count * 2 > ushort.MaxValue)
                 {
                     currLines = new List<Vector3>();
                     lines.Add(currLines);
@@ -721,9 +735,9 @@ namespace Elements.Serialization.glTF
 
             if (drawEdges && lines.Count() > 0)
             {
-                foreach(var lineSet in lines)
+                foreach (var lineSet in lines)
                 {
-                    if(lineSet.Count == 0)
+                    if (lineSet.Count == 0)
                     {
                         continue;
                     }
@@ -790,7 +804,7 @@ namespace Elements.Serialization.glTF
                             }
                             meshElementMap[e.Id].Add(meshId);
 
-                            if(!geom.IsElementDefinition)
+                            if (!geom.IsElementDefinition)
                             {
                                 CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
                             }
@@ -806,13 +820,13 @@ namespace Elements.Serialization.glTF
                 // Lookup the corresponding mesh in the map.
                 AddInstanceMesh(gltf, nodes, meshElementMap[i.BaseDefinition.Id], i.Transform);
 
-                if(drawEdges)
+                if (drawEdges)
                 {
                     // Get the edges for the solid
                     var geom = i.BaseDefinition;
-                    if(geom.Representation != null)
+                    if (geom.Representation != null)
                     {
-                        foreach(var solidOp in geom.Representation.SolidOperations)
+                        foreach (var solidOp in geom.Representation.SolidOperations)
                         {
                             if (solidOp.Solid != null)
                             {
@@ -898,7 +912,7 @@ namespace Elements.Serialization.glTF
                                      meshes);
 
                 var geom = (GeometricElement)e;
-                if(!geom.IsElementDefinition)
+                if (!geom.IsElementDefinition)
                 {
                     CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
                 }
@@ -934,11 +948,11 @@ namespace Elements.Serialization.glTF
                             out vmax, out vmin, out nmin, out nmax, out cmin,
                             out cmax, out imin, out imax, out uvmax, out uvmin);
 
-            if(drawEdges)
+            if (drawEdges)
             {
                 foreach (var edge in solid.Edges.Values)
                 {
-                    if(t != null)
+                    if (t != null)
                     {
                         lines.AddRange(new[] { t.OfVector(edge.Left.Vertex.Point), t.OfVector(edge.Right.Vertex.Point) });
                     }
@@ -982,7 +996,7 @@ namespace Elements.Serialization.glTF
                 vi += 3 * floatSize;
 
                 var write = lineLoop ? (i < vertices.Count - 1) : (i % 2 == 0 && i < vertices.Count - 1);
-                if(write)
+                if (write)
                 {
                     System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)i), 0, indices, ii, ushortSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)(i + 1)), 0, indices, ii + ushortSize, ushortSize);

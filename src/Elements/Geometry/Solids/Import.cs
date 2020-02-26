@@ -11,10 +11,5 @@ namespace Elements.Geometry.Solids
         {
             this._solid = solid;
         }
-
-        internal override Solid GetSolid()
-        {
-            return this._solid;
-        }
     }
 }
