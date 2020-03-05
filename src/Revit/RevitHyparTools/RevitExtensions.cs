@@ -40,7 +40,7 @@ namespace Hypar.Revit
         /// </summary>
         /// <param name="solid">The revit Solid</param>
         /// <param name="verticalThreshold">The angle (in degrees) that represents the threshold for a face to be considered facing up.  A completely horizontal face will have an angle of 0.  A face that does not face up or down at all will have an angle of 90.</param>
-        private static PlanarFace[] GetMostLikelyTopFaces(this Solid solid, double verticalThreshold = 30)
+        internal static PlanarFace[] GetMostLikelyTopFaces(this Solid solid, double verticalThreshold = 30)
         {
             var faces = new List<PlanarFace>();
             foreach (PlanarFace face in solid.Faces)
