@@ -109,7 +109,7 @@ namespace Elements.Spatial
 
         /// <summary>
         /// Create a Grid2d from a list of boundary polygons and an optional transform.
-        /// If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
+        /// If the transform is null or not supplied, a transform will be generated automatically from the boundaries' normal.
         /// Currently only transforms parallel to the supplied polygons are supported.
         /// The polygons' bounding box parallel to the supplied transform will be
         /// used as the grid extents.
@@ -122,25 +122,31 @@ namespace Elements.Spatial
             {
                 //if no transform is supplied, calculate one from the normal. 
                 var planeTransform = boundaries.First().Vertices.ToTransform();
-                if (Math.Abs(planeTransform.ZAxis.Dot(Vector3.ZAxis)).ApproximatelyEquals(1)) // we're xy parallel
-                {
-                    transform = new Transform(planeTransform.Origin);
-                }
-                else
-                {
-                    transform = planeTransform;
-                }
+                // If we are calculating the transform automatically, then the user has not
+                // supplied any rotational orientation information; we only care about
+                // direction. So if the polygon is nearly XY-parallel, let's just use
+                // the XY plane at the boundary's location to be consistent with default behavior. 
+                transform = Math.Abs(planeTransform.ZAxis.Dot(Vector3.ZAxis)).ApproximatelyEquals(1) ?
+                    new Transform(planeTransform.Origin) :
+                    planeTransform;
             }
-
 
             fromGrid = new Transform(transform);
             toGrid = new Transform(transform);
             toGrid.Invert();
 
             var transformedBoundaries = toGrid.OfPolygons(boundaries);
-            var allVerticesZ = transformedBoundaries.SelectMany(b => b.Vertices).Select(v => v.Z);
-            if(allVerticesZ.Any(z => !z.ApproximatelyEquals(0))) {
-                throw new Exception("After transform, this polygon was not in the XY Plane. Please ensure that all your geometry as well as any provided transform all lie in the same plane.");
+
+            // verify that all boundaries are in XY plane after transform
+            foreach (var boundary in transformedBoundaries)
+            {
+                foreach (var vertex in boundary.Vertices)
+                {
+                    if (!vertex.Z.ApproximatelyEquals(0))
+                    {
+                        throw new Exception("The Grid2d could not be constructed. After transform, this polygon was not in the XY Plane. Please ensure that all your geometry as well as any provided transform all lie in the same plane.");
+                    }
+                }
             }
 
             boundariesInGridSpace = transformedBoundaries;
@@ -343,7 +349,7 @@ namespace Elements.Spatial
             }
             if (!(otherDirection is Line))
             {
-                throw new Exception("Only grids with straight-line axes are currently supported.");
+                throw new Exception("Unable to get Cell separators. Only grids with straight-line axes are currently supported.");
             }
             var originVec = otherDirection.PointAt(0);
             foreach (var point in points)

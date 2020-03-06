@@ -503,9 +503,6 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static Transform ToTransform(this IList<Vector3> points)
         {
-            //var a = new Vector3(points[1].X - points[0].X,
-            //                    points[1].Y - points[0].Y,
-            //                    points[1].Z - points[0].Z).Unitized();
             var a = (points[1] - points[0]).Unitized();
             // We need to search for a second vector that is not colinear 
             // with the first. If all the vectors are tried, and one isn't

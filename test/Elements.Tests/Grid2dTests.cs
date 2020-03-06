@@ -216,8 +216,6 @@ namespace Elements.Tests
             };
         }
 
-
-
         [Fact]
         public void NonXYOrientedBoundary()
         {
@@ -237,7 +235,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void XYParallelNonOrthoganalBoundary()
+        public void XYParallelNonOrthogonalBoundary()
         {
             var polygon = new Polygon(new[]
             {
