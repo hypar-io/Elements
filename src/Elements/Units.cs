@@ -73,6 +73,37 @@ namespace Elements
         }
 
         /// <summary>
+        /// Units of length.
+        /// </summary>
+        public enum LengthUnit
+        {
+            /// <summary>
+            /// Kilometer
+            /// </summary>
+            Kilometer,
+            /// <summary>
+            /// Meter
+            /// </summary>
+            Meter,
+            /// <summary>
+            /// Centimeter
+            /// </summary>
+            Centimeter,
+            /// <summary>
+            /// Millimeter
+            /// </summary>
+            Millimeter,
+            /// <summary>
+            /// Foot
+            /// </summary>
+            Foot,
+            /// <summary>
+            /// Inch
+            /// </summary>
+            Inch
+        }
+
+        /// <summary>
         /// Cardinal directions.
         /// </summary>
         public enum CardinalDirection

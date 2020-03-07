@@ -911,8 +911,14 @@ namespace Elements.Serialization.glTF
                                      null,
                                      meshes);
 
+                if (!meshElementMap.ContainsKey(e.Id))
+                {
+                    meshElementMap.Add(e.Id, new List<int>());
+                }
+                meshElementMap[e.Id].Add(meshId);
+
                 var geom = (GeometricElement)e;
-                if (!geom.IsElementDefinition)
+                if(!geom.IsElementDefinition)
                 {
                     CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
                 }
