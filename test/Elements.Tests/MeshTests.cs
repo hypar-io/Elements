@@ -6,6 +6,9 @@ using static Elements.Units;
 
 namespace Elements.Tests
 {
+    /// <summary>
+    /// This is an example of a user element with a mesh representation.
+    /// </summary>
     [UserElement]
     public class MeshElement : GeometricElement, ITessellate
     {
