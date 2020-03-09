@@ -4,6 +4,12 @@
 ## Added
 - `Material.Unlit`
 - `Material.DoubleSided`
+- `Units.LengthUnit`
+- `Elements.MeshImportElement`
+
+## Changed
+- `Mesh.AddVertex(...)` is now public.
+- `Mesh.AddTriangle(...)` is now public.
 
 ## Removed
 - `SolidOperation.GetSolid()`.

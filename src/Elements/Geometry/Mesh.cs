@@ -485,7 +485,7 @@ Triangles:{_triangles.Count}";
         /// Add a vertex to the mesh.
         /// </summary>
         /// <param name="v">The vertex to add.</param>
-        internal Vertex AddVertex(Vertex v)
+        public Vertex AddVertex(Vertex v)
         {
             this._vertices.Add(v);
             v.Index = (this._vertices.Count) - 1;
