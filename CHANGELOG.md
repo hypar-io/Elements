@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.2
+### Changed
+- `Grid2d` now supports grids that are not parallel to the XY plane
+
+### Fixed
+- Fixed an error where `Transform.OfPlane(...)` would not solve correctly if the plane was not at the world origin. 
+
 ### 0.6.0
 ## Added
 - `ColorScale`
