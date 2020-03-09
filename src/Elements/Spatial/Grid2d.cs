@@ -96,7 +96,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Create a Grid2d from a polygon and optional Transform.
         /// If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
-        /// Currently only transforms parallel to the world XY are supported.
+        /// Currently only transforms parallel to the supplied polygons are supported.
         /// The polygon's bounding box parallel to the supplied transform will be
         /// used as the grid extents. 
         /// </summary>
@@ -109,8 +109,8 @@ namespace Elements.Spatial
 
         /// <summary>
         /// Create a Grid2d from a list of boundary polygons and an optional transform.
-        /// If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
-        /// Currently only transforms parallel to the world XY are supported.
+        /// If the transform is null or not supplied, a transform will be generated automatically from the boundaries' normal.
+        /// Currently only transforms parallel to the supplied polygons are supported.
         /// The polygons' bounding box parallel to the supplied transform will be
         /// used as the grid extents.
         /// </summary>
@@ -120,20 +120,35 @@ namespace Elements.Spatial
         {
             if (transform == null)
             {
-                transform = new Transform();
+                //if no transform is supplied, calculate one from the normal. 
+                var planeTransform = boundaries.First().Vertices.ToTransform();
+                // If we are calculating the transform automatically, then the user has not
+                // supplied any rotational orientation information; we only care about
+                // direction. So if the polygon is nearly XY-parallel, let's just use
+                // the XY plane at the boundary's location to be consistent with default behavior. 
+                transform = Math.Abs(planeTransform.ZAxis.Dot(Vector3.ZAxis)).ApproximatelyEquals(1) ?
+                    new Transform(planeTransform.Origin) :
+                    planeTransform;
             }
-
-            if (!transform.ZAxis.IsParallelTo(Vector3.ZAxis))
-            {
-                throw new ArgumentException("Currently transforms that are not parallel to the XY Plane are not supported.");
-            }
-
 
             fromGrid = new Transform(transform);
             toGrid = new Transform(transform);
             toGrid.Invert();
 
             var transformedBoundaries = toGrid.OfPolygons(boundaries);
+
+            // verify that all boundaries are in XY plane after transform
+            foreach (var boundary in transformedBoundaries)
+            {
+                foreach (var vertex in boundary.Vertices)
+                {
+                    if (!vertex.Z.ApproximatelyEquals(0))
+                    {
+                        throw new Exception("The Grid2d could not be constructed. After transform, this polygon was not in the XY Plane. Please ensure that all your geometry as well as any provided transform all lie in the same plane.");
+                    }
+                }
+            }
+
             boundariesInGridSpace = transformedBoundaries;
             var bbox = new BBox3(transformedBoundaries);
 
@@ -334,7 +349,7 @@ namespace Elements.Spatial
             }
             if (!(otherDirection is Line))
             {
-                throw new Exception("Only grids with straight-line axes are currently supported.");
+                throw new Exception("Unable to get Cell separators. Only grids with straight-line axes are currently supported.");
             }
             var originVec = otherDirection.PointAt(0);
             foreach (var point in points)
@@ -356,7 +371,7 @@ namespace Elements.Spatial
         /// <returns>A list of all bottom-level cells in the grid.</returns>
         public List<Grid2d> GetCells()
         {
-            if(IsSingleCell)
+            if (IsSingleCell)
             {
                 return new List<Grid2d> { this };
             }
@@ -447,7 +462,7 @@ namespace Elements.Spatial
         /// <param name="e"></param>
         private void TopLevelGridChange(Grid1d sender, EventArgs e)
         {
-            if(CellsFlat.Any(c => !c.IsSingleCell))
+            if (CellsFlat.Any(c => !c.IsSingleCell))
             {
                 throw new Exception("You are trying to modify the U / V dimensions of a grid that already has subdivisions. This is not allowed.");
             }

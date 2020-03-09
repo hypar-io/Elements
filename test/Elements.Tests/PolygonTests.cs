@@ -634,30 +634,14 @@ namespace Elements.Geometry.Tests
             var l = new Line(Vector3.Origin, new Vector3(0.0, 0.5, 0.5));
             var transforms = l.Frames(0.0, 0.0);
 
-            _output.WriteLine("Transforms:");
-            _output.WriteLine(transforms[0].ToString());
-            _output.WriteLine(transforms[1].ToString());
-            _output.WriteLine("");
-
             var start = transforms[0].OfPolygon(a);
             var end = transforms[1].OfPolygon(b);
 
-            _output.WriteLine("Polygons:");
-            _output.WriteLine(start.ToString());
-            _output.WriteLine(end.ToString());
-            _output.WriteLine("");
-
-            var n1 = start.Plane().Normal;
-            var n2 = end.Plane().Normal;
-
-            _output.WriteLine("Normals:");
-            _output.WriteLine(n1.ToString());
-            _output.WriteLine(n2.ToString());
-            _output.WriteLine("");
+            var n1 = start.Plane();
+            var n2 = end.Plane();
 
             // Check that the start and end have opposing normals.
-            var dot = n1.Dot(n2);
-            _output.WriteLine(dot.ToString());
+            var dot = n1.Normal.Dot(n2.Normal);
             Assert.Equal(-1.0, dot, 5);
         }
 

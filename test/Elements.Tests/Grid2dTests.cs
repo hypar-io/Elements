@@ -215,5 +215,39 @@ namespace Elements.Tests
                 { "V", vLines }
             };
         }
+
+        [Fact]
+        public void NonXYOrientedBoundary()
+        {
+            var polygon = new Polygon(new[]
+            {
+                new Vector3(-0.00143854692902412, 4.30437683003289, 18.5932250285742),
+                new Vector3(4.74720486586016, -0.330526623597087, 18.5932250285742),
+                new Vector3(5.51987513308118, 0.461104876693076, 15.6842815666606),
+                new Vector3(3.74403947664555, 2.19440554840181, 15.6842815666606),
+                new Vector3(4.16271103113095, 2.6233512512022, 14.1080699110863),
+                new Vector3(1.28521062051391, 5.6226002093707, 13.7492575016872),
+            });
+            var grid = new Grid2d(polygon);
+            grid.U.DivideByPattern(new double[] { 1, 2 });
+            grid.V.DivideByCount(10);
+            Assert.Equal(50, grid.GetCells().Count());
+        }
+
+        [Fact]
+        public void XYParallelNonOrthogonalBoundary()
+        {
+            var polygon = new Polygon(new[]
+            {
+                new Vector3(16.076011004152, -0.0286165078903409, 5.30811736183681),
+                new Vector3(20.9095067384118, 5.97574627670645, 5.30811736183681),
+                new Vector3(13.4808532467711, 11.9557921618838, 5.30811736183681),
+                new Vector3(10.0455739172429, 3.54936529736341, 5.30811736183681),
+            });
+            var grid = new Grid2d(polygon);
+            grid.U.DivideByPattern(new double[] { 1, 2 });
+            grid.V.DivideByCount(10);
+            Assert.Equal(80, grid.GetCells().Count());
+        }
     }
 }
