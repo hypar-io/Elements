@@ -174,6 +174,163 @@
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Geometry_Mesh_AddTriangle_" data-uid="Elements.Geometry.Mesh.AddTriangle*"></a>
+  <h4 id="Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Triangle_" data-uid="Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Triangle)">AddTriangle(Triangle)</h4>
+  <div class="markdown level1 summary"><p>Add a triangle to the mesh.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Triangle AddTriangle(Triangle t)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></td>
+        <td><span class="parametername">t</span></td>
+        <td><p>The triangle to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_AddTriangle_" data-uid="Elements.Geometry.Mesh.AddTriangle*"></a>
+  <h4 id="Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Vertex_Elements_Geometry_Vertex_Elements_Geometry_Vertex_" data-uid="Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)">AddTriangle(Vertex, Vertex, Vertex)</h4>
+  <div class="markdown level1 summary"><p>Add a triangle to the mesh.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The third vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_AddVertex_" data-uid="Elements.Geometry.Mesh.AddVertex*"></a>
+  <h4 id="Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Vector3_Elements_Geometry_UV_Elements_Geometry_Vector3_Elements_Geometry_Color_" data-uid="Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.UV,Elements.Geometry.Vector3,Elements.Geometry.Color)">AddVertex(Vector3, UV, Vector3, Color)</h4>
+  <div class="markdown level1 summary"><p>Add a vertex to the mesh.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vector3 position, UV uv, Vector3 normal = default(Vector3), Color color = default(Color))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">position</span></td>
+        <td><p>The position of the vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.UV.html">UV</a></td>
+        <td><span class="parametername">uv</span></td>
+        <td><p>The texture coordinate of the vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">normal</span></td>
+        <td><p>The vertex's normal.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
+        <td><span class="parametername">color</span></td>
+        <td><p>The vertex's color.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><p>The newly created vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Mesh_ComputeNormals_" data-uid="Elements.Geometry.Mesh.ComputeNormals*"></a>
   <h4 id="Elements_Geometry_Mesh_ComputeNormals" data-uid="Elements.Geometry.Mesh.ComputeNormals">ComputeNormals()</h4>
   <div class="markdown level1 summary"><p>Compute the vertex normals by averaging
@@ -184,6 +341,54 @@ the normals of the incident faces.</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void ComputeNormals()</code></pre>
   </div>
+  <a id="Elements_Geometry_Mesh_FromSTL_" data-uid="Elements.Geometry.Mesh.FromSTL*"></a>
+  <h4 id="Elements_Geometry_Mesh_FromSTL_System_String_Elements_Units_LengthUnit_" data-uid="Elements.Geometry.Mesh.FromSTL(System.String,Elements.Units.LengthUnit)">FromSTL(String, Units.LengthUnit)</h4>
+  <div class="markdown level1 summary"><p>Construct a mesh from an STL file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Mesh FromSTL(string stlPath, Units.LengthUnit unit = Units.LengthUnit.Millimeter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">stlPath</span></td>
+        <td><p>The path to the STL file.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Units.LengthUnit.html">Units.LengthUnit</a></td>
+        <td><span class="parametername">unit</span></td>
+        <td><p>The length unit used in the file.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Mesh_GetBuffers_" data-uid="Elements.Geometry.Mesh.GetBuffers*"></a>
   <h4 id="Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____" data-uid="Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)">GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])</h4>
   <div class="markdown level1 summary"><p>Get all buffers required for rendering.</p>

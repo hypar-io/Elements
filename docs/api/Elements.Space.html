@@ -273,7 +273,8 @@ var space = new Space(profile, 10);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Space(Profile profile, double height, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Space(Profile profile, double height, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

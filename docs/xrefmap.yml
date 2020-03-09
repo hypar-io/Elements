@@ -35,6 +35,19 @@ references:
   isSpec: "True"
   fullName: Elements.Analysis.AnalysisMesh.AnalysisMesh
   nameWithType: AnalysisMesh.AnalysisMesh
+- uid: Elements.Analysis.AnalysisMesh.Analyze
+  name: Analyze()
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Analyze
+  commentId: M:Elements.Analysis.AnalysisMesh.Analyze
+  fullName: Elements.Analysis.AnalysisMesh.Analyze()
+  nameWithType: AnalysisMesh.Analyze()
+- uid: Elements.Analysis.AnalysisMesh.Analyze*
+  name: Analyze
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Analyze_
+  commentId: Overload:Elements.Analysis.AnalysisMesh.Analyze
+  isSpec: "True"
+  fullName: Elements.Analysis.AnalysisMesh.Analyze
+  nameWithType: AnalysisMesh.Analyze
 - uid: Elements.Analysis.AnalysisMesh.ColorScale
   name: ColorScale
   href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_ColorScale
@@ -77,6 +90,19 @@ references:
   isSpec: "True"
   fullName: Elements.Analysis.AnalysisMesh.Tessellate
   nameWithType: AnalysisMesh.Tessellate
+- uid: Elements.Analysis.AnalysisMesh.TotalAnalysisLocations
+  name: TotalAnalysisLocations
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_TotalAnalysisLocations
+  commentId: P:Elements.Analysis.AnalysisMesh.TotalAnalysisLocations
+  fullName: Elements.Analysis.AnalysisMesh.TotalAnalysisLocations
+  nameWithType: AnalysisMesh.TotalAnalysisLocations
+- uid: Elements.Analysis.AnalysisMesh.TotalAnalysisLocations*
+  name: TotalAnalysisLocations
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_TotalAnalysisLocations_
+  commentId: Overload:Elements.Analysis.AnalysisMesh.TotalAnalysisLocations
+  isSpec: "True"
+  fullName: Elements.Analysis.AnalysisMesh.TotalAnalysisLocations
+  nameWithType: AnalysisMesh.TotalAnalysisLocations
 - uid: Elements.Analysis.AnalysisMesh.ULength
   name: ULength
   href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_ULength
@@ -3679,6 +3705,38 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Mesh.Mesh
   nameWithType: Mesh.Mesh
+- uid: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Triangle)
+  name: AddTriangle(Triangle)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Triangle_
+  commentId: M:Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Triangle)
+  fullName: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Triangle)
+  nameWithType: Mesh.AddTriangle(Triangle)
+- uid: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
+  name: AddTriangle(Vertex, Vertex, Vertex)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Vertex_Elements_Geometry_Vertex_Elements_Geometry_Vertex_
+  commentId: M:Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
+  fullName: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Vertex, Elements.Geometry.Vertex, Elements.Geometry.Vertex)
+  nameWithType: Mesh.AddTriangle(Vertex, Vertex, Vertex)
+- uid: Elements.Geometry.Mesh.AddTriangle*
+  name: AddTriangle
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddTriangle_
+  commentId: Overload:Elements.Geometry.Mesh.AddTriangle
+  isSpec: "True"
+  fullName: Elements.Geometry.Mesh.AddTriangle
+  nameWithType: Mesh.AddTriangle
+- uid: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.UV,Elements.Geometry.Vector3,Elements.Geometry.Color)
+  name: AddVertex(Vector3, UV, Vector3, Color)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Vector3_Elements_Geometry_UV_Elements_Geometry_Vector3_Elements_Geometry_Color_
+  commentId: M:Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.UV,Elements.Geometry.Vector3,Elements.Geometry.Color)
+  fullName: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3, Elements.Geometry.UV, Elements.Geometry.Vector3, Elements.Geometry.Color)
+  nameWithType: Mesh.AddVertex(Vector3, UV, Vector3, Color)
+- uid: Elements.Geometry.Mesh.AddVertex*
+  name: AddVertex
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddVertex_
+  commentId: Overload:Elements.Geometry.Mesh.AddVertex
+  isSpec: "True"
+  fullName: Elements.Geometry.Mesh.AddVertex
+  nameWithType: Mesh.AddVertex
 - uid: Elements.Geometry.Mesh.ComputeNormals
   name: ComputeNormals()
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_ComputeNormals
@@ -3692,6 +3750,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Mesh.ComputeNormals
   nameWithType: Mesh.ComputeNormals
+- uid: Elements.Geometry.Mesh.FromSTL(System.String,Elements.Units.LengthUnit)
+  name: FromSTL(String, Units.LengthUnit)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_FromSTL_System_String_Elements_Units_LengthUnit_
+  commentId: M:Elements.Geometry.Mesh.FromSTL(System.String,Elements.Units.LengthUnit)
+  fullName: Elements.Geometry.Mesh.FromSTL(System.String, Elements.Units.LengthUnit)
+  nameWithType: Mesh.FromSTL(String, Units.LengthUnit)
+- uid: Elements.Geometry.Mesh.FromSTL*
+  name: FromSTL
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_FromSTL_
+  commentId: Overload:Elements.Geometry.Mesh.FromSTL
+  isSpec: "True"
+  fullName: Elements.Geometry.Mesh.FromSTL
+  nameWithType: Mesh.FromSTL
 - uid: Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)
   name: GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____
@@ -4647,19 +4718,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Perimeter
   nameWithType: Profile.Perimeter
-- uid: Elements.Geometry.Profile.Reversed
-  name: Reversed()
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Reversed
-  commentId: M:Elements.Geometry.Profile.Reversed
-  fullName: Elements.Geometry.Profile.Reversed()
-  nameWithType: Profile.Reversed()
-- uid: Elements.Geometry.Profile.Reversed*
-  name: Reversed
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Reversed_
-  commentId: Overload:Elements.Geometry.Profile.Reversed
+- uid: Elements.Geometry.Profile.Reverse
+  name: Reverse()
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Reverse
+  commentId: M:Elements.Geometry.Profile.Reverse
+  fullName: Elements.Geometry.Profile.Reverse()
+  nameWithType: Profile.Reverse()
+- uid: Elements.Geometry.Profile.Reverse*
+  name: Reverse
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Reverse_
+  commentId: Overload:Elements.Geometry.Profile.Reverse
   isSpec: "True"
-  fullName: Elements.Geometry.Profile.Reversed
-  nameWithType: Profile.Reversed
+  fullName: Elements.Geometry.Profile.Reverse
+  nameWithType: Profile.Reverse
+- uid: Elements.Geometry.Profile.Scale(System.Double)
+  name: Scale(Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Scale_System_Double_
+  commentId: M:Elements.Geometry.Profile.Scale(System.Double)
+  fullName: Elements.Geometry.Profile.Scale(System.Double)
+  nameWithType: Profile.Scale(Double)
+- uid: Elements.Geometry.Profile.Scale*
+  name: Scale
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Scale_
+  commentId: Overload:Elements.Geometry.Profile.Scale
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Scale
+  nameWithType: Profile.Scale
 - uid: Elements.Geometry.Profile.Transform(Elements.Geometry.Transform)
   name: Transform(Transform)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Transform_Elements_Geometry_Transform_
@@ -8254,6 +8338,64 @@ references:
   commentId: N:Elements.Geometry.Solids
   fullName: Elements.Geometry.Solids
   nameWithType: Elements.Geometry.Solids
+- uid: Elements.Geometry.Solids.Edge
+  name: Edge
+  href: api/Elements.Geometry.Solids.Edge.html
+  commentId: T:Elements.Geometry.Solids.Edge
+  fullName: Elements.Geometry.Solids.Edge
+  nameWithType: Edge
+- uid: Elements.Geometry.Solids.Edge.Id
+  name: Id
+  href: api/Elements.Geometry.Solids.Edge.html#Elements_Geometry_Solids_Edge_Id
+  commentId: P:Elements.Geometry.Solids.Edge.Id
+  fullName: Elements.Geometry.Solids.Edge.Id
+  nameWithType: Edge.Id
+- uid: Elements.Geometry.Solids.Edge.Id*
+  name: Id
+  href: api/Elements.Geometry.Solids.Edge.html#Elements_Geometry_Solids_Edge_Id_
+  commentId: Overload:Elements.Geometry.Solids.Edge.Id
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Edge.Id
+  nameWithType: Edge.Id
+- uid: Elements.Geometry.Solids.Edge.Left
+  name: Left
+  href: api/Elements.Geometry.Solids.Edge.html#Elements_Geometry_Solids_Edge_Left
+  commentId: P:Elements.Geometry.Solids.Edge.Left
+  fullName: Elements.Geometry.Solids.Edge.Left
+  nameWithType: Edge.Left
+- uid: Elements.Geometry.Solids.Edge.Left*
+  name: Left
+  href: api/Elements.Geometry.Solids.Edge.html#Elements_Geometry_Solids_Edge_Left_
+  commentId: Overload:Elements.Geometry.Solids.Edge.Left
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Edge.Left
+  nameWithType: Edge.Left
+- uid: Elements.Geometry.Solids.Edge.Right
+  name: Right
+  href: api/Elements.Geometry.Solids.Edge.html#Elements_Geometry_Solids_Edge_Right
+  commentId: P:Elements.Geometry.Solids.Edge.Right
+  fullName: Elements.Geometry.Solids.Edge.Right
+  nameWithType: Edge.Right
+- uid: Elements.Geometry.Solids.Edge.Right*
+  name: Right
+  href: api/Elements.Geometry.Solids.Edge.html#Elements_Geometry_Solids_Edge_Right_
+  commentId: Overload:Elements.Geometry.Solids.Edge.Right
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Edge.Right
+  nameWithType: Edge.Right
+- uid: Elements.Geometry.Solids.Edge.ToString
+  name: ToString()
+  href: api/Elements.Geometry.Solids.Edge.html#Elements_Geometry_Solids_Edge_ToString
+  commentId: M:Elements.Geometry.Solids.Edge.ToString
+  fullName: Elements.Geometry.Solids.Edge.ToString()
+  nameWithType: Edge.ToString()
+- uid: Elements.Geometry.Solids.Edge.ToString*
+  name: ToString
+  href: api/Elements.Geometry.Solids.Edge.html#Elements_Geometry_Solids_Edge_ToString_
+  commentId: Overload:Elements.Geometry.Solids.Edge.ToString
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Edge.ToString
+  nameWithType: Edge.ToString
 - uid: Elements.Geometry.Solids.Extrude
   name: Extrude
   href: api/Elements.Geometry.Solids.Extrude.html
@@ -8312,18 +8454,166 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Extrude.Profile
   nameWithType: Extrude.Profile
+- uid: Elements.Geometry.Solids.Extrude.PropertyChanged
+  name: PropertyChanged
+  href: api/Elements.Geometry.Solids.Extrude.html#Elements_Geometry_Solids_Extrude_PropertyChanged
+  commentId: E:Elements.Geometry.Solids.Extrude.PropertyChanged
+  fullName: Elements.Geometry.Solids.Extrude.PropertyChanged
+  nameWithType: Extrude.PropertyChanged
+- uid: Elements.Geometry.Solids.Extrude.RaisePropertyChanged(System.String)
+  name: RaisePropertyChanged(String)
+  href: api/Elements.Geometry.Solids.Extrude.html#Elements_Geometry_Solids_Extrude_RaisePropertyChanged_System_String_
+  commentId: M:Elements.Geometry.Solids.Extrude.RaisePropertyChanged(System.String)
+  fullName: Elements.Geometry.Solids.Extrude.RaisePropertyChanged(System.String)
+  nameWithType: Extrude.RaisePropertyChanged(String)
+- uid: Elements.Geometry.Solids.Extrude.RaisePropertyChanged*
+  name: RaisePropertyChanged
+  href: api/Elements.Geometry.Solids.Extrude.html#Elements_Geometry_Solids_Extrude_RaisePropertyChanged_
+  commentId: Overload:Elements.Geometry.Solids.Extrude.RaisePropertyChanged
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Extrude.RaisePropertyChanged
+  nameWithType: Extrude.RaisePropertyChanged
+- uid: Elements.Geometry.Solids.Face
+  name: Face
+  href: api/Elements.Geometry.Solids.Face.html
+  commentId: T:Elements.Geometry.Solids.Face
+  fullName: Elements.Geometry.Solids.Face
+  nameWithType: Face
+- uid: Elements.Geometry.Solids.Face.Id
+  name: Id
+  href: api/Elements.Geometry.Solids.Face.html#Elements_Geometry_Solids_Face_Id
+  commentId: P:Elements.Geometry.Solids.Face.Id
+  fullName: Elements.Geometry.Solids.Face.Id
+  nameWithType: Face.Id
+- uid: Elements.Geometry.Solids.Face.Id*
+  name: Id
+  href: api/Elements.Geometry.Solids.Face.html#Elements_Geometry_Solids_Face_Id_
+  commentId: Overload:Elements.Geometry.Solids.Face.Id
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Face.Id
+  nameWithType: Face.Id
+- uid: Elements.Geometry.Solids.Face.Inner
+  name: Inner
+  href: api/Elements.Geometry.Solids.Face.html#Elements_Geometry_Solids_Face_Inner
+  commentId: P:Elements.Geometry.Solids.Face.Inner
+  fullName: Elements.Geometry.Solids.Face.Inner
+  nameWithType: Face.Inner
+- uid: Elements.Geometry.Solids.Face.Inner*
+  name: Inner
+  href: api/Elements.Geometry.Solids.Face.html#Elements_Geometry_Solids_Face_Inner_
+  commentId: Overload:Elements.Geometry.Solids.Face.Inner
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Face.Inner
+  nameWithType: Face.Inner
+- uid: Elements.Geometry.Solids.Face.Outer
+  name: Outer
+  href: api/Elements.Geometry.Solids.Face.html#Elements_Geometry_Solids_Face_Outer
+  commentId: P:Elements.Geometry.Solids.Face.Outer
+  fullName: Elements.Geometry.Solids.Face.Outer
+  nameWithType: Face.Outer
+- uid: Elements.Geometry.Solids.Face.Outer*
+  name: Outer
+  href: api/Elements.Geometry.Solids.Face.html#Elements_Geometry_Solids_Face_Outer_
+  commentId: Overload:Elements.Geometry.Solids.Face.Outer
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Face.Outer
+  nameWithType: Face.Outer
+- uid: Elements.Geometry.Solids.Face.ToString
+  name: ToString()
+  href: api/Elements.Geometry.Solids.Face.html#Elements_Geometry_Solids_Face_ToString
+  commentId: M:Elements.Geometry.Solids.Face.ToString
+  fullName: Elements.Geometry.Solids.Face.ToString()
+  nameWithType: Face.ToString()
+- uid: Elements.Geometry.Solids.Face.ToString*
+  name: ToString
+  href: api/Elements.Geometry.Solids.Face.html#Elements_Geometry_Solids_Face_ToString_
+  commentId: Overload:Elements.Geometry.Solids.Face.ToString
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Face.ToString
+  nameWithType: Face.ToString
+- uid: Elements.Geometry.Solids.HalfEdge
+  name: HalfEdge
+  href: api/Elements.Geometry.Solids.HalfEdge.html
+  commentId: T:Elements.Geometry.Solids.HalfEdge
+  fullName: Elements.Geometry.Solids.HalfEdge
+  nameWithType: HalfEdge
+- uid: Elements.Geometry.Solids.HalfEdge.#ctor(Elements.Geometry.Solids.Edge,Elements.Geometry.Solids.Vertex)
+  name: HalfEdge(Edge, Vertex)
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge__ctor_Elements_Geometry_Solids_Edge_Elements_Geometry_Solids_Vertex_
+  commentId: M:Elements.Geometry.Solids.HalfEdge.#ctor(Elements.Geometry.Solids.Edge,Elements.Geometry.Solids.Vertex)
+  fullName: Elements.Geometry.Solids.HalfEdge.HalfEdge(Elements.Geometry.Solids.Edge, Elements.Geometry.Solids.Vertex)
+  nameWithType: HalfEdge.HalfEdge(Edge, Vertex)
+- uid: Elements.Geometry.Solids.HalfEdge.#ctor(Elements.Geometry.Solids.Vertex)
+  name: HalfEdge(Vertex)
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge__ctor_Elements_Geometry_Solids_Vertex_
+  commentId: M:Elements.Geometry.Solids.HalfEdge.#ctor(Elements.Geometry.Solids.Vertex)
+  fullName: Elements.Geometry.Solids.HalfEdge.HalfEdge(Elements.Geometry.Solids.Vertex)
+  nameWithType: HalfEdge.HalfEdge(Vertex)
+- uid: Elements.Geometry.Solids.HalfEdge.#ctor*
+  name: HalfEdge
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge__ctor_
+  commentId: Overload:Elements.Geometry.Solids.HalfEdge.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.HalfEdge.HalfEdge
+  nameWithType: HalfEdge.HalfEdge
+- uid: Elements.Geometry.Solids.HalfEdge.Edge
+  name: Edge
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge_Edge
+  commentId: P:Elements.Geometry.Solids.HalfEdge.Edge
+  fullName: Elements.Geometry.Solids.HalfEdge.Edge
+  nameWithType: HalfEdge.Edge
+- uid: Elements.Geometry.Solids.HalfEdge.Edge*
+  name: Edge
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge_Edge_
+  commentId: Overload:Elements.Geometry.Solids.HalfEdge.Edge
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.HalfEdge.Edge
+  nameWithType: HalfEdge.Edge
+- uid: Elements.Geometry.Solids.HalfEdge.Loop
+  name: Loop
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge_Loop
+  commentId: P:Elements.Geometry.Solids.HalfEdge.Loop
+  fullName: Elements.Geometry.Solids.HalfEdge.Loop
+  nameWithType: HalfEdge.Loop
+- uid: Elements.Geometry.Solids.HalfEdge.Loop*
+  name: Loop
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge_Loop_
+  commentId: Overload:Elements.Geometry.Solids.HalfEdge.Loop
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.HalfEdge.Loop
+  nameWithType: HalfEdge.Loop
+- uid: Elements.Geometry.Solids.HalfEdge.ToString
+  name: ToString()
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge_ToString
+  commentId: M:Elements.Geometry.Solids.HalfEdge.ToString
+  fullName: Elements.Geometry.Solids.HalfEdge.ToString()
+  nameWithType: HalfEdge.ToString()
+- uid: Elements.Geometry.Solids.HalfEdge.ToString*
+  name: ToString
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge_ToString_
+  commentId: Overload:Elements.Geometry.Solids.HalfEdge.ToString
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.HalfEdge.ToString
+  nameWithType: HalfEdge.ToString
+- uid: Elements.Geometry.Solids.HalfEdge.Vertex
+  name: Vertex
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge_Vertex
+  commentId: P:Elements.Geometry.Solids.HalfEdge.Vertex
+  fullName: Elements.Geometry.Solids.HalfEdge.Vertex
+  nameWithType: HalfEdge.Vertex
+- uid: Elements.Geometry.Solids.HalfEdge.Vertex*
+  name: Vertex
+  href: api/Elements.Geometry.Solids.HalfEdge.html#Elements_Geometry_Solids_HalfEdge_Vertex_
+  commentId: Overload:Elements.Geometry.Solids.HalfEdge.Vertex
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.HalfEdge.Vertex
+  nameWithType: HalfEdge.Vertex
 - uid: Elements.Geometry.Solids.Lamina
   name: Lamina
   href: api/Elements.Geometry.Solids.Lamina.html
   commentId: T:Elements.Geometry.Solids.Lamina
   fullName: Elements.Geometry.Solids.Lamina
   nameWithType: Lamina
-- uid: Elements.Geometry.Solids.Lamina.#ctor(Elements.Geometry.Polygon)
-  name: Lamina(Polygon)
-  href: api/Elements.Geometry.Solids.Lamina.html#Elements_Geometry_Solids_Lamina__ctor_Elements_Geometry_Polygon_
-  commentId: M:Elements.Geometry.Solids.Lamina.#ctor(Elements.Geometry.Polygon)
-  fullName: Elements.Geometry.Solids.Lamina.Lamina(Elements.Geometry.Polygon)
-  nameWithType: Lamina.Lamina(Polygon)
 - uid: Elements.Geometry.Solids.Lamina.#ctor(Elements.Geometry.Polygon,System.Boolean)
   name: Lamina(Polygon, Boolean)
   href: api/Elements.Geometry.Solids.Lamina.html#Elements_Geometry_Solids_Lamina__ctor_Elements_Geometry_Polygon_System_Boolean_
@@ -8350,6 +8640,390 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Lamina.Perimeter
   nameWithType: Lamina.Perimeter
+- uid: Elements.Geometry.Solids.Lamina.PropertyChanged
+  name: PropertyChanged
+  href: api/Elements.Geometry.Solids.Lamina.html#Elements_Geometry_Solids_Lamina_PropertyChanged
+  commentId: E:Elements.Geometry.Solids.Lamina.PropertyChanged
+  fullName: Elements.Geometry.Solids.Lamina.PropertyChanged
+  nameWithType: Lamina.PropertyChanged
+- uid: Elements.Geometry.Solids.Lamina.RaisePropertyChanged(System.String)
+  name: RaisePropertyChanged(String)
+  href: api/Elements.Geometry.Solids.Lamina.html#Elements_Geometry_Solids_Lamina_RaisePropertyChanged_System_String_
+  commentId: M:Elements.Geometry.Solids.Lamina.RaisePropertyChanged(System.String)
+  fullName: Elements.Geometry.Solids.Lamina.RaisePropertyChanged(System.String)
+  nameWithType: Lamina.RaisePropertyChanged(String)
+- uid: Elements.Geometry.Solids.Lamina.RaisePropertyChanged*
+  name: RaisePropertyChanged
+  href: api/Elements.Geometry.Solids.Lamina.html#Elements_Geometry_Solids_Lamina_RaisePropertyChanged_
+  commentId: Overload:Elements.Geometry.Solids.Lamina.RaisePropertyChanged
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Lamina.RaisePropertyChanged
+  nameWithType: Lamina.RaisePropertyChanged
+- uid: Elements.Geometry.Solids.Loop
+  name: Loop
+  href: api/Elements.Geometry.Solids.Loop.html
+  commentId: T:Elements.Geometry.Solids.Loop
+  fullName: Elements.Geometry.Solids.Loop
+  nameWithType: Loop
+- uid: Elements.Geometry.Solids.Loop.#ctor
+  name: Loop()
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop__ctor
+  commentId: M:Elements.Geometry.Solids.Loop.#ctor
+  fullName: Elements.Geometry.Solids.Loop.Loop()
+  nameWithType: Loop.Loop()
+- uid: Elements.Geometry.Solids.Loop.#ctor(Elements.Geometry.Solids.HalfEdge[])
+  name: Loop(HalfEdge[])
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop__ctor_Elements_Geometry_Solids_HalfEdge___
+  commentId: M:Elements.Geometry.Solids.Loop.#ctor(Elements.Geometry.Solids.HalfEdge[])
+  name.vb: Loop(HalfEdge())
+  fullName: Elements.Geometry.Solids.Loop.Loop(Elements.Geometry.Solids.HalfEdge[])
+  fullName.vb: Elements.Geometry.Solids.Loop.Loop(Elements.Geometry.Solids.HalfEdge())
+  nameWithType: Loop.Loop(HalfEdge[])
+  nameWithType.vb: Loop.Loop(HalfEdge())
+- uid: Elements.Geometry.Solids.Loop.#ctor*
+  name: Loop
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop__ctor_
+  commentId: Overload:Elements.Geometry.Solids.Loop.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Loop.Loop
+  nameWithType: Loop.Loop
+- uid: Elements.Geometry.Solids.Loop.AddEdgeToEnd(Elements.Geometry.Solids.HalfEdge)
+  name: AddEdgeToEnd(HalfEdge)
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_AddEdgeToEnd_Elements_Geometry_Solids_HalfEdge_
+  commentId: M:Elements.Geometry.Solids.Loop.AddEdgeToEnd(Elements.Geometry.Solids.HalfEdge)
+  fullName: Elements.Geometry.Solids.Loop.AddEdgeToEnd(Elements.Geometry.Solids.HalfEdge)
+  nameWithType: Loop.AddEdgeToEnd(HalfEdge)
+- uid: Elements.Geometry.Solids.Loop.AddEdgeToEnd*
+  name: AddEdgeToEnd
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_AddEdgeToEnd_
+  commentId: Overload:Elements.Geometry.Solids.Loop.AddEdgeToEnd
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Loop.AddEdgeToEnd
+  nameWithType: Loop.AddEdgeToEnd
+- uid: Elements.Geometry.Solids.Loop.AddEdgeToStart(Elements.Geometry.Solids.HalfEdge)
+  name: AddEdgeToStart(HalfEdge)
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_AddEdgeToStart_Elements_Geometry_Solids_HalfEdge_
+  commentId: M:Elements.Geometry.Solids.Loop.AddEdgeToStart(Elements.Geometry.Solids.HalfEdge)
+  fullName: Elements.Geometry.Solids.Loop.AddEdgeToStart(Elements.Geometry.Solids.HalfEdge)
+  nameWithType: Loop.AddEdgeToStart(HalfEdge)
+- uid: Elements.Geometry.Solids.Loop.AddEdgeToStart*
+  name: AddEdgeToStart
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_AddEdgeToStart_
+  commentId: Overload:Elements.Geometry.Solids.Loop.AddEdgeToStart
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Loop.AddEdgeToStart
+  nameWithType: Loop.AddEdgeToStart
+- uid: Elements.Geometry.Solids.Loop.Edges
+  name: Edges
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_Edges
+  commentId: P:Elements.Geometry.Solids.Loop.Edges
+  fullName: Elements.Geometry.Solids.Loop.Edges
+  nameWithType: Loop.Edges
+- uid: Elements.Geometry.Solids.Loop.Edges*
+  name: Edges
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_Edges_
+  commentId: Overload:Elements.Geometry.Solids.Loop.Edges
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Loop.Edges
+  nameWithType: Loop.Edges
+- uid: Elements.Geometry.Solids.Loop.Face
+  name: Face
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_Face
+  commentId: P:Elements.Geometry.Solids.Loop.Face
+  fullName: Elements.Geometry.Solids.Loop.Face
+  nameWithType: Loop.Face
+- uid: Elements.Geometry.Solids.Loop.Face*
+  name: Face
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_Face_
+  commentId: Overload:Elements.Geometry.Solids.Loop.Face
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Loop.Face
+  nameWithType: Loop.Face
+- uid: Elements.Geometry.Solids.Loop.InsertEdgeAfter(Elements.Geometry.Solids.HalfEdge,Elements.Geometry.Solids.HalfEdge)
+  name: InsertEdgeAfter(HalfEdge, HalfEdge)
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_InsertEdgeAfter_Elements_Geometry_Solids_HalfEdge_Elements_Geometry_Solids_HalfEdge_
+  commentId: M:Elements.Geometry.Solids.Loop.InsertEdgeAfter(Elements.Geometry.Solids.HalfEdge,Elements.Geometry.Solids.HalfEdge)
+  fullName: Elements.Geometry.Solids.Loop.InsertEdgeAfter(Elements.Geometry.Solids.HalfEdge, Elements.Geometry.Solids.HalfEdge)
+  nameWithType: Loop.InsertEdgeAfter(HalfEdge, HalfEdge)
+- uid: Elements.Geometry.Solids.Loop.InsertEdgeAfter*
+  name: InsertEdgeAfter
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_InsertEdgeAfter_
+  commentId: Overload:Elements.Geometry.Solids.Loop.InsertEdgeAfter
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Loop.InsertEdgeAfter
+  nameWithType: Loop.InsertEdgeAfter
+- uid: Elements.Geometry.Solids.Loop.InsertEdgeBefore(Elements.Geometry.Solids.HalfEdge,Elements.Geometry.Solids.HalfEdge)
+  name: InsertEdgeBefore(HalfEdge, HalfEdge)
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_InsertEdgeBefore_Elements_Geometry_Solids_HalfEdge_Elements_Geometry_Solids_HalfEdge_
+  commentId: M:Elements.Geometry.Solids.Loop.InsertEdgeBefore(Elements.Geometry.Solids.HalfEdge,Elements.Geometry.Solids.HalfEdge)
+  fullName: Elements.Geometry.Solids.Loop.InsertEdgeBefore(Elements.Geometry.Solids.HalfEdge, Elements.Geometry.Solids.HalfEdge)
+  nameWithType: Loop.InsertEdgeBefore(HalfEdge, HalfEdge)
+- uid: Elements.Geometry.Solids.Loop.InsertEdgeBefore*
+  name: InsertEdgeBefore
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_InsertEdgeBefore_
+  commentId: Overload:Elements.Geometry.Solids.Loop.InsertEdgeBefore
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Loop.InsertEdgeBefore
+  nameWithType: Loop.InsertEdgeBefore
+- uid: Elements.Geometry.Solids.Loop.ToPolygon
+  name: ToPolygon()
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_ToPolygon
+  commentId: M:Elements.Geometry.Solids.Loop.ToPolygon
+  fullName: Elements.Geometry.Solids.Loop.ToPolygon()
+  nameWithType: Loop.ToPolygon()
+- uid: Elements.Geometry.Solids.Loop.ToPolygon*
+  name: ToPolygon
+  href: api/Elements.Geometry.Solids.Loop.html#Elements_Geometry_Solids_Loop_ToPolygon_
+  commentId: Overload:Elements.Geometry.Solids.Loop.ToPolygon
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Loop.ToPolygon
+  nameWithType: Loop.ToPolygon
+- uid: Elements.Geometry.Solids.Solid
+  name: Solid
+  href: api/Elements.Geometry.Solids.Solid.html
+  commentId: T:Elements.Geometry.Solids.Solid
+  fullName: Elements.Geometry.Solids.Solid
+  nameWithType: Solid
+- uid: Elements.Geometry.Solids.Solid.#ctor
+  name: Solid()
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid__ctor
+  commentId: M:Elements.Geometry.Solids.Solid.#ctor
+  fullName: Elements.Geometry.Solids.Solid.Solid()
+  nameWithType: Solid.Solid()
+- uid: Elements.Geometry.Solids.Solid.#ctor*
+  name: Solid
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid__ctor_
+  commentId: Overload:Elements.Geometry.Solids.Solid.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.Solid
+  nameWithType: Solid.Solid
+- uid: Elements.Geometry.Solids.Solid.AddEdge(Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex)
+  name: AddEdge(Vertex, Vertex)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddEdge_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_
+  commentId: M:Elements.Geometry.Solids.Solid.AddEdge(Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex)
+  fullName: Elements.Geometry.Solids.Solid.AddEdge(Elements.Geometry.Solids.Vertex, Elements.Geometry.Solids.Vertex)
+  nameWithType: Solid.AddEdge(Vertex, Vertex)
+- uid: Elements.Geometry.Solids.Solid.AddEdge*
+  name: AddEdge
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddEdge_
+  commentId: Overload:Elements.Geometry.Solids.Solid.AddEdge
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.AddEdge
+  nameWithType: Solid.AddEdge
+- uid: Elements.Geometry.Solids.Solid.AddEdges(Elements.Geometry.Polygon)
+  name: AddEdges(Polygon)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddEdges_Elements_Geometry_Polygon_
+  commentId: M:Elements.Geometry.Solids.Solid.AddEdges(Elements.Geometry.Polygon)
+  fullName: Elements.Geometry.Solids.Solid.AddEdges(Elements.Geometry.Polygon)
+  nameWithType: Solid.AddEdges(Polygon)
+- uid: Elements.Geometry.Solids.Solid.AddEdges*
+  name: AddEdges
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddEdges_
+  commentId: Overload:Elements.Geometry.Solids.Solid.AddEdges
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.AddEdges
+  nameWithType: Solid.AddEdges
+- uid: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name: AddFace(Polygon, IList<Polygon>)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name.vb: AddFace(Polygon, IList(Of Polygon))
+  fullName: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
+  nameWithType: Solid.AddFace(Polygon, IList<Polygon>)
+  nameWithType.vb: Solid.AddFace(Polygon, IList(Of Polygon))
+- uid: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Solids.Loop,Elements.Geometry.Solids.Loop[])
+  name: AddFace(Loop, Loop[])
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddFace_Elements_Geometry_Solids_Loop_Elements_Geometry_Solids_Loop___
+  commentId: M:Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Solids.Loop,Elements.Geometry.Solids.Loop[])
+  name.vb: AddFace(Loop, Loop())
+  fullName: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Solids.Loop, Elements.Geometry.Solids.Loop[])
+  fullName.vb: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Solids.Loop, Elements.Geometry.Solids.Loop())
+  nameWithType: Solid.AddFace(Loop, Loop[])
+  nameWithType.vb: Solid.AddFace(Loop, Loop())
+- uid: Elements.Geometry.Solids.Solid.AddFace*
+  name: AddFace
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddFace_
+  commentId: Overload:Elements.Geometry.Solids.Solid.AddFace
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.AddFace
+  nameWithType: Solid.AddFace
+- uid: Elements.Geometry.Solids.Solid.AddVertex(Elements.Geometry.Vector3)
+  name: AddVertex(Vector3)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddVertex_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Solids.Solid.AddVertex(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Solids.Solid.AddVertex(Elements.Geometry.Vector3)
+  nameWithType: Solid.AddVertex(Vector3)
+- uid: Elements.Geometry.Solids.Solid.AddVertex*
+  name: AddVertex
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddVertex_
+  commentId: Overload:Elements.Geometry.Solids.Solid.AddVertex
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.AddVertex
+  nameWithType: Solid.AddVertex
+- uid: Elements.Geometry.Solids.Solid.Cap(Elements.Geometry.Solids.Edge[][],System.Boolean)
+  name: Cap(Edge[][], Boolean)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Cap_Elements_Geometry_Solids_Edge_____System_Boolean_
+  commentId: M:Elements.Geometry.Solids.Solid.Cap(Elements.Geometry.Solids.Edge[][],System.Boolean)
+  name.vb: Cap(Edge()(), Boolean)
+  fullName: Elements.Geometry.Solids.Solid.Cap(Elements.Geometry.Solids.Edge[][], System.Boolean)
+  fullName.vb: Elements.Geometry.Solids.Solid.Cap(Elements.Geometry.Solids.Edge()(), System.Boolean)
+  nameWithType: Solid.Cap(Edge[][], Boolean)
+  nameWithType.vb: Solid.Cap(Edge()(), Boolean)
+- uid: Elements.Geometry.Solids.Solid.Cap*
+  name: Cap
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Cap_
+  commentId: Overload:Elements.Geometry.Solids.Solid.Cap
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.Cap
+  nameWithType: Solid.Cap
+- uid: Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList{Elements.Geometry.Vector3})
+  name: CreateLamina(IList<Vector3>)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_CreateLamina_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList{Elements.Geometry.Vector3})
+  name.vb: CreateLamina(IList(Of Vector3))
+  fullName: Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
+  nameWithType: Solid.CreateLamina(IList<Vector3>)
+  nameWithType.vb: Solid.CreateLamina(IList(Of Vector3))
+- uid: Elements.Geometry.Solids.Solid.CreateLamina*
+  name: CreateLamina
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_CreateLamina_
+  commentId: Overload:Elements.Geometry.Solids.Solid.CreateLamina
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.CreateLamina
+  nameWithType: Solid.CreateLamina
+- uid: Elements.Geometry.Solids.Solid.Edges
+  name: Edges
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Edges
+  commentId: P:Elements.Geometry.Solids.Solid.Edges
+  fullName: Elements.Geometry.Solids.Solid.Edges
+  nameWithType: Solid.Edges
+- uid: Elements.Geometry.Solids.Solid.Edges*
+  name: Edges
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Edges_
+  commentId: Overload:Elements.Geometry.Solids.Solid.Edges
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.Edges
+  nameWithType: Solid.Edges
+- uid: Elements.Geometry.Solids.Solid.Faces
+  name: Faces
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Faces
+  commentId: P:Elements.Geometry.Solids.Solid.Faces
+  fullName: Elements.Geometry.Solids.Solid.Faces
+  nameWithType: Solid.Faces
+- uid: Elements.Geometry.Solids.Solid.Faces*
+  name: Faces
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Faces_
+  commentId: Overload:Elements.Geometry.Solids.Solid.Faces
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.Faces
+  nameWithType: Solid.Faces
+- uid: Elements.Geometry.Solids.Solid.LoopFromPolygon(Elements.Geometry.Polygon)
+  name: LoopFromPolygon(Polygon)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_LoopFromPolygon_Elements_Geometry_Polygon_
+  commentId: M:Elements.Geometry.Solids.Solid.LoopFromPolygon(Elements.Geometry.Polygon)
+  fullName: Elements.Geometry.Solids.Solid.LoopFromPolygon(Elements.Geometry.Polygon)
+  nameWithType: Solid.LoopFromPolygon(Polygon)
+- uid: Elements.Geometry.Solids.Solid.LoopFromPolygon*
+  name: LoopFromPolygon
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_LoopFromPolygon_
+  commentId: Overload:Elements.Geometry.Solids.Solid.LoopFromPolygon
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.LoopFromPolygon
+  nameWithType: Solid.LoopFromPolygon
+- uid: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,System.Double,System.Boolean,System.Double)
+  name: SweepFace(Polygon, IList<Polygon>, Vector3, Double, Boolean, Double)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_System_Double_System_Boolean_System_Double_
+  commentId: M:Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,System.Double,System.Boolean,System.Double)
+  name.vb: SweepFace(Polygon, IList(Of Polygon), Vector3, Double, Boolean, Double)
+  fullName: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Geometry.Vector3, System.Double, System.Boolean, System.Double)
+  fullName.vb: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Vector3, System.Double, System.Boolean, System.Double)
+  nameWithType: Solid.SweepFace(Polygon, IList<Polygon>, Vector3, Double, Boolean, Double)
+  nameWithType.vb: Solid.SweepFace(Polygon, IList(Of Polygon), Vector3, Double, Boolean, Double)
+- uid: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double,System.Boolean,System.Double)
+  name: SweepFace(Polygon, IList<Polygon>, Double, Boolean, Double)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_System_Boolean_System_Double_
+  commentId: M:Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double,System.Boolean,System.Double)
+  name.vb: SweepFace(Polygon, IList(Of Polygon), Double, Boolean, Double)
+  fullName: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double, System.Boolean, System.Double)
+  fullName.vb: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double, System.Boolean, System.Double)
+  nameWithType: Solid.SweepFace(Polygon, IList<Polygon>, Double, Boolean, Double)
+  nameWithType.vb: Solid.SweepFace(Polygon, IList(Of Polygon), Double, Boolean, Double)
+- uid: Elements.Geometry.Solids.Solid.SweepFace*
+  name: SweepFace
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFace_
+  commentId: Overload:Elements.Geometry.Solids.Solid.SweepFace
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.SweepFace
+  nameWithType: Solid.SweepFace
+- uid: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)
+  name: SweepFaceAlongCurve(Polygon, IList<Polygon>, ICurve, Double, Double)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Interfaces_ICurve_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)
+  name.vb: SweepFaceAlongCurve(Polygon, IList(Of Polygon), ICurve, Double, Double)
+  fullName: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Geometry.Interfaces.ICurve, System.Double, System.Double)
+  fullName.vb: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Interfaces.ICurve, System.Double, System.Double)
+  nameWithType: Solid.SweepFaceAlongCurve(Polygon, IList<Polygon>, ICurve, Double, Double)
+  nameWithType.vb: Solid.SweepFaceAlongCurve(Polygon, IList(Of Polygon), ICurve, Double, Double)
+- uid: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve*
+  name: SweepFaceAlongCurve
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_
+  commentId: Overload:Elements.Geometry.Solids.Solid.SweepFaceAlongCurve
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve
+  nameWithType: Solid.SweepFaceAlongCurve
+- uid: Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@)
+  name: Tessellate(ref Mesh)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Tessellate_Elements_Geometry_Mesh__
+  commentId: M:Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@)
+  name.vb: Tessellate(ByRef Mesh)
+  fullName: Elements.Geometry.Solids.Solid.Tessellate(ref Elements.Geometry.Mesh)
+  fullName.vb: Elements.Geometry.Solids.Solid.Tessellate(ByRef Elements.Geometry.Mesh)
+  nameWithType: Solid.Tessellate(ref Mesh)
+  nameWithType.vb: Solid.Tessellate(ByRef Mesh)
+- uid: Elements.Geometry.Solids.Solid.Tessellate(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)
+  name: Tessellate(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Tessellate_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____
+  commentId: M:Elements.Geometry.Solids.Solid.Tessellate(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)
+  name.vb: Tessellate(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16, ByRef Double(), ByRef Double())
+  fullName: Elements.Geometry.Solids.Solid.Tessellate(out System.Byte[], out System.Byte[], out System.Byte[], out System.Byte[], out System.Byte[], out System.Double[], out System.Double[], out System.Double[], out System.Double[], out System.Single[], out System.Single[], out System.UInt16, out System.UInt16, out System.Double[], out System.Double[])
+  fullName.vb: Elements.Geometry.Solids.Solid.Tessellate(ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Byte(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Double(), ByRef System.Single(), ByRef System.Single(), ByRef System.UInt16, ByRef System.UInt16, ByRef System.Double(), ByRef System.Double())
+  nameWithType: Solid.Tessellate(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])
+  nameWithType.vb: Solid.Tessellate(ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Byte(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Double(), ByRef Single(), ByRef Single(), ByRef UInt16, ByRef UInt16, ByRef Double(), ByRef Double())
+- uid: Elements.Geometry.Solids.Solid.Tessellate*
+  name: Tessellate
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Tessellate_
+  commentId: Overload:Elements.Geometry.Solids.Solid.Tessellate
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.Tessellate
+  nameWithType: Solid.Tessellate
+- uid: Elements.Geometry.Solids.Solid.ToString
+  name: ToString()
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_ToString
+  commentId: M:Elements.Geometry.Solids.Solid.ToString
+  fullName: Elements.Geometry.Solids.Solid.ToString()
+  nameWithType: Solid.ToString()
+- uid: Elements.Geometry.Solids.Solid.ToString*
+  name: ToString
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_ToString_
+  commentId: Overload:Elements.Geometry.Solids.Solid.ToString
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.ToString
+  nameWithType: Solid.ToString
+- uid: Elements.Geometry.Solids.Solid.Vertices
+  name: Vertices
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Vertices
+  commentId: P:Elements.Geometry.Solids.Solid.Vertices
+  fullName: Elements.Geometry.Solids.Solid.Vertices
+  nameWithType: Solid.Vertices
+- uid: Elements.Geometry.Solids.Solid.Vertices*
+  name: Vertices
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Vertices_
+  commentId: Overload:Elements.Geometry.Solids.Solid.Vertices
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Solid.Vertices
+  nameWithType: Solid.Vertices
 - uid: Elements.Geometry.Solids.SolidOperation
   name: SolidOperation
   href: api/Elements.Geometry.Solids.SolidOperation.html
@@ -8382,6 +9056,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.SolidOperation.IsVoid
   nameWithType: SolidOperation.IsVoid
+- uid: Elements.Geometry.Solids.SolidOperation.Solid
+  name: Solid
+  href: api/Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_Solid
+  commentId: P:Elements.Geometry.Solids.SolidOperation.Solid
+  fullName: Elements.Geometry.Solids.SolidOperation.Solid
+  nameWithType: SolidOperation.Solid
+- uid: Elements.Geometry.Solids.SolidOperation.Solid*
+  name: Solid
+  href: api/Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_Solid_
+  commentId: Overload:Elements.Geometry.Solids.SolidOperation.Solid
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.SolidOperation.Solid
+  nameWithType: SolidOperation.Solid
 - uid: Elements.Geometry.Solids.Sweep
   name: Sweep
   href: api/Elements.Geometry.Solids.Sweep.html
@@ -8440,6 +9127,25 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Sweep.Profile
   nameWithType: Sweep.Profile
+- uid: Elements.Geometry.Solids.Sweep.PropertyChanged
+  name: PropertyChanged
+  href: api/Elements.Geometry.Solids.Sweep.html#Elements_Geometry_Solids_Sweep_PropertyChanged
+  commentId: E:Elements.Geometry.Solids.Sweep.PropertyChanged
+  fullName: Elements.Geometry.Solids.Sweep.PropertyChanged
+  nameWithType: Sweep.PropertyChanged
+- uid: Elements.Geometry.Solids.Sweep.RaisePropertyChanged(System.String)
+  name: RaisePropertyChanged(String)
+  href: api/Elements.Geometry.Solids.Sweep.html#Elements_Geometry_Solids_Sweep_RaisePropertyChanged_System_String_
+  commentId: M:Elements.Geometry.Solids.Sweep.RaisePropertyChanged(System.String)
+  fullName: Elements.Geometry.Solids.Sweep.RaisePropertyChanged(System.String)
+  nameWithType: Sweep.RaisePropertyChanged(String)
+- uid: Elements.Geometry.Solids.Sweep.RaisePropertyChanged*
+  name: RaisePropertyChanged
+  href: api/Elements.Geometry.Solids.Sweep.html#Elements_Geometry_Solids_Sweep_RaisePropertyChanged_
+  commentId: Overload:Elements.Geometry.Solids.Sweep.RaisePropertyChanged
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Sweep.RaisePropertyChanged
+  nameWithType: Sweep.RaisePropertyChanged
 - uid: Elements.Geometry.Solids.Sweep.StartSetback
   name: StartSetback
   href: api/Elements.Geometry.Solids.Sweep.html#Elements_Geometry_Solids_Sweep_StartSetback
@@ -8453,6 +9159,64 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Sweep.StartSetback
   nameWithType: Sweep.StartSetback
+- uid: Elements.Geometry.Solids.Vertex
+  name: Vertex
+  href: api/Elements.Geometry.Solids.Vertex.html
+  commentId: T:Elements.Geometry.Solids.Vertex
+  fullName: Elements.Geometry.Solids.Vertex
+  nameWithType: Vertex
+- uid: Elements.Geometry.Solids.Vertex.HalfEdge
+  name: HalfEdge
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_HalfEdge
+  commentId: P:Elements.Geometry.Solids.Vertex.HalfEdge
+  fullName: Elements.Geometry.Solids.Vertex.HalfEdge
+  nameWithType: Vertex.HalfEdge
+- uid: Elements.Geometry.Solids.Vertex.HalfEdge*
+  name: HalfEdge
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_HalfEdge_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.HalfEdge
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.HalfEdge
+  nameWithType: Vertex.HalfEdge
+- uid: Elements.Geometry.Solids.Vertex.Id
+  name: Id
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Id
+  commentId: P:Elements.Geometry.Solids.Vertex.Id
+  fullName: Elements.Geometry.Solids.Vertex.Id
+  nameWithType: Vertex.Id
+- uid: Elements.Geometry.Solids.Vertex.Id*
+  name: Id
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Id_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.Id
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.Id
+  nameWithType: Vertex.Id
+- uid: Elements.Geometry.Solids.Vertex.Point
+  name: Point
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Point
+  commentId: P:Elements.Geometry.Solids.Vertex.Point
+  fullName: Elements.Geometry.Solids.Vertex.Point
+  nameWithType: Vertex.Point
+- uid: Elements.Geometry.Solids.Vertex.Point*
+  name: Point
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Point_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.Point
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.Point
+  nameWithType: Vertex.Point
+- uid: Elements.Geometry.Solids.Vertex.ToString
+  name: ToString()
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_ToString
+  commentId: M:Elements.Geometry.Solids.Vertex.ToString
+  fullName: Elements.Geometry.Solids.Vertex.ToString()
+  nameWithType: Vertex.ToString()
+- uid: Elements.Geometry.Solids.Vertex.ToString*
+  name: ToString
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_ToString_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.ToString
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.ToString
+  nameWithType: Vertex.ToString
 - uid: Elements.Geometry.Transform
   name: Transform
   href: api/Elements.Geometry.Transform.html
@@ -9247,6 +10011,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.Division
   nameWithType: Vector3.Division
+- uid: Elements.Geometry.Vector3.op_Equality(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  name: Equality(Vector3, Vector3)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_op_Equality_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Vector3.op_Equality(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Vector3.Equality(Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  nameWithType: Vector3.Equality(Vector3, Vector3)
+- uid: Elements.Geometry.Vector3.op_Equality*
+  name: Equality
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_op_Equality_
+  commentId: Overload:Elements.Geometry.Vector3.op_Equality
+  isSpec: "True"
+  fullName: Elements.Geometry.Vector3.Equality
+  nameWithType: Vector3.Equality
 - uid: Elements.Geometry.Vector3.op_GreaterThan(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   name: GreaterThan(Vector3, Vector3)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_op_GreaterThan_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
@@ -9260,6 +10037,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.GreaterThan
   nameWithType: Vector3.GreaterThan
+- uid: Elements.Geometry.Vector3.op_Inequality(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  name: Inequality(Vector3, Vector3)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_op_Inequality_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Vector3.op_Inequality(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Vector3.Inequality(Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  nameWithType: Vector3.Inequality(Vector3, Vector3)
+- uid: Elements.Geometry.Vector3.op_Inequality*
+  name: Inequality
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_op_Inequality_
+  commentId: Overload:Elements.Geometry.Vector3.op_Inequality
+  isSpec: "True"
+  fullName: Elements.Geometry.Vector3.Inequality
+  nameWithType: Vector3.Inequality
 - uid: Elements.Geometry.Vector3.op_LessThan(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   name: LessThan(Vector3, Vector3)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_op_LessThan_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
@@ -9673,6 +10463,54 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vertex.UV
   nameWithType: Vertex.UV
+- uid: Elements.ImportMeshElement
+  name: ImportMeshElement
+  href: api/Elements.ImportMeshElement.html
+  commentId: T:Elements.ImportMeshElement
+  fullName: Elements.ImportMeshElement
+  nameWithType: ImportMeshElement
+- uid: Elements.ImportMeshElement.#ctor(System.String,Elements.Units.LengthUnit,Elements.Material,System.Guid,System.String)
+  name: ImportMeshElement(String, Units.LengthUnit, Material, Guid, String)
+  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement__ctor_System_String_Elements_Units_LengthUnit_Elements_Material_System_Guid_System_String_
+  commentId: M:Elements.ImportMeshElement.#ctor(System.String,Elements.Units.LengthUnit,Elements.Material,System.Guid,System.String)
+  fullName: Elements.ImportMeshElement.ImportMeshElement(System.String, Elements.Units.LengthUnit, Elements.Material, System.Guid, System.String)
+  nameWithType: ImportMeshElement.ImportMeshElement(String, Units.LengthUnit, Material, Guid, String)
+- uid: Elements.ImportMeshElement.#ctor*
+  name: ImportMeshElement
+  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement__ctor_
+  commentId: Overload:Elements.ImportMeshElement.#ctor
+  isSpec: "True"
+  fullName: Elements.ImportMeshElement.ImportMeshElement
+  nameWithType: ImportMeshElement.ImportMeshElement
+- uid: Elements.ImportMeshElement.Path
+  name: Path
+  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement_Path
+  commentId: P:Elements.ImportMeshElement.Path
+  fullName: Elements.ImportMeshElement.Path
+  nameWithType: ImportMeshElement.Path
+- uid: Elements.ImportMeshElement.Path*
+  name: Path
+  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement_Path_
+  commentId: Overload:Elements.ImportMeshElement.Path
+  isSpec: "True"
+  fullName: Elements.ImportMeshElement.Path
+  nameWithType: ImportMeshElement.Path
+- uid: Elements.ImportMeshElement.Tessellate(Elements.Geometry.Mesh@)
+  name: Tessellate(ref Mesh)
+  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement_Tessellate_Elements_Geometry_Mesh__
+  commentId: M:Elements.ImportMeshElement.Tessellate(Elements.Geometry.Mesh@)
+  name.vb: Tessellate(ByRef Mesh)
+  fullName: Elements.ImportMeshElement.Tessellate(ref Elements.Geometry.Mesh)
+  fullName.vb: Elements.ImportMeshElement.Tessellate(ByRef Elements.Geometry.Mesh)
+  nameWithType: ImportMeshElement.Tessellate(ref Mesh)
+  nameWithType.vb: ImportMeshElement.Tessellate(ByRef Mesh)
+- uid: Elements.ImportMeshElement.Tessellate*
+  name: Tessellate
+  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement_Tessellate_
+  commentId: Overload:Elements.ImportMeshElement.Tessellate
+  isSpec: "True"
+  fullName: Elements.ImportMeshElement.Tessellate
+  nameWithType: ImportMeshElement.Tessellate
 - uid: Elements.Interfaces
   name: Elements.Interfaces
   href: api/Elements.Interfaces.html
@@ -9801,18 +10639,18 @@ references:
   commentId: T:Elements.Material
   fullName: Elements.Material
   nameWithType: Material
-- uid: Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Guid,System.String)
-  name: Material(Color, Double, Double, Guid, String)
-  href: api/Elements.Material.html#Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Guid_System_String_
-  commentId: M:Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Guid,System.String)
-  fullName: Elements.Material.Material(Elements.Geometry.Color, System.Double, System.Double, System.Guid, System.String)
-  nameWithType: Material.Material(Color, Double, Double, Guid, String)
-- uid: Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String,System.Guid)
-  name: Material(String, Color, Single, Single, String, Guid)
-  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_System_String_System_Guid_
-  commentId: M:Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String,System.Guid)
-  fullName: Elements.Material.Material(System.String, Elements.Geometry.Color, System.Single, System.Single, System.String, System.Guid)
-  nameWithType: Material.Material(String, Color, Single, Single, String, Guid)
+- uid: Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Boolean,System.String,System.Boolean,System.Guid,System.String)
+  name: Material(Color, Double, Double, Boolean, String, Boolean, Guid, String)
+  href: api/Elements.Material.html#Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Boolean_System_String_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Boolean,System.String,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Material.Material(Elements.Geometry.Color, System.Double, System.Double, System.Boolean, System.String, System.Boolean, System.Guid, System.String)
+  nameWithType: Material.Material(Color, Double, Double, Boolean, String, Boolean, Guid, String)
+- uid: Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Guid)
+  name: Material(String, Color, Double, Double, String, Boolean, Boolean, Guid)
+  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Double_System_Double_System_String_System_Boolean_System_Boolean_System_Guid_
+  commentId: M:Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Guid)
+  fullName: Elements.Material.Material(System.String, Elements.Geometry.Color, System.Double, System.Double, System.String, System.Boolean, System.Boolean, System.Guid)
+  nameWithType: Material.Material(String, Color, Double, Double, String, Boolean, Boolean, Guid)
 - uid: Elements.Material.#ctor(System.String,System.Guid)
   name: Material(String, Guid)
   href: api/Elements.Material.html#Elements_Material__ctor_System_String_System_Guid_
@@ -9839,6 +10677,19 @@ references:
   isSpec: "True"
   fullName: Elements.Material.Color
   nameWithType: Material.Color
+- uid: Elements.Material.DoubleSided
+  name: DoubleSided
+  href: api/Elements.Material.html#Elements_Material_DoubleSided
+  commentId: P:Elements.Material.DoubleSided
+  fullName: Elements.Material.DoubleSided
+  nameWithType: Material.DoubleSided
+- uid: Elements.Material.DoubleSided*
+  name: DoubleSided
+  href: api/Elements.Material.html#Elements_Material_DoubleSided_
+  commentId: Overload:Elements.Material.DoubleSided
+  isSpec: "True"
+  fullName: Elements.Material.DoubleSided
+  nameWithType: Material.DoubleSided
 - uid: Elements.Material.Equals(System.Object)
   name: Equals(Object)
   href: api/Elements.Material.html#Elements_Material_Equals_System_Object_
@@ -9904,6 +10755,19 @@ references:
   isSpec: "True"
   fullName: Elements.Material.Texture
   nameWithType: Material.Texture
+- uid: Elements.Material.Unlit
+  name: Unlit
+  href: api/Elements.Material.html#Elements_Material_Unlit
+  commentId: P:Elements.Material.Unlit
+  fullName: Elements.Material.Unlit
+  nameWithType: Material.Unlit
+- uid: Elements.Material.Unlit*
+  name: Unlit
+  href: api/Elements.Material.html#Elements_Material_Unlit_
+  commentId: Overload:Elements.Material.Unlit
+  isSpec: "True"
+  fullName: Elements.Material.Unlit
+  nameWithType: Material.Unlit
 - uid: Elements.Model
   name: Model
   href: api/Elements.Model.html
@@ -10562,11 +11426,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
   nameWithType: JsonInheritanceConverter.Elements
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*
   name: ReadJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_
@@ -10575,11 +11439,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson
   nameWithType: JsonInheritanceConverter.ReadJson
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*
   name: WriteJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_
@@ -12010,6 +12874,48 @@ references:
   isSpec: "True"
   fullName: Elements.Units.InchesToMeters
   nameWithType: Units.InchesToMeters
+- uid: Elements.Units.LengthUnit
+  name: Units.LengthUnit
+  href: api/Elements.Units.LengthUnit.html
+  commentId: T:Elements.Units.LengthUnit
+  fullName: Elements.Units.LengthUnit
+  nameWithType: Units.LengthUnit
+- uid: Elements.Units.LengthUnit.Centimeter
+  name: Centimeter
+  href: api/Elements.Units.LengthUnit.html#Elements_Units_LengthUnit_Centimeter
+  commentId: F:Elements.Units.LengthUnit.Centimeter
+  fullName: Elements.Units.LengthUnit.Centimeter
+  nameWithType: Units.LengthUnit.Centimeter
+- uid: Elements.Units.LengthUnit.Foot
+  name: Foot
+  href: api/Elements.Units.LengthUnit.html#Elements_Units_LengthUnit_Foot
+  commentId: F:Elements.Units.LengthUnit.Foot
+  fullName: Elements.Units.LengthUnit.Foot
+  nameWithType: Units.LengthUnit.Foot
+- uid: Elements.Units.LengthUnit.Inch
+  name: Inch
+  href: api/Elements.Units.LengthUnit.html#Elements_Units_LengthUnit_Inch
+  commentId: F:Elements.Units.LengthUnit.Inch
+  fullName: Elements.Units.LengthUnit.Inch
+  nameWithType: Units.LengthUnit.Inch
+- uid: Elements.Units.LengthUnit.Kilometer
+  name: Kilometer
+  href: api/Elements.Units.LengthUnit.html#Elements_Units_LengthUnit_Kilometer
+  commentId: F:Elements.Units.LengthUnit.Kilometer
+  fullName: Elements.Units.LengthUnit.Kilometer
+  nameWithType: Units.LengthUnit.Kilometer
+- uid: Elements.Units.LengthUnit.Meter
+  name: Meter
+  href: api/Elements.Units.LengthUnit.html#Elements_Units_LengthUnit_Meter
+  commentId: F:Elements.Units.LengthUnit.Meter
+  fullName: Elements.Units.LengthUnit.Meter
+  nameWithType: Units.LengthUnit.Meter
+- uid: Elements.Units.LengthUnit.Millimeter
+  name: Millimeter
+  href: api/Elements.Units.LengthUnit.html#Elements_Units_LengthUnit_Millimeter
+  commentId: F:Elements.Units.LengthUnit.Millimeter
+  fullName: Elements.Units.LengthUnit.Millimeter
+  nameWithType: Units.LengthUnit.Millimeter
 - uid: Elements.Units.MetersToFeet(System.Double)
   name: MetersToFeet(Double)
   href: api/Elements.Units.html#Elements_Units_MetersToFeet_System_Double_
@@ -12073,22 +12979,35 @@ references:
   commentId: T:Elements.Validators.ArcValidator
   fullName: Elements.Validators.ArcValidator
   nameWithType: ArcValidator
-- uid: Elements.Validators.ArcValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.ArcValidator.html#Elements_Validators_ArcValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.ArcValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.ArcValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.ArcValidator.Validate(System.Object())
-  nameWithType: ArcValidator.Validate(Object[])
-  nameWithType.vb: ArcValidator.Validate(Object())
-- uid: Elements.Validators.ArcValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.ArcValidator.html#Elements_Validators_ArcValidator_Validate_
-  commentId: Overload:Elements.Validators.ArcValidator.Validate
+- uid: Elements.Validators.ArcValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.ArcValidator.html#Elements_Validators_ArcValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.ArcValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.ArcValidator.PostConstruct(System.Object)
+  nameWithType: ArcValidator.PostConstruct(Object)
+- uid: Elements.Validators.ArcValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.ArcValidator.html#Elements_Validators_ArcValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.ArcValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.ArcValidator.Validate
-  nameWithType: ArcValidator.Validate
+  fullName: Elements.Validators.ArcValidator.PostConstruct
+  nameWithType: ArcValidator.PostConstruct
+- uid: Elements.Validators.ArcValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.ArcValidator.html#Elements_Validators_ArcValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.ArcValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.ArcValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.ArcValidator.PreConstruct(System.Object())
+  nameWithType: ArcValidator.PreConstruct(Object[])
+  nameWithType.vb: ArcValidator.PreConstruct(Object())
+- uid: Elements.Validators.ArcValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.ArcValidator.html#Elements_Validators_ArcValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.ArcValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.ArcValidator.PreConstruct
+  nameWithType: ArcValidator.PreConstruct
 - uid: Elements.Validators.ArcValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.ArcValidator.html#Elements_Validators_ArcValidator_ValidatesType
@@ -12108,22 +13027,35 @@ references:
   commentId: T:Elements.Validators.ColorValidator
   fullName: Elements.Validators.ColorValidator
   nameWithType: ColorValidator
-- uid: Elements.Validators.ColorValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.ColorValidator.html#Elements_Validators_ColorValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.ColorValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.ColorValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.ColorValidator.Validate(System.Object())
-  nameWithType: ColorValidator.Validate(Object[])
-  nameWithType.vb: ColorValidator.Validate(Object())
-- uid: Elements.Validators.ColorValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.ColorValidator.html#Elements_Validators_ColorValidator_Validate_
-  commentId: Overload:Elements.Validators.ColorValidator.Validate
+- uid: Elements.Validators.ColorValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.ColorValidator.html#Elements_Validators_ColorValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.ColorValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.ColorValidator.PostConstruct(System.Object)
+  nameWithType: ColorValidator.PostConstruct(Object)
+- uid: Elements.Validators.ColorValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.ColorValidator.html#Elements_Validators_ColorValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.ColorValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.ColorValidator.Validate
-  nameWithType: ColorValidator.Validate
+  fullName: Elements.Validators.ColorValidator.PostConstruct
+  nameWithType: ColorValidator.PostConstruct
+- uid: Elements.Validators.ColorValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.ColorValidator.html#Elements_Validators_ColorValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.ColorValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.ColorValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.ColorValidator.PreConstruct(System.Object())
+  nameWithType: ColorValidator.PreConstruct(Object[])
+  nameWithType.vb: ColorValidator.PreConstruct(Object())
+- uid: Elements.Validators.ColorValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.ColorValidator.html#Elements_Validators_ColorValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.ColorValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.ColorValidator.PreConstruct
+  nameWithType: ColorValidator.PreConstruct
 - uid: Elements.Validators.ColorValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.ColorValidator.html#Elements_Validators_ColorValidator_ValidatesType
@@ -12143,22 +13075,35 @@ references:
   commentId: T:Elements.Validators.ExtrudeValidator
   fullName: Elements.Validators.ExtrudeValidator
   nameWithType: ExtrudeValidator
-- uid: Elements.Validators.ExtrudeValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.ExtrudeValidator.html#Elements_Validators_ExtrudeValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.ExtrudeValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.ExtrudeValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.ExtrudeValidator.Validate(System.Object())
-  nameWithType: ExtrudeValidator.Validate(Object[])
-  nameWithType.vb: ExtrudeValidator.Validate(Object())
-- uid: Elements.Validators.ExtrudeValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.ExtrudeValidator.html#Elements_Validators_ExtrudeValidator_Validate_
-  commentId: Overload:Elements.Validators.ExtrudeValidator.Validate
+- uid: Elements.Validators.ExtrudeValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.ExtrudeValidator.html#Elements_Validators_ExtrudeValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.ExtrudeValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.ExtrudeValidator.PostConstruct(System.Object)
+  nameWithType: ExtrudeValidator.PostConstruct(Object)
+- uid: Elements.Validators.ExtrudeValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.ExtrudeValidator.html#Elements_Validators_ExtrudeValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.ExtrudeValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.ExtrudeValidator.Validate
-  nameWithType: ExtrudeValidator.Validate
+  fullName: Elements.Validators.ExtrudeValidator.PostConstruct
+  nameWithType: ExtrudeValidator.PostConstruct
+- uid: Elements.Validators.ExtrudeValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.ExtrudeValidator.html#Elements_Validators_ExtrudeValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.ExtrudeValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.ExtrudeValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.ExtrudeValidator.PreConstruct(System.Object())
+  nameWithType: ExtrudeValidator.PreConstruct(Object[])
+  nameWithType.vb: ExtrudeValidator.PreConstruct(Object())
+- uid: Elements.Validators.ExtrudeValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.ExtrudeValidator.html#Elements_Validators_ExtrudeValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.ExtrudeValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.ExtrudeValidator.PreConstruct
+  nameWithType: ExtrudeValidator.PreConstruct
 - uid: Elements.Validators.ExtrudeValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.ExtrudeValidator.html#Elements_Validators_ExtrudeValidator_ValidatesType
@@ -12178,22 +13123,35 @@ references:
   commentId: T:Elements.Validators.IValidator
   fullName: Elements.Validators.IValidator
   nameWithType: IValidator
-- uid: Elements.Validators.IValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.IValidator.html#Elements_Validators_IValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.IValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.IValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.IValidator.Validate(System.Object())
-  nameWithType: IValidator.Validate(Object[])
-  nameWithType.vb: IValidator.Validate(Object())
-- uid: Elements.Validators.IValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.IValidator.html#Elements_Validators_IValidator_Validate_
-  commentId: Overload:Elements.Validators.IValidator.Validate
+- uid: Elements.Validators.IValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.IValidator.html#Elements_Validators_IValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.IValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.IValidator.PostConstruct(System.Object)
+  nameWithType: IValidator.PostConstruct(Object)
+- uid: Elements.Validators.IValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.IValidator.html#Elements_Validators_IValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.IValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.IValidator.Validate
-  nameWithType: IValidator.Validate
+  fullName: Elements.Validators.IValidator.PostConstruct
+  nameWithType: IValidator.PostConstruct
+- uid: Elements.Validators.IValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.IValidator.html#Elements_Validators_IValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.IValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.IValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.IValidator.PreConstruct(System.Object())
+  nameWithType: IValidator.PreConstruct(Object[])
+  nameWithType.vb: IValidator.PreConstruct(Object())
+- uid: Elements.Validators.IValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.IValidator.html#Elements_Validators_IValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.IValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.IValidator.PreConstruct
+  nameWithType: IValidator.PreConstruct
 - uid: Elements.Validators.IValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.IValidator.html#Elements_Validators_IValidator_ValidatesType
@@ -12207,28 +13165,89 @@ references:
   isSpec: "True"
   fullName: Elements.Validators.IValidator.ValidatesType
   nameWithType: IValidator.ValidatesType
+- uid: Elements.Validators.LaminaValidator
+  name: LaminaValidator
+  href: api/Elements.Validators.LaminaValidator.html
+  commentId: T:Elements.Validators.LaminaValidator
+  fullName: Elements.Validators.LaminaValidator
+  nameWithType: LaminaValidator
+- uid: Elements.Validators.LaminaValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.LaminaValidator.html#Elements_Validators_LaminaValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.LaminaValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.LaminaValidator.PostConstruct(System.Object)
+  nameWithType: LaminaValidator.PostConstruct(Object)
+- uid: Elements.Validators.LaminaValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.LaminaValidator.html#Elements_Validators_LaminaValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.LaminaValidator.PostConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.LaminaValidator.PostConstruct
+  nameWithType: LaminaValidator.PostConstruct
+- uid: Elements.Validators.LaminaValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.LaminaValidator.html#Elements_Validators_LaminaValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.LaminaValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.LaminaValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.LaminaValidator.PreConstruct(System.Object())
+  nameWithType: LaminaValidator.PreConstruct(Object[])
+  nameWithType.vb: LaminaValidator.PreConstruct(Object())
+- uid: Elements.Validators.LaminaValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.LaminaValidator.html#Elements_Validators_LaminaValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.LaminaValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.LaminaValidator.PreConstruct
+  nameWithType: LaminaValidator.PreConstruct
+- uid: Elements.Validators.LaminaValidator.ValidatesType
+  name: ValidatesType
+  href: api/Elements.Validators.LaminaValidator.html#Elements_Validators_LaminaValidator_ValidatesType
+  commentId: P:Elements.Validators.LaminaValidator.ValidatesType
+  fullName: Elements.Validators.LaminaValidator.ValidatesType
+  nameWithType: LaminaValidator.ValidatesType
+- uid: Elements.Validators.LaminaValidator.ValidatesType*
+  name: ValidatesType
+  href: api/Elements.Validators.LaminaValidator.html#Elements_Validators_LaminaValidator_ValidatesType_
+  commentId: Overload:Elements.Validators.LaminaValidator.ValidatesType
+  isSpec: "True"
+  fullName: Elements.Validators.LaminaValidator.ValidatesType
+  nameWithType: LaminaValidator.ValidatesType
 - uid: Elements.Validators.LineValidator
   name: LineValidator
   href: api/Elements.Validators.LineValidator.html
   commentId: T:Elements.Validators.LineValidator
   fullName: Elements.Validators.LineValidator
   nameWithType: LineValidator
-- uid: Elements.Validators.LineValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.LineValidator.html#Elements_Validators_LineValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.LineValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.LineValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.LineValidator.Validate(System.Object())
-  nameWithType: LineValidator.Validate(Object[])
-  nameWithType.vb: LineValidator.Validate(Object())
-- uid: Elements.Validators.LineValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.LineValidator.html#Elements_Validators_LineValidator_Validate_
-  commentId: Overload:Elements.Validators.LineValidator.Validate
+- uid: Elements.Validators.LineValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.LineValidator.html#Elements_Validators_LineValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.LineValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.LineValidator.PostConstruct(System.Object)
+  nameWithType: LineValidator.PostConstruct(Object)
+- uid: Elements.Validators.LineValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.LineValidator.html#Elements_Validators_LineValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.LineValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.LineValidator.Validate
-  nameWithType: LineValidator.Validate
+  fullName: Elements.Validators.LineValidator.PostConstruct
+  nameWithType: LineValidator.PostConstruct
+- uid: Elements.Validators.LineValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.LineValidator.html#Elements_Validators_LineValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.LineValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.LineValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.LineValidator.PreConstruct(System.Object())
+  nameWithType: LineValidator.PreConstruct(Object[])
+  nameWithType.vb: LineValidator.PreConstruct(Object())
+- uid: Elements.Validators.LineValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.LineValidator.html#Elements_Validators_LineValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.LineValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.LineValidator.PreConstruct
+  nameWithType: LineValidator.PreConstruct
 - uid: Elements.Validators.LineValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.LineValidator.html#Elements_Validators_LineValidator_ValidatesType
@@ -12248,22 +13267,35 @@ references:
   commentId: T:Elements.Validators.MaterialValidator
   fullName: Elements.Validators.MaterialValidator
   nameWithType: MaterialValidator
-- uid: Elements.Validators.MaterialValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.MaterialValidator.html#Elements_Validators_MaterialValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.MaterialValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.MaterialValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.MaterialValidator.Validate(System.Object())
-  nameWithType: MaterialValidator.Validate(Object[])
-  nameWithType.vb: MaterialValidator.Validate(Object())
-- uid: Elements.Validators.MaterialValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.MaterialValidator.html#Elements_Validators_MaterialValidator_Validate_
-  commentId: Overload:Elements.Validators.MaterialValidator.Validate
+- uid: Elements.Validators.MaterialValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.MaterialValidator.html#Elements_Validators_MaterialValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.MaterialValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.MaterialValidator.PostConstruct(System.Object)
+  nameWithType: MaterialValidator.PostConstruct(Object)
+- uid: Elements.Validators.MaterialValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.MaterialValidator.html#Elements_Validators_MaterialValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.MaterialValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.MaterialValidator.Validate
-  nameWithType: MaterialValidator.Validate
+  fullName: Elements.Validators.MaterialValidator.PostConstruct
+  nameWithType: MaterialValidator.PostConstruct
+- uid: Elements.Validators.MaterialValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.MaterialValidator.html#Elements_Validators_MaterialValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.MaterialValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.MaterialValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.MaterialValidator.PreConstruct(System.Object())
+  nameWithType: MaterialValidator.PreConstruct(Object[])
+  nameWithType.vb: MaterialValidator.PreConstruct(Object())
+- uid: Elements.Validators.MaterialValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.MaterialValidator.html#Elements_Validators_MaterialValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.MaterialValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.MaterialValidator.PreConstruct
+  nameWithType: MaterialValidator.PreConstruct
 - uid: Elements.Validators.MaterialValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.MaterialValidator.html#Elements_Validators_MaterialValidator_ValidatesType
@@ -12283,22 +13315,35 @@ references:
   commentId: T:Elements.Validators.MatrixValidator
   fullName: Elements.Validators.MatrixValidator
   nameWithType: MatrixValidator
-- uid: Elements.Validators.MatrixValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.MatrixValidator.html#Elements_Validators_MatrixValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.MatrixValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.MatrixValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.MatrixValidator.Validate(System.Object())
-  nameWithType: MatrixValidator.Validate(Object[])
-  nameWithType.vb: MatrixValidator.Validate(Object())
-- uid: Elements.Validators.MatrixValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.MatrixValidator.html#Elements_Validators_MatrixValidator_Validate_
-  commentId: Overload:Elements.Validators.MatrixValidator.Validate
+- uid: Elements.Validators.MatrixValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.MatrixValidator.html#Elements_Validators_MatrixValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.MatrixValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.MatrixValidator.PostConstruct(System.Object)
+  nameWithType: MatrixValidator.PostConstruct(Object)
+- uid: Elements.Validators.MatrixValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.MatrixValidator.html#Elements_Validators_MatrixValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.MatrixValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.MatrixValidator.Validate
-  nameWithType: MatrixValidator.Validate
+  fullName: Elements.Validators.MatrixValidator.PostConstruct
+  nameWithType: MatrixValidator.PostConstruct
+- uid: Elements.Validators.MatrixValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.MatrixValidator.html#Elements_Validators_MatrixValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.MatrixValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.MatrixValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.MatrixValidator.PreConstruct(System.Object())
+  nameWithType: MatrixValidator.PreConstruct(Object[])
+  nameWithType.vb: MatrixValidator.PreConstruct(Object())
+- uid: Elements.Validators.MatrixValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.MatrixValidator.html#Elements_Validators_MatrixValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.MatrixValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.MatrixValidator.PreConstruct
+  nameWithType: MatrixValidator.PreConstruct
 - uid: Elements.Validators.MatrixValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.MatrixValidator.html#Elements_Validators_MatrixValidator_ValidatesType
@@ -12318,22 +13363,35 @@ references:
   commentId: T:Elements.Validators.PlaneValidator
   fullName: Elements.Validators.PlaneValidator
   nameWithType: PlaneValidator
-- uid: Elements.Validators.PlaneValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.PlaneValidator.html#Elements_Validators_PlaneValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.PlaneValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.PlaneValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.PlaneValidator.Validate(System.Object())
-  nameWithType: PlaneValidator.Validate(Object[])
-  nameWithType.vb: PlaneValidator.Validate(Object())
-- uid: Elements.Validators.PlaneValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.PlaneValidator.html#Elements_Validators_PlaneValidator_Validate_
-  commentId: Overload:Elements.Validators.PlaneValidator.Validate
+- uid: Elements.Validators.PlaneValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.PlaneValidator.html#Elements_Validators_PlaneValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.PlaneValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.PlaneValidator.PostConstruct(System.Object)
+  nameWithType: PlaneValidator.PostConstruct(Object)
+- uid: Elements.Validators.PlaneValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.PlaneValidator.html#Elements_Validators_PlaneValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.PlaneValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.PlaneValidator.Validate
-  nameWithType: PlaneValidator.Validate
+  fullName: Elements.Validators.PlaneValidator.PostConstruct
+  nameWithType: PlaneValidator.PostConstruct
+- uid: Elements.Validators.PlaneValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.PlaneValidator.html#Elements_Validators_PlaneValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.PlaneValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.PlaneValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.PlaneValidator.PreConstruct(System.Object())
+  nameWithType: PlaneValidator.PreConstruct(Object[])
+  nameWithType.vb: PlaneValidator.PreConstruct(Object())
+- uid: Elements.Validators.PlaneValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.PlaneValidator.html#Elements_Validators_PlaneValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.PlaneValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.PlaneValidator.PreConstruct
+  nameWithType: PlaneValidator.PreConstruct
 - uid: Elements.Validators.PlaneValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.PlaneValidator.html#Elements_Validators_PlaneValidator_ValidatesType
@@ -12353,22 +13411,35 @@ references:
   commentId: T:Elements.Validators.PolygonValidator
   fullName: Elements.Validators.PolygonValidator
   nameWithType: PolygonValidator
-- uid: Elements.Validators.PolygonValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.PolygonValidator.html#Elements_Validators_PolygonValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.PolygonValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.PolygonValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.PolygonValidator.Validate(System.Object())
-  nameWithType: PolygonValidator.Validate(Object[])
-  nameWithType.vb: PolygonValidator.Validate(Object())
-- uid: Elements.Validators.PolygonValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.PolygonValidator.html#Elements_Validators_PolygonValidator_Validate_
-  commentId: Overload:Elements.Validators.PolygonValidator.Validate
+- uid: Elements.Validators.PolygonValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.PolygonValidator.html#Elements_Validators_PolygonValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.PolygonValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.PolygonValidator.PostConstruct(System.Object)
+  nameWithType: PolygonValidator.PostConstruct(Object)
+- uid: Elements.Validators.PolygonValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.PolygonValidator.html#Elements_Validators_PolygonValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.PolygonValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.PolygonValidator.Validate
-  nameWithType: PolygonValidator.Validate
+  fullName: Elements.Validators.PolygonValidator.PostConstruct
+  nameWithType: PolygonValidator.PostConstruct
+- uid: Elements.Validators.PolygonValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.PolygonValidator.html#Elements_Validators_PolygonValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.PolygonValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.PolygonValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.PolygonValidator.PreConstruct(System.Object())
+  nameWithType: PolygonValidator.PreConstruct(Object[])
+  nameWithType.vb: PolygonValidator.PreConstruct(Object())
+- uid: Elements.Validators.PolygonValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.PolygonValidator.html#Elements_Validators_PolygonValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.PolygonValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.PolygonValidator.PreConstruct
+  nameWithType: PolygonValidator.PreConstruct
 - uid: Elements.Validators.PolygonValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.PolygonValidator.html#Elements_Validators_PolygonValidator_ValidatesType
@@ -12388,22 +13459,35 @@ references:
   commentId: T:Elements.Validators.PolylineValidator
   fullName: Elements.Validators.PolylineValidator
   nameWithType: PolylineValidator
-- uid: Elements.Validators.PolylineValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.PolylineValidator.html#Elements_Validators_PolylineValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.PolylineValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.PolylineValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.PolylineValidator.Validate(System.Object())
-  nameWithType: PolylineValidator.Validate(Object[])
-  nameWithType.vb: PolylineValidator.Validate(Object())
-- uid: Elements.Validators.PolylineValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.PolylineValidator.html#Elements_Validators_PolylineValidator_Validate_
-  commentId: Overload:Elements.Validators.PolylineValidator.Validate
+- uid: Elements.Validators.PolylineValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.PolylineValidator.html#Elements_Validators_PolylineValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.PolylineValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.PolylineValidator.PostConstruct(System.Object)
+  nameWithType: PolylineValidator.PostConstruct(Object)
+- uid: Elements.Validators.PolylineValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.PolylineValidator.html#Elements_Validators_PolylineValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.PolylineValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.PolylineValidator.Validate
-  nameWithType: PolylineValidator.Validate
+  fullName: Elements.Validators.PolylineValidator.PostConstruct
+  nameWithType: PolylineValidator.PostConstruct
+- uid: Elements.Validators.PolylineValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.PolylineValidator.html#Elements_Validators_PolylineValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.PolylineValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.PolylineValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.PolylineValidator.PreConstruct(System.Object())
+  nameWithType: PolylineValidator.PreConstruct(Object[])
+  nameWithType.vb: PolylineValidator.PreConstruct(Object())
+- uid: Elements.Validators.PolylineValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.PolylineValidator.html#Elements_Validators_PolylineValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.PolylineValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.PolylineValidator.PreConstruct
+  nameWithType: PolylineValidator.PreConstruct
 - uid: Elements.Validators.PolylineValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.PolylineValidator.html#Elements_Validators_PolylineValidator_ValidatesType
@@ -12423,22 +13507,35 @@ references:
   commentId: T:Elements.Validators.ProfileValidator
   fullName: Elements.Validators.ProfileValidator
   nameWithType: ProfileValidator
-- uid: Elements.Validators.ProfileValidator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.ProfileValidator.html#Elements_Validators_ProfileValidator_Validate_System_Object___
-  commentId: M:Elements.Validators.ProfileValidator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.ProfileValidator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.ProfileValidator.Validate(System.Object())
-  nameWithType: ProfileValidator.Validate(Object[])
-  nameWithType.vb: ProfileValidator.Validate(Object())
-- uid: Elements.Validators.ProfileValidator.Validate*
-  name: Validate
-  href: api/Elements.Validators.ProfileValidator.html#Elements_Validators_ProfileValidator_Validate_
-  commentId: Overload:Elements.Validators.ProfileValidator.Validate
+- uid: Elements.Validators.ProfileValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.ProfileValidator.html#Elements_Validators_ProfileValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.ProfileValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.ProfileValidator.PostConstruct(System.Object)
+  nameWithType: ProfileValidator.PostConstruct(Object)
+- uid: Elements.Validators.ProfileValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.ProfileValidator.html#Elements_Validators_ProfileValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.ProfileValidator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.ProfileValidator.Validate
-  nameWithType: ProfileValidator.Validate
+  fullName: Elements.Validators.ProfileValidator.PostConstruct
+  nameWithType: ProfileValidator.PostConstruct
+- uid: Elements.Validators.ProfileValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.ProfileValidator.html#Elements_Validators_ProfileValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.ProfileValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.ProfileValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.ProfileValidator.PreConstruct(System.Object())
+  nameWithType: ProfileValidator.PreConstruct(Object[])
+  nameWithType.vb: ProfileValidator.PreConstruct(Object())
+- uid: Elements.Validators.ProfileValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.ProfileValidator.html#Elements_Validators_ProfileValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.ProfileValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.ProfileValidator.PreConstruct
+  nameWithType: ProfileValidator.PreConstruct
 - uid: Elements.Validators.ProfileValidator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.ProfileValidator.html#Elements_Validators_ProfileValidator_ValidatesType
@@ -12452,6 +13549,54 @@ references:
   isSpec: "True"
   fullName: Elements.Validators.ProfileValidator.ValidatesType
   nameWithType: ProfileValidator.ValidatesType
+- uid: Elements.Validators.SweepValidator
+  name: SweepValidator
+  href: api/Elements.Validators.SweepValidator.html
+  commentId: T:Elements.Validators.SweepValidator
+  fullName: Elements.Validators.SweepValidator
+  nameWithType: SweepValidator
+- uid: Elements.Validators.SweepValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.SweepValidator.html#Elements_Validators_SweepValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.SweepValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.SweepValidator.PostConstruct(System.Object)
+  nameWithType: SweepValidator.PostConstruct(Object)
+- uid: Elements.Validators.SweepValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.SweepValidator.html#Elements_Validators_SweepValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.SweepValidator.PostConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.SweepValidator.PostConstruct
+  nameWithType: SweepValidator.PostConstruct
+- uid: Elements.Validators.SweepValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.SweepValidator.html#Elements_Validators_SweepValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.SweepValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.SweepValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.SweepValidator.PreConstruct(System.Object())
+  nameWithType: SweepValidator.PreConstruct(Object[])
+  nameWithType.vb: SweepValidator.PreConstruct(Object())
+- uid: Elements.Validators.SweepValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.SweepValidator.html#Elements_Validators_SweepValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.SweepValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.SweepValidator.PreConstruct
+  nameWithType: SweepValidator.PreConstruct
+- uid: Elements.Validators.SweepValidator.ValidatesType
+  name: ValidatesType
+  href: api/Elements.Validators.SweepValidator.html#Elements_Validators_SweepValidator_ValidatesType
+  commentId: P:Elements.Validators.SweepValidator.ValidatesType
+  fullName: Elements.Validators.SweepValidator.ValidatesType
+  nameWithType: SweepValidator.ValidatesType
+- uid: Elements.Validators.SweepValidator.ValidatesType*
+  name: ValidatesType
+  href: api/Elements.Validators.SweepValidator.html#Elements_Validators_SweepValidator_ValidatesType_
+  commentId: Overload:Elements.Validators.SweepValidator.ValidatesType
+  isSpec: "True"
+  fullName: Elements.Validators.SweepValidator.ValidatesType
+  nameWithType: SweepValidator.ValidatesType
 - uid: Elements.Validators.Validator
   name: Validator
   href: api/Elements.Validators.Validator.html
@@ -12493,22 +13638,35 @@ references:
   commentId: T:Elements.Validators.Vector3Validator
   fullName: Elements.Validators.Vector3Validator
   nameWithType: Vector3Validator
-- uid: Elements.Validators.Vector3Validator.Validate(System.Object[])
-  name: Validate(Object[])
-  href: api/Elements.Validators.Vector3Validator.html#Elements_Validators_Vector3Validator_Validate_System_Object___
-  commentId: M:Elements.Validators.Vector3Validator.Validate(System.Object[])
-  name.vb: Validate(Object())
-  fullName: Elements.Validators.Vector3Validator.Validate(System.Object[])
-  fullName.vb: Elements.Validators.Vector3Validator.Validate(System.Object())
-  nameWithType: Vector3Validator.Validate(Object[])
-  nameWithType.vb: Vector3Validator.Validate(Object())
-- uid: Elements.Validators.Vector3Validator.Validate*
-  name: Validate
-  href: api/Elements.Validators.Vector3Validator.html#Elements_Validators_Vector3Validator_Validate_
-  commentId: Overload:Elements.Validators.Vector3Validator.Validate
+- uid: Elements.Validators.Vector3Validator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.Vector3Validator.html#Elements_Validators_Vector3Validator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.Vector3Validator.PostConstruct(System.Object)
+  fullName: Elements.Validators.Vector3Validator.PostConstruct(System.Object)
+  nameWithType: Vector3Validator.PostConstruct(Object)
+- uid: Elements.Validators.Vector3Validator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.Vector3Validator.html#Elements_Validators_Vector3Validator_PostConstruct_
+  commentId: Overload:Elements.Validators.Vector3Validator.PostConstruct
   isSpec: "True"
-  fullName: Elements.Validators.Vector3Validator.Validate
-  nameWithType: Vector3Validator.Validate
+  fullName: Elements.Validators.Vector3Validator.PostConstruct
+  nameWithType: Vector3Validator.PostConstruct
+- uid: Elements.Validators.Vector3Validator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.Vector3Validator.html#Elements_Validators_Vector3Validator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.Vector3Validator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.Vector3Validator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.Vector3Validator.PreConstruct(System.Object())
+  nameWithType: Vector3Validator.PreConstruct(Object[])
+  nameWithType.vb: Vector3Validator.PreConstruct(Object())
+- uid: Elements.Validators.Vector3Validator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.Vector3Validator.html#Elements_Validators_Vector3Validator_PreConstruct_
+  commentId: Overload:Elements.Validators.Vector3Validator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.Vector3Validator.PreConstruct
+  nameWithType: Vector3Validator.PreConstruct
 - uid: Elements.Validators.Vector3Validator.ValidatesType
   name: ValidatesType
   href: api/Elements.Validators.Vector3Validator.html#Elements_Validators_Vector3Validator_ValidatesType
@@ -12586,3 +13744,80 @@ references:
   isSpec: "True"
   fullName: Elements.Wall.UpdateRepresentations
   nameWithType: Wall.UpdateRepresentations
+- uid: Elements.WallByProfile
+  name: WallByProfile
+  href: api/Elements.WallByProfile.html
+  commentId: T:Elements.WallByProfile
+  fullName: Elements.WallByProfile
+  nameWithType: WallByProfile
+- uid: Elements.WallByProfile.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean)
+  name: WallByProfile(Profile, Double, Line, Transform, Material, Representation, Boolean)
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Line_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_
+  commentId: M:Elements.WallByProfile.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean)
+  fullName: Elements.WallByProfile.WallByProfile(Elements.Geometry.Profile, System.Double, Elements.Geometry.Line, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean)
+  nameWithType: WallByProfile.WallByProfile(Profile, Double, Line, Transform, Material, Representation, Boolean)
+- uid: Elements.WallByProfile.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: WallByProfile(Profile, Double, Line, Transform, Material, Representation, Boolean, Guid, String)
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Line_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.WallByProfile.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.WallByProfile.WallByProfile(Elements.Geometry.Profile, System.Double, Elements.Geometry.Line, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: WallByProfile.WallByProfile(Profile, Double, Line, Transform, Material, Representation, Boolean, Guid, String)
+- uid: Elements.WallByProfile.#ctor*
+  name: WallByProfile
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile__ctor_
+  commentId: Overload:Elements.WallByProfile.#ctor
+  isSpec: "True"
+  fullName: Elements.WallByProfile.WallByProfile
+  nameWithType: WallByProfile.WallByProfile
+- uid: Elements.WallByProfile.Centerline
+  name: Centerline
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile_Centerline
+  commentId: P:Elements.WallByProfile.Centerline
+  fullName: Elements.WallByProfile.Centerline
+  nameWithType: WallByProfile.Centerline
+- uid: Elements.WallByProfile.Centerline*
+  name: Centerline
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile_Centerline_
+  commentId: Overload:Elements.WallByProfile.Centerline
+  isSpec: "True"
+  fullName: Elements.WallByProfile.Centerline
+  nameWithType: WallByProfile.Centerline
+- uid: Elements.WallByProfile.Profile
+  name: Profile
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile_Profile
+  commentId: P:Elements.WallByProfile.Profile
+  fullName: Elements.WallByProfile.Profile
+  nameWithType: WallByProfile.Profile
+- uid: Elements.WallByProfile.Profile*
+  name: Profile
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile_Profile_
+  commentId: Overload:Elements.WallByProfile.Profile
+  isSpec: "True"
+  fullName: Elements.WallByProfile.Profile
+  nameWithType: WallByProfile.Profile
+- uid: Elements.WallByProfile.Thickness
+  name: Thickness
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile_Thickness
+  commentId: P:Elements.WallByProfile.Thickness
+  fullName: Elements.WallByProfile.Thickness
+  nameWithType: WallByProfile.Thickness
+- uid: Elements.WallByProfile.Thickness*
+  name: Thickness
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile_Thickness_
+  commentId: Overload:Elements.WallByProfile.Thickness
+  isSpec: "True"
+  fullName: Elements.WallByProfile.Thickness
+  nameWithType: WallByProfile.Thickness
+- uid: Elements.WallByProfile.UpdateRepresentations
+  name: UpdateRepresentations()
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile_UpdateRepresentations
+  commentId: M:Elements.WallByProfile.UpdateRepresentations
+  fullName: Elements.WallByProfile.UpdateRepresentations()
+  nameWithType: WallByProfile.UpdateRepresentations()
+- uid: Elements.WallByProfile.UpdateRepresentations*
+  name: UpdateRepresentations
+  href: api/Elements.WallByProfile.html#Elements_WallByProfile_UpdateRepresentations_
+  commentId: Overload:Elements.WallByProfile.UpdateRepresentations
+  isSpec: "True"
+  fullName: Elements.WallByProfile.UpdateRepresentations
+  nameWithType: WallByProfile.UpdateRepresentations

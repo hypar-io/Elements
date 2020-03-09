@@ -72,7 +72,8 @@
           "Elements_Panel.glb",
           "Elements_Space.glb",
           "Elements_Topography.glb",
-          "Elements_StandardWall.glb"
+          "Elements_StandardWall.glb",
+          "Elements_ImportMeshElement.glb"
         ],
         "dest": "models"
       }

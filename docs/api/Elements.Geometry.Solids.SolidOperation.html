@@ -115,7 +115,8 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Solids_SolidOperation_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class SolidOperation</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
+public abstract class SolidOperation</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -125,7 +126,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SolidOperation(bool isVoid)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public SolidOperation(bool isVoid)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -153,7 +155,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsVoid { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;IsVoid&quot;, Required = Required.Always)]
+public bool IsVoid { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -166,6 +169,32 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Solids_SolidOperation_Solid_" data-uid="Elements.Geometry.Solids.SolidOperation.Solid*"></a>
+  <h4 id="Elements_Geometry_Solids_SolidOperation_Solid" data-uid="Elements.Geometry.Solids.SolidOperation.Solid">Solid</h4>
+  <div class="markdown level1 summary"><p>The solid operation's solid. To update this
+cached representation, call GetSolid().</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Solid Solid { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
         <td></td>
       </tr>
     </tbody>
