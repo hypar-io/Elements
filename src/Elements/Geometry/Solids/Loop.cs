@@ -6,7 +6,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A Loop of HalfEdges which bound a Face.
     /// </summary>
-    internal class Loop
+    public class Loop
     {
         /// <summary>
         /// The Face to which this Loop corresponds.
@@ -40,6 +40,9 @@ namespace Elements.Geometry.Solids
             }
         }
 
+        /// <summary>
+        /// Convert this loop to a polygon.
+        /// </summary>
         public Polygon ToPolygon()
         {
             return new Polygon(

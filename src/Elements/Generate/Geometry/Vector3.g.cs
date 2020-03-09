@@ -29,12 +29,17 @@ namespace Elements.Geometry
             var validator = Validator.Instance.GetFirstValidatorForType<Vector3>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @x, @y, @z});
+                validator.PreConstruct(new object[]{ @x, @y, @z});
             }
         
             this.X = @x;
             this.Y = @y;
             this.Z = @z;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The X component of the vector.</summary>

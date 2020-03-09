@@ -29,12 +29,17 @@ namespace Elements
             var validator = Validator.Instance.GetFirstValidatorForType<Model>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @origin, @transform, @elements});
+                validator.PreConstruct(new object[]{ @origin, @transform, @elements});
             }
         
             this.Origin = @origin;
             this.Transform = @transform;
             this.Elements = @elements;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The origin of the model.</summary>

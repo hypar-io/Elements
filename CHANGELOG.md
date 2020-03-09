@@ -1,19 +1,27 @@
 # Changelog
 
 ## 0.6.2
+### Added
+- `Material.Unlit`
+- `Material.DoubleSided`
+
+### Removed
+- `SolidOperation.GetSolid()`.
+
+### Fixed
+- #262
+- Fixed an error where `Transform.OfPlane(...)` would not solve correctly if the plane was not at the world origin. 
+
 ### Changed
 - `Grid2d` now supports grids that are not parallel to the XY plane
 
-### Fixed
-- Fixed an error where `Transform.OfPlane(...)` would not solve correctly if the plane was not at the world origin. 
-
-### 0.6.0
-## Added
+## 0.6.0
+### Added
 - `ColorScale`
 - `AnalysisMesh`
 - `Ray.Intersects(...)` for `Plane`, `Face`, `Solid`, and `SolidOperation`
 
-## Fixed
+### Fixed
 - Fix #253
 
 ## 0.5.2

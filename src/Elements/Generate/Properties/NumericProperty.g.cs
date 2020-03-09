@@ -29,11 +29,16 @@ namespace Elements.Properties
             var validator = Validator.Instance.GetFirstValidatorForType<NumericProperty>();
             if(validator != null)
             {
-                validator.Validate(new object[]{ @value, @unitType});
+                validator.PreConstruct(new object[]{ @value, @unitType});
             }
         
             this.Value = @value;
             this.UnitType = @unitType;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The property's value</summary>

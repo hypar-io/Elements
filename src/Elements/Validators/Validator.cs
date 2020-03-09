@@ -17,10 +17,16 @@ namespace Elements.Validators
         Type ValidatesType {get;}
 
         /// <summary>
-        /// Validate the type with the provided arguments.
+        /// Validate the object with the provided arguments.
         /// </summary>
         /// <param name="args"></param>
-        void Validate(object[] args);
+        void PreConstruct(object[] args);
+
+        /// <summary>
+        /// Post construction logic.
+        /// </summary>
+        /// <param name="obj">The constructed object.</param>
+        void PostConstruct(object obj);
     }
 
     /// <summary>

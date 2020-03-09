@@ -88,7 +88,7 @@ namespace Elements.Geometry
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
         public bool Intersects(SolidOperation solidOp, out List<Vector3> result)
         {
-            var intersects = Intersects(solidOp.GetSolid(), out List<Vector3> tempResult);
+            var intersects = Intersects(solidOp.Solid, out List<Vector3> tempResult);
             result = tempResult;
             return intersects;
         }
