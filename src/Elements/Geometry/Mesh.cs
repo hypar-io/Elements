@@ -52,6 +52,11 @@ namespace Elements.Geometry
             var ab = (b.Position - a.Position).Unitized();
             var bc = (c.Position - a.Position).Unitized();
             this.Normal = ab.Cross(bc).Unitized();
+
+            if (Double.IsNaN(this.Normal.X) || Double.IsNaN(this.Normal.Y) || Double.IsNaN(this.Normal.Z))
+            {
+                Debug.WriteLine("Degenerate triangle found.");
+            }
         }
 
         [JsonConstructor]
@@ -434,21 +439,6 @@ Triangles:{_triangles.Count}";
         /// <param name="c">The third vertex.</param>
         public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
         {
-            // Calculate the face normal
-            var v1 = b.Position - a.Position;
-            var v2 = c.Position - a.Position;
-            var n = v1.Cross(v2).Unitized();
-            if (Double.IsNaN(n.X) || Double.IsNaN(n.Y) || Double.IsNaN(n.Z))
-            {
-                Debug.WriteLine("Degenerate triangle found.");
-                return null;
-            }
-
-            // If the vertices normals are null, set them to the face normal.
-            a.Normal = a.Normal.Equals(default(Vector3)) ? n : a.Normal;
-            b.Normal = b.Normal.Equals(default(Vector3)) ? n : b.Normal;
-            c.Normal = c.Normal.Equals(default(Vector3)) ? n : c.Normal;
-
             var t = new Triangle(a, b, c);
             this._triangles.Add(t);
             return t;

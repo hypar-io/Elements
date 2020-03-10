@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using static Elements.Units;
 
 namespace Elements
@@ -13,10 +12,8 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Elements.Tests/ImportMeshElementTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class ImportMeshElement : GeometricElement, ITessellate
+    public class ImportMeshElement : MeshElement
     {
-        private Mesh _mesh;
-
         /// <summary>
         /// The path to the element's mesh on disk.
         /// </summary>
@@ -34,12 +31,12 @@ namespace Elements
                          LengthUnit lengthUnit,
                          Material material = null,
                          Guid id = default(Guid),
-                         string name = null) : base(new Transform(),
-                                                          material == null ? BuiltInMaterials.Default : material,
-                                                          null,
-                                                          true,
-                                                          id == default(Guid) ? Guid.NewGuid() : id,
-                                                          name)
+                         string name = null) : base(null,
+                                                    material == null ? BuiltInMaterials.Default : material,
+                                                    new Transform(),
+                                                    true,
+                                                    id == default(Guid) ? Guid.NewGuid() : id,
+                                                    name)
         {
             this.Path = path;
 
@@ -51,15 +48,6 @@ namespace Elements
             // TODO: Currently we only support STL. In the future we should
             // support glTF as well, and possibly others.
             this._mesh = Mesh.FromSTL(path, lengthUnit);
-        }
-
-        /// <summary>
-        /// Tessellate the element.
-        /// </summary>
-        /// <param name="mesh"></param>
-        public void Tessellate(ref Mesh mesh)
-        {
-            mesh = this._mesh;
         }
     }
 }
