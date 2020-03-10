@@ -118,12 +118,12 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Guid_System_String_" data-uid="Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Guid,System.String)">Material(Color, Double, Double, Guid, String)</h4>
+  <h4 id="Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Boolean_System_String_System_Boolean_System_Guid_System_String_" data-uid="Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Boolean,System.String,System.Boolean,System.Guid,System.String)">Material(Color, Double, Double, Boolean, String, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(Color color, double specularFactor, double glossinessFactor, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(Color color, double specularFactor, double glossinessFactor, bool unlit, string texture, bool doubleSided, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -151,6 +151,21 @@
         <td></td>
       </tr>
       <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">unlit</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">texture</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">doubleSided</span></td>
+        <td></td>
+      </tr>
+      <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td></td>
@@ -163,13 +178,13 @@
     </tbody>
   </table>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Single_System_Single_System_String_System_Guid_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Single,System.Single,System.String,System.Guid)">Material(String, Color, Single, Single, String, Guid)</h4>
+  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Double_System_Double_System_String_System_Boolean_System_Boolean_System_Guid_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Guid)">Material(String, Color, Double, Double, String, Boolean, Boolean, Guid)</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(string name, Color color, float specularFactor = 0.1F, float glossinessFactor = 0.1F, string texture = null, Guid id = default(Guid))</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(string name, Color color, double specularFactor = 0.1, double glossinessFactor = 0.1, string texture = null, bool unlit = false, bool doubleSided = false, Guid id = default(Guid))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -194,13 +209,13 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">specularFactor</span></td>
         <td><p>The specular component of the color. Between 0.0 and 1.0.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">glossinessFactor</span></td>
         <td><p>The glossiness component of the color. Between 0.0 and 1.0.</p>
 </td>
@@ -209,6 +224,18 @@
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">texture</span></td>
         <td><p>A relative path to a jpg or png image file to be used as a texture.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">unlit</span></td>
+        <td><p>Is this material affected by lights?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">doubleSided</span></td>
+        <td><p>Is this material to be rendered from both sides?</p>
 </td>
       </tr>
       <tr>
@@ -278,6 +305,29 @@
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Material_DoubleSided_" data-uid="Elements.Material.DoubleSided*"></a>
+  <h4 id="Elements_Material_DoubleSided" data-uid="Elements.Material.DoubleSided">DoubleSided</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool DoubleSided { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Material_GlossinessFactor_" data-uid="Elements.Material.GlossinessFactor*"></a>
   <h4 id="Elements_Material_GlossinessFactor" data-uid="Elements.Material.GlossinessFactor">GlossinessFactor</h4>
   <div class="markdown level1 summary"><p>The glossiness factor between 0.0 and 1.0.</p>
@@ -328,13 +378,11 @@
   </table>
   <a id="Elements_Material_Texture_" data-uid="Elements.Material.Texture*"></a>
   <h4 id="Elements_Material_Texture" data-uid="Elements.Material.Texture">Texture</h4>
-  <div class="markdown level1 summary"><p>A relative file path to an image file to be used as a texture.
-The image data will be packed into the glTF's buffer.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Texture { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Texture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -347,6 +395,29 @@ The image data will be packed into the glTF's buffer.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Material_Unlit_" data-uid="Elements.Material.Unlit*"></a>
+  <h4 id="Elements_Material_Unlit" data-uid="Elements.Material.Unlit">Unlit</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Unlit { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>

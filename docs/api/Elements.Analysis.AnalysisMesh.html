@@ -221,6 +221,7 @@ var analyze = new Func&lt;Vector3,double&gt;((v) =&gt; {
 var colorScale = new ColorScale(new List&lt;Color&gt;(){Colors.Cyan, Colors.Purple, Colors.Orange}, 10);
 
 var analysisMesh = new AnalysisMesh(perimeter, 0.2, 0.2, colorScale, analyze);
+analysisMesh.Analyze();
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -402,6 +403,30 @@ var analysisMesh = new AnalysisMesh(perimeter, 0.2, 0.2, colorScale, analyze);
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Analysis_AnalysisMesh_TotalAnalysisLocations_" data-uid="Elements.Analysis.AnalysisMesh.TotalAnalysisLocations*"></a>
+  <h4 id="Elements_Analysis_AnalysisMesh_TotalAnalysisLocations" data-uid="Elements.Analysis.AnalysisMesh.TotalAnalysisLocations">TotalAnalysisLocations</h4>
+  <div class="markdown level1 summary"><p>The total number of analysis locations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double TotalAnalysisLocations { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Analysis_AnalysisMesh_ULength_" data-uid="Elements.Analysis.AnalysisMesh.ULength*"></a>
   <h4 id="Elements_Analysis_AnalysisMesh_ULength" data-uid="Elements.Analysis.AnalysisMesh.ULength">ULength</h4>
   <div class="markdown level1 summary"><p>The length of the cells in the u direction.</p>
@@ -452,6 +477,15 @@ var analysisMesh = new AnalysisMesh(perimeter, 0.2, 0.2, colorScale, analyze);
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Analysis_AnalysisMesh_Analyze_" data-uid="Elements.Analysis.AnalysisMesh.Analyze*"></a>
+  <h4 id="Elements_Analysis_AnalysisMesh_Analyze" data-uid="Elements.Analysis.AnalysisMesh.Analyze">Analyze()</h4>
+  <div class="markdown level1 summary"><p>Compute a value for each grid cell.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Analyze()</code></pre>
+  </div>
   <a id="Elements_Analysis_AnalysisMesh_Tessellate_" data-uid="Elements.Analysis.AnalysisMesh.Tessellate*"></a>
   <h4 id="Elements_Analysis_AnalysisMesh_Tessellate_Elements_Geometry_Mesh__" data-uid="Elements.Analysis.AnalysisMesh.Tessellate(Elements.Geometry.Mesh@)">Tessellate(ref Mesh)</h4>
   <div class="markdown level1 summary"><p>Tessellate the analysis mesh.</p>
@@ -474,8 +508,7 @@ var analysisMesh = new AnalysisMesh(perimeter, 0.2, 0.2, colorScale, analyze);
       <tr>
         <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
         <td><span class="parametername">mesh</span></td>
-        <td><p>The mesh into which the analytical cells will be drawn.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
