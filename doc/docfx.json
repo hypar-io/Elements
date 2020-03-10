@@ -50,30 +50,7 @@
       {
         "src": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/",
         "files": [
-          "Elements_**.glb",
-          "Elements_ElementInstance.glb",
-          "Elements_Geometry_Arc.glb",
-          "Elements_Geometry_Bezier.glb",
-          "Elements_Geometry_Contour.glb",
-          "Elements_Geometry_Line.glb",
-          "Elements_Geometry_Polygon.glb",
-          "Elements_Geometry_Polyline.glb",
-          "Elements_Geometry_Transform.glb",
-          "Elements_ModelCurve.glb",
-          "Elements_ModelPoints.glb",
-          "Elements_Analysis_AnalysisMesh.glb",
-          "Elements_Analysis_ColorScale.glb",
-          "Elements_Column.glb",
-          "Elements_Beam.glb",
-          "Elements_Floor.glb",
-          "Elements_Spatial_Grid1d.glb",
-          "Elements_Mass.glb",
-          "Elements_ModelCurve.glb",
-          "Elements_Panel.glb",
-          "Elements_Space.glb",
-          "Elements_Topography.glb",
-          "Elements_StandardWall.glb",
-          "Elements_ImportMeshElement.glb"
+          "Elements_**.glb"
         ],
         "dest": "models"
       }

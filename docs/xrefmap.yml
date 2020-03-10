@@ -3730,6 +3730,12 @@ references:
   commentId: M:Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.UV,Elements.Geometry.Vector3,Elements.Geometry.Color)
   fullName: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3, Elements.Geometry.UV, Elements.Geometry.Vector3, Elements.Geometry.Color)
   nameWithType: Mesh.AddVertex(Vector3, UV, Vector3, Color)
+- uid: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vertex)
+  name: AddVertex(Vertex)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Vertex_
+  commentId: M:Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vertex)
+  fullName: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vertex)
+  nameWithType: Mesh.AddVertex(Vertex)
 - uid: Elements.Geometry.Mesh.AddVertex*
   name: AddVertex
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddVertex_
@@ -10495,22 +10501,6 @@ references:
   isSpec: "True"
   fullName: Elements.ImportMeshElement.Path
   nameWithType: ImportMeshElement.Path
-- uid: Elements.ImportMeshElement.Tessellate(Elements.Geometry.Mesh@)
-  name: Tessellate(ref Mesh)
-  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement_Tessellate_Elements_Geometry_Mesh__
-  commentId: M:Elements.ImportMeshElement.Tessellate(Elements.Geometry.Mesh@)
-  name.vb: Tessellate(ByRef Mesh)
-  fullName: Elements.ImportMeshElement.Tessellate(ref Elements.Geometry.Mesh)
-  fullName.vb: Elements.ImportMeshElement.Tessellate(ByRef Elements.Geometry.Mesh)
-  nameWithType: ImportMeshElement.Tessellate(ref Mesh)
-  nameWithType.vb: ImportMeshElement.Tessellate(ByRef Mesh)
-- uid: Elements.ImportMeshElement.Tessellate*
-  name: Tessellate
-  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement_Tessellate_
-  commentId: Overload:Elements.ImportMeshElement.Tessellate
-  isSpec: "True"
-  fullName: Elements.ImportMeshElement.Tessellate
-  nameWithType: ImportMeshElement.Tessellate
 - uid: Elements.Interfaces
   name: Elements.Interfaces
   href: api/Elements.Interfaces.html
@@ -10768,6 +10758,47 @@ references:
   isSpec: "True"
   fullName: Elements.Material.Unlit
   nameWithType: Material.Unlit
+- uid: Elements.MeshElement
+  name: MeshElement
+  href: api/Elements.MeshElement.html
+  commentId: T:Elements.MeshElement
+  fullName: Elements.MeshElement
+  nameWithType: MeshElement
+- uid: Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  name: MeshElement(Mesh, Material, Transform, Boolean, Guid, String)
+  href: api/Elements.MeshElement.html#Elements_MeshElement__ctor_Elements_Geometry_Mesh_Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  fullName: Elements.MeshElement.MeshElement(Elements.Geometry.Mesh, Elements.Material, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
+  nameWithType: MeshElement.MeshElement(Mesh, Material, Transform, Boolean, Guid, String)
+- uid: Elements.MeshElement.#ctor*
+  name: MeshElement
+  href: api/Elements.MeshElement.html#Elements_MeshElement__ctor_
+  commentId: Overload:Elements.MeshElement.#ctor
+  isSpec: "True"
+  fullName: Elements.MeshElement.MeshElement
+  nameWithType: MeshElement.MeshElement
+- uid: Elements.MeshElement._mesh
+  name: _mesh
+  href: api/Elements.MeshElement.html#Elements_MeshElement__mesh
+  commentId: F:Elements.MeshElement._mesh
+  fullName: Elements.MeshElement._mesh
+  nameWithType: MeshElement._mesh
+- uid: Elements.MeshElement.Tessellate(Elements.Geometry.Mesh@)
+  name: Tessellate(ref Mesh)
+  href: api/Elements.MeshElement.html#Elements_MeshElement_Tessellate_Elements_Geometry_Mesh__
+  commentId: M:Elements.MeshElement.Tessellate(Elements.Geometry.Mesh@)
+  name.vb: Tessellate(ByRef Mesh)
+  fullName: Elements.MeshElement.Tessellate(ref Elements.Geometry.Mesh)
+  fullName.vb: Elements.MeshElement.Tessellate(ByRef Elements.Geometry.Mesh)
+  nameWithType: MeshElement.Tessellate(ref Mesh)
+  nameWithType.vb: MeshElement.Tessellate(ByRef Mesh)
+- uid: Elements.MeshElement.Tessellate*
+  name: Tessellate
+  href: api/Elements.MeshElement.html#Elements_MeshElement_Tessellate_
+  commentId: Overload:Elements.MeshElement.Tessellate
+  isSpec: "True"
+  fullName: Elements.MeshElement.Tessellate
+  nameWithType: MeshElement.Tessellate
 - uid: Elements.Model
   name: Model
   href: api/Elements.Model.html
@@ -11426,11 +11457,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
   nameWithType: JsonInheritanceConverter.Elements
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  name: ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+  nameWithType: JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*
   name: ReadJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_
@@ -11439,11 +11470,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson
   nameWithType: JsonInheritanceConverter.ReadJson
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  name: WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+  nameWithType: JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*
   name: WriteJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_
