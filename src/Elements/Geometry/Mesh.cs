@@ -234,29 +234,8 @@ namespace Elements.Geometry
             List<Vertex> vertexCache = new List<Vertex>();
             var mesh = new Mesh();
 
-            var conversion = 1.0;
-            switch(unit)
-            {
-                case LengthUnit.Kilometer:
-                    conversion = 1000.0;
-                    break;
-                case LengthUnit.Meter:
-                    conversion = 1.0;
-                    break;
-                case LengthUnit.Centimeter:
-                    conversion = 0.01;
-                    break;
-                case LengthUnit.Millimeter:
-                    conversion = 0.001;
-                    break;
-                case LengthUnit.Foot:
-                    conversion = Units.FeetToMeters(1.0);
-                    break;
-                case LengthUnit.Inch:
-                    conversion = Units.InchesToMeters(1.0);
-                    break;
-
-            }
+            var conversion = Units.GetConversionToMeters(unit);
+            
             using(var reader = new StreamReader(stlPath))
             {
                 string line;
