@@ -12,7 +12,7 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Elements.Tests/ImportMeshElementTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class ImportMeshElement : MeshElement
+    public sealed class ImportMeshElement : MeshElement
     {
         /// <summary>
         /// The path to the element's mesh on disk.
