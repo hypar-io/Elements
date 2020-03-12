@@ -43,7 +43,7 @@ namespace Elements.Serialization.glTF
         /// <param name="path">The output path.</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true, bool drawEdges = true)
+        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true, bool drawEdges = false)
         {
             if (model.Elements.Count > 0)
             {
@@ -73,7 +73,7 @@ namespace Elements.Serialization.glTF
         /// Convert the Model to a base64 encoded string.
         /// </summary>
         /// <returns>A Base64 string representing the Model.</returns>
-        public static string ToBase64String(this Model model, bool drawEdges = true)
+        public static string ToBase64String(this Model model, bool drawEdges = false)
         {
             var buffer = new List<byte>();
             var tmp = Path.GetTempFileName();
@@ -606,7 +606,7 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGlb(Model model, string path, bool drawEdges = true)
+        private static bool SaveGlb(Model model, string path, bool drawEdges = false)
         {
             var buffer = new List<byte>();
             var gltf = InitializeGlTF(model, buffer, drawEdges);
@@ -620,7 +620,7 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGltf(Model model, string path, bool drawEdges = true)
+        private static bool SaveGltf(Model model, string path, bool drawEdges = false)
         {
             var buffer = new List<byte>();
 
@@ -648,7 +648,7 @@ namespace Elements.Serialization.glTF
             return true;
         }
 
-        private static Gltf InitializeGlTF(Model model, List<byte> buffer, bool drawEdges = true)
+        private static Gltf InitializeGlTF(Model model, List<byte> buffer, bool drawEdges = false)
         {
             var gltf = new Gltf();
             var asset = new Asset();
@@ -911,8 +911,14 @@ namespace Elements.Serialization.glTF
                                      null,
                                      meshes);
 
+                if (!meshElementMap.ContainsKey(e.Id))
+                {
+                    meshElementMap.Add(e.Id, new List<int>());
+                }
+                meshElementMap[e.Id].Add(meshId);
+
                 var geom = (GeometricElement)e;
-                if (!geom.IsElementDefinition)
+                if(!geom.IsElementDefinition)
                 {
                     CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
                 }

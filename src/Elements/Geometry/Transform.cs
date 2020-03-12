@@ -225,7 +225,10 @@ namespace Elements.Geometry
         /// <returns>A new plane transformed by this transform.</returns>
         public Plane OfPlane(Plane plane)
         {
-            return new Plane(OfPoint(plane.Origin), OfVector(plane.Normal));
+            // The normal vector must be transformed in a way
+            // that considers only orientation and not position
+            var tempXform = new Transform(Vector3.Origin, this.XAxis, this.ZAxis);
+            return new Plane(OfPoint(plane.Origin), tempXform.OfVector(plane.Normal));
         }
 
         /// <summary>

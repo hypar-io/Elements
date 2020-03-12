@@ -85,10 +85,17 @@
     <div class="level1"><a class="xref" href="Elements.Geometry.Solids.SolidOperation.html">SolidOperation</a></div>
     <div class="level2"><span class="xref">Sweep</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
       <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_IsVoid">SolidOperation.IsVoid</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_Solid">SolidOperation.Solid</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -116,7 +123,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Solids_Sweep_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Sweep : SolidOperation</code></pre>
+    <pre><code class="lang-csharp hljs">public class Sweep : SolidOperation, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -263,6 +270,61 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Geometry_Solids_Sweep_RaisePropertyChanged_" data-uid="Elements.Geometry.Solids.Sweep.RaisePropertyChanged*"></a>
+  <h4 id="Elements_Geometry_Solids_Sweep_RaisePropertyChanged_System_String_" data-uid="Elements.Geometry.Solids.Sweep.RaisePropertyChanged(System.String)">RaisePropertyChanged(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void RaisePropertyChanged(string propertyName = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">propertyName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <h4 id="Elements_Geometry_Solids_Sweep_PropertyChanged" data-uid="Elements.Geometry.Solids.Sweep.PropertyChanged">PropertyChanged</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event PropertyChangedEventHandler PropertyChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ComponentModel.PropertyChangedEventHandler</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
 </article>
           </div>
           

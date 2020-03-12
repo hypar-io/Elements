@@ -523,10 +523,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static Transform ToTransform(this IList<Vector3> points)
         {
-            var a = new Vector3(points[1].X - points[0].X,
-                                points[1].Y - points[0].Y,
-                                points[1].Z - points[0].Z).Unitized();
-
+            var a = (points[1] - points[0]).Unitized();
             // We need to search for a second vector that is not colinear 
             // with the first. If all the vectors are tried, and one isn't
             // found that's not parallel to the first, you'll 
@@ -534,9 +531,7 @@ namespace Elements.Geometry
             Vector3 b = new Vector3();
             for(var i=2; i<points.Count; i++)
             {
-                b = new Vector3(points[i].X - points[1].X,
-                            points[i].Y - points[1].Y,
-                            points[i].Z - points[1].Z).Unitized();
+                b = (points[i] - points[1]).Unitized();
                 var dot = b.Dot(a);
                 if(dot > -1 && dot < 1)
                 {

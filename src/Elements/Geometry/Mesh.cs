@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using static Elements.Units;
 
 namespace Elements.Geometry
 {
@@ -50,6 +52,11 @@ namespace Elements.Geometry
             var ab = (b.Position - a.Position).Unitized();
             var bc = (c.Position - a.Position).Unitized();
             this.Normal = ab.Cross(bc).Unitized();
+
+            if (Double.IsNaN(this.Normal.X) || Double.IsNaN(this.Normal.Y) || Double.IsNaN(this.Normal.Z))
+            {
+                Debug.WriteLine("Degenerate triangle found.");
+            }
         }
 
         [JsonConstructor]
@@ -217,6 +224,53 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a mesh from an STL file.
+        /// </summary>
+        /// <param name="stlPath">The path to the STL file.</param>
+        /// <param name="unit">The length unit used in the file.</param>
+        /// <returns></returns>
+        public static Mesh FromSTL(string stlPath, LengthUnit unit = LengthUnit.Millimeter)
+        {
+            List<Vertex> vertexCache = new List<Vertex>();
+            var mesh = new Mesh();
+
+            var conversion = Units.GetConversionToMeters(unit);
+            
+            using(var reader = new StreamReader(stlPath))
+            {
+                string line;
+                while((line = reader.ReadLine()) != null)  
+                {  
+                    line = line.TrimStart();
+
+                    if(line.StartsWith("facet"))
+                    {
+                        vertexCache.Clear();
+                    }
+
+                    if(line.StartsWith("vertex"))
+                    {
+                        var splits = line.Split(' ');
+                        var x = double.Parse(splits[1]) * conversion;
+                        var y = double.Parse(splits[2]) * conversion;
+                        var z = double.Parse(splits[3]) * conversion;
+                        var v = new Vertex(new Vector3(x,y,z));
+                        mesh.AddVertex(v);
+                        vertexCache.Add(v);
+                    }
+
+                    if(line.StartsWith("endfacet"))
+                    {
+                        var t = new Triangle(vertexCache[0], vertexCache[1], vertexCache[2]);
+                        mesh.AddTriangle(t);
+                    }
+                }
+            }
+            mesh.ComputeNormals();
+            return mesh;
+        } 
+
+        /// <summary>
         /// Get a string representation of the mesh.
         /// </summary>
         /// <returns></returns>
@@ -362,29 +416,18 @@ Triangles:{_triangles.Count}";
         /// <param name="a">The first vertex.</param>
         /// <param name="b">The second vertex.</param>
         /// <param name="c">The third vertex.</param>
-        internal Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
+        public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
         {
-            // Calculate the face normal
-            var v1 = b.Position - a.Position;
-            var v2 = c.Position - a.Position;
-            var n = v1.Cross(v2).Unitized();
-            if (Double.IsNaN(n.X) || Double.IsNaN(n.Y) || Double.IsNaN(n.Z))
-            {
-                Debug.WriteLine("Degenerate triangle found.");
-                return null;
-            }
-
-            // If the vertices normals are null, set them to the face normal.
-            a.Normal = a.Normal.Equals(default(Vector3)) ? n : a.Normal;
-            b.Normal = b.Normal.Equals(default(Vector3)) ? n : b.Normal;
-            c.Normal = c.Normal.Equals(default(Vector3)) ? n : c.Normal;
-
             var t = new Triangle(a, b, c);
             this._triangles.Add(t);
             return t;
         }
-
-        internal Triangle AddTriangle(Triangle t)
+        
+        /// <summary>
+        /// Add a triangle to the mesh.
+        /// </summary>
+        /// <param name="t">The triangle to add.</param>
+        public Triangle AddTriangle(Triangle t)
         {
             this._triangles.Add(t);
             return t;
@@ -398,7 +441,7 @@ Triangles:{_triangles.Count}";
         /// <param name="color">The vertex's color.</param>
         /// <param name="uv">The texture coordinate of the vertex.</param>
         /// <returns>The newly created vertex.</returns>
-        internal Vertex AddVertex(Vector3 position, UV uv, Vector3 normal = default(Vector3), Color color = default(Color))
+        public Vertex AddVertex(Vector3 position, UV uv, Vector3 normal = default(Vector3), Color color = default(Color))
         {
             var v = new Vertex(position, normal, color);
             v.UV = uv;
@@ -407,7 +450,11 @@ Triangles:{_triangles.Count}";
             return v;
         }
 
-        internal Vertex AddVertex(Vertex v)
+        /// <summary>
+        /// Add a vertex to the mesh.
+        /// </summary>
+        /// <param name="v">The vertex to add.</param>
+        public Vertex AddVertex(Vertex v)
         {
             this._vertices.Add(v);
             v.Index = (this._vertices.Count) - 1;

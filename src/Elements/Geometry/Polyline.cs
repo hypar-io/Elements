@@ -175,12 +175,13 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Compute the Plane defined by the first three vertices of the Polygon.
+        /// Compute the Plane defined by the first three non-collinear vertices of the Polygon.
         /// </summary>
         /// <returns>A Plane.</returns>
         public Plane Plane()
         {
-            return new Plane(this.Vertices[0], this.Vertices[1], this.Vertices[2]);
+            var xform = Vertices.ToTransform();
+            return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
         }
 
         internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)
@@ -404,13 +405,13 @@ namespace Elements.Geometry
         /// <returns></returns>
         public bool Equals(Polyline other)
         {
-            if(this.Vertices.Count != other.Vertices.Count)
+            if (this.Vertices.Count != other.Vertices.Count)
             {
                 return false;
             }
-            for(var i=0; i<Vertices.Count; i++)
+            for (var i = 0; i < Vertices.Count; i++)
             {
-                if(!this.Vertices[i].Equals(other.Vertices[i]))
+                if (!this.Vertices[i].Equals(other.Vertices[i]))
                 {
                     return false;
                 }

@@ -73,6 +73,69 @@ namespace Elements
         }
 
         /// <summary>
+        /// Get the conversion factor from the provided length unit to meters.
+        /// </summary>
+        /// <param name="from">The length unit.</param>
+        public static double GetConversionToMeters(LengthUnit from)
+        {
+            var conversion = 1.0;
+            switch(from)
+            {
+                case LengthUnit.Kilometer:
+                    conversion = 1000.0;
+                    break;
+                case LengthUnit.Meter:
+                    conversion = 1.0;
+                    break;
+                case LengthUnit.Centimeter:
+                    conversion = 0.01;
+                    break;
+                case LengthUnit.Millimeter:
+                    conversion = 0.001;
+                    break;
+                case LengthUnit.Foot:
+                    conversion = Units.FeetToMeters(1.0);
+                    break;
+                case LengthUnit.Inch:
+                    conversion = Units.InchesToMeters(1.0);
+                    break;
+
+            }
+            return conversion;
+        }
+
+        /// <summary>
+        /// Units of length.
+        /// </summary>
+        public enum LengthUnit
+        {
+            /// <summary>
+            /// Kilometer
+            /// </summary>
+            Kilometer,
+            /// <summary>
+            /// Meter
+            /// </summary>
+            Meter,
+            /// <summary>
+            /// Centimeter
+            /// </summary>
+            Centimeter,
+            /// <summary>
+            /// Millimeter
+            /// </summary>
+            Millimeter,
+            /// <summary>
+            /// Foot
+            /// </summary>
+            Foot,
+            /// <summary>
+            /// Inch
+            /// </summary>
+            Inch
+        }
+
+        /// <summary>
         /// Cardinal directions.
         /// </summary>
         public enum CardinalDirection
