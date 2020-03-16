@@ -42,6 +42,18 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Vector3_Parallel_WithTolerance()
+        {
+            var a = new Vector3(12, 0, 0);
+            var b = Vector3.XAxis;
+            Assert.True(a.IsParallelTo(b));
+
+            var c = a.Negate();
+            var d = new Vector3(12, 0.0001, 0);
+            Assert.True(d.IsParallelTo(c));
+        }
+
+        [Fact]
         public void Project()
         {
             var p = new Plane(new Vector3(0,0,5), Vector3.ZAxis);
