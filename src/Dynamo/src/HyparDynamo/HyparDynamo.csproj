@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
@@ -34,12 +34,12 @@
   </ItemGroup>
 
   <ItemGroup>
-      <NodeLibraries Include="$(TargetDir)publish\*.*" />
+    <NodeLibraries Include="$(TargetDir)*.*" />
   </ItemGroup>
 
 
-  <Target Name="BuildPackage" AfterTargets="Publish">
-    <RemoveDir Directories="..\..\deploy\HyparDynamo\bin\" />     
+  <Target Name="BuildPackage" AfterTargets="AfterBuild">
+    <RemoveDir Directories="..\..\deploy\HyparDynamo\bin\" />
     <Copy SourceFiles="@(NodeLibraries)" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
     <Copy SourceFiles=".\HyparDynamo_DynamoCustomization.xml" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
   </Target>
