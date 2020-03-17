@@ -271,7 +271,7 @@ var modelCurves = grid.GetCells().Select(c =&gt; new ModelCurve(c.GetCellGeometr
   <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Geometry_Polygon_Elements_Geometry_Transform_" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Transform)">Grid2d(Polygon, Transform)</h4>
   <div class="markdown level1 summary"><p>Create a Grid2d from a polygon and optional Transform.
 If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
-Currently only transforms parallel to the world XY are supported.
+Currently only transforms parallel to the supplied polygons are supported.
 The polygon's bounding box parallel to the supplied transform will be
 used as the grid extents.</p>
 </div>
@@ -307,8 +307,8 @@ used as the grid extents.</p>
   <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
   <h4 id="Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_" data-uid="Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)">Grid2d(IList&lt;Polygon&gt;, Transform)</h4>
   <div class="markdown level1 summary"><p>Create a Grid2d from a list of boundary polygons and an optional transform.
-If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
-Currently only transforms parallel to the world XY are supported.
+If the transform is null or not supplied, a transform will be generated automatically from the boundaries' normal.
+Currently only transforms parallel to the supplied polygons are supported.
 The polygons' bounding box parallel to the supplied transform will be
 used as the grid extents.</p>
 </div>
