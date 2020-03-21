@@ -20,7 +20,7 @@ PM> Install-Package Hypar.Elements
 Find the documentation [here](https://hypar-io.github.io/Elements/index.html).
 
 ## Examples
-The best examples are those provided in the [tests](https://github.com/hypar-io/elements/tree/master/test/Examples), where we demonstrate usage of almost every function in the library.
+The best examples are those provided in the [tests](https://github.com/hypar-io/Elements/tree/master/test/Elements.Tests), where we demonstrate usage of almost every function in the library.
 
 ## What
 Elements is a cross-platform library for creating building elements. It's meant to be used by architects, engineers, and other building professionals who want to write code that generates buildings.
