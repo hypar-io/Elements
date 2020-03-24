@@ -66,6 +66,7 @@ namespace Elements.Geometry
             return Contains2D(Segments(), vector);
         }
 
+        // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
         internal static bool Contains2D(IEnumerable<Line> segments, Vector3 location)
         {
             int windingNumber = 0;
