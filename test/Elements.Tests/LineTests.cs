@@ -62,6 +62,14 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void OverlappingLineDoesNotIntersect()
+        {
+            var line1 = new Line(new Vector3(0, 0, 0), new Vector3(4, 0, 0));
+            var line2 = new Line(new Vector3(2, 0, 0), new Vector3(8, 0, 0));
+            Assert.False(line1.Intersects2D(line2));
+        }
+
+        [Fact]
         public void LineInPlaneDoesNotIntersect()
         {
             var line = new Line(Vector3.Origin, new Vector3(5,0,0));

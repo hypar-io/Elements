@@ -185,5 +185,21 @@ namespace Elements.Geometry
             }
             return this.Perimeter.Equals(other.Perimeter);
         }
+
+        /// <summary>
+        /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids). 
+        /// </summary>
+        /// <param name="point">The position to test.</param>
+        /// <returns>True if the point is within the profile.</returns>
+        public bool Contains2D(Vector3 point)
+        {
+            IEnumerable<Line> allLines = Perimeter.Segments();
+            if(Voids != null)
+            {
+                allLines = allLines.Union(Voids.SelectMany(v => v.Segments()));
+            }
+            return Polygon.Contains2D(allLines, point);
+        }
+
     }
 }
