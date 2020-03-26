@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Elements.Spatial;
-using LibTessDotNet.Double;
 using Newtonsoft.Json;
 
 namespace Elements.Analysis
@@ -17,20 +15,18 @@ namespace Elements.Analysis
     [UserElement]
     public class AnalysisMesh : GeometricElement, ITessellate
     {
-        private Grid2d _grid;
+        private List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();
         private Func<Vector3, double> _analyze;
+        private double _min = double.MaxValue;
+        private double _max = double.MinValue;
 
-        private List<(Polygon cell, double result)> _results;
-        private double _min;
-        private double _max;
-        
         /// <summary>
         /// The total number of analysis locations.
         /// </summary>
         [JsonIgnore]
         public double TotalAnalysisLocations
         {
-            get { return this._results != null ? this._results.Count : 0; }
+            get { return _results.Count; }
         }
 
         /// <summary>
@@ -81,23 +77,6 @@ namespace Elements.Analysis
             this.VLength = vLength;
             this.ColorScale = colorScale;
             this._analyze = analyze;
-
-            Line longestSegment = null;
-            foreach (var s in perimeter.Segments())
-            {
-                if (longestSegment == null || s.Length() > longestSegment.Length())
-                {
-                    longestSegment = s;
-                }
-            }
-            var l = longestSegment.Length();
-
-            var gridTransform = new Transform(longestSegment.Start, longestSegment.Direction(), Vector3.ZAxis);
-            this._grid = new Grid2d(this.Perimeter, gridTransform);
-
-            this._grid.U.DivideByApproximateLength(this.ULength);
-            this._grid.V.DivideByApproximateLength(this.VLength);
-
             this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
         }
 
@@ -107,36 +86,23 @@ namespace Elements.Analysis
         /// <param name="mesh"></param>
         public void Tessellate(ref Mesh mesh)
         {
-            if(this._results == null || this._results.Count == 0)
-            {
-                return;
-            }
-            
             var span = this._max - this._min;
-            for (var i = 0; i < this._results.Count; i++)
+
+            foreach (var result in this._results)
             {
-                var cell = this._results[i].cell;
-                var result = this._results[i].result;
-
-                var tess = new Tess();
-                tess.NoEmptyPolygons = true;
-                tess.AddContour(cell.ToContourVertexArray());
-                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-
-                for (var j = 0; j < tess.ElementCount; j++)
-                {
-                    var a = tess.Vertices[tess.Elements[j * 3]].Position.ToVector3();
-                    var b = tess.Vertices[tess.Elements[j * 3 + 1]].Position.ToVector3();
-                    var c = tess.Vertices[tess.Elements[j * 3 + 2]].Position.ToVector3();
-
-                    var color = this.ColorScale.GetColorForValue((result - this._min) / span);
-
-                    var v1 = mesh.AddVertex(a, new UV(), color: color);
-                    var v2 = mesh.AddVertex(b, new UV(), color: color);
-                    var v3 = mesh.AddVertex(c, new UV(), color: color);
-                    mesh.AddTriangle(v1, v2, v3);
-                }
+                var center = result.cell.Center();
+                var color = this.Perimeter.Contains(center) ? this.ColorScale.GetColorForValue((result.value - this._min) / span) : Colors.White;
+                var min = result.cell.Min;
+                var max = result.cell.Max;
+                var v1 = mesh.AddVertex(min, color: color);
+                var v2 = mesh.AddVertex(new Vector3(max.X, min.Y), color: color);
+                var v3 = mesh.AddVertex(max, color: color);
+                var v4 = mesh.AddVertex(new Vector3(min.X, max.Y), color: color);
+                mesh.AddTriangle(v1, v2, v3);
+                mesh.AddTriangle(v3, v4, v1);
             }
+
+            mesh.ComputeNormals();
         }
 
         /// <summary>
@@ -144,28 +110,25 @@ namespace Elements.Analysis
         /// </summary>
         public void Analyze()
         {
-            this._results = new List<(Polygon cell, double result)>();
-            this._min = double.MaxValue;
-            this._max = double.MinValue;
+            var bounds = new BBox3(new[] { this.Perimeter });
+            var w = bounds.Max.X - bounds.Min.X;
+            var h = bounds.Max.Y - bounds.Min.Y;
+            var x = bounds.Min.X;
+            var y = bounds.Min.Y;
 
-            var flatCells = this._grid.CellsFlat;
-
-            foreach (var innerGrid in flatCells)
+            while (x <= bounds.Min.X + w)
             {
-                var innerCells = innerGrid.GetTrimmedCellGeometry() as Polygon[];
-                if (innerCells == null)
+                while (y <= bounds.Min.Y + h)
                 {
-                    continue;
-                }
-
-                foreach (var innerCell in innerCells)
-                {
-                    var center = innerCell.Centroid();
-                    var result = this._analyze(center);
-                    this._results.Add((innerCell, result));
+                    var cell = new BBox3(new Vector3(x, y), new Vector3(x + this.ULength, y + this.VLength));
+                    var result = this._analyze(cell.Center());
                     this._min = Math.Min(this._min, result);
                     this._max = Math.Max(this._max, result);
+                    this._results.Add((cell, result));
+                    y += this.VLength;
                 }
+                y = bounds.Min.Y;
+                x += this.ULength;
             }
         }
     }
