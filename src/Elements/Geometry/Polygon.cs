@@ -47,27 +47,23 @@ namespace Elements.Geometry
         /// </returns>
         public bool Contains(Vector3 vector)
         {
-            var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
-            if (Clipper.PointInPolygon(intPoint, thisPath) != 1)
-            {
-                return false;
-            }
-            return true;
+            Contains(vector, out Containment containment);
+            return containment == Containment.Inside;
         }
 
         /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon, using a 2D method. 
         /// </summary>
         /// <param name="vector">The position to test</param>
+        /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
         /// <returns>Returns true if the supplied Vector3 is within this polygon.</returns>
-        public bool Contains2D(Vector3 vector)
+        public bool Contains(Vector3 vector, out Containment containment)
         {
-            return Contains2D(Segments(), vector);
+            return Contains(Segments(), vector, out containment);
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
-        internal static bool Contains2D(IEnumerable<Line> segments, Vector3 location)
+        internal static bool Contains(IEnumerable<Line> segments, Vector3 location, out Containment containment)
         {
             int windingNumber = 0;
 
@@ -75,13 +71,25 @@ namespace Elements.Geometry
             {
                 // check for coincidence with edge vertices
                 var toStart = location - edge.Start;
-                if (toStart.IsZero()) return true;
+                if (toStart.IsZero())
+                {
+                    containment = Containment.CoincidesAtVertex;
+                    return true;
+                }
                 var toEnd = location - edge.End;
-                if (toEnd.IsZero()) return true;
+                if (toEnd.IsZero())
+                {
+                    containment = Containment.CoincidesAtVertex;
+                    return true;
+                }
                 //along segment - check if perpendicular distance to segment is below tolerance and that point is between ends
                 var a = toStart.Length();
                 var b = toStart.Dot((edge.End - edge.Start).Unitized());
-                if (a * a - b * b < Vector3.EPSILON * Vector3.EPSILON && toStart.Dot(toEnd) < 0) return true;
+                if (a * a - b * b < Vector3.EPSILON * Vector3.EPSILON && toStart.Dot(toEnd) < 0)
+                {
+                    containment = Containment.CoincidesAtEdge;
+                    return true;
+                }
 
 
                 if (edge.AscendingRelativeTo(location) &&
@@ -96,7 +104,9 @@ namespace Elements.Geometry
                 }
             }
 
-            return windingNumber != 0;
+            var result = windingNumber != 0;
+            containment = result ? Containment.Inside : Containment.Outside;
+            return result;
         }
 
         private static int Wind(Vector3 location, Line edge, Line.Position position)

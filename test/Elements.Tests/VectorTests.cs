@@ -282,9 +282,8 @@ namespace Elements.Tests
 
             foreach (var pt in ptsToTest)
             {
-                var includes = profile.Contains2D(pt.Key);
+                var includes = profile.Contains(pt.Key, out _);
                 Assert.True(includes == pt.Value);
-
             }
         }
     }

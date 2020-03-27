@@ -19,6 +19,57 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a profile from a list of polygons. Inner polygons will be treated as voids.
+        /// </summary>
+        /// <param name="polygons">The polygons bounding this profile.</param>
+        public Profile(IList<Polygon> polygons) : base(Guid.NewGuid(), null)
+        {
+            var polyCount = polygons.Count();
+            if (polyCount == 0)
+            {
+                return;
+            }
+            if (polyCount == 1)
+            {
+                this.Perimeter = polygons.First();
+                return;
+            }
+            var polyIsContainedByOther = new bool[polyCount];
+            for (int i = 0; i < polyCount; i++)
+            {
+                var polyToTest = polygons[i];
+                polyIsContainedByOther[i] = false;
+                for (int j = 0; j < polyCount; j++)
+                {
+                    if (i == j) continue;
+                    var otherPoly = polygons[j];
+                    if (otherPoly.Contains(polyToTest))
+                    {
+                        polyIsContainedByOther[i] = true;
+                        break;
+                    }
+                }
+            }
+
+            var indices = Enumerable.Range(0, polyCount);
+            var outerMostIndices = indices.Where(i => !polyIsContainedByOther[i]);
+            if (outerMostIndices.Count() > 1)
+            {
+                throw new ArgumentException("Unable to construct a profile. More than one of the polygons supplied are not contained by any other.");
+            }
+            if(outerMostIndices.Count() == 0)
+            {
+                throw new ArgumentException("Unable to construct a profile. All the supplied polygons are inside other supplied polygons. Sounds like a geometric paradox!");
+            }
+
+            var perimeter = polygons[outerMostIndices.First()];
+            var voids = indices.Except(outerMostIndices).Select(i => polygons[i]);
+            this.Perimeter = perimeter;
+            this.Voids = voids.ToList();
+
+        }
+
+        /// <summary>
         /// Construct a profile.
         /// </summary>
         /// <param name="perimeter">The perimeter of the profile.</param>
@@ -187,18 +238,30 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile, within voids, or coincident at edges or vertices.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public bool Contains(Vector3 point)
+        {
+            Contains(point, out Containment containment);
+            return containment == Containment.Inside;
+        }
+
+        /// <summary>
         /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids). 
         /// </summary>
         /// <param name="point">The position to test.</param>
+        /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
         /// <returns>True if the point is within the profile.</returns>
-        public bool Contains2D(Vector3 point)
+        public bool Contains(Vector3 point, out Containment containment)
         {
             IEnumerable<Line> allLines = Perimeter.Segments();
-            if(Voids != null)
+            if (Voids != null)
             {
                 allLines = allLines.Union(Voids.SelectMany(v => v.Segments()));
             }
-            return Polygon.Contains2D(allLines, point);
+            return Polygon.Contains(allLines, point, out containment);
         }
 
     }

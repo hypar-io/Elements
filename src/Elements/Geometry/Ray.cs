@@ -95,7 +95,7 @@ namespace Elements.Geometry
             var transformMinusTranslation = new Transform(transformFromElement);
             transformMinusTranslation.Move(-1 * transformMinusTranslation.Origin); // 
             var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformMinusTranslation.OfVector(Direction));
-            //TODO: handle voids
+            //TODO: extend to handle voids when void solids in Representations are supported generally
             var intersects = false;
             foreach (var solidOp in element.Representation.SolidOperations.Where(e => !e.IsVoid))
             {
@@ -165,7 +165,7 @@ namespace Elements.Geometry
                 var transformedIntersection = transformFromPolygon.OfVector(intersection);
                 var profile = new Profile(boundaryPolygon, voids, default, "");
                 profile.Transform(transformFromPolygon);
-                if (profile.Contains2D(transformedIntersection))
+                if (profile.Contains(transformedIntersection, out _))
                 {
                     result = intersection;
                     return true;
