@@ -54,7 +54,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon, using a 2D method. 
         /// </summary>
-        /// <param name="vector">The position to test</param>
+        /// <param name="vector">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
         /// <returns>Returns true if the supplied Vector3 is within this polygon.</returns>
         public bool Contains(Vector3 vector, out Containment containment)

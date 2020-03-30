@@ -2,7 +2,7 @@
 namespace Elements.Geometry
 {
     /// <summary>
-    /// Represents the state of containment of a point relative to an enclosing polygon, profile, or volume
+    /// Represents the state of containment of a point relative to an enclosing polygon, profile, or solid.
     /// </summary>
     public enum Containment
     {
