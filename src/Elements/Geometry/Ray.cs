@@ -163,9 +163,14 @@ namespace Elements.Geometry
                 var transformFromPolygon = new Transform(transformToPolygon);
                 transformFromPolygon.Invert();
                 var transformedIntersection = transformFromPolygon.OfVector(intersection);
-                var profile = new Profile(boundaryPolygon, voids, default, "");
-                profile.Transform(transformFromPolygon);
-                if (profile.Contains(transformedIntersection, out _))
+                IEnumerable<Line> curveList = boundaryPolygon.Segments();
+                if(voids != null)
+                {
+                    curveList = curveList.Union(voids.SelectMany(v => v.Segments())); 
+                }
+                curveList = curveList.Select(l => transformFromPolygon.OfLine(l));
+
+                if (Polygon.Contains(curveList, transformedIntersection, out _))
                 {
                     result = intersection;
                     return true;
