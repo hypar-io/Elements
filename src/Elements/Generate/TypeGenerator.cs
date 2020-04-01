@@ -152,17 +152,25 @@ namespace Elements.Generate
             var elementsAssemblyPath = Path.GetDirectoryName(typeof(Model).Assembly.Location);
             var newtonSoftPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
 
-            IEnumerable<MetadataReference> defaultReferences = new[]
+             List<PortableExecutableReference> defaultReferences = new List<PortableExecutableReference>
             {
-                // MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
-                // MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
-                // MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
+            #if NETFRAMEWORK
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Linq.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ObjectModel.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Linq.Expressions.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.Extensions.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ComponentModel.DataAnnotations.dll")),
+               #else
+                //MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Private.CoreLib.dll")),
+               #endif
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "netstandard.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ComponentModel.Annotations.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Diagnostics.Tools.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.Serialization.Primitives.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Private.CoreLib.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(elementsAssemblyPath, "Hypar.Elements.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(newtonSoftPath, "Newtonsoft.Json.dll"))
             };
@@ -257,7 +265,7 @@ namespace Elements.Generate
 
         private static string WriteTypeFromSchema(JsonSchema schema, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
-            var templates = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "./Templates"));
+            var templates = Path.GetFullPath(Path.Combine(GetAssemblyFolder(), "./Templates"));
 
             var structTypes = new[] { "Color", "Vector3" };
 
@@ -311,6 +319,41 @@ namespace Elements.Generate
             Console.WriteLine($"Generating type {@ns}.{typeName} in {outPath}...");
             var type = WriteTypeFromSchema(schema, typeName, ns, isUserElement, excludedTypes);
             File.WriteAllText(outPath, type);
+        }
+
+        /// <summary>
+        /// Get the currently loaded UserElement types
+        /// </summary>
+        /// <returns></returns>
+        public static List<Type> GetLoadedTypeNames()
+        {
+            List<Type> loadedTypes = new List<Type>();
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asm in asms)
+            {
+                try
+                {
+                    var userTypes = asm.GetTypes().Where(t => t.GetCustomAttributes(typeof(UserElement), true).Length > 0);
+                    foreach (var ut in userTypes)
+                    {
+                        loadedTypes.Add(ut);
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return loadedTypes;
+        }
+
+        /// <summary>
+        /// Get the path to the folder containing this assembly.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetAssemblyFolder()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
     }
 }
