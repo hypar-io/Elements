@@ -152,7 +152,7 @@ namespace Elements.Generate
             var elementsAssemblyPath = Path.GetDirectoryName(typeof(Model).Assembly.Location);
             var newtonSoftPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
 
-             List<PortableExecutableReference> defaultReferences = new List<PortableExecutableReference>
+            List<PortableExecutableReference> defaultReferences = new List<PortableExecutableReference>
             {
             #if NETFRAMEWORK
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
@@ -234,7 +234,12 @@ namespace Elements.Generate
             return $"{typeName}.g.cs";
         }
 
-        private static JsonSchema GetSchema(string uri)
+        /// <summary>
+        /// Get the Schema information for a given schema URI.
+        /// </summary>
+        /// <param name="uri">The web URL or file path to the schema JSON.</param>
+        /// <returns></returns>
+        public static JsonSchema GetSchema(string uri)
         {
             if (uri.StartsWith("http://") || uri.StartsWith("https://"))
             {
@@ -272,7 +277,7 @@ namespace Elements.Generate
             // A limited set of the solid operation types. This will be used
             // to add INotifyPropertyChanged logic, so we don't add the
             // base class SolidOperation, or the Import class.
-            var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina"};
+            var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina" };
 
             var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings()
             {
