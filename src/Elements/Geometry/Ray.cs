@@ -93,7 +93,10 @@ namespace Elements.Geometry
             transformFromElement.Invert();
             var transformToElement = new Transform(element.Transform);
             var transformMinusTranslation = new Transform(transformFromElement);
-            transformMinusTranslation.Move(transformMinusTranslation.Origin.Negate()); // 
+
+            // This transform ignores position so it can be used to transform the ray direction vector
+            transformMinusTranslation.Move(transformMinusTranslation.Origin.Negate());
+
             var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformMinusTranslation.OfVector(Direction));
             //TODO: extend to handle voids when void solids in Representations are supported generally
             var intersects = false;
