@@ -24,7 +24,7 @@ namespace Elements.Serialization.IFC
             IfcProductDefinitionShape shape = null;
             GeometricElement geoElement = null;
             Transform trans = null;
-            Guid id;
+            Guid id = Guid.Empty;
              
             if(e is ElementInstance)
             {
