@@ -12892,6 +12892,19 @@ references:
   isSpec: "True"
   fullName: Elements.Units.FeetToMeters
   nameWithType: Units.FeetToMeters
+- uid: Elements.Units.GetConversionToMeters(Elements.Units.LengthUnit)
+  name: GetConversionToMeters(Units.LengthUnit)
+  href: api/Elements.Units.html#Elements_Units_GetConversionToMeters_Elements_Units_LengthUnit_
+  commentId: M:Elements.Units.GetConversionToMeters(Elements.Units.LengthUnit)
+  fullName: Elements.Units.GetConversionToMeters(Elements.Units.LengthUnit)
+  nameWithType: Units.GetConversionToMeters(Units.LengthUnit)
+- uid: Elements.Units.GetConversionToMeters*
+  name: GetConversionToMeters
+  href: api/Elements.Units.html#Elements_Units_GetConversionToMeters_
+  commentId: Overload:Elements.Units.GetConversionToMeters
+  isSpec: "True"
+  fullName: Elements.Units.GetConversionToMeters
+  nameWithType: Units.GetConversionToMeters
 - uid: Elements.Units.InchesToMeters(System.Double)
   name: InchesToMeters(Double)
   href: api/Elements.Units.html#Elements_Units_InchesToMeters_System_Double_

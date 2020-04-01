@@ -297,8 +297,8 @@ namespace Elements.Geometry
         /// <returns>True if the vectors are parallel, otherwise false.</returns>
         public bool IsParallelTo(Vector3 v)
         {
-            var result = Math.Abs(Dot(v));
-            return result == 1.0;
+            var result = Math.Abs(this.Unitized().Dot(v.Unitized()));
+            return result.ApproximatelyEquals(1);
         }
 
         /// <summary>
