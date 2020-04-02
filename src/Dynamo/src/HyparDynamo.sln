@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyparDynExtension", "HyparDynamoExtension\HyparDynExtension.csproj", "{BEBFD868-2A33-4C31-BE5B-867ADB7EAE19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyparDynamo", "HyparDynamo\HyparDynamo.csproj", "{936EB91C-2361-4AAA-894C-282202E0A6B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DBA46A0-BE97-4F58-8C15-5D9E633477EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DBA46A0-BE97-4F58-8C15-5D9E633477EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DBA46A0-BE97-4F58-8C15-5D9E633477EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DBA46A0-BE97-4F58-8C15-5D9E633477EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D021C90D-DA17-49A9-B7A5-15E24EFDC8D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D021C90D-DA17-49A9-B7A5-15E24EFDC8D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D021C90D-DA17-49A9-B7A5-15E24EFDC8D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D021C90D-DA17-49A9-B7A5-15E24EFDC8D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{936EB91C-2361-4AAA-894C-282202E0A6B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{936EB91C-2361-4AAA-894C-282202E0A6B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{936EB91C-2361-4AAA-894C-282202E0A6B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{936EB91C-2361-4AAA-894C-282202E0A6B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEBFD868-2A33-4C31-BE5B-867ADB7EAE19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEBFD868-2A33-4C31-BE5B-867ADB7EAE19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEBFD868-2A33-4C31-BE5B-867ADB7EAE19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEBFD868-2A33-4C31-BE5B-867ADB7EAE19}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3905384A-A1BD-45E9-881A-EADA046CE857}
+	EndGlobalSection
+EndGlobal
