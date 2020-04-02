@@ -85,7 +85,7 @@ namespace Elements.Tests
         /// Test whether two models, containing user defined types, can be 
         /// deserialized and merged into one model.
         /// </summary>
-        [Fact(Skip = "ModelMerging")]
+        [IgnoreOnNetFrameworkFact(Skip = "ModelMerging")]
         public void MergesModelsWithUserDefinedTypes()
         {
             var schemas = new[]{
@@ -93,12 +93,13 @@ namespace Elements.Tests
                 "../../../models/Merge/FacadePanel.json",
                 "../../../models/Merge/Level.json"
             };
-
+#if NETCORE
             var asm = TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(schemas);
             var facadePanelType = asm.GetType("Elements.FacadePanel");
             Assert.NotNull(facadePanelType);
             var envelopeType = asm.GetType("Elements.Envelope");
             Assert.NotNull(envelopeType);
+#endif
             var model1 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/facade.json"));
             var count1 = model1.Elements.Count;
 

@@ -27,6 +27,26 @@ namespace Elements.Tests
         }
     }
 
+    public sealed class IgnoreOnNetFrameworkFact : FactAttribute
+    {
+        public IgnoreOnNetFrameworkFact()
+        {
+            if (IsFramework())
+            {
+                Skip = "Ignore on .Net Framework.";
+            }
+        }
+
+        private static bool IsFramework()
+        {
+#if NETFRAMEWORK
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
+
     public sealed class IgnoreOnMacFact : FactAttribute
     {
         public IgnoreOnMacFact() 
@@ -87,16 +107,24 @@ namespace Elements.Tests
             var tmpPath = Path.GetTempPath();
             var schemaPath = Path.Combine(tmpPath, "beam.json");
             File.WriteAllText(schemaPath, schema);
-            var relPath = Path.GetRelativePath(Assembly.GetExecutingAssembly().Location, schemaPath);
+#if NETFRAMEWORK
+            var baseUri = new Uri(Environment.CurrentDirectory);
+            var fullUri = new Uri(schemaPath);
+            var relativeUri = baseUri.MakeRelativeUri(fullUri);
+            var relPath = relativeUri.LocalPath;
+#else
+            var relPath = Path.GetRelativePath(System.Environment.CurrentDirectory, schemaPath);
+#endif
             TypeGenerator.GenerateUserElementTypeFromUri(relPath, tmpPath, true);
             var code = File.ReadAllText(Path.Combine(tmpPath, "beam.g.cs"));
         }
         
-        [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact))]
+        [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact), typeof(IgnoreOnNetFrameworkFact))]
         public void GeneratesInMemoryAssembly()
         {
             var uris = new []{"https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadeAnchor.json", 
                                 "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
+#if NETCORE
             var asm = TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(uris);
             var mullionType = asm.GetType("Test.Foo.Bar.Mullion");
             var anchorType = asm.GetType("Test.Foo.Bar.FacadeAnchor");
@@ -113,15 +141,18 @@ namespace Elements.Tests
             // Profile @profile, Line @centerLine, NumericProperty @length, Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name
             var t = new Transform();
             var m = BuiltInMaterials.Steel;
-            var mullion = Activator.CreateInstance(mullionType, new object[]{profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), Guid.NewGuid(), "Test Mullion" });
-        }
+            var mullion = Activator.CreateInstance(mullionType, new object[]{profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), false, Guid.NewGuid(), "Test Mullion" });
+#endif
+            }
 
-        [IgnoreOnTravisFact]
+        [MultiFact(typeof(IgnoreOnTravisFact), typeof(IgnoreOnNetFrameworkFact))]
         public void ThrowsWithBadSchema()
         {
-            var uris = new []{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesn'tExist.json", 
+#if NETCORE
+            var uris = new []{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesntExist.json", 
                                 "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
             Assert.Throws<Exception>(()=>TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(uris));
+#endif
         }
     }
 }
