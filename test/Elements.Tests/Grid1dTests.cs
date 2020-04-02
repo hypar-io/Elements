@@ -9,7 +9,7 @@ namespace Elements.Tests
 {
     public class Grid1dTests : ModelTest
     {
-        [Fact, Trait("Category", "Examples")]
+        [IgnoreOnNetFrameworkFact, Trait("Category", "Examples")]
         public void Grid1d()
         {
             this.Name = "Elements_Spatial_Grid1d";
@@ -33,7 +33,9 @@ namespace Elements.Tests
 
             // Take the fourth grid segment and subdivide it by a repeating pattern
             var pattern = new[] { 1.0, 1.5 };
+#if NETCORE
             grid[3].DivideByPattern(pattern);
+#endif
 
             // Retrieve all bottom-level cells.
             // Note that grid.Cells gets the top-level cells only, and
@@ -223,7 +225,7 @@ namespace Elements.Tests
             Assert.Equal(3, cellGeo.ToArray()[1].Length());
         }
 
-        [Fact]
+        [IgnoreOnNetFrameworkFact]
         public void DivideByPattern()
         {
             var grid = new Grid1d(new Domain1d(60, 150));
@@ -233,7 +235,9 @@ namespace Elements.Tests
                 ("Glazing", 3),
                 ("Fin", 0.2)
             };
+#if NETCORE
             grid.DivideByPattern(pattern, PatternMode.Cycle, FixedDivisionMode.RemainderAtBothEnds);
+#endif
             var cells = grid.GetCells();
             var types = cells.Select(c => c.Type);
 
@@ -244,7 +248,7 @@ namespace Elements.Tests
             }
         }
 
-        [Fact]
+        [IgnoreOnNetFrameworkFact]
         public void PatternTooLongThrowsException()
         {
             var grid = new Grid1d(4);
@@ -254,9 +258,11 @@ namespace Elements.Tests
                 ("Glazing", 3),
                 ("Fin", 0.2)
             };
+#if NETCORE
             Exception ex = Assert.Throws<ArgumentException>(() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
 
             Assert.Equal("The grid could not be constructed. Pattern length exceeds grid length.", ex.Message);
+#endif
         }
 
         [Fact]

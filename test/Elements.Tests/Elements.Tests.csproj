@@ -2,9 +2,17 @@
 
   <PropertyGroup>
     <AssemblyName>Hypar.Elements.Tests</AssemblyName>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
     <RootNamespace>Elements</RootNamespace>
     <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
+	  <DefineConstants>NETCORE;NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
+	<DefineConstants>NET47;NETFRAMEWORK</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

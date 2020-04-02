@@ -81,8 +81,9 @@ namespace Elements.Generate
         {
             var schema = GetSchema(uri);
             var csharp = GenerateCodeForSchema(schema);
-            Console.WriteLine($"Writing to {outPath}...");
-            File.WriteAllText(outPath, csharp);
+            var filePath = Path.Combine(outPath, GetFileNameFromTypeName(schema.Title));
+            Console.WriteLine($"Writing to {filePath}...");
+            File.WriteAllText(filePath, csharp);
         }
 
         /// <summary>

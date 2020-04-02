@@ -11,7 +11,7 @@ namespace Elements.Tests
 {
     public class Grid2dTests : ModelTest
     {
-        [Fact, Trait("Category", "Examples")]
+        [IgnoreOnNetFrameworkFact, Trait("Category", "Examples")]
         public void Grid2d()
         {
             this.Name = "Elements_Spatial_Grid2d";
@@ -22,8 +22,9 @@ namespace Elements.Tests
 
             // Access the U and V axes directly and use 1d subdivision methods on them
             grid.U.DivideByFixedLength(7, FixedDivisionMode.RemainderAtBothEnds);
+#if NETCORE
             grid.V.DivideByPattern(new[] { 2.0, 5.0 });
-
+#endif
             // Get a row by index
             var fifthRow = grid.GetRowAtIndex(4);
             // Divide U axis of all cells in row into panels of approximate width 1
@@ -97,7 +98,7 @@ namespace Elements.Tests
             Assert.Equal(0.5, grid[5, 5].V.Domain.Length, 3);
         }
 
-        [Fact]
+        [IgnoreOnNetFrameworkFact]
         public void NoExceptionsThrownWithAnyRotation()
         {
             for (int rotation = 0; rotation < 360; rotation += 10)
@@ -133,8 +134,10 @@ namespace Elements.Tests
                 {
                     var vDomain = grid.CellsFlat[index].V.Domain;
                     var start = 0.1.MapToDomain(vDomain);
+#if NETCORE
                     grid.CellsFlat[index].V.DivideByPattern(patterns[index % patterns.Count()], PatternMode.Cycle, FixedDivisionMode.RemainderAtBothEnds);
-                }
+#endif
+                    }
                 var cells = grid.GetCells();
                 var geo = cells.Select(cl => cl.GetTrimmedCellGeometry());
                 var types = cells.Select(cl => cl.Type);
@@ -184,14 +187,16 @@ namespace Elements.Tests
 
         }
 
-        [Fact]
+        [IgnoreOnNetFrameworkFact]
         public void GridInheritsNamesFromBothDirections()
         {
             var grid = new Grid2d(20, 20);
             var uPattern = new[] { 1.0, 2.0, 3.0 };
             var vPattern = new[] { ("Large", 5.0), ("Small", 1.0) };
+#if NETCORE
             grid.U.DivideByPattern(uPattern);
             grid.V.DivideByPattern(vPattern);
+#endif
             Assert.Equal("B / Large", grid[1, 0].Type);
         }
 
@@ -216,7 +221,7 @@ namespace Elements.Tests
             };
         }
 
-        [Fact]
+        [IgnoreOnNetFrameworkFact]
         public void NonXYOrientedBoundary()
         {
             var polygon = new Polygon(new[]
@@ -229,12 +234,14 @@ namespace Elements.Tests
                 new Vector3(1.28521062051391, 5.6226002093707, 13.7492575016872),
             });
             var grid = new Grid2d(polygon);
+#if NETCORE
             grid.U.DivideByPattern(new double[] { 1, 2 });
+#endif
             grid.V.DivideByCount(10);
             Assert.Equal(50, grid.GetCells().Count());
         }
 
-        [Fact]
+        [IgnoreOnNetFrameworkFact]
         public void XYParallelNonOrthogonalBoundary()
         {
             var polygon = new Polygon(new[]
@@ -245,7 +252,9 @@ namespace Elements.Tests
                 new Vector3(10.0455739172429, 3.54936529736341, 5.30811736183681),
             });
             var grid = new Grid2d(polygon);
+#if NETCORE
             grid.U.DivideByPattern(new double[] { 1, 2 });
+#endif
             grid.V.DivideByCount(10);
             Assert.Equal(80, grid.GetCells().Count());
         }
