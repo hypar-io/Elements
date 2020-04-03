@@ -243,7 +243,7 @@ namespace Elements.Generate
         /// Get the currently loaded UserElement types
         /// </summary>
         /// <returns>A list of the loaded types with the UserElement attribute.</returns>
-        public static List<Type> GetLoadedTypeNames()
+        public static List<Type> GetLoadedElementTypes()
         {
             List<Type> loadedTypes = new List<Type>();
             var asms = AppDomain.CurrentDomain.GetAssemblies();
@@ -310,7 +310,7 @@ namespace Elements.Generate
                 _coreTypeNames = GetCoreTypeNames();
             }
 
-            var loadedTypes = GetLoadedTypeNames().Select(t => t.Name);
+            var loadedTypes = GetLoadedElementTypes().Select(t => t.Name);
             if (loadedTypes.Contains(typeName)) return null;
             var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
 
