@@ -2,7 +2,7 @@
     "license": "MIT",
     "file_hash": null,
     "name": "Hypar Dynamo",
-    "version": "0.0.3",
+    "version": "0.0.5",
     "description": "Dynamo nodes for creating Hypar Elements.  To learn more about Hypar visit https://hypar.io/.  To learn about Hypar's Elements library visit https://github.com/hypar-io/Elements.",
     "group": "",
     "keywords": [
