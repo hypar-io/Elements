@@ -102,7 +102,9 @@ namespace Elements.Generate
                 {
                     var schema = GetSchema(uri);
                     var csharp = GenerateCodeForSchema(schema);
-                    if (csharp == null) continue;
+                    if (csharp == null) {
+                        continue;
+                    }
                     code.Add(csharp);
                 }
                 catch
@@ -266,7 +268,7 @@ namespace Elements.Generate
         /// <summary>
         /// Get the path to the folder containing this assembly.
         /// </summary>
-        public static string GetAssemblyFolder()
+        private static string GetAssemblyFolder()
         {
             return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
