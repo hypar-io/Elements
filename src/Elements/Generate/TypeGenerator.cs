@@ -82,7 +82,7 @@ namespace Elements.Generate
             var schema = GetSchema(uri);
             var csharp = GenerateCodeForSchema(schema);
             var filePath = Path.Combine(outPath, GetFileNameFromTypeName(schema.Title));
-            Console.WriteLine($"Writing to {filePath}...");
+            Console.WriteLine($"Generating type {schema.Title} in {filePath}...");
             File.WriteAllText(filePath, csharp);
         }
 
@@ -150,7 +150,6 @@ namespace Elements.Generate
         /// Get the Schema information for a given schema URI.
         /// </summary>
         /// <param name="uri">The web URL or file path to the schema JSON.</param>
-        /// <returns></returns>
         public static JsonSchema GetSchema(string uri)
         {
             if (uri.StartsWith("http://") || uri.StartsWith("https://"))
@@ -241,7 +240,7 @@ namespace Elements.Generate
         /// <summary>
         /// Get the currently loaded UserElement types
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of the loaded types with the UserElement attribute.</returns>
         public static List<Type> GetLoadedTypeNames()
         {
             List<Type> loadedTypes = new List<Type>();
@@ -267,7 +266,6 @@ namespace Elements.Generate
         /// <summary>
         /// Get the path to the folder containing this assembly.
         /// </summary>
-        /// <returns></returns>
         public static string GetAssemblyFolder()
         {
             return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
