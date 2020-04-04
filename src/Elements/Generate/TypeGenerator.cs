@@ -70,6 +70,24 @@ namespace Elements.Generate
 
         private const string NAMESPACE_PROPERTY = "x-namespace";
         private static string[] _coreTypeNames;
+        private static string _templatesPath;
+
+        /// <summary>
+        /// The directory in which to find code templates. Some execution contexts require this to be overriden as the 
+        /// Executing Assembly is not necessarily in the same place as the templates (e.g. Headless Grasshopper Execution)
+        /// </summary>
+        public static string TemplatesPath
+        {
+            get
+            {
+                if (_templatesPath == null)
+                {
+                    _templatesPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "./Templates"));
+                }
+                return _templatesPath;
+            }
+            set => _templatesPath = value;
+        }
 
         /// <summary>
         /// Generate a user-defined type in a .cs file from a schema.
@@ -102,7 +120,8 @@ namespace Elements.Generate
                 {
                     var schema = GetSchema(uri);
                     var csharp = GenerateCodeForSchema(schema);
-                    if (csharp == null) {
+                    if (csharp == null)
+                    {
                         continue;
                     }
                     code.Add(csharp);
@@ -183,7 +202,7 @@ namespace Elements.Generate
 
         private static string WriteTypeFromSchema(JsonSchema schema, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
-            var templates = Path.GetFullPath(Path.Combine(GetAssemblyFolder(), "./Templates"));
+            var templates = TemplatesPath;
 
             var structTypes = new[] { "Color", "Vector3" };
 
@@ -263,14 +282,6 @@ namespace Elements.Generate
                 }
             }
             return loadedTypes;
-        }
-
-        /// <summary>
-        /// Get the path to the folder containing this assembly.
-        /// </summary>
-        private static string GetAssemblyFolder()
-        {
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
 
         /// <summary>
@@ -373,7 +384,15 @@ namespace Elements.Generate
         {
             var emitResult = compilation.Emit(outputPath);
             diagnosticMessages = emitResult.Diagnostics.Select(d => d.ToString()).ToArray();
-            return emitResult.Success ? outputPath : null;
+            if (!emitResult.Success)
+            {
+                File.Delete(outputPath);
+                return null;
+            }
+            else
+            {
+                return outputPath;
+            }
         }
 
         private static Assembly EmitAndLoad(CSharpCompilation compilation, out string[] diagnosticMessages)
