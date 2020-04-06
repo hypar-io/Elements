@@ -292,7 +292,7 @@ namespace Elements.Geometry
             {
                 if ((rayResult - line.Start).Length() > line.Length())
                 {
-                    result = default;
+                    result = default(Vector3);
                     return false;
                 }
                 else
@@ -301,7 +301,7 @@ namespace Elements.Geometry
                     return true;
                 }
             }
-            result = default;
+            result = default(Vector3);
             return false;
         }
 
