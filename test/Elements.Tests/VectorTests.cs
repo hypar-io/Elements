@@ -175,7 +175,7 @@ namespace Elements.Tests
                 })
             };
 
-            var profile = new Profile(perimeter, voids, default, "");
+            var profile = new Profile(perimeter, voids, default(Guid), "");
             var ptsToTest = new Dictionary<Vector3, bool>
             {
                {new Vector3(-1.91334741463405,-2.96997766092954,0), false},
