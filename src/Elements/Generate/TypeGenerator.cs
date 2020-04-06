@@ -77,9 +77,9 @@ namespace Elements.Generate
         /// <param name="uri">The uri to the schema which defines the type. This can be a url or a relative file path.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
         /// <param name="isUserElement">Is the type a user-defined element?</param>
-        public static void GenerateUserElementTypeFromUri(string uri, string outputBaseDir, bool isUserElement = false)
+        public static async Task GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)
         {
-            var schema = GetSchema(uri);
+            var schema = await GetSchemaAsync(uri);
 
             string ns;
             if (!GetNamespace(schema, out ns))
@@ -103,7 +103,7 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
         /// <returns>An assembly containing the generated types or null if no Assembly could be generated.</returns>
-        public static Assembly GenerateInMemoryAssemblyFromUrisAndLoad(string[] uris)
+        public static async Task<Assembly> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
@@ -112,7 +112,7 @@ namespace Elements.Generate
             {
                 try
                 {
-                    var schema = GetSchema(uri);
+                    var schema = await GetSchemaAsync(uri);
 
                     string ns;
                     if (!GetNamespace(schema, out ns))
@@ -199,7 +199,7 @@ namespace Elements.Generate
         /// Generate the core element types as .cs files to the specified output directory. 
         /// </summary>
         /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
-        public static void GenerateElementTypes(string outputBaseDir)
+        public static async Task GenerateElementTypesAsync(string outputBaseDir)
         {
             var typeNames = _hyparSchemas.Select(u => u.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToList();
 
@@ -212,7 +212,7 @@ namespace Elements.Generate
                     Directory.CreateDirectory(outDir);
                 }
 
-                GenerateUserElementTypeFromUri(uri, outDir);
+                await GenerateUserElementTypeFromUriAsync(uri, outDir);
             }
         }
 
@@ -226,11 +226,11 @@ namespace Elements.Generate
             return $"{typeName}.g.cs";
         }
 
-        private static JsonSchema GetSchema(string uri)
+        private static async Task<JsonSchema> GetSchemaAsync(string uri)
         {
             if (uri.StartsWith("http://") || uri.StartsWith("https://"))
             {
-                return Task.Run(() => JsonSchema.FromUrlAsync(uri)).Result; ;
+                return await JsonSchema.FromUrlAsync(uri);
             }
             else
             {
@@ -239,7 +239,7 @@ namespace Elements.Generate
                 {
                     throw new Exception($"The specified schema, {uri}, can not be found as a relative file or a url.");
                 }
-                return Task.Run(() => JsonSchema.FromJsonAsync(File.ReadAllText(path))).Result; ;
+                return await JsonSchema.FromJsonAsync(File.ReadAllText(path));
             }
         }
 
@@ -264,7 +264,7 @@ namespace Elements.Generate
             // A limited set of the solid operation types. This will be used
             // to add INotifyPropertyChanged logic, so we don't add the
             // base class SolidOperation, or the Import class.
-            var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina"};
+            var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina" };
 
             var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings()
             {
