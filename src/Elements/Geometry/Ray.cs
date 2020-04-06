@@ -8,7 +8,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An infinite ray starting at origin and pointing towards direction.
     /// </summary>
-    public class Ray : IEquatable<Ray>
+    public struct Ray : IEquatable<Ray>
     {
         /// <summary>
         /// The origin of the ray.
@@ -81,6 +81,38 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Does this ray intersect with the provided GeometricElement? Only GeometricElements with Solid Representations are currently supported, and voids will be ignored.
+        /// </summary>
+        /// <param name="element">The element to intersect with.</param>
+        /// <param name="result">The list of intersection results.</param>
+        /// <returns></returns>
+        public bool Intersects(GeometricElement element, out List<Vector3> result)
+        {
+            List<Vector3> resultsOut = new List<Vector3>();
+            var transformFromElement = new Transform(element.Transform);
+            transformFromElement.Invert();
+            var transformToElement = new Transform(element.Transform);
+            var transformMinusTranslation = new Transform(transformFromElement);
+
+            // This transform ignores position so it can be used to transform the ray direction vector
+            transformMinusTranslation.Move(transformMinusTranslation.Origin.Negate());
+
+            var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformMinusTranslation.OfVector(Direction));
+            //TODO: extend to handle voids when void solids in Representations are supported generally
+            var intersects = false;
+            foreach (var solidOp in element.Representation.SolidOperations.Where(e => !e.IsVoid))
+            {
+                if (transformedRay.Intersects(solidOp, out List<Vector3> tempResults))
+                {
+                    intersects = true;
+                    resultsOut.AddRange(tempResults.Select(t => transformToElement.OfPoint(t)));
+                };
+            }
+            result = resultsOut;
+            return intersects;
+        }
+
+        /// <summary>
         /// Does this ray intersect with the provided SolidOperation?
         /// </summary>
         /// <param name="solidOp">The SolidOperation to intersect with.</param>
@@ -112,7 +144,8 @@ namespace Elements.Geometry
                     results.Add(tempResult);
                 }
             }
-            result = results.OrderBy(r => r.DistanceTo(Origin)).ToList();
+            var origin = Origin; // lambdas in structs can't refer to their properties
+            result = results.OrderBy(r => r.DistanceTo(origin)).ToList();
             return intersects;
         }
 
@@ -128,12 +161,19 @@ namespace Elements.Geometry
             if (Intersects(plane, out Vector3 intersection))
             {
                 var boundaryPolygon = face.Outer.ToPolygon();
+                var voids = face.Inner?.Select(v => v.ToPolygon())?.ToList();
                 var transformToPolygon = new Transform(plane.Origin, plane.Normal);
                 var transformFromPolygon = new Transform(transformToPolygon);
                 transformFromPolygon.Invert();
-                var transformedPolygon = transformFromPolygon.OfPolygon(boundaryPolygon);
                 var transformedIntersection = transformFromPolygon.OfVector(intersection);
-                if (transformedPolygon.Contains(transformedIntersection) || transformedPolygon.Touches(transformedIntersection))
+                IEnumerable<Line> curveList = boundaryPolygon.Segments();
+                if(voids != null)
+                {
+                    curveList = curveList.Union(voids.SelectMany(v => v.Segments())); 
+                }
+                curveList = curveList.Select(l => transformFromPolygon.OfLine(l));
+
+                if (Polygon.Contains(curveList, transformedIntersection, out _))
                 {
                     result = intersection;
                     return true;
@@ -173,7 +213,7 @@ namespace Elements.Geometry
 
             // Test for perpendicular.
             if (plane.Normal.Dot(d) == 0)
-            { 
+            {
                 return false;
             }
             t = (plane.Normal.Dot(plane.Origin) - plane.Normal.Dot(Origin)) / plane.Normal.Dot(d);
@@ -240,16 +280,38 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Does this ray intersect the provided line?
+        /// </summary>
+        /// <param name="line">The line to intersect.</param>
+        /// <param name="result">The location of intersection.</param>
+        /// <returns>True if the rays intersect, otherwise false.</returns>
+        public bool Intersects(Line line, out Vector3 result)
+        {
+            var otherRay = new Ray(line.Start, line.Direction());
+            if (Intersects(otherRay, out Vector3 rayResult))
+            {
+                if ((rayResult - line.Start).Length() > line.Length())
+                {
+                    result = default(Vector3);
+                    return false;
+                }
+                else
+                {
+                    result = rayResult;
+                    return true;
+                }
+            }
+            result = default(Vector3);
+            return false;
+        }
+
+        /// <summary>
         /// Is this ray equal to the provided ray?
         /// </summary>
         /// <param name="other">The ray to test.</param>
         /// <returns>Returns true if the two rays are equal, otherwise false.</returns>
         public bool Equals(Ray other)
         {
-            if (other == null)
-            {
-                return false;
-            }
             return this.Origin.Equals(other.Origin) && this.Direction.Equals(other.Direction);
         }
     }

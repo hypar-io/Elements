@@ -228,15 +228,15 @@ namespace Elements.Tests
             var inner = Polygon.Rectangle(1.5,1.5);
 
             var mass = new Mass(new Profile(outer, inner.Reversed()), 2);
-            mass.Transform.Move(new Vector3(0,0,5));
+            mass.Transform.Move(new Vector3(0,0,1));
+            mass.Transform.Rotate(Vector3.ZAxis, 45);
             mass.UpdateRepresentations();
 
-            var light = new Vector3(7,7,10);
+            var light = new Vector3(4,4,10);
             var colorScale = new ColorScale(new List<Color> { Colors.White, Colors.Darkgray });
             var analyze = new Func<Vector3, double>((v) => {
                 var ray = new Ray(v, (light - v).Unitized());
-                var solidOp = mass.Representation.SolidOperations[0];
-                if(ray.Intersects(solidOp, out List<Vector3> results))
+                if(ray.Intersects(mass, out List<Vector3> results))
                 {
                     var hit = results[results.Count - 1];
                     if(!v.Equals(hit))

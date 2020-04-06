@@ -135,7 +135,7 @@ namespace Elements.Geometry
         public bool Intersects(Plane p, out Vector3 result)
         {
             var rayIntersects = new Ray(Start, Direction()).Intersects(p, out Vector3 location, out double t);
-            if(rayIntersects && t <= Length())
+            if (rayIntersects && t <= Length())
             {
                 result = location;
                 return true;
@@ -435,5 +435,55 @@ namespace Elements.Geometry
         {
             return new[] { this.Start, this.End };
         }
+
+        #region WindingNumberCalcs
+        internal Position RelativePositionOf(Vector3 location)
+        {
+            double positionCalculation =
+                (End.Y - Start.Y) * (location.X - Start.X) -
+                (location.Y - Start.Y) * (End.X - Start.X);
+
+            if (positionCalculation > 0)
+            {
+                return Position.Left;
+            }
+
+            if (positionCalculation < 0)
+            {
+                return Position.Right;
+            }
+
+            return Position.Center;
+        }
+
+        internal bool AscendingRelativeTo(Vector3 location)
+        {
+            return Start.X <= location.X;
+        }
+
+        internal bool LocationInRange(Vector3 location, Orientation orientation)
+        {
+            if (orientation == Orientation.Ascending)
+            {
+                return End.X > location.X;
+            }
+
+            return End.X <= location.X;
+        }
+
+        internal enum Position
+        {
+            Left,
+            Right,
+            Center
+        }
+
+        internal enum Orientation
+        {
+            Ascending,
+            Descending
+        }
+        #endregion
+
     }
 }

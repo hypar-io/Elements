@@ -1,5 +1,6 @@
 using Elements.Geometry;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Elements.Tests
@@ -9,8 +10,8 @@ namespace Elements.Tests
         [Fact]
         public void Vector3_TwoVectors_Equal()
         {
-            var v1 = new Vector3(5,5,5);
-            var v2 = new Vector3(5,5,5);
+            var v1 = new Vector3(5, 5, 5);
+            var v2 = new Vector3(5, 5, 5);
             Assert.True(v1.Equals(v2));
 
             var v3 = new Vector3();
@@ -22,10 +23,10 @@ namespace Elements.Tests
         {
             var a = Vector3.XAxis;
             var b = Vector3.YAxis;
-            Assert.Equal(Math.PI/2 * 180 / Math.PI, a.AngleTo(b), 5);
+            Assert.Equal(Math.PI / 2 * 180 / Math.PI, a.AngleTo(b), 5);
 
-            var c = new Vector3(1,1,0);
-            Assert.Equal(Math.PI/4 * 180 /Math.PI, a.AngleTo(c), 5);
+            var c = new Vector3(1, 1, 0);
+            Assert.Equal(Math.PI / 4 * 180 / Math.PI, a.AngleTo(c), 5);
 
             Assert.Equal(0.0, a.AngleTo(a), 5);
         }
@@ -56,8 +57,8 @@ namespace Elements.Tests
         [Fact]
         public void Project()
         {
-            var p = new Plane(new Vector3(0,0,5), Vector3.ZAxis);
-            var v = new Vector3(5,5,0);
+            var p = new Plane(new Vector3(0, 0, 5), Vector3.ZAxis);
+            var v = new Vector3(5, 5, 0);
             var v1 = v.Project(p);
             Assert.Equal(v.X, v1.X);
             Assert.Equal(v.Y, v1.Y);
@@ -67,11 +68,11 @@ namespace Elements.Tests
         [Fact]
         public void DistanceToPlane()
         {
-            var v = new Vector3(0.5,0.5,1.0);
+            var v = new Vector3(0.5, 0.5, 1.0);
             var p = new Plane(Vector3.Origin, Vector3.ZAxis);
             Assert.Equal(1.0, v.DistanceTo(p));
 
-            v = new Vector3(0.5,0.5,-1.0);
+            v = new Vector3(0.5, 0.5, -1.0);
             Assert.Equal(-1.0, v.DistanceTo(p));
 
             p = new Plane(Vector3.Origin, Vector3.YAxis);
@@ -84,34 +85,206 @@ namespace Elements.Tests
 
         [Fact]
         public void AreCoplanar()
-        {   
+        {
             var a = Vector3.Origin;
-            var b = new Vector3(1,0);
-            var c = new Vector3(1,1,1);
+            var b = new Vector3(1, 0);
+            var c = new Vector3(1, 1, 1);
 
             // Any three points are coplanar.
-            Assert.True(new[]{a,b,c}.AreCoplanar());
+            Assert.True(new[] { a, b, c }.AreCoplanar());
 
-            var d = new Vector3(5,5);
-            Assert.False(new[]{a,b,c,d}.AreCoplanar());
+            var d = new Vector3(5, 5);
+            Assert.False(new[] { a, b, c, d }.AreCoplanar());
 
-            var e = new Vector3(1,0,0);
-            var f = new Vector3(1,1,0);
-            var g = new Vector3(1,1,1);
-            var h = new Vector3(1,0,1);
-            Assert.True(new[]{e,f,g,h}.AreCoplanar());
+            var e = new Vector3(1, 0, 0);
+            var f = new Vector3(1, 1, 0);
+            var g = new Vector3(1, 1, 1);
+            var h = new Vector3(1, 0, 1);
+            Assert.True(new[] { e, f, g, h }.AreCoplanar());
         }
 
         [Fact]
         public void CCW()
         {
             var a = new Vector3();
-            var b = new Vector3(5,0);
-            var c = new Vector3(5,5);
-            var d = new Vector3(10,0);
-            Assert.True(Vector3.CCW(a,b,c) > 0);
-            Assert.True(Vector3.CCW(c,b,a) < 0);
-            Assert.True(Vector3.CCW(a,b,d) == 0);
+            var b = new Vector3(5, 0);
+            var c = new Vector3(5, 5);
+            var d = new Vector3(10, 0);
+            Assert.True(Vector3.CCW(a, b, c) > 0);
+            Assert.True(Vector3.CCW(c, b, a) < 0);
+            Assert.True(Vector3.CCW(a, b, d) == 0);
+        }
+
+        [Fact]
+        public void ProfileContains()
+        {
+            var perimeter = new Polygon(new[]
+            {
+                new Vector3(-3.6674344150115,-0.575821478244796,0),
+                new Vector3(-1.00768758692839,2.61861672249419,0),
+                new Vector3(-1.99481012106233,-0.877442252563498,0),
+                new Vector3(1.85770976909928,3.12588802475747,0),
+                new Vector3(3.72227455579672,2.49522640572745,0),
+                new Vector3(1.99481012106233,0.562111443048493,0),
+                new Vector3(-0.500416284665121,-0.411301055889139,0),
+                new Vector3(2.99564269039257,0.534691372655883,0),
+                new Vector3(2.88596240882213,1.1653529916859,0),
+                new Vector3(3.79082473177824,1.42584366041569,0),
+                new Vector3(4.33922613963043,-1.08309278050807,0),
+                new Vector3(0.664936707020777,-2.82426725043876,0),
+                new Vector3(3.16016311274823,-2.89281742642029,0),
+                new Vector3(3.76340466138563,-2.13876549062353,0),
+                new Vector3(4.13357561168586,-3.00249770799072,0),
+                new Vector3(2.22788071939951,-3.72912957339487,0),
+                new Vector3(-1.3093083612471,-3.11217798956116,0),
+                new Vector3(1.65205924115471,-1.49439383639721,0),
+                new Vector3(-2.43353124734408,-1.67262429394917,0),
+                new Vector3(-3.24242332392606,-3.20814823593529,0),
+                new Vector3(-3.98276522452651,-2.27586584258658,0),
+                new Vector3(-2.85854233842953,-0.671791724618928,0)
+            });
+            var voids = new Polygon[]
+            {
+                new Polygon(new []
+                {
+                    new Vector3(2.95451258480366,-0.82260211177828,0),
+                    new Vector3(2.83210175913191,-0.184080777868908,0),
+                    new Vector3(0.18606496624511,-0.691352080132181,0),
+                    new Vector3(0.308475791916855,-1.32987341404155,0)
+                }),
+                new Polygon(new []
+                {
+                    new Vector3(-2.44724128254038,-0.671791724618928,0),
+                    new Vector3(-1.86692577850678,-0.130163920854226,0),
+                    new Vector3(-2.25080676400331,0.281137135034914,0),
+                    new Vector3(-2.83112226803692,-0.260490668729788,0)
+                }),
+                new Polygon(new []
+                {
+                    new Vector3(2.37869110655886,1.63149418836026,0),
+                    new Vector3(2.37869110655886,2.6323267576905,0),
+                    new Vector3(1.93996998027711,2.6323267576905,0),
+                    new Vector3(1.93996998027711,1.63149418836026,0)
+                }),
+                new Polygon(new []
+                {
+                    new Vector3(-3.28355342951497,-2.6460367928868,0),
+                    new Vector3(-2.87188183213404,-2.34663926751885,0),
+                    new Vector3(-3.20092267684535,-1.8942081060408,0),
+                    new Vector3(-3.61259427422628,-2.19360563140875,0)
+                })
+            };
+
+            var profile = new Profile(perimeter, voids, default(Guid), "");
+            var ptsToTest = new Dictionary<Vector3, bool>
+            {
+               {new Vector3(-1.91334741463405,-2.96997766092954,0), false},
+                {new Vector3(4.32167548616329,2.2746423178971,0), false},
+                {new Vector3(-2.52934817318559,3.08382557184115,0), false},
+                {new Vector3(3.68051948709585,-3.34290823110025,0), false},
+                {new Vector3(1.47363235412019,-0.318362797170227,0), true},
+                {new Vector3(1.03151184379788,3.03068639229677,0), false},
+                {new Vector3(-2.95289884475764,-0.0462495805211567,0), true},
+                {new Vector3(-0.621995215911255,1.05705346447982,0), false},
+                {new Vector3(4.10420657061144,-0.566629455682417,0), true},
+                {new Vector3(0.330286098829276,-3.5901259123077,0), false},
+                {new Vector3(-0.24932288983424,-1.64532269157363,0), false},
+                {new Vector3(-3.82465396213172,-1.83361135499892,0), false},
+                {new Vector3(2.56729062582401,1.02546126481966,0), false},
+                {new Vector3(-3.80767261083786,1.65455831105201,0), false},
+                {new Vector3(2.00514204041448,-2.92098965628603,0), true},
+                {new Vector3(2.88074247023243,2.72485127897336,0), true},
+                {new Vector3(-0.524706555697834,2.81824453284872,0), false},
+                {new Vector3(-1.84098244224056,-1.3790147374684,0), true},
+                {new Vector3(3.39908309297339,-1.84493503651402,0), false},
+                {new Vector3(0.65205689391488,1.13625251347017,0), true},
+                {new Vector3(-2.04425197929765,1.37541650435303,0), false},
+                {new Vector3(-0.661902074460968,-0.504785285552072,0), true},
+                {new Vector3(1.82278238764248,-1.59523972080554,0), true},
+                {new Vector3(-3.620949136078,-3.63013797953193,0), false},
+                {new Vector3(1.91472943578338,2.12193876071354,0), true},
+                {new Vector3(3.63328005158634,0.635947130047641,0), true},
+                {new Vector3(2.52386727577964,-0.823794004369836,0), false},
+                {new Vector3(-3.77633611233577,3.09833381074556,0), false},
+                {new Vector3(-2.8513912108739,-1.29825685358609,0), true},
+                {new Vector3(-1.07527845574056,1.94299642234845,0), false},
+                {new Vector3(3.35311117131022,1.57950690967399,0), false},
+                {new Vector3(0.185824335404782,2.04076518348335,0), false},
+                {new Vector3(-0.589561535387669,-2.60849165452688,0), false},
+                {new Vector3(-2.12805663220433,-0.384342162467137,0), true},
+                {new Vector3(0.273964292487538,-0.0382582098835089,0), true},
+                {new Vector3(4.27599299761961,-1.53701107888109,0), false},
+                {new Vector3(0.295742755147601,-0.929507978140383,0), false},
+                {new Vector3(0.94757983923356,-2.19128236423104,0), true},
+                {new Vector3(-3.21033981959072,-2.60966643313582,0), true},
+                {new Vector3(-3.97378329188504,-0.600818882481563,0), false},
+                {new Vector3(-1.31960908449334,0.135866691870123,0), false},
+                {new Vector3(-2.99607308344248,0.975188260982761,0), false},
+                {new Vector3(-1.25204077393947,-3.69544796442061,0), false},
+                {new Vector3(1.52221861779236,-3.61031508082525,0), false},
+                {new Vector3(4.12224219738895,-2.45367193809444,0), false},
+                {new Vector3(1.60987927877555,0.748894350021771,0), true},
+                {new Vector3(2.92062349650421,-0.0420986577974796,0), true},
+                {new Vector3(3.75635173169776,3.12459364393421,0), false},
+                {new Vector3(-1.72896438455763,2.77930858868642,0), false},
+                {new Vector3(-3.69588313355008,0.353927908199615,0), false},
+                {new Vector3(-1.05754567425085,-1.5659779352417,0), true},
+                {new Vector3(-2.95449505167064,2.0902905298356,0), false},
+                {new Vector3(-2.73666210483694,-3.39252895469605,0), false},
+                {new Vector3(2.7012550831002,-2.14178129392341,0), false},
+                {new Vector3(-0.437686977758653,-3.44893495246733,0), false},
+                {new Vector3(-2.5070807224777,-2.01478737356734,0), false},
+                {new Vector3(-2.22516037035492,2.18440936771125,0), false},
+                {new Vector3(3.46734282579874,-2.6629153161418,0), true},
+                {new Vector3(1.78543934198807,2.87785559416455,0), true},
+                {new Vector3(2.71723380409013,-3.33835238203706,0), true},
+                {new Vector3(-1.54071448801245,-2.30018636029404,0), false},
+                {new Vector3(4.19964888561659,1.19884340579508,0), false},
+                {new Vector3(1.02936055680281,2.18768247121518,0), true},
+                {new Vector3(-2.21247938804578,0.511731988446303,0), true},
+                {new Vector3(3.68066540497666,-1.23424440333159,0), true},
+                {new Vector3(1.44320901462995,1.5089628180384,0), true},
+                {new Vector3(1.06149262823672,-0.905494778763094,0), false},
+                {new Vector3(0.0337533424069378,0.873451641803066,0), true},
+                {new Vector3(-3.90766383652856,-2.84405525421944,0), false},
+                {new Vector3(0.420348882644054,2.68914441583881,0), false},
+                {new Vector3(0.918810842844982,-3.02808829988996,0), true},
+                {new Vector3(2.56799067823095,1.93157714014166,0), true},
+                {new Vector3(-0.358288665854758,0.342974920768614,0), true},
+                {new Vector3(-2.5592891706461,-2.70213602580895,0), false},
+                {new Vector3(-1.48740995451241,0.74399453446443,0), false},
+                {new Vector3(1.77101999385746,-2.3560184666247,0), false},
+                {new Vector3(2.73204263988329,-1.44748561978022,0), true},
+                {new Vector3(2.35183555451272,0.429594969860303,0), false},
+                {new Vector3(-3.36379789663229,-0.567811266523619,0), true},
+                {new Vector3(-1.53359780782258,-0.625566192001836,0), true},
+                {new Vector3(-1.13394743416365,-3.0069111075288,0), false},
+                {new Vector3(0.274582837198435,-2.42718849077329,0), true},
+                {new Vector3(3.31168354880983,-0.632021104482929,0), true},
+                {new Vector3(4.28637395001078,0.220961787192477,0), false},
+                {new Vector3(-0.407346765810272,1.70007411670455,0), false},
+                {new Vector3(3.48461554007624,2.33450300909345,0), true},
+                {new Vector3(-3.61678678725695,-1.18027072158594,0), false},
+                {new Vector3(-0.100779719501275,-2.90429416331805,0), true},
+                {new Vector3(1.93374194196669,-0.908690719239205,0), false},
+                {new Vector3(-3.23747431017598,-2.05846009913801,0), false},
+                {new Vector3(3.01025089444163,0.75774928707979,0), true},
+                {new Vector3(0.841728085027284,-0.0584785781459851,0), true},
+                {new Vector3(-2.54833104549111,1.59963309135231,0), false},
+                {new Vector3(1.16594499067128,-1.58753660465589,0), false},
+                {new Vector3(-2.29266516590198,-1.03134304218741,0), true},
+                {new Vector3(0.974686075522627,0.642437127079215,0), true},
+                {new Vector3(-0.0486675320265331,-0.440921485770396,0), true},
+                {new Vector3(2.00274993117517,-0.328307525932269,0), true},
+                {new Vector3(4.21286785824697,-3.72598025696974,0), false},
+                {new Vector3(-3.58071192586354,1.0545253530434,0), false}
+            };
+
+            foreach (var pt in ptsToTest)
+            {
+                var includes = profile.Contains(pt.Key, out _);
+                Assert.True(includes == pt.Value);
+            }
         }
     }
 }
