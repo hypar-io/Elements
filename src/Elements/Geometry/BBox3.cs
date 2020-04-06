@@ -5,7 +5,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An axis-aligned bounding box.
     /// </summary>
-    public class BBox3
+    public struct BBox3
     {
         /// <summary>
         /// The maximum extent of the bounding box.
@@ -25,7 +25,7 @@ namespace Elements.Geometry
         {
             this.Min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
             this.Max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
-            for(var i=0;i<points.Count; i++)
+            for (var i = 0; i < points.Count; i++)
             {
                 this.Extend(points[i]);
             }
@@ -38,7 +38,7 @@ namespace Elements.Geometry
             if (v.Y < this.Min.Y) newMin.Y = v.Y;
             if (v.Z < this.Min.Z) newMin.Z = v.Z;
             this.Min = newMin;
-            
+
             var newMax = new Vector3(Max.X, Max.Y, Max.Z);
             if (v.X > this.Max.X) newMax.X = v.X;
             if (v.Y > this.Max.Y) newMax.Y = v.Y;
@@ -54,15 +54,15 @@ namespace Elements.Geometry
         {
             this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
             this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
-            for(var i=0;i<profile.Perimeter.Vertices.Count; i++)
+            for (var i = 0; i < profile.Perimeter.Vertices.Count; i++)
             {
                 this.Extend(profile.Perimeter.Vertices[i]);
             }
 
-            for(var i=0; i<profile.Voids.Count; i++)
+            for (var i = 0; i < profile.Voids.Count; i++)
             {
                 var v = profile.Voids[i];
-                for(var j=0;j<v.Vertices.Count; j++)
+                for (var j = 0; j < v.Vertices.Count; j++)
                 {
                     this.Extend(v.Vertices[j]);
                 }
@@ -95,6 +95,15 @@ namespace Elements.Geometry
         {
             this.Min = min;
             this.Max = max;
+        }
+
+        /// <summary>
+        /// Get the center of the bounding box.
+        /// </summary>
+        /// <returns>The center of the bounding box.</returns>
+        public Vector3 Center()
+        {
+            return this.Max.Average(this.Min);
         }
     }
 }

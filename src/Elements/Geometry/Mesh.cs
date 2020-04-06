@@ -235,31 +235,31 @@ namespace Elements.Geometry
             var mesh = new Mesh();
 
             var conversion = Units.GetConversionToMeters(unit);
-            
-            using(var reader = new StreamReader(stlPath))
+
+            using (var reader = new StreamReader(stlPath))
             {
                 string line;
-                while((line = reader.ReadLine()) != null)  
-                {  
+                while ((line = reader.ReadLine()) != null)
+                {
                     line = line.TrimStart();
 
-                    if(line.StartsWith("facet"))
+                    if (line.StartsWith("facet"))
                     {
                         vertexCache.Clear();
                     }
 
-                    if(line.StartsWith("vertex"))
+                    if (line.StartsWith("vertex"))
                     {
                         var splits = line.Split(' ');
                         var x = double.Parse(splits[1]) * conversion;
                         var y = double.Parse(splits[2]) * conversion;
                         var z = double.Parse(splits[3]) * conversion;
-                        var v = new Vertex(new Vector3(x,y,z));
+                        var v = new Vertex(new Vector3(x, y, z));
                         mesh.AddVertex(v);
                         vertexCache.Add(v);
                     }
 
-                    if(line.StartsWith("endfacet"))
+                    if (line.StartsWith("endfacet"))
                     {
                         var t = new Triangle(vertexCache[0], vertexCache[1], vertexCache[2]);
                         mesh.AddTriangle(t);
@@ -268,7 +268,7 @@ namespace Elements.Geometry
             }
             mesh.ComputeNormals();
             return mesh;
-        } 
+        }
 
         /// <summary>
         /// Get a string representation of the mesh.
@@ -422,7 +422,7 @@ Triangles:{_triangles.Count}";
             this._triangles.Add(t);
             return t;
         }
-        
+
         /// <summary>
         /// Add a triangle to the mesh.
         /// </summary>
@@ -441,7 +441,7 @@ Triangles:{_triangles.Count}";
         /// <param name="color">The vertex's color.</param>
         /// <param name="uv">The texture coordinate of the vertex.</param>
         /// <returns>The newly created vertex.</returns>
-        public Vertex AddVertex(Vector3 position, UV uv, Vector3 normal = default(Vector3), Color color = default(Color))
+        public Vertex AddVertex(Vector3 position, UV uv = default(UV), Vector3 normal = default(Vector3), Color color = default(Color))
         {
             var v = new Vertex(position, normal, color);
             v.UV = uv;
