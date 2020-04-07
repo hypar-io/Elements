@@ -8,7 +8,7 @@
     <title>Getting Started with Hypar | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Getting Started with Hypar | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.48.0.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
@@ -127,7 +127,7 @@
 <li>None of the Hypar libraries you'll use in this guide bind your code to Hypar web services. For example, if you'd like to use the Elements library for a desktop application, it's an <a href="https://github.com/hypar-io/Elements">open source project on GitHub</a> and will always be free for anyone to use or extend. You don't even have to tell us you're using it.</li>
 </ul>
 <div style="page-break-after: always;"></div>
-<h3 id="signing-up-for-hypar">Signing up for Hypar</h3>
+<h2 id="signing-up-for-hypar">Signing up for Hypar</h2>
 <p>To upload anything to the Hypar platform, you're going to need an account.
 Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.io</a>, and you should see a page that looks like this.</p>
 <p><img src="images/HyparLanding2019.11.29.png" alt=""></p>
@@ -147,7 +147,7 @@ Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.i
 <p><img src="images/HyparSignUpConfirm2019.06.16.png" alt=""></p>
 <p>That's it! You now have a Hypar account. Later in this guide you'll sign in to see your first function in Hypar Explore.</p>
 <div style="page-break-after: always;"></div>
-<h3 id="installing-and-using-the-hypar-command-line-interface-cli">Installing and Using the Hypar Command Line Interface (CLI)</h3>
+<h2 id="installing-and-using-the-hypar-command-line-interface-cli">Installing and Using the Hypar Command Line Interface (CLI)</h2>
 <p>Open a Windows Command Prompt and input the following command:</p>
 <pre><code class="lang-bash">dotnet tool install -g hypar.cli
 </code></pre>
@@ -218,7 +218,7 @@ In the alternatives list, you can see that your function has actually run many t
 <p><img src="images/HyparOutputs2020.01.07.png" alt=""></p>
 <p>In the next exercise, we're going add a new <strong>Height</strong> input to this function.</p>
 <div style="page-break-after: always;"></div>
-<h3 id="adding-a-new-function-input">Adding a new function input</h3>
+<h2 id="adding-a-new-function-input">Adding a new function input</h2>
 <p>First, let's open the <strong>src/StarterFunctionInputs.g.cs</strong> file in Code and look at the <strong>StarterFunctionInputs</strong> class to see how the <strong>hypar.json</strong> turns into code. Note how the corresponding entries become public class properties:</p>
 <p><img src="images/HyparInputsClassJSON2020.01.07.png" alt=""></p>
 <div style="page-break-after: always;"></div>
@@ -245,7 +245,7 @@ In the alternatives list, you can see that your function has actually run many t
 <p>When we open <strong>StarterFunction</strong> on Hypar again, the range can now be set to 20:</p>
 <p><img src="images/HyparHeightUpdate.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<h3 id="adding-a-new-function-output">Adding a new function output</h3>
+<h2 id="adding-a-new-function-output">Adding a new function output</h2>
 <p>Hypar can also generate non-geometric data. In Hypar, click <strong>&quot;Show outputs&quot;</strong> in the top left. You should see something like this, although your volume result might be different:</p>
 <p><img src="images/HyparOutput2019.11.29.png" alt=""></p>
 <div style="page-break-after: always;"></div>
@@ -324,7 +324,21 @@ If you select **area** in the **Label** dropdown, you should see the value notat
 ![](./images/HyparLabels4.png)
 
 You're not limited to simple values like these. You can add any static or calculated value you'd like to any Hypar Element (like Mass).  -->
-<p>To learn more about the open source Hypar Elements library browse to the <a href="https://github.com/hypar-io/Elements">GitHub repository</a>.</p>
+<h2 id="whats-next">What's next?</h2>
+<p>Congratulations on creating your first Hypar function! There's more to learn, but you should start thinking about building a real, useful function. Here are a few tips for deciding what to make:</p>
+<ul>
+<li>Solve one small problem. Hypar Functions are easy to compose. No single function needs to do too much on its own.</li>
+<li>Take something you've done before and do it again on Hypar.</li>
+<li>Scratch an itch. What do you hate doing manually? What would look cool? What would look silly?</li>
+<li>You don't need to be original. Just get started. Feel free to make another version of something you've already seen.</li>
+</ul>
+<p>Here are some other good resources:</p>
+<ul>
+<li><a href="https://discord.gg/Ts6mzXg">Hypar's Discord live chat</a>. Lots of people should be there to answer questions or share ideas.</li>
+<li><a href="https://www.youtube.com/c/hypar">Hypar's YouTube channel</a> has walkthrough videos and livestreams.</li>
+<li>The <a href="https://github.com/hypar-io/Elements">Elements GitHub repository</a> and the tabs on top of this page have more information about Hypar's data model.</li>
+<li><a href="https://github.com/hypar-io/BuildingBlocks">Hypar's Building Blocks repo</a> has the source code for many Hypar functions. Read those to see how they work, and feel free to branch or improve any of them.</li>
+</ul>
 </article>
           </div>
           

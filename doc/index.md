@@ -41,7 +41,7 @@ Before getting started, there are a few things you'll need and some other things
 
 <div style="page-break-after: always;"></div>
 
-### Signing up for Hypar
+## Signing up for Hypar
 
 To upload anything to the Hypar platform, you're going to need an account. 
 Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.io</a>, and you should see a page that looks like this. 
@@ -80,7 +80,7 @@ That's it! You now have a Hypar account. Later in this guide you'll sign in to s
 
 <div style="page-break-after: always;"></div>
 
-### Installing and Using the Hypar Command Line Interface (CLI)
+## Installing and Using the Hypar Command Line Interface (CLI)
 
 Open a Windows Command Prompt and input the following command:
 
@@ -218,7 +218,7 @@ In the next exercise, we're going add a new **Height** input to this function.
 
 <div style="page-break-after: always;"></div>
 
-### Adding a new function input
+## Adding a new function input
 
 First, let's open the **src/StarterFunctionInputs.g.cs** file in Code and look at the **StarterFunctionInputs** class to see how the **hypar.json** turns into code. Note how the corresponding entries become public class properties:
 
@@ -272,7 +272,7 @@ When we open **StarterFunction** on Hypar again, the range can now be set to 20:
 
 <div style="page-break-after: always;"></div>
 
-### Adding a new function output
+## Adding a new function output
 
 Hypar can also generate non-geometric data. In Hypar, click **"Show outputs"** in the top left. You should see something like this, although your volume result might be different:
 
@@ -370,5 +370,17 @@ If you select **area** in the **Label** dropdown, you should see the value notat
 
 You're not limited to simple values like these. You can add any static or calculated value you'd like to any Hypar Element (like Mass).  -->
 
-To learn more about the open source Hypar Elements library browse to the [GitHub repository](https://github.com/hypar-io/Elements).
+## What's next?
+
+Congratulations on creating your first Hypar function! There's more to learn, but you should start thinking about building a real, useful function. Here are a few tips for deciding what to make:
+* Solve one small problem. Hypar Functions are easy to compose. No single function needs to do too much on its own.
+* Take something you've done before and do it again on Hypar.
+* Scratch an itch. What do you hate doing manually? What would look cool? What would look silly?
+* You don't need to be original. Just get started. Feel free to make another version of something you've already seen.
+
+Here are some other good resources:
+* [Hypar's Discord live chat](https://discord.gg/Ts6mzXg). Lots of people should be there to answer questions or share ideas.
+* [Hypar's YouTube channel](https://www.youtube.com/c/hypar) has walkthrough videos and livestreams.
+* The [Elements GitHub repository](https://github.com/hypar-io/Elements) and the tabs on top of this page have more information about Hypar's data model.
+* [Hypar's Building Blocks repo](https://github.com/hypar-io/BuildingBlocks) has the source code for many Hypar functions. Read those to see how they work, and feel free to branch or improve any of them.
 
