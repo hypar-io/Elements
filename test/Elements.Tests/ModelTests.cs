@@ -10,6 +10,7 @@ using Elements.Geometry.Solids;
 using System.Linq;
 using Xunit.Abstractions;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Elements.Tests
 {
@@ -86,7 +87,7 @@ namespace Elements.Tests
         /// deserialized and merged into one model.
         /// </summary>
         [Fact(Skip = "ModelMerging")]
-        public void MergesModelsWithUserDefinedTypes()
+        public async Task MergesModelsWithUserDefinedTypes()
         {
             var schemas = new[]{
                 "../../../models/Merge/Envelope.json",
@@ -94,7 +95,7 @@ namespace Elements.Tests
                 "../../../models/Merge/Level.json"
             };
 
-            var asm = TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(schemas);
+            var asm = await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(schemas);
             var facadePanelType = asm.GetType("Elements.FacadePanel");
             Assert.NotNull(facadePanelType);
             var envelopeType = asm.GetType("Elements.Envelope");

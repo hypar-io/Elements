@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Elements.Generate;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
@@ -14,13 +15,14 @@ namespace Elements.Tests
 {
     public sealed class IgnoreOnTravisFact : FactAttribute
     {
-        public IgnoreOnTravisFact() {
-            if(IsTravis()) 
+        public IgnoreOnTravisFact()
+        {
+            if (IsTravis())
             {
                 Skip = "Ignore on Travis.";
             }
         }
-        
+
         private static bool IsTravis()
         {
             return Environment.GetEnvironmentVariable("TRAVIS") != null;
@@ -29,9 +31,9 @@ namespace Elements.Tests
 
     public sealed class IgnoreOnMacFact : FactAttribute
     {
-        public IgnoreOnMacFact() 
+        public IgnoreOnMacFact()
         {
-            if(IsMac())
+            if (IsMac())
             {
                 Skip = "Ignore on mac.";
             }
@@ -82,22 +84,22 @@ namespace Elements.Tests
         // We've started ignoring these tests on mac because on 
         // Catalina we receive an System.Net.Http.CurlException : Login denied.
         [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact))]
-        public void GeneratesCodeFromSchema()
+        public async Task GeneratesCodeFromSchema()
         {
             var tmpPath = Path.GetTempPath();
             var schemaPath = Path.Combine(tmpPath, "beam.json");
             File.WriteAllText(schemaPath, schema);
             var relPath = Path.GetRelativePath(Assembly.GetExecutingAssembly().Location, schemaPath);
-            TypeGenerator.GenerateUserElementTypeFromUri(relPath, tmpPath, true);
+            await TypeGenerator.GenerateUserElementTypeFromUriAsync(relPath, tmpPath, true);
             var code = File.ReadAllText(Path.Combine(tmpPath, "beam.g.cs"));
         }
-        
+
         [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact))]
-        public void GeneratesInMemoryAssembly()
+        public async Task GeneratesInMemoryAssembly()
         {
-            var uris = new []{"https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadeAnchor.json", 
+            var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadeAnchor.json",
                                 "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
-            var asm = TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(uris);
+            var asm = await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(uris);
             var mullionType = asm.GetType("Test.Foo.Bar.Mullion");
             var anchorType = asm.GetType("Test.Foo.Bar.FacadeAnchor");
             Assert.NotNull(mullionType);
@@ -108,20 +110,20 @@ namespace Elements.Tests
 
             var ctors = mullionType.GetConstructors();
             Assert.Single<ConstructorInfo>(ctors);
-            var centerLine = new Line(new Vector3(0,0), new Vector3(5,5));
-            var profile = new Profile(Polygon.Rectangle(0.1,0.1));
+            var centerLine = new Line(new Vector3(0, 0), new Vector3(5, 5));
+            var profile = new Profile(Polygon.Rectangle(0.1, 0.1));
             // Profile @profile, Line @centerLine, NumericProperty @length, Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name
             var t = new Transform();
             var m = BuiltInMaterials.Steel;
-            var mullion = Activator.CreateInstance(mullionType, new object[]{profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), Guid.NewGuid(), "Test Mullion" });
+            var mullion = Activator.CreateInstance(mullionType, new object[] { profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), Guid.NewGuid(), "Test Mullion" });
         }
 
         [IgnoreOnTravisFact]
-        public void ThrowsWithBadSchema()
+        public async Task ThrowsWithBadSchema()
         {
-            var uris = new []{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesn'tExist.json", 
+            var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesn'tExist.json",
                                 "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
-            Assert.Throws<Exception>(()=>TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(uris));
+            await Assert.ThrowsAsync<Exception>(async () => await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(uris));
         }
     }
 }
