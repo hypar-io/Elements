@@ -32,7 +32,7 @@ Before getting started, there are a few things you'll need and some other things
         * Windows: Hypar is known to work on the windows command prompt and git bash.
             * Some users have experienced issues using Hypar on PowerShell. PowerShell is not recommended.
         * Mac: Hypar is known to work on bash and zsh.
-        * Linux: Hypar is known to work on bash.
+        * Linux: Hypar is known to work on zsh.
 * [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1) 
     * Hypar uses the cross-platform dotnet framework created and maintained by Microsoft. The version number is important! There might be issues with earlier or later versions of .NET Core.
     
