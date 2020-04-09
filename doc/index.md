@@ -33,9 +33,8 @@ Before getting started, there are a few things you'll need and some other things
             * Some users have experienced issues using Hypar on PowerShell. PowerShell is not recommended.
         * Mac: Hypar is known to work on bash and zsh.
         * Linux: Hypar is known to work on bash.
-* Microsoft .Net Core 3.1. 
-    * Hypar uses the cross-platform dotnet framework created and maintained by Microsoft. The version number is important! There might be issues with later or earlier versions of .Net Core.
-        * [.Net Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1) 
+    * Hypar uses the cross-platform dotnet framework created and maintained by Microsoft. The version number is important! There might be issues with earlier or later versions of .NET Core.
     
 ### Things you might want to know
 * Basic familiarity with the **C#** programming language will help, but if you're not familiar with C# we'll do our best to walk you through making changes to the initial code you'll get by following the steps in this guide.

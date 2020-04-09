@@ -5,12 +5,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class Ray
+    <title>Struct Ray
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class Ray
+    <meta name="title" content="Struct Ray
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -74,16 +74,11 @@
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Elements.Geometry.Ray">
   
-  <h1 id="Elements_Geometry_Ray" data-uid="Elements.Geometry.Ray" class="text-break">Class Ray
+  <h1 id="Elements_Geometry_Ray" data-uid="Elements.Geometry.Ray" class="text-break">Struct Ray
   </h1>
   <div class="markdown level0 summary"><p>An infinite ray starting at origin and pointing towards direction.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Ray</span></div>
-  </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Ray.html">Ray</a>&gt;</div>
@@ -91,32 +86,29 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <span class="xref">System.ValueType.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.ValueType.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.ValueType.ToString()</span>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
       <span class="xref">System.Object.GetType()</span>
     </div>
     <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
       <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Ray_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Ray : IEquatable&lt;Ray&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public struct Ray : IEquatable&lt;Ray&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -244,6 +236,103 @@
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>Returns true if the two rays are equal, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
+  <h4 id="Elements_Geometry_Ray_Intersects_Elements_GeometricElement_System_Collections_Generic_List_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.Ray.Intersects(Elements.GeometricElement,System.Collections.Generic.List{Elements.Geometry.Vector3}@)">Intersects(GeometricElement, out List&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Does this ray intersect with the provided GeometricElement? Only GeometricElements with Solid Representations are currently supported, and voids will be ignored.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(GeometricElement element, out List&lt;Vector3&gt; result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></td>
+        <td><span class="parametername">element</span></td>
+        <td><p>The element to intersect with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The list of intersection results.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
+  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@)">Intersects(Line, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Does this ray intersect the provided line?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Line line, out Vector3 result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>The line to intersect.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The location of intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the rays intersect, otherwise false.</p>
 </td>
       </tr>
     </tbody>

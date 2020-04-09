@@ -927,48 +927,48 @@ references:
   commentId: T:Elements.Generate.TypeGenerator
   fullName: Elements.Generate.TypeGenerator
   nameWithType: TypeGenerator
-- uid: Elements.Generate.TypeGenerator.GenerateElementTypes(System.String)
-  name: GenerateElementTypes(String)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypes_System_String_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateElementTypes(System.String)
-  fullName: Elements.Generate.TypeGenerator.GenerateElementTypes(System.String)
-  nameWithType: TypeGenerator.GenerateElementTypes(String)
-- uid: Elements.Generate.TypeGenerator.GenerateElementTypes*
-  name: GenerateElementTypes
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypes_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateElementTypes
+- uid: Elements.Generate.TypeGenerator.GenerateElementTypesAsync(System.String)
+  name: GenerateElementTypesAsync(String)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypesAsync_System_String_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateElementTypesAsync(System.String)
+  fullName: Elements.Generate.TypeGenerator.GenerateElementTypesAsync(System.String)
+  nameWithType: TypeGenerator.GenerateElementTypesAsync(String)
+- uid: Elements.Generate.TypeGenerator.GenerateElementTypesAsync*
+  name: GenerateElementTypesAsync
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypesAsync_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateElementTypesAsync
   isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateElementTypes
-  nameWithType: TypeGenerator.GenerateElementTypes
-- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(System.String[])
-  name: GenerateInMemoryAssemblyFromUrisAndLoad(String[])
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoad_System_String___
-  commentId: M:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(System.String[])
-  name.vb: GenerateInMemoryAssemblyFromUrisAndLoad(String())
-  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(System.String[])
-  fullName.vb: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(System.String())
-  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(String[])
-  nameWithType.vb: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad(String())
-- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad*
-  name: GenerateInMemoryAssemblyFromUrisAndLoad
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoad_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad
+  fullName: Elements.Generate.TypeGenerator.GenerateElementTypesAsync
+  nameWithType: TypeGenerator.GenerateElementTypesAsync
+- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[])
+  name: GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[])
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_System_String___
+  commentId: M:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[])
+  name.vb: GenerateInMemoryAssemblyFromUrisAndLoadAsync(String())
+  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[])
+  fullName.vb: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String())
+  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[])
+  nameWithType.vb: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(String())
+- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync*
+  name: GenerateInMemoryAssemblyFromUrisAndLoadAsync
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync
   isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad
-  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoad
-- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri(System.String,System.String,System.Boolean)
-  name: GenerateUserElementTypeFromUri(String, String, Boolean)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUri_System_String_System_String_System_Boolean_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri(System.String,System.String,System.Boolean)
-  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri(System.String, System.String, System.Boolean)
-  nameWithType: TypeGenerator.GenerateUserElementTypeFromUri(String, String, Boolean)
-- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri*
-  name: GenerateUserElementTypeFromUri
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUri_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri
+  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync
+  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync
+- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync(System.String,System.String,System.Boolean)
+  name: GenerateUserElementTypeFromUriAsync(String, String, Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUriAsync_System_String_System_String_System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync(System.String,System.String,System.Boolean)
+  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync(System.String, System.String, System.Boolean)
+  nameWithType: TypeGenerator.GenerateUserElementTypeFromUriAsync(String, String, Boolean)
+- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync*
+  name: GenerateUserElementTypeFromUriAsync
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUriAsync_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync
   isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUri
-  nameWithType: TypeGenerator.GenerateUserElementTypeFromUri
+  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync
+  nameWithType: TypeGenerator.GenerateUserElementTypeFromUriAsync
 - uid: Elements.GeoJSON
   name: Elements.GeoJSON
   href: api/Elements.GeoJSON.html
@@ -1824,6 +1824,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.BBox3.BBox3
   nameWithType: BBox3.BBox3
+- uid: Elements.Geometry.BBox3.Center
+  name: Center()
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_Center
+  commentId: M:Elements.Geometry.BBox3.Center
+  fullName: Elements.Geometry.BBox3.Center()
+  nameWithType: BBox3.Center()
+- uid: Elements.Geometry.BBox3.Center*
+  name: Center
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_Center_
+  commentId: Overload:Elements.Geometry.BBox3.Center
+  isSpec: "True"
+  fullName: Elements.Geometry.BBox3.Center
+  nameWithType: BBox3.Center
 - uid: Elements.Geometry.BBox3.Max
   name: Max
   href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_Max
@@ -2647,6 +2660,42 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Colors.Yellow
   nameWithType: Colors.Yellow
+- uid: Elements.Geometry.Containment
+  name: Containment
+  href: api/Elements.Geometry.Containment.html
+  commentId: T:Elements.Geometry.Containment
+  fullName: Elements.Geometry.Containment
+  nameWithType: Containment
+- uid: Elements.Geometry.Containment.CoincidesAtEdge
+  name: CoincidesAtEdge
+  href: api/Elements.Geometry.Containment.html#Elements_Geometry_Containment_CoincidesAtEdge
+  commentId: F:Elements.Geometry.Containment.CoincidesAtEdge
+  fullName: Elements.Geometry.Containment.CoincidesAtEdge
+  nameWithType: Containment.CoincidesAtEdge
+- uid: Elements.Geometry.Containment.CoincidesAtFace
+  name: CoincidesAtFace
+  href: api/Elements.Geometry.Containment.html#Elements_Geometry_Containment_CoincidesAtFace
+  commentId: F:Elements.Geometry.Containment.CoincidesAtFace
+  fullName: Elements.Geometry.Containment.CoincidesAtFace
+  nameWithType: Containment.CoincidesAtFace
+- uid: Elements.Geometry.Containment.CoincidesAtVertex
+  name: CoincidesAtVertex
+  href: api/Elements.Geometry.Containment.html#Elements_Geometry_Containment_CoincidesAtVertex
+  commentId: F:Elements.Geometry.Containment.CoincidesAtVertex
+  fullName: Elements.Geometry.Containment.CoincidesAtVertex
+  nameWithType: Containment.CoincidesAtVertex
+- uid: Elements.Geometry.Containment.Inside
+  name: Inside
+  href: api/Elements.Geometry.Containment.html#Elements_Geometry_Containment_Inside
+  commentId: F:Elements.Geometry.Containment.Inside
+  fullName: Elements.Geometry.Containment.Inside
+  nameWithType: Containment.Inside
+- uid: Elements.Geometry.Containment.Outside
+  name: Outside
+  href: api/Elements.Geometry.Containment.html#Elements_Geometry_Containment_Outside
+  commentId: F:Elements.Geometry.Containment.Outside
+  fullName: Elements.Geometry.Containment.Outside
+  nameWithType: Containment.Outside
 - uid: Elements.Geometry.Contour
   name: Contour
   href: api/Elements.Geometry.Contour.html
@@ -3970,6 +4019,15 @@ references:
   commentId: M:Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3)
   fullName: Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3)
   nameWithType: Polygon.Contains(Vector3)
+- uid: Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3,Elements.Geometry.Containment@)
+  name: Contains(Vector3, out Containment)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Contains_Elements_Geometry_Vector3_Elements_Geometry_Containment__
+  commentId: M:Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3,Elements.Geometry.Containment@)
+  name.vb: Contains(Vector3, ByRef Containment)
+  fullName: Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3, out Elements.Geometry.Containment)
+  fullName.vb: Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3, ByRef Elements.Geometry.Containment)
+  nameWithType: Polygon.Contains(Vector3, out Containment)
+  nameWithType.vb: Polygon.Contains(Vector3, ByRef Containment)
 - uid: Elements.Geometry.Polygon.Contains*
   name: Contains
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Contains_
@@ -4672,6 +4730,15 @@ references:
   fullName.vb: Elements.Geometry.Profile.Profile(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Guid, System.String)
   nameWithType: Profile.Profile(Polygon, IList<Polygon>, Guid, String)
   nameWithType.vb: Profile.Profile(Polygon, IList(Of Polygon), Guid, String)
+- uid: Elements.Geometry.Profile.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name: Profile(IList<Polygon>)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Profile.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
+  name.vb: Profile(IList(Of Polygon))
+  fullName: Elements.Geometry.Profile.Profile(System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Profile.Profile(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
+  nameWithType: Profile.Profile(IList<Polygon>)
+  nameWithType.vb: Profile.Profile(IList(Of Polygon))
 - uid: Elements.Geometry.Profile.#ctor(System.String)
   name: Profile(String)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile__ctor_System_String_
@@ -4698,6 +4765,28 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Area
   nameWithType: Profile.Area
+- uid: Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3)
+  name: Contains(Vector3)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Contains_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3)
+  nameWithType: Profile.Contains(Vector3)
+- uid: Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3,Elements.Geometry.Containment@)
+  name: Contains(Vector3, out Containment)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Contains_Elements_Geometry_Vector3_Elements_Geometry_Containment__
+  commentId: M:Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3,Elements.Geometry.Containment@)
+  name.vb: Contains(Vector3, ByRef Containment)
+  fullName: Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3, out Elements.Geometry.Containment)
+  fullName.vb: Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3, ByRef Elements.Geometry.Containment)
+  nameWithType: Profile.Contains(Vector3, out Containment)
+  nameWithType.vb: Profile.Contains(Vector3, ByRef Containment)
+- uid: Elements.Geometry.Profile.Contains*
+  name: Contains
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Contains_
+  commentId: Overload:Elements.Geometry.Profile.Contains
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Contains
+  nameWithType: Profile.Contains
 - uid: Elements.Geometry.Profile.Equals(Elements.Geometry.Profile)
   name: Equals(Profile)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Equals_Elements_Geometry_Profile_
@@ -8229,6 +8318,24 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Ray.Equals
   nameWithType: Ray.Equals
+- uid: Elements.Geometry.Ray.Intersects(Elements.GeometricElement,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
+  name: Intersects(GeometricElement, out List<Vector3>)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_GeometricElement_System_Collections_Generic_List_Elements_Geometry_Vector3___
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.GeometricElement,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
+  name.vb: Intersects(GeometricElement, ByRef List(Of Vector3))
+  fullName: Elements.Geometry.Ray.Intersects(Elements.GeometricElement, out System.Collections.Generic.List<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.GeometricElement, ByRef System.Collections.Generic.List(Of Elements.Geometry.Vector3))
+  nameWithType: Ray.Intersects(GeometricElement, out List<Vector3>)
+  nameWithType.vb: Ray.Intersects(GeometricElement, ByRef List(Of Vector3))
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@)
+  name: Intersects(Line, out Vector3)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@)
+  name.vb: Intersects(Line, ByRef Vector3)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Line, out Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Line, ByRef Elements.Geometry.Vector3)
+  nameWithType: Ray.Intersects(Line, out Vector3)
+  nameWithType.vb: Ray.Intersects(Line, ByRef Vector3)
 - uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
   name: Intersects(Plane, out Vector3)
   href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__
@@ -11457,11 +11564,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
   nameWithType: JsonInheritanceConverter.Elements
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  name: ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+  nameWithType: JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*
   name: ReadJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_
@@ -11470,11 +11577,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson
   nameWithType: JsonInheritanceConverter.ReadJson
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  name: WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+  nameWithType: JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*
   name: WriteJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polygon
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -272,8 +272,7 @@ var star = Polygon.Star(5, 3, 5);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -473,6 +472,55 @@ public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>Returns true if the supplied Vector3 is within this Polygon when compared on a shared plane. Returns false if the Vector3 is outside this Polygon or if the supplied Vector3 is null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polygon_Contains_" data-uid="Elements.Geometry.Polygon.Contains*"></a>
+  <h4 id="Elements_Geometry_Polygon_Contains_Elements_Geometry_Vector3_Elements_Geometry_Containment__" data-uid="Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3,Elements.Geometry.Containment@)">Contains(Vector3, out Containment)</h4>
+  <div class="markdown level1 summary"><p>Tests if the supplied Vector3 is within this Polygon, using a 2D method.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 vector, out Containment containment)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">vector</span></td>
+        <td><p>The position to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Containment.html">Containment</a></td>
+        <td><span class="parametername">containment</span></td>
+        <td><p>Whether the point is inside, outside, at an edge, or at a vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Returns true if the supplied Vector3 is within this polygon.</p>
 </td>
       </tr>
     </tbody>
