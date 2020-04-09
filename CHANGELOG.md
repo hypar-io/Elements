@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.7.0
+
+## Changed
+- Updated documentation to reflect the use of .NET Core 3.1.
+
 ## 0.6.2
 ### Added
 - `Material.Unlit`
