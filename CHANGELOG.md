@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+### Fixed
+- #271
+
 ## 0.6.2
 ### Added
 - `Material.Unlit`

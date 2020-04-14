@@ -1,5 +1,6 @@
 using System;
 using Elements.Geometry;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -30,7 +31,8 @@ namespace Elements
         /// <param name="transform">The transform of the instance.</param>
         /// <param name="name">The name of the instance.</param>
         /// <param name="id">The id of the instance.</param>
-        public ElementInstance(GeometricElement baseDefinition,
+        [JsonConstructor]
+        internal ElementInstance(GeometricElement baseDefinition,
                                Transform transform,
                                string name = null,
                                Guid id = default(Guid)) : base(id == default(Guid) ? Guid.NewGuid() : id, name)
