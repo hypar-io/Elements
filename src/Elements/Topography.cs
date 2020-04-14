@@ -28,7 +28,7 @@ namespace Elements
         /// The topography's mesh.
         /// </summary>
         [JsonIgnore]
-        public Mesh Mesh => _mesh;
+        public Mesh Mesh => this._mesh;
 
         /// <summary>
         /// The maximum elevation of the topography.
@@ -92,20 +92,62 @@ namespace Elements
             this.RowWidth = (int)Math.Sqrt(elevations.Length);
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
+            var mesh = GenerateMesh(elevations, origin, this.RowWidth, this.CellWidth, this.CellWidth);
+            this._mesh = mesh.Mesh;
+            this._minElevation = mesh.MinElevation;
+            this._maxElevation = mesh.MaxElevation;
+        }
 
-            var triangles = (Math.Sqrt(elevations.Length) - 1) * this.RowWidth * 2;
+        [JsonConstructor]
+        internal Topography(double[] elevations,
+                            Vector3 origin,
+                            int rowWidth,
+                            double cellWidth,
+                            double cellHeight,
+                            Material material,
+                            Transform transform,
+                            Guid id,
+                            string name) : base(transform,
+                                            material,
+                                            null,
+                                            false,
+                                            id,
+                                            name)
+        {
+            this.Elevations = elevations;
+            this.Origin = origin;
+            this.RowWidth = rowWidth;
+            this.CellWidth = cellWidth;
+            this.CellHeight = cellHeight;
+            var mesh = GenerateMesh(elevations, origin, rowWidth, cellWidth, cellHeight);
+            this._mesh = mesh.Mesh;
+            this._minElevation = mesh.MinElevation;
+            this._maxElevation = mesh.MaxElevation;
+        }
 
-            for (var y = 0; y < this.RowWidth; y++)
+        private static (Mesh Mesh, double MaxElevation, double MinElevation) GenerateMesh(
+            double[] elevations,
+            Vector3 origin,
+            int rowWidth,
+            double cellWidth,
+            double cellHeight)
+        {
+            var minElevation = double.MaxValue;
+            var maxElevation = double.MinValue;
+            var mesh = new Mesh();
+            var triangles = (Math.Sqrt(elevations.Length) - 1) * rowWidth * 2;
+
+            for (var y = 0; y < rowWidth; y++)
             {
-                for (var x = 0; x < this.RowWidth; x++)
+                for (var x = 0; x < rowWidth; x++)
                 {
-                    var ei = x + y * this.RowWidth;
-                    var el = this.Elevations[ei];
-                    _minElevation = Math.Min(_minElevation, el);
-                    _maxElevation = Math.Max(_maxElevation, el);
+                    var ei = x + y * rowWidth;
+                    var el = elevations[ei];
+                    minElevation = Math.Min(minElevation, el);
+                    maxElevation = Math.Max(maxElevation, el);
 
-                    var u = (double)x / (double)(this.RowWidth - 1);
-                    var v = (double)y / (double)(this.RowWidth - 1);
+                    var u = (double)x / (double)(rowWidth - 1);
+                    var v = (double)y / (double)(rowWidth - 1);
 
                     // Shrink the UV space slightly to avoid
                     // visible edges on applied textures.
@@ -117,28 +159,29 @@ namespace Elements
 
                     var uv = new UV(u, v);
 
-                    this._mesh.AddVertex(origin + new Vector3(x * this.CellWidth, y * this.CellHeight, el), uv: uv);
+                    mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv: uv);
 
                     if (y > 0 && x > 0)
                     {
-                        var i = x + y * this.RowWidth;
+                        var i = x + y * rowWidth;
 
                         // Top triangle
-                        var a = this._mesh.Vertices[i];
-                        var b = this._mesh.Vertices[i - 1];
-                        var c = this._mesh.Vertices[i - this.RowWidth];
-                        var tt = this._mesh.AddTriangle(a, b, c);
+                        var a = mesh.Vertices[i];
+                        var b = mesh.Vertices[i - 1];
+                        var c = mesh.Vertices[i - rowWidth];
+                        var tt = mesh.AddTriangle(a, b, c);
 
                         // Bottom triangle
-                        var d = this._mesh.Vertices[i - 1];
-                        var e = this._mesh.Vertices[i - 1 - this.RowWidth];
-                        var f = this._mesh.Vertices[i - this.RowWidth];
-                        var tb = this._mesh.AddTriangle(d, e, f);
+                        var d = mesh.Vertices[i - 1];
+                        var e = mesh.Vertices[i - 1 - rowWidth];
+                        var f = mesh.Vertices[i - rowWidth];
+                        var tb = mesh.AddTriangle(d, e, f);
                     }
                 }
             }
 
-            this.Mesh.ComputeNormals();
+            mesh.ComputeNormals();
+            return (mesh, maxElevation, minElevation);
         }
 
         /// <summary>

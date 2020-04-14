@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
-    public class TopographyTests: ModelTest
+    public class TopographyTests : ModelTest
     {
         private ITestOutputHelper _output;
 
@@ -26,10 +26,10 @@ namespace Elements.Tests
         public void Example()
         {
             this.Name = "Elements_Topography";
-            
+
             // <example>
             // Read topo elevations from a file.
-            var data = JsonConvert.DeserializeObject<Dictionary<string,double[]>>(File.ReadAllText("./elevations.json"));
+            var data = JsonConvert.DeserializeObject<Dictionary<string, double[]>>(File.ReadAllText("./elevations.json"));
             var elevations = data["points"];
             var tileSize = WebMercatorProjection.GetTileSizeMeters(15);
 
@@ -44,8 +44,9 @@ namespace Elements.Tests
         public void Simple()
         {
             this.Name = "TopographySimple";
-            var elevations = new double[]{0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05};
-            var colorizer = new Func<Triangle,Elements.Geometry.Color>((t)=>{
+            var elevations = new double[] { 0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05 };
+            var colorizer = new Func<Triangle, Elements.Geometry.Color>((t) =>
+            {
                 return Colors.Green;
             });
             var topo = new Topography(Vector3.Origin, 3, elevations);
@@ -64,7 +65,7 @@ namespace Elements.Tests
         public void TopographyHasTextureApplied()
         {
             this.Name = "TexturedTopography";
-            var m = new Material("texture",Colors.Gray, 0.0f, 0.0f, "./Textures/UV.jpg");
+            var m = new Material("texture", Colors.Gray, 0.0f, 0.0f, "./Textures/UV.jpg");
             var topo = CreateTopoFromMapboxElevations(material: m);
             this.Model.AddElement(topo);
         }
@@ -99,26 +100,29 @@ namespace Elements.Tests
             var newTopo = newModel.AllElementsOfType<Topography>().First();
             Assert.Equal(topo.Mesh.Triangles.Count, newTopo.Mesh.Triangles.Count);
             Assert.Equal(topo.Mesh.Vertices.Count, newTopo.Mesh.Vertices.Count);
+            Assert.Equal(topo.CellWidth, newTopo.CellWidth);
+            Assert.Equal(topo.CellWidth, newTopo.CellWidth);
+            Assert.Equal(topo.RowWidth, newTopo.RowWidth);
         }
 
         [Fact]
         public void RaysIntersectTopography()
         {
             this.Name = "RayTopographyIntersection";
-            var topo = CreateTopoFromMapboxElevations(new Vector3(10000000,10000000));
+            var topo = CreateTopoFromMapboxElevations(new Vector3(10000000, 10000000));
             var mp = new ModelPoints(new List<Vector3>(), new Material("xsect", Colors.Black));
-            foreach(var t in topo.Mesh.Triangles)
+            foreach (var t in topo.Mesh.Triangles)
             {
                 var o = t.Vertices[0].Position;
-                var c = new[]{t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position}.Average();
+                var c = new[] { t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position }.Average();
                 var r = new Ray(new Vector3(c.X, c.Y), Vector3.ZAxis);
-                if(r.Intersects(t, out Vector3 result))
+                if (r.Intersects(t, out Vector3 result))
                 {
                     mp.Locations.Add(result);
                 }
             }
             this.Model.AddElement(topo);
-            if(mp.Locations.Count > 0)
+            if (mp.Locations.Count > 0)
             {
                 this.Model.AddElement(mp);
             }
@@ -128,7 +132,7 @@ namespace Elements.Tests
         public void MapboxTopography()
         {
             this.Name = "MapboxTopography";
-            
+
             // 0 1
             // 2 3
 
@@ -137,14 +141,14 @@ namespace Elements.Tests
                 "./Topography/Texture_df332cc3-62b0-42ac-9041-942e1fd985aa_1.jpg",
                 "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg",
                 "./Topography/Texture_aa1b1148-0563-4b9d-b1c0-7138024dc974_3.jpg"};
-            
+
             var topos = new[]{
                 "./Topography/Topo_52f0cdf5-2d34-4e1c-927d-79fb5f2caf43_0.png",
                 "./Topography/Topo_5f21ae5e-eeef-4346-af16-860afdc0e829_1.png",
                 "./Topography/Topo_e056d328-5b7d-47d3-b6bc-42d6d245d8ec_2.png",
                 "./Topography/Topo_0a91fd8a-d887-40c2-a729-aac47441f9d8_3.png"};
-            
-            var tiles = new []{
+
+            var tiles = new[]{
                 new Tuple<int,int>(20,20),
                 new Tuple<int,int>(21,20),
                 new Tuple<int,int>(20,21),
@@ -170,12 +174,12 @@ namespace Elements.Tests
             var zoom = 16;
             var selectedOrigin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
             var sampleSize = 4;
-            
+
             var topographies = new Topography[maps.Length];
 
-            for(var i=0; i<maps.Length; i++)
+            for (var i = 0; i < maps.Length; i++)
             {
-                using(var topo = Image.Load<Rgba32>(topos[i]))
+                using (var topo = Image.Load<Rgba32>(topos[i]))
                 {
                     var size = topo.Width / sampleSize;
                     var elevationData = new double[(int)Math.Pow(size, 2)];
@@ -198,7 +202,7 @@ namespace Elements.Tests
                     var tileSize = WebMercatorProjection.GetTileSizeMeters(zoom);
                     var origin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[i].Item1, tiles[i].Item2, zoom) - new Vector3(tileSize / 2.0, tileSize / 2.0) - selectedOrigin;
                     var material = new Material($"Topo_{i}", Colors.White, 0.0f, 0.0f, maps[i]);
-                    var topography = new Topography(origin, tileSize, elevationData, material);                
+                    var topography = new Topography(origin, tileSize, elevationData, material);
                     this.Model.AddElement(topography);
                     topographies[i] = topography;
                 }
@@ -216,7 +220,7 @@ namespace Elements.Tests
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
         {
             // Read topo elevations
-            var data = JsonConvert.DeserializeObject<Dictionary<string,double[]>>(File.ReadAllText("./elevations.json"));
+            var data = JsonConvert.DeserializeObject<Dictionary<string, double[]>>(File.ReadAllText("./elevations.json"));
             var elevations = data["points"];
 
             // Compute the mapbox tile side lenth.
