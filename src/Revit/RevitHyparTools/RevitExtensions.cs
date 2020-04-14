@@ -25,7 +25,7 @@ namespace Hypar.Revit
         /// </summary>
         internal static Elements.Geometry.Profile[] GetProfiles(this PlanarFace face)
         {
-            var polygons = face.GetEdgesAsCurveLoops().Select(cL => cL.ToPolygon());
+            var polygons = face.GetEdgesAsCurveLoops().Select(cL => cL.ToPolygon(true));
 
             var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
 

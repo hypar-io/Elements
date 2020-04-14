@@ -1,19 +1,25 @@
 {
- "license": "MIT",
- "file_hash": null,
- "name": "Hypar Dynamo",
- "version": "0.0.1",
- "description": "Work with Hypar Elements in Dynamo",
- "group": "",
- "keywords": ["Hypar"],
- "dependencies": [],
- "contents": "Nodes and Extension for working with Hypar Elements",
- "engine_version": "1.2.0.2690",
- "engine": "dynamo",
- "engine_metadata": "",
- "site_url": "",
- "repository_url": "",
- "contains_binaries": true,
- "node_libraries": [ 
-    "HyparDynamo, Version=1.0.0, Culture=neutral, PublicKeyToken=null"] 
+    "license": "MIT",
+    "file_hash": null,
+    "name": "Hypar Dynamo",
+    "version": "0.0.5",
+    "description": "Dynamo nodes for creating Hypar Elements.  To learn more about Hypar visit https://hypar.io/.  To learn about Hypar's Elements library visit https://github.com/hypar-io/Elements.",
+    "group": "",
+    "keywords": [
+        "hypar",
+        "gltf",
+        "wall",
+        "floor"
+    ],
+    "dependencies": [],
+    "contents": "Nodes and Extension for working with Hypar Elements",
+    "engine_version": "1.2.0.2690",
+    "engine": "dynamo",
+    "engine_metadata": "",
+    "site_url": "",
+    "repository_url": "",
+    "contains_binaries": true,
+    "node_libraries": [
+        "HyparDynamo, Version=1.0.0, Culture=neutral, PublicKeyToken=null"
+    ]
 }
