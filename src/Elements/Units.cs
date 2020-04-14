@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Elements
 {
@@ -79,7 +80,7 @@ namespace Elements
         public static double GetConversionToMeters(LengthUnit from)
         {
             var conversion = 1.0;
-            switch(from)
+            switch (from)
             {
                 case LengthUnit.Kilometer:
                     conversion = 1000.0;
@@ -156,6 +157,58 @@ namespace Elements
             /// West
             /// </summary>
             West
+        }
+
+        /// <summary>
+        /// Unit types.
+        /// </summary>        
+        public enum UnitType
+        {
+            /// <summary>
+            /// None
+            /// </summary>
+            [EnumMember(Value = "none")]
+            None,
+            /// <summary>
+            /// Area
+            /// </summary>
+            [EnumMember(Value = "area")]
+            Area,
+            /// <summary>
+            /// Force
+            /// </summary>
+            [EnumMember(Value = "force")]
+            Force,
+            /// <summary>
+            /// Length
+            /// </summary>
+            [EnumMember(Value = "length")]
+            Length,
+            /// <summary>
+            /// Mass
+            /// </summary>
+            [EnumMember(Value = "mass")]
+            Mass,
+            /// <summary>
+            /// Plane Angle
+            /// </summary>
+            [EnumMember(Value = "plane_angle")]
+            PlaneAngle,
+            /// <summary>
+            /// Pressure
+            /// </summary>
+            [EnumMember(Value = "pressure")]
+            Pressure,
+            /// <summary>
+            /// Time
+            /// </summary>
+            [EnumMember(Value = "time")]
+            Time,
+            /// <summary>
+            /// Volume
+            /// </summary>
+            [EnumMember(Value = "volume")]
+            Volume,
         }
     }
 }
