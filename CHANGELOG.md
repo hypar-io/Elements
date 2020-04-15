@@ -3,6 +3,16 @@
 ## 0.7.0
 ### Fixed
 - #271
+- #265
+
+### Added
+- `Curve.ToPolyline(...)`
+- `Circle.ToPolygon(...)`
+- Implicit conversion `Curve` -> `Polyline`.
+- Implcit conversion `Circle` -> `Polygon`.
+
+### Deprecated
+- `Polygon.Circle(...)`
 
 ## 0.6.2
 ### Added

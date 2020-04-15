@@ -96,5 +96,21 @@ namespace Hypar.Tests
             Assert.Equal(-350, comp.StartAngle);
             Assert.Equal(-10, comp.EndAngle);
         }
+
+        [Fact]
+        public void ToPolyline()
+        {
+            var arc = new Arc(Vector3.Origin, 1, 10, 20);
+            var p = arc.ToPolyline(10);
+            Assert.Equal(10, p.Segments().Length);
+        }
+
+        [Fact]
+        public void ToPolygon()
+        {
+            var c = new Circle(Vector3.Origin, 1);
+            var p = c.ToPolygon(10);
+            Assert.Equal(10, p.Segments().Length);
+        }
     }
 }

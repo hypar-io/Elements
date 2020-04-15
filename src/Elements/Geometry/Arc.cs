@@ -14,6 +14,21 @@ namespace Elements.Geometry
     public partial class Arc : ICurve, IEquatable<Arc>
     {
         /// <summary>
+        /// Construct an arc.
+        /// </summary>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
+        /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
+        public Arc(double radius, double startAngle, double endAngle)
+            : base()
+        {
+            this.Center = Vector3.Origin;
+            this.Radius = radius;
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
+        }
+
+        /// <summary>
         /// Calculate the length of the arc.
         /// </summary>
         public override double Length()
@@ -55,7 +70,7 @@ namespace Elements.Geometry
             var theta = DegToRad(angle);
             var x = this.Center.X + this.Radius * Math.Cos(theta);
             var y = this.Center.Y + this.Radius * Math.Sin(theta);
-            return new Vector3(x,y);
+            return new Vector3(x, y);
         }
 
         /// <summary>
@@ -66,7 +81,7 @@ namespace Elements.Geometry
         public override Transform TransformAt(double u)
         {
             var p = PointAt(u);
-            var x = (p-this.Center).Unitized();
+            var x = (p - this.Center).Unitized();
             var y = Vector3.ZAxis;
             return new Transform(p, x, x.Cross(y));
         }
@@ -125,12 +140,12 @@ namespace Elements.Geometry
             var d = MinimumChordLength;
             var r = this.Radius;
             var t = 2 * Math.Asin(d / (2 * r));
-            var div = (int)Math.Ceiling((DegToRad(partialAngleSpan))/t);
+            var div = (int)Math.Ceiling((DegToRad(partialAngleSpan)) / t);
 
-            var parameters = new double[div+1];
+            var parameters = new double[div + 1];
             for (var i = 0; i <= div; i++)
             {
-                var u = startSetback + i * (parameterSpan/div);
+                var u = startSetback + i * (parameterSpan / div);
                 parameters[i] = u;
             }
             return parameters;
@@ -143,7 +158,7 @@ namespace Elements.Geometry
         {
             var parameters = GetSampleParameters();
             var vertices = new List<Vector3>();
-            foreach(var p in parameters)
+            foreach (var p in parameters)
             {
                 vertices.Add(PointAt(p));
             }
@@ -157,13 +172,13 @@ namespace Elements.Geometry
         /// <returns>Returns true if the two arcs are equal, otherwise false.</returns>
         public bool Equals(Arc other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }
             return this.Center.Equals(other.Center) && this.StartAngle == other.StartAngle && this.EndAngle == other.EndAngle;
         }
-        
+
         /// <summary>
         /// Return the arc which is the complement of this arc.
         /// </summary>
@@ -172,11 +187,17 @@ namespace Elements.Geometry
             var complementSpan = 360.0 - (this.EndAngle - this.StartAngle);
             var newEnd = this.StartAngle;
             var newStart = this.EndAngle;
-            if(newStart > newEnd)
+            if (newStart > newEnd)
             {
                 newStart = newStart - 360.0;
             }
             return new Arc(this.Center, this.Radius, newStart, newEnd);
         }
+
+        /// <summary>
+        /// Convert an arc to a polyline.
+        /// </summary>
+        /// <param name="a">The arc to convert.</param>
+        public static implicit operator Polyline(Arc a) => a.ToPolyline(10);
     }
 }
