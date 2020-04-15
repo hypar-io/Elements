@@ -1,6 +1,7 @@
 using System;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -19,6 +20,12 @@ namespace Elements
         protected Mesh _mesh;
 
         /// <summary>
+        /// The topography's mesh.
+        /// </summary>
+        [JsonIgnore]
+        public Mesh Mesh => this._mesh;
+
+        /// <summary>
         /// Construct an import mesh element.
         /// </summary>
         /// <param name="mesh">The element's mesh.</param>
@@ -27,6 +34,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this element a definition?</param>
         /// <param name="id">The element's id.</param>
         /// <param name="name">The element's name.</param>
+        [JsonConstructor]
         public MeshElement(Mesh mesh,
                             Material material = null,
                             Transform transform = null,
@@ -40,6 +48,20 @@ namespace Elements
                                                        name)
         {
             this._mesh = mesh;
+        }
+
+        internal MeshElement(Material material = null,
+                            Transform transform = null,
+                            bool isElementDefinition = false,
+                            Guid id = default(Guid),
+                            string name = null) : base(transform == null ? new Transform() : transform,
+                                                       material == null ? BuiltInMaterials.Default : material,
+                                                       null,
+                                                       isElementDefinition,
+                                                       id == default(Guid) ? Guid.NewGuid() : id,
+                                                       name)
+        {
+            this._mesh = new Mesh();
         }
 
         /// <summary>
