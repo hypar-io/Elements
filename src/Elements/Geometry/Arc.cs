@@ -193,11 +193,5 @@ namespace Elements.Geometry
             }
             return new Arc(this.Center, this.Radius, newStart, newEnd);
         }
-
-        /// <summary>
-        /// Convert an arc to a polyline.
-        /// </summary>
-        /// <param name="a">The arc to convert.</param>
-        public static implicit operator Polyline(Arc a) => a.ToPolyline(10);
     }
 }

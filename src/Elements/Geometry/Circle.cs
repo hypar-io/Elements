@@ -36,11 +36,5 @@ namespace Elements.Geometry
             }
             return new Polygon(pts);
         }
-
-        /// <summary>
-        /// Convert a circle to a polygon
-        /// </summary>
-        /// <param name="c">The circle to convert.</param>
-        public static implicit operator Polygon(Circle c) => c.ToPolygon(10);
     }
 }
