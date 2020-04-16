@@ -36,6 +36,7 @@ namespace Elements.Geometry.Tests
 
             Assert.Equal(2, seed.Voids.Count());
         }
+
         [Fact]
         public void ProfileUnion()
         {
