@@ -35,7 +35,7 @@ namespace Elements.Geometry
         
             this.Perimeter = @perimeter;
             this.Voids = @voids;
-
+        
             if(validator != null)
             {
                 validator.PostConstruct(this);
