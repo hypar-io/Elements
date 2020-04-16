@@ -1,6 +1,10 @@
 name: Build/Test on PR
 
-on: pull_request
+on:
+  pull_request:
+  push:
+    branch:
+      - master
 
 jobs:
   build:
