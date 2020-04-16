@@ -16,15 +16,18 @@ namespace Elements.Geometry.Tests
             // small grid of rough circles is unioned
             // 2x3 grid shoud produce 2 openings
             var circle = Polygon.Circle(3, 4);
-            var seed = new Profile(circle);
-            var originals = new List<Profile> { seed };
+            var smallCircle = Polygon.Circle(1, 4);
+
+            var seed = new Profile(circle, new List<Polygon> { smallCircle }, Guid.NewGuid(), "");
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 2; j++)
                 {
                     Transform t = new Transform(5 * i, 5 * j, 0);
-                    var newCircle = new Profile(new Polygon(circle.Vertices.Select(v => t.OfPoint(v)).ToArray()));
-                    originals.Add(newCircle);
+                    var newCircle = new Profile(new Polygon(circle.Vertices.Select(v => t.OfPoint(v)).ToArray()),
+                                                new List<Polygon> { new Polygon(smallCircle.Vertices.Select(v => t.OfPoint(v)).ToArray()) },
+                                                Guid.NewGuid(),
+                                                "");
 
                     seed = seed.Union(newCircle);
 
@@ -34,26 +37,7 @@ namespace Elements.Geometry.Tests
             var floor = new Floor(seed, 1);
             this.Model.AddElement(floor);
 
-            Assert.Equal(2, seed.Voids.Count());
-        }
-
-        [Fact]
-        public void ProfileUnion()
-        {
-            this.Name = "ProfileUnion";
-            var largeCirc = Polygon.Circle(3, 4);
-            var smallCirc = Polygon.Circle(1, 4);
-            var firstProfile = new Profile(largeCirc, new List<Polygon> { smallCirc }, Guid.NewGuid(), "");
-
-            var transform = new Transform(new Vector3(4.5, 0, 0));
-            var secondProfile = transform.OfProfile(firstProfile);
-
-            var unionProfile = firstProfile.Union(secondProfile);
-
-            var floor = new Floor(unionProfile, 1);
-            this.Model.AddElement(floor);
-
-            Assert.Equal(2, unionProfile.Voids.Count());
+            Assert.Equal(8, seed.Voids.Count());
         }
     }
 }
