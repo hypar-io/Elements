@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClipperLib;
 
 namespace Elements.Geometry
 {
@@ -57,7 +58,7 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("Unable to construct a profile. More than one of the polygons supplied are not contained by any other.");
             }
-            if(outerMostIndices.Count() == 0)
+            if (outerMostIndices.Count() == 0)
             {
                 throw new ArgumentException("Unable to construct a profile. All the supplied polygons are inside other supplied polygons. Sounds like a geometric paradox!");
             }
@@ -131,6 +132,30 @@ namespace Elements.Geometry
 
             return transform.OfProfile(this);
         }
+
+        /// <summary>
+        /// Perform a union operation, returning a new profile that is the union of the current profile with the other profile
+        /// <param name="profile">The profile with which to create a union.</param>
+        /// </summary>
+        public Profile Union(Profile profile)
+        {
+            var clipper = new ClipperLib.Clipper();
+            clipper.AddPath(this.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPath(profile.Perimeter.ToClipperPath(), PolyType.ptClip, true);
+
+            if (this.Voids != null && this.Voids.Count > 0)
+            {
+                clipper.AddPaths(this.Voids.Select(v => v.ToClipperPath()).ToList(), PolyType.ptSubject, true);
+            }
+            if (profile.Voids != null && profile.Voids.Count > 0)
+            {
+                clipper.AddPaths(profile.Voids.Select(v => v.ToClipperPath()).ToList(), PolyType.ptClip, true);
+            }
+            var solution = new List<List<ClipperLib.IntPoint>>();
+            clipper.Execute(ClipType.ctUnion, solution);
+            return new Profile(solution[0].ToPolygon(), solution.Skip(1).Select(s => s.ToPolygon()).ToList(), Guid.NewGuid(), "");
+        }
+
 
         /// <summary>
         /// Default constructor for profile.
