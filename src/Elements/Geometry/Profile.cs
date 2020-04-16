@@ -153,7 +153,7 @@ namespace Elements.Geometry
             }
             var solution = new List<List<ClipperLib.IntPoint>>();
             clipper.Execute(ClipType.ctUnion, solution);
-            return new Profile(solution[0].ToPolygon(), solution.Skip(1).Select(s => s.ToPolygon()).ToList(), Guid.NewGuid(), "");
+            return new Profile(solution.Select(s => s.ToPolygon()).ToList());
         }
 
 
