@@ -4,6 +4,10 @@
 ### Fixed
 - #271
 
+### Added
+- `Transform.Move(double x, double y, double z)`
+- `Transform.Rotate(double angle)`
+
 ## 0.6.2
 ### Added
 - `Material.Unlit`
