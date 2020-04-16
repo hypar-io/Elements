@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Xunit;
-using Elements.Serialization.glTF;
 using System.Collections.Generic;
 using Elements.Tests;
 
