@@ -67,7 +67,6 @@ namespace Elements.Geometry
             var voids = indices.Except(outerMostIndices).Select(i => polygons[i]);
             this.Perimeter = perimeter;
             this.Voids = voids.ToList();
-
         }
 
         /// <summary>
@@ -122,6 +121,7 @@ namespace Elements.Geometry
                 this.Voids[i].Transform(t);
             }
         }
+
         /// <summary>
         /// Return a new profile that is this profile scaled about the origin by the desired amount.
         /// </summary>
@@ -155,7 +155,6 @@ namespace Elements.Geometry
             clipper.Execute(ClipType.ctUnion, solution);
             return new Profile(solution.Select(s => s.ToPolygon()).ToList());
         }
-
 
         /// <summary>
         /// Default constructor for profile.
@@ -288,6 +287,5 @@ namespace Elements.Geometry
             }
             return Polygon.Contains(allLines, point, out containment);
         }
-
     }
 }
