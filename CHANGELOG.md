@@ -5,6 +5,7 @@
 - #271
 - #265
 - #221
+- #229
 
 ### Added
 - `Curve.ToPolyline(int divisions = 10)`
