@@ -3,6 +3,7 @@
 ## 0.7.0
 ### Fixed
 - #271
+- #221
 
 ### Added
 - `Transform.Move(double x, double y, double z)`

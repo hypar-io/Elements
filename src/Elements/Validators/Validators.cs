@@ -23,7 +23,7 @@ namespace Elements.Validators
             var radius = (double)args[1];
             var startAngle = (double)args[2];
             var endAngle = (double)args[3];
-            
+
             if (endAngle > 360.0 || startAngle > 360.00)
             {
                 throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
@@ -52,7 +52,7 @@ namespace Elements.Validators
 
         public void PreConstruct(object[] args)
         {
-            var start= (Vector3)args[0];
+            var start = (Vector3)args[0];
             var end = (Vector3)args[1];
 
             if (start.IsAlmostEqualTo(end))
@@ -68,7 +68,14 @@ namespace Elements.Validators
 
         public void PostConstruct(object obj)
         {
-            return;
+            // TODO: NJsonSchema does not have a way to specify that a property
+            // should have a default value, but also allow a null value. Remove
+            // this when we make Profile.Voids non nullable.
+            var profile = (Profile)obj;
+            if (profile.Voids == null)
+            {
+                profile.Voids = new List<Polygon>();
+            }
         }
 
         public void PreConstruct(object[] args)
@@ -101,17 +108,17 @@ namespace Elements.Validators
             var id = (Guid)args[6];
             var name = (string)args[7];
 
-            if(texture != null && !File.Exists(texture))
+            if (texture != null && !File.Exists(texture))
             {
                 throw new FileNotFoundException("The material could not be created. The specified texture does not exist.");
             }
-            
-            if(specularFactor < 0.0 || glossinessFactor < 0.0)
+
+            if (specularFactor < 0.0 || glossinessFactor < 0.0)
             {
                 throw new ArgumentOutOfRangeException("The material could not be created. Specular and glossiness values must be less greater than 0.0.");
             }
 
-            if(specularFactor > 1.0 || glossinessFactor > 1.0)
+            if (specularFactor > 1.0 || glossinessFactor > 1.0)
             {
                 throw new ArgumentOutOfRangeException("The material could not be created. Color, specular, and glossiness values must be less than 1.0.");
             }
@@ -132,7 +139,7 @@ namespace Elements.Validators
             var origin = (Vector3)args[0];
             var normal = (Vector3)args[1];
 
-            if(normal.IsZero())
+            if (normal.IsZero())
             {
                 throw new ArgumentException($"The plane could not be constructed. The normal, {normal}, has zero length.");
             }
@@ -154,12 +161,12 @@ namespace Elements.Validators
             var y = (double)args[1];
             var z = (double)args[2];
 
-            if(Double.IsNaN(x) || Double.IsNaN(y) || Double.IsNaN(z))
+            if (Double.IsNaN(x) || Double.IsNaN(y) || Double.IsNaN(z))
             {
                 throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
             }
 
-            if(Double.IsInfinity(x) || Double.IsInfinity(y) || Double.IsInfinity(z))
+            if (Double.IsInfinity(x) || Double.IsInfinity(y) || Double.IsInfinity(z))
             {
                 throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
             }
@@ -182,12 +189,12 @@ namespace Elements.Validators
             var blue = (double)args[2];
             var alpha = (double)args[3];
 
-            if(red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0)
+            if (red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0)
             {
                 throw new ArgumentOutOfRangeException("All components must have a value greater than 0.0.");
             }
 
-            if(red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
+            if (red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
             {
                 throw new ArgumentOutOfRangeException("All components must have a value less than or equal to 1.0.");
             }
@@ -202,7 +209,7 @@ namespace Elements.Validators
         {
             var extrude = (Extrude)obj;
             extrude.PropertyChanged += (sender, args) => { extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction); };
-            extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction);;
+            extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction); ;
         }
 
         public void PreConstruct(object[] args)
@@ -212,7 +219,7 @@ namespace Elements.Validators
             var direction = (Vector3)args[2];
             var isVoid = (bool)args[3];
 
-            if(direction.Length() == 0)
+            if (direction.Length() == 0)
             {
                 throw new ArgumentException("The extrude cannot be created. The provided direction has zero length.");
             }
@@ -226,8 +233,8 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var sweep = (Sweep)obj;
-            sweep.PropertyChanged += (sender, args) => { sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback);; };
-            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback);;
+            sweep.PropertyChanged += (sender, args) => { sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback); ; };
+            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback); ;
         }
 
         public void PreConstruct(object[] args)
@@ -243,8 +250,8 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var lamina = (Lamina)obj;
-            lamina.PropertyChanged += (sender, args) => { lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);; };
-            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);;
+            lamina.PropertyChanged += (sender, args) => { lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter); ; };
+            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter); ;
         }
 
         public void PreConstruct(object[] args)
@@ -265,7 +272,7 @@ namespace Elements.Validators
         public void PreConstruct(object[] args)
         {
             var components = (IList<double>)args[0];
-            if(components.Count != 12)
+            if (components.Count != 12)
             {
                 throw new ArgumentOutOfRangeException("The matrix could not be created. The component array must have 16 values.");
             }
@@ -285,7 +292,7 @@ namespace Elements.Validators
         {
             var vertices = (IList<Vector3>)args[0];
 
-            if(!vertices.AreCoplanar())
+            if (!vertices.AreCoplanar())
             {
                 throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
             }
@@ -308,7 +315,7 @@ namespace Elements.Validators
         {
             var vertices = (IList<Vector3>)args[0];
 
-            if(!vertices.AreCoplanar())
+            if (!vertices.AreCoplanar())
             {
                 throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
             }
