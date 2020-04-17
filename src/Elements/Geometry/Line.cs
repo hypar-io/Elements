@@ -214,7 +214,10 @@ namespace Elements.Geometry
             if (total < len && !removeShortSegments)
             {
                 var a = this.Start + d * total;
-                lines.Add(new Line(a, End));
+                if (!a.IsAlmostEqualTo(End))
+                {
+                    lines.Add(new Line(a, End));
+                }
             }
             return lines;
         }
