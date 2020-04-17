@@ -16,7 +16,7 @@ namespace Elements.Serialization.IFC
         internal static Beam ToBeam(this IfcBeam beam)
         {
             var elementTransform = beam.ObjectPlacement.ToTransform();
-            
+
             var solid = beam.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
 
             // foreach (var cis in beam.ContainedInStructure)
@@ -24,14 +24,14 @@ namespace Elements.Serialization.IFC
             //     cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
             // }
 
-            if(solid != null)
+            if (solid != null)
             {
                 var solidTransform = solid.Position.ToTransform();
 
                 var c = solid.SweptArea.ToCurve();
-                if(c is Polygon)
+                if (c is Polygon)
                 {
-                    var cl = new Line(Vector3.Origin, 
+                    var cl = new Line(Vector3.Origin,
                         solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
                     var result = new Beam(solidTransform.OfLine(cl),
                                           new Profile((Polygon)c),
@@ -43,7 +43,7 @@ namespace Elements.Serialization.IFC
                                           false,
                                           IfcGuid.FromIfcGUID(beam.GlobalId),
                                           beam.Name);
-                    return result; 
+                    return result;
                 }
             }
             return null;
@@ -52,14 +52,14 @@ namespace Elements.Serialization.IFC
         internal static Column ToColumn(this IfcColumn column)
         {
             var elementTransform = column.ObjectPlacement.ToTransform();
-            
+
             var solid = column.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
             foreach (var cis in column.ContainedInStructure)
             {
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(elementTransform);
             }
 
-            if(solid != null)
+            if (solid != null)
             {
                 var solidTransform = solid.Position.ToTransform();
                 var c = solid.SweptArea.ToCurve();
@@ -91,7 +91,7 @@ namespace Elements.Serialization.IFC
 
             var localPlacement = space.ObjectPlacement.ToTransform();
             transform.Concatenate(localPlacement);
-            
+
             var foundSolid = repItems.First();
             var material = new Material("space", new Color(1.0f, 0.0f, 1.0f, 0.5f), 0.0f, 0.0f);
             if (foundSolid.GetType() == typeof(IfcExtrudedAreaSolid))
@@ -109,7 +109,7 @@ namespace Elements.Serialization.IFC
                 var solid = (IfcFacetedBrep)foundSolid;
                 var shell = solid.Outer;
                 var newSolid = new Solid();
-                for(var i=0; i< shell.CfsFaces.Count; i++)
+                for (var i = 0; i < shell.CfsFaces.Count; i++)
                 {
                     var f = shell.CfsFaces[i];
                     foreach (var b in f.Bounds)
@@ -155,15 +155,15 @@ namespace Elements.Serialization.IFC
             var solidTransform = solid.Position.ToTransform();
 
             solidTransform.Concatenate(transform);
-            var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth, 
+            var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth,
                 solidTransform, BuiltInMaterials.Concrete, null, false, IfcGuid.FromIfcGUID(slab.GlobalId));
 
-            floor.Openings.AddRange(openings.Select(o=>o.ToOpening()));
+            floor.Openings.AddRange(openings.Select(o => o.ToOpening()));
 
             return floor;
         }
-    
-        internal static Wall ToWall(this IfcWallStandardCase wall, 
+
+        internal static Wall ToWall(this IfcWallStandardCase wall,
             IEnumerable<IfcOpeningElement> openings)
         {
             var transform = new Transform();
@@ -171,16 +171,16 @@ namespace Elements.Serialization.IFC
 
             // An extruded face solid.
             var solid = wall.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
-            if(solid == null)
+            if (solid == null)
             {
                 // It's possible that the rep is a boolean.
                 var boolean = wall.RepresentationsOfType<IfcBooleanClippingResult>().FirstOrDefault();
-                if(boolean != null)
+                if (boolean != null)
                 {
                     solid = boolean.FirstOperand.Choice as IfcExtrudedAreaSolid;
-                    if(solid == null)
+                    if (solid == null)
                     {
-                        solid = boolean.SecondOperand.Choice as IfcExtrudedAreaSolid; 
+                        solid = boolean.SecondOperand.Choice as IfcExtrudedAreaSolid;
                     }
                 }
 
@@ -189,10 +189,10 @@ namespace Elements.Serialization.IFC
                 //     throw new Exception("No usable solid was found when converting an IfcWallStandardCase to a Wall.");
                 // }
             }
-            
+
             // A centerline wall with material layers.
             // var axis = (Polyline)wall.RepresentationsOfType<IfcPolyline>().FirstOrDefault().ToICurve(false);
-            
+
             foreach (var cis in wall.ContainedInStructure)
             {
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
@@ -200,10 +200,10 @@ namespace Elements.Serialization.IFC
 
             // var os = openings.Select(o=>o.ToOpening()).ToArray();
 
-            if(solid != null)
+            if (solid != null)
             {
                 var c = solid.SweptArea.ToCurve();
-                if(c is Polygon)
+                if (c is Polygon)
                 {
                     transform.Concatenate(solid.Position.ToTransform());
                     var result = new Wall((Polygon)c,
@@ -219,18 +219,18 @@ namespace Elements.Serialization.IFC
             }
             return null;
         }
-    
+
         internal static Opening ToOpening(this IfcOpeningElement opening)
         {
             var openingTransform = opening.ObjectPlacement.ToTransform();
             var s = opening.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
-            if(s != null)
+            if (s != null)
             {
                 var solidTransform = s.Position.ToTransform();
                 solidTransform.Concatenate(openingTransform);
                 var profile = (Polygon)s.SweptArea.ToCurve();
                 // Console.WriteLine($"Opening profile:\n{profile.ToString()}\n");
-                
+
                 var newOpening = new Opening(profile,
                                              (IfcLengthMeasure)s.Depth,
                                              solidTransform,
@@ -243,23 +243,23 @@ namespace Elements.Serialization.IFC
         }
 
         private static Solid Representations(this IfcProduct product)
-        {   
-            var reps = product.Representation.Representations.SelectMany(r=>r.Items);
-            foreach(var r in reps)
+        {
+            var reps = product.Representation.Representations.SelectMany(r => r.Items);
+            foreach (var r in reps)
             {
-                if(r is IfcSurfaceCurveSweptAreaSolid)
+                if (r is IfcSurfaceCurveSweptAreaSolid)
                 {
                     throw new Exception("IfcSurfaceCurveSweptAreaSolid is not supported yet.");
                 }
-                if(r is IfcRevolvedAreaSolid)
+                if (r is IfcRevolvedAreaSolid)
                 {
                     throw new Exception("IfcRevolvedAreaSolid is not supported yet.");
                 }
-                if(r is IfcSweptDiskSolid)
+                if (r is IfcSweptDiskSolid)
                 {
                     throw new Exception("IfcSweptDiskSolid is not supported yet.");
                 }
-                else if(r is IfcExtrudedAreaSolid)
+                else if (r is IfcExtrudedAreaSolid)
                 {
                     var eas = (IfcExtrudedAreaSolid)r;
                     var profileDef = (IfcArbitraryClosedProfileDef)eas.SweptArea;
@@ -267,13 +267,13 @@ namespace Elements.Serialization.IFC
                     var outline = pline.ToPolygon(true);
                     var solid = Solid.SweepFace(outline, null, (IfcLengthMeasure)eas.Depth);
                 }
-                else if(r is IfcFacetedBrep)
+                else if (r is IfcFacetedBrep)
                 {
                     var solid = new Solid();
                     var fbr = (IfcFacetedBrep)r;
                     var shell = fbr.Outer;
                     var faces = new Face[shell.CfsFaces.Count];
-                    for(var i=0; i< shell.CfsFaces.Count; i++)
+                    for (var i = 0; i < shell.CfsFaces.Count; i++)
                     {
                         var f = shell.CfsFaces[i];
                         var boundCount = 0;
@@ -283,13 +283,13 @@ namespace Elements.Serialization.IFC
                         {
                             var loop = (IfcPolyLoop)b.Bound;
                             var newLoop = loop.Polygon.ToLoop(solid);
-                            if(boundCount == 0)
+                            if (boundCount == 0)
                             {
                                 outer = newLoop;
                             }
                             else
                             {
-                                inner[boundCount-1] = newLoop;
+                                inner[boundCount - 1] = newLoop;
                             }
                             boundCount++;
                         }
@@ -297,7 +297,7 @@ namespace Elements.Serialization.IFC
                     }
                     return solid;
                 }
-                else if(r is IfcFacetedBrepWithVoids)
+                else if (r is IfcFacetedBrepWithVoids)
                 {
                     throw new Exception("IfcFacetedBrepWithVoids is not supported yet.");
                 }
@@ -305,10 +305,10 @@ namespace Elements.Serialization.IFC
             return null;
         }
 
-        private static IEnumerable<T> RepresentationsOfType<T>(this IfcProduct product) where T: IfcGeometricRepresentationItem
+        private static IEnumerable<T> RepresentationsOfType<T>(this IfcProduct product) where T : IfcGeometricRepresentationItem
         {
-            var reps = product.Representation.Representations.SelectMany(r=>r.Items);
-            if(reps.Any())
+            var reps = product.Representation.Representations.SelectMany(r => r.Items);
+            if (reps.Any())
             {
                 return reps.OfType<T>();
             }
@@ -321,7 +321,7 @@ namespace Elements.Serialization.IFC
         //     // We use the Z extrude direction because the direction is 
         //     // relative to the local placement, which is a transform at the
         //     // beam's end with the Z axis pointing along the direction.
-            
+
         //     // var extrudeDirection = opening.ExtrudeDirection.ToIfcDirection();
         //     // var position = new Transform().ToIfcAxis2Placement3D(doc);
         //     // var solid = new IfcExtrudedAreaSolid(sweptArea, position, 
@@ -335,7 +335,7 @@ namespace Elements.Serialization.IFC
         //     var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{shape});
 
         //     var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(opening.Id), null, null, null, null, localPlacement, productRep, null);
-            
+
         //     // doc.AddEntity(sweptArea);
         //     // doc.AddEntity(extrudeDirection);
         //     // doc.AddEntity(position);
@@ -351,31 +351,33 @@ namespace Elements.Serialization.IFC
 
         private static ICurve ToCurve(this IfcProfileDef profile)
         {
-            if(profile is IfcCircleProfileDef)
+            if (profile is IfcCircleProfileDef)
             {
                 var cpd = (IfcCircleProfileDef)profile;
-                return Polygon.Circle((IfcLengthMeasure)cpd.Radius);
+                // TODO: Remove this conversion to a polygon when downstream
+                // functions support arcs and circles.
+                return new Circle((IfcLengthMeasure)cpd.Radius).ToPolygon(10);
             }
-            else if(profile is IfcParameterizedProfileDef)
+            else if (profile is IfcParameterizedProfileDef)
             {
                 var ipd = (IfcParameterizedProfileDef)profile;
                 return ipd.ToCurve();
             }
-            else if(profile is IfcArbitraryOpenProfileDef)
+            else if (profile is IfcArbitraryOpenProfileDef)
             {
                 var aopd = (IfcArbitraryOpenProfileDef)profile;
                 return aopd.ToCurve();
             }
-            else if(profile is IfcArbitraryClosedProfileDef)
+            else if (profile is IfcArbitraryClosedProfileDef)
             {
                 var acpd = (IfcArbitraryClosedProfileDef)profile;
                 return acpd.ToCurve();
             }
-            else if(profile is IfcCompositeProfileDef)
+            else if (profile is IfcCompositeProfileDef)
             {
                 throw new Exception("IfcCompositeProfileDef is not supported yet.");
             }
-            else if(profile is IfcDerivedProfileDef)
+            else if (profile is IfcDerivedProfileDef)
             {
                 throw new Exception("IfcDerivedProfileDef is not supported yet.");
             }
@@ -384,17 +386,17 @@ namespace Elements.Serialization.IFC
 
         private static ICurve ToCurve(this IfcParameterizedProfileDef profile)
         {
-            if(profile is IfcRectangleProfileDef)
+            if (profile is IfcRectangleProfileDef)
             {
                 var rect = (IfcRectangleProfileDef)profile;
                 var p = Polygon.Rectangle((IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim);
                 var t = new Transform(rect.Position.Location.ToVector3());
                 return t.OfPolygon(p);
             }
-            else if(profile is IfcCircleProfileDef)
+            else if (profile is IfcCircleProfileDef)
             {
                 var circle = (IfcCircleProfileDef)profile;
-                return Polygon.Circle((IfcLengthMeasure)circle.Radius);
+                return new Circle((IfcLengthMeasure)circle.Radius);
             }
             else
             {
@@ -414,16 +416,16 @@ namespace Elements.Serialization.IFC
 
         private static ICurve ToCurve(this IfcCurve curve, bool closed)
         {
-            if(curve is IfcBoundedCurve)
+            if (curve is IfcBoundedCurve)
             {
-                if(curve is IfcCompositeCurve)
+                if (curve is IfcCompositeCurve)
                 {
                     throw new Exception("IfcCompositeCurve is not supported yet.");
                 }
-                else if(curve is IfcPolyline)
+                else if (curve is IfcPolyline)
                 {
                     var pl = (IfcPolyline)curve;
-                    if(closed)
+                    if (closed)
                     {
                         return pl.ToPolygon(true);
                     }
@@ -432,7 +434,7 @@ namespace Elements.Serialization.IFC
                         return pl.ToPolyline();
                     }
                 }
-                else if(curve is IfcTrimmedCurve)
+                else if (curve is IfcTrimmedCurve)
                 {
                     throw new Exception("IfcTrimmedCurve is not supported yet.");
                 }
@@ -441,15 +443,15 @@ namespace Elements.Serialization.IFC
                     throw new Exception("IfcBSplineCurve is not supported yet.");
                 }
             }
-            else if(curve is IfcConic)
+            else if (curve is IfcConic)
             {
                 throw new Exception("IfcConic is not supported yet.");
             }
-            else if(curve is IfcOffsetCurve2D)
+            else if (curve is IfcOffsetCurve2D)
             {
                 throw new Exception("IfcOffsetCurve2D is not supported yet.");
             }
-            else if(curve is IfcOffsetCurve3D)
+            else if (curve is IfcOffsetCurve3D)
             {
                 throw new Exception("IfcOffsetCurve3D is not supported yet.");
             }
@@ -491,22 +493,22 @@ namespace Elements.Serialization.IFC
 
         private static Polyline ToPolyline(this IfcPolyline polyline)
         {
-            var verts = polyline.Points.Select(p=>p.ToVector3()).ToArray();
+            var verts = polyline.Points.Select(p => p.ToVector3()).ToArray();
             return new Polyline(verts);
         }
 
         private static bool IsClosed(this IfcPolyline pline)
         {
             var start = pline.Points[0];
-            var end = pline.Points[pline.Points.Count-1];
+            var end = pline.Points[pline.Points.Count - 1];
             return start.Equals(end);
         }
 
         private static bool Equals(this IfcCartesianPoint point, IfcCartesianPoint other)
         {
-            for(var i=0; i<point.Coordinates.Count; i++)
+            for (var i = 0; i < point.Coordinates.Count; i++)
             {
-                if(point.Coordinates[i] != other.Coordinates[i])
+                if (point.Coordinates[i] != other.Coordinates[i])
                 {
                     return false;
                 }
@@ -560,7 +562,7 @@ namespace Elements.Serialization.IFC
         private static Transform ToTransform(this IfcLocalPlacement placement)
         {
             var t = placement.RelativePlacement.ToTransform();
-            if(placement.PlacementRelTo != null)
+            if (placement.PlacementRelTo != null)
             {
                 var tr = placement.PlacementRelTo.ToTransform();
                 t.Concatenate(tr);

@@ -3,11 +3,17 @@
 ## 0.7.0
 ### Fixed
 - #271
+- #265
 - #221
 
 ### Added
+- `Curve.ToPolyline(int divisions = 10)`
+- `Circle.ToPolygon(int divisions = 10)`
 - `Transform.Move(double x, double y, double z)`
 - `Transform.Rotate(double angle)`
+
+### Deprecated
+- `Polygon.Circle(...)`
 
 ## 0.6.2
 ### Added

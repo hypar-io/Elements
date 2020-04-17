@@ -20,7 +20,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a profile from a list of polygons. Inner polygons will be treated as voids.
+        /// Construct a profile from a collection of polygons.
+        /// If the collection contains more than one polygon, the first polygon
+        /// will be used as the perimeter and any remaining polygons will 
+        /// be used as voids.
         /// </summary>
         /// <param name="polygons">The polygons bounding this profile.</param>
         public Profile(IList<Polygon> polygons) : base(Guid.NewGuid(), null)
@@ -73,10 +76,10 @@ namespace Elements.Geometry
         /// Construct a profile.
         /// </summary>
         /// <param name="perimeter">The perimeter of the profile.</param>
-        /// <param name="singleVoid">A void in the profile.</param>
+        /// <param name="void">A void in the profile.</param>
         public Profile(Polygon perimeter,
-                       Polygon singleVoid) :
-            this(perimeter, new[] { singleVoid }, Guid.NewGuid(), null)
+                       Polygon @void) :
+            this(perimeter, new[] { @void }, Guid.NewGuid(), null)
         { }
 
         /// <summary>

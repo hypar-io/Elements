@@ -61,6 +61,21 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public abstract Transform TransformAt(double u);
 
+        /// <summary>
+        /// Create a polyline through a set of points along the curve.
+        /// </summary>
+        /// <param name="divisions">The number of divisions of the curve.</param>
+        /// <returns>A polyline.</returns>
+        public virtual Polyline ToPolyline(int divisions = 10)
+        {
+            var pts = new Vector3[divisions + 1];
+            for (int i = 0; i <= divisions; i++)
+            {
+                pts[i] = this.PointAt((double)i / (double)divisions);
+            }
+            return new Polyline(pts);
+        }
+
         internal virtual double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
         {
             return new[] { startSetback, 1.0 - endSetback };

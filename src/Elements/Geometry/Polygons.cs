@@ -46,6 +46,7 @@ namespace Elements.Geometry
         /// <param name="radius">The radius of the circle.</param>
         /// <param name="divisions">The number of divisions of the circle.</param>
         /// <returns>A circle as a Polygon tessellated into the specified number of divisions.</returns>
+        [Obsolete("Please use Elements.Geometry.Circle.ToPolygon() instead.")]
         public static Polygon Circle(double radius = 1.0, int divisions = 10)
         {
             var verts = new Vector3[divisions];
