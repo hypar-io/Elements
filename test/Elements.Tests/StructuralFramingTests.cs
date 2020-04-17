@@ -15,7 +15,7 @@ namespace Elements.Tests
         }
 
         private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
-        
+
         [Fact, Trait("Category", "Examples")]
         public void BeamExample()
         {
@@ -26,21 +26,21 @@ namespace Elements.Tests
             var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
 
             // Create a straight beam.
-            var line = new Line(Vector3.Origin, new Vector3(5,0,5));
+            var line = new Line(Vector3.Origin, new Vector3(5, 0, 5));
             var linearBeam = new Beam(line, profile, BuiltInMaterials.Wood, 0, 0, 15);
             var lineT = line.TransformAt(0).ToModelCurves(linearBeam.Transform);
 
             // Create a polygon beam.
             var polygon = Polygon.Ngon(5, 2);
-            var polygonBeam = new Beam(polygon, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(6,0,0));
+            var polygonBeam = new Beam(polygon, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(6, 0, 0));
             var polyT = polygon.TransformAt(0).ToModelCurves(polygonBeam.Transform);
 
             // Create a curved beam.
             var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
-            var arcBeam = new Beam(arc, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(12,0,0));
+            var arcBeam = new Beam(arc, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(12, 0, 0));
             var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
             // </example>
-            
+
             this.Model.AddElement(linearBeam);
             this.Model.AddElements(lineT);
             this.Model.AddElement(polygonBeam);
@@ -60,7 +60,7 @@ namespace Elements.Tests
             this.Name = testName;
 
             Curve cl = null;
-            switch(beamType)
+            switch (beamType)
             {
                 case BeamType.Line:
                     cl = ModelTest.TestLine;
@@ -91,7 +91,7 @@ namespace Elements.Tests
         {
             Curve cl = ModelTest.TestArc;
             var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel);
-            Assert.Throws<InvalidOperationException>(()=>beam.Volume());
+            Assert.Throws<InvalidOperationException>(() => beam.Volume());
         }
 
         [Fact]
@@ -105,10 +105,10 @@ namespace Elements.Tests
             var x = 0.0;
             var z = 0.0;
             var profiles = WideFlangeProfileServer.Instance.AllProfiles().ToList();
-            foreach(var profile in profiles)
+            foreach (var profile in profiles)
             {
-                var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
-                var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
+                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x + 1, 3, z));
                 var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 this.Model.AddElement(beam);
                 x += 2.0;
@@ -131,10 +131,10 @@ namespace Elements.Tests
             var x = 0.0;
             var z = 0.0;
             var profiles = HSSPipeProfileServer.Instance.AllProfiles().ToList();
-            foreach(var profile in profiles)
+            foreach (var profile in profiles)
             {
-                var color = new Color((float)(x/20.0), (float)(z/profiles.Count), 0.0f, 1.0f);
-                var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
+                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
                 var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 this.Model.AddElement(beam);
                 x += 2.0;
@@ -160,7 +160,7 @@ namespace Elements.Tests
         public void Brace()
         {
             this.Name = "Brace";
-            var line = new Line(Vector3.Origin, new Vector3(3,3,3));
+            var line = new Line(Vector3.Origin, new Vector3(3, 3, 3));
             var brace = new Brace(line, this._testProfile, BuiltInMaterials.Steel);
             Assert.Equal(BuiltInMaterials.Steel, brace.Material);
             Assert.Equal(line, brace.Curve);
@@ -171,18 +171,18 @@ namespace Elements.Tests
         public void Setbacks()
         {
             this.Name = "BeamSetbacks";
-            var line = new Line(Vector3.Origin, new Vector3(3,3,0));
+            var line = new Line(Vector3.Origin, new Vector3(3, 3, 0));
             var mc = new ModelCurve(line, BuiltInMaterials.XAxis);
             this.Model.AddElement(mc);
             // Normal setbacks
             var beam = new Beam(line, this._testProfile, BuiltInMaterials.Steel, 2.0, 2.0);
             this.Model.AddElement(beam);
 
-            var line1 = new Line(new Vector3(2,0,0), new Vector3(5,3,0));
+            var line1 = new Line(new Vector3(2, 0, 0), new Vector3(5, 3, 0));
             var mc1 = new ModelCurve(line1, BuiltInMaterials.XAxis);
             this.Model.AddElement(mc1);
 
-            var sb = line1.Length()/2;
+            var sb = line1.Length() / 2;
             // Setbacks longer in total than the beam.
             // We are testing to ensure that the beam gets created
             // without throwing. It will not have setbacks.
@@ -190,7 +190,7 @@ namespace Elements.Tests
             this.Model.AddElement(beam1);
         }
 
-        [Fact(Skip="Benchmark")]
+        [Fact(Skip = "Benchmark")]
         public void Benchmark()
         {
             var sw = new Stopwatch();
@@ -201,9 +201,9 @@ namespace Elements.Tests
             var profile = WideFlangeProfileServer.Instance.AllProfiles().First();
             var n = 100000;
             var mesh = new Mesh();
-            for(var i=0; i<n; i++)
+            for (var i = 0; i < n; i++)
             {
-                var line = new Line(new Vector3(x, 0, z), new Vector3(x,3,z));
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
                 var beam = new Beam(line, profile, BuiltInMaterials.Steel);
                 beam.UpdateRepresentations();
                 beam.Representation.SolidOperations.First().Solid.Tessellate(ref mesh);
@@ -218,6 +218,26 @@ namespace Elements.Tests
             sw.Stop();
             Console.WriteLine($"{sw.Elapsed.TotalMilliseconds} ms for creating {n} beams.");
             Console.WriteLine($"{GC.GetTotalMemory(true)} bytes allocated.");
+        }
+
+        [Fact]
+        public void SweepsBecomeLinearSegments()
+        {
+            this.Name = "SweptBeam";
+            var circle = new Circle(5.0);
+            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W12x106);
+            var beam = new Beam(circle, profile);
+            this.Model.AddElement(beam);
+
+            var pline = circle.ToPolygon();
+            this.Model.AddElement(new Mass(pline));
+
+            for (var x = 0.0; x <= 5.0; x += 1.0)
+            {
+                var line = new Line(new Vector3(x, 0, 0), new Vector3(x, 5, x));
+                var straightBeam = new Beam(line, profile, rotation: x * (360.0 / 5.0));
+                this.Model.AddElement(straightBeam);
+            }
         }
     }
 }
