@@ -20,7 +20,7 @@ namespace Elements
         protected Mesh _mesh;
 
         /// <summary>
-        /// The topography's mesh.
+        /// The element's mesh.
         /// </summary>
         [JsonIgnore]
         public Mesh Mesh => this._mesh;
