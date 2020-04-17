@@ -99,6 +99,18 @@ namespace Elements
         }
 
         /// <summary>
+        /// Add elements to the model.
+        /// </summary>
+        /// <param name="elements">The elements to add to the model.</param>
+        public void AddElements(params Element[] elements)
+        {
+            foreach (var e in elements)
+            {
+                AddElement(e);
+            }
+        }
+
+        /// <summary>
         /// Get an entity by id from the Model.
         /// </summary>
         /// <param name="id">The identifier of the element.</param>

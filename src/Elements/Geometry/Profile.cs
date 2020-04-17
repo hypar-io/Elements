@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClipperLib;
 
 namespace Elements.Geometry
 {
@@ -69,7 +70,6 @@ namespace Elements.Geometry
             var voids = indices.Except(outerMostIndices).Select(i => polygons[i]);
             this.Perimeter = perimeter;
             this.Voids = voids.ToList();
-
         }
 
         /// <summary>
@@ -134,6 +134,29 @@ namespace Elements.Geometry
             transform.Scale(amount);
 
             return transform.OfProfile(this);
+        }
+
+        /// <summary>
+        /// Perform a union operation, returning a new profile that is the union of the current profile with the other profile
+        /// <param name="profile">The profile with which to create a union.</param>
+        /// </summary>
+        public Profile Union(Profile profile)
+        {
+            var clipper = new ClipperLib.Clipper();
+            clipper.AddPath(this.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
+            clipper.AddPath(profile.Perimeter.ToClipperPath(), PolyType.ptClip, true);
+
+            if (this.Voids != null && this.Voids.Count > 0)
+            {
+                clipper.AddPaths(this.Voids.Select(v => v.ToClipperPath()).ToList(), PolyType.ptSubject, true);
+            }
+            if (profile.Voids != null && profile.Voids.Count > 0)
+            {
+                clipper.AddPaths(profile.Voids.Select(v => v.ToClipperPath()).ToList(), PolyType.ptClip, true);
+            }
+            var solution = new List<List<ClipperLib.IntPoint>>();
+            clipper.Execute(ClipType.ctUnion, solution);
+            return new Profile(solution.Select(s => s.ToPolygon()).ToList());
         }
 
         /// <summary>
@@ -267,6 +290,5 @@ namespace Elements.Geometry
             }
             return Polygon.Contains(allLines, point, out containment);
         }
-
     }
 }

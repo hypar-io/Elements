@@ -57,7 +57,7 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.AllowNull)]
         public Representation Representation { get; set; }
     
-        /// <summary>When true, this element will act as the base defintion for element instances, and will not appear in visual output.</summary>
+        /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
         [Newtonsoft.Json.JsonProperty("IsElementDefinition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
     

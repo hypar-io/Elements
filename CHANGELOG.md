@@ -4,12 +4,13 @@
 ### Fixed
 - #271
 - #265
+- #221
 
 ### Added
-- `Curve.ToPolyline(...)`
-- `Circle.ToPolygon(...)`
-- Implicit conversion `Curve` -> `Polyline`.
-- Implcit conversion `Circle` -> `Polygon`.
+- `Curve.ToPolyline(int divisions = 10)`
+- `Circle.ToPolygon(int divisions = 10)`
+- `Transform.Move(double x, double y, double z)`
+- `Transform.Rotate(double angle)`
 
 ### Deprecated
 - `Polygon.Circle(...)`
