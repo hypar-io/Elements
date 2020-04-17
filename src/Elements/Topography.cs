@@ -16,19 +16,11 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Elements.Tests/TopographyTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Topography : GeometricElement, ITessellate
+    public class Topography : MeshElement, ITessellate
     {
-        private Mesh _mesh;
-
         private double _minElevation = double.PositiveInfinity;
 
         private double _maxElevation = double.NegativeInfinity;
-
-        /// <summary>
-        /// The topography's mesh.
-        /// </summary>
-        [JsonIgnore]
-        public Mesh Mesh => this._mesh;
 
         /// <summary>
         /// The maximum elevation of the topography.
@@ -75,15 +67,20 @@ namespace Elements
         /// width and the length of the topography will be the same.</param>
         /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
         /// <param name="material">The topography's material.</param>
+        /// <param name="transform">The topography's transform.</param>
+        /// <param name="id">The topography's id.</param>
+        /// <param name="name">The topography's name.</param>
         public Topography(Vector3 origin,
                           double width,
                           double[] elevations,
-                          Material material = null) : base(new Transform(),
-                                                          material != null ? material : BuiltInMaterials.Topography,
-                                                          null,
-                                                          false,
-                                                          Guid.NewGuid(),
-                                                          null)
+                          Material material = null,
+                          Transform transform = null,
+                          Guid id = default(Guid),
+                          string name = null) : base(material != null ? material : BuiltInMaterials.Topography,
+                                                     transform != null ? transform : new Transform(),
+                                                     false,
+                                                     id == null ? Guid.NewGuid() : id,
+                                                     name)
         {
             this._mesh = new Mesh();
 
@@ -107,12 +104,11 @@ namespace Elements
                             Material material,
                             Transform transform,
                             Guid id,
-                            string name) : base(transform,
-                                            material,
-                                            null,
-                                            false,
-                                            id,
-                                            name)
+                            string name) : base(material,
+                                                transform,
+                                                false,
+                                                id,
+                                                name)
         {
             this.Elevations = elevations;
             this.Origin = origin;
@@ -259,15 +255,6 @@ namespace Elements
                     return null;
             }
             return range.Select(i => this.Mesh.Vertices[start + i * increment]).ToArray();
-        }
-
-        /// <summary>
-        /// Tessellate the topography.
-        /// </summary>
-        /// <param name="mesh">The mesh into which the topography's facets will be added.</param>
-        public void Tessellate(ref Mesh mesh)
-        {
-            mesh.AddMesh(this._mesh);
         }
 
         /// <summary>
