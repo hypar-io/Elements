@@ -43,13 +43,14 @@ namespace Elements.Geometry
         {
             this.Matrix = new Matrix();
         }
-        
+
         /// <summary>
         /// Create a transform by copying another transform.
         /// </summary>
         /// <param name="t">The transform to copy.</param>
-        public Transform(Transform t): 
-            this(new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin))){}
+        public Transform(Transform t) :
+            this(new Matrix(new Vector3(t.XAxis), new Vector3(t.YAxis), new Vector3(t.ZAxis), new Vector3(t.Origin)))
+        { }
 
         /// <summary>
         /// Create a transform with a translation.
@@ -89,22 +90,22 @@ namespace Elements.Geometry
             Vector3 x = Vector3.XAxis;
             Vector3 y = Vector3.YAxis;
 
-            if(!z.IsParallelTo(Vector3.ZAxis))
-            {   
+            if (!z.IsParallelTo(Vector3.ZAxis))
+            {
                 // Project up onto the ortho plane
                 var p = new Plane(origin, z);
                 var test = Vector3.ZAxis.Project(p);
                 x = test.Cross(z).Unitized();
-                y = x.Cross(z.Negate()).Unitized(); 
+                y = x.Cross(z.Negate()).Unitized();
             }
-            
+
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
         }
 
         private void ApplyRotationAndTranslation(double rotation, Vector3 axis, Vector3 translation)
         {
-            if(rotation != 0.0)
+            if (rotation != 0.0)
             {
                 this.Rotate(axis, rotation);
             }
@@ -171,9 +172,9 @@ namespace Elements.Geometry
         {
             var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, this.Origin);
             return new Vector3(
-                vector.X*m.XAxis.X + vector.Y*YAxis.X + vector.Z*ZAxis.X + this.Origin.X,
-                vector.X*m.XAxis.Y + vector.Y*YAxis.Y + vector.Z*ZAxis.Y + this.Origin.Y,
-                vector.X*m.XAxis.Z + vector.Y*YAxis.Z + vector.Z*ZAxis.Z + this.Origin.Z
+                vector.X * m.XAxis.X + vector.Y * YAxis.X + vector.Z * ZAxis.X + this.Origin.X,
+                vector.X * m.XAxis.Y + vector.Y * YAxis.Y + vector.Z * ZAxis.Y + this.Origin.Y,
+                vector.X * m.XAxis.Z + vector.Y * YAxis.Z + vector.Z * ZAxis.Z + this.Origin.Z
             );
         }
 
@@ -201,7 +202,7 @@ namespace Elements.Geometry
         public Polygon[] OfPolygons(IList<Polygon> polygons)
         {
             var result = new Polygon[polygons.Count];
-            for(var i=0; i<polygons.Count; i++)
+            for (var i = 0; i < polygons.Count; i++)
             {
                 result[i] = OfPolygon(polygons[i]);
             }
@@ -259,7 +260,7 @@ namespace Elements.Geometry
         public Bezier OfBezier(Bezier bezier)
         {
             var newCtrlPoints = new List<Vector3>();
-            foreach(var vp in bezier.ControlPoints)
+            foreach (var vp in bezier.ControlPoints)
             {
                 newCtrlPoints.Add(OfPoint(vp));
             }
@@ -295,6 +296,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Apply a translation to the transform.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Move(double x = 0.0, double y = 0.0, double z = 0.0)
+        {
+            Move(new Vector3(x, y, z));
+        }
+
+        /// <summary>
         /// Apply a rotation to the transform.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
@@ -304,6 +316,15 @@ namespace Elements.Geometry
             var m = new Matrix();
             m.SetupRotate(axis, angle * (Math.PI / 180.0));
             this.Matrix = this.Matrix * m;
+        }
+
+        /// <summary>
+        /// Apply a rotation to the transform around the Z axis.
+        /// </summary>
+        /// <param name="angle">The angle of rotation in degrees.</param>
+        public void Rotate(double angle)
+        {
+            Rotate(Vector3.ZAxis, angle);
         }
 
         /// <summary>
@@ -367,7 +388,7 @@ namespace Elements.Geometry
         public void Scale(double factor, Vector3 origin)
         {
             Scale(factor);
-            Move(origin * (1-factor));
+            Move(origin * (1 - factor));
         }
 
         /// <summary>
@@ -392,7 +413,7 @@ namespace Elements.Geometry
         /// <returns>True if the two transforms are equal, otherwise false.</returns>
         public bool Equals(Transform other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }
