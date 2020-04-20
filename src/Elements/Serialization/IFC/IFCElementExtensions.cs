@@ -51,13 +51,13 @@ namespace Elements.Serialization.IFC
 
             var geoms = new List<IfcRepresentationItem>();
 
-            if (geoElement is Topography)
+            if (geoElement is MeshElement)
             {
-                var topo = (Topography)geoElement;
-                var lengths = topo.Mesh.Vertices.Select(v => v.Position.ToArray().Select(vi => new IfcLengthMeasure(vi)).ToList()).ToList();
+                var meshEl = (MeshElement)geoElement;
+                var lengths = meshEl.Mesh.Vertices.Select(v => v.Position.ToArray().Select(vi => new IfcLengthMeasure(vi)).ToList()).ToList();
                 var pts = new IfcCartesianPointList3D(lengths);
                 doc.AddEntity(pts);
-                var indices = topo.Mesh.Triangles.Select(t => t.Vertices.Select(vx => new IfcPositiveInteger(vx.Index + 1)).ToList()).ToList();
+                var indices = meshEl.Mesh.Triangles.Select(t => t.Vertices.Select(vx => new IfcPositiveInteger(vx.Index + 1)).ToList()).ToList();
                 var idxs = new List<List<IfcPositiveInteger>>(indices);
                 var geom = new IfcTriangulatedFaceSet(pts, indices);
                 geom.Closed = false;
@@ -439,9 +439,9 @@ namespace Elements.Serialization.IFC
         {
             var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(id),
                                                     null,
-                                                    null,
-                                                    null,
-                                                    null,
+                                                    element.Name,
+                                                    $"A {element.GetType().Name} created in Hypar.",
+                                                    $"{element.GetType().FullName}",
                                                     localPlacement,
                                                     shape,
                                                     null,
