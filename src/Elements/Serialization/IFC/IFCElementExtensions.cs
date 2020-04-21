@@ -25,8 +25,8 @@ namespace Elements.Serialization.IFC
             GeometricElement geoElement = null;
             Transform trans = null;
             Guid id;
-             
-            if(e is ElementInstance)
+
+            if (e is ElementInstance)
             {
                 // If we're using an element instance, get the transform
                 // and the id and use those to uniquely position and 
@@ -36,7 +36,7 @@ namespace Elements.Serialization.IFC
                 id = instance.Id;
                 trans = instance.Transform;
             }
-            else if(e is GeometricElement)
+            else if (e is GeometricElement)
             {
                 // If we've go a geometric element, use its properties as-is.
                 geoElement = (GeometricElement)e;
@@ -45,19 +45,19 @@ namespace Elements.Serialization.IFC
             }
 
             geoElement.UpdateRepresentations();
-            
+
             var localPlacement = trans.ToIfcLocalPlacement(doc);
             doc.AddEntity(localPlacement);
 
             var geoms = new List<IfcRepresentationItem>();
 
-            if(geoElement is Topography)
+            if (geoElement is MeshElement)
             {
-                var topo = (Topography)geoElement;
-                var lengths = topo.Mesh.Vertices.Select(v=>v.Position.ToArray().Select(vi => new IfcLengthMeasure(vi)).ToList()).ToList();
+                var meshEl = (MeshElement)geoElement;
+                var lengths = meshEl.Mesh.Vertices.Select(v => v.Position.ToArray().Select(vi => new IfcLengthMeasure(vi)).ToList()).ToList();
                 var pts = new IfcCartesianPointList3D(lengths);
                 doc.AddEntity(pts);
-                var indices = topo.Mesh.Triangles.Select(t=>t.Vertices.Select(vx=>new IfcPositiveInteger(vx.Index + 1)).ToList()).ToList();
+                var indices = meshEl.Mesh.Triangles.Select(t => t.Vertices.Select(vx => new IfcPositiveInteger(vx.Index + 1)).ToList()).ToList();
                 var idxs = new List<List<IfcPositiveInteger>>(indices);
                 var geom = new IfcTriangulatedFaceSet(pts, indices);
                 geom.Closed = false;
@@ -67,36 +67,72 @@ namespace Elements.Serialization.IFC
             }
             else
             {
-                foreach(var op in geoElement.Representation.SolidOperations)
+                foreach (var op in geoElement.Representation.SolidOperations)
                 {
-                    IfcGeometricRepresentationItem geom = null;
-                    if(op is Sweep)
+                    if (op is Sweep)
                     {
                         var sweep = (Sweep)op;
-                        geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
-                        // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(e.Transform, doc);
+
+                        // Neither of these entities, which are part of the 
+                        // IFC4 specification, and which would allow a sweep 
+                        // along a curve, are supported by many applications 
+                        // which are supposedly IFC4 compliant (Revit). For
+                        // Those applications where these entities appear,
+                        // the rotation of the profile is often wrong or 
+                        // inconsistent.
+                        // geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
+                        // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(geoElement.Transform, doc);
+
+                        // Instead, we'll divide the curve and create a set of 
+                        // linear extrusions instead.
+                        Polyline pline;
+                        if (sweep.Curve is Line)
+                        {
+                            pline = sweep.Curve.ToPolyline(1);
+                        }
+                        else
+                        {
+                            pline = sweep.Curve.ToPolyline();
+                        }
+                        foreach (var segment in pline.Segments())
+                        {
+                            var position = segment.TransformAt(0.0).ToIfcAxis2Placement3D(doc);
+                            var extrudeDepth = segment.Length();
+                            var extrudeProfile = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+                            var extrudeDirection = Vector3.ZAxis.Negate().ToIfcDirection();
+                            var geom = new IfcExtrudedAreaSolid(extrudeProfile, position,
+                                extrudeDirection, new IfcPositiveLengthMeasure(extrudeDepth));
+
+                            doc.AddEntity(extrudeProfile);
+                            doc.AddEntity(extrudeDirection);
+                            doc.AddEntity(position);
+                            doc.AddEntity(geom);
+                            geoms.Add(geom);
+                        }
                     }
-                    else if(op is Extrude)
+                    else if (op is Extrude)
                     {
                         var extrude = (Extrude)op;
-                        geom = extrude.ToIfcExtrudedAreaSolid(doc);
+                        var geom = extrude.ToIfcExtrudedAreaSolid(doc);
+                        doc.AddEntity(geom);
+                        geoms.Add(geom);
                     }
-                    else if(op is Lamina)
+                    else if (op is Lamina)
                     {
                         var lamina = (Lamina)op;
-                        geom = lamina.ToIfcShellBasedSurfaceModel(doc);
+                        var geom = lamina.ToIfcShellBasedSurfaceModel(doc);
+                        doc.AddEntity(geom);
+                        geoms.Add(geom);
                     }
                     else
                     {
                         throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
                     }
-                    doc.AddEntity(geom);
-                    geoms.Add(geom);
                 }
                 shape = ToIfcProductDefinitionShape(geoms, "SolidModel", context, doc);
             }
             doc.AddEntity(shape);
-            
+
 
             // Can we use IfcMappedItem?
             // https://forums.buildingsmart.org/t/can-tessellation-typed-representation-hold-items-from-another-group/1621
@@ -129,20 +165,20 @@ namespace Elements.Serialization.IFC
             products.Add(product);
             doc.AddEntity(product);
 
-            var ifcOpenings = doc.AllEntities.Where(ent=>ent.GetType() == typeof(IfcOpeningElement)).Cast<IfcOpeningElement>();
+            var ifcOpenings = doc.AllEntities.Where(ent => ent.GetType() == typeof(IfcOpeningElement)).Cast<IfcOpeningElement>();
 
             // If the element has openings, make opening relationships in
             // the IfcElement.
-            if(e is IHasOpenings)
+            if (e is IHasOpenings)
             {
                 var openings = (IHasOpenings)e;
-                if(openings.Openings.Count > 0)
+                if (openings.Openings.Count > 0)
                 {
-                    foreach(var o in openings.Openings)
+                    foreach (var o in openings.Openings)
                     {
                         var element = (IfcElement)product;
                         // TODO: Find the opening that we've already created that relates here
-                        var opening = ifcOpenings.First(ifcO=>ifcO.GlobalId == IfcGuid.ToIfcGuid(o.Id));
+                        var opening = ifcOpenings.First(ifcO => ifcO.GlobalId == IfcGuid.ToIfcGuid(o.Id));
                         var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), element, opening);
                         element.HasOpenings.Add(voidRel);
                         doc.AddEntity(voidRel);
@@ -150,7 +186,7 @@ namespace Elements.Serialization.IFC
                 }
             }
 
-            foreach(var geom in geoms)
+            foreach (var geom in geoms)
             {
                 var styledItem = new IfcStyledItem(geom, styleAssignments[geoElement.Material.Id], null);
                 doc.AddEntity(styledItem);
@@ -177,11 +213,11 @@ namespace Elements.Serialization.IFC
         {
             var placement = transform.ToIfcAxis2Placement3D(doc);
             var localPlacement = new IfcLocalPlacement(new IfcAxis2Placement(placement));
-            if(parent != null)
+            if (parent != null)
             {
                 localPlacement.PlacementRelTo = parent;
             }
-            
+
             doc.AddEntity(placement);
             return localPlacement;
         }
@@ -192,9 +228,9 @@ namespace Elements.Serialization.IFC
 
             var extrudeDepth = extrude.Height;
             var extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-            var extrudeDirection = Vector3.ZAxis.ToIfcDirection();;
+            var extrudeDirection = Vector3.ZAxis.ToIfcDirection(); ;
 
-            var solid = new IfcExtrudedAreaSolid(extrudeProfile, position, 
+            var solid = new IfcExtrudedAreaSolid(extrudeProfile, position,
                 extrudeDirection, new IfcPositiveLengthMeasure(extrude.Height));
 
             doc.AddEntity(extrudeProfile);
@@ -211,17 +247,17 @@ namespace Elements.Serialization.IFC
             {
                 return ((Line)curve).ToIfcTrimmedCurve(doc);
             }
-            else if(curve is Arc)
+            else if (curve is Arc)
             {
                 return ((Arc)curve).ToIfcTrimmedCurve(doc);
             }
             // Test Polygon before Polyline to avoid 
             // Polygons being treated as Polylines.
-            else if(curve is Polygon)
+            else if (curve is Polygon)
             {
                 return ((Polygon)curve).ToIfcPolyline(doc);
             }
-            else if(curve is Polyline)
+            else if (curve is Polyline)
             {
                 return ((Polyline)curve).ToIfcPolyline(doc);
             }
@@ -236,15 +272,15 @@ namespace Elements.Serialization.IFC
             try
             {
                 IfcProduct e = null;
-                if(element is Beam)
+                if (element is Beam)
                 {
                     e = ((Beam)element).ToIfc(id, localPlacement, shape);
                 }
-                if(element is Brace)
+                if (element is Brace)
                 {
                     e = ((Brace)element).ToIfc(id, localPlacement, shape);
                 }
-                else if(element is Column)
+                else if (element is Column)
                 {
                     e = ((Column)element).ToIfc(id, localPlacement, shape);
                 }
@@ -282,7 +318,7 @@ namespace Elements.Serialization.IFC
                 }
                 return e;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 Console.WriteLine($"{element.GetType()} cannot be serialized to IFC.");
@@ -315,7 +351,7 @@ namespace Elements.Serialization.IFC
             var profile = new IfcArbitraryOpenProfileDef(IfcProfileTypeEnum.CURVE, directrix);
 
             var extrudeDir = Vector3.ZAxis.ToIfcDirection();
-            var extrudeSurfPosition = new Transform(0,0,-100).ToIfcAxis2Placement3D(doc);
+            var extrudeSurfPosition = new Transform(0, 0, -100).ToIfcAxis2Placement3D(doc);
             doc.AddEntity(extrudeSurfPosition);
 
             var surface = new IfcSurfaceOfLinearExtrusion(profile, position, extrudeDir, 100);
@@ -324,7 +360,7 @@ namespace Elements.Serialization.IFC
             // and endParam. If you don't, ArchiCAD (and possibly others) will call
             // the geometry invalid.
             var solid = new IfcSurfaceCurveSweptAreaSolid(sweptArea, position, directrix, 0, 1, surface);
-            
+
             doc.AddEntity(position);
             doc.AddEntity(sweptArea);
             doc.AddEntity(directrix);
@@ -342,18 +378,18 @@ namespace Elements.Serialization.IFC
         {
             var plane = lamina.Perimeter.Plane().ToIfcPlane(doc);
             var outer = lamina.Perimeter.ToIfcCurve(doc);
-            var bplane = new IfcCurveBoundedPlane(plane, outer, new List<IfcCurve>{});
+            var bplane = new IfcCurveBoundedPlane(plane, outer, new List<IfcCurve> { });
 
-            var bounds = new List<IfcFaceBound>{};
+            var bounds = new List<IfcFaceBound> { };
             var loop = lamina.Perimeter.ToIfcPolyLoop(doc);
             var faceBounds = new IfcFaceBound(loop, true);
             bounds.Add(faceBounds);
 
             var face = new IfcFaceSurface(bounds, bplane, true);
-            var openShell = new IfcOpenShell(new List<IfcFace>{face});
+            var openShell = new IfcOpenShell(new List<IfcFace> { face });
 
             var shell = new IfcShell(openShell);
-            var ssm = new IfcShellBasedSurfaceModel(new List<IfcShell>{shell});
+            var ssm = new IfcShellBasedSurfaceModel(new List<IfcShell> { shell });
 
             doc.AddEntity(plane);
             doc.AddEntity(outer);
@@ -362,7 +398,7 @@ namespace Elements.Serialization.IFC
             doc.AddEntity(faceBounds);
             doc.AddEntity(face);
             doc.AddEntity(openShell);
-            
+
             return ssm;
         }
 
@@ -371,24 +407,24 @@ namespace Elements.Serialization.IFC
             if (curve is Line)
             {
                 var l = (Line)curve;
-                if(l.Direction().Equals(Vector3.ZAxis))
+                if (l.Direction().Equals(Vector3.ZAxis))
                 {
                     return new Plane(l.Start, Vector3.ZAxis);
                 }
-                
+
                 var normal = l.Direction().Cross(Vector3.ZAxis);
                 return new Plane(l.Start, normal);
 
             }
-            else if(curve is Arc)
+            else if (curve is Arc)
             {
                 return ((Arc)curve).Plane();
             }
-            else if(curve is Polyline)
+            else if (curve is Polyline)
             {
                 return ((Polyline)curve).Plane();
             }
-            else if(curve is Polygon)
+            else if (curve is Polygon)
             {
                 return ((Polygon)curve).Plane();
             }
@@ -401,7 +437,7 @@ namespace Elements.Serialization.IFC
         private static IfcProductDefinitionShape ToIfcProductDefinitionShape(this List<IfcRepresentationItem> geoms, string shapeType, IfcRepresentationContext context, Document doc)
         {
             var rep = new IfcShapeRepresentation(context, "Body", shapeType, geoms);
-            var shape = new IfcProductDefinitionShape(new List<IfcRepresentation>{rep});
+            var shape = new IfcProductDefinitionShape(new List<IfcRepresentation> { rep });
 
             doc.AddEntity(rep);
 
@@ -412,20 +448,20 @@ namespace Elements.Serialization.IFC
         {
             var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(id),
                                                     null,
-                                                    null,
-                                                    null,
-                                                    null,
+                                                    element.Name,
+                                                    $"A {element.GetType().Name} created in Hypar.",
+                                                    $"{element.GetType().FullName}",
                                                     localPlacement,
                                                     shape,
                                                     null,
                                                     IfcBuildingElementProxyTypeEnum.ELEMENT);
             return proxy;
         }
-        
-        private static IfcSlab ToIfc(this Floor floor, Guid id, 
+
+        private static IfcSlab ToIfc(this Floor floor, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var slab = new IfcSlab(IfcGuid.ToIfcGuid(id), null, null, null, 
+            var slab = new IfcSlab(IfcGuid.ToIfcGuid(id), null, null, null,
                 null, localPlacement, shape, null, IfcSlabTypeEnum.FLOOR);
             return slab;
         }
@@ -451,7 +487,7 @@ namespace Elements.Serialization.IFC
             return ifcSpace;
         }
 
-        private static IfcProduct ToIfc(this StandardWall wall, Guid id, 
+        private static IfcProduct ToIfc(this StandardWall wall, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             var ifcWall = new IfcWallStandardCase(IfcGuid.ToIfcGuid(id),
@@ -481,10 +517,10 @@ namespace Elements.Serialization.IFC
             return ifcWall;
         }
 
-        private static IfcBeam ToIfc(this Beam beam, 
+        private static IfcBeam ToIfc(this Beam beam,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(beam.Id), null, 
+            var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(beam.Id), null,
                 null, null, null, localPlacement, shape, null, IfcBeamTypeEnum.BEAM);
             return ifcBeam;
         }
@@ -513,11 +549,11 @@ namespace Elements.Serialization.IFC
             return plate;
         }
 
-        private static IfcBuildingElementProxy ToIfc(this Mass mass, Guid id, 
+        private static IfcBuildingElementProxy ToIfc(this Mass mass, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
             var proxy = new IfcBuildingElementProxy(IfcGuid.ToIfcGuid(id), null,
-                null, null, null, localPlacement, shape, null,IfcBuildingElementProxyTypeEnum.ELEMENT);
+                null, null, null, localPlacement, shape, null, IfcBuildingElementProxyTypeEnum.ELEMENT);
             return proxy;
         }
 
@@ -530,7 +566,7 @@ namespace Elements.Serialization.IFC
         private static List<IfcCartesianPoint> ToIfcCartesianPointList(this IList<Vector3> pts, Document doc)
         {
             var icps = new List<IfcCartesianPoint>();
-            foreach(var pt in pts)
+            foreach (var pt in pts)
             {
                 var icp = pt.ToIfcCartesianPoint();
                 doc.AddEntity(icp);
@@ -550,7 +586,7 @@ namespace Elements.Serialization.IFC
         private static IfcPolyline ToIfcPolyline(this Polygon polygon, Document doc)
         {
             var points = new List<IfcCartesianPoint>();
-            foreach(var v in polygon.Vertices)
+            foreach (var v in polygon.Vertices)
             {
                 var p = v.ToIfcCartesianPoint();
                 doc.AddEntity(p);
@@ -564,7 +600,7 @@ namespace Elements.Serialization.IFC
         private static IfcPolyline ToIfcPolyline(this Polyline polygon, Document doc)
         {
             var points = new List<IfcCartesianPoint>();
-            foreach(var v in polygon.Vertices)
+            foreach (var v in polygon.Vertices)
             {
                 var p = v.ToIfcCartesianPoint();
                 doc.AddEntity(p);
@@ -583,9 +619,9 @@ namespace Elements.Serialization.IFC
             var ifcLine = new IfcLine(start, dir);
             var trim1 = new IfcTrimmingSelect(start);
             var trim2 = new IfcTrimmingSelect(end);
-            var tc = new IfcTrimmedCurve(ifcLine, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, 
+            var tc = new IfcTrimmedCurve(ifcLine, new List<IfcTrimmingSelect> { trim1 }, new List<IfcTrimmingSelect> { trim2 },
                 true, IfcTrimmingPreference.CARTESIAN);
-            
+
             doc.AddEntity(start);
             doc.AddEntity(end);
             doc.AddEntity(dir);
@@ -600,7 +636,7 @@ namespace Elements.Serialization.IFC
             var ifcCircle = new IfcCircle(new IfcAxis2Placement(placement), new IfcPositiveLengthMeasure(arc.Radius));
             var trim1 = new IfcTrimmingSelect(arc.StartAngle);
             var trim2 = new IfcTrimmingSelect(arc.EndAngle);
-            var tc = new IfcTrimmedCurve(ifcCircle, new List<IfcTrimmingSelect>{trim1}, new List<IfcTrimmingSelect>{trim2}, 
+            var tc = new IfcTrimmedCurve(ifcCircle, new List<IfcTrimmingSelect> { trim1 }, new List<IfcTrimmingSelect> { trim2 },
                 true, IfcTrimmingPreference.PARAMETER);
 
             doc.AddEntity(placement);
@@ -622,22 +658,22 @@ namespace Elements.Serialization.IFC
             var origin = transform.Origin.ToIfcCartesianPoint();
             var z = transform.ZAxis.ToIfcDirection();
             var x = transform.XAxis.ToIfcDirection();
-            var placement = new IfcAxis2Placement3D(origin, 
+            var placement = new IfcAxis2Placement3D(origin,
                 z, x);
             doc.AddEntity(origin);
             doc.AddEntity(z);
             doc.AddEntity(x);
             return placement;
         }
-        
+
         private static IfcDirection ToIfcDirection(this Vector3 direction)
         {
-            return new IfcDirection(new List<IfcReal>{new IfcReal(direction.X), new IfcReal(direction.Y), new IfcReal(direction.Z)});
+            return new IfcDirection(new List<IfcReal> { new IfcReal(direction.X), new IfcReal(direction.Y), new IfcReal(direction.Z) });
         }
 
         private static IfcCartesianPoint ToIfcCartesianPoint(this Vector3 point)
         {
-            return new IfcCartesianPoint(new List<IfcLengthMeasure>{point.X, point.Y, point.Z});
+            return new IfcCartesianPoint(new List<IfcLengthMeasure> { point.X, point.Y, point.Z });
         }
 
         private static IfcPlane ToIfcPlane(this Plane plane, Document doc)
@@ -645,18 +681,18 @@ namespace Elements.Serialization.IFC
             var t = new Transform(plane.Origin, plane.Normal);
             var position = t.ToIfcAxis2Placement3D(doc);
             var ifcPlane = new IfcPlane(position);
-            
+
             doc.AddEntity(position);
 
             return ifcPlane;
         }
-    
+
         internal static IfcColourRgb ToIfcColourRgb(this Color color)
         {
             var red = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Red));
             var green = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Green));
             var blue = new IfcNormalisedRatioMeasure(new IfcRatioMeasure(color.Blue));
-            
+
             var ifcColor = new IfcColourRgb(red, green, blue);
 
             return ifcColor;

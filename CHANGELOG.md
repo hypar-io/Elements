@@ -1,9 +1,25 @@
 # Changelog
 
-### 0.7.0
+## 0.7.0
+### Fixed
+- #271
+- #284
+- #285
+- #265
+- #221
+- #229
+
+### Added
+- `Curve.ToPolyline(int divisions = 10)`
+- `Circle.ToPolygon(int divisions = 10)`
+- `Transform.Move(double x, double y, double z)`
+- `Transform.Rotate(double angle)`
 
 ## Changed
 - Updated documentation to reflect the use of .NET Core 3.1.
+
+### Deprecated
+- `Polygon.Circle(...)`
 
 ## 0.6.2
 ### Added

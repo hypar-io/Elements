@@ -16,19 +16,11 @@ namespace Elements
     /// [!code-csharp[Main](../../test/Elements.Tests/TopographyTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Topography : GeometricElement, ITessellate
+    public class Topography : MeshElement, ITessellate
     {
-        private Mesh _mesh;
-
         private double _minElevation = double.PositiveInfinity;
 
         private double _maxElevation = double.NegativeInfinity;
-
-        /// <summary>
-        /// The topography's mesh.
-        /// </summary>
-        [JsonIgnore]
-        public Mesh Mesh => _mesh;
 
         /// <summary>
         /// The maximum elevation of the topography.
@@ -75,15 +67,20 @@ namespace Elements
         /// width and the length of the topography will be the same.</param>
         /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
         /// <param name="material">The topography's material.</param>
+        /// <param name="transform">The topography's transform.</param>
+        /// <param name="id">The topography's id.</param>
+        /// <param name="name">The topography's name.</param>
         public Topography(Vector3 origin,
                           double width,
                           double[] elevations,
-                          Material material = null) : base(new Transform(),
-                                                          material != null ? material : BuiltInMaterials.Topography,
-                                                          null,
-                                                          false,
-                                                          Guid.NewGuid(),
-                                                          null)
+                          Material material = null,
+                          Transform transform = null,
+                          Guid id = default(Guid),
+                          string name = null) : base(material != null ? material : BuiltInMaterials.Topography,
+                                                     transform != null ? transform : new Transform(),
+                                                     false,
+                                                     id == null ? Guid.NewGuid() : id,
+                                                     name)
         {
             this._mesh = new Mesh();
 
@@ -92,20 +89,61 @@ namespace Elements
             this.RowWidth = (int)Math.Sqrt(elevations.Length);
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
+            var mesh = GenerateMesh(elevations, origin, this.RowWidth, this.CellWidth, this.CellWidth);
+            this._mesh = mesh.Mesh;
+            this._minElevation = mesh.MinElevation;
+            this._maxElevation = mesh.MaxElevation;
+        }
 
-            var triangles = (Math.Sqrt(elevations.Length) - 1) * this.RowWidth * 2;
+        [JsonConstructor]
+        internal Topography(double[] elevations,
+                            Vector3 origin,
+                            int rowWidth,
+                            double cellWidth,
+                            double cellHeight,
+                            Material material,
+                            Transform transform,
+                            Guid id,
+                            string name) : base(material,
+                                                transform,
+                                                false,
+                                                id,
+                                                name)
+        {
+            this.Elevations = elevations;
+            this.Origin = origin;
+            this.RowWidth = rowWidth;
+            this.CellWidth = cellWidth;
+            this.CellHeight = cellHeight;
+            var mesh = GenerateMesh(elevations, origin, rowWidth, cellWidth, cellHeight);
+            this._mesh = mesh.Mesh;
+            this._minElevation = mesh.MinElevation;
+            this._maxElevation = mesh.MaxElevation;
+        }
 
-            for (var y = 0; y < this.RowWidth; y++)
+        private static (Mesh Mesh, double MaxElevation, double MinElevation) GenerateMesh(
+            double[] elevations,
+            Vector3 origin,
+            int rowWidth,
+            double cellWidth,
+            double cellHeight)
+        {
+            var minElevation = double.MaxValue;
+            var maxElevation = double.MinValue;
+            var mesh = new Mesh();
+            var triangles = (Math.Sqrt(elevations.Length) - 1) * rowWidth * 2;
+
+            for (var y = 0; y < rowWidth; y++)
             {
-                for (var x = 0; x < this.RowWidth; x++)
+                for (var x = 0; x < rowWidth; x++)
                 {
-                    var ei = x + y * this.RowWidth;
-                    var el = this.Elevations[ei];
-                    _minElevation = Math.Min(_minElevation, el);
-                    _maxElevation = Math.Max(_maxElevation, el);
+                    var ei = x + y * rowWidth;
+                    var el = elevations[ei];
+                    minElevation = Math.Min(minElevation, el);
+                    maxElevation = Math.Max(maxElevation, el);
 
-                    var u = (double)x / (double)(this.RowWidth - 1);
-                    var v = (double)y / (double)(this.RowWidth - 1);
+                    var u = (double)x / (double)(rowWidth - 1);
+                    var v = (double)y / (double)(rowWidth - 1);
 
                     // Shrink the UV space slightly to avoid
                     // visible edges on applied textures.
@@ -117,28 +155,29 @@ namespace Elements
 
                     var uv = new UV(u, v);
 
-                    this._mesh.AddVertex(origin + new Vector3(x * this.CellWidth, y * this.CellHeight, el), uv: uv);
+                    mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv: uv);
 
                     if (y > 0 && x > 0)
                     {
-                        var i = x + y * this.RowWidth;
+                        var i = x + y * rowWidth;
 
                         // Top triangle
-                        var a = this._mesh.Vertices[i];
-                        var b = this._mesh.Vertices[i - 1];
-                        var c = this._mesh.Vertices[i - this.RowWidth];
-                        var tt = this._mesh.AddTriangle(a, b, c);
+                        var a = mesh.Vertices[i];
+                        var b = mesh.Vertices[i - 1];
+                        var c = mesh.Vertices[i - rowWidth];
+                        var tt = mesh.AddTriangle(a, b, c);
 
                         // Bottom triangle
-                        var d = this._mesh.Vertices[i - 1];
-                        var e = this._mesh.Vertices[i - 1 - this.RowWidth];
-                        var f = this._mesh.Vertices[i - this.RowWidth];
-                        var tb = this._mesh.AddTriangle(d, e, f);
+                        var d = mesh.Vertices[i - 1];
+                        var e = mesh.Vertices[i - 1 - rowWidth];
+                        var f = mesh.Vertices[i - rowWidth];
+                        var tb = mesh.AddTriangle(d, e, f);
                     }
                 }
             }
 
-            this.Mesh.ComputeNormals();
+            mesh.ComputeNormals();
+            return (mesh, maxElevation, minElevation);
         }
 
         /// <summary>
@@ -216,15 +255,6 @@ namespace Elements
                     return null;
             }
             return range.Select(i => this.Mesh.Vertices[start + i * increment]).ToArray();
-        }
-
-        /// <summary>
-        /// Tessellate the topography.
-        /// </summary>
-        /// <param name="mesh">The mesh into which the topography's facets will be added.</param>
-        public void Tessellate(ref Mesh mesh)
-        {
-            mesh.AddMesh(this._mesh);
         }
 
         /// <summary>

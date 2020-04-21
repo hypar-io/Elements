@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,10 +37,17 @@
     <NodeLibraries Include="$(TargetDir)*.*" />
   </ItemGroup>
 
+  <Target Name="CleanDeploy" BeforeTargets="BeforeBuild">
+    <RemoveDir Directories="..\..\deploy\HyparDynamo\bin\" />
+  </Target>
 
   <Target Name="BuildPackage" AfterTargets="AfterBuild">
-    <RemoveDir Directories="..\..\deploy\HyparDynamo\bin\" />
-    <Copy SourceFiles="@(NodeLibraries)" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)Hypar.Elements.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)Hypar.IFC4.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)HyparRevit.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)NJsonSchema.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
     <Copy SourceFiles=".\HyparDynamo_DynamoCustomization.xml" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
   </Target>
 
@@ -48,8 +55,7 @@
     <DynamoPackage Include="$(ProjectDir)..\..\deploy\HyparDynamo\**\*.*" />
   </ItemGroup>
   <Target Name="Deploy" AfterTargets="BuildPackage" Condition=" '$(Configuration)' == 'Debug' ">
-    <RemoveDir Directories="$(AppData)\Dynamo\Dynamo Revit\2.3\packages\HyparDynamo\" />
-    <Copy SourceFiles="@(DynamoPackage)" DestinationFiles="@(DynamoPackage->'$(AppData)\Dynamo\Dynamo Revit\2.3\packages\HyparDynamo\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <RemoveDir Directories="$(AppData)\Dynamo\Dynamo Revit\2.3\packages\Hypar Dynamo\" />
+    <Copy SourceFiles="@(DynamoPackage)" DestinationFiles="@(DynamoPackage->'$(AppData)\Dynamo\Dynamo Revit\2.3\packages\Hypar Dynamo\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
-
 </Project>
