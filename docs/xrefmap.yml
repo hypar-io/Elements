@@ -695,19 +695,6 @@ references:
   commentId: T:Elements.ElementInstance
   fullName: Elements.ElementInstance
   nameWithType: ElementInstance
-- uid: Elements.ElementInstance.#ctor(Elements.GeometricElement,Elements.Geometry.Transform,System.String,System.Guid)
-  name: ElementInstance(GeometricElement, Transform, String, Guid)
-  href: api/Elements.ElementInstance.html#Elements_ElementInstance__ctor_Elements_GeometricElement_Elements_Geometry_Transform_System_String_System_Guid_
-  commentId: M:Elements.ElementInstance.#ctor(Elements.GeometricElement,Elements.Geometry.Transform,System.String,System.Guid)
-  fullName: Elements.ElementInstance.ElementInstance(Elements.GeometricElement, Elements.Geometry.Transform, System.String, System.Guid)
-  nameWithType: ElementInstance.ElementInstance(GeometricElement, Transform, String, Guid)
-- uid: Elements.ElementInstance.#ctor*
-  name: ElementInstance
-  href: api/Elements.ElementInstance.html#Elements_ElementInstance__ctor_
-  commentId: Overload:Elements.ElementInstance.#ctor
-  isSpec: "True"
-  fullName: Elements.ElementInstance.ElementInstance
-  nameWithType: ElementInstance.ElementInstance
 - uid: Elements.ElementInstance.BaseDefinition
   name: BaseDefinition
   href: api/Elements.ElementInstance.html#Elements_ElementInstance_BaseDefinition
@@ -1592,6 +1579,12 @@ references:
   commentId: M:Elements.Geometry.Arc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)
   fullName: Elements.Geometry.Arc.Arc(Elements.Geometry.Vector3, System.Double, System.Double, System.Double)
   nameWithType: Arc.Arc(Vector3, Double, Double, Double)
+- uid: Elements.Geometry.Arc.#ctor(System.Double,System.Double,System.Double)
+  name: Arc(Double, Double, Double)
+  href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc__ctor_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Arc.#ctor(System.Double,System.Double,System.Double)
+  fullName: Elements.Geometry.Arc.Arc(System.Double, System.Double, System.Double)
+  nameWithType: Arc.Arc(Double, Double, Double)
 - uid: Elements.Geometry.Arc.#ctor*
   name: Arc
   href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc__ctor_
@@ -2083,6 +2076,12 @@ references:
   commentId: M:Elements.Geometry.Circle.#ctor(Elements.Geometry.Vector3,System.Double)
   fullName: Elements.Geometry.Circle.Circle(Elements.Geometry.Vector3, System.Double)
   nameWithType: Circle.Circle(Vector3, Double)
+- uid: Elements.Geometry.Circle.#ctor(System.Double)
+  name: Circle(Double)
+  href: api/Elements.Geometry.Circle.html#Elements_Geometry_Circle__ctor_System_Double_
+  commentId: M:Elements.Geometry.Circle.#ctor(System.Double)
+  fullName: Elements.Geometry.Circle.Circle(System.Double)
+  nameWithType: Circle.Circle(Double)
 - uid: Elements.Geometry.Circle.#ctor*
   name: Circle
   href: api/Elements.Geometry.Circle.html#Elements_Geometry_Circle__ctor_
@@ -2090,6 +2089,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Circle.Circle
   nameWithType: Circle.Circle
+- uid: Elements.Geometry.Circle.ToPolygon(System.Int32)
+  name: ToPolygon(Int32)
+  href: api/Elements.Geometry.Circle.html#Elements_Geometry_Circle_ToPolygon_System_Int32_
+  commentId: M:Elements.Geometry.Circle.ToPolygon(System.Int32)
+  fullName: Elements.Geometry.Circle.ToPolygon(System.Int32)
+  nameWithType: Circle.ToPolygon(Int32)
+- uid: Elements.Geometry.Circle.ToPolygon*
+  name: ToPolygon
+  href: api/Elements.Geometry.Circle.html#Elements_Geometry_Circle_ToPolygon_
+  commentId: Overload:Elements.Geometry.Circle.ToPolygon
+  isSpec: "True"
+  fullName: Elements.Geometry.Circle.ToPolygon
+  nameWithType: Circle.ToPolygon
 - uid: Elements.Geometry.Color
   name: Color
   href: api/Elements.Geometry.Color.html
@@ -2838,6 +2850,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Curve.PointAt
   nameWithType: Curve.PointAt
+- uid: Elements.Geometry.Curve.ToPolyline(System.Int32)
+  name: ToPolyline(Int32)
+  href: api/Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_
+  commentId: M:Elements.Geometry.Curve.ToPolyline(System.Int32)
+  fullName: Elements.Geometry.Curve.ToPolyline(System.Int32)
+  nameWithType: Curve.ToPolyline(Int32)
+- uid: Elements.Geometry.Curve.ToPolyline*
+  name: ToPolyline
+  href: api/Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_
+  commentId: Overload:Elements.Geometry.Curve.ToPolyline
+  isSpec: "True"
+  fullName: Elements.Geometry.Curve.ToPolyline
+  nameWithType: Curve.ToPolyline
 - uid: Elements.Geometry.Curve.TransformAt(System.Double)
   name: TransformAt(Double)
   href: api/Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_
@@ -4852,6 +4877,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Transform
   nameWithType: Profile.Transform
+- uid: Elements.Geometry.Profile.Union(Elements.Geometry.Profile)
+  name: Union(Profile)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Union_Elements_Geometry_Profile_
+  commentId: M:Elements.Geometry.Profile.Union(Elements.Geometry.Profile)
+  fullName: Elements.Geometry.Profile.Union(Elements.Geometry.Profile)
+  nameWithType: Profile.Union(Profile)
+- uid: Elements.Geometry.Profile.Union*
+  name: Union
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Union_
+  commentId: Overload:Elements.Geometry.Profile.Union
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Union
+  nameWithType: Profile.Union
 - uid: Elements.Geometry.Profile.Voids
   name: Voids
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Voids
@@ -9462,6 +9500,12 @@ references:
   commentId: M:Elements.Geometry.Transform.Move(Elements.Geometry.Vector3)
   fullName: Elements.Geometry.Transform.Move(Elements.Geometry.Vector3)
   nameWithType: Transform.Move(Vector3)
+- uid: Elements.Geometry.Transform.Move(System.Double,System.Double,System.Double)
+  name: Move(Double, Double, Double)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Move_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Transform.Move(System.Double,System.Double,System.Double)
+  fullName: Elements.Geometry.Transform.Move(System.Double, System.Double, System.Double)
+  nameWithType: Transform.Move(Double, Double, Double)
 - uid: Elements.Geometry.Transform.Move*
   name: Move
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Move_
@@ -9608,6 +9652,12 @@ references:
   commentId: M:Elements.Geometry.Transform.Rotate(Elements.Geometry.Vector3,System.Double)
   fullName: Elements.Geometry.Transform.Rotate(Elements.Geometry.Vector3, System.Double)
   nameWithType: Transform.Rotate(Vector3, Double)
+- uid: Elements.Geometry.Transform.Rotate(System.Double)
+  name: Rotate(Double)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Rotate_System_Double_
+  commentId: M:Elements.Geometry.Transform.Rotate(System.Double)
+  fullName: Elements.Geometry.Transform.Rotate(System.Double)
+  nameWithType: Transform.Rotate(Double)
 - uid: Elements.Geometry.Transform.Rotate*
   name: Rotate
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Rotate_
@@ -10890,6 +10940,19 @@ references:
   commentId: F:Elements.MeshElement._mesh
   fullName: Elements.MeshElement._mesh
   nameWithType: MeshElement._mesh
+- uid: Elements.MeshElement.Mesh
+  name: Mesh
+  href: api/Elements.MeshElement.html#Elements_MeshElement_Mesh
+  commentId: P:Elements.MeshElement.Mesh
+  fullName: Elements.MeshElement.Mesh
+  nameWithType: MeshElement.Mesh
+- uid: Elements.MeshElement.Mesh*
+  name: Mesh
+  href: api/Elements.MeshElement.html#Elements_MeshElement_Mesh_
+  commentId: Overload:Elements.MeshElement.Mesh
+  isSpec: "True"
+  fullName: Elements.MeshElement.Mesh
+  nameWithType: MeshElement.Mesh
 - uid: Elements.MeshElement.Tessellate(Elements.Geometry.Mesh@)
   name: Tessellate(ref Mesh)
   href: api/Elements.MeshElement.html#Elements_MeshElement_Tessellate_Elements_Geometry_Mesh__
@@ -10956,6 +11019,15 @@ references:
   isSpec: "True"
   fullName: Elements.Model.AddElement
   nameWithType: Model.AddElement
+- uid: Elements.Model.AddElements(Elements.Element[])
+  name: AddElements(Element[])
+  href: api/Elements.Model.html#Elements_Model_AddElements_Elements_Element___
+  commentId: M:Elements.Model.AddElements(Elements.Element[])
+  name.vb: AddElements(Element())
+  fullName: Elements.Model.AddElements(Elements.Element[])
+  fullName.vb: Elements.Model.AddElements(Elements.Element())
+  nameWithType: Model.AddElements(Element[])
+  nameWithType.vb: Model.AddElements(Element())
 - uid: Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element},System.Boolean)
   name: AddElements(IEnumerable<Element>, Boolean)
   href: api/Elements.Model.html#Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__System_Boolean_
@@ -12762,15 +12834,15 @@ references:
   commentId: T:Elements.Topography
   fullName: Elements.Topography
   nameWithType: Topography
-- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material)
-  name: Topography(Vector3, Double, Double[], Material)
-  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double___Elements_Material_
-  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material)
-  name.vb: Topography(Vector3, Double, Double(), Material)
-  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double[], Elements.Material)
-  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double(), Elements.Material)
-  nameWithType: Topography.Topography(Vector3, Double, Double[], Material)
-  nameWithType.vb: Topography.Topography(Vector3, Double, Double(), Material)
+- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)
+  name: Topography(Vector3, Double, Double[], Material, Transform, Guid, String)
+  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double___Elements_Material_Elements_Geometry_Transform_System_Guid_System_String_
+  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)
+  name.vb: Topography(Vector3, Double, Double(), Material, Transform, Guid, String)
+  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double[], Elements.Material, Elements.Geometry.Transform, System.Guid, System.String)
+  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double(), Elements.Material, Elements.Geometry.Transform, System.Guid, System.String)
+  nameWithType: Topography.Topography(Vector3, Double, Double[], Material, Transform, Guid, String)
+  nameWithType.vb: Topography.Topography(Vector3, Double, Double(), Material, Transform, Guid, String)
 - uid: Elements.Topography.#ctor*
   name: Topography
   href: api/Elements.Topography.html#Elements_Topography__ctor_
@@ -12856,19 +12928,6 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.MaxElevation
   nameWithType: Topography.MaxElevation
-- uid: Elements.Topography.Mesh
-  name: Mesh
-  href: api/Elements.Topography.html#Elements_Topography_Mesh
-  commentId: P:Elements.Topography.Mesh
-  fullName: Elements.Topography.Mesh
-  nameWithType: Topography.Mesh
-- uid: Elements.Topography.Mesh*
-  name: Mesh
-  href: api/Elements.Topography.html#Elements_Topography_Mesh_
-  commentId: Overload:Elements.Topography.Mesh
-  isSpec: "True"
-  fullName: Elements.Topography.Mesh
-  nameWithType: Topography.Mesh
 - uid: Elements.Topography.MinElevation
   name: MinElevation
   href: api/Elements.Topography.html#Elements_Topography_MinElevation
@@ -12908,22 +12967,6 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.RowWidth
   nameWithType: Topography.RowWidth
-- uid: Elements.Topography.Tessellate(Elements.Geometry.Mesh@)
-  name: Tessellate(ref Mesh)
-  href: api/Elements.Topography.html#Elements_Topography_Tessellate_Elements_Geometry_Mesh__
-  commentId: M:Elements.Topography.Tessellate(Elements.Geometry.Mesh@)
-  name.vb: Tessellate(ByRef Mesh)
-  fullName: Elements.Topography.Tessellate(ref Elements.Geometry.Mesh)
-  fullName.vb: Elements.Topography.Tessellate(ByRef Elements.Geometry.Mesh)
-  nameWithType: Topography.Tessellate(ref Mesh)
-  nameWithType.vb: Topography.Tessellate(ByRef Mesh)
-- uid: Elements.Topography.Tessellate*
-  name: Tessellate
-  href: api/Elements.Topography.html#Elements_Topography_Tessellate_
-  commentId: Overload:Elements.Topography.Tessellate
-  isSpec: "True"
-  fullName: Elements.Topography.Tessellate
-  nameWithType: Topography.Tessellate
 - uid: Elements.Topography.UpdateRepresentations
   name: UpdateRepresentations()
   href: api/Elements.Topography.html#Elements_Topography_UpdateRepresentations
@@ -13112,6 +13155,66 @@ references:
   isSpec: "True"
   fullName: Elements.Units.RadiansToDegrees
   nameWithType: Units.RadiansToDegrees
+- uid: Elements.Units.UnitType
+  name: Units.UnitType
+  href: api/Elements.Units.UnitType.html
+  commentId: T:Elements.Units.UnitType
+  fullName: Elements.Units.UnitType
+  nameWithType: Units.UnitType
+- uid: Elements.Units.UnitType.Area
+  name: Area
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_Area
+  commentId: F:Elements.Units.UnitType.Area
+  fullName: Elements.Units.UnitType.Area
+  nameWithType: Units.UnitType.Area
+- uid: Elements.Units.UnitType.Force
+  name: Force
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_Force
+  commentId: F:Elements.Units.UnitType.Force
+  fullName: Elements.Units.UnitType.Force
+  nameWithType: Units.UnitType.Force
+- uid: Elements.Units.UnitType.Length
+  name: Length
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_Length
+  commentId: F:Elements.Units.UnitType.Length
+  fullName: Elements.Units.UnitType.Length
+  nameWithType: Units.UnitType.Length
+- uid: Elements.Units.UnitType.Mass
+  name: Mass
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_Mass
+  commentId: F:Elements.Units.UnitType.Mass
+  fullName: Elements.Units.UnitType.Mass
+  nameWithType: Units.UnitType.Mass
+- uid: Elements.Units.UnitType.None
+  name: None
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_None
+  commentId: F:Elements.Units.UnitType.None
+  fullName: Elements.Units.UnitType.None
+  nameWithType: Units.UnitType.None
+- uid: Elements.Units.UnitType.PlaneAngle
+  name: PlaneAngle
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_PlaneAngle
+  commentId: F:Elements.Units.UnitType.PlaneAngle
+  fullName: Elements.Units.UnitType.PlaneAngle
+  nameWithType: Units.UnitType.PlaneAngle
+- uid: Elements.Units.UnitType.Pressure
+  name: Pressure
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_Pressure
+  commentId: F:Elements.Units.UnitType.Pressure
+  fullName: Elements.Units.UnitType.Pressure
+  nameWithType: Units.UnitType.Pressure
+- uid: Elements.Units.UnitType.Time
+  name: Time
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_Time
+  commentId: F:Elements.Units.UnitType.Time
+  fullName: Elements.Units.UnitType.Time
+  nameWithType: Units.UnitType.Time
+- uid: Elements.Units.UnitType.Volume
+  name: Volume
+  href: api/Elements.Units.UnitType.html#Elements_Units_UnitType_Volume
+  commentId: F:Elements.Units.UnitType.Volume
+  fullName: Elements.Units.UnitType.Volume
+  nameWithType: Units.UnitType.Volume
 - uid: Elements.UserElement
   name: UserElement
   href: api/Elements.UserElement.html

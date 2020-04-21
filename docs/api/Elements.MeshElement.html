@@ -200,25 +200,25 @@
   </script><h5 id="Elements_MeshElement"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">var mesh = new Mesh();
 var gridSize = 10;
-for(var u=0; u&lt;gridSize; u+=1)
+for (var u = 0; u &lt; gridSize; u += 1)
 {
-    for(var v=0; v&lt;gridSize; v+=1)
+    for (var v = 0; v &lt; gridSize; v += 1)
     {
-        var sinu = Math.Sin(-Math.PI + 2 * ((double)u/(double)gridSize * Math.PI));
-        var sinv = Math.Sin(-Math.PI + 2 * ((double)v/(double)gridSize * Math.PI));
+        var sinu = Math.Sin(-Math.PI + 2 * ((double)u / (double)gridSize * Math.PI));
+        var sinv = Math.Sin(-Math.PI + 2 * ((double)v / (double)gridSize * Math.PI));
         var z = sinu + sinv;
         var vertex = new Vertex(new Vector3(u, v, z), color: Colors.Mint);
         mesh.AddVertex(vertex);
 
-        if(u &gt; 0 &amp;&amp; v &gt; 0)
+        if (u &gt; 0 &amp;&amp; v &gt; 0)
         {
             var index = u * gridSize + v;
             var a = mesh.Vertices[index];
             var b = mesh.Vertices[index - gridSize];
             var c = mesh.Vertices[index - 1];
             var d = mesh.Vertices[index - gridSize - 1];
-            var tri1 = new Triangle(a,b,c);
-            var tri2 = new Triangle(c,b,d);
+            var tri1 = new Triangle(a, b, c);
+            var tri2 = new Triangle(c, b, d);
 
             mesh.AddTriangle(tri1);
             mesh.AddTriangle(tri2);
@@ -226,7 +226,7 @@ for(var u=0; u&lt;gridSize; u+=1)
     }
 }
 mesh.ComputeNormals();
-var meshElement = new MeshElement(mesh);
+var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Lime));
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -235,6 +235,7 @@ var meshElement = new MeshElement(mesh);
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
     <div class="level3"><span class="xref">MeshElement</span></div>
       <div class="level4"><a class="xref" href="Elements.ImportMeshElement.html">ImportMeshElement</a></div>
+      <div class="level4"><a class="xref" href="Elements.Topography.html">Topography</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -364,6 +365,32 @@ var meshElement = new MeshElement(mesh);
     <pre><code class="lang-csharp hljs">protected Mesh _mesh</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_MeshElement_Mesh_" data-uid="Elements.MeshElement.Mesh*"></a>
+  <h4 id="Elements_MeshElement_Mesh" data-uid="Elements.MeshElement.Mesh">Mesh</h4>
+  <div class="markdown level1 summary"><p>The element's mesh.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Mesh Mesh { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>

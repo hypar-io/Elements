@@ -199,7 +199,7 @@
     animate();
   </script><h5 id="Elements_Topography"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Read topo elevations from a file.
-var data = JsonConvert.DeserializeObject&lt;Dictionary&lt;string,double[]&gt;&gt;(File.ReadAllText(&quot;./elevations.json&quot;));
+var data = JsonConvert.DeserializeObject&lt;Dictionary&lt;string, double[]&gt;&gt;(File.ReadAllText(&quot;./elevations.json&quot;));
 var elevations = data[&quot;points&quot;];
 var tileSize = WebMercatorProjection.GetTileSizeMeters(15);
 
@@ -211,7 +211,8 @@ var topo = new Topography(Vector3.Origin, tileSize, elevations);
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
-    <div class="level3"><span class="xref">Topography</span></div>
+    <div class="level3"><a class="xref" href="Elements.MeshElement.html">MeshElement</a></div>
+    <div class="level4"><span class="xref">Topography</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -219,6 +220,15 @@ var topo = new Topography(Vector3.Origin, tileSize, elevations);
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.MeshElement.html#Elements_MeshElement__mesh">MeshElement._mesh</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.MeshElement.html#Elements_MeshElement_Mesh">MeshElement.Mesh</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.MeshElement.html#Elements_MeshElement_Tessellate_Elements_Geometry_Mesh__">MeshElement.Tessellate(Mesh)</a>
+    </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
@@ -266,18 +276,18 @@ var topo = new Topography(Vector3.Origin, tileSize, elevations);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Topography_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Topography : GeometricElement, ITessellate</code></pre>
+    <pre><code class="lang-csharp hljs">public class Topography : MeshElement, ITessellate</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Topography__ctor_" data-uid="Elements.Topography.#ctor*"></a>
-  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double___Elements_Material_" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material)">Topography(Vector3, Double, Double[], Material)</h4>
+  <h4 id="Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double___Elements_Material_Elements_Geometry_Transform_System_Guid_System_String_" data-uid="Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)">Topography(Vector3, Double, Double[], Material, Transform, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a topography.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Topography(Vector3 origin, double width, double[] elevations, Material material = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Topography(Vector3 origin, double width, double[] elevations, Material material = null, Transform transform = null, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -312,6 +322,24 @@ width and the length of the topography will be the same.</p>
         <td><a class="xref" href="Elements.Material.html">Material</a></td>
         <td><span class="parametername">material</span></td>
         <td><p>The topography's material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The topography's transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The topography's id.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The topography's name.</p>
 </td>
       </tr>
     </tbody>
@@ -412,30 +440,6 @@ to convert the flat list into a square grid.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Topography_Mesh_" data-uid="Elements.Topography.Mesh*"></a>
-  <h4 id="Elements_Topography_Mesh" data-uid="Elements.Topography.Mesh">Mesh</h4>
-  <div class="markdown level1 summary"><p>The topography's mesh.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Mesh Mesh { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -586,33 +590,6 @@ corresponding edge of a target topography.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a>[]</td>
         <td><p>A collection of vertices.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Topography_Tessellate_" data-uid="Elements.Topography.Tessellate*"></a>
-  <h4 id="Elements_Topography_Tessellate_Elements_Geometry_Mesh__" data-uid="Elements.Topography.Tessellate(Elements.Geometry.Mesh@)">Tessellate(ref Mesh)</h4>
-  <div class="markdown level1 summary"><p>Tessellate the topography.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Tessellate(ref Mesh mesh)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
-        <td><span class="parametername">mesh</span></td>
-        <td><p>The mesh into which the topography's facets will be added.</p>
 </td>
       </tr>
     </tbody>
