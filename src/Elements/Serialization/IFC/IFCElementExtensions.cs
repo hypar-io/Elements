@@ -69,29 +69,65 @@ namespace Elements.Serialization.IFC
             {
                 foreach (var op in geoElement.Representation.SolidOperations)
                 {
-                    IfcGeometricRepresentationItem geom = null;
                     if (op is Sweep)
                     {
                         var sweep = (Sweep)op;
-                        geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
-                        // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(e.Transform, doc);
+
+                        // Neither of these entities, which are part of the 
+                        // IFC4 specification, and which would allow a sweep 
+                        // along a curve, are supported by many applications 
+                        // which are supposedly IFC4 compliant (Revit). For
+                        // Those applications where these entities appear,
+                        // the rotation of the profile is often wrong or 
+                        // inconsistent.
+                        // geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
+                        // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(geoElement.Transform, doc);
+
+                        // Instead, we'll divide the curve and create a set of 
+                        // linear extrusions instead.
+                        Polyline pline;
+                        if (sweep.Curve is Line)
+                        {
+                            pline = sweep.Curve.ToPolyline(1);
+                        }
+                        else
+                        {
+                            pline = sweep.Curve.ToPolyline();
+                        }
+                        foreach (var segment in pline.Segments())
+                        {
+                            var position = segment.TransformAt(0.0).ToIfcAxis2Placement3D(doc);
+                            var extrudeDepth = segment.Length();
+                            var extrudeProfile = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+                            var extrudeDirection = Vector3.ZAxis.Negate().ToIfcDirection();
+                            var geom = new IfcExtrudedAreaSolid(extrudeProfile, position,
+                                extrudeDirection, new IfcPositiveLengthMeasure(extrudeDepth));
+
+                            doc.AddEntity(extrudeProfile);
+                            doc.AddEntity(extrudeDirection);
+                            doc.AddEntity(position);
+                            doc.AddEntity(geom);
+                            geoms.Add(geom);
+                        }
                     }
                     else if (op is Extrude)
                     {
                         var extrude = (Extrude)op;
-                        geom = extrude.ToIfcExtrudedAreaSolid(doc);
+                        var geom = extrude.ToIfcExtrudedAreaSolid(doc);
+                        doc.AddEntity(geom);
+                        geoms.Add(geom);
                     }
                     else if (op is Lamina)
                     {
                         var lamina = (Lamina)op;
-                        geom = lamina.ToIfcShellBasedSurfaceModel(doc);
+                        var geom = lamina.ToIfcShellBasedSurfaceModel(doc);
+                        doc.AddEntity(geom);
+                        geoms.Add(geom);
                     }
                     else
                     {
                         throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
                     }
-                    doc.AddEntity(geom);
-                    geoms.Add(geom);
                 }
                 shape = ToIfcProductDefinitionShape(geoms, "SolidModel", context, doc);
             }
