@@ -72,7 +72,7 @@ namespace Elements.Generate
         private static string[] _coreTypeNames;
 
         /// <summary>
-        /// Generate a user-defined type in a .cs file from a schema.
+        /// Generate a user-defined type in a .g.cs file from a schema.
         /// </summary>
         /// <param name="uri">The uri to the schema which defines the type. This can be a url or a relative file path.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
@@ -93,9 +93,37 @@ namespace Elements.Generate
             {
                 _coreTypeNames = GetCoreTypeNames();
             }
-            var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
+            var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
+            WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
+        }
 
-            WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, localExcludes);
+        /// <summary>
+        /// Generate user-defined types in .g.cs files from a schema.
+        /// </summary>
+        /// <param name="uris">An array of uris.</param>
+        /// <param name="outputBaseDir">The base output directory.</param>
+        /// <param name="isUserElement">Is the type a user-defined element?</param>
+        public static async Task GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)
+        {
+            var batchTypeNames = uris.Select(uri => GetTypeNameFromSchemaUri(uri)).ToArray();
+
+            foreach (var uri in uris)
+            {
+                var schema = await GetSchemaAsync(uri);
+                string ns;
+                if (!GetNamespace(schema, out ns))
+                {
+                    return;
+                }
+                var typeName = schema.Title;
+                if (_coreTypeNames == null)
+                {
+                    _coreTypeNames = GetCoreTypeNames();
+                }
+                var excludedTypeNames = _coreTypeNames.Concat(batchTypeNames).Where(n => n != typeName).ToArray();
+                var filePath = Path.Combine(outputBaseDir, GetFileNameFromTypeName(typeName));
+                WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
+            }
         }
 
         /// <summary>
@@ -130,9 +158,9 @@ namespace Elements.Generate
                     var csharp = WriteTypeFromSchema(schema, typeName, ns, true, localExcludes);
                     code.Add(csharp);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    throw new Exception($"There was an error reading the schema at {uri}. Type generation will not continue.");
+                    throw new Exception($"There was an error reading the schema at {uri}: {ex.Message}. Type generation will not continue.");
                 }
             }
 
@@ -218,7 +246,12 @@ namespace Elements.Generate
 
         private static string[] GetCoreTypeNames()
         {
-            return _hyparSchemas.Select(u => u.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToArray();
+            return _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToArray();
+        }
+
+        private static string GetTypeNameFromSchemaUri(string uri)
+        {
+            return uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "");
         }
 
         private static string GetFileNameFromTypeName(string typeName)

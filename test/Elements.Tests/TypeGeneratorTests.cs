@@ -10,6 +10,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
@@ -60,7 +61,7 @@ namespace Elements.Tests
 
     public class TypeGeneratorTests
     {
-        const string schema = @"{
+        const string beamSchema = @"{
     ""$id"": ""https://hypar.io/Schemas/Beam.json"",
     ""$schema"": ""http://json-schema.org/draft-07/schema#"",
     ""description"": ""A beam."",
@@ -81,6 +82,38 @@ namespace Elements.Tests
     },
     ""additionalProperties"": false
 }";
+
+        /// <summary>
+        /// The embeddedSchemaTest demonstrates a schema that has another 
+        /// schema that will be read at the same time specified for one of
+        /// its properties 
+        /// </summary>
+        const string embeddedSchemaTest = @"{
+    ""$id"": ""https://hypar.io/Schemas/Truss.json"",
+    ""$schema"": ""http://json-schema.org/draft-07/schema#"",
+    ""description"": ""A test of schema embedding."",
+    ""title"": ""EmbeddedSchemaTest"",
+    ""x-namespace"": ""Elements"",
+    ""type"": [""object"", ""null""],
+    ""allOf"": [{""$ref"": ""https://hypar.io/Schemas/GeometricElement.json""}],
+    ""required"": [""Panels""],
+    ""properties"": {
+        ""Panels"": {
+            ""type"": ""array"",
+            ""items"": {
+                ""$ref"": ""https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadePanel.json""
+            }
+        }
+    },
+    ""additionalProperties"": false
+}";
+        private ITestOutputHelper output;
+
+        public TypeGeneratorTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         // We've started ignoring these tests on mac because on 
         // Catalina we receive an System.Net.Http.CurlException : Login denied.
         [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact))]
@@ -88,7 +121,7 @@ namespace Elements.Tests
         {
             var tmpPath = Path.GetTempPath();
             var schemaPath = Path.Combine(tmpPath, "beam.json");
-            File.WriteAllText(schemaPath, schema);
+            File.WriteAllText(schemaPath, beamSchema);
             var relPath = Path.GetRelativePath(Assembly.GetExecutingAssembly().Location, schemaPath);
             await TypeGenerator.GenerateUserElementTypeFromUriAsync(relPath, tmpPath, true);
             var code = File.ReadAllText(Path.Combine(tmpPath, "beam.g.cs"));
@@ -124,6 +157,26 @@ namespace Elements.Tests
             var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesn'tExist.json",
                                 "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
             await Assert.ThrowsAsync<Exception>(async () => await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(uris));
+        }
+
+        [Fact]
+        public async Task CodeGenerationOfTypeWithEmbeddedType()
+        {
+            var tmpPath = Path.Combine(Path.GetTempPath(), "HyparModels");
+            if (!Directory.Exists(tmpPath))
+            {
+                Directory.CreateDirectory(tmpPath);
+            }
+
+            var embeddedSchemaTestPath = Path.Combine(tmpPath, "embeddedSchemaTest.json");
+            var relEmbeddedSchemaTestPath = Path.GetRelativePath(Assembly.GetExecutingAssembly().Location, embeddedSchemaTestPath);
+            File.WriteAllText(embeddedSchemaTestPath, embeddedSchemaTest);
+
+            // Generate the truss type which contains the beam type
+            await TypeGenerator.GenerateUserElementTypesFromUrisAsync(new[] { relEmbeddedSchemaTestPath, "https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadePanel.json" }, tmpPath, true);
+
+            // Ensure that there is only one beam.g.cs in the output.
+            Assert.Equal(2, Directory.GetFiles(tmpPath, "*.g.cs").Length);
         }
     }
 }
