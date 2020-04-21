@@ -85,7 +85,16 @@ namespace Elements.Serialization.IFC
 
                         // Instead, we'll divide the curve and create a set of 
                         // linear extrusions instead.
-                        foreach (var segment in sweep.Curve.ToPolyline().Segments())
+                        Polyline pline;
+                        if (sweep.Curve is Line)
+                        {
+                            pline = sweep.Curve.ToPolyline(1);
+                        }
+                        else
+                        {
+                            pline = sweep.Curve.ToPolyline();
+                        }
+                        foreach (var segment in pline.Segments())
                         {
                             var position = segment.TransformAt(0.0).ToIfcAxis2Placement3D(doc);
                             var extrudeDepth = segment.Length();
