@@ -2,12 +2,13 @@
 
 ## 0.7.0
 ### Fixed
-- #271
-- #284
-- #285
-- #265
-- #221
-- #229
+- https://github.com/hypar-io/Elements/issues/271
+- https://github.com/hypar-io/Elements/issues/284
+- https://github.com/hypar-io/Elements/issues/285
+- https://github.com/hypar-io/Elements/issues/265
+- https://github.com/hypar-io/Elements/issues/221
+- https://github.com/hypar-io/Elements/issues/229
+- https://github.com/hypar-io/Elements/issues/189
 
 ### Added
 - `Curve.ToPolyline(int divisions = 10)`
