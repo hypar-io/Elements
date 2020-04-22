@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Circle
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -143,6 +143,9 @@ an end angle of 360.0.</p>
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
+    </div>
+    <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
@@ -201,6 +204,78 @@ an end angle of 360.0.</p>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">radius</span></td>
         <td><p>The radius of the circle.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Circle__ctor_" data-uid="Elements.Geometry.Circle.#ctor*"></a>
+  <h4 id="Elements_Geometry_Circle__ctor_System_Double_" data-uid="Elements.Geometry.Circle.#ctor(System.Double)">Circle(Double)</h4>
+  <div class="markdown level1 summary"><p>Construct a circle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Circle(double radius = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td><p>The radius of the circle.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Geometry_Circle_ToPolygon_" data-uid="Elements.Geometry.Circle.ToPolygon*"></a>
+  <h4 id="Elements_Geometry_Circle_ToPolygon_System_Int32_" data-uid="Elements.Geometry.Circle.ToPolygon(System.Int32)">ToPolygon(Int32)</h4>
+  <div class="markdown level1 summary"><p>Create a polygon through a set of points along the arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polygon ToPolygon(int divisions = 10)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">divisions</span></td>
+        <td><p>The number of divisions of the arc.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><p>A polyline.</p>
 </td>
       </tr>
     </tbody>

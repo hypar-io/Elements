@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Transform
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -274,8 +274,7 @@ for(var i=0.0; i&lt;360.0; i+= 360.0/(double)count)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Transform(Matrix matrix)</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform(Matrix matrix)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -538,9 +537,7 @@ along up.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Matrix&quot;, Required = Required.Always)]
-[Required]
-public Matrix Matrix { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Matrix Matrix { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -564,8 +561,7 @@ public Matrix Matrix { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Origin { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Origin { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -589,8 +585,7 @@ public Vector3 Origin { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 XAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 XAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -614,8 +609,7 @@ public Vector3 XAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 YAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 YAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -639,8 +633,7 @@ public Vector3 YAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 ZAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 ZAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -817,6 +810,42 @@ of the curve.</p>
         <td><span class="parametername">translation</span></td>
         <td><p>The translation to apply.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Transform_Move_" data-uid="Elements.Geometry.Transform.Move*"></a>
+  <h4 id="Elements_Geometry_Transform_Move_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Transform.Move(System.Double,System.Double,System.Double)">Move(Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Apply a translation to the transform.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Move(double x = 0, double y = 0, double z = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">x</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">y</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">z</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -1216,6 +1245,33 @@ of the curve.</p>
         <td><p>The axis of rotation.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">angle</span></td>
+        <td><p>The angle of rotation in degrees.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Transform_Rotate_" data-uid="Elements.Geometry.Transform.Rotate*"></a>
+  <h4 id="Elements_Geometry_Transform_Rotate_System_Double_" data-uid="Elements.Geometry.Transform.Rotate(System.Double)">Rotate(Double)</h4>
+  <div class="markdown level1 summary"><p>Apply a rotation to the transform around the Z axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Rotate(double angle)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">angle</span></td>

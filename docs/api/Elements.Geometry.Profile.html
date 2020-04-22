@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Profile
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -163,7 +163,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Profile(Polygon perimeter, Polygon singleVoid)</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile(Polygon perimeter, Polygon void)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -183,7 +183,7 @@
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td><span class="parametername">singleVoid</span></td>
+        <td><span class="parametername">void</span></td>
         <td><p>A void in the profile.</p>
 </td>
       </tr>
@@ -195,8 +195,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -227,6 +226,36 @@ public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string na
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
+  <h4 id="Elements_Geometry_Profile__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Profile.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})">Profile(IList&lt;Polygon&gt;)</h4>
+  <div class="markdown level1 summary"><p>Construct a profile from a collection of polygons.
+If the collection contains more than one polygon, the first polygon
+will be used as the perimeter and any remaining polygons will
+be used as voids.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Profile(IList&lt;Polygon&gt; polygons)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">polygons</span></td>
+        <td><p>The polygons bounding this profile.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -265,8 +294,7 @@ public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string na
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Perimeter&quot;, Required = Required.AllowNull)]
-public Polygon Perimeter { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon Perimeter { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -290,8 +318,7 @@ public Polygon Perimeter { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Voids&quot;, Required = Required.AllowNull)]
-public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -331,6 +358,96 @@ public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Profile_Contains_" data-uid="Elements.Geometry.Profile.Contains*"></a>
+  <h4 id="Elements_Geometry_Profile_Contains_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3)">Contains(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Tests if a point is contained within this profile. Returns false for points that are outside of the profile, within voids, or coincident at edges or vertices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Profile_Contains_" data-uid="Elements.Geometry.Profile.Contains*"></a>
+  <h4 id="Elements_Geometry_Profile_Contains_Elements_Geometry_Vector3_Elements_Geometry_Containment__" data-uid="Elements.Geometry.Profile.Contains(Elements.Geometry.Vector3,Elements.Geometry.Containment@)">Contains(Vector3, out Containment)</h4>
+  <div class="markdown level1 summary"><p>Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 point, out Containment containment)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The position to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Containment.html">Containment</a></td>
+        <td><span class="parametername">containment</span></td>
+        <td><p>Whether the point is inside, outside, at an edge, or at a vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the point is within the profile.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -465,6 +582,48 @@ public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
         <td><span class="parametername">t</span></td>
         <td><p>The transform.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Profile_Union_" data-uid="Elements.Geometry.Profile.Union*"></a>
+  <h4 id="Elements_Geometry_Profile_Union_Elements_Geometry_Profile_" data-uid="Elements.Geometry.Profile.Union(Elements.Geometry.Profile)">Union(Profile)</h4>
+  <div class="markdown level1 summary"><p>Perform a union operation, returning a new profile that is the union of the current profile with the other profile</p>
+<param name="profile">The profile with which to create a union.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Profile Union(Profile profile)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

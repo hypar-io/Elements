@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class AnalysisMesh
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -200,25 +200,28 @@
   </script><h5 id="Elements_Analysis_AnalysisMesh"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">var perimeter1 = Polygon.L(10, 10, 3);
 var perimeter2 = Polygon.Ngon(5, 5);
-var move = new Transform(3,7,0);
+var move = new Transform(3, 7, 0);
 var perimeter = perimeter1.Union(move.OfPolygon(perimeter2));
+var mc = new ModelCurve(perimeter);
+this.Model.AddElement(mc);
 
 // Construct a mass from which we will measure
 // distance to the analysis mesh's cells.
-var attractor = new Vector3(10,5);
-var mass = new Mass(Polygon.Rectangle(1,1));
-mass.Transform.Move(attractor);
+var center = perimeter.Centroid();
+var mass = new Mass(Polygon.Rectangle(1, 1));
+mass.Transform.Move(center);
 this.Model.AddElement(mass);
 
 // The analyze function computes the distance
 // to the attractor.
-var analyze = new Func&lt;Vector3,double&gt;((v) =&gt; {
-    return attractor.DistanceTo(v);
+var analyze = new Func&lt;Vector3, double&gt;((v) =&gt;
+{
+    return center.DistanceTo(v);
 });
 
 // Construct a color scale from a small number
 // of colors.
-var colorScale = new ColorScale(new List&lt;Color&gt;(){Colors.Cyan, Colors.Purple, Colors.Orange}, 10);
+var colorScale = new ColorScale(new List&lt;Color&gt;() { Colors.Cyan, Colors.Purple, Colors.Orange }, 10);
 
 var analysisMesh = new AnalysisMesh(perimeter, 0.2, 0.2, colorScale, analyze);
 analysisMesh.Analyze();
@@ -410,8 +413,7 @@ analysisMesh.Analyze();
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double TotalAnalysisLocations { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double TotalAnalysisLocations { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

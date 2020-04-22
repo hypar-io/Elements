@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Beam
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -202,18 +202,18 @@
 var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
 
 // Create a straight beam.
-var line = new Line(Vector3.Origin, new Vector3(5,0,5));
+var line = new Line(Vector3.Origin, new Vector3(5, 0, 5));
 var linearBeam = new Beam(line, profile, BuiltInMaterials.Wood, 0, 0, 15);
 var lineT = line.TransformAt(0).ToModelCurves(linearBeam.Transform);
 
 // Create a polygon beam.
 var polygon = Polygon.Ngon(5, 2);
-var polygonBeam = new Beam(polygon, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(6,0,0));
+var polygonBeam = new Beam(polygon, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(6, 0, 0));
 var polyT = polygon.TransformAt(0).ToModelCurves(polygonBeam.Transform);
 
 // Create a curved beam.
 var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
-var arcBeam = new Beam(arc, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(12,0,0));
+var arcBeam = new Beam(arc, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(12, 0, 0));
 var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
 </code></pre>
   <div class="inheritance">

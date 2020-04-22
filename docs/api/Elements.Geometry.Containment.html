@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Namespace Elements.Properties
+    <title>Enum Containment
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Namespace Elements.Properties
+    <meta name="title" content="Enum Containment
    | Hypar Docs ">
     <meta name="generator" content="docfx 2.48.1.0">
     
@@ -72,22 +72,57 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Elements.Properties">
+            <article class="content wrap" id="_content" data-uid="Elements.Geometry.Containment">
   
-  <h1 id="Elements_Properties" data-uid="Elements.Properties" class="text-break">Namespace Elements.Properties
+  
+  <h1 id="Elements_Geometry_Containment" data-uid="Elements.Geometry.Containment" class="text-break">Enum Containment
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Represents the state of containment of a point relative to an enclosing polygon, profile, or solid.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
-  <div class="markdown level0 remarks"></div>
-    <h3 id="classes">Classes
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Geometry_Containment_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public enum Containment</code></pre>
+  </div>
+  <h3 id="fields">Fields
   </h3>
-      <h4><a class="xref" href="Elements.Properties.NumericProperty.html">NumericProperty</a></h4>
-      <section><p>A property with a numeric value.</p>
-</section>
-    <h3 id="enums">Enums
-  </h3>
-      <h4><a class="xref" href="Elements.Properties.NumericPropertyUnitType.html">NumericPropertyUnitType</a></h4>
-      <section></section>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    <thead>
+    <tbody>
+      <tr>
+        <td id="Elements_Geometry_Containment_CoincidesAtEdge">CoincidesAtEdge</td>
+        <td><p>The point lies exactly or nearly at an edge.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Elements_Geometry_Containment_CoincidesAtFace">CoincidesAtFace</td>
+        <td><p>The point lies exactly or nearly at a face.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Elements_Geometry_Containment_CoincidesAtVertex">CoincidesAtVertex</td>
+        <td><p>The point lies exactly or nearly at a vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Elements_Geometry_Containment_Inside">Inside</td>
+        <td><p>The point lies entirely inside.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="Elements_Geometry_Containment_Outside">Outside</td>
+        <td><p>The point lies entirely outside.</p>
+</td>
+      </tr>
+    </tbody>
+  </thead></thead></table>
 </article>
           </div>
           

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Curve
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -120,8 +120,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Curve_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public abstract class Curve : ICurve</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class Curve : ICurve</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -131,8 +130,7 @@ public abstract class Curve : ICurve</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Curve()</code></pre>
+    <pre><code class="lang-csharp hljs">public Curve()</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -298,6 +296,49 @@ A lower MinimumChordLength results in smoother curves.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>A point on the curve at parameter u.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Curve_ToPolyline_" data-uid="Elements.Geometry.Curve.ToPolyline*"></a>
+  <h4 id="Elements_Geometry_Curve_ToPolyline_System_Int32_" data-uid="Elements.Geometry.Curve.ToPolyline(System.Int32)">ToPolyline(Int32)</h4>
+  <div class="markdown level1 summary"><p>Create a polyline through a set of points along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Polyline ToPolyline(int divisions = 10)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">divisions</span></td>
+        <td><p>The number of divisions of the curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><p>A polyline.</p>
 </td>
       </tr>
     </tbody>

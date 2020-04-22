@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Arc
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.0.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -227,6 +227,9 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
+    </div>
+    <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
@@ -262,8 +265,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Arc(Vector3 center, double radius, double startAngle, double endAngle)</code></pre>
+    <pre><code class="lang-csharp hljs">public Arc(Vector3 center, double radius, double startAngle, double endAngle)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -297,6 +299,45 @@ public Arc(Vector3 center, double radius, double startAngle, double endAngle)</c
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
+  <h4 id="Elements_Geometry_Arc__ctor_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(System.Double,System.Double,System.Double)">Arc(Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Construct an arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Arc(double radius, double startAngle, double endAngle)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td><p>The radius of the arc.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startAngle</span></td>
+        <td><p>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endAngle</span></td>
+        <td><p>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Geometry_Arc_Center_" data-uid="Elements.Geometry.Arc.Center*"></a>
@@ -306,8 +347,7 @@ public Arc(Vector3 center, double radius, double startAngle, double endAngle)</c
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Center&quot;, Required = Required.AllowNull)]
-public Vector3 Center { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Center { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -331,8 +371,7 @@ public Vector3 Center { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -356,9 +395,7 @@ public Vector3 End { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EndAngle&quot;, Required = Required.Always)]
-[Range(0, 360)]
-public double EndAngle { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double EndAngle { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -382,9 +419,7 @@ public double EndAngle { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Radius&quot;, Required = Required.Always)]
-[Range(0, 1.7976931348623157E+308)]
-public double Radius { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Radius { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -408,8 +443,7 @@ public double Radius { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -433,9 +467,7 @@ public Vector3 Start { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;StartAngle&quot;, Required = Required.Always)]
-[Range(0, 360)]
-public double StartAngle { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double StartAngle { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

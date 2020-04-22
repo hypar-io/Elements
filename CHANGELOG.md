@@ -16,6 +16,9 @@
 - `Transform.Rotate(double angle)`
 - `TypeGenerator.GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)`
 
+## Changed
+- Updated documentation to reflect the use of .NET Core 3.1.
+
 ### Deprecated
 - `Polygon.Circle(...)`
 
