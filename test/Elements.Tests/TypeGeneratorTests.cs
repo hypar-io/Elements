@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Elements.Generate;
 using Elements.Geometry;
@@ -27,22 +26,6 @@ namespace Elements.Tests
         private static bool IsTravis()
         {
             return Environment.GetEnvironmentVariable("TRAVIS") != null;
-        }
-    }
-
-    public sealed class IgnoreOnMacFact : FactAttribute
-    {
-        public IgnoreOnMacFact()
-        {
-            if (IsMac())
-            {
-                Skip = "Ignore on mac.";
-            }
-        }
-
-        private static bool IsMac()
-        {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         }
     }
 
@@ -114,9 +97,7 @@ namespace Elements.Tests
             this.output = output;
         }
 
-        // We've started ignoring these tests on mac because on 
-        // Catalina we receive an System.Net.Http.CurlException : Login denied.
-        [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact))]
+        [MultiFact(typeof(IgnoreOnTravisFact))]
         public async Task GeneratesCodeFromSchema()
         {
             var tmpPath = Path.GetTempPath();
@@ -127,7 +108,7 @@ namespace Elements.Tests
             var code = File.ReadAllText(Path.Combine(tmpPath, "beam.g.cs"));
         }
 
-        [MultiFact(typeof(IgnoreOnMacFact), typeof(IgnoreOnTravisFact))]
+        [MultiFact(typeof(IgnoreOnTravisFact))]
         public async Task GeneratesInMemoryAssembly()
         {
             var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadeAnchor.json",
@@ -148,7 +129,7 @@ namespace Elements.Tests
             // Profile @profile, Line @centerLine, NumericProperty @length, Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name
             var t = new Transform();
             var m = BuiltInMaterials.Steel;
-            var mullion = Activator.CreateInstance(mullionType, new object[] { profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), Guid.NewGuid(), "Test Mullion" });
+            var mullion = Activator.CreateInstance(mullionType, new object[] { profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), false, Guid.NewGuid(), "Test Mullion" });
         }
 
         [IgnoreOnTravisFact]

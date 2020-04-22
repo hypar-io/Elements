@@ -229,7 +229,7 @@ namespace Elements.Generate
         /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
         public static async Task GenerateElementTypesAsync(string outputBaseDir)
         {
-            var typeNames = _hyparSchemas.Select(u => u.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "")).ToList();
+            var typeNames = _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToList();
 
             foreach (var uri in _hyparSchemas)
             {
@@ -251,7 +251,7 @@ namespace Elements.Generate
 
         private static string GetTypeNameFromSchemaUri(string uri)
         {
-            return uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".json", "");
+            return Path.GetFileNameWithoutExtension(uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last());
         }
 
         private static string GetFileNameFromTypeName(string typeName)
