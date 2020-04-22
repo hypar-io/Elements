@@ -14,6 +14,7 @@
 - `Circle.ToPolygon(int divisions = 10)`
 - `Transform.Move(double x, double y, double z)`
 - `Transform.Rotate(double angle)`
+- `TypeGenerator.GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)`
 
 ### Deprecated
 - `Polygon.Circle(...)`
