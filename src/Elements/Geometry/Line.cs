@@ -132,13 +132,25 @@ namespace Elements.Geometry
         /// <param name="p">The plane.</param>
         /// <param name="result">The location of intersection.</param>
         /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
-        public bool Intersects(Plane p, out Vector3 result)
+        public bool Intersects(Plane p, out Vector3 result, bool infinite = false)
         {
             var rayIntersects = new Ray(Start, Direction()).Intersects(p, out Vector3 location, out double t);
-            if (rayIntersects && t <= Length())
+            if (rayIntersects)
             {
-                result = location;
-                return true;
+                if (infinite || t <= Length())
+                {
+                    result = location;
+                    return true;
+                }
+            }
+            else if (infinite)
+            {
+                var rayIntersectsBackwards = new Ray(End, Direction().Negate()).Intersects(p, out Vector3 location2, out double t2);
+                if(rayIntersectsBackwards)
+                {
+                    result = location2;
+                    return true;
+                }
             }
             result = default(Vector3);
             return false;
@@ -157,6 +169,63 @@ namespace Elements.Geometry
             if (IsAlmostZero(a) || a > Vector3.EPSILON) return false;
             if (IsAlmostZero(b) || b > Vector3.EPSILON) return false;
             return true;
+        }
+
+        /// <summary>
+        /// Does this line intersect the provided line in 3D?
+        /// </summary>
+        /// <param name="l"></param>
+        /// <param name="infinite">Treat the lines as infinite?</param>
+        /// <param name="result"></param>
+        /// <returns>True if the lines intersect, false if they are fully collinear or do not intersect.</returns>
+        public bool Intersects(Line l, out Vector3 result, bool infinite = false)
+        {
+            // check if two lines are parallel
+            if (Direction().IsParallelTo(l.Direction()))
+            {
+                result = default(Vector3);
+                return false;
+            }
+            // construct a plane through this line and the start or end of the other line
+            Plane plane;
+            Vector3 testpoint;
+            if (!(new[] { Start, End, l.Start }).AreCollinear())
+            {
+                plane = new Plane(Start, End, l.Start);
+                testpoint = l.End;
+
+            } // this only occurs in the rare case that the start point of the other line is collinear with this line (still need to generate a plane)
+            else if (!(new[] { Start, End, l.End }).AreCollinear())
+            {
+                plane = new Plane(Start, End, l.End);
+                testpoint = l.Start;
+            }
+            else // they're collinear (this shouldn't occur since it should be caught by the parallel test)
+            {
+                result = default(Vector3);
+                return false;
+            }
+
+            // check if the fourth point is in the same plane as the other 3
+            if (Math.Abs(plane.SignedDistanceTo(testpoint)) > Vector3.EPSILON)
+            {
+                result = default(Vector3);
+                return false;
+            }
+
+            // at this point they're not parallel, and they lie in the same plane, so we know they intersect, we just don't know where.
+            // construct a plane 
+            var normal = l.Direction().Cross(plane.Normal);
+            Plane intersectionPlane = new Plane(l.Start, normal);
+            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, infinite))
+            {
+                result = planeIntersectionResult;
+
+                return true;
+
+            }
+            result = default(Vector3);
+            return false;
         }
 
         private bool IsAlmostZero(double a)
@@ -313,13 +382,7 @@ namespace Elements.Geometry
         /// <returns>A new line, or null if this line does not intersect the trimming line.</returns>
         public Line TrimTo(Line line, bool flip = false)
         {
-            var d1 = this.Direction();
-            var d2 = line.Direction();
-
-            var n = d2.Cross(Vector3.ZAxis);
-            var p = new Plane(line.Start, n);
-
-            if (this.Intersects(p, out Vector3 result))
+            if (this.Intersects(line, out Vector3 result, true))
             {
                 if (flip)
                 {
@@ -341,23 +404,18 @@ namespace Elements.Geometry
         /// <returns>A new line, or null if this line does not intersect the trimming line.</returns>
         public Line ExtendTo(Line line)
         {
-            var d1 = this.Direction();
-            var d2 = line.Direction();
-
-            // Extend the line and trim in one direction.
-            var d3 = this.Start + d1 * 1000000;
-            var temp = new Line(this.Start, d3);
-            var trim = temp.TrimTo(line);
-            if (trim != null)
+            if (!Intersects(line, out var intersection, true))
             {
-                return trim;
+                return null;
             }
-
-            // Extend the line and trim in the other direction.
-            d3 = this.Start - d1 * 1000000;
-            temp = new Line(this.End, d3);
-            trim = temp.TrimTo(line);
-            return trim;
+            if (intersection.DistanceTo(Start) > intersection.DistanceTo(End))
+            {
+                return new Line(this.Start, intersection);
+            }
+            else
+            {
+                return new Line(this.End, intersection);
+            }
         }
 
         /// <summary>
