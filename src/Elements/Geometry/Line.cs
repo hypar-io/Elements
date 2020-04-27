@@ -131,6 +131,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="p">The plane.</param>
         /// <param name="result">The location of intersection.</param>
+        /// <param name="infinite">If true, line will be treated as infinite. (False by default)</param>
         /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
         public bool Intersects(Plane p, out Vector3 result, bool infinite = false)
         {
