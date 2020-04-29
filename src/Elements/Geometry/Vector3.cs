@@ -519,6 +519,10 @@ namespace Elements.Geometry
         /// <param name="points"></param>
         public static bool AreCollinear(this IList<Vector3> points)
         {
+            if (points == null || points.Count == 0)
+            {
+                throw new ArgumentException("Cannot test collinearity of an empty list");
+            }
             if (points.Count < 3)
             {
                 return true;
