@@ -402,7 +402,7 @@ namespace Elements.Geometry
         /// Extend this line to the trimming curve.
         /// </summary>
         /// <param name="line">The curve to which to extend.</param>
-        /// <returns>A new line, or null if this line does not intersect the trimming line.</returns>
+        /// <returns>A new line, or null if these lines would never intersect if extended infinitely.</returns>
         public Line ExtendTo(Line line)
         {
             if (!Intersects(line, out var intersection, true))
