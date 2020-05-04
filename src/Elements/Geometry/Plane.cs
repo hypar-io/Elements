@@ -47,6 +47,32 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find the closest point on this plane from a given sample point.
+        /// </summary>
+        /// <param name="point">The sample point.</param>
+        /// <returns>The closest point to the sample point on this plane.</returns>
+        public Vector3 ClosestPoint(Vector3 point)
+        {
+            var fromPointToOrigin = Origin - point;
+            var projectionVector = fromPointToOrigin.Dot(Normal) * Normal;
+            return point + projectionVector;
+            
+        }
+
+        /// <summary>
+        /// Find the signed distance from a sample point to a plane.
+        /// If positive, the point is on the "Normal" side of the plane,
+        /// otherwise it is on the opposite side. 
+        /// </summary>
+        /// <param name="point">The sample point.</param>
+        /// <returns>The signed distance between this plane and the sample point.</returns>
+        public double SignedDistanceTo(Vector3 point)
+        {
+            var fromOriginToPoint = point - Origin;
+            return fromOriginToPoint.Dot(Normal);
+        }
+
+        /// <summary>
         /// Is this plane equal to the provided plane?
         /// </summary>
         /// <param name="other">The plane to test.</param>

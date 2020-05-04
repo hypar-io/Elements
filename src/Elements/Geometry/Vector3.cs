@@ -103,12 +103,12 @@ namespace Elements.Geometry
         /// <exception>Thrown if any components of the vector are NaN or Infinity.</exception>
         public Vector3(double x, double y)
         {
-            if(Double.IsNaN(x) || Double.IsNaN(y))
+            if (Double.IsNaN(x) || Double.IsNaN(y))
             {
                 throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
             }
 
-            if(Double.IsInfinity(x) || Double.IsInfinity(y))
+            if (Double.IsInfinity(x) || Double.IsInfinity(y))
             {
                 throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
             }
@@ -514,6 +514,32 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Are the provided points along the same line?
+        /// </summary>
+        /// <param name="points"></param>
+        public static bool AreCollinear(this IList<Vector3> points)
+        {
+            if (points == null || points.Count == 0)
+            {
+                throw new ArgumentException("Cannot test collinearity of an empty list");
+            }
+            if (points.Count < 3)
+            {
+                return true;
+            }
+            var testVector = (points[1] - points[0]).Unitized();
+            for (int i = 2; i < points.Count; i++)
+            {
+                var nextVector = (points[i] - points[i - 1]).Unitized();
+                if (Math.Abs(nextVector.Dot(testVector)) < (1 - Vector3.EPSILON))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Compute a transform with the origin at points[0], with
         /// an X axis along points[1]->points[0], and a normal
         /// computed using the vectors points[2]->points[1] and 
@@ -529,11 +555,11 @@ namespace Elements.Geometry
             // found that's not parallel to the first, you'll 
             // get a zero-length normal.
             Vector3 b = new Vector3();
-            for(var i=2; i<points.Count; i++)
+            for (var i = 2; i < points.Count; i++)
             {
                 b = (points[i] - points[1]).Unitized();
                 var dot = b.Dot(a);
-                if(dot > -1 && dot < 1)
+                if (dot > -1 && dot < 1)
                 {
                     // Console.WriteLine("Found valid second vector.");
                     break;
