@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Getting started | Hypar Docs </title>
+    <title>Getting Started | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Getting started | Hypar Docs ">
+    <meta name="title" content="Getting Started | Hypar Docs ">
     <meta name="generator" content="docfx 2.52.0.0">
     
     <link rel="shortcut icon" href="favicon.ico">
@@ -64,37 +64,38 @@
         <div class="article row grid">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="getting-started">Getting started</h1>
+<h1 id="getting-started">Getting Started</h1>
 
 <p>All Hypar functions (Excel, Grasshopper, C# etc..) work by receiving some Inputs, executing some logic, and then returning some Outputs.  When we turn Excel spreadsheets into a Hypar functions we are talking about an Excel spreadsheet acting as the &quot;logic&quot; between some Inputs and some Outputs.</p>
 <p>Excel functions can be created by uploading an Excel spreadsheet to Hypar where the system exposes some named spreadsheet cells as Inputs to the function and other named cells as Outputs from the formulas contained in the spreadsheet.</p>
-<h1 id="prepping-your-excel-file">Prepping your excel file.</h1>
+<h1 id="prepping-your-excel-file">Prepping Your Excel File.</h1>
 <p>Before uploading your file to Hypar, designate some spreadsheet cells as Inputs and some cells as Outputs by using the Excel feature called Named Ranges. Cells named with the prefix &quot;INPUT.&quot; become Inputs, and, and names that start with &quot;OUTPUT.&quot; become Outputs.</p>
 <p>There are two places with Excel where you can see cell names.</p>
-<p>First, when a cell is selected you can see and edit the name in the upper left of the Excel spreadsheet view.
-<img src="images/ExcelNameCellHighlighted2020.05.07.png" alt=""></p>
-<p>Second, under the &quot;Formula&quot; tab, there is a button called &quot;Named Ranges&quot;  with a dialog that will pop up, showing you all of the named regions in the spreadsheet.
-<img src="images/ExcelNamedRegionsButton2020.05.07.png" alt="">
+<p>First, when a cell is selected you can see and edit the name in the upper left of the Excel spreadsheet view.</p>
+<p><img src="images/ExcelNameCellHighlighted2020.05.07.png" alt=""></p>
+<p>Second, under the &quot;Formula&quot; tab, there is a button called &quot;Named Ranges&quot;  with a dialog that will pop up, showing you all of the named regions in the spreadsheet.</p>
+<p><img src="images/ExcelNamedRegionsButton2020.05.07.png" alt="">
 <img src="images/ExcelNamedRegionsDialog2020.05.07.png" alt=""></p>
 <p>Name some cells in a spreadsheet, prefixing with INPUT. and OUTPUT. and when you're done, proceed to the next section.</p>
 <h1 id="upload-to-hypar">Upload to Hypar</h1>
-<p>Now that your Excel file is equipped with cells named INPUT.[your name here] and OUTPUT.[your name here] you're ready to upload it to Hypar.</p>
+<p>Now that your Excel file is equipped with cells named <strong>INPUT.[your name here]</strong> and <strong>OUTPUT.[your name here]</strong> you're ready to upload it to Hypar.</p>
 <p>Navigate to <a href="https://hypar.io">https://hypar.io</a> , sign in, and you should see the workflow gallery.</p>
 <p>Now scroll to the section labeled &quot;Your Functions&quot; and click on the &quot;New Function&quot; button.</p>
 <p><img src="images/ExcelNewFunctionsButton2020.05.07.png" alt=""></p>
-<p>Choose &quot;New Excel Function&quot;
-<img src="images/ExcelNewExcelButton2020.05.07.png" alt=""></p>
-<p>Now you'll see a dialog with a summary of the instructions, and a drop box to which, you can drag your prepared Excel spreadsheet, or click and choose the file from a file dialog.
-<img src="images/ExcelNewExcelUpload2020.05.07.png" alt=""></p>
-<p>Once you drop your Excel file on the target box your file is uploaded to Hypar where Inputs and Outputs are extracted. When the process is complete, you should see a summary of the resulting function's characteristics:
-<img src="images/ExcelNewExcelSummary2020.05.07.png" alt=""></p>
+<p>Choose &quot;New Excel Function&quot;</p>
+<p><img src="images/ExcelNewExcelButton2020.05.07.png" alt=""></p>
+<p>Now you'll see a dialog with a summary of the instructions, and a drop box to which, you can drag your prepared Excel spreadsheet, or click and choose the file from a file dialog.</p>
+<p><img src="images/ExcelNewExcelUpload2020.05.07.png" alt=""></p>
+<p>Once you drop your Excel file on the target box your file is uploaded to Hypar where Inputs and Outputs are extracted. When the process is complete, you should see a summary of the resulting function's characteristics:</p>
+<p><img src="images/ExcelNewExcelSummary2020.05.07.png" alt=""></p>
 <p>This dialog box lets you edit your function name and description and shows you a list of the Inputs and Outputs found when Hypar analyzed your file for Named cells. If you like what you see, click the &quot;Publish Function&quot; button.
-Here we see the detailed view of your function, and if you would like to make further edits click on &quot;Edit Function Details&quot;
-<img src="images/ExcelFunctionDetails2020.05.07.png" alt=""></p>
+Here we see the detailed view of your function, and if you would like to make further edits click on &quot;Edit Function Details&quot;</p>
+<h1 id="editing-the-function-on-hypar">Editing the Function on Hypar</h1>
+<p><img src="images/ExcelFunctionDetails2020.05.07.png" alt=""></p>
 <p>Here you can use &quot;Edit Function Details&quot; to change the function name and description, upload a thumbnail for your function's card on Hypar, and even upload a new Excel file if you need to update the spreadsheet with new formulae or edited Inputs and Outputs.</p>
-<p>[[[[[[[[[[[[[[[[[[[[[[[[edit func details ]]]]]]]]]]]]]]]]]]]]]]]]</p>
-<p>You can also edit the numeric range of your Inputs. Hypar tries to choose smart defaults based on your initial values, but you should double check that all the values here make sense.
-<img src="images/ExcelFunctionEditInputDetails2020.05.07.png" alt=""></p>
+<p><img src="images/ExcelFunctionEditDetails2020.05.07.png" alt=""></p>
+<p>You can also edit the numeric range of your Inputs. Hypar tries to choose smart defaults based on your initial values, but you should double check that all the values here make sense.</p>
+<p><img src="images/ExcelFunctionEditInputDetails2020.05.07.png" alt=""></p>
 <p>Now it's time to run your function!  Make note of your function's name, and then click close (or anywhere outside of this window) to go back to the gallery. Now click &quot;New Workflow&quot;, and select &quot;New Blank Workflow&quot; as your template.</p>
 <p>You should now be in a blank Workflow, where you can rename your Workflow to something you'll remember.</p>
 <p>After that, choose &quot;Add Function&quot;, search for your function name, and add it to your Workflow.</p>

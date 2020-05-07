@@ -42,7 +42,7 @@
       "output": {
         ".html": {
           "relative_path": "Excel.html",
-          "hash": "ZsMFUkMhwmrbtjK001U8Yw=="
+          "hash": "ArJlqOyIOPPVDUJtlIoZGg=="
         }
       },
       "is_incremental": false,
@@ -1745,6 +1745,17 @@
       "output": {
         "resource": {
           "relative_path": "images/ExcelFunctionDetails2020.05.07.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/ExcelFunctionEditDetails2020.05.07.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/ExcelFunctionEditDetails2020.05.07.png"
         }
       },
       "is_incremental": false,
