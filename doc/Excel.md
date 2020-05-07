@@ -1,8 +1,14 @@
-# Getting Started
+# Getting Started with Excel Functions
 
 All Hypar functions (Excel, Grasshopper, C# etc..) work by receiving some Inputs, executing some logic, and then returning some Outputs.  When we turn Excel spreadsheets into a Hypar functions we are talking about an Excel spreadsheet acting as the "logic" between some Inputs and some Outputs.
 
-Excel functions can be created by uploading an Excel spreadsheet to Hypar where the system exposes some named spreadsheet cells as Inputs to the function and other named cells as Outputs from the formulas contained in the spreadsheet.
+Excel functions can be created by uploading an Excel spreadsheet to Hypar where the system exposes some named spreadsheet cells as Inputs to the function and other named cells as Outputs from the formulas contained in the spreadsheet.  
+
+Detailed instructions are below this short video describing the process.
+
+<video width="100%" controls>
+  <source src="https://hypar.io/videos/excel+tutorial.mp4" type="video/mp4">
+</video>
 
 # Prepping Your Excel File.
 
