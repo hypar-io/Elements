@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Line
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.52.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -199,8 +199,8 @@
     animate();
   </script><h5 id="Elements_Geometry_Line"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">var a = new Vector3();
-var b = new Vector3(5,5,5);
-var l = new Line(a,b);
+var b = new Vector3(5, 5, 5);
+var l = new Line(a, b);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -266,7 +266,8 @@ var l = new Line(a,b);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Line(Vector3 start, Vector3 end)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Line(Vector3 start, Vector3 end)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -335,7 +336,8 @@ var l = new Line(a,b);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 End { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;End&quot;, Required = Required.AllowNull)]
+public Vector3 End { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -359,7 +361,8 @@ var l = new Line(a,b);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Start { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Start&quot;, Required = Required.AllowNull)]
+public Vector3 Start { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -643,7 +646,7 @@ Divisions will be centered along the line.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
-        <td><p>A new line, or null if this line does not intersect the trimming line.</p>
+        <td><p>A new line, or null if these lines would never intersect if extended infinitely.</p>
 </td>
       </tr>
     </tbody>
@@ -724,13 +727,66 @@ Divisions will be centered along the line.</p>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Line_Intersects_" data-uid="Elements.Geometry.Line.Intersects*"></a>
-  <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)">Intersects(Plane, out Vector3)</h4>
+  <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean)">Intersects(Line, out Vector3, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Does this line intersect the provided line in 3D?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Line l, out Vector3 result, bool infinite = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">l</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">infinite</span></td>
+        <td><p>Treat the lines as infinite?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the lines intersect, false if they are fully collinear or do not intersect.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Intersects_" data-uid="Elements.Geometry.Line.Intersects*"></a>
+  <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Boolean)">Intersects(Plane, out Vector3, Boolean)</h4>
   <div class="markdown level1 summary"><p>Intersect this line with the specified plane</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Plane p, out Vector3 result)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane p, out Vector3 result, bool infinite = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -752,6 +808,12 @@ Divisions will be centered along the line.</p>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">result</span></td>
         <td><p>The location of intersection.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">infinite</span></td>
+        <td><p>If true, line will be treated as infinite. (False by default)</p>
 </td>
       </tr>
     </tbody>

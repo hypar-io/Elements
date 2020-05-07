@@ -956,6 +956,22 @@ references:
   isSpec: "True"
   fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync
   nameWithType: TypeGenerator.GenerateUserElementTypeFromUriAsync
+- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[],System.String,System.Boolean)
+  name: GenerateUserElementTypesFromUrisAsync(String[], String, Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypesFromUrisAsync_System_String___System_String_System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[],System.String,System.Boolean)
+  name.vb: GenerateUserElementTypesFromUrisAsync(String(), String, Boolean)
+  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[], System.String, System.Boolean)
+  fullName.vb: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String(), System.String, System.Boolean)
+  nameWithType: TypeGenerator.GenerateUserElementTypesFromUrisAsync(String[], String, Boolean)
+  nameWithType.vb: TypeGenerator.GenerateUserElementTypesFromUrisAsync(String(), String, Boolean)
+- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync*
+  name: GenerateUserElementTypesFromUrisAsync
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypesFromUrisAsync_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync
+  nameWithType: TypeGenerator.GenerateUserElementTypesFromUrisAsync
 - uid: Elements.GeoJSON
   name: Elements.GeoJSON
   href: api/Elements.GeoJSON.html
@@ -3178,15 +3194,24 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.GetHashCode
   nameWithType: Line.GetHashCode
-- uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
-  name: Intersects(Plane, out Vector3)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
-  name.vb: Intersects(Plane, ByRef Vector3)
-  fullName: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane, out Elements.Geometry.Vector3)
-  fullName.vb: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3)
-  nameWithType: Line.Intersects(Plane, out Vector3)
-  nameWithType.vb: Line.Intersects(Plane, ByRef Vector3)
+- uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean)
+  name: Intersects(Line, out Vector3, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_
+  commentId: M:Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean)
+  name.vb: Intersects(Line, ByRef Vector3, Boolean)
+  fullName: Elements.Geometry.Line.Intersects(Elements.Geometry.Line, out Elements.Geometry.Vector3, System.Boolean)
+  fullName.vb: Elements.Geometry.Line.Intersects(Elements.Geometry.Line, ByRef Elements.Geometry.Vector3, System.Boolean)
+  nameWithType: Line.Intersects(Line, out Vector3, Boolean)
+  nameWithType.vb: Line.Intersects(Line, ByRef Vector3, Boolean)
+- uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Boolean)
+  name: Intersects(Plane, out Vector3, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__System_Boolean_
+  commentId: M:Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Boolean)
+  name.vb: Intersects(Plane, ByRef Vector3, Boolean)
+  fullName: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane, out Elements.Geometry.Vector3, System.Boolean)
+  fullName.vb: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3, System.Boolean)
+  nameWithType: Line.Intersects(Plane, out Vector3, Boolean)
+  nameWithType.vb: Line.Intersects(Plane, ByRef Vector3, Boolean)
 - uid: Elements.Geometry.Line.Intersects*
   name: Intersects
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_
@@ -3932,6 +3957,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Plane.Plane
   nameWithType: Plane.Plane
+- uid: Elements.Geometry.Plane.ClosestPoint(Elements.Geometry.Vector3)
+  name: ClosestPoint(Vector3)
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_ClosestPoint_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Plane.ClosestPoint(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Plane.ClosestPoint(Elements.Geometry.Vector3)
+  nameWithType: Plane.ClosestPoint(Vector3)
+- uid: Elements.Geometry.Plane.ClosestPoint*
+  name: ClosestPoint
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_ClosestPoint_
+  commentId: Overload:Elements.Geometry.Plane.ClosestPoint
+  isSpec: "True"
+  fullName: Elements.Geometry.Plane.ClosestPoint
+  nameWithType: Plane.ClosestPoint
 - uid: Elements.Geometry.Plane.Equals(Elements.Geometry.Plane)
   name: Equals(Plane)
   href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_Equals_Elements_Geometry_Plane_
@@ -3971,6 +4009,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Plane.Origin
   nameWithType: Plane.Origin
+- uid: Elements.Geometry.Plane.SignedDistanceTo(Elements.Geometry.Vector3)
+  name: SignedDistanceTo(Vector3)
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_SignedDistanceTo_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Plane.SignedDistanceTo(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Plane.SignedDistanceTo(Elements.Geometry.Vector3)
+  nameWithType: Plane.SignedDistanceTo(Vector3)
+- uid: Elements.Geometry.Plane.SignedDistanceTo*
+  name: SignedDistanceTo
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_SignedDistanceTo_
+  commentId: Overload:Elements.Geometry.Plane.SignedDistanceTo
+  isSpec: "True"
+  fullName: Elements.Geometry.Plane.SignedDistanceTo
+  nameWithType: Plane.SignedDistanceTo
 - uid: Elements.Geometry.Polygon
   name: Polygon
   href: api/Elements.Geometry.Polygon.html
@@ -10446,6 +10497,22 @@ references:
   commentId: T:Elements.Geometry.Vector3Extensions
   fullName: Elements.Geometry.Vector3Extensions
   nameWithType: Vector3Extensions
+- uid: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList{Elements.Geometry.Vector3})
+  name: AreCollinear(IList<Vector3>)
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCollinear_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList{Elements.Geometry.Vector3})
+  name.vb: AreCollinear(IList(Of Vector3))
+  fullName: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
+  nameWithType: Vector3Extensions.AreCollinear(IList<Vector3>)
+  nameWithType.vb: Vector3Extensions.AreCollinear(IList(Of Vector3))
+- uid: Elements.Geometry.Vector3Extensions.AreCollinear*
+  name: AreCollinear
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCollinear_
+  commentId: Overload:Elements.Geometry.Vector3Extensions.AreCollinear
+  isSpec: "True"
+  fullName: Elements.Geometry.Vector3Extensions.AreCollinear
+  nameWithType: Vector3Extensions.AreCollinear
 - uid: Elements.Geometry.Vector3Extensions.AreCoplanar(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: AreCoplanar(IList<Vector3>)
   href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCoplanar_System_Collections_Generic_IList_Elements_Geometry_Vector3__
@@ -11636,11 +11703,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
   nameWithType: JsonInheritanceConverter.Elements
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*
   name: ReadJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_
@@ -11649,11 +11716,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson
   nameWithType: JsonInheritanceConverter.ReadJson
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*
   name: WriteJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_
