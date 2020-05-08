@@ -4,7 +4,7 @@ All Hypar functions (Excel, Grasshopper, C# etc..) work by receiving some Inputs
 
 Excel functions can be created by uploading an Excel spreadsheet to Hypar where the system exposes some named spreadsheet cells as Inputs to the function and other named cells as Outputs from the formulas contained in the spreadsheet.  
 
-Detailed instructions are below this short video describing the process.
+Detailed instructions are below this short video describing the process. If you'd like to use our sample spreadsheet to follow along you can download it here [Sample Property Analyzer](https://github.com/hypar-io/HyparFunctionData/raw/master/Excel%20To%20Function/Property%20Analyzer.xlsx).
 
 <video width="100%" controls>
   <source src="https://hypar.io/videos/excel+tutorial.mp4" type="video/mp4">
