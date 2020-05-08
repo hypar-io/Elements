@@ -2,6 +2,8 @@
   href: index.md
 - name: Types
   href: Types.md
+- name: Excel
+  href: Excel.md
 - name: Elements
   href: Elements/
   homepage: Elements/WhatIsElements.md
