@@ -1,6 +1,6 @@
 language: csharp
 solution: ./hypar.sln
-dist: trusty
+dist: xenial
 mono: none
 dotnet: 3.1
 install:
