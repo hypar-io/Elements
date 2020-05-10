@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Hypar.Elements.Tests</AssemblyName>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netstandard2.0; netcoreapp3.1;net472</TargetFrameworks>
     <RootNamespace>Elements</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Elements\Elements.csproj" />
+    <ProjectReference Properties="TargetFramework=netstandard2.0" Include="..\..\src\Elements\Elements.csproj" />
   </ItemGroup>
 
   <ItemGroup>
