@@ -73,6 +73,19 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Construct a Grid2d from another Grid2d
+        /// </summary>
+        /// <param name="other"></param>
+        public Grid2d(Grid2d other) {
+            this.U = new Grid1d(other.U);
+            this.U.TopLevelGridChange += TopLevelGridChange;
+            this.V = new Grid1d(other.V);
+            this.V.TopLevelGridChange += TopLevelGridChange;
+            this.Type = other.Type;
+            this.boundariesInGridSpace = other.boundariesInGridSpace;
+        }
+
+        /// <summary>
         /// Construct a 2d grid with two 1d domains
         /// </summary>
         /// <param name="uDomain">The domain along the U axis</param>

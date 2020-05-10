@@ -64,6 +64,10 @@ namespace Elements.Spatial
 
         }
 
+        /// <summary>
+        /// Construct a 1D Grid from another 1D Grid
+        /// </summary>
+        /// <param name="other"></param>
         public Grid1d(Grid1d other) {
             this.curve = other.curve;
             this.curveDomain = other.curveDomain;
