@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Hypar.Elements.Tests</AssemblyName>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Elements</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
