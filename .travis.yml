@@ -6,7 +6,7 @@ dotnet: 3.1
 install:
   - dotnet restore
 script:
-  - dotnet build ./Elements.sln
+  - dotnet build ./Elements.sln --framework=netcoreapp3.1
   - dotnet test ./test/Elements.Tests/Elements.Tests.csproj
 env:
   - TRAVIS=true
