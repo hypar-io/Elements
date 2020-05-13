@@ -20,7 +20,7 @@ namespace Elements.Serialization.JSON
         [System.ThreadStatic]
         private static bool _isWriting;
 
-        private Dictionary<string, Type> _typeCache;
+        private static Dictionary<string, Type> _typeCache;
 
         [System.ThreadStatic]
         private static Dictionary<Guid, Element> _elements;
@@ -49,7 +49,12 @@ namespace Elements.Serialization.JSON
             _typeCache = BuildUserElementTypeCache();
         }
 
-        private Dictionary<string, Type> BuildUserElementTypeCache()
+        public static void RefreshUserElementTypeCache()
+        {
+            _typeCache = BuildUserElementTypeCache();
+        }
+
+        private static Dictionary<string, Type> BuildUserElementTypeCache()
         {
             var typeCache = new Dictionary<string, Type>();
 
