@@ -12,18 +12,41 @@ using NJsonSchema.CodeGeneration.CSharp;
 
 namespace Elements.Generate
 {
-
+    /// <summary>
+    /// The result of a compilation.
+    /// </summary>
     public struct CompilationResult
     {
+        /// <summary>
+        /// True if the compilation succeeded.
+        /// </summary>
         public bool Success;
+        /// <summary>
+        /// The Assembly loaded from the compilation, if successful.
+        /// </summary>
         public Assembly Assembly;
+        /// <summary>
+        /// Any messages or errors that arose during compilation.
+        /// </summary>
         public string[] DiagnosticResults;
     }
 
+    /// <summary>
+    /// The result of code generation.
+    /// </summary>
     public struct GenerationResult
     {
+        /// <summary>
+        /// True if the code was generated successfully
+        /// </summary>
         public bool Success;
+        /// <summary>
+        /// The file path to the generated code
+        /// </summary>
         public string FilePath;
+        /// <summary>
+        /// Any messages or errors that arose during code generation.
+        /// </summary>
         public string[] DiagnosticResults;
     }
     class ElementsTypeNameGenerator : ITypeNameGenerator
