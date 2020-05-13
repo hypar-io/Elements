@@ -159,7 +159,7 @@ namespace Elements.Generate
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
-                    string csharp = GenerateCodeForSchema(schema);
+                    string csharp = GenerateCSharpCodeForSchema(schema);
                     if (csharp == null)
                     {
                         continue;
@@ -312,16 +312,20 @@ namespace Elements.Generate
         /// <summary>
         /// Get the currently loaded UserElement types
         /// </summary>
+        /// <param name="userElementTypesOnly">If true, only return types wit the UserElement attribute.</param>
         /// <returns>A list of the loaded types with the UserElement attribute.</returns>
-        public static List<Type> GetLoadedElementTypes()
+        public static List<Type> GetLoadedElementTypes(bool userElementTypesOnly = false)
         {
             List<Type> loadedTypes = new List<Type>();
             var asms = AppDomain.CurrentDomain.GetAssemblies();
+            Func<Type, bool> IsUserElement = t => t.GetCustomAttributes(typeof(UserElement), true).Length > 0;
+            Func<Type, bool> IsElement = t => typeof(Element).IsAssignableFrom(t);
+            var typeFilter = userElementTypesOnly ? IsUserElement : IsElement;
             foreach (var asm in asms)
             {
                 try
                 {
-                    var userTypes = asm.GetTypes().Where(t => t.GetCustomAttributes(typeof(UserElement), true).Length > 0);
+                    var userTypes = asm.GetTypes().Where(typeFilter);
                     foreach (var ut in userTypes)
                     {
                         loadedTypes.Add(ut);
@@ -342,16 +346,16 @@ namespace Elements.Generate
         /// <param name="dllPath"></param>
         /// <param name="frameworkBuild"></param>
         /// <returns></returns>
-        public static string GenerateAndSaveDllForSchema(JsonSchema schema, string dllPath, bool frameworkBuild = false)
+        public static bool GenerateAndSaveDllForSchema(JsonSchema schema, string dllPath, bool frameworkBuild = false)
         {
-            var csharp = GenerateCodeForSchema(schema);
+            var csharp = GenerateCSharpCodeForSchema(schema);
             if (csharp == null)
             {
-                return null;
+                return false;
             }
             var compilation = GenerateCompilation(new List<string> { csharp }, schema.Title, frameworkBuild);
             var result = EmitAndSave(compilation, dllPath, out string[] diagnostics);
-            if (result == null)
+            if (!result)
             {
                 foreach (var d in diagnostics)
                 {
@@ -359,10 +363,10 @@ namespace Elements.Generate
                 }
                 throw new Exception($"There was an error compiling the schema for {schema.Title}. Type generation will not continue.");
             }
-            return result;
+            return true;
         }
 
-        private static string GenerateCodeForSchema(JsonSchema schema)
+        private static string GenerateCSharpCodeForSchema(JsonSchema schema)
         {
             string ns;
             if (!GetNamespace(schema, out ns))
@@ -376,7 +380,7 @@ namespace Elements.Generate
                 _coreTypeNames = GetCoreTypeNames();
             }
 
-            var loadedTypes = GetLoadedElementTypes().Select(t => t.Name);
+            var loadedTypes = GetLoadedElementTypes(true).Select(t => t.Name);
             if (loadedTypes.Contains(typeName)) return null;
             var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
 
@@ -441,18 +445,18 @@ namespace Elements.Generate
                                                        compileOptions);
         }
 
-        private static string EmitAndSave(CSharpCompilation compilation, string outputPath, out string[] diagnosticMessages)
+        private static bool EmitAndSave(CSharpCompilation compilation, string outputPath, out string[] diagnosticMessages)
         {
             var emitResult = compilation.Emit(outputPath);
             diagnosticMessages = emitResult.Diagnostics.Select(d => d.ToString()).ToArray();
             if (!emitResult.Success)
             {
                 File.Delete(outputPath);
-                return null;
+                return false;
             }
             else
             {
-                return outputPath;
+                return true;
             }
         }
 
