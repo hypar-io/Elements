@@ -78,9 +78,9 @@ namespace Elements.Spatial
         /// <param name="other"></param>
         public Grid2d(Grid2d other) {
             this.U = new Grid1d(other.U);
-            this.U.TopLevelGridChange += TopLevelGridChange;
+            this.U.SetParent(this);
             this.V = new Grid1d(other.V);
-            this.V.TopLevelGridChange += TopLevelGridChange;
+            this.V.SetParent(this);
             this.Type = other.Type;
             this.boundariesInGridSpace = other.boundariesInGridSpace;
         }
@@ -463,19 +463,23 @@ namespace Elements.Spatial
         private void InitializeUV(Domain1d uDomain, Domain1d vDomain)
         {
             U = new Grid1d(uDomain);
-            U.TopLevelGridChange += TopLevelGridChange;
+            U.SetParent(this);
             V = new Grid1d(vDomain);
-            V.TopLevelGridChange += TopLevelGridChange;
+            V.SetParent(this);
         }
 
         /// <summary>
-        /// Update the 2d grid cells of this grid when its U or V 1d cells change.
+        /// Get the base rectangle of this cell in grid coordinates.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TopLevelGridChange(Grid1d sender, EventArgs e)
+        /// <returns></returns>
+        private Polygon GetBaseRectangle()
         {
-            if (CellsFlat.Any(c => !c.IsSingleCell))
+            return Polygon.Rectangle(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Max));
+        }
+
+        internal void ChildUpdated()
+        {
+           if (CellsFlat.Any(c => !c.IsSingleCell))
             {
                 throw new Exception("You are trying to modify the U / V dimensions of a grid that already has subdivisions. This is not allowed.");
             }
@@ -511,15 +515,6 @@ namespace Elements.Spatial
                 }
                 Cells.Add(column);
             }
-        }
-
-        /// <summary>
-        /// Get the base rectangle of this cell in grid coordinates.
-        /// </summary>
-        /// <returns></returns>
-        private Polygon GetBaseRectangle()
-        {
-            return Polygon.Rectangle(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Max));
         }
 
         #endregion
