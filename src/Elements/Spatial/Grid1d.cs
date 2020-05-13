@@ -690,7 +690,7 @@ namespace Elements.Spatial
 
          private void UpdateParent()
         {
-           this.parent.ChildUpdated();
+           this.parent?.ChildUpdated();
         }
 
         #endregion
