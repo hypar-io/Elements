@@ -12,6 +12,20 @@ using NJsonSchema.CodeGeneration.CSharp;
 
 namespace Elements.Generate
 {
+
+    public struct CompilationResult
+    {
+        public bool Success;
+        public Assembly Assembly;
+        public string[] DiagnosticResults;
+    }
+
+    public struct GenerationResult
+    {
+        public bool Success;
+        public string FilePath;
+        public string[] DiagnosticResults;
+    }
     class ElementsTypeNameGenerator : ITypeNameGenerator
     {
         // TODO(Ian): This type name generator is only required because njsonschema
@@ -95,14 +109,22 @@ namespace Elements.Generate
         /// <param name="uri">The uri to the schema which defines the type. This can be a url or a relative file path.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
         /// <param name="isUserElement">Is the type a user-defined element?</param>
-        public static async Task GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)
+        /// <returns>
+        /// A GenerationResult object containing info about the success or failure of generation, 
+        /// the file path of the generated code, and any errors that may have occurred during generation.
+        /// </returns>
+        public static async Task<GenerationResult> GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)
         {
             var schema = await GetSchemaAsync(uri);
 
             string ns;
             if (!GetNamespace(schema, out ns))
             {
-                return;
+                return new GenerationResult
+                {
+                    Success = false,
+                    DiagnosticResults = new[] { "The provided schema does not contain the required 'x-namespace' property." }
+                };
             }
 
             var typeName = schema.Title;
@@ -112,7 +134,7 @@ namespace Elements.Generate
                 _coreTypeNames = GetCoreTypeNames();
             }
             var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
-            WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
+            return WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
         }
 
         /// <summary>
@@ -121,27 +143,15 @@ namespace Elements.Generate
         /// <param name="uris">An array of uris.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
         /// <param name="isUserElement">Is the type a user-defined element?</param>
-        public static async Task GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)
+        public static async Task<GenerationResult[]> GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)
         {
-            var batchTypeNames = uris.Select(uri => GetTypeNameFromSchemaUri(uri)).ToArray();
-
+            var results = new List<Task<GenerationResult>>();
             foreach (var uri in uris)
             {
-                var schema = await GetSchemaAsync(uri);
-                string ns;
-                if (!GetNamespace(schema, out ns))
-                {
-                    return;
-                }
-                var typeName = schema.Title;
-                if (_coreTypeNames == null)
-                {
-                    _coreTypeNames = GetCoreTypeNames();
-                }
-                var excludedTypeNames = _coreTypeNames.Concat(batchTypeNames).Where(n => n != typeName).ToArray();
-                var filePath = Path.Combine(outputBaseDir, GetFileNameFromTypeName(typeName));
-                WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
+                results.Add(GenerateUserElementTypeFromUriAsync(uri, outputBaseDir, isUserElement));
             }
+            var allResults = await Task.WhenAll(results);
+            return allResults;
         }
 
         /// <summary>
@@ -149,7 +159,7 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
         /// <returns>An assembly containing the generated types or null if no Assembly could be generated.</returns>
-        public static async Task<Assembly> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)
+        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
@@ -168,12 +178,26 @@ namespace Elements.Generate
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"There was an error reading the schema at {uri}: {ex.Message}. Type generation will not continue.");
+                    var diagnostics = new[]
+                    {
+                        $"There was an error reading the schema at {uri}: {ex.Message}."
+                    };
+                    return new CompilationResult
+                    {
+                        Success = false,
+                        DiagnosticResults = diagnostics
+                    };
                 }
             }
 
             var compilation = GenerateCompilation(code);
-            return EmitAndLoad(compilation, out _);
+            var assembly = EmitAndLoad(compilation, out string[] diagnosticResults);
+            return new CompilationResult
+            {
+                Success = true,
+                DiagnosticResults = diagnosticResults,
+                Assembly = assembly
+            };
         }
 
 
@@ -181,10 +205,10 @@ namespace Elements.Generate
         /// Generate the core element types as .cs files to the specified output directory. 
         /// </summary>
         /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
-        public static async Task GenerateElementTypesAsync(string outputBaseDir)
+        public static async Task<GenerationResult[]> GenerateElementTypesAsync(string outputBaseDir)
         {
             var typeNames = _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToList();
-
+            var tasks = new List<Task<GenerationResult>>();
             foreach (var uri in _hyparSchemas)
             {
                 var split = uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Skip(3);
@@ -194,8 +218,10 @@ namespace Elements.Generate
                     Directory.CreateDirectory(outDir);
                 }
 
-                await GenerateUserElementTypeFromUriAsync(uri, outDir);
+               tasks.Add(GenerateUserElementTypeFromUriAsync(uri, outDir));
             }
+            var allResults = await Task.WhenAll(tasks);
+            return allResults;
         }
 
         private static string[] GetCoreTypeNames()
@@ -214,15 +240,11 @@ namespace Elements.Generate
         }
 
         /// <summary>
-        /// Get the Schema information for a given schema URI.
+        /// Asynchronously load a JSON Schema from a URI. If a web address is provided,
+        /// it will be loaded from the URL, otherwise it will attempt to load from disk.
         /// </summary>
-        /// <param name="uri">The web URL or file path to the schema JSON.</param>
-        public static JsonSchema GetSchema(string uri)
-        {
-            return Task.Run(() => GetSchemaAsync(uri)).Result;
-        }
-
-        private static async Task<JsonSchema> GetSchemaAsync(string uri)
+        /// <param name="uri"></param>
+        public static async Task<JsonSchema> GetSchemaAsync(string uri)
         {
             if (uri.StartsWith("http://") || uri.StartsWith("https://"))
             {
@@ -302,11 +324,17 @@ namespace Elements.Generate
             return file;
         }
 
-        private static void WriteTypeFromSchemaToDisk(JsonSchema schema, string outPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
+        private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
             Console.WriteLine($"Generating type {@ns}.{typeName} in {outPath}...");
             var type = WriteTypeFromSchema(schema, typeName, ns, isUserElement, excludedTypes);
             File.WriteAllText(outPath, type);
+            return new GenerationResult
+            {
+                Success = true,
+                FilePath = outPath,
+                DiagnosticResults = new string[0]
+            };
         }
 
         /// <summary>
@@ -316,7 +344,7 @@ namespace Elements.Generate
         /// <returns>A list of the loaded types with the UserElement attribute.</returns>
         public static List<Type> GetLoadedElementTypes(bool userElementTypesOnly = false)
         {
-            List<Type> loadedTypes = new List<Type>();
+            var loadedTypes = new List<Type>();
             var asms = AppDomain.CurrentDomain.GetAssemblies();
             Func<Type, bool> IsUserElement = t => t.GetCustomAttributes(typeof(UserElement), true).Length > 0;
             Func<Type, bool> IsElement = t => typeof(Element).IsAssignableFrom(t);
@@ -344,26 +372,19 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="dllPath"></param>
+        /// <param name="diagnosticResults"></param>
         /// <param name="frameworkBuild"></param>
-        /// <returns></returns>
-        public static bool GenerateAndSaveDllForSchema(JsonSchema schema, string dllPath, bool frameworkBuild = false)
+        /// <returns>Returns true if the dll was generated successfully, otherwise false.</returns>
+        public static bool GenerateAndSaveDllForSchema(JsonSchema schema, string dllPath, out string[] diagnosticResults, bool frameworkBuild = false)
         {
             var csharp = GenerateCSharpCodeForSchema(schema);
             if (csharp == null)
             {
+                diagnosticResults = new string[] { };
                 return false;
             }
             var compilation = GenerateCompilation(new List<string> { csharp }, schema.Title, frameworkBuild);
-            var result = EmitAndSave(compilation, dllPath, out string[] diagnostics);
-            if (!result)
-            {
-                foreach (var d in diagnostics)
-                {
-                    Console.WriteLine(d);
-                }
-                throw new Exception($"There was an error compiling the schema for {schema.Title}. Type generation will not continue.");
-            }
-            return true;
+            return EmitAndSave(compilation, dllPath, out diagnosticResults);
         }
 
         private static string GenerateCSharpCodeForSchema(JsonSchema schema)
@@ -451,7 +472,10 @@ namespace Elements.Generate
             diagnosticMessages = emitResult.Diagnostics.Select(d => d.ToString()).ToArray();
             if (!emitResult.Success)
             {
-                File.Delete(outputPath);
+                if (File.Exists(outputPath))
+                {
+                    File.Delete(outputPath);
+                }
                 return false;
             }
             else
