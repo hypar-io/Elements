@@ -312,7 +312,7 @@ namespace Elements.Generate
         /// <summary>
         /// Get the currently loaded UserElement types
         /// </summary>
-        /// <param name="userElementTypesOnly">If true, only return types wit the UserElement attribute.</param>
+        /// <param name="userElementTypesOnly">If true, only return types with the UserElement attribute.</param>
         /// <returns>A list of the loaded types with the UserElement attribute.</returns>
         public static List<Type> GetLoadedElementTypes(bool userElementTypesOnly = false)
         {
