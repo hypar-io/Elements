@@ -37,11 +37,11 @@ namespace Elements.Generate
     public struct GenerationResult
     {
         /// <summary>
-        /// True if the code was generated successfully
+        /// True if the code was generated successfully.
         /// </summary>
         public bool Success;
         /// <summary>
-        /// The file path to the generated code
+        /// The file path to the generated code.
         /// </summary>
         public string FilePath;
         /// <summary>
