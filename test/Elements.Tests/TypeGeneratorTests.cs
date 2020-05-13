@@ -133,11 +133,13 @@ namespace Elements.Tests
         }
 
         [IgnoreOnTravisFact]
-        public async Task ThrowsWithBadSchema()
+        public async Task FailsWithBadSchema()
         {
-            var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesn'tExist.json",
+            var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesntExist.json",
                                 "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
-            await Assert.ThrowsAsync<Exception>(async () => await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(uris));
+            var result = await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(uris);
+            Assert.False(result.Success);
+            Assert.NotEmpty(result.DiagnosticResults);
         }
 
         [Fact]
