@@ -20,14 +20,15 @@ namespace Elements.Generate
         /// <summary>
         /// True if the compilation succeeded.
         /// </summary>
-        public bool Success { get; private set; }
+        public bool Success { get; internal set; }
+        /// <summary>
         /// The Assembly loaded from the compilation, if successful.
         /// </summary>
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; internal set; }
         /// <summary>
         /// Any messages or errors that arose during compilation.
         /// </summary>
-        public string[] DiagnosticResults { get; private set; }
+        public string[] DiagnosticResults { get; internal set; }
     }
 
     /// <summary>
@@ -38,15 +39,15 @@ namespace Elements.Generate
         /// <summary>
         /// True if the code was generated successfully.
         /// </summary>
-        public bool Success { get; private set; }
+        public bool Success { get; internal set; }
         /// <summary>
         /// The file path to the generated code.
         /// </summary>
-        public string FilePath { get; private set; }
+        public string FilePath { get; internal set; }
         /// <summary>
         /// Any messages or errors that arose during code generation.
         /// </summary>
-        public string[] DiagnosticResults { get; private set; }
+        public string[] DiagnosticResults { get; internal set; }
     }
     class ElementsTypeNameGenerator : ITypeNameGenerator
     {
