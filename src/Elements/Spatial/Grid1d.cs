@@ -71,11 +71,15 @@ namespace Elements.Spatial
         /// Construct a 1D Grid from another 1D Grid
         /// </summary>
         /// <param name="other"></param>
-        public Grid1d(Grid1d other) {
+        public Grid1d(Grid1d other)
+        {
             this.curve = other.curve;
             this.curveDomain = other.curveDomain;
             this.Domain = other.Domain;
-            this.Cells = other.Cells.Select(c => new Grid1d(c)).ToList();
+            if (other.Cells != null)
+            {
+                this.Cells = other.Cells.Select(c => new Grid1d(c)).ToList();
+            }
             this.Type = other.Type;
         }
 
@@ -278,7 +282,7 @@ namespace Elements.Spatial
         /// <param name="divisionMode">Whether to permit any size cell, or only larger or smaller cells by rounding up or down.</param>
         public void DivideByApproximateLength(double targetLength, EvenDivisionMode divisionMode = EvenDivisionMode.Nearest)
         {
-            if(targetLength <= Vector3.EPSILON)
+            if (targetLength <= Vector3.EPSILON)
             {
                 throw new ArgumentException($"Unable to divide. Target Length {targetLength} is too small.");
             }
@@ -417,7 +421,7 @@ namespace Elements.Spatial
         /// <param name="divisionMode">How to handle leftover/remainder length</param>
         public void DivideByPattern(IList<(string typeName, double length)> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
         {
-            if(lengthPattern.Any(p => p.length <= Vector3.EPSILON))
+            if (lengthPattern.Any(p => p.length <= Vector3.EPSILON))
             {
                 throw new ArgumentException("One or more of the pattern segments is too small.");
             }
@@ -473,7 +477,7 @@ namespace Elements.Spatial
 
         internal void SetParent(Grid2d grid2d)
         {
-           this.parent = grid2d;
+            this.parent = grid2d;
         }
 
 
@@ -605,7 +609,7 @@ namespace Elements.Spatial
 
         private List<double> DomainsToSequence(bool recursive = false)
         {
-            if(IsSingleCell)
+            if (IsSingleCell)
             {
                 return new List<double> { Domain.Min, Domain.Max };
             }
@@ -688,9 +692,9 @@ namespace Elements.Spatial
             return Domain.IsCloseToBoundary(pos);
         }
 
-         private void UpdateParent()
+        private void UpdateParent()
         {
-           this.parent.ChildUpdated();
+           this.parent?.ChildUpdated();
         }
 
         #endregion
