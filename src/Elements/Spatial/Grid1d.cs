@@ -51,6 +51,9 @@ namespace Elements.Spatial
         // domain back to the original curve.
         private Domain1d curveDomain;
 
+        // if this 1d grid is the axis of a 2d grid, this is where we store that reference. If not, it will be null
+        private Grid2d parent;
+
         #endregion
 
         #region Constructors
@@ -62,6 +65,18 @@ namespace Elements.Spatial
         public Grid1d(double length = 1.0) : this(new Domain1d(0, length))
         {
 
+        }
+
+        /// <summary>
+        /// Construct a 1D Grid from another 1D Grid
+        /// </summary>
+        /// <param name="other"></param>
+        public Grid1d(Grid1d other) {
+            this.curve = other.curve;
+            this.curveDomain = other.curveDomain;
+            this.Domain = other.Domain;
+            this.Cells = other.Cells.Select(c => new Grid1d(c)).ToList();
+            this.Type = other.Type;
         }
 
         /// <summary>
@@ -196,7 +211,7 @@ namespace Elements.Spatial
                     }
                 }
             }
-            OnTopLevelGridChange();
+            UpdateParent();
 
         }
 
@@ -252,7 +267,7 @@ namespace Elements.Spatial
 
             var newDomains = Domain.DivideByCount(n);
             Cells = new List<Grid1d>(newDomains.Select(d => new Grid1d(curve, d, curveDomain)));
-            OnTopLevelGridChange();
+            UpdateParent();
         }
 
         /// <summary>
@@ -456,6 +471,11 @@ namespace Elements.Spatial
 
         }
 
+        internal void SetParent(Grid2d grid2d)
+        {
+           this.parent = grid2d;
+        }
+
 
         /// <summary>
         /// Divide by a list of named lengths and an offset from start, used by the DivideByPattern function.
@@ -482,7 +502,7 @@ namespace Elements.Spatial
             // This is necessary because otherwise name changes don't propogate back to a parent 2d grid.
             // TODO: find a better system than this to manage 1d/2d synchronization — this one involves
             // a lot of unnecessary regeneration. 
-            OnTopLevelGridChange();
+            UpdateParent();
 
         }
 
@@ -668,31 +688,14 @@ namespace Elements.Spatial
             return Domain.IsCloseToBoundary(pos);
         }
 
-        #endregion
-
-        #region Events
-        /// <summary>
-        /// Handler for a grid event
-        /// </summary>
-        /// <param name="sender">The Grid1d that spawned this event</param>
-        /// <param name="e">Event args</param>
-        public delegate void Grid1dEventHandler(Grid1d sender, EventArgs e);
-
-
-        /// <summary>
-        /// Fired when the cells of this grid change
-        /// </summary>
-        public event Grid1dEventHandler TopLevelGridChange;
-
-        /// <summary>
-        /// Fired when the cells of this grid change
-        /// </summary>
-        protected virtual void OnTopLevelGridChange()
+         private void UpdateParent()
         {
-            Grid1dEventHandler handler = TopLevelGridChange;
-            handler?.Invoke(this, new EventArgs());
+           this.parent.ChildUpdated();
         }
+
         #endregion
+
+
 
     }
 
