@@ -651,6 +651,10 @@ namespace Elements.Spatial
         /// <returns>A list of all the bottom-level cells / child cells of this grid.</returns>
         public List<Grid1d> GetCells()
         {
+            if (IsSingleCell)
+            {
+                return new List<Grid1d> { this };
+            }
             List<Grid1d> resultCells = new List<Grid1d>();
             foreach (var cell in Cells)
             {
