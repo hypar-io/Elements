@@ -239,6 +239,19 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Split a cell at a list of relative positions measured from its domain start or end. 
+        /// </summary>
+        /// <param name="positions">The relative positions at which to split.</param>
+        /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
+        public void SplitAtOffsets(IEnumerable<double> positions, bool fromEnd = false)
+        {
+            foreach (var position in positions)
+            {
+                SplitAtOffset(position, fromEnd);
+            }
+        }
+
+        /// <summary>
         /// Split the grid at a list of fixed positions from the start or end
         /// </summary>
         /// <param name="positions">The lengths along the grid at which to split.</param>
@@ -694,7 +707,7 @@ namespace Elements.Spatial
 
         private void UpdateParent()
         {
-           this.parent?.ChildUpdated();
+            this.parent?.ChildUpdated();
         }
 
         #endregion
