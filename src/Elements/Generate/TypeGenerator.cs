@@ -12,6 +12,43 @@ using NJsonSchema.CodeGeneration.CSharp;
 
 namespace Elements.Generate
 {
+    /// <summary>
+    /// The result of a compilation.
+    /// </summary>
+    public struct CompilationResult
+    {
+        /// <summary>
+        /// True if the compilation succeeded.
+        /// </summary>
+        public bool Success { get; internal set; }
+        /// <summary>
+        /// The Assembly loaded from the compilation, if successful.
+        /// </summary>
+        public Assembly Assembly { get; internal set; }
+        /// <summary>
+        /// Any messages or errors that arose during compilation.
+        /// </summary>
+        public string[] DiagnosticResults { get; internal set; }
+    }
+
+    /// <summary>
+    /// The result of code generation.
+    /// </summary>
+    public struct GenerationResult
+    {
+        /// <summary>
+        /// True if the code was generated successfully.
+        /// </summary>
+        public bool Success { get; internal set; }
+        /// <summary>
+        /// The file path to the generated code.
+        /// </summary>
+        public string FilePath { get; internal set; }
+        /// <summary>
+        /// Any messages or errors that arose during code generation.
+        /// </summary>
+        public string[] DiagnosticResults { get; internal set; }
+    }
     class ElementsTypeNameGenerator : ITypeNameGenerator
     {
         // TODO(Ian): This type name generator is only required because njsonschema
@@ -70,6 +107,24 @@ namespace Elements.Generate
 
         private const string NAMESPACE_PROPERTY = "x-namespace";
         private static string[] _coreTypeNames;
+        private static string _templatesPath;
+
+        /// <summary>
+        /// The directory in which to find code templates. Some execution contexts require this to be overriden as the 
+        /// Executing Assembly is not necessarily in the same place as the templates (e.g. Headless Grasshopper Execution)
+        /// </summary>
+        public static string TemplatesPath
+        {
+            get
+            {
+                if (_templatesPath == null)
+                {
+                    _templatesPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "./Templates"));
+                }
+                return _templatesPath;
+            }
+            set => _templatesPath = value;
+        }
 
         /// <summary>
         /// Generate a user-defined type in a .g.cs file from a schema.
@@ -77,14 +132,22 @@ namespace Elements.Generate
         /// <param name="uri">The uri to the schema which defines the type. This can be a url or a relative file path.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
         /// <param name="isUserElement">Is the type a user-defined element?</param>
-        public static async Task GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)
+        /// <returns>
+        /// A GenerationResult object containing info about the success or failure of generation, 
+        /// the file path of the generated code, and any errors that may have occurred during generation.
+        /// </returns>
+        public static async Task<GenerationResult> GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)
         {
             var schema = await GetSchemaAsync(uri);
 
             string ns;
             if (!GetNamespace(schema, out ns))
             {
-                return;
+                return new GenerationResult
+                {
+                    Success = false,
+                    DiagnosticResults = new[] { "The provided schema does not contain the required 'x-namespace' property." }
+                };
             }
 
             var typeName = schema.Title;
@@ -94,7 +157,7 @@ namespace Elements.Generate
                 _coreTypeNames = GetCoreTypeNames();
             }
             var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
-            WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
+            return WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
         }
 
         /// <summary>
@@ -103,27 +166,15 @@ namespace Elements.Generate
         /// <param name="uris">An array of uris.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
         /// <param name="isUserElement">Is the type a user-defined element?</param>
-        public static async Task GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)
+        public static async Task<GenerationResult[]> GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)
         {
-            var batchTypeNames = uris.Select(uri => GetTypeNameFromSchemaUri(uri)).ToArray();
-
+            var results = new List<Task<GenerationResult>>();
             foreach (var uri in uris)
             {
-                var schema = await GetSchemaAsync(uri);
-                string ns;
-                if (!GetNamespace(schema, out ns))
-                {
-                    return;
-                }
-                var typeName = schema.Title;
-                if (_coreTypeNames == null)
-                {
-                    _coreTypeNames = GetCoreTypeNames();
-                }
-                var excludedTypeNames = _coreTypeNames.Concat(batchTypeNames).Where(n => n != typeName).ToArray();
-                var filePath = Path.Combine(outputBaseDir, GetFileNameFromTypeName(typeName));
-                WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
+                results.Add(GenerateUserElementTypeFromUriAsync(uri, outputBaseDir, isUserElement));
             }
+            var allResults = await Task.WhenAll(results);
+            return allResults;
         }
 
         /// <summary>
@@ -131,7 +182,7 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
         /// <returns>An assembly containing the generated types or null if no Assembly could be generated.</returns>
-        public static async Task<Assembly> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)
+        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
@@ -141,96 +192,46 @@ namespace Elements.Generate
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
-
-                    string ns;
-                    if (!GetNamespace(schema, out ns))
+                    string csharp = GenerateCSharpCodeForSchema(schema);
+                    if (csharp == null)
                     {
-                        return null;
+                        continue;
                     }
-
-                    var typeName = schema.Title;
-                    if (_coreTypeNames == null)
-                    {
-                        _coreTypeNames = GetCoreTypeNames();
-                    }
-                    var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
-
-                    var csharp = WriteTypeFromSchema(schema, typeName, ns, true, localExcludes);
                     code.Add(csharp);
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"There was an error reading the schema at {uri}: {ex.Message}. Type generation will not continue.");
-                }
-            }
-
-            // Generate the assembly from the various code files.
-            var options = new CSharpParseOptions(LanguageVersion.CSharp7_3,
-                                                 kind: Microsoft.CodeAnalysis.SourceCodeKind.Regular,
-                                                 documentationMode: Microsoft.CodeAnalysis.DocumentationMode.Diagnose);
-            var syntaxTrees = new List<Microsoft.CodeAnalysis.SyntaxTree>();
-            foreach (var cs in code)
-            {
-                var tree = CSharpSyntaxTree.ParseText(cs, options);
-                syntaxTrees.Add(tree);
-
-            }
-
-            var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
-            var elementsAssemblyPath = Path.GetDirectoryName(typeof(Model).Assembly.Location);
-            var newtonSoftPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
-
-            IEnumerable<MetadataReference> defaultReferences = new[]
-            {
-                // MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
-                // MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
-                // MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "netstandard.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ComponentModel.Annotations.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Diagnostics.Tools.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.Serialization.Primitives.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Private.CoreLib.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(elementsAssemblyPath, "Hypar.Elements.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(newtonSoftPath, "Newtonsoft.Json.dll"))
-            };
-
-            var compileOptions = new CSharpCompilationOptions(Microsoft.CodeAnalysis.OutputKind.DynamicallyLinkedLibrary,
-                                                              optimizationLevel: Microsoft.CodeAnalysis.OptimizationLevel.Release);
-            var compilation = CSharpCompilation.Create("UserElements",
-                                                       syntaxTrees,
-                                                       defaultReferences,
-                                                       compileOptions);
-
-            Assembly assembly = null;
-            using (var ms = new MemoryStream())
-            {
-                var emitResult = compilation.Emit(ms);
-                if (emitResult.Success)
-                {
-                    ms.Seek(0, SeekOrigin.Begin);
-                    assembly = Assembly.Load(ms.ToArray());
-                }
-                else
-                {
-                    foreach (var d in emitResult.Diagnostics)
+                    var diagnostics = new[]
                     {
-                        Console.WriteLine(d.ToString());
-                    }
-                    throw new Exception("There was an error creating an assembly for the user defined types. See the console for more information.");
+                        $"There was an error reading the schema at {uri}: {ex.Message}."
+                    };
+                    return new CompilationResult
+                    {
+                        Success = false,
+                        DiagnosticResults = diagnostics
+                    };
                 }
             }
-            return assembly;
+
+            var compilation = GenerateCompilation(code);
+            var assembly = EmitAndLoad(compilation, out string[] diagnosticResults);
+            return new CompilationResult
+            {
+                Success = true,
+                DiagnosticResults = diagnosticResults,
+                Assembly = assembly
+            };
         }
+
 
         /// <summary>
         /// Generate the core element types as .cs files to the specified output directory. 
         /// </summary>
         /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
-        public static async Task GenerateElementTypesAsync(string outputBaseDir)
+        public static async Task<GenerationResult[]> GenerateElementTypesAsync(string outputBaseDir)
         {
             var typeNames = _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToList();
-
+            var tasks = new List<Task<GenerationResult>>();
             foreach (var uri in _hyparSchemas)
             {
                 var split = uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Skip(3);
@@ -240,8 +241,10 @@ namespace Elements.Generate
                     Directory.CreateDirectory(outDir);
                 }
 
-                await GenerateUserElementTypeFromUriAsync(uri, outDir);
+               tasks.Add(GenerateUserElementTypeFromUriAsync(uri, outDir));
             }
+            var allResults = await Task.WhenAll(tasks);
+            return allResults;
         }
 
         private static string[] GetCoreTypeNames()
@@ -259,7 +262,12 @@ namespace Elements.Generate
             return $"{typeName}.g.cs";
         }
 
-        private static async Task<JsonSchema> GetSchemaAsync(string uri)
+        /// <summary>
+        /// Asynchronously load a JSON Schema from a URI. If a web address is provided,
+        /// it will be loaded from the URL, otherwise it will attempt to load from disk.
+        /// </summary>
+        /// <param name="uri"></param>
+        public static async Task<JsonSchema> GetSchemaAsync(string uri)
         {
             if (uri.StartsWith("http://") || uri.StartsWith("https://"))
             {
@@ -290,7 +298,7 @@ namespace Elements.Generate
 
         private static string WriteTypeFromSchema(JsonSchema schema, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
-            var templates = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "./Templates"));
+            var templates = TemplatesPath;
 
             var structTypes = new[] { "Color", "Vector3" };
 
@@ -339,11 +347,188 @@ namespace Elements.Generate
             return file;
         }
 
-        private static void WriteTypeFromSchemaToDisk(JsonSchema schema, string outPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
+        private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
             Console.WriteLine($"Generating type {@ns}.{typeName} in {outPath}...");
             var type = WriteTypeFromSchema(schema, typeName, ns, isUserElement, excludedTypes);
             File.WriteAllText(outPath, type);
+            return new GenerationResult
+            {
+                Success = true,
+                FilePath = outPath,
+                DiagnosticResults = new string[0]
+            };
+        }
+
+        /// <summary>
+        /// Get the currently loaded UserElement types
+        /// </summary>
+        /// <param name="userElementTypesOnly">If true, only return types with the UserElement attribute.</param>
+        /// <returns>A list of the loaded types with the UserElement attribute.</returns>
+        public static List<Type> GetLoadedElementTypes(bool userElementTypesOnly = false)
+        {
+            var loadedTypes = new List<Type>();
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            Func<Type, bool> IsUserElement = t => t.GetCustomAttributes(typeof(UserElement), true).Length > 0;
+            Func<Type, bool> IsElement = t => typeof(Element).IsAssignableFrom(t);
+            var typeFilter = userElementTypesOnly ? IsUserElement : IsElement;
+            foreach (var asm in asms)
+            {
+                try
+                {
+                    var userTypes = asm.GetTypes().Where(typeFilter);
+                    foreach (var ut in userTypes)
+                    {
+                        loadedTypes.Add(ut);
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return loadedTypes;
+        }
+
+        /// <summary>
+        /// For a given schema, generate code, compile an assembly, and write it to disk at the specified path.
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <param name="dllPath"></param>
+        /// <param name="diagnosticResults"></param>
+        /// <param name="frameworkBuild"></param>
+        /// <returns>Returns true if the dll was generated successfully, otherwise false.</returns>
+        public static bool GenerateAndSaveDllForSchema(JsonSchema schema, string dllPath, out string[] diagnosticResults, bool frameworkBuild = false)
+        {
+            var csharp = GenerateCSharpCodeForSchema(schema);
+            if (csharp == null)
+            {
+                diagnosticResults = new string[] { };
+                return false;
+            }
+            var compilation = GenerateCompilation(new List<string> { csharp }, schema.Title, frameworkBuild);
+            return EmitAndSave(compilation, dllPath, out diagnosticResults);
+        }
+
+        private static string GenerateCSharpCodeForSchema(JsonSchema schema)
+        {
+            string ns;
+            if (!GetNamespace(schema, out ns))
+            {
+                return null;
+            }
+
+            var typeName = schema.Title;
+            if (_coreTypeNames == null)
+            {
+                _coreTypeNames = GetCoreTypeNames();
+            }
+
+            var loadedTypes = GetLoadedElementTypes(true).Select(t => t.Name);
+            if (loadedTypes.Contains(typeName)) return null;
+            var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
+
+            return WriteTypeFromSchema(schema, typeName, ns, true, localExcludes);
+        }
+
+        private static CSharpCompilation GenerateCompilation(List<string> code, string compilationName = "UserElements", bool frameworkBuild = false)
+        {
+            // Generate the assembly from the various code files.
+            var options = new CSharpParseOptions(LanguageVersion.CSharp7_3,
+                                                 kind: Microsoft.CodeAnalysis.SourceCodeKind.Regular,
+                                                 documentationMode: Microsoft.CodeAnalysis.DocumentationMode.Diagnose);
+            var syntaxTrees = new List<Microsoft.CodeAnalysis.SyntaxTree>();
+            foreach (var cs in code)
+            {
+                var tree = CSharpSyntaxTree.ParseText(cs, options);
+                syntaxTrees.Add(tree);
+
+            }
+
+            var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            var elementsAssemblyPath = Path.GetDirectoryName(typeof(Model).Assembly.Location);
+            var newtonSoftPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
+
+            IEnumerable<MetadataReference> defaultReferences = new[]
+           {
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "netstandard.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ComponentModel.Annotations.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Diagnostics.Tools.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.Serialization.Primitives.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(elementsAssemblyPath, "Hypar.Elements.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(newtonSoftPath, "Newtonsoft.Json.dll"))
+            };
+
+            // If we're building in a .net framework context, we need a different set of reference DLLs
+            if (frameworkBuild)
+            {
+                defaultReferences = defaultReferences.Union(new[]
+                {
+                    MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
+                    MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
+                    MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
+                    MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Linq.dll")),
+                    MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ObjectModel.dll")),
+                    MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Linq.Expressions.dll")),
+                    MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.Extensions.dll")),
+                    MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ComponentModel.DataAnnotations.dll")),
+                });
+            }
+            else
+            {
+                defaultReferences = defaultReferences.Union(new[] { MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Private.CoreLib.dll")) });
+            }
+
+
+            var compileOptions = new CSharpCompilationOptions(Microsoft.CodeAnalysis.OutputKind.DynamicallyLinkedLibrary,
+                                                              optimizationLevel: Microsoft.CodeAnalysis.OptimizationLevel.Release);
+            return CSharpCompilation.Create(compilationName,
+                                                       syntaxTrees,
+                                                       defaultReferences,
+                                                       compileOptions);
+        }
+
+        private static bool EmitAndSave(CSharpCompilation compilation, string outputPath, out string[] diagnosticMessages)
+        {
+            var emitResult = compilation.Emit(outputPath);
+            diagnosticMessages = emitResult.Diagnostics.Select(d => d.ToString()).ToArray();
+            if (!emitResult.Success)
+            {
+                if (File.Exists(outputPath))
+                {
+                    File.Delete(outputPath);
+                }
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private static Assembly EmitAndLoad(CSharpCompilation compilation, out string[] diagnosticMessages)
+        {
+            Assembly assembly = null;
+            using (var ms = new MemoryStream())
+            {
+                var emitResult = compilation.Emit(ms);
+                diagnosticMessages = emitResult.Diagnostics.Select(d => d.ToString()).ToArray();
+                if (emitResult.Success)
+                {
+                    ms.Seek(0, SeekOrigin.Begin);
+                    assembly = Assembly.Load(ms.ToArray());
+                }
+                else
+                {
+                    foreach (var d in emitResult.Diagnostics)
+                    {
+                        Console.WriteLine(d.ToString());
+                    }
+                    throw new Exception("There was an error creating an assembly for the user defined types. See the console for more information.");
+                }
+            }
+            return assembly;
         }
     }
 }

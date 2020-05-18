@@ -114,8 +114,8 @@ namespace Elements.Tests
             var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadeAnchor.json",
                                 "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
             var asm = await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(uris);
-            var mullionType = asm.GetType("Test.Foo.Bar.Mullion");
-            var anchorType = asm.GetType("Test.Foo.Bar.FacadeAnchor");
+            var mullionType = asm.Assembly.GetType("Test.Foo.Bar.Mullion");
+            var anchorType = asm.Assembly.GetType("Test.Foo.Bar.FacadeAnchor");
             Assert.NotNull(mullionType);
             Assert.NotNull(anchorType);
             Assert.NotNull(mullionType.GetProperty("CenterLine"));
@@ -133,11 +133,13 @@ namespace Elements.Tests
         }
 
         [IgnoreOnTravisFact]
-        public async Task ThrowsWithBadSchema()
+        public async Task FailsWithBadSchema()
         {
-            var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesn'tExist.json",
+            var uris = new[]{"https://raw.githubusercontent.com/hypar-io/Schemas/master/ThisDoesntExist.json",
                                 "https://raw.githubusercontent.com/hypar-io/Schemas/master/Mullion.json"};
-            await Assert.ThrowsAsync<Exception>(async () => await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(uris));
+            var result = await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(uris);
+            Assert.False(result.Success);
+            Assert.NotEmpty(result.DiagnosticResults);
         }
 
         [Fact]
