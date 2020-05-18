@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -74,6 +75,15 @@ namespace Elements.Geometry
             }
             var offset = this.Length() * u;
             return this.Start + offset * this.Direction();
+        }
+
+        /// <summary>
+        /// A transformed copy of this Line.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override ICurve Transformed(Transform transform)
+        {
+            return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
         }
 
         /// <summary>

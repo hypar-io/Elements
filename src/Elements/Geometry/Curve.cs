@@ -62,6 +62,13 @@ namespace Elements.Geometry
         public abstract Transform TransformAt(double u);
 
         /// <summary>
+        /// A transformed copy of this curve.
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        public abstract ICurve Transformed(Transform transform); 
+
+        /// <summary>
         /// Create a polyline through a set of points along the curve.
         /// </summary>
         /// <param name="divisions">The number of divisions of the curve.</param>

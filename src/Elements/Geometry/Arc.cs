@@ -193,5 +193,14 @@ namespace Elements.Geometry
             }
             return new Arc(this.Center, this.Radius, newStart, newEnd);
         }
+
+        /// <summary>
+        /// A transformed copy of this Arc.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override ICurve Transformed(Transform transform)
+        {
+            return new Arc(transform.OfPoint(Center), Radius, StartAngle, EndAngle);
+        }
     }
 }

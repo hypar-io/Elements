@@ -157,6 +157,21 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// A transformed copy of this Polyline.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override ICurve Transformed(Transform transform)
+        {
+            var transformed = new Vector3[this.Vertices.Count];
+            for (var i = 0; i < transformed.Length; i++)
+            {
+                transformed[i] = transform.OfPoint(this.Vertices[i]);
+            }
+            var p = new Polyline(transformed);
+            return p;
+        }
+
+        /// <summary>
         /// Get the transforms used to transform a Profile extruded along this Polyline.
         /// </summary>
         /// <param name="startSetback"></param>
@@ -259,7 +274,7 @@ namespace Elements.Geometry
 
             foreach (var l in segments)
             {
-                segmentsTrans.Add(t.OfLine(l));
+                segmentsTrans.Add((Line)l.Transformed(t));
             };
 
             for (var i = 0; i < segmentsTrans.Count; i++)
