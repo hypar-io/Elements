@@ -2,6 +2,14 @@
 
 By uploading a function to Hypar you can produce multiple options for a building problem in just a few seconds, and combine them with other people's functions to create rich, realistic designs. In this introduction to Hypar, we'll work with a much simpler function that generates masses of variable dimensions.
 
+## Tutorial Videos
+### Installing and Using the Hypar CLI
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-0sKYpekdqI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+### Using the Function Builder extension for VS Code
+<iframe width="560" height="315" src="https://www.youtube.com/embed/e-KO5Q9wAAw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 <div style="page-break-after: always;"></div>
 
 ## Pre-Flight Check
