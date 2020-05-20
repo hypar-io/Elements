@@ -1,7 +1,5 @@
 # Types
 
-## NOTE: The following functionality is only available as of version 0.4.0.
-
 Let's say that you're a mechanical engineer and you want to introduce a new type to Elements called "VAV Box". To introduce this new type, first you need to design it. Where will it fit in the existing Elements type hierarchy? Will an existing base type be used? If so, will the base type need to be changed? Once that's figured out you'll need to write code that represents your type (in the case of Elements as a C# class) and propose that change to the maintainers of the library. The maintainers approve the change and your "VAV Box" class is made availble in the next release. Any small iteration on the design of your type based on use or user feedback requires that you repeat the whole cycle. 
 
 This scenario creates several challenges. First, it requires direct interaction with the maintainers of the Elements library. Most AEC developers don't know how to propose a change to the Elements code and requiring that they undertake our code review process just to introduce a container for data that represents a thing they know is challenging. Second, the maintainers of Elements now "own" the "VAV Box" type and are therefore required to make sure that they don't break it in the future. Imagine how many hundreds of thousands, or potentially millions, of different types of components are in a building. It's not reasonable to assume that one library is going to be able to encapsulate them all. Finally, although having the base description for a type be C# code works well in the short term, it limits the Elements' team's flexibility in the future to work with other languages. 
@@ -62,7 +60,7 @@ The following schema describes a simple beam with a center line and a cross-sect
 ```
 
 #### Generate Code for your Type
-The [Hypar CLI](https://www.nuget.org/packages/Hypar.CLI/0.4.0) can be used to generate code for your type. 
+The [Hypar CLI](https://www.nuget.org/packages/Hypar.CLI/) can be used to generate code for your type. 
 ```bash
 hypar generate-types -u ./beam.json -o ./Structural
 ```
