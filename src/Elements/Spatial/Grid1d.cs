@@ -44,12 +44,12 @@ namespace Elements.Spatial
         // The curve this was generated from, often a line.
         // subdivided cells maintain the complete original curve,
         // rather than a subcurve. 
-        private readonly Curve curve;
+        internal readonly Curve curve;
 
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
         // domain back to the original curve.
-        private Domain1d curveDomain;
+        private readonly Domain1d curveDomain;
 
         // if this 1d grid is the axis of a 2d grid, this is where we store that reference. If not, it will be null
         private Grid2d parent;
@@ -488,6 +488,23 @@ namespace Elements.Spatial
 
         }
 
+        internal Vector3 Evaluate(double t)
+        {
+            if (curve != null)
+            {
+                var tNormalized = t.MapFromDomain(curveDomain);
+                if (tNormalized > 1 || tNormalized < 0)
+                {
+                    throw new Exception("t must be in the curve domain.");
+                }
+                return curve.PointAt(tNormalized);
+            }
+            else
+            {
+                return new Vector3(t, 0, 0);
+            }
+        }
+
         internal void SetParent(Grid2d grid2d)
         {
             this.parent = grid2d;
@@ -548,6 +565,23 @@ namespace Elements.Spatial
                 }
                 i++;
             }
+        }
+
+        internal Vector3 GetVector()
+        {
+            if (curve != null)
+            {
+                return (curve.PointAt(1) - curve.PointAt(0)).Unitized();
+            }
+            else
+            {
+                return Vector3.XAxis;
+            }
+        }
+
+        internal Vector3 GetStartPoint()
+        {
+            return curve.PointAt(curveDomain.Min);
         }
 
         #endregion
@@ -707,6 +741,11 @@ namespace Elements.Spatial
         private bool PositionIsAtCellEdge(double pos)
         {
             return Domain.IsCloseToBoundary(pos);
+        }
+
+        internal Grid1d SpawnSubGrid(Domain1d domain)
+        {
+            return new Grid1d(curve, domain, curveDomain);
         }
 
         private void UpdateParent()

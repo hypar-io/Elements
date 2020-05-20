@@ -178,6 +178,11 @@ namespace Elements.Geometry
             );
         }
 
+        public Curve OfCurve(Curve curve)
+        {
+            return curve.Transformed(this) as Curve;
+        }
+
         /// <summary>
         /// A transformed copy of the supplied curve.
         /// </summary>

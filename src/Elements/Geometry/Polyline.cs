@@ -156,6 +156,17 @@ namespace Elements.Geometry
             return new Transform(o, x, up);
         }
 
+        public override ICurve Transformed(Transform transform)
+        {
+            var transformed = new Vector3[this.Vertices.Count];
+            for (var i = 0; i < transformed.Length; i++)
+            {
+                transformed[i] = transform.OfPoint(this.Vertices[i]);
+            }
+            var p = new Polyline(transformed);
+            return p;
+        }
+
         /// <summary>
         /// A transformed copy of this Polyline.
         /// </summary>
