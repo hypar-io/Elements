@@ -39,17 +39,6 @@ namespace Elements.Geometry
             return normal.Unitized();
         }
 
-        public override ICurve Transformed(Transform transform)
-        {
-            var transformed = new Vector3[this.Vertices.Count];
-            for (var i = 0; i < transformed.Length; i++)
-            {
-                transformed[i] = transform.OfPoint(this.Vertices[i]);
-            }
-            var p = new Polygon(transformed);
-            return p;
-        }
-
         /// <summary>
         /// A transformed copy of this Polygon.
         /// </summary>

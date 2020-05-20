@@ -77,11 +77,6 @@ namespace Elements.Geometry
             return this.Start + offset * this.Direction();
         }
 
-        public override ICurve Transformed(Transform transform)
-        {
-            return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
-        }
-
         /// <summary>
         /// A transformed copy of this Line.
         /// </summary>
