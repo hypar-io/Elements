@@ -289,6 +289,11 @@ Triangles:{_triangles.Count}";
         {
             foreach (var v in this.Vertices)
             {
+                if(v.Triangles.Count == 0)
+                {
+                    v.Normal = default(Vector3);
+                    continue;
+                }
                 var avg = new Vector3();
                 foreach (var t in v.Triangles)
                 {
