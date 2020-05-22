@@ -192,7 +192,7 @@ namespace Elements.Geometry
         public Vertex(Vector3 position, Vector3? normal = null, Color color = default(Color))
         {
             this.Position = position;
-            this.Normal = Vector3.Origin;
+            this.Normal = normal ?? Vector3.Origin;
             this.Color = color;
         }
     }
