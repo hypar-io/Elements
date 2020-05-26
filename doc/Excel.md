@@ -1,6 +1,6 @@
 # Getting Started with Excel Functions
 
-All Hypar functions (Excel, Grasshopper, C# etc..) work by receiving some Inputs, executing some logic, and then returning some Outputs.  When we turn Excel spreadsheets into a Hypar functions we are talking about an Excel spreadsheet acting as the "logic" between some Inputs and some Outputs.
+All Hypar functions (Excel, Grasshopper, C# etc..) work by receiving some Inputs, executing some logic, and then returning some Outputs.  When we turn Excel spreadsheets into a Hypar function we are talking about an Excel spreadsheet acting as the "logic" between some Inputs and some Outputs.
 
 Excel functions can be created by uploading an Excel spreadsheet to Hypar where the system exposes some named spreadsheet cells as Inputs to the function and other named cells as Outputs from the formulas contained in the spreadsheet.  
 
@@ -12,15 +12,15 @@ Detailed instructions are below this short video describing the process.
 
 # Prepping Your Excel File.
 
-Before uploading your file to Hypar, designate some spreadsheet cells as Inputs and some cells as Outputs by using the Excel feature called Named Ranges. Cells named with the prefix "INPUT." become Inputs, and, and names that start with "OUTPUT." become Outputs.
+Before uploading your file to Hypar, designate some spreadsheet cells as Inputs and some cells as Outputs by using the Excel feature called Named Ranges. Cells named with the prefix "INPUT." become Inputs, and names that start with "OUTPUT." become Outputs.
 
-There are two places with Excel where you can see cell names.
+There are two places in Excel where you can see cell names.
 
 First, when a cell is selected you can see and edit the name in the upper left of the Excel spreadsheet view.
 
 ![](./images/ExcelNameCellHighlighted2020.05.07.png)
 
-Second, under the "Formula" tab, there is a button called "Named Ranges"  with a dialog that will pop up, showing you all of the named regions in the spreadsheet.
+Second, under the "Formula" tab, there is a button called "Named Ranges" with a dialog that will pop up, showing you all of the named regions in the spreadsheet.
 
 ![](./images/ExcelNamedRegionsButton2020.05.07.png)
 ![](./images/ExcelNamedRegionsDialog2020.05.07.png)
