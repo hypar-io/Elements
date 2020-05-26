@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using IFC;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 
 namespace Elements.Spatial
