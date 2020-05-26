@@ -558,10 +558,6 @@ namespace Elements.Spatial
 
         private List<List<Grid2d>> GetTopLevelCells()
         {
-            //if (CellsFlat.Any(c => !c.IsSingleCell))
-            //{
-            //    throw new Exception("You are trying to modify the U / V dimensions of a grid that already has subdivisions. This is not allowed.");
-            //}
             if(U.IsSingleCell && V.IsSingleCell)
             {
                 return new List<List<Grid2d>> { new List<Grid2d> { this } };
@@ -608,46 +604,6 @@ namespace Elements.Spatial
 
             return newCell;
         }
-
-        //internal void ChildUpdated()
-        //{
-        //    if (CellsFlat.Any(c => !c.IsSingleCell))
-        //    {
-        //        throw new Exception("You are trying to modify the U / V dimensions of a grid that already has subdivisions. This is not allowed.");
-        //    }
-        //    Cells = new List<List<Grid2d>>();
-        //    var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.Cells;
-        //    var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.Cells;
-        //    foreach (var uCell in uCells)
-        //    {
-        //        var column = new List<Grid2d>();
-        //        foreach (var vCell in vCells)
-        //        {
-        //            Grid2d newCell = CreateSubGrid(uCell.Domain, vCell.Domain);
-
-        //            // Map type name from U and V type names. In most cases this
-        //            // should only be one direction, so we inherit directly.
-        //            if (uCell.Type != null && vCell.Type != null)
-        //            {
-        //                newCell.Type = $"{uCell.Type} / {vCell.Type}";
-        //            }
-        //            else if (uCell.Type != null)
-        //            {
-        //                newCell.Type = uCell.Type;
-        //            }
-        //            else if (vCell.Type != null)
-        //            {
-        //                newCell.Type = vCell.Type;
-        //            }
-
-        //            newCell.fromGrid = fromGrid;
-        //            newCell.toGrid = toGrid;
-        //            newCell.boundariesInGridSpace = boundariesInGridSpace;
-        //            column.Add(newCell);
-        //        }
-        //        Cells.Add(column);
-        //    }
-        //}
 
         #endregion
 
