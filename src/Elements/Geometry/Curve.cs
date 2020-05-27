@@ -10,7 +10,7 @@ namespace Elements.Geometry
     [JsonInheritanceAttribute("Elements.Geometry.Polygon", typeof(Polygon))]
     [JsonInheritanceAttribute("Elements.Geometry.Bezier", typeof(Bezier))]
     [JsonInheritanceAttribute("Elements.Geometry.Circle", typeof(Circle))]
-    public abstract partial class Curve : ICurve
+    public abstract partial class Curve : ICurve, ITransformable<Curve>
     {
         /// <summary>
         /// The minimum chord length allowed for subdivision of the curve.
@@ -61,12 +61,6 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public abstract Transform TransformAt(double u);
 
-        /// <summary>
-        /// A transformed copy of this curve.
-        /// </summary>
-        /// <param name="transform"></param>
-        /// <returns></returns>
-        public abstract ICurve Transformed(Transform transform); 
 
         /// <summary>
         /// Create a polyline through a set of points along the curve.
@@ -93,5 +87,11 @@ namespace Elements.Geometry
         /// A list of vertices used to render the curve.
         /// </summary>
         internal abstract IList<Vector3> RenderVertices();
+
+        /// <summary>
+        /// A transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public abstract Curve Transformed(Transform transform);
     }
 }

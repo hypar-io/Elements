@@ -43,7 +43,7 @@ namespace Elements.Geometry
         /// A transformed copy of this Polygon.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
-        public override ICurve Transformed(Transform transform)
+        public Polygon TransformedPolygon(Transform transform)
         {
             var transformed = new Vector3[this.Vertices.Count];
             for (var i = 0; i < transformed.Length; i++)
@@ -52,6 +52,15 @@ namespace Elements.Geometry
             }
             var p = new Polygon(transformed);
             return p;
+        }
+
+        /// <summary>
+        /// A transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedPolygon(transform);
         }
 
         /// <summary>

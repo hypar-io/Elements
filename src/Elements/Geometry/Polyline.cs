@@ -160,7 +160,7 @@ namespace Elements.Geometry
         /// A transformed copy of this Polyline.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
-        public override ICurve Transformed(Transform transform)
+        public Polyline TransformedPolyline(Transform transform)
         {
             var transformed = new Vector3[this.Vertices.Count];
             for (var i = 0; i < transformed.Length; i++)
@@ -169,6 +169,15 @@ namespace Elements.Geometry
             }
             var p = new Polyline(transformed);
             return p;
+        }
+
+        /// <summary>
+        /// A transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedPolyline(transform);
         }
 
         /// <summary>

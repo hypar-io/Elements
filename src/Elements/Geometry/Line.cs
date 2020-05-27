@@ -78,10 +78,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// A transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedLine(transform);
+        }
+
+        /// <summary>
         /// A transformed copy of this Line.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
-        public override ICurve Transformed(Transform transform)
+        public Line TransformedLine(Transform transform)
         {
             return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
         }
