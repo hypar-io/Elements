@@ -185,7 +185,7 @@ namespace Elements.Geometry
         [Obsolete("Use Curve.Transformed(Transform) instead.")]
         public Curve OfCurve(Curve curve)
         {
-            return curve.Transformed(this) as Curve;
+            return curve.Transformed(this);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Elements.Geometry
         [Obsolete("Use Polygon.Transformed(Transform) instead.")]
         public Polygon OfPolygon(Polygon polygon)
         {
-            return polygon.Transformed(this) as Polygon;
+            return polygon.TransformedPolygon(this);
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Elements.Geometry
             var result = new Polygon[polygons.Count];
             for (var i = 0; i < polygons.Count; i++)
             {
-                result[i] = polygons[i].Transformed(this) as Polygon;
+                result[i] = polygons[i].TransformedPolygon(this);
             }
             return result;
         }
@@ -222,7 +222,7 @@ namespace Elements.Geometry
         [Obsolete("Use Line.Transformed(Transform) instead.")]
         public Line OfLine(Line line)
         {
-            return line.Transformed(this) as Line;
+            return line.TransformedLine(this);
         }
 
         /// <summary>
@@ -251,10 +251,10 @@ namespace Elements.Geometry
                 voids = new Polygon[profile.Voids.Count];
                 for (var i = 0; i < voids.Length; i++)
                 {
-                    voids[i] = profile.Voids[i].Transformed(this) as Polygon;
+                    voids[i] = profile.Voids[i].TransformedPolygon(this);
                 }
             }
-            var p = new Profile(profile.Perimeter.Transformed(this) as Polygon, voids, Guid.NewGuid(), null);
+            var p = new Profile(profile.Perimeter.TransformedPolygon(this), voids, Guid.NewGuid(), null);
             return p;
         }
 
@@ -266,7 +266,7 @@ namespace Elements.Geometry
         [Obsolete("Use Bezier.Transformed(Transform) instead.")]
         public Bezier OfBezier(Bezier bezier)
         {
-            return bezier.Transformed(this) as Bezier;
+            return bezier.TransformedBezier(this);
         }
 
         /// <summary>
