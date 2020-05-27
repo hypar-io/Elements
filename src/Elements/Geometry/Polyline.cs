@@ -283,7 +283,7 @@ namespace Elements.Geometry
 
             foreach (var l in segments)
             {
-                segmentsTrans.Add((Line)l.Transformed(t));
+                segmentsTrans.Add(l.TransformedLine(t));
             };
 
             for (var i = 0; i < segmentsTrans.Count; i++)
