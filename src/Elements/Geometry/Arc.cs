@@ -193,5 +193,23 @@ namespace Elements.Geometry
             }
             return new Arc(this.Center, this.Radius, newStart, newEnd);
         }
+
+        /// <summary>
+        /// Construct a transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedArc(transform);
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Arc.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public Arc TransformedArc(Transform transform)
+        {
+            return new Arc(transform.OfPoint(Center), Radius, StartAngle, EndAngle);
+        }
     }
 }

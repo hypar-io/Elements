@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -74,6 +75,24 @@ namespace Elements.Geometry
             }
             var offset = this.Length() * u;
             return this.Start + offset * this.Direction();
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedLine(transform);
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Line.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public Line TransformedLine(Transform transform)
+        {
+            return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
         }
 
         /// <summary>
