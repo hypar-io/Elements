@@ -18,12 +18,6 @@ namespace Elements.Geometry.Interfaces
         Vector3 PointAt(double u);
 
         /// <summary>
-        /// Get a copy of this curve transformed by the supplied Transform.
-        /// </summary>
-        /// <param name="transform"></param>
-        ICurve Transformed(Transform transform);
-
-        /// <summary>
         /// Get the frame from the curve at parameter u.
         /// </summary>
         /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>

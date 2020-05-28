@@ -259,10 +259,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A transformed copy of this Bezier.
+        /// Construct a transformed copy of this Bezier.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
-        public override ICurve Transformed(Transform transform)
+        public Bezier TransformedBezier(Transform transform)
         {
             var newCtrlPoints = new List<Vector3>();
             foreach (var vp in ControlPoints)
@@ -270,6 +270,15 @@ namespace Elements.Geometry
                 newCtrlPoints.Add(transform.OfPoint(vp));
             }
             return new Bezier(newCtrlPoints, this.FrameType);
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedBezier(transform);
         }
     }
 }
