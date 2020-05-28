@@ -78,7 +78,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A transformed copy of this Curve.
+        /// Construct a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
@@ -87,7 +87,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A transformed copy of this Line.
+        /// Construct a transformed copy of this Line.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public Line TransformedLine(Transform transform)

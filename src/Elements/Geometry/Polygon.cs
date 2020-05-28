@@ -40,7 +40,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A transformed copy of this Polygon.
+        /// Construct a transformed copy of this Polygon.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public Polygon TransformedPolygon(Transform transform)
@@ -55,7 +55,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A transformed copy of this Curve.
+        /// Construct a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)

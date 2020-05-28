@@ -259,7 +259,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A transformed copy of this Bezier.
+        /// Construct a transformed copy of this Bezier.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public Bezier TransformedBezier(Transform transform)
@@ -273,7 +273,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A transformed copy of this Curve.
+        /// Construct a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)

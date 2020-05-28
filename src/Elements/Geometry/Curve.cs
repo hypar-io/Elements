@@ -89,7 +89,7 @@ namespace Elements.Geometry
         internal abstract IList<Vector3> RenderVertices();
 
         /// <summary>
-        /// A transformed copy of this Curve.
+        /// Construct a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);
