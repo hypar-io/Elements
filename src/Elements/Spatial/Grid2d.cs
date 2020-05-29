@@ -54,6 +54,9 @@ namespace Elements.Spatial
         /// </summary>
         private Transform toGrid = new Transform();
 
+        private Domain1d UDomainInternal = new Domain1d(0, 0);
+        private Domain1d VDomainInternal = new Domain1d(0, 0);
+
         /// <summary>
         /// Any boundary curves, transformed to grid space. 
         /// </summary>
@@ -80,8 +83,10 @@ namespace Elements.Spatial
         {
             this.U = new Grid1d(other.U);
             this.U.SetParent(this);
+            this.UDomainInternal = other.UDomainInternal;
             this.V = new Grid1d(other.V);
             this.V.SetParent(this);
+            this.VDomainInternal = other.VDomainInternal;
             this.Type = other.Type;
             this.boundariesInGridSpace = other.boundariesInGridSpace;
             this.fromGrid = other.fromGrid;
@@ -100,8 +105,10 @@ namespace Elements.Spatial
         {
             this.U = u;
             this.U.SetParent(this);
+            this.UDomainInternal = other.UDomainInternal;
             this.V = v;
             this.V.SetParent(this);
+            this.VDomainInternal = other.VDomainInternal;
             this.Type = other.Type;
             this.boundariesInGridSpace = other.boundariesInGridSpace;
             this.fromGrid = other.fromGrid;
@@ -197,9 +204,9 @@ namespace Elements.Spatial
                     }
                 }
             }
+            var bbox = new BBox3(transformedBoundaries);
 
             boundariesInGridSpace = transformedBoundaries;
-            var bbox = new BBox3(transformedBoundaries);
 
             InitializeUV(new Domain1d(bbox.Min.X, bbox.Max.X), new Domain1d(bbox.Min.Y, bbox.Max.Y));
         }
@@ -239,7 +246,8 @@ namespace Elements.Spatial
         public void SplitAtPoint(Vector3 point)
         {
             var ptTransformed = toGrid.OfPoint(point);
-            SplitAtPosition(ptTransformed);
+            U.SplitAtPoint(AxisTransformPoint(GridDirection.U,ptTransformed));
+            V.SplitAtPoint(AxisTransformPoint(GridDirection.V, ptTransformed));
         }
 
         /// <summary>
@@ -258,6 +266,14 @@ namespace Elements.Spatial
         /// <param name="vPosition">The V position</param>
         public void SplitAtPosition(double uPosition, double vPosition)
         {
+            if (UDomainInternal.Length > 0)
+            {
+                uPosition = uPosition.MapBetweenDomains(UDomainInternal, U.Domain);
+            }
+            if (VDomainInternal.Length > 0)
+            {
+                vPosition = vPosition.MapBetweenDomains(VDomainInternal, V.Domain);
+            }
             U.SplitAtPosition(uPosition);
             V.SplitAtPosition(vPosition);
         }
@@ -454,7 +470,7 @@ namespace Elements.Spatial
         public Curve GetCellGeometry()
         {
             var baseRect = GetBaseRectangleTransformed();
-            return fromGrid.OfPolygon(baseRect);
+            return baseRect.TransformedPolygon(fromGrid);
         }
 
         /// <summary>
@@ -507,7 +523,9 @@ namespace Elements.Spatial
         private void InitializeUV(Domain1d uDomain, Domain1d vDomain)
         {
             var uCrv = new Line(new Vector3(uDomain.Min, 0, 0), new Vector3(uDomain.Max, 0, 0));
-            var vCrv = new Line(new Vector3(0 , vDomain.Min, 0), new Vector3(0, vDomain.Max, 0));
+            var vCrv = new Line(new Vector3(0, vDomain.Min, 0), new Vector3(0, vDomain.Max, 0));
+            UDomainInternal = uDomain;
+            VDomainInternal = vDomain;
             U = new Grid1d(uCrv);
             U.SetParent(this);
             V = new Grid1d(vCrv);
@@ -551,14 +569,29 @@ namespace Elements.Spatial
             return uPt + vPt + GetTransformedOrigin();
         }
 
-        internal void ChildUpdated()
+        private Vector3 AxisTransformPoint(GridDirection direction, Vector3 point)
         {
-
+            if (direction == GridDirection.U)
+            {
+                var projVec = V.GetVector();
+                var vLine = new Line(point, projVec, 1.0);
+                var uLine = new Line(U.GetStartPoint(), U.GetVector(), 1.0);
+                vLine.Intersects(uLine, out Vector3 result, true);
+                return result;
+            }
+            else
+            {
+                var projVec = U.GetVector();
+                var uLine = new Line(point, projVec, 1.0);
+                var vLine = new Line(V.GetStartPoint(), V.GetVector(), 1.0);
+                uLine.Intersects(vLine, out Vector3 result, true);
+                return result;
+            }
         }
 
         private List<List<Grid2d>> GetTopLevelCells()
         {
-            if(U.IsSingleCell && V.IsSingleCell)
+            if (U.IsSingleCell && V.IsSingleCell)
             {
                 return new List<List<Grid2d>> { new List<Grid2d> { this } };
             }

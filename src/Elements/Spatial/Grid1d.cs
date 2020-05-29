@@ -215,7 +215,6 @@ namespace Elements.Spatial
                     }
                 }
             }
-            UpdateParent();
 
         }
 
@@ -263,6 +262,35 @@ namespace Elements.Spatial
             }
         }
 
+        /// <summary>
+        /// Split the grid at a point in world space. 
+        /// </summary>
+        /// <param name="point"></param>
+        public void SplitAtPoint(Vector3 point)
+        {
+            var A = curve.PointAt(0);
+            var B = curve.PointAt(1);
+            var C = point;
+            var AB = B - A;
+            AB = AB.Unitized();
+            var AC = C - A;
+            var posAlongCurve = AC.Dot(AB);
+            SplitAtOffset(posAlongCurve);
+        }
+
+
+        /// <summary>
+        /// Split the grid at points in world space
+        /// </summary>
+        /// <param name="points">The points at which to split.</param>
+        public void SplitAtPoints(IEnumerable<Vector3> points)
+        {
+            foreach (var pos in points)
+            {
+                SplitAtPoint(pos);
+            }
+        }
+
         #endregion
 
         #region Divide Methods
@@ -284,7 +312,6 @@ namespace Elements.Spatial
 
             var newDomains = Domain.DivideByCount(n);
             Cells = new List<Grid1d>(newDomains.Select(d => new Grid1d(curve, d, curveDomain)));
-            UpdateParent();
         }
 
         /// <summary>
@@ -533,10 +560,6 @@ namespace Elements.Spatial
                 var cellOffset = offset > 0 ? 1 : 0;
                 Cells[i + cellOffset].Type = patternSegments[i].typeName;
             }
-            // This is necessary because otherwise name changes don't propogate back to a parent 2d grid.
-            // TODO: find a better system than this to manage 1d/2d synchronization — this one involves
-            // a lot of unnecessary regeneration. 
-            UpdateParent();
 
         }
 
@@ -746,11 +769,6 @@ namespace Elements.Spatial
         internal Grid1d SpawnSubGrid(Domain1d domain)
         {
             return new Grid1d(curve, domain, curveDomain);
-        }
-
-        private void UpdateParent()
-        {
-            this.parent?.ChildUpdated();
         }
 
         #endregion
