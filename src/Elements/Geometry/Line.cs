@@ -283,7 +283,8 @@ namespace Elements.Geometry
 
         public bool PointOnLine(Vector3 point)
         {
-            return (Start - point).Unitized().Dot((End - point).Unitized()) < (-1 + Vector3.EPSILON);
+
+            return (Start - point).Unitized().Dot((End - point).Unitized()) < (Vector3.EPSILON - 1);
         }
 
         /// <summary>
@@ -458,12 +459,14 @@ namespace Elements.Geometry
             // adapted from http://csharphelper.com/blog/2016/01/clip-a-line-segment-to-a-polygon-in-c/
 
             // Make lists to hold points of
-            // intersection and their t values.
-            List<Vector3> intersections = new List<Vector3>();
+            // intersection
+            var intersections = new List<Vector3>();
 
             // Add the segment's starting point.
             intersections.Add(this.Start);
-            bool StartsOutsidePolygon = !polygon.Contains(this.Start);
+            var StartsOutsidePolygon = !polygon.Contains(this.Start);
+
+            var hasVertexIntersections = false;
 
             // Examine the polygon's edges.
             for (int i1 = 0; i1 < polygon.Vertices.Count; i1++)
@@ -473,9 +476,9 @@ namespace Elements.Geometry
 
                 // See where the edge intersects the segment.
                 var segment = new Line(polygon.Vertices[i1], polygon.Vertices[i2]);
-                bool segmentsIntersect = Intersects(segment, out Vector3 intersection);
+                var segmentsIntersect = Intersects(segment, out Vector3 intersection); // This will return false for intersections exactly at an end
 
-                // See if the segment intersects the edge.
+                // See if the segment intersects the edge. 
                 if (segmentsIntersect)
                 {
                     // See if we need to record this intersection.
@@ -483,6 +486,13 @@ namespace Elements.Geometry
                     // Record this intersection.
                     intersections.Add(intersection);
                 }
+                //see if the segment intersects at a vertex
+                else if (this.PointOnLine(polygon.Vertices[i1]))
+                {
+                    intersections.Add(polygon.Vertices[i1]);
+                    hasVertexIntersections = true;
+                }
+
             }
 
             // Add the segment's ending point.
@@ -491,16 +501,20 @@ namespace Elements.Geometry
             var intersectionsOrdered = intersections.OrderBy(v => v.DistanceTo(Start)).ToArray();
             var inSegments = new List<Line>();
             var outSegments = new List<Line>();
-            bool currentlyIn = !StartsOutsidePolygon;
+            var currentlyIn = !StartsOutsidePolygon;
             for (int i = 0; i < intersectionsOrdered.Length - 1; i++)
             {
                 var A = intersectionsOrdered[i];
                 var B = intersectionsOrdered[i + 1];
-                if(A.DistanceTo(B) < Vector3.EPSILON) // skip duplicate points
+                if (A.DistanceTo(B) < Vector3.EPSILON) // skip duplicate points
                 {
                     continue;
                 }
                 var segment = new Line(A, B);
+                if (hasVertexIntersections) // if it passed through a vertex, we can't rely on alternating, so check each midpoint
+                {
+                    currentlyIn = polygon.Contains((A + B) / 2);
+                }
                 if (currentlyIn)
                 {
                     inSegments.Add(segment);
