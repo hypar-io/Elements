@@ -281,6 +281,10 @@ namespace Elements.Geometry
             return (this.End - this.Start).Unitized();
         }
 
+        /// <summary>
+        /// Test if a point lies within this line segment
+        /// </summary>
+        /// <param name="point"></param>
         public bool PointOnLine(Vector3 point)
         {
 
@@ -451,7 +455,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Trim a line with a polygon. 
         /// </summary>
-        /// <param name="polygons"></param>
+        /// <param name="polygon">The polygon to trim with.</param>
         /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
         /// <returns>A list of the segment(s) of the line within the supplied polygon.</returns>
         public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments)
