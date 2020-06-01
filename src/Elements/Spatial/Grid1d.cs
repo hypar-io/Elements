@@ -223,7 +223,8 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="position">The relative position at which to split.</param>
         /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
-        public void SplitAtOffset(double position, bool fromEnd = false)
+        /// <param name="ignoreOutsideDomain">If true, splits at offsets outside the domain will be silently ignored.</param>
+        public void SplitAtOffset(double position, bool fromEnd = false, bool ignoreOutsideDomain = false)
         {
             position = fromEnd ? Domain.Max - position : Domain.Min + position;
             if (PositionIsAtCellEdge(position))
@@ -232,7 +233,14 @@ namespace Elements.Spatial
             }
             if (!Domain.Includes(position))
             {
-                throw new Exception("Offset position was beyond the grid's domain.");
+                if (ignoreOutsideDomain)
+                {
+                    return;
+                }
+                else
+                {
+                    throw new Exception("Offset position was beyond the grid's domain.");
+                }
             }
             SplitAtPosition(position);
         }
@@ -275,7 +283,7 @@ namespace Elements.Spatial
             AB = AB.Unitized();
             var AC = C - A;
             var posAlongCurve = AC.Dot(AB);
-            SplitAtOffset(posAlongCurve);
+            SplitAtOffset(posAlongCurve, false, true);
         }
 
 
