@@ -101,6 +101,12 @@ namespace Elements.Spatial
             }
         }
 
+        /// <summary>
+        /// Construct a Grid2d using another Grid2d as the base, but with different Grid1ds as its axes. 
+        /// </summary>
+        /// <param name="other">The Grid2d to base this one on.</param>
+        /// <param name="u">The Grid1d representing the U Axis.</param>
+        /// <param name="v">The Grid1d representing the V Axis.</param>
         public Grid2d(Grid2d other, Grid1d u, Grid1d v)
         {
             this.U = u;
