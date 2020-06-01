@@ -252,7 +252,7 @@ namespace Elements.Spatial
         public void SplitAtPoint(Vector3 point)
         {
             var ptTransformed = toGrid.OfPoint(point);
-            U.SplitAtPoint(AxisTransformPoint(GridDirection.U,ptTransformed));
+            U.SplitAtPoint(AxisTransformPoint(GridDirection.U, ptTransformed));
             V.SplitAtPoint(AxisTransformPoint(GridDirection.V, ptTransformed));
         }
 
@@ -423,12 +423,12 @@ namespace Elements.Spatial
                 case GridDirection.U:
                     points = V.GetCellSeparators(true);
                     otherDirection = U.curve;
-                    toOrigin = GetTransformedOrigin() - V.GetStartPoint();
+                    toOrigin = GetTransformedOrigin() - V.StartPoint();
                     break;
                 case GridDirection.V:
                     points = U.GetCellSeparators(true);
                     otherDirection = V.curve;
-                    toOrigin = GetTransformedOrigin() - U.GetStartPoint();
+                    toOrigin = GetTransformedOrigin() - U.StartPoint();
                     break;
             }
             var originVec = otherDirection.PointAt(0) - toOrigin;
@@ -547,6 +547,12 @@ namespace Elements.Spatial
             return Polygon.Rectangle(new Vector3(U.Domain.Min, V.Domain.Min), new Vector3(U.Domain.Max, V.Domain.Max));
         }
 
+        /// <summary>
+        /// This method returns the "rectangle" of the cell transformed into the grid's
+        /// distorted coordinate space. The result may be a parallelogram rather than a rectangle
+        /// depending on the shape of the axis curves. 
+        /// </summary>
+        /// <returns></returns>
         private Polygon GetBaseRectangleTransformed()
         {
             var A = GetTransformedPoint(U.Domain.Min, V.Domain.Min);
@@ -556,12 +562,19 @@ namespace Elements.Spatial
             return new Polygon(new[] { A, B, C, D });
         }
 
+        /// <summary>
+        /// This method finds the origin of the transformed 2d grid. Since the axes
+        /// may not be perpendicular or intersect at all, the point is located
+        /// at the intersection of two lines: one extending in the V direction from the start
+        /// of the U axis, and one extending in the U direction from the start of the V axis.
+        /// </summary>
+        /// <returns></returns>
         private Vector3 GetTransformedOrigin()
         {
-            var uVec = U.GetVector();
-            var uStart = U.GetStartPoint();
-            var vVec = V.GetVector();
-            var vStart = V.GetStartPoint();
+            var uVec = U.Direction();
+            var uStart = U.StartPoint();
+            var vVec = V.Direction();
+            var vStart = V.StartPoint();
             var vAxis = new Line(uStart, vVec, 1.0);
             var uAxis = new Line(vStart, uVec, 1.0);
             vAxis.Intersects(uAxis, out Vector3 intersection, true);
@@ -570,8 +583,8 @@ namespace Elements.Spatial
 
         private Vector3 GetTransformedPoint(double u, double v)
         {
-            var uPt = U.Evaluate(u) - U.GetStartPoint();
-            var vPt = V.Evaluate(v) - V.GetStartPoint();
+            var uPt = U.Evaluate(u) - U.StartPoint();
+            var vPt = V.Evaluate(v) - V.StartPoint();
             return uPt + vPt + GetTransformedOrigin();
         }
 
@@ -579,17 +592,17 @@ namespace Elements.Spatial
         {
             if (direction == GridDirection.U)
             {
-                var projVec = V.GetVector();
+                var projVec = V.Direction();
                 var vLine = new Line(point, projVec, 1.0);
-                var uLine = new Line(U.GetStartPoint(), U.GetVector(), 1.0);
+                var uLine = new Line(U.StartPoint(), U.Direction(), 1.0);
                 vLine.Intersects(uLine, out Vector3 result, true);
                 return result;
             }
             else
             {
-                var projVec = U.GetVector();
+                var projVec = U.Direction();
                 var uLine = new Line(point, projVec, 1.0);
-                var vLine = new Line(V.GetStartPoint(), V.GetVector(), 1.0);
+                var vLine = new Line(V.StartPoint(), V.Direction(), 1.0);
                 uLine.Intersects(vLine, out Vector3 result, true);
                 return result;
             }

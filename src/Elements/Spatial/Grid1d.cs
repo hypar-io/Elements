@@ -271,7 +271,8 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Split the grid at a point in world space. 
+        /// Split the grid at a point in world space. Note that for curved grids an approximate
+        /// point will be used.
         /// </summary>
         /// <param name="point"></param>
         public void SplitAtPoint(Vector3 point)
@@ -288,7 +289,8 @@ namespace Elements.Spatial
 
 
         /// <summary>
-        /// Split the grid at points in world space
+        /// Split the grid at points in world space. Note that for curved grids an approximate
+        /// point will be used.
         /// </summary>
         /// <param name="points">The points at which to split.</param>
         public void SplitAtPoints(IEnumerable<Vector3> points)
@@ -598,7 +600,7 @@ namespace Elements.Spatial
             }
         }
 
-        internal Vector3 GetVector()
+        internal Vector3 Direction()
         {
             if (curve != null)
             {
@@ -610,7 +612,7 @@ namespace Elements.Spatial
             }
         }
 
-        internal Vector3 GetStartPoint()
+        internal Vector3 StartPoint()
         {
             return curve.PointAt(curveDomain.Min);
         }
