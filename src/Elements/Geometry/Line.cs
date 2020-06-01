@@ -1,6 +1,7 @@
 using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -166,7 +167,7 @@ namespace Elements.Geometry
             else if (infinite)
             {
                 var rayIntersectsBackwards = new Ray(End, Direction().Negate()).Intersects(p, out Vector3 location2, out double t2);
-                if(rayIntersectsBackwards)
+                if (rayIntersectsBackwards)
                 {
                     result = location2;
                     return true;
@@ -237,11 +238,14 @@ namespace Elements.Geometry
             // construct a plane 
             var normal = l.Direction().Cross(plane.Normal);
             Plane intersectionPlane = new Plane(l.Start, normal);
-            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, infinite))
+            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, infinite)) // does the line intersect the plane? 
             {
-                result = planeIntersectionResult;
+                if (l.PointOnLine(planeIntersectionResult))
+                {
+                    result = planeIntersectionResult;
 
-                return true;
+                    return true;
+                }
 
             }
             result = default(Vector3);
@@ -275,6 +279,11 @@ namespace Elements.Geometry
         public Vector3 Direction()
         {
             return (this.End - this.Start).Unitized();
+        }
+
+        public bool PointOnLine(Vector3 point)
+        {
+            return (Start - point).Unitized().Dot((End - point).Unitized()) < (-1 + Vector3.EPSILON);
         }
 
         /// <summary>
@@ -436,6 +445,76 @@ namespace Elements.Geometry
             {
                 return new Line(this.End, intersection);
             }
+        }
+
+        /// <summary>
+        /// Trim a line with a polygon. 
+        /// </summary>
+        /// <param name="polygons"></param>
+        /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
+        /// <returns>A list of the segment(s) of the line within the supplied polygon.</returns>
+        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments)
+        {
+            // adapted from http://csharphelper.com/blog/2016/01/clip-a-line-segment-to-a-polygon-in-c/
+
+            // Make lists to hold points of
+            // intersection and their t values.
+            List<Vector3> intersections = new List<Vector3>();
+
+            // Add the segment's starting point.
+            intersections.Add(this.Start);
+            bool StartsOutsidePolygon = !polygon.Contains(this.Start);
+
+            // Examine the polygon's edges.
+            for (int i1 = 0; i1 < polygon.Vertices.Count; i1++)
+            {
+                // Get the end points for this edge.
+                int i2 = (i1 + 1) % polygon.Vertices.Count;
+
+                // See where the edge intersects the segment.
+                var segment = new Line(polygon.Vertices[i1], polygon.Vertices[i2]);
+                bool segmentsIntersect = Intersects(segment, out Vector3 intersection);
+
+                // See if the segment intersects the edge.
+                if (segmentsIntersect)
+                {
+                    // See if we need to record this intersection.
+
+                    // Record this intersection.
+                    intersections.Add(intersection);
+                }
+            }
+
+            // Add the segment's ending point.
+            intersections.Add(End);
+
+            var intersectionsOrdered = intersections.OrderBy(v => v.DistanceTo(Start)).ToArray();
+            var inSegments = new List<Line>();
+            var outSegments = new List<Line>();
+            bool currentlyIn = !StartsOutsidePolygon;
+            for (int i = 0; i < intersectionsOrdered.Length - 1; i++)
+            {
+                var A = intersectionsOrdered[i];
+                var B = intersectionsOrdered[i + 1];
+                if(A.DistanceTo(B) < Vector3.EPSILON) // skip duplicate points
+                {
+                    continue;
+                }
+                var segment = new Line(A, B);
+                if (currentlyIn)
+                {
+                    inSegments.Add(segment);
+                }
+                else
+                {
+                    outSegments.Add(segment);
+                }
+                currentlyIn = !currentlyIn;
+            }
+
+            outsideSegments = outSegments;
+            return inSegments;
+
         }
 
         /// <summary>
