@@ -44,12 +44,12 @@ namespace Elements.Spatial
         // The curve this was generated from, often a line.
         // subdivided cells maintain the complete original curve,
         // rather than a subcurve. 
-        private readonly Curve curve;
+        internal readonly Curve curve;
 
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
         // domain back to the original curve.
-        private Domain1d curveDomain;
+        private readonly Domain1d curveDomain;
 
         // if this 1d grid is the axis of a 2d grid, this is where we store that reference. If not, it will be null
         private Grid2d parent;
@@ -215,7 +215,6 @@ namespace Elements.Spatial
                     }
                 }
             }
-            UpdateParent();
 
         }
 
@@ -224,7 +223,8 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="position">The relative position at which to split.</param>
         /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
-        public void SplitAtOffset(double position, bool fromEnd = false)
+        /// <param name="ignoreOutsideDomain">If true, splits at offsets outside the domain will be silently ignored.</param>
+        public void SplitAtOffset(double position, bool fromEnd = false, bool ignoreOutsideDomain = false)
         {
             position = fromEnd ? Domain.Max - position : Domain.Min + position;
             if (PositionIsAtCellEdge(position))
@@ -233,7 +233,14 @@ namespace Elements.Spatial
             }
             if (!Domain.Includes(position))
             {
-                throw new Exception("Offset position was beyond the grid's domain.");
+                if (ignoreOutsideDomain)
+                {
+                    return;
+                }
+                else
+                {
+                    throw new Exception("Offset position was beyond the grid's domain.");
+                }
             }
             SplitAtPosition(position);
         }
@@ -263,6 +270,37 @@ namespace Elements.Spatial
             }
         }
 
+        /// <summary>
+        /// Split the grid at a point in world space. Note that for curved grids an approximate
+        /// point will be used.
+        /// </summary>
+        /// <param name="point"></param>
+        public void SplitAtPoint(Vector3 point)
+        {
+            var A = curve.PointAt(0);
+            var B = curve.PointAt(1);
+            var C = point;
+            var AB = B - A;
+            AB = AB.Unitized();
+            var AC = C - A;
+            var posAlongCurve = AC.Dot(AB);
+            SplitAtOffset(posAlongCurve, false, true);
+        }
+
+
+        /// <summary>
+        /// Split the grid at points in world space. Note that for curved grids an approximate
+        /// point will be used.
+        /// </summary>
+        /// <param name="points">The points at which to split.</param>
+        public void SplitAtPoints(IEnumerable<Vector3> points)
+        {
+            foreach (var pos in points)
+            {
+                SplitAtPoint(pos);
+            }
+        }
+
         #endregion
 
         #region Divide Methods
@@ -284,7 +322,6 @@ namespace Elements.Spatial
 
             var newDomains = Domain.DivideByCount(n);
             Cells = new List<Grid1d>(newDomains.Select(d => new Grid1d(curve, d, curveDomain)));
-            UpdateParent();
         }
 
         /// <summary>
@@ -488,6 +525,23 @@ namespace Elements.Spatial
 
         }
 
+        internal Vector3 Evaluate(double t)
+        {
+            if (curve != null)
+            {
+                var tNormalized = t.MapFromDomain(curveDomain);
+                if (tNormalized > 1 || tNormalized < 0)
+                {
+                    throw new Exception("t must be in the curve domain.");
+                }
+                return curve.PointAt(tNormalized);
+            }
+            else
+            {
+                return new Vector3(t, 0, 0);
+            }
+        }
+
         internal void SetParent(Grid2d grid2d)
         {
             this.parent = grid2d;
@@ -516,10 +570,6 @@ namespace Elements.Spatial
                 var cellOffset = offset > 0 ? 1 : 0;
                 Cells[i + cellOffset].Type = patternSegments[i].typeName;
             }
-            // This is necessary because otherwise name changes don't propogate back to a parent 2d grid.
-            // TODO: find a better system than this to manage 1d/2d synchronization — this one involves
-            // a lot of unnecessary regeneration. 
-            UpdateParent();
 
         }
 
@@ -548,6 +598,23 @@ namespace Elements.Spatial
                 }
                 i++;
             }
+        }
+
+        internal Vector3 Direction()
+        {
+            if (curve != null)
+            {
+                return (curve.PointAt(1) - curve.PointAt(0)).Unitized();
+            }
+            else
+            {
+                return Vector3.XAxis;
+            }
+        }
+
+        internal Vector3 StartPoint()
+        {
+            return curve.PointAt(curveDomain.Min);
         }
 
         #endregion
@@ -709,9 +776,9 @@ namespace Elements.Spatial
             return Domain.IsCloseToBoundary(pos);
         }
 
-        private void UpdateParent()
+        internal Grid1d SpawnSubGrid(Domain1d domain)
         {
-            this.parent?.ChildUpdated();
+            return new Grid1d(curve, domain, curveDomain);
         }
 
         #endregion
