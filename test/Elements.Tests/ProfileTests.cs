@@ -18,6 +18,7 @@ namespace Elements.Tests
             profile.Voids.Add(Polygon.Rectangle(0.5, 0.5));
         }
 
+        [Fact]
         public void ProfileMultipleUnion()
         {
             this.Name = "MultipleProfileUnion";
