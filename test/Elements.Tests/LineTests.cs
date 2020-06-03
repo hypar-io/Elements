@@ -173,5 +173,48 @@ namespace Elements.Geometry.Tests
 
             Assert.NotNull(l3);
         }
+
+
+        [Fact]
+        public void LineTrimWithPolygon()
+        {
+            Line startsOutsideAndCrossesTwice = new Line(new Vector3(0, 0, 0), new Vector3(5, 6, 0));
+            Line fullyInside = new Line(new Vector3(2, 2, 0), new Vector3(3, 3, 0));
+            Line fullyOutside = new Line(new Vector3(8, 9, 0), new Vector3(7, 6, 0));
+            Line startsInsideAndCrossesOnce = new Line(new Vector3(2, 2, 0), new Vector3(7, 4, 0));
+            Line startsOutsideAndLandsOnEdge = new Line(new Vector3(-2, 4, 0), new Vector3(4, 5, 0));
+            Line crossesAtVertexStaysOutside = new Line(new Vector3(6, 2, 0), new Vector3(4, 0));
+            Line passesThroughAtVertex = new Line(new Vector3(6, 0, 0), new Vector3(4, 2, 0));
+            var Polygon = new Polygon(new[]
+            {
+                new Vector3(1,1,0),
+                new Vector3(5,1,0),
+                new Vector3(5,5,0),
+                new Vector3(1,5,0)
+            });
+
+            var i1 = startsOutsideAndCrossesTwice.Trim(Polygon, out var o1);
+            Assert.Equal(1, i1.Count);
+            Assert.Equal(2, o1.Count);
+            var i2 = fullyInside.Trim(Polygon, out var o2);
+            Assert.Equal(1, i2.Count);
+            Assert.Equal(0, o2.Count);
+            var i3 = fullyOutside.Trim(Polygon, out var o3);
+            Assert.Equal(0, i3.Count);
+            Assert.Equal(1, o3.Count);
+            var i4 = startsInsideAndCrossesOnce.Trim(Polygon, out var o4);
+            Assert.Equal(1, i4.Count);
+            Assert.Equal(1, o4.Count);
+            var i5 = startsOutsideAndLandsOnEdge.Trim(Polygon, out var o5);
+            Assert.Equal(1, i5.Count);
+            Assert.Equal(1, o5.Count);
+            var i6 = crossesAtVertexStaysOutside.Trim(Polygon, out var o6);
+            Assert.Equal(0, i6.Count);
+            Assert.Equal(2, o6.Count);
+            var i7 = passesThroughAtVertex.Trim(Polygon, out var o7);
+            Assert.Equal(1, i7.Count);
+            Assert.Equal(1, o7.Count);
+
+        }
     }
 }
