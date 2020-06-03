@@ -287,7 +287,6 @@ namespace Elements.Geometry
         /// <param name="point"></param>
         public bool PointOnLine(Vector3 point)
         {
-
             return (Start - point).Unitized().Dot((End - point).Unitized()) < (Vector3.EPSILON - 1);
         }
 
@@ -461,9 +460,7 @@ namespace Elements.Geometry
         public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments)
         {
             // adapted from http://csharphelper.com/blog/2016/01/clip-a-line-segment-to-a-polygon-in-c/
-
-            // Make lists to hold points of
-            // intersection
+            // Make lists to hold points of intersection
             var intersections = new List<Vector3>();
 
             // Add the segment's starting point.
@@ -485,18 +482,15 @@ namespace Elements.Geometry
                 // See if the segment intersects the edge. 
                 if (segmentsIntersect)
                 {
-                    // See if we need to record this intersection.
-
                     // Record this intersection.
                     intersections.Add(intersection);
                 }
-                //see if the segment intersects at a vertex
+                // see if the segment intersects at a vertex
                 else if (this.PointOnLine(polygon.Vertices[i1]))
                 {
                     intersections.Add(polygon.Vertices[i1]);
                     hasVertexIntersections = true;
                 }
-
             }
 
             // Add the segment's ending point.
@@ -532,7 +526,6 @@ namespace Elements.Geometry
 
             outsideSegments = outSegments;
             return inSegments;
-
         }
 
         /// <summary>
