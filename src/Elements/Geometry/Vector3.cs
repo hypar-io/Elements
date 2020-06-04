@@ -463,6 +463,8 @@ namespace Elements.Geometry
             var dir = line.Direction();
             var v = this - line.Start;
             var d = v.Dot(dir);
+            d = Math.Min(line.Length(), d);
+            d = Math.Max(d, 0);
             return line.Start + dir * d;
         }
 
