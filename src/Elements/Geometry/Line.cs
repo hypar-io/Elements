@@ -280,6 +280,20 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Test if a point lies within this line segment
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        public bool PointOnLine(Vector3 point, bool includeEnds = false)
+        {
+            if (includeEnds && (point.DistanceTo(Start) < Vector3.EPSILON || point.DistanceTo(End) < Vector3.EPSILON))
+            {
+                return true;
+            }
+            return (Start - point).Unitized().Dot((End - point).Unitized()) < (Vector3.EPSILON - 1);
+        }
+
+        /// <summary>
         /// Divide the line into as many segments of the provided length as possible.
         /// </summary>
         /// <param name="l">The length.</param>
