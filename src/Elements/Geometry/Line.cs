@@ -166,7 +166,7 @@ namespace Elements.Geometry
             else if (infinite)
             {
                 var rayIntersectsBackwards = new Ray(End, Direction().Negate()).Intersects(p, out Vector3 location2, out double t2);
-                if(rayIntersectsBackwards)
+                if (rayIntersectsBackwards)
                 {
                     result = location2;
                     return true;
@@ -195,10 +195,11 @@ namespace Elements.Geometry
         /// Does this line intersect the provided line in 3D?
         /// </summary>
         /// <param name="l"></param>
-        /// <param name="infinite">Treat the lines as infinite?</param>
         /// <param name="result"></param>
+        /// <param name="infinite">Treat the lines as infinite?</param>
+        /// <param name="includeEnds">If the end of one line lies exactly on the other, count it as an intersection?</param>
         /// <returns>True if the lines intersect, false if they are fully collinear or do not intersect.</returns>
-        public bool Intersects(Line l, out Vector3 result, bool infinite = false)
+        public bool Intersects(Line l, out Vector3 result, bool infinite = false, bool includeEnds = false)
         {
             // check if two lines are parallel
             if (Direction().IsParallelTo(l.Direction()))
