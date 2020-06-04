@@ -237,11 +237,13 @@ namespace Elements.Geometry
             // construct a plane 
             var normal = l.Direction().Cross(plane.Normal);
             Plane intersectionPlane = new Plane(l.Start, normal);
-            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, infinite))
+            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane? 
             {
-                result = planeIntersectionResult;
-
-                return true;
+                if (infinite || (l.PointOnLine(planeIntersectionResult, includeEnds) && PointOnLine(planeIntersectionResult, includeEnds)))
+                {
+                    result = planeIntersectionResult;
+                    return true;
+                }
 
             }
             result = default(Vector3);
