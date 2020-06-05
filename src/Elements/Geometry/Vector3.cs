@@ -533,7 +533,7 @@ namespace Elements.Geometry
             var testVector = (points[1] - points[0]).Unitized();
             // in general this loop should not execute. This is just a check in case the first two points are
             // coincident.
-            while (testVector.IsZero())
+            while (testVector.IsZero()) //loop until you find an initial vector that isn't zero-length
             {
                 points.RemoveAt(0);
                 if (points.Count < 3)
@@ -545,7 +545,7 @@ namespace Elements.Geometry
             for (int i = 2; i < points.Count; i++)
             {
                 var nextVector = (points[i] - points[i - 1]).Unitized();
-                if (nextVector.IsZero())
+                if (nextVector.IsZero()) // coincident points may be safely skipped
                 {
                     continue;
                 }
