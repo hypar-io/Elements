@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -463,6 +464,8 @@ namespace Elements.Geometry
             var dir = line.Direction();
             var v = this - line.Start;
             var d = v.Dot(dir);
+            d = Math.Min(line.Length(), d);
+            d = Math.Max(d, 0);
             return line.Start + dir * d;
         }
 
@@ -528,9 +531,24 @@ namespace Elements.Geometry
                 return true;
             }
             var testVector = (points[1] - points[0]).Unitized();
+            // in general this loop should not execute. This is just a check in case the first two points are
+            // coincident.
+            while (testVector.IsZero()) //loop until you find an initial vector that isn't zero-length
+            {
+                points.RemoveAt(0);
+                if (points.Count < 3)
+                {
+                    return true;
+                }
+                testVector = (points[1] - points[0]).Unitized();
+            }
             for (int i = 2; i < points.Count; i++)
             {
                 var nextVector = (points[i] - points[i - 1]).Unitized();
+                if (nextVector.IsZero()) // coincident points may be safely skipped
+                {
+                    continue;
+                }
                 if (Math.Abs(nextVector.Dot(testVector)) < (1 - Vector3.EPSILON))
                 {
                     return false;

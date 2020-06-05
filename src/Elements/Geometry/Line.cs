@@ -196,10 +196,11 @@ namespace Elements.Geometry
         /// Does this line intersect the provided line in 3D?
         /// </summary>
         /// <param name="l"></param>
-        /// <param name="infinite">Treat the lines as infinite?</param>
         /// <param name="result"></param>
+        /// <param name="infinite">Treat the lines as infinite?</param>
+        /// <param name="includeEnds">If the end of one line lies exactly on the other, count it as an intersection?</param>
         /// <returns>True if the lines intersect, false if they are fully collinear or do not intersect.</returns>
-        public bool Intersects(Line l, out Vector3 result, bool infinite = false)
+        public bool Intersects(Line l, out Vector3 result, bool infinite = false, bool includeEnds = false)
         {
             // check if two lines are parallel
             if (Direction().IsParallelTo(l.Direction()))
@@ -238,12 +239,11 @@ namespace Elements.Geometry
             // construct a plane 
             var normal = l.Direction().Cross(plane.Normal);
             Plane intersectionPlane = new Plane(l.Start, normal);
-            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, infinite)) // does the line intersect the plane? 
+            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane? 
             {
-                if (l.PointOnLine(planeIntersectionResult))
+                if (infinite || (l.PointOnLine(planeIntersectionResult, includeEnds) && PointOnLine(planeIntersectionResult, includeEnds)))
                 {
                     result = planeIntersectionResult;
-
                     return true;
                 }
 
@@ -284,9 +284,14 @@ namespace Elements.Geometry
         /// <summary>
         /// Test if a point lies within this line segment
         /// </summary>
-        /// <param name="point"></param>
-        public bool PointOnLine(Vector3 point)
+        /// <param name="point">The point to test.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        public bool PointOnLine(Vector3 point, bool includeEnds = false)
         {
+            if (includeEnds && (point.DistanceTo(Start) < Vector3.EPSILON || point.DistanceTo(End) < Vector3.EPSILON))
+            {
+                return true;
+            }
             return (Start - point).Unitized().Dot((End - point).Unitized()) < (Vector3.EPSILON - 1);
         }
 
