@@ -1,11 +1,11 @@
 
 :root {
 	/* Hypar brand colors */
-    /* --hy-co-dark-blue:#1a4b5d; */
-    --hy-co-dark-blue: #1a4b5d;
+    /* --hy-co-dark-blue:#28455a; */
+    --hy-co-dark-blue: #26455a;
 	--hy-co-dark-blue-half:#27718b;
 	--hy-co-gray:#a3c3cb;
-	--hy-co-pale-green:#eff0f3;
+	--hy-co-white:#eff0f3;
 	--hy-co-pink:#f05b6b;
 	--hy-co-medium-blue:#1e85b4;
 	--hy-co-light-blue:#0dafd3;
@@ -59,6 +59,39 @@ li {
     font-size: 18px;
 }
 
+.nav a {
+    color: var(--hy-co-white);
+}
+
+#navbar li:hover ul.nav.level2 {
+    display: block;
+    position: absolute;
+    width: 100%;
+}
+
+#navbar ul.nav.level2 {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: var(--hy-co-pink);
+}
+
+#navbar .nav li.active {
+    background: var(--hy-co-dark-blue);
+}
+
+#navbar .nav li a:hover {
+    background: var(--hy-co-dark-blue);
+}
+
+.navbar-inverse .navbar-nav>.active>a {
+    background: var(--hy-co-dark-blue);
+}
+
+.navbar-inverse .navbar-nav>a:hover {
+    background: var(--hy-co-dark-blue);
+}
+
 .navbar {
     background: var(--hy-co-pink);
     min-height: 40px;
@@ -69,12 +102,12 @@ li {
 }
 
 #navbar > ul > li.active > a.active {
-    background: var(--hy-co-medium-blue);
-    color: var(--hy-co-pale-green);
+    background: var(--hy-co-dark-blue);
+    color: var(--hy-co-white);
 }
 
 #navbar > ul > li > a {
-    color: var(--hy-co-pale-green);
+    color: var(--hy-co-white);
 }
 
 p {
@@ -96,7 +129,16 @@ pre {
 }
 
 .sidenav {
-    background: var(--hy-co-pale-green);
+    background: var(--hy-co-white);
+}
+
+.sideaffix {
+    min-width: 200px;
+    margin-right: 20px;
+}
+
+.affix > ul.level1 {
+    margin-right: 0;
 }
 
 .subnav {
@@ -119,7 +161,7 @@ th {
 }
 
 #toc > ul > li.active.in > a{
-    color: var(--hy-co-medium-blue)
+    color: var(--hy-co-dark-blue)
 }
 
 .xref.text-break {

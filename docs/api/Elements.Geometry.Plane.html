@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Plane
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.53.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -126,7 +126,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Plane(Vector3 origin, Vector3 normal)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Plane(Vector3 origin, Vector3 normal)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -230,7 +231,8 @@ Only the first three points of the points array will be used.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Normal { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Normal&quot;, Required = Required.AllowNull)]
+public Vector3 Normal { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -254,7 +256,8 @@ Only the first three points of the points array will be used.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Origin { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Origin&quot;, Required = Required.AllowNull)]
+public Vector3 Origin { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -273,6 +276,49 @@ Only the first three points of the points array will be used.</p>
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Geometry_Plane_ClosestPoint_" data-uid="Elements.Geometry.Plane.ClosestPoint*"></a>
+  <h4 id="Elements_Geometry_Plane_ClosestPoint_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Plane.ClosestPoint(Elements.Geometry.Vector3)">ClosestPoint(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find the closest point on this plane from a given sample point.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 ClosestPoint(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The sample point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>The closest point to the sample point on this plane.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Plane_Equals_" data-uid="Elements.Geometry.Plane.Equals*"></a>
   <h4 id="Elements_Geometry_Plane_Equals_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Plane.Equals(Elements.Geometry.Plane)">Equals(Plane)</h4>
   <div class="markdown level1 summary"><p>Is this plane equal to the provided plane?</p>
@@ -312,6 +358,51 @@ Only the first three points of the points array will be used.</p>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>Returns true if the two planes are equal, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Plane_SignedDistanceTo_" data-uid="Elements.Geometry.Plane.SignedDistanceTo*"></a>
+  <h4 id="Elements_Geometry_Plane_SignedDistanceTo_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Plane.SignedDistanceTo(Elements.Geometry.Vector3)">SignedDistanceTo(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find the signed distance from a sample point to a plane.
+If positive, the point is on the &quot;Normal&quot; side of the plane,
+otherwise it is on the opposite side.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double SignedDistanceTo(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The sample point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>The signed distance between this plane and the sample point.</p>
 </td>
       </tr>
     </tbody>

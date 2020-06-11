@@ -171,7 +171,7 @@ namespace Elements.Geometry
                 {
                     curveList = curveList.Union(voids.SelectMany(v => v.Segments())); 
                 }
-                curveList = curveList.Select(l => transformFromPolygon.OfLine(l));
+                curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
 
                 if (Polygon.Contains(curveList, transformedIntersection, out _))
                 {

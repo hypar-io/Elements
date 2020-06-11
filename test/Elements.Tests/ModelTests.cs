@@ -96,9 +96,9 @@ namespace Elements.Tests
             };
 
             var asm = await TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(schemas);
-            var facadePanelType = asm.GetType("Elements.FacadePanel");
+            var facadePanelType = asm.Assembly.GetType("Elements.FacadePanel");
             Assert.NotNull(facadePanelType);
-            var envelopeType = asm.GetType("Elements.Envelope");
+            var envelopeType = asm.Assembly.GetType("Elements.Envelope");
             Assert.NotNull(envelopeType);
             var model1 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/facade.json"));
             var count1 = model1.Elements.Count;

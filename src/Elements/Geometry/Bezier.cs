@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -255,6 +256,29 @@ namespace Elements.Geometry
                 vertices.Add(PointAt(i * 1.0 / _samples));
             }
             return vertices;
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Bezier.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public Bezier TransformedBezier(Transform transform)
+        {
+            var newCtrlPoints = new List<Vector3>();
+            foreach (var vp in ControlPoints)
+            {
+                newCtrlPoints.Add(transform.OfPoint(vp));
+            }
+            return new Bezier(newCtrlPoints, this.FrameType);
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedBezier(transform);
         }
     }
 }

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class TypeGenerator
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.53.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -114,8 +114,92 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static class TypeGenerator</code></pre>
   </div>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Generate_TypeGenerator_TemplatesPath_" data-uid="Elements.Generate.TypeGenerator.TemplatesPath*"></a>
+  <h4 id="Elements_Generate_TypeGenerator_TemplatesPath" data-uid="Elements.Generate.TypeGenerator.TemplatesPath">TemplatesPath</h4>
+  <div class="markdown level1 summary"><p>The directory in which to find code templates. Some execution contexts require this to be overriden as the
+Executing Assembly is not necessarily in the same place as the templates (e.g. Headless Grasshopper Execution)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string TemplatesPath { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_" data-uid="Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema*"></a>
+  <h4 id="Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_NJsonSchema_JsonSchema_System_String_System_String____System_Boolean_" data-uid="Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema,System.String,System.String[]@,System.Boolean)">GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)</h4>
+  <div class="markdown level1 summary"><p>For a given schema, generate code, compile an assembly, and write it to disk at the specified path.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool GenerateAndSaveDllForSchema(JsonSchema schema, string dllPath, out string[] diagnosticResults, bool frameworkBuild = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">NJsonSchema.JsonSchema</span></td>
+        <td><span class="parametername">schema</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">dllPath</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">diagnosticResults</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">frameworkBuild</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Returns true if the dll was generated successfully, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Generate_TypeGenerator_GenerateElementTypesAsync_" data-uid="Elements.Generate.TypeGenerator.GenerateElementTypesAsync*"></a>
   <h4 id="Elements_Generate_TypeGenerator_GenerateElementTypesAsync_System_String_" data-uid="Elements.Generate.TypeGenerator.GenerateElementTypesAsync(System.String)">GenerateElementTypesAsync(String)</h4>
   <div class="markdown level1 summary"><p>Generate the core element types as .cs files to the specified output directory.</p>
@@ -123,7 +207,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Task GenerateElementTypesAsync(string outputBaseDir)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;GenerationResult[]&gt; GenerateElementTypesAsync(string outputBaseDir)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -153,7 +237,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Elements.Generate.GenerationResult.html">GenerationResult</a>[]&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -165,7 +249,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Task&lt;Assembly&gt; GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;CompilationResult&gt; GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -195,7 +279,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.Reflection.Assembly</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Elements.Generate.CompilationResult.html">CompilationResult</a>&gt;</td>
         <td><p>An assembly containing the generated types or null if no Assembly could be generated.</p>
 </td>
       </tr>
@@ -203,12 +287,12 @@
   </table>
   <a id="Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUriAsync_" data-uid="Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync*"></a>
   <h4 id="Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUriAsync_System_String_System_String_System_Boolean_" data-uid="Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync(System.String,System.String,System.Boolean)">GenerateUserElementTypeFromUriAsync(String, String, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Generate a user-defined type in a .cs file from a schema.</p>
+  <div class="markdown level1 summary"><p>Generate a user-defined type in a .g.cs file from a schema.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Task GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;GenerationResult&gt; GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -250,7 +334,148 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Elements.Generate.GenerationResult.html">GenerationResult</a>&gt;</td>
+        <td><p>A GenerationResult object containing info about the success or failure of generation,
+the file path of the generated code, and any errors that may have occurred during generation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Generate_TypeGenerator_GenerateUserElementTypesFromUrisAsync_" data-uid="Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync*"></a>
+  <h4 id="Elements_Generate_TypeGenerator_GenerateUserElementTypesFromUrisAsync_System_String___System_String_System_Boolean_" data-uid="Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[],System.String,System.Boolean)">GenerateUserElementTypesFromUrisAsync(String[], String, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Generate user-defined types in .g.cs files from a schema.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;GenerationResult[]&gt; GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">uris</span></td>
+        <td><p>An array of uris.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">outputBaseDir</span></td>
+        <td><p>The base output directory.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isUserElement</span></td>
+        <td><p>Is the type a user-defined element?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Elements.Generate.GenerationResult.html">GenerationResult</a>[]&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Generate_TypeGenerator_GetLoadedElementTypes_" data-uid="Elements.Generate.TypeGenerator.GetLoadedElementTypes*"></a>
+  <h4 id="Elements_Generate_TypeGenerator_GetLoadedElementTypes_System_Boolean_" data-uid="Elements.Generate.TypeGenerator.GetLoadedElementTypes(System.Boolean)">GetLoadedElementTypes(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Get the currently loaded UserElement types</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;Type&gt; GetLoadedElementTypes(bool userElementTypesOnly = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">userElementTypesOnly</span></td>
+        <td><p>If true, only return types with the UserElement attribute.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Type</span>&gt;</td>
+        <td><p>A list of the loaded types with the UserElement attribute.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Generate_TypeGenerator_GetSchemaAsync_" data-uid="Elements.Generate.TypeGenerator.GetSchemaAsync*"></a>
+  <h4 id="Elements_Generate_TypeGenerator_GetSchemaAsync_System_String_" data-uid="Elements.Generate.TypeGenerator.GetSchemaAsync(System.String)">GetSchemaAsync(String)</h4>
+  <div class="markdown level1 summary"><p>Asynchronously load a JSON Schema from a URI. If a web address is provided,
+it will be loaded from the URL, otherwise it will attempt to load from disk.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;JsonSchema&gt; GetSchemaAsync(string uri)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">uri</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">NJsonSchema.JsonSchema</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>

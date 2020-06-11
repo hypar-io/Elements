@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.7.2
+### Fixed
+- [#307](https://github.com/hypar-io/Elements/issues/307)
+- `Mesh.ComputeNormals()` would fail if there were any unconnected vertices.
+- `new Vertex()` would ignore supplied Normals.
+- `Vector3.ClosestPointOn(Line)` would return points that were not on the line.
+- `Line.Intersects(Line)` in infinite mode would sometimes return erroneous results.
+- `Vector3.AreCollinear()` would return the wrong result if the first two vertices were coincident.
+
+### Added
+- Added `Plane.ClosestPoint(Vector3 p)`
+- New methods for dynamic type generation in `TypeGeneration`, utilized by the Grasshopper plugin.
+- `Line.Trim(Polygon)`
+- `Line.PointOnLine(Vector3 point)`
+- **Grid1d**
+  - `Grid1d(Grid1d other)` constructor
+  - Adds `IgnoreOutsideDomain` flag to `SplitAtOffset`
+  - Adds `SplitAtPoint(point)` and `SplitAtPoints(points)` methods
+  - Adds internal `Evaluate(t)` method 
+  - Adds internal `SpawnSubGrid(domain)` method
+- **Grid2d**
+  - Adds `Grid2d(Grid2d other)` constructor
+  - Adds `Grid2d(Grid2d other, Grid1d u, Grid1d v)` constructor
+  - Adds `SplitAtPoint(point)` and `SplitAtPoints(points)` methods to Grid2d
+  - Adds `Grid2d(Grid1d u, Grid1d v)` constructor
+  - Adds support for curved 1d Grid axes
+  - Adds private `SpawnSubGrid(Grid1d uCell, Grid1d vCell)` method
+- `Curve.Transformed(transform)` (and related `XXX.TransformedXXX()` methods for child types Arc, Bezier, Line, Polyline, Polygon)
+
+### Changed
+- Updates to Elements Docs including Grasshopper + Excel.
+- `Line.Intersects(Plane p)` supports infinite lines
+- `Line.Intersects(Line l)` supports 3d line intersections
+- `Line.Intersects(Line l)` now has an optional flag indicating whether to include the line ends as intersections.
+- `Line.PointOnLine(Point)` now has an optional flag indicating whether to include points at the ends as "on" the line.
+- **Grid1d / Grid2d**
+    - Removes "Parent/child" updating from 1d grids / 2d grids in favor of always recalculating the 2d grid every time its `Cells` are accessed. This may have a bit of a performance hit, but it's worth it to make 2d grid behavior easier to reason about. 
+    - Allows Grid2ds to support construction from Grid1ds that are not straight lines. Previously Grid1ds could support any sort of curve and Grid2ds were stuck as dumb rectangles.
+- **JsonInheritanceConverter**
+  - Makes the Type Cache on the JsonInheritanceConverter static, and exposes a public method to refresh it. In the grasshopper context, new types may have been dynamically loaded since the JsonInheritanceConverter was initialized, so it needs to be refreshed before deserializing a model.
+- **TypeGenerator**
+  - Enables external overriding of the Templates path, as in GH's case the `Templates` folder is not in the same place as the executing assembly. 
+  - Exposes a public, synchronous method `GetSchema` to get a `JsonSchema` from uri (wrapping `GetSchemaAsync`)
+  - Refactors some of the internal processes of `GenerateInMemoryAssemblyFromUrisAndLoadAsync`:
+      - `GenerateCodeFromSchema()` produces csharp from a schema, including generating the namespace, typename, and local excludes
+      - `GenerateCompilation()` takes the csharp and compiles it, using a new optional flag `frameworkBuild` to designate whether it should load netstandard or net framework reference assemblies.  
+      - `EmitAndLoad()` generates the assembly in memory and loads it into the app domain.
+  - Adds an `EmitAndSave()` method that generates the assembly and writes it to a .dll on disk
+  -  Adds a public `GenerateAndSaveDllForSchema()` method used by grasshopper that generates code from a schema, generates a compilation, and saves it to disk as a DLL.
+  -  Adds a public `GetLoadedElementTypes()` method used by grasshopper to list all the currently loaded element types. 
+
+### Deprecated
+- `Transform.OfXXX(xxx)` curve methods have been deprecated in favor of `XXX.Transformed(Transform)` and `XXX.TransformedXXX(Transform)`.
+
 ## 0.7.0
 ### Fixed
 - [#271](https://github.com/hypar-io/Elements/issues/271)
@@ -17,7 +71,7 @@
 - `Transform.Rotate(double angle)`
 - `TypeGenerator.GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)`
 
-## Changed
+### Changed
 - Updated documentation to reflect the use of .NET Core 3.1.
 
 ### Deprecated

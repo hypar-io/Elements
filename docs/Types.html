@@ -8,7 +8,7 @@
     <title>Types | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Types | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.53.1.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
@@ -66,7 +66,6 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="types">Types</h1>
 
-<h2 id="note-the-following-functionality-is-only-available-as-of-version-040">NOTE: The following functionality is only available as of version 0.4.0.</h2>
 <p>Let's say that you're a mechanical engineer and you want to introduce a new type to Elements called &quot;VAV Box&quot;. To introduce this new type, first you need to design it. Where will it fit in the existing Elements type hierarchy? Will an existing base type be used? If so, will the base type need to be changed? Once that's figured out you'll need to write code that represents your type (in the case of Elements as a C# class) and propose that change to the maintainers of the library. The maintainers approve the change and your &quot;VAV Box&quot; class is made availble in the next release. Any small iteration on the design of your type based on use or user feedback requires that you repeat the whole cycle.</p>
 <p>This scenario creates several challenges. First, it requires direct interaction with the maintainers of the Elements library. Most AEC developers don't know how to propose a change to the Elements code and requiring that they undertake our code review process just to introduce a container for data that represents a thing they know is challenging. Second, the maintainers of Elements now &quot;own&quot; the &quot;VAV Box&quot; type and are therefore required to make sure that they don't break it in the future. Imagine how many hundreds of thousands, or potentially millions, of different types of components are in a building. It's not reasonable to assume that one library is going to be able to encapsulate them all. Finally, although having the base description for a type be C# code works well in the short term, it limits the Elements' team's flexibility in the future to work with other languages.</p>
 <p>To address these challenges we've introduced the ability for an AEC developer to create a schema which describes their type using <a href="https://json-schema.org/">JSON schema</a>, and to generate source code from that schema. Schemas can be shared and extended allowing for the growth of a type system from the community.</p>
@@ -120,7 +119,7 @@
 }
 </code></pre>
 <h4 id="generate-code-for-your-type">Generate Code for your Type</h4>
-<p>The <a href="https://www.nuget.org/packages/Hypar.CLI/0.4.0">Hypar CLI</a> can be used to generate code for your type.</p>
+<p>The <a href="https://www.nuget.org/packages/Hypar.CLI/">Hypar CLI</a> can be used to generate code for your type.</p>
 <pre><code class="lang-bash">hypar generate-types -u ./beam.json -o ./Structural
 </code></pre>
 <h4 id="generate-code-for-your-hypar-function">Generate Code for your Hypar Function</h4>

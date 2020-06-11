@@ -179,19 +179,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// A transformed copy of the supplied curve.
+        /// </summary>
+        /// <param name="curve">The curve to transform.</param>
+        [Obsolete("Use Curve.Transformed(Transform) instead.")]
+        public Curve OfCurve(Curve curve)
+        {
+            return curve.Transformed(this);
+        }
+
+        /// <summary>
         /// Transform the specified polygon.
         /// </summary>
         /// <param name="polygon">The polygon to transform.</param>
         /// <returns>A new polygon transformed by this transform.</returns>
+        [Obsolete("Use Polygon.Transformed(Transform) instead.")]
         public Polygon OfPolygon(Polygon polygon)
         {
-            var transformed = new Vector3[polygon.Vertices.Count];
-            for (var i = 0; i < transformed.Length; i++)
-            {
-                transformed[i] = OfPoint(polygon.Vertices[i]);
-            }
-            var p = new Polygon(transformed);
-            return p;
+            return polygon.TransformedPolygon(this);
         }
 
         /// <summary>
@@ -204,7 +209,7 @@ namespace Elements.Geometry
             var result = new Polygon[polygons.Count];
             for (var i = 0; i < polygons.Count; i++)
             {
-                result[i] = OfPolygon(polygons[i]);
+                result[i] = polygons[i].TransformedPolygon(this);
             }
             return result;
         }
@@ -214,9 +219,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="line">The line to transform.</param>
         /// <returns>A new line transformed by this transform.</returns>
+        [Obsolete("Use Line.Transformed(Transform) instead.")]
         public Line OfLine(Line line)
         {
-            return new Line(OfPoint(line.Start), OfPoint(line.End));
+            return line.TransformedLine(this);
         }
 
         /// <summary>
@@ -245,10 +251,10 @@ namespace Elements.Geometry
                 voids = new Polygon[profile.Voids.Count];
                 for (var i = 0; i < voids.Length; i++)
                 {
-                    voids[i] = OfPolygon(profile.Voids[i]);
+                    voids[i] = profile.Voids[i].TransformedPolygon(this);
                 }
             }
-            var p = new Profile(OfPolygon(profile.Perimeter), voids, Guid.NewGuid(), null);
+            var p = new Profile(profile.Perimeter.TransformedPolygon(this), voids, Guid.NewGuid(), null);
             return p;
         }
 
@@ -257,14 +263,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="bezier">The bezier to transform.</param>
         /// <returns>A new bezier transformed by this transform.</returns>
+        [Obsolete("Use Bezier.Transformed(Transform) instead.")]
         public Bezier OfBezier(Bezier bezier)
         {
-            var newCtrlPoints = new List<Vector3>();
-            foreach (var vp in bezier.ControlPoints)
-            {
-                newCtrlPoints.Add(OfPoint(vp));
-            }
-            return new Bezier(newCtrlPoints);
+            return bezier.TransformedBezier(this);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 using ClipperLib;
+using Elements.Geometry.Interfaces;
 using LibTessDotNet.Double;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,30 @@ namespace Elements.Geometry
                 normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
             }
             return normal.Unitized();
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Polygon.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public Polygon TransformedPolygon(Transform transform)
+        {
+            var transformed = new Vector3[this.Vertices.Count];
+            for (var i = 0; i < transformed.Length; i++)
+            {
+                transformed[i] = transform.OfPoint(this.Vertices[i]);
+            }
+            var p = new Polygon(transformed);
+            return p;
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedPolygon(transform);
         }
 
         /// <summary>

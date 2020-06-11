@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Getting Started with Grasshopper Functions | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Getting Started with Grasshopper Functions | Hypar Docs ">
+    <meta name="generator" content="docfx 2.53.1.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/vs2015.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="index.html">
+          <img id="logo" class="svg" src="logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="getting-started-with-grasshopper-functions">Getting Started with Grasshopper Functions</h1>
+
+<p>Hypar functions are a way to capture the logic of a system in a way that can be easily combined with other systems, and shared with other people. One of the ways you can create a function is by publishing a Grasshopper script to Hypar. This guide will walk you through the process. You can follow the video tutorials below, or walk through the step-by-step guide at your own pace; they cover roughly the same information.</p>
+<h2 id="video-tutorials">Video Tutorials</h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/FE8BeWSE_WI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+<h3 id="tutorial-index">Tutorial Index</h3>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=FE8BeWSE_WI&amp;list=PLUI4W-9fe5g_6rSKww5ip50SiUGBBbmIZ">Part 1: Getting Started</a></li>
+<li><a href="https://www.youtube.com/watch?v=x3EaAz0UavA&amp;list=PLUI4W-9fe5g_6rSKww5ip50SiUGBBbmIZ&amp;index=2">Part 2: Outputs and Deconstruct Element</a></li>
+<li><a href="https://www.youtube.com/watch?v=xOWbQk619fE&amp;list=PLUI4W-9fe5g_6rSKww5ip50SiUGBBbmIZ&amp;index=3">Part 3: Input Types, Materials, and Mesh Elements</a></li>
+<li><a href="https://www.youtube.com/watch?v=tjv875fA7Iw&amp;list=PLUI4W-9fe5g_6rSKww5ip50SiUGBBbmIZ&amp;index=4">Part 4: Custom Schemas + Solids</a></li>
+<li><a href="https://www.youtube.com/watch?v=C8VALN0vtz0&amp;list=PLUI4W-9fe5g_6rSKww5ip50SiUGBBbmIZ&amp;index=5">Part 5: Model Dependencies</a></li>
+<li><a href="https://www.youtube.com/watch?v=19dqWo9xrcc&amp;list=PLUI4W-9fe5g_6rSKww5ip50SiUGBBbmIZ&amp;index=6">Part 6: Instances</a></li>
+</ul>
+<h2 id="installing-the-grasshopper-plugin">Installing the Grasshopper Plugin</h2>
+<p>To install the Hypar plugin for Grasshopper, it is best to use the Rhino Package Manager. In Rhino 6, type <code>TestPackageManager</code> in the Rhino Command line -- it may not autocomplete, but the command will work. In Rhino 7 or later, type <code>PackageManager</code> to open the dialog.</p>
+<p>Search for Hypar, select the result, and click &quot;Download and Install.&quot;
+<img src="images/2020-05-19-13-59-47.png" alt=""></p>
+<p>If Grasshopper was already running, you'll need to shut down Rhino and restart it, otherwise you can proceed to launch Grasshopper.</p>
+<p>If you are having trouble with the package manager, you can also download the plug-in from <a href="https://www.food4rhino.com/app/hypar-elements">Food4Rhino</a>, but this is not recommended.</p>
+<div class="NOTE">
+<h5>NOTE</h5>
+Only Rhino 6 and 7 on Windows are fully supported. Rhino on Mac also works in most but not all cases.
+</div>
+<h2 id="building-a-simple-function">Building a simple function</h2>
+<p>To start, we'll build a very simple Grasshopper function: just a <code>Center Box</code> component with some sliders from 0 to 100 controlling X, Y, and Z.</p>
+<p><img src="images/simple%20box%20definition.png" alt=""></p>
+<p>We need to do three things to make this function ready for Hypar. Navigate to the Hypar tab in your Grasshopper window, and grab the following components from the <code>1. Setup</code> section.
+<img src="images/2020-05-19-14-19-59.png" alt=""></p>
+<ol>
+<li>Give your function a name and description with the <img src="images/Hypar%20Setup.png" alt="Hypar Setup"> component.</li>
+<li>Connect one <img src="images/Function%20Input.png" alt="Function Input"> component to each of your Sliders (there should be three total.) Each slider should feed into the &quot;O&quot; input of the Function Input component.</li>
+<li>Create a <img src="images/Model%20Output.png" alt="Model Output"> component and supply it with a name.</li>
+</ol>
+<p>Your definition should look like this:</p>
+<p><img src="images/simple-box-def.png" alt=""></p>
+<p>Lastly, in order to produce geometry out of our function, we have to create Hypar Elements -- these are special objects that Hypar knows how to read and display. <a href="Elements/WhatIsElements.html">You can learn more about Hypar Elements here</a>.</p>
+<p>To create a Hypar Element in Grasshopper, we'll use the <img src="images/Construct%20Element.png" alt="Construct Element"> component. Place it on the canvas, and right click it to open a menu of possible Element types:</p>
+<p><img src="images/PossibleElements.png" alt=""></p>
+<p>Select &quot;MeshElement&quot; from the list. The component should change shape, generating inputs on the left-hand side for all the information that a &quot;MeshElement&quot; requires.</p>
+<p><img src="images/MeshElement.png" alt=""></p>
+<p>Connect your box to the &quot;Mesh&quot; input, and connect the &quot;E&quot; output to the &quot;E&quot; input of the <img src="images/Model%20Output.png" alt="Model Output"> component we created earlier. The final definition should look like this:</p>
+<p><img src="images/grasshopper-pt-1-complete.png" alt=""></p>
+<h2 id="publishing-the-function">Publishing the function</h2>
+<p>Save the definition as a .gh file. Open <a href="https://hypar.io">hypar.io</a>, and log in. Scroll down until you see &quot;Your Functions&quot;:</p>
+<p><img src="images/Your%20Functions.png" alt=""></p>
+<p>Click &quot;New Function&quot; and then click &quot;New Grasshopper Function.&quot;</p>
+<p><img src="images/New%20Function.png" alt="">
+<img src="images/New%20Grasshopper%20Function.png" alt=""></p>
+<p>Drag and drop the .gh file you saved earlier onto the region marked &quot;Drop a Grasshopper Definition Here,&quot; or click it to bring up a file browser and locate the file that way.</p>
+<p>It will upload the file and load the information from it. Don't worry if it takes a little while -- it shouldn't show &quot;Loading Function Details&quot; longer than about 30 seconds.</p>
+<p><img src="images/Loading%20Function%20Details.png" alt=""></p>
+<p>When it has successfully loaded, you'll see a preview of the information it's gathered from your file. Feel free to edit the name and description of the file at this point.</p>
+<p><img src="images/Loaded%20Function%20from%20GH.png" alt=""></p>
+<p>Click &quot;Publish Function,&quot; and when the dialog changes, click &quot;Close.&quot; Your function should now show up under &quot;Your Functions.&quot;</p>
+<p><img src="images/Your%20Functions%20With%20GH.png" alt=""></p>
+<p>Next click &quot;New Workflow,&quot; and choose &quot;New Blank Workflow.&quot;</p>
+<p><img src="images/New%20Workflow.png" alt=""></p>
+<p>Search for your function in the Function Library, and click &quot;Insert&quot; when you've found it.</p>
+<p><img src="images/Insert.png" alt=""></p>
+<p>You should see a box appear in your model. Click on the function name to open its settings:</p>
+<p><img src="images/FunctionSettings.png" alt=""></p>
+<p>Adjust the sliders and watch the cube change dynamically. Congratulations! You've authored your first Hypar function with Grasshopper!</p>
+<h2 id="working-with-elements-and-custom-types">Working with Elements and Custom Types</h2>
+<div class="WARNING">
+<h5>WARNING</h5>
+Grasshopper for Mac does not support building custom types.
+</div>
+<p>As shown in the previous section, to create geometry for the model that you can see in Hypar, you need to create Elements. This is done with the Construct Element component, which can take on a number of different types. However, it doesn't stop there! Many other types are available, and you can even <a href="Types.html">create your own custom types</a>.</p>
+<p>You can visit the <a href="Types.html">Types</a> section for details, but for our purposes it suffices to know that a type is defined with a .JSON file hosted somewhere on the web. The <a href="https://github.com/hypar-io/schemas">Hypar Schemas repository</a> collects a good number of these, but they can be hosted anywhere that's public.</p>
+<p>If we want to construct an <code>Envelope</code> Element, for instance, we'll need to grab a reference to the Envelope schema.</p>
+<p>Copy and paste this URL: <code>https://raw.githubusercontent.com/hypar-io/Schemas/master/Envelope.json</code> into a text panel in Grasshopper, and connect it to the &quot;S&quot; input of a <img src="images/Hypar%20Setup.png" alt="Hypar Setup"> component, like so:</p>
+<p><img src="images/custom%20schema%20setup.png" alt=""></p>
+<p>It will show &quot;Loading&quot; for a bit while it downloads that schema and loads the type. When it's done, all Hypar components will be able to use the <code>Envelope</code> type. If you right click a <code>Construct Element</code> component, you will now be able to create an Envelope:</p>
+<p><img src="images/EnvelopeType.png" alt=""></p>
+<h2 id="solids-and-representations">Solids and Representations</h2>
+<p>When you reference a custom type like <code>Envelope</code>, Hypar has no way of knowing how to construct its 3D geometry, so you have to explicitly provide a &quot;Representation&quot; of that geometry. The <img src="images/Representation.png" alt="Representation"> component will accept a list of <code>Solid</code>s which can be used to describe the geometry. Here's an example of defining an <code>Envelope</code>, with an <code>Extrude</code> solid as its representation:</p>
+<p><img src="images/EnvelopeWithRepresentation.png" alt=""></p>
+<h2 id="specifying-model-dependencies">Specifying Model Dependencies</h2>
+<p>In many cases, you'll want to build a function that references information from other functions in the model. Hypar functions can declare &quot;Model Dependencies,&quot; and thereby access specific elements produced by other functions. A <code>Facade</code> function might depend on the <code>Envelope</code> produced by an <code>Envelope By Sketch</code> function, for instance.</p>
+<p>Let's build a function that depends on Envelope. Log into Hypar, click &quot;New Workflow.&quot;</p>
+<p><img src="images/New%20Workflow.png" alt=""></p>
+<p>This time, select the &quot;Simple Tower&quot; template.</p>
+<p>Click on &quot;Envelope By Sketch,&quot; and then click the &quot;About&quot; button.</p>
+<p><img src="images/About%20Button.png" alt=""></p>
+<p>Pay special attention to the information under &quot;Model Output&quot; and &quot;Element Types&quot;:</p>
+<p><img src="images/OutputAndTypes.png" alt=""></p>
+<p>Right click &quot;Envelope&quot; under &quot;Element types,&quot; and copy the link address.</p>
+<p>Open Grasshopper and start a new Definition. As in the previous section, we'll need to reference the &quot;<code>Envelope</code>&quot; type. The link we just copied contains the schema URL for this type; paste it into a text panel and connect it to the &quot;S&quot; input of a <img src="images/Hypar%20Setup.png" alt="Hypar Setup"> component, like so:</p>
+<p><img src="images/custom%20schema%20setup.png" alt=""></p>
+<p>Now place a <img src="images/Model%20Dependency.png" alt="Model Dependency"> component. Type &quot;Envelope&quot; into a text panel, and connect it to the &quot;K&quot; input. This input should match the &quot;Model Output&quot; text we just referred to in the function details view on the Hypar web interface.</p>
+<p><img src="images/Envelope%20Dependency.png" alt=""></p>
+<p>For common types like Envelope, reference geometry is automatically loaded. For more complex types, you may need to download a JSON representation of a model to use as test geometry to build your function against.</p>
+<p>If your &quot;Model Dependency&quot; component shows no output, go to the workflow and click &quot;Export&quot; in the lower left-hand corner. In our case this is not necessary, but feel free to try it out.</p>
+<p><img src="images/Export.png" alt=""></p>
+<p>Download the JSON file, and supply the file path to the &quot;J&quot; input of the Model Dependency component.</p>
+<p>You'll notice that the Model Dependency component outputs several kinds of Elements.</p>
+<p><img src="images/kindsOfElements.png" alt=""></p>
+<p>An easy way to filter this down is to supply a type filter to the T input of the Model Dependency component. Connect your &quot;Envelope&quot; panel to this input as well to limit your dependency to Elements of type <code>Envelope</code>.</p>
+<p><img src="images/typefilter.png" alt=""></p>
+<p>Now, connect a <img src="images/Deconstruct%20Element.png" alt="Deconstruct Element"> component to the output of Model Dependency. It will automatically take on all the properties of an Envelope, and you can use any of the resulting outputs and geometry as information for your function. When the function is run on Hypar, this information will be replaced by the <code>Envelope</code>s in the workflow.</p>
+<p><img src="images/DeconstructEnvelope.png" alt=""></p>
+<h2 id="updating-a-grasshopper-function-on-hypar">Updating a Grasshopper Function on Hypar</h2>
+<p>You can update the version of the Grasshopper script for a given function. Just click the tile for that function in &quot;Your Functions,&quot; and choose &quot;Edit Function Details&quot;:</p>
+<p><img src="images/Edit%20Function%20Details.png" alt=""></p>
+<p>Just drop a new version of your script on the file drop zone to update the logic of your function.</p>
+<p><img src="images/UpdateFunction.png" alt=""></p>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>Currently Custom Type generation is not supported on Grasshopper for Mac.</li>
+<li>Only certain 3rd party plug-ins are currently supported on Hypar:
+<ul>
+<li>Wombat</li>
+<li>TreeFrog</li>
+<li>Human</li>
+<li>Clipper Tools</li>
+<li>MetaHopper</li>
+</ul>
+</li>
+<li>Custom scripts (C#, VB.NET, and Python) are not currently supported.</li>
+<li>Function Execution has a time limit of 15-30 seconds. If your definition takes longer than this to run, you may experience timeouts on Hypar.</li>
+</ul>
+<h2 id="component-reference">Component Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Icon</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Setup</td>
+<td><img src="images/GH-icons/HyparElements.Components.ModelDependency.png" alt=""></td>
+<td>Model Dependency</td>
+<td>Refer to other elements in the model</td>
+</tr>
+<tr>
+<td>1. Setup</td>
+<td><img src="images/GH-icons/HyparElements.Components.FunctionOutput.png" alt=""></td>
+<td>Function Output</td>
+<td>Designate a data output for your function</td>
+</tr>
+<tr>
+<td>1. Setup</td>
+<td><img src="images/GH-icons/HyparElements.Components.FunctionInput.png" alt=""></td>
+<td>Function Input</td>
+<td>Select a function input</td>
+</tr>
+<tr>
+<td>1. Setup</td>
+<td><img src="images/GH-icons/HyparElements.Components.Setup.png" alt=""></td>
+<td>Hypar Function Setup</td>
+<td>Use this component to set up the parameters of your Hypar function.</td>
+</tr>
+<tr>
+<td>1. Setup</td>
+<td><img src="images/GH-icons/HyparElements.Components.ModelOutput.png" alt=""></td>
+<td>Model Output</td>
+<td>Create a model output from elements</td>
+</tr>
+<tr>
+<td>2. Elements</td>
+<td><img src="images/GH-icons/HyparElements.Components.DeconstructElementInstance.png" alt=""></td>
+<td>Deconstruct Element Instance</td>
+<td>Deconstruct an Element Instance</td>
+</tr>
+<tr>
+<td>2. Elements</td>
+<td><img src="images/GH-icons/HyparElements.Components.ConstructElement.png" alt=""></td>
+<td>Construct Element</td>
+<td>Construct a Hypar element</td>
+</tr>
+<tr>
+<td>2. Elements</td>
+<td><img src="images/GH-icons/HyparElements.Components.DeconstructElement.png" alt=""></td>
+<td>Deconstruct Element</td>
+<td>Use this component to deconstruct the properties of any element.</td>
+</tr>
+<tr>
+<td>2. Elements</td>
+<td><img src="images/GH-icons/HyparElements.Components.CreateMaterial.png" alt=""></td>
+<td>Material</td>
+<td>Create a Elements.Material</td>
+</tr>
+<tr>
+<td>2. Elements</td>
+<td><img src="images/GH-icons/HyparElements.Components.CreateRepresentation.png" alt=""></td>
+<td>Representation</td>
+<td>Create a Elements.Geometry.Representation</td>
+</tr>
+<tr>
+<td>2. Elements</td>
+<td><img src="images/GH-icons/HyparElements.Components.ConstructElementInstance.png" alt=""></td>
+<td>Construct Element Instance</td>
+<td>Construct an Element Instance from another element</td>
+</tr>
+<tr>
+<td>3. Solids</td>
+<td><img src="images/GH-icons/HyparElements.Components.CreateSweep.png" alt=""></td>
+<td>Sweep</td>
+<td>Create a Elements.Geometry.Solids.Sweep</td>
+</tr>
+<tr>
+<td>3. Solids</td>
+<td><img src="images/GH-icons/HyparElements.Components.CreateExtrude.png" alt=""></td>
+<td>Extrude</td>
+<td>Create a Elements.Geometry.Solids.Extrude</td>
+</tr>
+<tr>
+<td>3. Solids</td>
+<td><img src="images/GH-icons/HyparElements.Components.CreateLamina.png" alt=""></td>
+<td>Lamina</td>
+<td>Create a Elements.Geometry.Solids.Lamina</td>
+</tr>
+<tr>
+<td>4. Special</td>
+<td><img src="images/GH-icons/HyparElements.Components.ModelToJson.png" alt=""></td>
+<td>Model to JSON</td>
+<td>Convert elements into a model and output it as JSON.</td>
+</tr>
+</tbody>
+</table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

@@ -192,7 +192,7 @@ namespace Elements.Geometry
         public Vertex(Vector3 position, Vector3? normal = null, Color color = default(Color))
         {
             this.Position = position;
-            this.Normal = Vector3.Origin;
+            this.Normal = normal ?? Vector3.Origin;
             this.Color = color;
         }
     }
@@ -289,6 +289,11 @@ Triangles:{_triangles.Count}";
         {
             foreach (var v in this.Vertices)
             {
+                if(v.Triangles.Count == 0)
+                {
+                    v.Normal = default(Vector3);
+                    continue;
+                }
                 var avg = new Vector3();
                 foreach (var t in v.Triangles)
                 {

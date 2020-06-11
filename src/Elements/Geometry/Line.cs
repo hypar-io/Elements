@@ -1,5 +1,7 @@
+using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -77,6 +79,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a transformed copy of this Curve.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public override Curve Transformed(Transform transform)
+        {
+            return TransformedLine(transform);
+        }
+
+        /// <summary>
+        /// Construct a transformed copy of this Line.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public Line TransformedLine(Transform transform)
+        {
+            return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
+        }
+
+        /// <summary>
         /// Get a new line that is the reverse of the original line.
         /// </summary>
         public Line Reversed()
@@ -131,14 +151,27 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="p">The plane.</param>
         /// <param name="result">The location of intersection.</param>
+        /// <param name="infinite">If true, line will be treated as infinite. (False by default)</param>
         /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
-        public bool Intersects(Plane p, out Vector3 result)
+        public bool Intersects(Plane p, out Vector3 result, bool infinite = false)
         {
             var rayIntersects = new Ray(Start, Direction()).Intersects(p, out Vector3 location, out double t);
-            if (rayIntersects && t <= Length())
+            if (rayIntersects)
             {
-                result = location;
-                return true;
+                if (infinite || t <= Length())
+                {
+                    result = location;
+                    return true;
+                }
+            }
+            else if (infinite)
+            {
+                var rayIntersectsBackwards = new Ray(End, Direction().Negate()).Intersects(p, out Vector3 location2, out double t2);
+                if (rayIntersectsBackwards)
+                {
+                    result = location2;
+                    return true;
+                }
             }
             result = default(Vector3);
             return false;
@@ -157,6 +190,66 @@ namespace Elements.Geometry
             if (IsAlmostZero(a) || a > Vector3.EPSILON) return false;
             if (IsAlmostZero(b) || b > Vector3.EPSILON) return false;
             return true;
+        }
+
+        /// <summary>
+        /// Does this line intersect the provided line in 3D?
+        /// </summary>
+        /// <param name="l"></param>
+        /// <param name="result"></param>
+        /// <param name="infinite">Treat the lines as infinite?</param>
+        /// <param name="includeEnds">If the end of one line lies exactly on the other, count it as an intersection?</param>
+        /// <returns>True if the lines intersect, false if they are fully collinear or do not intersect.</returns>
+        public bool Intersects(Line l, out Vector3 result, bool infinite = false, bool includeEnds = false)
+        {
+            // check if two lines are parallel
+            if (Direction().IsParallelTo(l.Direction()))
+            {
+                result = default(Vector3);
+                return false;
+            }
+            // construct a plane through this line and the start or end of the other line
+            Plane plane;
+            Vector3 testpoint;
+            if (!(new[] { Start, End, l.Start }).AreCollinear())
+            {
+                plane = new Plane(Start, End, l.Start);
+                testpoint = l.End;
+
+            } // this only occurs in the rare case that the start point of the other line is collinear with this line (still need to generate a plane)
+            else if (!(new[] { Start, End, l.End }).AreCollinear())
+            {
+                plane = new Plane(Start, End, l.End);
+                testpoint = l.Start;
+            }
+            else // they're collinear (this shouldn't occur since it should be caught by the parallel test)
+            {
+                result = default(Vector3);
+                return false;
+            }
+
+            // check if the fourth point is in the same plane as the other 3
+            if (Math.Abs(plane.SignedDistanceTo(testpoint)) > Vector3.EPSILON)
+            {
+                result = default(Vector3);
+                return false;
+            }
+
+            // at this point they're not parallel, and they lie in the same plane, so we know they intersect, we just don't know where.
+            // construct a plane 
+            var normal = l.Direction().Cross(plane.Normal);
+            Plane intersectionPlane = new Plane(l.Start, normal);
+            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane? 
+            {
+                if (infinite || (l.PointOnLine(planeIntersectionResult, includeEnds) && PointOnLine(planeIntersectionResult, includeEnds)))
+                {
+                    result = planeIntersectionResult;
+                    return true;
+                }
+
+            }
+            result = default(Vector3);
+            return false;
         }
 
         private bool IsAlmostZero(double a)
@@ -186,6 +279,20 @@ namespace Elements.Geometry
         public Vector3 Direction()
         {
             return (this.End - this.Start).Unitized();
+        }
+
+        /// <summary>
+        /// Test if a point lies within this line segment
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        public bool PointOnLine(Vector3 point, bool includeEnds = false)
+        {
+            if (includeEnds && (point.DistanceTo(Start) < Vector3.EPSILON || point.DistanceTo(End) < Vector3.EPSILON))
+            {
+                return true;
+            }
+            return (Start - point).Unitized().Dot((End - point).Unitized()) < (Vector3.EPSILON - 1);
         }
 
         /// <summary>
@@ -313,13 +420,7 @@ namespace Elements.Geometry
         /// <returns>A new line, or null if this line does not intersect the trimming line.</returns>
         public Line TrimTo(Line line, bool flip = false)
         {
-            var d1 = this.Direction();
-            var d2 = line.Direction();
-
-            var n = d2.Cross(Vector3.ZAxis);
-            var p = new Plane(line.Start, n);
-
-            if (this.Intersects(p, out Vector3 result))
+            if (this.Intersects(line, out Vector3 result, true))
             {
                 if (flip)
                 {
@@ -338,26 +439,98 @@ namespace Elements.Geometry
         /// Extend this line to the trimming curve.
         /// </summary>
         /// <param name="line">The curve to which to extend.</param>
-        /// <returns>A new line, or null if this line does not intersect the trimming line.</returns>
+        /// <returns>A new line, or null if these lines would never intersect if extended infinitely.</returns>
         public Line ExtendTo(Line line)
         {
-            var d1 = this.Direction();
-            var d2 = line.Direction();
-
-            // Extend the line and trim in one direction.
-            var d3 = this.Start + d1 * 1000000;
-            var temp = new Line(this.Start, d3);
-            var trim = temp.TrimTo(line);
-            if (trim != null)
+            if (!Intersects(line, out var intersection, true))
             {
-                return trim;
+                return null;
+            }
+            if (intersection.DistanceTo(Start) > intersection.DistanceTo(End))
+            {
+                return new Line(this.Start, intersection);
+            }
+            else
+            {
+                return new Line(this.End, intersection);
+            }
+        }
+
+        /// <summary>
+        /// Trim a line with a polygon. 
+        /// </summary>
+        /// <param name="polygon">The polygon to trim with.</param>
+        /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
+        /// <returns>A list of the segment(s) of the line within the supplied polygon.</returns>
+        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments)
+        {
+            // adapted from http://csharphelper.com/blog/2016/01/clip-a-line-segment-to-a-polygon-in-c/
+            // Make lists to hold points of intersection
+            var intersections = new List<Vector3>();
+
+            // Add the segment's starting point.
+            intersections.Add(this.Start);
+            var StartsOutsidePolygon = !polygon.Contains(this.Start);
+
+            var hasVertexIntersections = false;
+
+            // Examine the polygon's edges.
+            for (int i1 = 0; i1 < polygon.Vertices.Count; i1++)
+            {
+                // Get the end points for this edge.
+                int i2 = (i1 + 1) % polygon.Vertices.Count;
+
+                // See where the edge intersects the segment.
+                var segment = new Line(polygon.Vertices[i1], polygon.Vertices[i2]);
+                var segmentsIntersect = Intersects(segment, out Vector3 intersection); // This will return false for intersections exactly at an end
+
+                // See if the segment intersects the edge. 
+                if (segmentsIntersect)
+                {
+                    // Record this intersection.
+                    intersections.Add(intersection);
+                }
+                // see if the segment intersects at a vertex
+                else if (this.PointOnLine(polygon.Vertices[i1]))
+                {
+                    intersections.Add(polygon.Vertices[i1]);
+                    hasVertexIntersections = true;
+                }
             }
 
-            // Extend the line and trim in the other direction.
-            d3 = this.Start - d1 * 1000000;
-            temp = new Line(this.End, d3);
-            trim = temp.TrimTo(line);
-            return trim;
+            // Add the segment's ending point.
+            intersections.Add(End);
+
+            var intersectionsOrdered = intersections.OrderBy(v => v.DistanceTo(Start)).ToArray();
+            var inSegments = new List<Line>();
+            var outSegments = new List<Line>();
+            var currentlyIn = !StartsOutsidePolygon;
+            for (int i = 0; i < intersectionsOrdered.Length - 1; i++)
+            {
+                var A = intersectionsOrdered[i];
+                var B = intersectionsOrdered[i + 1];
+                if (A.DistanceTo(B) < Vector3.EPSILON) // skip duplicate points
+                {
+                    continue;
+                }
+                var segment = new Line(A, B);
+                if (hasVertexIntersections) // if it passed through a vertex, we can't rely on alternating, so check each midpoint
+                {
+                    currentlyIn = polygon.Contains((A + B) / 2);
+                }
+                if (currentlyIn)
+                {
+                    inSegments.Add(segment);
+                }
+                else
+                {
+                    outSegments.Add(segment);
+                }
+                currentlyIn = !currentlyIn;
+            }
+
+            outsideSegments = outSegments;
+            return inSegments;
         }
 
         /// <summary>

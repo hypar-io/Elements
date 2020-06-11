@@ -44,12 +44,15 @@ namespace Elements.Spatial
         // The curve this was generated from, often a line.
         // subdivided cells maintain the complete original curve,
         // rather than a subcurve. 
-        private readonly Curve curve;
+        internal readonly Curve curve;
 
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
         // domain back to the original curve.
-        private Domain1d curveDomain;
+        private readonly Domain1d curveDomain;
+
+        // if this 1d grid is the axis of a 2d grid, this is where we store that reference. If not, it will be null
+        private Grid2d parent;
 
         #endregion
 
@@ -62,6 +65,22 @@ namespace Elements.Spatial
         public Grid1d(double length = 1.0) : this(new Domain1d(0, length))
         {
 
+        }
+
+        /// <summary>
+        /// Construct a 1D Grid from another 1D Grid
+        /// </summary>
+        /// <param name="other"></param>
+        public Grid1d(Grid1d other)
+        {
+            this.curve = other.curve;
+            this.curveDomain = other.curveDomain;
+            this.Domain = other.Domain;
+            if (other.Cells != null)
+            {
+                this.Cells = other.Cells.Select(c => new Grid1d(c)).ToList();
+            }
+            this.Type = other.Type;
         }
 
         /// <summary>
@@ -196,7 +215,6 @@ namespace Elements.Spatial
                     }
                 }
             }
-            OnTopLevelGridChange();
 
         }
 
@@ -205,7 +223,8 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="position">The relative position at which to split.</param>
         /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
-        public void SplitAtOffset(double position, bool fromEnd = false)
+        /// <param name="ignoreOutsideDomain">If true, splits at offsets outside the domain will be silently ignored.</param>
+        public void SplitAtOffset(double position, bool fromEnd = false, bool ignoreOutsideDomain = false)
         {
             position = fromEnd ? Domain.Max - position : Domain.Min + position;
             if (PositionIsAtCellEdge(position))
@@ -214,9 +233,29 @@ namespace Elements.Spatial
             }
             if (!Domain.Includes(position))
             {
-                throw new Exception("Offset position was beyond the grid's domain.");
+                if (ignoreOutsideDomain)
+                {
+                    return;
+                }
+                else
+                {
+                    throw new Exception("Offset position was beyond the grid's domain.");
+                }
             }
             SplitAtPosition(position);
+        }
+
+        /// <summary>
+        /// Split a cell at a list of relative positions measured from its domain start or end. 
+        /// </summary>
+        /// <param name="positions">The relative positions at which to split.</param>
+        /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
+        public void SplitAtOffsets(IEnumerable<double> positions, bool fromEnd = false)
+        {
+            foreach (var position in positions)
+            {
+                SplitAtOffset(position, fromEnd);
+            }
         }
 
         /// <summary>
@@ -228,6 +267,37 @@ namespace Elements.Spatial
             foreach (var pos in positions)
             {
                 SplitAtPosition(pos);
+            }
+        }
+
+        /// <summary>
+        /// Split the grid at a point in world space. Note that for curved grids an approximate
+        /// point will be used.
+        /// </summary>
+        /// <param name="point"></param>
+        public void SplitAtPoint(Vector3 point)
+        {
+            var A = curve.PointAt(0);
+            var B = curve.PointAt(1);
+            var C = point;
+            var AB = B - A;
+            AB = AB.Unitized();
+            var AC = C - A;
+            var posAlongCurve = AC.Dot(AB);
+            SplitAtOffset(posAlongCurve, false, true);
+        }
+
+
+        /// <summary>
+        /// Split the grid at points in world space. Note that for curved grids an approximate
+        /// point will be used.
+        /// </summary>
+        /// <param name="points">The points at which to split.</param>
+        public void SplitAtPoints(IEnumerable<Vector3> points)
+        {
+            foreach (var pos in points)
+            {
+                SplitAtPoint(pos);
             }
         }
 
@@ -252,7 +322,6 @@ namespace Elements.Spatial
 
             var newDomains = Domain.DivideByCount(n);
             Cells = new List<Grid1d>(newDomains.Select(d => new Grid1d(curve, d, curveDomain)));
-            OnTopLevelGridChange();
         }
 
         /// <summary>
@@ -263,7 +332,7 @@ namespace Elements.Spatial
         /// <param name="divisionMode">Whether to permit any size cell, or only larger or smaller cells by rounding up or down.</param>
         public void DivideByApproximateLength(double targetLength, EvenDivisionMode divisionMode = EvenDivisionMode.Nearest)
         {
-            if(targetLength <= Vector3.EPSILON)
+            if (targetLength <= Vector3.EPSILON)
             {
                 throw new ArgumentException($"Unable to divide. Target Length {targetLength} is too small.");
             }
@@ -402,7 +471,7 @@ namespace Elements.Spatial
         /// <param name="divisionMode">How to handle leftover/remainder length</param>
         public void DivideByPattern(IList<(string typeName, double length)> lengthPattern, PatternMode patternMode = PatternMode.Cycle, FixedDivisionMode divisionMode = FixedDivisionMode.RemainderAtEnd)
         {
-            if(lengthPattern.Any(p => p.length <= Vector3.EPSILON))
+            if (lengthPattern.Any(p => p.length <= Vector3.EPSILON))
             {
                 throw new ArgumentException("One or more of the pattern segments is too small.");
             }
@@ -456,6 +525,28 @@ namespace Elements.Spatial
 
         }
 
+        internal Vector3 Evaluate(double t)
+        {
+            if (curve != null)
+            {
+                var tNormalized = t.MapFromDomain(curveDomain);
+                if (tNormalized > 1 || tNormalized < 0)
+                {
+                    throw new Exception("t must be in the curve domain.");
+                }
+                return curve.PointAt(tNormalized);
+            }
+            else
+            {
+                return new Vector3(t, 0, 0);
+            }
+        }
+
+        internal void SetParent(Grid2d grid2d)
+        {
+            this.parent = grid2d;
+        }
+
 
         /// <summary>
         /// Divide by a list of named lengths and an offset from start, used by the DivideByPattern function.
@@ -479,10 +570,6 @@ namespace Elements.Spatial
                 var cellOffset = offset > 0 ? 1 : 0;
                 Cells[i + cellOffset].Type = patternSegments[i].typeName;
             }
-            // This is necessary because otherwise name changes don't propogate back to a parent 2d grid.
-            // TODO: find a better system than this to manage 1d/2d synchronization — this one involves
-            // a lot of unnecessary regeneration. 
-            OnTopLevelGridChange();
 
         }
 
@@ -511,6 +598,23 @@ namespace Elements.Spatial
                 }
                 i++;
             }
+        }
+
+        internal Vector3 Direction()
+        {
+            if (curve != null)
+            {
+                return (curve.PointAt(1) - curve.PointAt(0)).Unitized();
+            }
+            else
+            {
+                return Vector3.XAxis;
+            }
+        }
+
+        internal Vector3 StartPoint()
+        {
+            return curve.PointAt(curveDomain.Min);
         }
 
         #endregion
@@ -585,7 +689,7 @@ namespace Elements.Spatial
 
         private List<double> DomainsToSequence(bool recursive = false)
         {
-            if(IsSingleCell)
+            if (IsSingleCell)
             {
                 return new List<double> { Domain.Min, Domain.Max };
             }
@@ -614,6 +718,10 @@ namespace Elements.Spatial
         /// <returns>A list of all the bottom-level cells / child cells of this grid.</returns>
         public List<Grid1d> GetCells()
         {
+            if (IsSingleCell)
+            {
+                return new List<Grid1d> { this };
+            }
             List<Grid1d> resultCells = new List<Grid1d>();
             foreach (var cell in Cells)
             {
@@ -668,31 +776,14 @@ namespace Elements.Spatial
             return Domain.IsCloseToBoundary(pos);
         }
 
-        #endregion
-
-        #region Events
-        /// <summary>
-        /// Handler for a grid event
-        /// </summary>
-        /// <param name="sender">The Grid1d that spawned this event</param>
-        /// <param name="e">Event args</param>
-        public delegate void Grid1dEventHandler(Grid1d sender, EventArgs e);
-
-
-        /// <summary>
-        /// Fired when the cells of this grid change
-        /// </summary>
-        public event Grid1dEventHandler TopLevelGridChange;
-
-        /// <summary>
-        /// Fired when the cells of this grid change
-        /// </summary>
-        protected virtual void OnTopLevelGridChange()
+        internal Grid1d SpawnSubGrid(Domain1d domain)
         {
-            Grid1dEventHandler handler = TopLevelGridChange;
-            handler?.Invoke(this, new EventArgs());
+            return new Grid1d(curve, domain, curveDomain);
         }
+
         #endregion
+
+
 
     }
 

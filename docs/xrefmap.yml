@@ -908,12 +908,118 @@ references:
   commentId: N:Elements.Generate
   fullName: Elements.Generate
   nameWithType: Elements.Generate
+- uid: Elements.Generate.CompilationResult
+  name: CompilationResult
+  href: api/Elements.Generate.CompilationResult.html
+  commentId: T:Elements.Generate.CompilationResult
+  fullName: Elements.Generate.CompilationResult
+  nameWithType: CompilationResult
+- uid: Elements.Generate.CompilationResult.Assembly
+  name: Assembly
+  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_Assembly
+  commentId: P:Elements.Generate.CompilationResult.Assembly
+  fullName: Elements.Generate.CompilationResult.Assembly
+  nameWithType: CompilationResult.Assembly
+- uid: Elements.Generate.CompilationResult.Assembly*
+  name: Assembly
+  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_Assembly_
+  commentId: Overload:Elements.Generate.CompilationResult.Assembly
+  isSpec: "True"
+  fullName: Elements.Generate.CompilationResult.Assembly
+  nameWithType: CompilationResult.Assembly
+- uid: Elements.Generate.CompilationResult.DiagnosticResults
+  name: DiagnosticResults
+  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_DiagnosticResults
+  commentId: P:Elements.Generate.CompilationResult.DiagnosticResults
+  fullName: Elements.Generate.CompilationResult.DiagnosticResults
+  nameWithType: CompilationResult.DiagnosticResults
+- uid: Elements.Generate.CompilationResult.DiagnosticResults*
+  name: DiagnosticResults
+  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_DiagnosticResults_
+  commentId: Overload:Elements.Generate.CompilationResult.DiagnosticResults
+  isSpec: "True"
+  fullName: Elements.Generate.CompilationResult.DiagnosticResults
+  nameWithType: CompilationResult.DiagnosticResults
+- uid: Elements.Generate.CompilationResult.Success
+  name: Success
+  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_Success
+  commentId: P:Elements.Generate.CompilationResult.Success
+  fullName: Elements.Generate.CompilationResult.Success
+  nameWithType: CompilationResult.Success
+- uid: Elements.Generate.CompilationResult.Success*
+  name: Success
+  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_Success_
+  commentId: Overload:Elements.Generate.CompilationResult.Success
+  isSpec: "True"
+  fullName: Elements.Generate.CompilationResult.Success
+  nameWithType: CompilationResult.Success
+- uid: Elements.Generate.GenerationResult
+  name: GenerationResult
+  href: api/Elements.Generate.GenerationResult.html
+  commentId: T:Elements.Generate.GenerationResult
+  fullName: Elements.Generate.GenerationResult
+  nameWithType: GenerationResult
+- uid: Elements.Generate.GenerationResult.DiagnosticResults
+  name: DiagnosticResults
+  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_DiagnosticResults
+  commentId: P:Elements.Generate.GenerationResult.DiagnosticResults
+  fullName: Elements.Generate.GenerationResult.DiagnosticResults
+  nameWithType: GenerationResult.DiagnosticResults
+- uid: Elements.Generate.GenerationResult.DiagnosticResults*
+  name: DiagnosticResults
+  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_DiagnosticResults_
+  commentId: Overload:Elements.Generate.GenerationResult.DiagnosticResults
+  isSpec: "True"
+  fullName: Elements.Generate.GenerationResult.DiagnosticResults
+  nameWithType: GenerationResult.DiagnosticResults
+- uid: Elements.Generate.GenerationResult.FilePath
+  name: FilePath
+  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_FilePath
+  commentId: P:Elements.Generate.GenerationResult.FilePath
+  fullName: Elements.Generate.GenerationResult.FilePath
+  nameWithType: GenerationResult.FilePath
+- uid: Elements.Generate.GenerationResult.FilePath*
+  name: FilePath
+  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_FilePath_
+  commentId: Overload:Elements.Generate.GenerationResult.FilePath
+  isSpec: "True"
+  fullName: Elements.Generate.GenerationResult.FilePath
+  nameWithType: GenerationResult.FilePath
+- uid: Elements.Generate.GenerationResult.Success
+  name: Success
+  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_Success
+  commentId: P:Elements.Generate.GenerationResult.Success
+  fullName: Elements.Generate.GenerationResult.Success
+  nameWithType: GenerationResult.Success
+- uid: Elements.Generate.GenerationResult.Success*
+  name: Success
+  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_Success_
+  commentId: Overload:Elements.Generate.GenerationResult.Success
+  isSpec: "True"
+  fullName: Elements.Generate.GenerationResult.Success
+  nameWithType: GenerationResult.Success
 - uid: Elements.Generate.TypeGenerator
   name: TypeGenerator
   href: api/Elements.Generate.TypeGenerator.html
   commentId: T:Elements.Generate.TypeGenerator
   fullName: Elements.Generate.TypeGenerator
   nameWithType: TypeGenerator
+- uid: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema,System.String,System.String[]@,System.Boolean)
+  name: GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_NJsonSchema_JsonSchema_System_String_System_String____System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema,System.String,System.String[]@,System.Boolean)
+  name.vb: GenerateAndSaveDllForSchema(JsonSchema, String, ByRef String(), Boolean)
+  fullName: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema, System.String, out System.String[], System.Boolean)
+  fullName.vb: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema, System.String, ByRef System.String(), System.Boolean)
+  nameWithType: TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)
+  nameWithType.vb: TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, String, ByRef String(), Boolean)
+- uid: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema*
+  name: GenerateAndSaveDllForSchema
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema
+  nameWithType: TypeGenerator.GenerateAndSaveDllForSchema
 - uid: Elements.Generate.TypeGenerator.GenerateElementTypesAsync(System.String)
   name: GenerateElementTypesAsync(String)
   href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypesAsync_System_String_
@@ -956,6 +1062,61 @@ references:
   isSpec: "True"
   fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync
   nameWithType: TypeGenerator.GenerateUserElementTypeFromUriAsync
+- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[],System.String,System.Boolean)
+  name: GenerateUserElementTypesFromUrisAsync(String[], String, Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypesFromUrisAsync_System_String___System_String_System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[],System.String,System.Boolean)
+  name.vb: GenerateUserElementTypesFromUrisAsync(String(), String, Boolean)
+  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[], System.String, System.Boolean)
+  fullName.vb: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String(), System.String, System.Boolean)
+  nameWithType: TypeGenerator.GenerateUserElementTypesFromUrisAsync(String[], String, Boolean)
+  nameWithType.vb: TypeGenerator.GenerateUserElementTypesFromUrisAsync(String(), String, Boolean)
+- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync*
+  name: GenerateUserElementTypesFromUrisAsync
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypesFromUrisAsync_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync
+  nameWithType: TypeGenerator.GenerateUserElementTypesFromUrisAsync
+- uid: Elements.Generate.TypeGenerator.GetLoadedElementTypes(System.Boolean)
+  name: GetLoadedElementTypes(Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GetLoadedElementTypes_System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GetLoadedElementTypes(System.Boolean)
+  fullName: Elements.Generate.TypeGenerator.GetLoadedElementTypes(System.Boolean)
+  nameWithType: TypeGenerator.GetLoadedElementTypes(Boolean)
+- uid: Elements.Generate.TypeGenerator.GetLoadedElementTypes*
+  name: GetLoadedElementTypes
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GetLoadedElementTypes_
+  commentId: Overload:Elements.Generate.TypeGenerator.GetLoadedElementTypes
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GetLoadedElementTypes
+  nameWithType: TypeGenerator.GetLoadedElementTypes
+- uid: Elements.Generate.TypeGenerator.GetSchemaAsync(System.String)
+  name: GetSchemaAsync(String)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GetSchemaAsync_System_String_
+  commentId: M:Elements.Generate.TypeGenerator.GetSchemaAsync(System.String)
+  fullName: Elements.Generate.TypeGenerator.GetSchemaAsync(System.String)
+  nameWithType: TypeGenerator.GetSchemaAsync(String)
+- uid: Elements.Generate.TypeGenerator.GetSchemaAsync*
+  name: GetSchemaAsync
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GetSchemaAsync_
+  commentId: Overload:Elements.Generate.TypeGenerator.GetSchemaAsync
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GetSchemaAsync
+  nameWithType: TypeGenerator.GetSchemaAsync
+- uid: Elements.Generate.TypeGenerator.TemplatesPath
+  name: TemplatesPath
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_TemplatesPath
+  commentId: P:Elements.Generate.TypeGenerator.TemplatesPath
+  fullName: Elements.Generate.TypeGenerator.TemplatesPath
+  nameWithType: TypeGenerator.TemplatesPath
+- uid: Elements.Generate.TypeGenerator.TemplatesPath*
+  name: TemplatesPath
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_TemplatesPath_
+  commentId: Overload:Elements.Generate.TypeGenerator.TemplatesPath
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.TemplatesPath
+  nameWithType: TypeGenerator.TemplatesPath
 - uid: Elements.GeoJSON
   name: Elements.GeoJSON
   href: api/Elements.GeoJSON.html
@@ -3178,15 +3339,24 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.GetHashCode
   nameWithType: Line.GetHashCode
-- uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
-  name: Intersects(Plane, out Vector3)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)
-  name.vb: Intersects(Plane, ByRef Vector3)
-  fullName: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane, out Elements.Geometry.Vector3)
-  fullName.vb: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3)
-  nameWithType: Line.Intersects(Plane, out Vector3)
-  nameWithType.vb: Line.Intersects(Plane, ByRef Vector3)
+- uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean)
+  name: Intersects(Line, out Vector3, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_
+  commentId: M:Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean)
+  name.vb: Intersects(Line, ByRef Vector3, Boolean)
+  fullName: Elements.Geometry.Line.Intersects(Elements.Geometry.Line, out Elements.Geometry.Vector3, System.Boolean)
+  fullName.vb: Elements.Geometry.Line.Intersects(Elements.Geometry.Line, ByRef Elements.Geometry.Vector3, System.Boolean)
+  nameWithType: Line.Intersects(Line, out Vector3, Boolean)
+  nameWithType.vb: Line.Intersects(Line, ByRef Vector3, Boolean)
+- uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Boolean)
+  name: Intersects(Plane, out Vector3, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__System_Boolean_
+  commentId: M:Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Boolean)
+  name.vb: Intersects(Plane, ByRef Vector3, Boolean)
+  fullName: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane, out Elements.Geometry.Vector3, System.Boolean)
+  fullName.vb: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3, System.Boolean)
+  nameWithType: Line.Intersects(Plane, out Vector3, Boolean)
+  nameWithType.vb: Line.Intersects(Plane, ByRef Vector3, Boolean)
 - uid: Elements.Geometry.Line.Intersects*
   name: Intersects
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_
@@ -3932,6 +4102,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Plane.Plane
   nameWithType: Plane.Plane
+- uid: Elements.Geometry.Plane.ClosestPoint(Elements.Geometry.Vector3)
+  name: ClosestPoint(Vector3)
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_ClosestPoint_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Plane.ClosestPoint(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Plane.ClosestPoint(Elements.Geometry.Vector3)
+  nameWithType: Plane.ClosestPoint(Vector3)
+- uid: Elements.Geometry.Plane.ClosestPoint*
+  name: ClosestPoint
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_ClosestPoint_
+  commentId: Overload:Elements.Geometry.Plane.ClosestPoint
+  isSpec: "True"
+  fullName: Elements.Geometry.Plane.ClosestPoint
+  nameWithType: Plane.ClosestPoint
 - uid: Elements.Geometry.Plane.Equals(Elements.Geometry.Plane)
   name: Equals(Plane)
   href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_Equals_Elements_Geometry_Plane_
@@ -3971,6 +4154,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Plane.Origin
   nameWithType: Plane.Origin
+- uid: Elements.Geometry.Plane.SignedDistanceTo(Elements.Geometry.Vector3)
+  name: SignedDistanceTo(Vector3)
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_SignedDistanceTo_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Plane.SignedDistanceTo(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Plane.SignedDistanceTo(Elements.Geometry.Vector3)
+  nameWithType: Plane.SignedDistanceTo(Vector3)
+- uid: Elements.Geometry.Plane.SignedDistanceTo*
+  name: SignedDistanceTo
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane_SignedDistanceTo_
+  commentId: Overload:Elements.Geometry.Plane.SignedDistanceTo
+  isSpec: "True"
+  fullName: Elements.Geometry.Plane.SignedDistanceTo
+  nameWithType: Plane.SignedDistanceTo
 - uid: Elements.Geometry.Polygon
   name: Polygon
   href: api/Elements.Geometry.Polygon.html
@@ -10446,6 +10642,22 @@ references:
   commentId: T:Elements.Geometry.Vector3Extensions
   fullName: Elements.Geometry.Vector3Extensions
   nameWithType: Vector3Extensions
+- uid: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList{Elements.Geometry.Vector3})
+  name: AreCollinear(IList<Vector3>)
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCollinear_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList{Elements.Geometry.Vector3})
+  name.vb: AreCollinear(IList(Of Vector3))
+  fullName: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
+  nameWithType: Vector3Extensions.AreCollinear(IList<Vector3>)
+  nameWithType.vb: Vector3Extensions.AreCollinear(IList(Of Vector3))
+- uid: Elements.Geometry.Vector3Extensions.AreCollinear*
+  name: AreCollinear
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCollinear_
+  commentId: Overload:Elements.Geometry.Vector3Extensions.AreCollinear
+  isSpec: "True"
+  fullName: Elements.Geometry.Vector3Extensions.AreCollinear
+  nameWithType: Vector3Extensions.AreCollinear
 - uid: Elements.Geometry.Vector3Extensions.AreCoplanar(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: AreCoplanar(IList<Vector3>)
   href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCoplanar_System_Collections_Generic_IList_Elements_Geometry_Vector3__
@@ -11636,11 +11848,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
   nameWithType: JsonInheritanceConverter.Elements
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*
   name: ReadJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_
@@ -11648,12 +11860,25 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson
   nameWithType: JsonInheritanceConverter.ReadJson
+- uid: Elements.Serialization.JSON.JsonInheritanceConverter.RefreshUserElementTypeCache
+  name: RefreshUserElementTypeCache()
+  href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_RefreshUserElementTypeCache
+  commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.RefreshUserElementTypeCache
+  fullName: Elements.Serialization.JSON.JsonInheritanceConverter.RefreshUserElementTypeCache()
+  nameWithType: JsonInheritanceConverter.RefreshUserElementTypeCache()
+- uid: Elements.Serialization.JSON.JsonInheritanceConverter.RefreshUserElementTypeCache*
+  name: RefreshUserElementTypeCache
+  href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_RefreshUserElementTypeCache_
+  commentId: Overload:Elements.Serialization.JSON.JsonInheritanceConverter.RefreshUserElementTypeCache
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.JsonInheritanceConverter.RefreshUserElementTypeCache
+  nameWithType: JsonInheritanceConverter.RefreshUserElementTypeCache
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*
   name: WriteJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_
@@ -11836,6 +12061,12 @@ references:
   commentId: M:Elements.Spatial.Grid1d.#ctor(Elements.Geometry.Curve)
   fullName: Elements.Spatial.Grid1d.Grid1d(Elements.Geometry.Curve)
   nameWithType: Grid1d.Grid1d(Curve)
+- uid: Elements.Spatial.Grid1d.#ctor(Elements.Spatial.Grid1d)
+  name: Grid1d(Grid1d)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d__ctor_Elements_Spatial_Grid1d_
+  commentId: M:Elements.Spatial.Grid1d.#ctor(Elements.Spatial.Grid1d)
+  fullName: Elements.Spatial.Grid1d.Grid1d(Elements.Spatial.Grid1d)
+  nameWithType: Grid1d.Grid1d(Grid1d)
 - uid: Elements.Spatial.Grid1d.#ctor(System.Double)
   name: Grid1d(Double)
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d__ctor_System_Double_
@@ -12004,12 +12235,6 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.GetCellSeparators
   nameWithType: Grid1d.GetCellSeparators
-- uid: Elements.Spatial.Grid1d.Grid1dEventHandler
-  name: Grid1d.Grid1dEventHandler
-  href: api/Elements.Spatial.Grid1d.Grid1dEventHandler.html
-  commentId: T:Elements.Spatial.Grid1d.Grid1dEventHandler
-  fullName: Elements.Spatial.Grid1d.Grid1dEventHandler
-  nameWithType: Grid1d.Grid1dEventHandler
 - uid: Elements.Spatial.Grid1d.IsSingleCell
   name: IsSingleCell
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_IsSingleCell
@@ -12039,19 +12264,6 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.Item
   nameWithType: Grid1d.Item
-- uid: Elements.Spatial.Grid1d.OnTopLevelGridChange
-  name: OnTopLevelGridChange()
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_OnTopLevelGridChange
-  commentId: M:Elements.Spatial.Grid1d.OnTopLevelGridChange
-  fullName: Elements.Spatial.Grid1d.OnTopLevelGridChange()
-  nameWithType: Grid1d.OnTopLevelGridChange()
-- uid: Elements.Spatial.Grid1d.OnTopLevelGridChange*
-  name: OnTopLevelGridChange
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_OnTopLevelGridChange_
-  commentId: Overload:Elements.Spatial.Grid1d.OnTopLevelGridChange
-  isSpec: "True"
-  fullName: Elements.Spatial.Grid1d.OnTopLevelGridChange
-  nameWithType: Grid1d.OnTopLevelGridChange
 - uid: Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean)
   name: SplitAtOffset(Double, Boolean)
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffset_System_Double_System_Boolean_
@@ -12065,6 +12277,22 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.SplitAtOffset
   nameWithType: Grid1d.SplitAtOffset
+- uid: Elements.Spatial.Grid1d.SplitAtOffsets(System.Collections.Generic.IEnumerable{System.Double},System.Boolean)
+  name: SplitAtOffsets(IEnumerable<Double>, Boolean)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffsets_System_Collections_Generic_IEnumerable_System_Double__System_Boolean_
+  commentId: M:Elements.Spatial.Grid1d.SplitAtOffsets(System.Collections.Generic.IEnumerable{System.Double},System.Boolean)
+  name.vb: SplitAtOffsets(IEnumerable(Of Double), Boolean)
+  fullName: Elements.Spatial.Grid1d.SplitAtOffsets(System.Collections.Generic.IEnumerable<System.Double>, System.Boolean)
+  fullName.vb: Elements.Spatial.Grid1d.SplitAtOffsets(System.Collections.Generic.IEnumerable(Of System.Double), System.Boolean)
+  nameWithType: Grid1d.SplitAtOffsets(IEnumerable<Double>, Boolean)
+  nameWithType.vb: Grid1d.SplitAtOffsets(IEnumerable(Of Double), Boolean)
+- uid: Elements.Spatial.Grid1d.SplitAtOffsets*
+  name: SplitAtOffsets
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffsets_
+  commentId: Overload:Elements.Spatial.Grid1d.SplitAtOffsets
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.SplitAtOffsets
+  nameWithType: Grid1d.SplitAtOffsets
 - uid: Elements.Spatial.Grid1d.SplitAtParameter(System.Double)
   name: SplitAtParameter(Double)
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtParameter_System_Double_
@@ -12123,12 +12351,6 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.SplitAtPositions
   nameWithType: Grid1d.SplitAtPositions
-- uid: Elements.Spatial.Grid1d.TopLevelGridChange
-  name: TopLevelGridChange
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_TopLevelGridChange
-  commentId: E:Elements.Spatial.Grid1d.TopLevelGridChange
-  fullName: Elements.Spatial.Grid1d.TopLevelGridChange
-  nameWithType: Grid1d.TopLevelGridChange
 - uid: Elements.Spatial.Grid1d.Type
   name: Type
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Type
@@ -12160,6 +12382,12 @@ references:
   commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Transform)
   fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Polygon, Elements.Geometry.Transform)
   nameWithType: Grid2d.Grid2d(Polygon, Transform)
+- uid: Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d)
+  name: Grid2d(Grid2d)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid2d_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d)
+  fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Spatial.Grid2d)
+  nameWithType: Grid2d.Grid2d(Grid2d)
 - uid: Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)
   name: Grid2d(IList<Polygon>, Transform)
   href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_

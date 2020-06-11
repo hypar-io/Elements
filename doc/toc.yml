@@ -1,5 +1,14 @@
 - name: Getting Started
   href: index.md
+- name: Making Hypar Functions
+  href: Functions.md
+  items:
+    - name: C#
+      href: C-Sharp.md
+    - name: Excel
+      href: Excel.md
+    - name: Grasshopper
+      href: Grasshopper.md
 - name: Types
   href: Types.md
 - name: Elements
