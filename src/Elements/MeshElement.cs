@@ -68,7 +68,9 @@ namespace Elements
         /// Tessellate the element.
         /// </summary>
         /// <param name="mesh"></param>
-        public void Tessellate(ref Mesh mesh)
+        /// <param name="transform"></param>
+        /// <param name="color"></param>
+        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
         {
             mesh = this._mesh;
         }

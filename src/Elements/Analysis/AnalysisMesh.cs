@@ -84,20 +84,22 @@ namespace Elements.Analysis
         /// Tessellate the analysis mesh.
         /// </summary>
         /// <param name="mesh"></param>
-        public void Tessellate(ref Mesh mesh)
+        /// <param name="transform"></param>
+        /// <param name="color"></param>
+        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
         {
             var span = this._max - this._min;
 
             foreach (var result in this._results)
             {
                 var center = result.cell.Center();
-                var color = this.Perimeter.Contains(center) ? this.ColorScale.GetColorForValue((result.value - this._min) / span) : Colors.White;
+                var vColor = this.Perimeter.Contains(center) ? this.ColorScale.GetColorForValue((result.value - this._min) / span) : Colors.White;
                 var min = result.cell.Min;
                 var max = result.cell.Max;
-                var v1 = mesh.AddVertex(min, color: color);
-                var v2 = mesh.AddVertex(new Vector3(max.X, min.Y), color: color);
-                var v3 = mesh.AddVertex(max, color: color);
-                var v4 = mesh.AddVertex(new Vector3(min.X, max.Y), color: color);
+                var v1 = mesh.AddVertex(min, color: vColor);
+                var v2 = mesh.AddVertex(new Vector3(max.X, min.Y), color: vColor);
+                var v3 = mesh.AddVertex(max, color: vColor);
+                var v4 = mesh.AddVertex(new Vector3(min.X, max.Y), color: vColor);
                 mesh.AddTriangle(v1, v2, v3);
                 mesh.AddTriangle(v3, v4, v1);
             }
