@@ -15,9 +15,9 @@
     </Reference>
   </ItemGroup>
 
-<Target Name="CopyAddin" AfterTargets="AfterBuild">
-  <Copy SourceFiles="Hypar.Revit.addin" DestinationFolder="C:\ProgramData\Autodesk\Revit\Addins\2020" />
-</Target>
+  <Target Name="CopyAddin" AfterTargets="AfterBuild">
+    <Copy SourceFiles="Hypar.Revit.addin" DestinationFolder="C:\ProgramData\Autodesk\Revit\Addins\2020" />
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
