@@ -18,7 +18,7 @@ namespace Hypar.Revit
         private static HubConnection hyparConnection;
         public static Workflow CurrentWorkflow;
         public static Dictionary<string, ElementId> FunctionInstanceGroupCache = new Dictionary<string, ElementId>();
-
+        public static bool IsSyncing = false;
         public static List<string> GroupCache = new List<string>();
 
         public Result OnShutdown(UIControlledApplication application)
@@ -69,9 +69,6 @@ namespace Hypar.Revit
 
         public void Start()
         {
-            // var workflowEvent = new WorkflowUpdatedEvent(HyparLogger);
-            // var executionEvent = new ExecutionRequestedEvent(HyparLogger);
-
             HyparLogger.Information("Creating hypar connection...");
             hyparConnection = new HubConnectionBuilder()
                     .WithUrl("http://localhost:5000/functionHub")
@@ -81,18 +78,24 @@ namespace Hypar.Revit
             {
                 HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
                 CurrentWorkflow = workflow;
-                // workflowEvent.Raise(workflow);
             });
 
             HyparLogger.Information("Starting hypar connection...");
             Task.Run(async () => await hyparConnection.StartAsync()).Wait();
         }
 
+        public void Stop()
+        {
+            if (hyparConnection != null)
+            {
+                Task.Run(async () => await hyparConnection.StopAsync()).Wait();
+            }
+        }
+
         System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender,
                                                                  ResolveEventArgs args)
         {
             var dllName = args.Name.Split(',')[0];
-            // HyparLogger.Debug("Resolving {Name}", dllName);
             string execAsmPath = Path.GetDirectoryName(
                     System.Reflection.Assembly
                     .GetExecutingAssembly().Location);

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
   <AddIn Type="Command">
-    <Name>HyparRevit</Name>
-    <FullClassName>Hypar.Revit.HyparHubCommand</FullClassName>
-    <Description>"Sync with a Hypar workflow."</Description>
+    <Text>Hypar Hub Start</Text>
+    <FullClassName>Hypar.Revit.HyparHubStartCommand</FullClassName>
+    <Description>"Start the Hypar Hub sync."</Description>
     <Assembly>C:/Users/Ian/Documents/GitHub/Hypar-1/Elements/src/Revit/HyparRevit/bin/Debug/netstandard2.0/publish/Hypar.Revit.dll</Assembly>
     <AddInId>9a956586-8d1c-4cd1-a487-61990d3769fa</AddInId>
+    <VendorDescription>"Hypar Inc., hypar.io"</VendorDescription>
+    <VendorId>HYPR</VendorId>
+  </AddIn>
+  <AddIn Type="Command">
+    <Text>Hypar Hub Stop</Text>
+    <FullClassName>Hypar.Revit.HyparHubStopCommand</FullClassName>
+    <Description>"Stop the Hypar Hub sync."</Description>
+    <Assembly>C:/Users/Ian/Documents/GitHub/Hypar-1/Elements/src/Revit/HyparRevit/bin/Debug/netstandard2.0/publish/Hypar.Revit.dll</Assembly>
+    <AddInId>74a19e88-1577-41f6-b407-90600500b736</AddInId>
     <VendorDescription>"Hypar Inc., hypar.io"</VendorDescription>
     <VendorId>HYPR</VendorId>
   </AddIn>

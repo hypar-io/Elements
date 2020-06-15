@@ -14,7 +14,6 @@ namespace Hypar.Revit
     public class HyparDirectContextServer : IDirectContext3DServer
     {
         private Guid _serverId = new Guid("d8a24d18-1bf6-466c-b55e-083e8ac4439e");
-        // private string _appId = "502fe383-2648-4e98-adf8-5e6047f9dc34";
 
         private ILogger _logger;
 
@@ -76,16 +75,18 @@ namespace Hypar.Revit
 
         public void RenderScene(View dBView, DisplayStyle displayStyle)
         {
+            if (HyparHubApp.IsSyncing == false)
+            {
+                return;
+            }
+
             if (HyparHubApp.CurrentWorkflow == null)
             {
-                // _logger.Debug("The current workflow on the app is null. No draw.");
                 return;
             }
 
             if (HyparHubApp.CurrentWorkflow.Equals(_lastDrawnWorkflow))
             {
-                // _logger.Debug("No change to the workflow. No draw.");
-
                 foreach (var renderData in _renderDataCache.Values)
                 {
                     DrawContext.FlushBuffer(renderData.VertexBuffer,
