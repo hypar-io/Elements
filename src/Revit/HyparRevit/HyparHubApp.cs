@@ -2,6 +2,7 @@
 using System.IO;
 using Serilog;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Hypar.Model;
@@ -75,6 +76,15 @@ namespace Hypar.Revit
             {
                 HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
                 CurrentWorkflow = workflow;
+
+                var depPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "workflows", workflow.Id, $"{workflow.Id}.dll");
+                if(File.Exists(depPath))
+                {
+                    var asmBytes = File.ReadAllBytes(depPath);
+                    var depAsm = AppDomain.CurrentDomain.Load(asmBytes);
+                    HyparLogger.Information("Loading the dependencies assembly at {DepPath}.", depPath);
+                    Assembly.LoadFile(depPath);
+                }
             });
 
             HyparLogger.Information("Starting hypar connection...");
@@ -98,6 +108,7 @@ namespace Hypar.Revit
                     .GetExecutingAssembly().Location);
 
             var filename = Path.Combine(execAsmPath, $"{dllName}.dll");
+            HyparLogger.Information("Resolving {AsmName}...", args.Name);
             if (File.Exists(filename))
             {
                 return System.Reflection.Assembly.LoadFrom(filename);
