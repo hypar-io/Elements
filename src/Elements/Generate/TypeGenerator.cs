@@ -181,8 +181,10 @@ namespace Elements.Generate
         /// Generate an in-memory assembly containing all the types generated from the supplied uris.
         /// </summary>
         /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
-        /// <returns>An assembly containing the generated types or null if no Assembly could be generated.</returns>
-        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)
+        /// <param name="dllPath">The path at which the dll will be written. If this is not null, the assembly will be written but not loaded.</param>
+        /// <param name="frameworkBuild">If true, the assembly will be built against the .NET framework, otherwise it will be built against .NET core.</param>
+        /// <returns>A CompilationResult containing information about the compilation.</returns>
+        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris, string dllPath = null, bool frameworkBuild = false)
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
@@ -213,14 +215,28 @@ namespace Elements.Generate
                 }
             }
 
-            var compilation = GenerateCompilation(code);
-            var assembly = EmitAndLoad(compilation, out string[] diagnosticResults);
-            return new CompilationResult
+            var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
+            Assembly assembly = null;
+            string[] diagnosticResults = null;
+            if (dllPath != null)
             {
-                Success = true,
-                DiagnosticResults = diagnosticResults,
-                Assembly = assembly
-            };
+                var success = EmitAndSave(compilation, dllPath, out diagnosticResults);
+                return new CompilationResult
+                {
+                    Success = success,
+                    DiagnosticResults = diagnosticResults,
+                };
+            }
+            else
+            {
+                assembly = EmitAndLoad(compilation, out diagnosticResults);
+                return new CompilationResult
+                {
+                    Success = true,
+                    DiagnosticResults = diagnosticResults,
+                    Assembly = assembly
+                };
+            }
         }
 
 
@@ -241,7 +257,7 @@ namespace Elements.Generate
                     Directory.CreateDirectory(outDir);
                 }
 
-               tasks.Add(GenerateUserElementTypeFromUriAsync(uri, outDir));
+                tasks.Add(GenerateUserElementTypeFromUriAsync(uri, outDir));
             }
             var allResults = await Task.WhenAll(tasks);
             return allResults;
@@ -445,7 +461,7 @@ namespace Elements.Generate
 
             }
 
-            var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            var assemblyPath = frameworkBuild ? @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" : Path.GetDirectoryName(typeof(object).Assembly.Location);
             var elementsAssemblyPath = Path.GetDirectoryName(typeof(Model).Assembly.Location);
             var newtonSoftPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
 
@@ -493,7 +509,7 @@ namespace Elements.Generate
         {
             var emitResult = compilation.Emit(outputPath);
             diagnosticMessages = emitResult.Diagnostics.Select(d => d.ToString()).ToArray();
-            if (!emitResult.Success)
+            if (emitResult.Success == false)
             {
                 if (File.Exists(outputPath))
                 {
