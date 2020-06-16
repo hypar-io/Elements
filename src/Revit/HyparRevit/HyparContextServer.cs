@@ -5,7 +5,6 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExternalService;
-using Elements.Geometry;
 using Hypar.Model;
 using Serilog;
 
@@ -308,10 +307,11 @@ namespace Hypar.Revit
         {
             return false;
         }
-
-
     }
 
+    /// <summary>
+    /// An object which stores render buffer data.
+    /// </summary>
     public class RenderData
     {
         public VertexBuffer VertexBuffer { get; set; }

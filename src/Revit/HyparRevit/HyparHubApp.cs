@@ -4,29 +4,26 @@ using Serilog;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
-using System.Collections.Generic;
 using Hypar.Model;
-using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.ExternalService;
 
 namespace Hypar.Revit
 {
     public class HyparHubApp : IExternalApplication
     {
-        public static HyparHubApp HyparApp;
-        public static ILogger HyparLogger;
-        private static HubConnection hyparConnection;
-        public static Workflow CurrentWorkflow;
-        public static Dictionary<string, ElementId> FunctionInstanceGroupCache = new Dictionary<string, ElementId>();
-        public static bool IsSyncing = false;
-        public static List<string> GroupCache = new List<string>();
+        private static HubConnection _hyparConnection;
+
+        public static HyparHubApp HyparApp { get; private set; }
+        public static ILogger HyparLogger { get; private set; }
+        public static Workflow CurrentWorkflow { get; private set; }
+        public static bool IsSyncing { get; set; }
 
         public Result OnShutdown(UIControlledApplication application)
         {
-            if (hyparConnection != null)
+            if (_hyparConnection != null)
             {
                 HyparLogger.Debug("Stopping the hypar hub application...");
-                Task.Run(async () => await hyparConnection.StopAsync()).Wait();
+                Task.Run(async () => await _hyparConnection.StopAsync()).Wait();
                 HyparLogger.Debug("Hypar hub application stopped.");
             }
             return Result.Succeeded;
@@ -37,7 +34,7 @@ namespace Hypar.Revit
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             HyparApp = this;
-
+            IsSyncing = false;
             HyparLogger = new LoggerConfiguration()
                             .MinimumLevel.Debug()
                             .WriteTo.File(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "hypar-revit.log"))
@@ -70,25 +67,25 @@ namespace Hypar.Revit
         public void Start()
         {
             HyparLogger.Information("Creating hypar connection...");
-            hyparConnection = new HubConnectionBuilder()
+            _hyparConnection = new HubConnectionBuilder()
                     .WithUrl("http://localhost:5000/functionHub")
                     .Build();
 
-            hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
+            _hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
             {
                 HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
                 CurrentWorkflow = workflow;
             });
 
             HyparLogger.Information("Starting hypar connection...");
-            Task.Run(async () => await hyparConnection.StartAsync()).Wait();
+            Task.Run(async () => await _hyparConnection.StartAsync()).Wait();
         }
 
         public void Stop()
         {
-            if (hyparConnection != null)
+            if (_hyparConnection != null)
             {
-                Task.Run(async () => await hyparConnection.StopAsync()).Wait();
+                Task.Run(async () => await _hyparConnection.StopAsync()).Wait();
             }
         }
 
