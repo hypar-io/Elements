@@ -54,7 +54,7 @@ namespace Elements.Generate
         // TODO(Ian): This type name generator is only required because njsonschema
         // calls dependencies 'Json2', 'Json3', etc. We use their title to label
         // them and then they get excluded by that title. This is fragile because
-        // if a user gives their schema a title that is different than its id, 
+        // if a user gives their schema a title that is different than its id,
         // this will break. We need to figure out why njson schema has this bizarre
         // behavior. This behavior does not exist when the schemas are loaded
         // from disk, only when they are referenced by urls.
@@ -110,7 +110,7 @@ namespace Elements.Generate
         private static string _templatesPath;
 
         /// <summary>
-        /// The directory in which to find code templates. Some execution contexts require this to be overriden as the 
+        /// The directory in which to find code templates. Some execution contexts require this to be overriden as the
         /// Executing Assembly is not necessarily in the same place as the templates (e.g. Headless Grasshopper Execution)
         /// </summary>
         public static string TemplatesPath
@@ -133,7 +133,7 @@ namespace Elements.Generate
         /// <param name="outputBaseDir">The base output directory.</param>
         /// <param name="isUserElement">Is the type a user-defined element?</param>
         /// <returns>
-        /// A GenerationResult object containing info about the success or failure of generation, 
+        /// A GenerationResult object containing info about the success or failure of generation,
         /// the file path of the generated code, and any errors that may have occurred during generation.
         /// </returns>
         public static async Task<GenerationResult> GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)
@@ -241,7 +241,7 @@ namespace Elements.Generate
 
 
         /// <summary>
-        /// Generate the core element types as .cs files to the specified output directory. 
+        /// Generate the core element types as .cs files to the specified output directory.
         /// </summary>
         /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
         public static async Task<GenerationResult[]> GenerateElementTypesAsync(string outputBaseDir)
@@ -323,6 +323,7 @@ namespace Elements.Generate
             // base class SolidOperation, or the Import class.
             var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina" };
 
+            DotLiquid.Template.DefaultIsThreadSafe = true;
             var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings()
             {
                 Namespace = ns,
