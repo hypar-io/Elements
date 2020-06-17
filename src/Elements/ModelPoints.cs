@@ -11,14 +11,8 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../test/Elements.Tests/ModelPointsTests.cs?name=example)]
     /// </example>
-    [UserElement]
-    public class ModelPoints: GeometricElement
-    {   
-        /// <summary>
-        /// The locations of the points.
-        /// </summary>
-        public IList<Vector3> Locations { get; set;}
-
+    public partial class ModelPoints
+    {
         /// <summary>
         /// Create a collection of points.
         /// </summary>
@@ -28,7 +22,6 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the model curve.</param>
         /// <param name="name">The name of the model curve.</param>
-        [JsonConstructor]
         public ModelPoints(IList<Vector3> locations = null,
                           Material material = null,
                           Transform transform = null,
