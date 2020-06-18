@@ -808,12 +808,14 @@ namespace Elements.Geometry
         {
             var x = 0.0;
             var y = 0.0;
+            var z = 0.0;
             foreach (var pnt in Vertices)
             {
                 x += pnt.X;
                 y += pnt.Y;
+                z += pnt.Z;
             }
-            return new Vector3(x / Vertices.Count, y / Vertices.Count);
+            return new Vector3(x / Vertices.Count, y / Vertices.Count, z / Vertices.Count);
         }
 
         /// <summary>

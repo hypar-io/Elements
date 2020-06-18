@@ -4,9 +4,46 @@ using System.Linq;
 using Elements.Serialization.glTF;
 using Hypar.Revit;
 using RevitServices.Persistence;
+using Elements;
+using Elements.Generate;
+using Elements.Geometry;
+
+using ADSK = Autodesk.Revit.DB;
+using Autodesk.Revit.DB;
 
 namespace HyparDynamo.Hypar
 {
+    /// <summary>
+    /// Convert a Revit Area into a SpaceBoundary element. This currently only
+    /// stores the perimeter polygon, and no geometric representation, so you will 
+    /// not see it in 3D views in Hypar.
+    /// </summary>
+    /// <param name="area">The area that is meant to be converted to a Hypar SpaceBoundary.</param>
+    public static class SpaceBoundary
+    {
+        public static Elements.Element[] FromArea(Revit.Elements.Element area)
+        {
+            var areaElement = (Autodesk.Revit.DB.Area)area.InternalElement;
+            var doc = DocumentManager.Instance.CurrentDBDocument;
+
+            return Create.SpaceBoundaryFromRevitArea(areaElement, doc);
+        }
+    }
+
+    /// <summary>
+    /// Convert a list of points from Dynamo into a ModelPoints element, with the option 
+    /// to add a tag that will be stored in the elements Name field.
+    /// </summary>
+    /// <param name="Points">The points that will be stored.</param>
+    /// <returns name="Tag">The tag to assign to the model points.</param>
+    public static class ModelPoints
+    {
+        public static Elements.Element FromPoints(List<Autodesk.DesignScript.Geometry.Point> points, string tag = "")
+        {
+            return Create.ModelPointsFromPoints(points.Select(p => new XYZ(p.X, p.Y, p.Z)), tag);
+        }
+    }
+
     public static class Wall
     {
         /// <summary>
@@ -57,11 +94,20 @@ namespace HyparDynamo.Hypar
 
     public static class Column
     {
-        public static string FromRevitColumn(this Revit.Elements.Element column)
+        public static Elements.Column FromRevitColumn(this Revit.Elements.Element column)
         {
-            throw new NotImplementedException("Conversion of Revit columns is not yet supported.");
+            var r_col = (Autodesk.Revit.DB.FamilyInstance)column.InternalElement;
+            try
+            {
+                return Create.ColumnFromRevitColumn(r_col);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
+
     public static class Model
     {
         public static void WriteJson(string filePath, Elements.Model model)
