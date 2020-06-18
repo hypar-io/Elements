@@ -9,6 +9,8 @@
       href: Excel.md
     - name: Grasshopper
       href: Grasshopper.md
+    - name: Hub
+      href: Hub.md
 - name: Types
   href: Types.md
 - name: Elements
