@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Hypar.Model;
 using Autodesk.Revit.DB.ExternalService;
+using System.Collections.Generic;
 
 namespace Hypar.Revit
 {
@@ -16,8 +17,10 @@ namespace Hypar.Revit
 
         public static HyparHubApp HyparApp { get; private set; }
         public static ILogger HyparLogger { get; private set; }
-        public static Workflow CurrentWorkflow { get; private set; }
+        public static Dictionary<string, Workflow> CurrentWorkflows { get; private set; }
         public static bool IsSyncing { get; set; }
+
+        public static bool RequiresRedraw {get; set;}
 
         public Result OnShutdown(UIControlledApplication application)
         {
@@ -35,6 +38,7 @@ namespace Hypar.Revit
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             HyparApp = this;
+            CurrentWorkflows = new Dictionary<string, Workflow>();
             IsSyncing = false;
             HyparLogger = new LoggerConfiguration()
                             .MinimumLevel.Debug()
@@ -74,9 +78,6 @@ namespace Hypar.Revit
 
             _hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
             {
-                HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
-                CurrentWorkflow = workflow;
-
                 var depPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "workflows", workflow.Id, $"{workflow.Id}.dll");
                 if(File.Exists(depPath))
                 {
@@ -85,6 +86,18 @@ namespace Hypar.Revit
                     HyparLogger.Information("Loading the dependencies assembly at {DepPath}.", depPath);
                     Assembly.LoadFile(depPath);
                 }
+
+                HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
+                if(!CurrentWorkflows.ContainsKey(workflow.Id))
+                {
+                    CurrentWorkflows.Add(workflow.Id, workflow);
+                }
+                else
+                {
+                    CurrentWorkflows[workflow.Id] = workflow;
+                }
+
+                RequiresRedraw = true;
             });
 
             HyparLogger.Information("Starting hypar connection...");
