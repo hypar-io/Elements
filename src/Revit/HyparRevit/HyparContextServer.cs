@@ -83,7 +83,7 @@ namespace Hypar.Revit
                 return;
             }
 
-            if(HyparHubApp.RequiresRedraw == false)
+            if (HyparHubApp.RequiresRedraw == false)
             {
                 // Draw what's in the cached buffers.
                 foreach (var renderData in _renderDataCache.Values)
@@ -105,7 +105,7 @@ namespace Hypar.Revit
 
             List<(string Id, string SelectedOptionExecutionId)> executionsToDraw;
 
-            executionsToDraw = HyparHubApp.CurrentWorkflows.Values.SelectMany(w=>w.FunctionInstances.Select(fi => (fi.Id, fi.SelectedOptionExecutionId)))
+            executionsToDraw = HyparHubApp.CurrentWorkflows.Values.SelectMany(w => w.FunctionInstances.Select(fi => (fi.Id, fi.SelectedOptionExecutionId)))
                 .Where(fi => fi.SelectedOptionExecutionId != null)
                 .ToList();
 
@@ -117,22 +117,22 @@ namespace Hypar.Revit
             }
 
             _outline = new Outline(new XYZ(), new XYZ());
-            
+
             // TODO: This is doing way too much drawing!
             // We should be able to only update render data 
             // for executions which are different.
-            foreach(var workflow in HyparHubApp.CurrentWorkflows.Values)
+            foreach (var workflow in HyparHubApp.CurrentWorkflows.Values)
             {
                 foreach (var e in executionsToDraw)
                 {
                     var renderData = DrawExecution(_logger, workflow.Id, e.Id, _outline);
-                    if(renderData != null)
+                    if (renderData != null)
                     {
                         _renderDataCache.Add(e.Id, renderData);
                     }
                 }
             }
-        
+
             HyparHubApp.RequiresRedraw = false;
         }
 
@@ -152,10 +152,6 @@ namespace Hypar.Revit
             {
                 logger.Debug("{Error}", error);
             }
-
-            // var geoms = DrawContext.IsTransparentPass() ?
-            //     model.AllElementsOfType<Elements.GeometricElement>().Where(geom => geom.Material.Color.Alpha > 0.0) :
-            //     model.AllElementsOfType<Elements.GeometricElement>();
 
             var geoms = model.AllElementsOfType<Elements.GeometricElement>();
 
@@ -201,7 +197,7 @@ namespace Hypar.Revit
             var min = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
             var max = new XYZ(double.MinValue, double.MinValue, double.MinValue);
 
-            var numVertices = mesh.Triangles.Count * 3; //  mesh.Vertices.Count;
+            var numVertices = mesh.Triangles.Count * 3;
             var numPrimitives = mesh.Triangles.Count;
             var pType = PrimitiveType.TriangleList;
             var numIndices = GetPrimitiveSize(pType) * numPrimitives;
