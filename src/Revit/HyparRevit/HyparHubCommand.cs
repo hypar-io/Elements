@@ -10,7 +10,11 @@ namespace Hypar.Revit
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            HyparHubApp.HyparApp.Start();
+            HyparHubApp.HyparApp.Start(commandData.Application.ActiveUIDocument);
+            commandData.Application.ViewActivated += (sender, args) =>
+            {
+                HyparHubApp.HyparApp.RefreshView(commandData.Application.ActiveUIDocument);
+            };
             HyparHubApp.IsSyncing = true;
             return Result.Succeeded;
         }

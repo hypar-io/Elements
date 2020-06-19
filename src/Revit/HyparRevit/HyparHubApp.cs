@@ -20,7 +20,7 @@ namespace Hypar.Revit
         public static Dictionary<string, Workflow> CurrentWorkflows { get; private set; }
         public static bool IsSyncing { get; set; }
 
-        public static bool RequiresRedraw {get; set;}
+        public static bool RequiresRedraw { get; set; }
 
         public Result OnShutdown(UIControlledApplication application)
         {
@@ -69,7 +69,7 @@ namespace Hypar.Revit
             }
         }
 
-        public void Start()
+        public void Start(UIDocument uIDocument)
         {
             HyparLogger.Information("Creating hypar connection...");
             _hyparConnection = new HubConnectionBuilder()
@@ -79,7 +79,7 @@ namespace Hypar.Revit
             _hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
             {
                 var depPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "workflows", workflow.Id, $"{workflow.Id}.dll");
-                if(File.Exists(depPath))
+                if (File.Exists(depPath))
                 {
                     var asmBytes = File.ReadAllBytes(depPath);
                     var depAsm = AppDomain.CurrentDomain.Load(asmBytes);
@@ -88,7 +88,7 @@ namespace Hypar.Revit
                 }
 
                 HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
-                if(!CurrentWorkflows.ContainsKey(workflow.Id))
+                if (!CurrentWorkflows.ContainsKey(workflow.Id))
                 {
                     CurrentWorkflows.Add(workflow.Id, workflow);
                 }
@@ -98,6 +98,8 @@ namespace Hypar.Revit
                 }
 
                 RequiresRedraw = true;
+
+                uIDocument.RefreshActiveView();
             });
 
             HyparLogger.Information("Starting hypar connection...");
@@ -110,6 +112,12 @@ namespace Hypar.Revit
             {
                 Task.Run(async () => await _hyparConnection.StopAsync()).Wait();
             }
+        }
+
+        public void RefreshView(UIDocument uiDocument)
+        {
+            RequiresRedraw = true;
+            uiDocument.RefreshActiveView();
         }
 
         System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender,
