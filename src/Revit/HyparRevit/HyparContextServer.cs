@@ -101,11 +101,7 @@ namespace Hypar.Revit
                 return;
             }
 
-            _renderDataCache.Clear();
-
-            List<(string Id, string SelectedOptionExecutionId)> executionsToDraw;
-
-            executionsToDraw = HyparHubApp.CurrentWorkflows.Values.SelectMany(w => w.FunctionInstances.Select(fi => (fi.Id, fi.SelectedOptionExecutionId)))
+            var executionsToDraw = HyparHubApp.CurrentWorkflows.Values.SelectMany(w => w.FunctionInstances.Select(fi => (fi.Id, fi.SelectedOptionExecutionId)))
                 .Where(fi => fi.SelectedOptionExecutionId != null)
                 .ToList();
 
@@ -121,14 +117,20 @@ namespace Hypar.Revit
             // TODO: This is doing way too much drawing!
             // We should be able to only update render data 
             // for executions which are different.
+            _renderDataCache.Clear();
             foreach (var workflow in HyparHubApp.CurrentWorkflows.Values)
             {
                 foreach (var e in executionsToDraw)
                 {
-                    var renderData = DrawExecution(_logger, workflow.Id, e.Id, _outline);
-                    if (renderData != null)
+                    var renderDatas = DrawExecution(_logger, workflow.Id, e.Id, _outline);
+                    if (renderDatas != null && renderDatas.Count > 0)
                     {
-                        _renderDataCache.Add(e.Id, renderData);
+                        for (var i = 0; i < renderDatas.Count; i++)
+                        {
+                            var renderData = renderDatas[i];
+                            _renderDataCache.Add($"{e.Id}_{i}", renderData);
+                        }
+
                     }
                 }
             }
@@ -136,7 +138,7 @@ namespace Hypar.Revit
             HyparHubApp.RequiresRedraw = false;
         }
 
-        private static RenderData DrawExecution(ILogger logger, string workflowId, string executionId, Outline outline)
+        private static List<RenderData> DrawExecution(ILogger logger, string workflowId, string executionId, Outline outline)
         {
             // Read the workflow from disk
             var execPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), $".hypar/workflows/{workflowId}/{executionId}/model.json");
@@ -163,9 +165,15 @@ namespace Hypar.Revit
                 return null;
             }
 
-            var mesh = new Elements.Geometry.Mesh();
-            mesh.ComputeNormals();
+            var meshes = new List<Elements.Geometry.Mesh>();
 
+            // Draw the meshes in batches. Arbitrarily large meshes
+            // will overun the max value of ushorts causing data
+            // not to show up.
+            var meshBatchSize = 500;
+            var mesh = new Elements.Geometry.Mesh();
+
+            var count = 0;
             foreach (var geom in geoms)
             {
                 if (geom.Representation == null || geom.Representation.SolidOperations.Count() == 0)
@@ -177,6 +185,15 @@ namespace Hypar.Revit
                 foreach (var solidOp in geom.Representation.SolidOperations)
                 {
                     solidOp.Solid.Tessellate(ref mesh, geom.Transform, geom.Material.Color);
+                }
+
+                count++;
+
+                if (count > meshBatchSize)
+                {
+                    meshes.Add(mesh);
+                    mesh = new Elements.Geometry.Mesh();
+                    count = 0;
                 }
             }
 
@@ -192,8 +209,30 @@ namespace Hypar.Revit
                 {
                     solidOp.Solid.Tessellate(ref mesh, instance.Transform, instance.BaseDefinition.Material.Color);
                 }
+
+                count++;
+
+                if (count > meshBatchSize)
+                {
+                    meshes.Add(mesh);
+                    mesh = new Elements.Geometry.Mesh();
+                    count = 0;
+                }
+            }
+            meshes.Add(mesh);
+
+            var renderDatas = new List<RenderData>();
+            logger.Debug("There are {MeshCount} meshes to be drawn.", meshes.Count);
+            foreach (var subMesh in meshes)
+            {
+                renderDatas.Add(DrawMesh(subMesh, ref outline));
             }
 
+            return renderDatas;
+        }
+
+        public static RenderData DrawMesh(Elements.Geometry.Mesh mesh, ref Outline outline)
+        {
             var min = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
             var max = new XYZ(double.MinValue, double.MinValue, double.MinValue);
 
@@ -235,6 +274,7 @@ namespace Hypar.Revit
                 }
 
                 triangles.Add(new IndexTriangle(t.Vertices[0].Index, t.Vertices[1].Index, t.Vertices[2].Index));
+
             }
             var vPos = vBuffer.GetVertexStreamPositionNormalColored();
             vPos.AddVertices(vertices);
