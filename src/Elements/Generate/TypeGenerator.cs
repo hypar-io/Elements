@@ -126,6 +126,7 @@ namespace Elements.Generate
             }
             set => _templatesPath = value;
         }
+
         // TODO Delete this HyparFilters class when this issue gets resolved. https://github.com/RicoSuter/NJsonSchema/issues/1199
         // This HyparFilters class contains filters that are copied directly from the NJsonSchema repo
         // because the filters are not public but we need to register them globally for async code gen.
