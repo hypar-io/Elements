@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using DotLiquid;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Newtonsoft.Json;
@@ -125,6 +126,32 @@ namespace Elements.Generate
             }
             set => _templatesPath = value;
         }
+        // TODO Delete this HyparFilters class when this issue gets resolved. https://github.com/RicoSuter/NJsonSchema/issues/1199
+        // This HyparFilters class contains filters that are copied directly from the NJsonSchema repo
+        // because the filters are not public but we need to register them globally for async code gen.
+        // Copied from https://github.com/RicoSuter/NJsonSchema/blob/687efeabdc30ddacd235e85213f3594458ed48b4/src/NJsonSchema.CodeGeneration/DefaultTemplateFactory.cs#L183
+        internal static class HyparFilters
+        {
+            public static string Lowercamelcase(Context context, string input, bool firstCharacterMustBeAlpha = true)
+            {
+                return ConversionUtilities.ConvertToLowerCamelCase(input, firstCharacterMustBeAlpha);
+            }
+
+            public static string Csharpdocs(string input, int tabCount)
+            {
+                return ConversionUtilities.ConvertCSharpDocs(input, tabCount);
+            }
+
+            public static IEnumerable<object> Empty(Context context, object input)
+            {
+                return Enumerable.Empty<object>();
+            }
+
+            public static string Tab(Context context, string input, int tabCount)
+            {
+                return ConversionUtilities.Tab(input, tabCount);
+            }
+        }
 
         /// <summary>
         /// Generate a user-defined type in a .g.cs file from a schema.
@@ -138,6 +165,9 @@ namespace Elements.Generate
         /// </returns>
         public static async Task<GenerationResult> GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
+
             var schema = await GetSchemaAsync(uri);
 
             string ns;
@@ -307,7 +337,6 @@ namespace Elements.Generate
             // base class SolidOperation, or the Import class.
             var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina" };
 
-            DotLiquid.Template.DefaultIsThreadSafe = true;
             var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings()
             {
                 Namespace = ns,
