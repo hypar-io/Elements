@@ -21,7 +21,7 @@ namespace HyparDynamo.Hypar
     /// <param name="area">The area that is meant to be converted to a Hypar SpaceBoundary.</param>
     public static class SpaceBoundary
     {
-        public static Elements.Element[] FromArea(Revit.Elements.Element area)
+        public static Elements.SpaceBoundary[] FromArea(Revit.Elements.Element area)
         {
             var areaElement = (Autodesk.Revit.DB.Area)area.InternalElement;
             var doc = DocumentManager.Instance.CurrentDBDocument;
@@ -38,7 +38,7 @@ namespace HyparDynamo.Hypar
     /// <returns name="Tag">The tag to assign to the model points.</param>
     public static class ModelPoints
     {
-        public static Elements.Element FromPoints(List<Autodesk.DesignScript.Geometry.Point> points, string tag = "")
+        public static Elements.ModelPoints FromPoints(List<Autodesk.DesignScript.Geometry.Point> points, string tag = "")
         {
             return Create.ModelPointsFromPoints(points.Select(p => new XYZ(p.X, p.Y, p.Z)), tag);
         }
@@ -96,10 +96,10 @@ namespace HyparDynamo.Hypar
     {
         public static Elements.Column FromRevitColumn(this Revit.Elements.Element column)
         {
-            var r_col = (Autodesk.Revit.DB.FamilyInstance)column.InternalElement;
+            var revitColumn = (Autodesk.Revit.DB.FamilyInstance)column.InternalElement;
             try
             {
-                return Create.ColumnFromRevitColumn(r_col);
+                return Create.ColumnFromRevitColumn(revitColumn);
             }
             catch (Exception ex)
             {

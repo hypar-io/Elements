@@ -10,7 +10,7 @@ namespace Hypar.Revit
     {
         public static ModelPoints ModelPointsFromPoints(IEnumerable<XYZ> points, string tag)
         {
-            return new ModelPoints(points.Select(p => p.ToVector3(true)).ToList(), null, null, false, Guid.NewGuid(), tag);
+            return new ModelPoints(points.Select(p => p.ToVector3(true)).ToList(), id: Guid.NewGuid(), name: tag);
         }
     }
 }
