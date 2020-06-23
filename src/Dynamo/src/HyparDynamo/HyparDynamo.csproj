@@ -36,6 +36,9 @@
   <ItemGroup>
     <NodeLibraries Include="$(TargetDir)*.*" />
   </ItemGroup>
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
   <Target Name="CleanDeploy" BeforeTargets="BeforeBuild">
     <RemoveDir Directories="..\..\deploy\HyparDynamo\bin\" />
@@ -45,6 +48,7 @@
     <!-- <Copy SourceFiles="@(NodeLibraries)" DestinationFolder="..\..\deploy\HyparDynamo\bin\" /> -->
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
     <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
     <Copy SourceFiles="$(TargetDir)Hypar.Elements.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
     <Copy SourceFiles="$(TargetDir)Hypar.IFC4.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
     <Copy SourceFiles="$(TargetDir)HyparRevit.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
