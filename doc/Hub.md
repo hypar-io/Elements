@@ -43,3 +43,6 @@ https://hypar.io/workflows/8026cc62-e421-4790-89a5-a9332c3427a2 <-- There it is!
 
 ## Hub Clients
 Hub clients receive update messages from the hub when data has changed. For example, when the Revit hub client receives an update message it updates the visualization in the active 3D view to include what's in the hub. If you're interested in seeing how a hub client works internally, you can view the Revit hub source code on github.
+
+## Known Limitations
+- The hub creates dlls containing all the types required by your synced workflows. For applications which will deserialize models from JSON, these assemblies are loaded to provide type definitions for deserialization. In applications like Revit, assemblies can not be unloaded and are locked by the system. After the first load of an assembly, you can not update it or reload it. If you add a function to a workflow, the hub will attempt to create a new assembly containing the types required by that workflow, and will not be able to. You will need to restart the hub.
