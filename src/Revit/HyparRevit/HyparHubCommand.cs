@@ -8,14 +8,28 @@ namespace Hypar.Revit
     [Regeneration(RegenerationOption.Manual)]
     public class HyparHubStartCommand : IExternalCommand
     {
+        internal static bool _hubConnectionStarted = false;
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            HyparHubApp.HyparApp.Start(commandData.Application.ActiveUIDocument);
+            if (_hubConnectionStarted == true)
+            {
+                return Result.Cancelled;
+            }
+
+            if (!HyparHubApp.HyparApp.Start(commandData.Application.ActiveUIDocument))
+            {
+                TaskDialog.Show("Hypar Hub Error", "The connection to the hub could not be started. Is the hub running?");
+                _hubConnectionStarted = false;
+                return Result.Failed;
+            }
             commandData.Application.ViewActivated += (sender, args) =>
             {
                 HyparHubApp.HyparApp.RefreshView(commandData.Application.ActiveUIDocument);
             };
             HyparHubApp.IsSyncing = true;
+            _hubConnectionStarted = true;
+
             return Result.Succeeded;
         }
     }
@@ -26,7 +40,10 @@ namespace Hypar.Revit
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            HyparHubApp.HyparApp.Stop();
+            if (HyparHubStartCommand._hubConnectionStarted == false || !HyparHubApp.HyparApp.Stop())
+            {
+                TaskDialog.Show("Hypar Hub Error", "The connection to the hub could not be stopped. Was the connection running?");
+            }
             HyparHubApp.IsSyncing = false;
             return Result.Succeeded;
         }

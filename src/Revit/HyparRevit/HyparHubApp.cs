@@ -69,12 +69,12 @@ namespace Hypar.Revit
             }
         }
 
-        public void Start(UIDocument uIDocument)
+        public bool Start(UIDocument uIDocument)
         {
             HyparLogger.Information("Creating hypar connection...");
             _hyparConnection = new HubConnectionBuilder()
-                    .WithUrl("http://localhost:5000/functionHub")
-                    .Build();
+                .WithUrl("http://localhost:5000/functionHub")
+                .Build();
 
             _hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
             {
@@ -102,16 +102,30 @@ namespace Hypar.Revit
                 uIDocument.RefreshActiveView();
             });
 
-            HyparLogger.Information("Starting hypar connection...");
-            Task.Run(async () => await _hyparConnection.StartAsync()).Wait();
+            try
+            {
+                HyparLogger.Information("Starting hypar connection...");
+                Task.Run(async () => await _hyparConnection.StartAsync()).Wait();
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        public void Stop()
+        public bool Stop()
         {
-            if (_hyparConnection != null)
+            try
             {
                 Task.Run(async () => await _hyparConnection.StopAsync()).Wait();
             }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public void RefreshView(UIDocument uiDocument)
