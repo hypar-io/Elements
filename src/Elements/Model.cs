@@ -266,12 +266,12 @@ namespace Elements
                 }
 
                 // Get the properties dictionaries.
-                var dict = pValue as IDictionary<string, object>;
+                var dict = pValue as IDictionary;
                 if (dict != null)
                 {
-                    foreach (var kvp in dict)
+                    foreach (var value in dict.Values)
                     {
-                        elements.AddRange(RecursiveGatherSubElements(kvp.Value));
+                        elements.AddRange(RecursiveGatherSubElements(value));
                     }
                     continue;
                 }
