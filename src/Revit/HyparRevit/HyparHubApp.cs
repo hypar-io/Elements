@@ -8,12 +8,14 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Hypar.Model;
 using Autodesk.Revit.DB.ExternalService;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hypar.Revit
 {
     public class HyparHubApp : IExternalApplication
     {
         private static HubConnection _hyparConnection;
+        private static Dictionary<string, WorkflowSettings> _settings;
 
         public static HyparHubApp HyparApp { get; private set; }
         public static ILogger HyparLogger { get; private set; }
@@ -69,15 +71,37 @@ namespace Hypar.Revit
             }
         }
 
-        public bool Start(UIDocument uIDocument)
+        public bool Start(UIDocument uiDocument)
         {
             HyparLogger.Information("Creating hypar connection...");
             _hyparConnection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:5000/functionHub")
                 .Build();
 
+            _hyparConnection.On<Dictionary<string, WorkflowSettings>>("WorkflowSettings", (settings) =>
+            {
+                _settings = settings;
+            });
+
             _hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
             {
+                // Check if the settings include sync with this document.
+                if (!_settings.ContainsKey(workflow.Id))
+                {
+                    return;
+                }
+
+                var workflowSettings = _settings[workflow.Id];
+                var fileName = Path.GetFileName(uiDocument.Document.PathName);
+
+                if (workflowSettings.Revit == null ||
+                    workflowSettings.Revit.FileName == null ||
+                    workflowSettings.Revit.FileName != fileName)
+                {
+                    HyparLogger.Debug("The current Revit file, {RevitFileName} was not associated with the workflow settings. No sync will occur.", fileName);
+                    return;
+                }
+
                 var depPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "workflows", workflow.Id, $"{workflow.Id}.dll");
                 if (File.Exists(depPath))
                 {
@@ -99,7 +123,7 @@ namespace Hypar.Revit
 
                 RequiresRedraw = true;
 
-                uIDocument.RefreshActiveView();
+                uiDocument.RefreshActiveView();
             });
 
             try
