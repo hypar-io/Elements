@@ -19,6 +19,9 @@ You can control how the hub synchronizes with hypar by editing the `hub.json` fi
             "JSON to Model",
             "Panels From Walls"
         ],
+        "revit": {
+            "file_name": "HyparTest.rvt"
+        },
         "active": false
     },
     "8026cc62-e421-4790-89a5-a9332c3427a2": {
@@ -35,7 +38,8 @@ The keys in the `hub.json` file are the identifiers of Workflows on Hypar. You c
 https://hypar.io/workflows/8026cc62-e421-4790-89a5-a9332c3427a2 <-- There it is!
 ```
 - The `hidden` property is an array of function names which you would like to be hidden from hub clients. It's often useful to hide certain functions, like those which provide datums: Levels, Grids, etc., so that your client application doesn't need to draw or import those.
-- The `active` property is a boolean value specifying whether the workflow should be sent to the hub clients. A workflow with `"active": false` will still be synced to the hub, but its update notifications will not be sent to the clients.
+- The `active` property is a boolean value indicating whether the workflow should be sent to the hub clients. A workflow with `"active": false` will still be synced to the hub, but its update notifications will not be sent to the clients.
+- The `revit` property contains information for syncing with Revit. The `file_name` property on this object specifies the file name (without directory) of the Revit file in which this workflow will be made visible.
 
 ## Hub Clients
 Hub clients receive update messages from the hub when data has changed. For example, when the Revit hub client receives an update message it updates the visualization in the active 3D view to include what's in the hub. If you're interested in seeing how a hub client works internally, you can view the Revit hub source code on github.
