@@ -4,7 +4,7 @@
     <Text>Hypar Hub Start</Text>
     <FullClassName>Hypar.Revit.HyparHubStartCommand</FullClassName>
     <Description>"Start the Hypar Hub sync."</Description>
-    <Assembly>C:/Users/Ian/Documents/GitHub/Hypar-1/Elements/src/Revit/HyparRevit/bin/Debug/netstandard2.0/publish/Hypar.Revit.dll</Assembly>
+    <Assembly>Hypar.Revit/Hypar.Revit.dll</Assembly>
     <AddInId>9a956586-8d1c-4cd1-a487-61990d3769fa</AddInId>
     <VendorDescription>"Hypar Inc., hypar.io"</VendorDescription>
     <VendorId>HYPR</VendorId>
@@ -13,7 +13,7 @@
     <Text>Hypar Hub Stop</Text>
     <FullClassName>Hypar.Revit.HyparHubStopCommand</FullClassName>
     <Description>"Stop the Hypar Hub sync."</Description>
-    <Assembly>C:/Users/Ian/Documents/GitHub/Hypar-1/Elements/src/Revit/HyparRevit/bin/Debug/netstandard2.0/publish/Hypar.Revit.dll</Assembly>
+    <Assembly>Hypar.Revit/Hypar.Revit.dll</Assembly>
     <AddInId>74a19e88-1577-41f6-b407-90600500b736</AddInId>
     <VendorDescription>"Hypar Inc., hypar.io"</VendorDescription>
     <VendorId>HYPR</VendorId>
@@ -22,7 +22,7 @@
     <Name>HyparRevit</Name>
     <FullClassName>Hypar.Revit.HyparHubApp</FullClassName>
     <Description>"Sync with a Hypar workflow."</Description>
-    <Assembly>C:/Users/Ian/Documents/GitHub/Hypar-1/Elements/src/Revit/HyparRevit/bin/Debug/netstandard2.0/publish/Hypar.Revit.dll</Assembly>
+    <Assembly>Hypar.Revit/Hypar.Revit.dll</Assembly>
     <AddInId>502fe383-2648-4e98-adf8-5e6047f9dc34</AddInId>
     <VendorDescription>"Hypar Inc., hypar.io"</VendorDescription>
     <VendorId>HYPR</VendorId>
