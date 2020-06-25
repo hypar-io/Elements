@@ -245,13 +245,24 @@ namespace Elements.Generate
 
             var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
 
-            var assembly = EmitAndLoad(compilation, out string[] diagnosticResults);
-            return new CompilationResult
+            if (TryEmitAndLoad(compilation, out Assembly assembly, out string[] diagnosticResults))
             {
-                Success = true,
-                DiagnosticResults = diagnosticResults,
-                Assembly = assembly
-            };
+                return new CompilationResult
+                {
+                    Success = true,
+                    DiagnosticResults = diagnosticResults,
+                    Assembly = assembly
+                };
+            }
+            else
+            {
+                return new CompilationResult
+                {
+                    Success = false,
+                    DiagnosticResults = diagnosticResults,
+                    Assembly = null
+                };
+            }
         }
 
         /// <summary>
@@ -294,12 +305,22 @@ namespace Elements.Generate
 
             var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
 
-            var success = EmitAndSave(compilation, dllPath, out string[] diagnosticResults);
-            return new CompilationResult
+            if (TryEmitAndSave(compilation, dllPath, out string[] diagnosticResults))
             {
-                Success = success,
-                DiagnosticResults = diagnosticResults,
-            };
+                return new CompilationResult
+                {
+                    Success = true,
+                    DiagnosticResults = diagnosticResults,
+                };
+            }
+            else
+            {
+                return new CompilationResult
+                {
+                    Success = false,
+                    DiagnosticResults = diagnosticResults,
+                };
+            }
         }
 
 
@@ -486,7 +507,7 @@ namespace Elements.Generate
                 return false;
             }
             var compilation = GenerateCompilation(new List<string> { csharp }, schema.Title, frameworkBuild);
-            return EmitAndSave(compilation, dllPath, out diagnosticResults);
+            return TryEmitAndSave(compilation, dllPath, out diagnosticResults);
         }
 
         private static string GenerateCSharpCodeForSchema(JsonSchema schema)
@@ -568,7 +589,7 @@ namespace Elements.Generate
                                                        compileOptions);
         }
 
-        private static bool EmitAndSave(CSharpCompilation compilation, string outputPath, out string[] diagnosticMessages)
+        private static bool TryEmitAndSave(CSharpCompilation compilation, string outputPath, out string[] diagnosticMessages)
         {
             var emitResult = compilation.Emit(outputPath);
             diagnosticMessages = emitResult.Diagnostics.Select(d => d.ToString()).ToArray();
@@ -586,9 +607,8 @@ namespace Elements.Generate
             }
         }
 
-        private static Assembly EmitAndLoad(CSharpCompilation compilation, out string[] diagnosticMessages)
+        private static bool TryEmitAndLoad(CSharpCompilation compilation, out Assembly assembly, out string[] diagnosticMessages)
         {
-            Assembly assembly = null;
             using (var ms = new MemoryStream())
             {
                 var emitResult = compilation.Emit(ms);
@@ -597,17 +617,14 @@ namespace Elements.Generate
                 {
                     ms.Seek(0, SeekOrigin.Begin);
                     assembly = Assembly.Load(ms.ToArray());
+                    return true;
                 }
                 else
                 {
-                    foreach (var d in emitResult.Diagnostics)
-                    {
-                        Console.WriteLine(d.ToString());
-                    }
-                    throw new Exception("There was an error creating an assembly for the user defined types. See the console for more information.");
+                    assembly = null;
+                    return false;
                 }
             }
-            return assembly;
         }
     }
 }
