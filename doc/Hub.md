@@ -34,9 +34,9 @@ You can control how the hub synchronizes with hypar by editing the `hub.json` fi
 }
 ```
 The keys in the `hub.json` file are the identifiers of Workflows on Hypar. You can see the id of a Workflow on Hypar by inspecting its url in the hypar web application:
-```
-https://hypar.io/workflows/8026cc62-e421-4790-89a5-a9332c3427a2 <-- There it is!
-```
+
+>https://hypar.io/workflows/8026cc62-e421-4790-89a5-a9332c3427a2 <-- There it is!
+
 - The `hidden` property is an array of function names which you would like to be hidden from hub clients. It's often useful to hide certain functions, like those which provide datums: Levels, Grids, etc., so that your client application doesn't need to draw or import those.
 - The `active` property is a boolean value indicating whether the workflow should be sent to the hub clients. A workflow with `"active": false` will still be synced to the hub, but its update notifications will not be sent to the clients.
 - The `revit` property contains information for syncing with Revit. The `file_name` property on this object specifies the file name (without directory) of the Revit file in which this workflow will be made visible.

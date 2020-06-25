@@ -3,26 +3,10 @@
 # Getting Started with Hypar for Revit
 Hypar for Revit is a Revit addin that connects Revit to the Hypar Hub. Hub workflows will be temporarily visualized in the active 3D view of your Revit document.
 
-## Installation
+## Installation (beta)
 - [Install the latest Hypar CLI](https://hypar-io.github.io/Elements/C-Sharp.html#installing-and-using-the-hypar-cli). You'll need this to use the `hub` command.
 - Download the latest zip from the [releases page](https://github.com/hypar-io/Elements/releases).
-- Unzip the addin to a location on your hard drive.
-- Place the `Hypar.Revit.addin` file from the zip in `C:\ProgramData\Autodesk\Revit\Addins\2020` (change the Revit version as appropriate).
-- Ensure that the `Hypar.Revit.Addin` points to the correct path of the `Hypar.Revit.dll`.
-  - For example, if you unzipped the zip into `C:/Users/Ian/Documents/Hypar.Revit`, then all references to `Hypar.Revit.dll` will need to be updated as follows:
-  ```xml
-  ...
-  <AddIn Type="Application">
-    <Name>HyparRevit</Name>
-    <FullClassName>Hypar.Revit.HyparHubApp</FullClassName>
-    <Description>"Sync with a Hypar workflow."</Description>
-    <Assembly>C:/Users/Ian/Documents/Hypar.Revit/Hypar.Revit.dll</Assembly>
-    <AddInId>502fe383-2648-4e98-adf8-5e6047f9dc34</AddInId>
-    <VendorDescription>"Hypar Inc., hypar.io"</VendorDescription>
-    <VendorId>HYPR</VendorId>
-  </AddIn>
-  ...
-  ```
+- Unzip into `C:\ProgramData\Autodesk\Revit\Addins\2020`. After unzipping you should see a `Hypar.Revit.addin` at the top level of the addins folder and a `Hypar.Revit` subfolder.
 
 ## Running
 - Start the hub. From the command line do `hypar hub`.
