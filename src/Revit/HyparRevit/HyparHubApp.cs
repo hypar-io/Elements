@@ -121,9 +121,7 @@ namespace Hypar.Revit
                     CurrentWorkflows[workflow.Id] = workflow;
                 }
 
-                RequiresRedraw = true;
-
-                uiDocument.RefreshActiveView();
+                RefreshView(uiDocument);
             });
 
             try
@@ -155,7 +153,9 @@ namespace Hypar.Revit
         public void RefreshView(UIDocument uiDocument)
         {
             RequiresRedraw = true;
+            HyparLogger.Debug("Requires redraw has been set.");
             uiDocument.RefreshActiveView();
+            HyparLogger.Debug("Refresh complete.");
         }
 
         System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender,
@@ -167,9 +167,10 @@ namespace Hypar.Revit
                     .GetExecutingAssembly().Location);
 
             var filename = Path.Combine(execAsmPath, $"{dllName}.dll");
-            HyparLogger.Information("Resolving {AsmName}...", args.Name);
+
             if (File.Exists(filename))
             {
+                HyparLogger.Information("Loading {AsmName}...", args.Name);
                 return System.Reflection.Assembly.LoadFrom(filename);
             }
             return null;

@@ -122,7 +122,7 @@ namespace Hypar.Revit
             {
                 foreach (var e in executionsToDraw)
                 {
-                    var renderDatas = DrawExecution(_logger, workflow.Id, e.Id, _outline);
+                    var renderDatas = DrawExecution(_logger, workflow.Id, e.Id, _outline, displayStyle);
                     if (renderDatas != null && renderDatas.Count > 0)
                     {
                         for (var i = 0; i < renderDatas.Count; i++)
@@ -136,9 +136,15 @@ namespace Hypar.Revit
             }
 
             HyparHubApp.RequiresRedraw = false;
+
+            _logger.Debug("Render complete.");
         }
 
-        private static List<RenderData> DrawExecution(ILogger logger, string workflowId, string executionId, Outline outline)
+        private static List<RenderData> DrawExecution(ILogger logger,
+                                                      string workflowId,
+                                                      string executionId,
+                                                      Outline outline,
+                                                      DisplayStyle displayStyle)
         {
             // Read the workflow from disk
             var execPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), $".hypar/workflows/{workflowId}/{executionId}/model.json");
@@ -225,13 +231,20 @@ namespace Hypar.Revit
             logger.Debug("There are {MeshCount} meshes to be drawn.", meshes.Count);
             foreach (var subMesh in meshes)
             {
-                renderDatas.Add(DrawMesh(subMesh, ref outline));
+                try
+                {
+                    renderDatas.Add(DrawMesh(subMesh, ref outline, displayStyle));
+                }
+                catch (Exception ex)
+                {
+                    logger.Debug(ex.Message);
+                }
             }
 
             return renderDatas;
         }
 
-        public static RenderData DrawMesh(Elements.Geometry.Mesh mesh, ref Outline outline)
+        public static RenderData DrawMesh(Elements.Geometry.Mesh mesh, ref Outline outline, DisplayStyle displayStyle)
         {
             var min = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
             var max = new XYZ(double.MinValue, double.MinValue, double.MinValue);
@@ -240,14 +253,16 @@ namespace Hypar.Revit
             var numPrimitives = mesh.Triangles.Count;
             var pType = PrimitiveType.TriangleList;
             var numIndices = GetPrimitiveSize(pType) * numPrimitives;
-            var vertexFormat = new VertexFormat(VertexFormatBits.PositionNormalColored);
+            var vertexFormatBits = displayStyle == DisplayStyle.HLR ? VertexFormatBits.PositionColored : VertexFormatBits.PositionNormalColored;
+            var vertexFormat = new VertexFormat(vertexFormatBits);
 
-            var vBuffer = new VertexBuffer(GetVertexSize(VertexFormatBits.PositionNormalColored) * numVertices);
+            var vBuffer = new VertexBuffer(GetVertexSize(vertexFormatBits) * numVertices);
             var iBuffer = new IndexBuffer(numIndices);
 
-            vBuffer.Map(GetVertexSize(VertexFormatBits.PositionNormalColored) * numVertices);
+            vBuffer.Map(GetVertexSize(vertexFormatBits) * numVertices);
             iBuffer.Map(numIndices);
 
+            var verticesFlat = new List<VertexPositionColored>();
             var vertices = new List<VertexPositionNormalColored>();
             var triangles = new List<IndexTriangle>();
 
@@ -261,7 +276,15 @@ namespace Hypar.Revit
 
                     outline.AddPoint(pos);
 
-                    vertices.Add(new VertexPositionNormalColored(pos, t.Normal.ToXYZ(), v.Color.ToColorWithTransparency()));
+                    switch (vertexFormatBits)
+                    {
+                        case VertexFormatBits.PositionColored:
+                            verticesFlat.Add(new VertexPositionColored(pos, v.Color.ToColorWithTransparency()));
+                            break;
+                        default:
+                            vertices.Add(new VertexPositionNormalColored(pos, t.Normal.ToXYZ(), v.Color.ToColorWithTransparency()));
+                            break;
+                    }
 
                     if (pos.X < min.X && pos.Y < min.Y && pos.Z < min.Z)
                     {
@@ -276,8 +299,17 @@ namespace Hypar.Revit
                 triangles.Add(new IndexTriangle(t.Vertices[0].Index, t.Vertices[1].Index, t.Vertices[2].Index));
 
             }
-            var vPos = vBuffer.GetVertexStreamPositionNormalColored();
-            vPos.AddVertices(vertices);
+
+            if (displayStyle == DisplayStyle.HLR)
+            {
+                var vPos = vBuffer.GetVertexStreamPositionColored();
+                vPos.AddVertices(verticesFlat);
+            }
+            else
+            {
+                var vPos = vBuffer.GetVertexStreamPositionNormalColored();
+                vPos.AddVertices((IList<VertexPositionNormalColored>)vertices);
+            }
 
             var iPos = iBuffer.GetIndexStreamTriangle();
             iPos.AddTriangles(triangles);
@@ -285,7 +317,7 @@ namespace Hypar.Revit
             vBuffer.Unmap();
             iBuffer.Unmap();
 
-            var effect = new EffectInstance(VertexFormatBits.PositionNormalColored);
+            var effect = new EffectInstance(vertexFormatBits);
 
             // Create a render data for reuse 
             // on non-update calls.
