@@ -14,6 +14,7 @@ namespace Hypar.Revit
         {
             if (_hubConnectionStarted == true)
             {
+                TaskDialog.Show("Hypar Hub Error", "The connection to the hub is already running.");
                 return Result.Cancelled;
             }
 
@@ -23,6 +24,11 @@ namespace Hypar.Revit
                 _hubConnectionStarted = false;
                 return Result.Failed;
             }
+            else
+            {
+                TaskDialog.Show("Hypar Hub Error", "The connection to the hub is now running.");
+            }
+
             commandData.Application.ViewActivated += (sender, args) =>
             {
                 HyparHubApp.HyparApp.RefreshView(commandData.Application.ActiveUIDocument);

@@ -93,13 +93,13 @@ namespace Elements.Analysis
             foreach (var result in this._results)
             {
                 var center = result.cell.Center();
-                var vColor = this.Perimeter.Contains(center) ? this.ColorScale.GetColorForValue((result.value - this._min) / span) : Colors.White;
+                var vertexColor = this.Perimeter.Contains(center) ? this.ColorScale.GetColorForValue((result.value - this._min) / span) : Colors.White;
                 var min = result.cell.Min;
                 var max = result.cell.Max;
-                var v1 = mesh.AddVertex(min, color: vColor);
-                var v2 = mesh.AddVertex(new Vector3(max.X, min.Y), color: vColor);
-                var v3 = mesh.AddVertex(max, color: vColor);
-                var v4 = mesh.AddVertex(new Vector3(min.X, max.Y), color: vColor);
+                var v1 = mesh.AddVertex(min, color: vertexColor);
+                var v2 = mesh.AddVertex(new Vector3(max.X, min.Y), color: vertexColor);
+                var v3 = mesh.AddVertex(max, color: vertexColor);
+                var v4 = mesh.AddVertex(new Vector3(min.X, max.Y), color: vertexColor);
                 mesh.AddTriangle(v1, v2, v3);
                 mesh.AddTriangle(v3, v4, v1);
             }

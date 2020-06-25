@@ -2,13 +2,10 @@
 using System.IO;
 using Serilog;
 using System;
-using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Hypar.Model;
 using Autodesk.Revit.DB.ExternalService;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Hypar.Revit
 {
@@ -29,7 +26,7 @@ namespace Hypar.Revit
             if (_hyparConnection != null)
             {
                 HyparLogger.Debug("Stopping the hypar hub application...");
-                Task.Run(async () => await _hyparConnection.StopAsync()).Wait();
+                _hyparConnection.StopAsync().Wait();
                 HyparLogger.Debug("Hypar hub application stopped.");
             }
             return Result.Succeeded;
@@ -37,6 +34,9 @@ namespace Hypar.Revit
 
         public Result OnStartup(UIControlledApplication application)
         {
+            // Use an assembly resolver to resolve assemblies relative to the executing assembly.
+            // This is necessary if the addin is not in the application path, because
+            // assembly resolution will try the application path first, then stop looking.
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             HyparApp = this;
@@ -54,7 +54,7 @@ namespace Hypar.Revit
 
         private void OnApplicationInitialized(object sender, EventArgs e)
         {
-            // file:///C:/Users/Ian/Downloads/ee1ea1c8-7911-4ecd-abe5-8f1e2ee1d81a.ClassHandoutAS125032DirectContext3DAPIforDisplayingExternalGraphicsinRevitAlexPytel1%20(2).pdf
+            // https://www.autodesk.com/autodesk-university/class/DirectContext3D-API-Displaying-External-Graphics-Revit-2017
             var service = ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService) as MultiServerService;
             if (service != null)
             {
@@ -85,6 +85,8 @@ namespace Hypar.Revit
 
             _hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
             {
+                HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
+
                 // Check if the settings include sync with this document.
                 if (!_settings.ContainsKey(workflow.Id))
                 {
@@ -105,13 +107,11 @@ namespace Hypar.Revit
                 var depPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "workflows", workflow.Id, $"{workflow.Id}.dll");
                 if (File.Exists(depPath))
                 {
+                    HyparLogger.Information("Loading the dependencies assembly at {DepPath}.", depPath);
                     var asmBytes = File.ReadAllBytes(depPath);
                     var depAsm = AppDomain.CurrentDomain.Load(asmBytes);
-                    HyparLogger.Information("Loading the dependencies assembly at {DepPath}.", depPath);
-                    Assembly.LoadFile(depPath);
                 }
 
-                HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
                 if (!CurrentWorkflows.ContainsKey(workflow.Id))
                 {
                     CurrentWorkflows.Add(workflow.Id, workflow);
@@ -126,8 +126,8 @@ namespace Hypar.Revit
 
             try
             {
-                HyparLogger.Information("Starting hypar connection...");
-                Task.Run(async () => await _hyparConnection.StartAsync()).Wait();
+                HyparLogger.Information("Starting the hypar connection...");
+                _hyparConnection.StartAsync().Wait();
             }
             catch
             {
@@ -141,10 +141,13 @@ namespace Hypar.Revit
         {
             try
             {
-                Task.Run(async () => await _hyparConnection.StopAsync()).Wait();
+                HyparLogger.Information("Stopping the hypar connection...");
+                _hyparConnection.StopAsync().Wait();
             }
-            catch
+            catch (Exception ex)
             {
+                HyparLogger.Debug(ex.Message);
+                HyparLogger.Debug(ex.StackTrace);
                 return false;
             }
             return true;

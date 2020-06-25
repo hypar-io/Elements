@@ -101,11 +101,9 @@ namespace Hypar.Revit
                 return;
             }
 
-            var executionsToDraw = HyparHubApp.CurrentWorkflows.Values.SelectMany(w => w.FunctionInstances.Select(fi => (fi.Id, fi.SelectedOptionExecutionId)))
-                .Where(fi => fi.SelectedOptionExecutionId != null)
-                .ToList();
+            var executionsToDraw = HyparHubApp.CurrentWorkflows.Values.SelectMany(w => w.FunctionInstances.Where(fi => fi.SelectedOptionExecutionId != null).Select(fi => fi.Id)).ToList();
 
-            if (executionsToDraw.Count() == 0)
+            if (executionsToDraw.Count == 0)
             {
                 _logger.Debug("There were no executions to draw...");
                 HyparHubApp.RequiresRedraw = false;
@@ -120,15 +118,15 @@ namespace Hypar.Revit
             _renderDataCache.Clear();
             foreach (var workflow in HyparHubApp.CurrentWorkflows.Values)
             {
-                foreach (var e in executionsToDraw)
+                foreach (var id in executionsToDraw)
                 {
-                    var renderDatas = DrawExecution(_logger, workflow.Id, e.Id, _outline, displayStyle);
+                    var renderDatas = DrawExecution(_logger, workflow.Id, id, _outline, displayStyle);
                     if (renderDatas != null && renderDatas.Count > 0)
                     {
                         for (var i = 0; i < renderDatas.Count; i++)
                         {
                             var renderData = renderDatas[i];
-                            _renderDataCache.Add($"{e.Id}_{i}", renderData);
+                            _renderDataCache.Add($"{id}_{i}", renderData);
                         }
 
                     }
