@@ -211,10 +211,57 @@ namespace Elements.Generate
         /// Generate an in-memory assembly containing all the types generated from the supplied uris.
         /// </summary>
         /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
+        /// <param name="frameworkBuild">If true, the assembly will be built against the .NET framework, otherwise it will be built against .NET core.</param>
+        /// <returns>A CompilationResult containing information about the compilation.</returns>
+        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris, bool frameworkBuild = false)
+        {
+            // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
+            var code = new List<string>();
+            foreach (var uri in uris)
+            {
+                try
+                {
+                    var schema = await GetSchemaAsync(uri);
+                    string csharp = GenerateCSharpCodeForSchema(schema);
+                    if (csharp == null)
+                    {
+                        continue;
+                    }
+                    code.Add(csharp);
+                }
+                catch (Exception ex)
+                {
+                    var diagnostics = new[]
+                    {
+                        $"There was an error reading the schema at {uri}: {ex.Message}."
+                    };
+                    return new CompilationResult
+                    {
+                        Success = false,
+                        DiagnosticResults = diagnostics
+                    };
+                }
+            }
+
+            var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
+
+            var assembly = EmitAndLoad(compilation, out string[] diagnosticResults);
+            return new CompilationResult
+            {
+                Success = true,
+                DiagnosticResults = diagnosticResults,
+                Assembly = assembly
+            };
+        }
+
+        /// <summary>
+        /// Generate an in-memory assembly containing all the types generated from the supplied uris and save it to disk.
+        /// </summary>
+        /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
         /// <param name="dllPath">The path at which the dll will be written. If this is not null, the assembly will be written but not loaded.</param>
         /// <param name="frameworkBuild">If true, the assembly will be built against the .NET framework, otherwise it will be built against .NET core.</param>
         /// <returns>A CompilationResult containing information about the compilation.</returns>
-        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris, string dllPath = null, bool frameworkBuild = false)
+        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndSaveAsync(string[] uris, string dllPath, bool frameworkBuild = false)
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
@@ -246,27 +293,13 @@ namespace Elements.Generate
             }
 
             var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
-            Assembly assembly = null;
-            string[] diagnosticResults = null;
-            if (dllPath != null)
+
+            var success = EmitAndSave(compilation, dllPath, out string[] diagnosticResults);
+            return new CompilationResult
             {
-                var success = EmitAndSave(compilation, dllPath, out diagnosticResults);
-                return new CompilationResult
-                {
-                    Success = success,
-                    DiagnosticResults = diagnosticResults,
-                };
-            }
-            else
-            {
-                assembly = EmitAndLoad(compilation, out diagnosticResults);
-                return new CompilationResult
-                {
-                    Success = true,
-                    DiagnosticResults = diagnosticResults,
-                    Assembly = assembly
-                };
-            }
+                Success = success,
+                DiagnosticResults = diagnosticResults,
+            };
         }
 
 
