@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <Target Name="CopyAddin" AfterTargets="AfterBuild">
-    <RemoveDir Directories="c:\ProgramData\Autodesk\Revit\Addins\2020\Hypar.Revit"/>
+    <RemoveDir Directories="$(AppData)\Autodesk\Revit\Addins\2020\Hypar.Revit"/>
     <Message Importance="High" Text="Completed CopyAddin target."/>
-    <Copy SourceFiles="Hypar.Revit.addin" DestinationFolder="C:\ProgramData\Autodesk\Revit\Addins\2020" />
-    <Copy SourceFiles="@(AddinFiles)" DestinationFolder="C:\ProgramData\Autodesk\Revit\Addins\2020\Hypar.Revit\%(RecursiveDir)" />
+    <Copy SourceFiles="Hypar.Revit.addin" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\2020" />
+    <Copy SourceFiles="@(AddinFiles)" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\2020\Hypar.Revit\%(RecursiveDir)" />
   </Target>
 
   <ItemGroup>
