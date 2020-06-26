@@ -5,7 +5,6 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExternalService;
-using Hypar.Model;
 using Serilog;
 
 namespace Hypar.Revit
@@ -182,7 +181,6 @@ namespace Hypar.Revit
             {
                 if (geom.Representation == null || geom.Representation.SolidOperations.Count() == 0)
                 {
-                    logger.Debug("There were no representations or solids. No draw.");
                     continue;
                 }
 
@@ -205,7 +203,6 @@ namespace Hypar.Revit
             {
                 if (instance.BaseDefinition.Representation == null || instance.BaseDefinition.Representation.SolidOperations.Count() == 0)
                 {
-                    logger.Debug("There were no representations or solids. No draw.");
                     continue;
                 }
 

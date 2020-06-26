@@ -23,4 +23,5 @@ Hypar for Revit is a Revit addin that connects Revit to the Hypar Hub. Hub workf
 
 ## Known Limitations
 - When the hub is first started, you will not see any visualizations until you zoom, pan, or rotate. This is a limitation of Revit's `RefreshActiveView` API which does not work as advertised.
-- The visualization only works in `Shaded` mode in Revit. In other modes, the visualization will be all black.
+- The visualization only works in `Hidden Line` and `Shaded` modes in Revit. This is a limitation of Revit's `DirectContext3D` API.
+- Transparency is not currently supported.
