@@ -72,7 +72,7 @@ namespace Hypar.Revit
 
         public void RenderScene(View dBView, DisplayStyle displayStyle)
         {
-            if (HyparHubApp.IsSyncing == false)
+            if (!HyparHubApp.IsSyncing())
             {
                 return;
             }

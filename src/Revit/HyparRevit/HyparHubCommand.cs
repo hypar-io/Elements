@@ -8,11 +8,9 @@ namespace Hypar.Revit
     [Regeneration(RegenerationOption.Manual)]
     public class HyparHubStartCommand : IExternalCommand
     {
-        internal static bool _hubConnectionStarted = false;
-
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            if (_hubConnectionStarted == true)
+            if (HyparHubApp.IsSyncing())
             {
                 TaskDialog.Show("Hypar Hub Error", "The connection to the hub is already running.");
                 return Result.Cancelled;
@@ -21,20 +19,17 @@ namespace Hypar.Revit
             if (!HyparHubApp.HyparApp.Start(commandData.Application.ActiveUIDocument))
             {
                 TaskDialog.Show("Hypar Hub Error", "The connection to the hub could not be started. Is the hub running?");
-                _hubConnectionStarted = false;
                 return Result.Failed;
             }
             else
             {
-                TaskDialog.Show("Hypar Hub Error", "The connection to the hub is now running.");
+                TaskDialog.Show("Hypar Hub", "The connection to the hub is now running.");
             }
 
             commandData.Application.ViewActivated += (sender, args) =>
             {
                 HyparHubApp.HyparApp.RefreshView(commandData.Application.ActiveUIDocument);
             };
-            HyparHubApp.IsSyncing = true;
-            _hubConnectionStarted = true;
 
             return Result.Succeeded;
         }
@@ -46,12 +41,21 @@ namespace Hypar.Revit
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            if (HyparHubStartCommand._hubConnectionStarted == false || !HyparHubApp.HyparApp.Stop())
+            if (!HyparHubApp.IsSyncing())
             {
                 TaskDialog.Show("Hypar Hub Error", "The connection to the hub could not be stopped. Was the connection running?");
                 return Result.Failed;
             }
-            HyparHubApp.IsSyncing = false;
+            else
+            {
+                if (!HyparHubApp.HyparApp.Stop())
+                {
+                    TaskDialog.Show("Hypar Hub Error", "The connection to the hub could not be stopped.");
+                    return Result.Failed;
+                }
+            }
+
+            TaskDialog.Show("Hypar Hub", "The connection to the hub is stopped.");
             return Result.Succeeded;
         }
     }

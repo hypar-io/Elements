@@ -18,7 +18,6 @@ namespace Hypar.Revit
         public static HyparHubApp HyparApp { get; private set; }
         public static ILogger HyparLogger { get; private set; }
         public static Dictionary<string, Workflow> CurrentWorkflows { get; private set; }
-        public static bool IsSyncing { get; set; }
 
         public static bool RequiresRedraw { get; set; }
 
@@ -42,7 +41,6 @@ namespace Hypar.Revit
 
             HyparApp = this;
             CurrentWorkflows = new Dictionary<string, Workflow>();
-            IsSyncing = false;
             HyparLogger = new LoggerConfiguration()
                             .MinimumLevel.Debug()
                             .WriteTo.File(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "hypar-revit.log"))
@@ -74,84 +72,97 @@ namespace Hypar.Revit
 
         public bool Start(UIDocument uiDocument)
         {
-            HyparLogger.Information("Creating hypar connection...");
-            _hyparConnection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5000/functionHub")
-                .Build();
-
-            _hyparConnection.On<Dictionary<string, WorkflowSettings>>("WorkflowSettings", (settings) =>
+            if (_hyparConnection == null)
             {
-                _settings = settings;
-            });
+                HyparLogger.Information("Creating hypar connection...");
+                _hyparConnection = new HubConnectionBuilder()
+                    .WithUrl("http://localhost:5000/functionHub")
+                    .Build();
 
-            _hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
-            {
-                HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
 
-                // Check if the settings include sync with this document.
-                if (!_settings.ContainsKey(workflow.Id))
+                _hyparConnection.On<Dictionary<string, WorkflowSettings>>("WorkflowSettings", (settings) =>
                 {
-                    return;
-                }
+                    _settings = settings;
+                });
 
-                var workflowSettings = _settings[workflow.Id];
-                var fileName = Path.GetFileName(uiDocument.Document.PathName);
-
-                if (workflowSettings.Revit == null ||
-                    workflowSettings.Revit.FileName == null ||
-                    workflowSettings.Revit.FileName != fileName)
+                _hyparConnection.On<Workflow>("WorkflowUpdated", (workflow) =>
                 {
-                    HyparLogger.Debug("The current Revit file, {RevitFileName} was not associated with the workflow settings. No sync will occur.", fileName);
-                    return;
-                }
+                    HyparLogger.Information("Received workflow updated for {WorkflowId}", workflow);
 
-                var depPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "workflows", workflow.Id, $"{workflow.Id}.dll");
-                if (File.Exists(depPath))
-                {
-                    HyparLogger.Information("Loading the dependencies assembly at {DepPath}.", depPath);
-                    var asmBytes = File.ReadAllBytes(depPath);
-                    var depAsm = AppDomain.CurrentDomain.Load(asmBytes);
-                }
+                    // Check if the settings include sync with this document.
+                    if (!_settings.ContainsKey(workflow.Id))
+                    {
+                        return;
+                    }
 
-                if (!CurrentWorkflows.ContainsKey(workflow.Id))
-                {
-                    CurrentWorkflows.Add(workflow.Id, workflow);
-                }
-                else
-                {
-                    CurrentWorkflows[workflow.Id] = workflow;
-                }
+                    var workflowSettings = _settings[workflow.Id];
+                    var fileName = Path.GetFileName(uiDocument.Document.PathName);
 
-                RefreshView(uiDocument);
-            });
+                    if (workflowSettings.Revit == null ||
+                        workflowSettings.Revit.FileName == null ||
+                        workflowSettings.Revit.FileName != fileName)
+                    {
+                        HyparLogger.Debug("The current Revit file, {RevitFileName} was not associated with the workflow settings. No sync will occur.", fileName);
+                        return;
+                    }
 
-            try
-            {
-                HyparLogger.Information("Starting the hypar connection...");
-                Task.Run(async () => await _hyparConnection.StartAsync());
-            }
-            catch
-            {
-                return false;
+                    var depPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "workflows", workflow.Id, $"{workflow.Id}.dll");
+                    if (File.Exists(depPath))
+                    {
+                        HyparLogger.Information("Loading the dependencies assembly at {DepPath}.", depPath);
+                        var asmBytes = File.ReadAllBytes(depPath);
+                        var depAsm = AppDomain.CurrentDomain.Load(asmBytes);
+                    }
+
+                    if (!CurrentWorkflows.ContainsKey(workflow.Id))
+                    {
+                        CurrentWorkflows.Add(workflow.Id, workflow);
+                    }
+                    else
+                    {
+                        CurrentWorkflows[workflow.Id] = workflow;
+                    }
+
+                    RefreshView(uiDocument);
+                });
             }
 
-            return true;
+            HyparLogger.Information("Starting the hypar connection...");
+            var task = Task.Run<bool>(async () =>
+            {
+                try
+                {
+                    await _hyparConnection.StartAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    HyparLogger.Debug(ex.Message);
+                    HyparLogger.Debug(ex.StackTrace);
+                    return false;
+                }
+            });
+            return task.Result;
         }
 
         public bool Stop()
         {
-            try
+            HyparLogger.Information("Stopping the hypar connection...");
+            var task = Task.Run(async () =>
             {
-                HyparLogger.Information("Stopping the hypar connection...");
-                Task.Run(async () => await _hyparConnection.StopAsync());
-            }
-            catch (Exception ex)
-            {
-                HyparLogger.Debug(ex.Message);
-                HyparLogger.Debug(ex.StackTrace);
-                return false;
-            }
-            return true;
+                try
+                {
+                    await _hyparConnection.StopAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    HyparLogger.Debug(ex.Message);
+                    HyparLogger.Debug(ex.StackTrace);
+                    return false;
+                }
+            });
+            return task.Result;
         }
 
         public void RefreshView(UIDocument uiDocument)
@@ -160,6 +171,11 @@ namespace Hypar.Revit
             HyparLogger.Debug("Requires redraw has been set.");
             uiDocument.RefreshActiveView();
             HyparLogger.Debug("Refresh complete.");
+        }
+
+        public static bool IsSyncing()
+        {
+            return _hyparConnection != null && _hyparConnection.State == HubConnectionState.Connected;
         }
 
         System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender,
