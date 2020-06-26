@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Hypar.Model;
 using Autodesk.Revit.DB.ExternalService;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Hypar.Revit
 {
@@ -26,7 +27,7 @@ namespace Hypar.Revit
             if (_hyparConnection != null)
             {
                 HyparLogger.Debug("Stopping the hypar hub application...");
-                _hyparConnection.StopAsync().Wait();
+                Task.Run(async () => await _hyparConnection.StopAsync());
                 HyparLogger.Debug("Hypar hub application stopped.");
             }
             return Result.Succeeded;
@@ -127,7 +128,7 @@ namespace Hypar.Revit
             try
             {
                 HyparLogger.Information("Starting the hypar connection...");
-                _hyparConnection.StartAsync().Wait();
+                Task.Run(async () => await _hyparConnection.StartAsync());
             }
             catch
             {
@@ -142,7 +143,7 @@ namespace Hypar.Revit
             try
             {
                 HyparLogger.Information("Stopping the hypar connection...");
-                _hyparConnection.StopAsync().Wait();
+                Task.Run(async () => await _hyparConnection.StopAsync());
             }
             catch (Exception ex)
             {
