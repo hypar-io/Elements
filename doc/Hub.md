@@ -1,5 +1,5 @@
 # Getting Started with the Hypar Hub
-The Hypar Hub acts as the single point of synchronization between your workflows on hypar and your local machine. The hub listens for update messages from hypar, and builds a local cache of data representating the output of the functions in your workflow. By having one hub on the machine manage this communication we remove this requirement from the host application plugins, and we provide an offline store of data.
+The Hypar Hub acts as the single point of synchronization between your workflows on Hypar and your local machine. The hub listens for update messages from Hypar, and builds a local cache of data representating the output of the functions in your workflow. By having one hub on the machine manage this communication we remove this requirement from the host application plugins, and we provide an offline store of data.
 
 After installing the hypar CLI, you can start the hypar hub like this:
 ```
@@ -11,7 +11,11 @@ The hub writes data into the current user's home directory in a folder called `.
 
 
 ## Settings
-You can control how the hub synchronizes with hypar by editing the `hub.json` file located in the `.hypar` directory. The `hub.json` file looks like this:
+- Do `hypar hub` on the command line. If no `hub.json` file exists, one will be created for you.
+- After your `hub.json` file has been created, you can add a workflow with `hypar hub --add-workflow <id>` where `<id>` is the id of a workflow on Hypar.
+  - You can find the id of your workflow by looking at its url in Hypar:
+    >https://hypar.io/workflows/**8026cc62-e421-4790-89a5-a9332c3427a2**
+- The `hub.json` file looks like this:
 ```json
 {
     "2e534890-ab60-40ad-9fb0-681d313a08e6": {
@@ -33,10 +37,6 @@ You can control how the hub synchronizes with hypar by editing the `hub.json` fi
     },
 }
 ```
-The keys in the `hub.json` file are the identifiers of Workflows on Hypar. You can see the id of a Workflow on Hypar by inspecting its url in the hypar web application:
-
->https://hypar.io/workflows/8026cc62-e421-4790-89a5-a9332c3427a2 <-- There it is!
-
 - The `hidden` property is an array of function names which you would like to be hidden from hub clients. It's often useful to hide certain functions, like those which provide datums: Levels, Grids, etc., so that your client application doesn't need to draw or import those.
 - The `active` property is a boolean value indicating whether the workflow should be sent to the hub clients. A workflow with `"active": false` will still be synced to the hub, but its update notifications will not be sent to the clients.
 - The `revit` property contains information for syncing with Revit. The `file_name` property on this object specifies the file name (without directory) of the Revit file in which this workflow will be made visible.

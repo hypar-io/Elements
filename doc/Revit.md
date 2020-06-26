@@ -14,8 +14,9 @@ Hypar for Revit is a Revit addin that connects Revit to the Hypar Hub. Hub workf
 
   ![](./images/RevitExternalCommands.png)
 
-- Clicking on Hypar Hub Start will start visualization the hub in your current active 3D view.
+- Clicking on Hypar Hub Start will start visualization of the hub in your current active 3D view. You may need to rotate/pan/zoom to get the visualization to show.
 - Clicking on Hypar Hub Stop will stop syncing with the hub.
+- NOTE: If after rotate/pan/zoom, you still don't see visualization of your workflow geometry in the view, the hub may be misconfigured. Ensure that the hub references your workflow, and that the workflow is set to sync with the active Revit model. For more information on setting up the hub go [here](./Hub.md).
 
 ## Troubleshooting
 - The Hypar Revit log is available at `C:/Users/{you}/./hypar/hypar-revit.log. If you run into problems, you can send that log to support@hypar.io.
