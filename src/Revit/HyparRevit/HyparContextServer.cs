@@ -303,7 +303,7 @@ namespace Hypar.Revit
             else
             {
                 var vPos = vBuffer.GetVertexStreamPositionNormalColored();
-                vPos.AddVertices((IList<VertexPositionNormalColored>)vertices);
+                vPos.AddVertices(vertices);
             }
 
             var iPos = iBuffer.GetIndexStreamTriangle();

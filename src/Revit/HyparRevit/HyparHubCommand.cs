@@ -49,6 +49,7 @@ namespace Hypar.Revit
             if (HyparHubStartCommand._hubConnectionStarted == false || !HyparHubApp.HyparApp.Stop())
             {
                 TaskDialog.Show("Hypar Hub Error", "The connection to the hub could not be stopped. Was the connection running?");
+                return Result.Failed;
             }
             HyparHubApp.IsSyncing = false;
             return Result.Succeeded;
