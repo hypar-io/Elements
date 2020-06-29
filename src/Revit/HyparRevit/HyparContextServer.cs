@@ -17,6 +17,7 @@ namespace Hypar.Revit
 
         private Outline _outline;
 
+        private DisplayStyle _lastDisplayStyle = DisplayStyle.Undefined;
 
         private Dictionary<string, RenderData> _renderDataCache = new Dictionary<string, RenderData>();
 
@@ -82,7 +83,9 @@ namespace Hypar.Revit
                 return;
             }
 
-            if (HyparHubApp.RequiresRedraw == false)
+            // When the display style changes we need to redraw because
+            // we'll use a different data layout.
+            if (HyparHubApp.RequiresRedraw == false && _lastDisplayStyle == displayStyle)
             {
                 // Draw what's in the cached buffers.
                 foreach (var renderData in _renderDataCache.Values)
@@ -99,6 +102,8 @@ namespace Hypar.Revit
                 }
                 return;
             }
+
+            _lastDisplayStyle = displayStyle;
 
             var executionsToDraw = HyparHubApp.CurrentWorkflows.Values.SelectMany(w => w.FunctionInstances.Where(fi => fi.SelectedOptionExecutionId != null).Select(fi => fi.Id)).ToList();
 
@@ -248,7 +253,7 @@ namespace Hypar.Revit
             var numPrimitives = mesh.Triangles.Count;
             var pType = PrimitiveType.TriangleList;
             var numIndices = GetPrimitiveSize(pType) * numPrimitives;
-            var vertexFormatBits = displayStyle == DisplayStyle.HLR ? VertexFormatBits.PositionColored : VertexFormatBits.PositionNormalColored;
+            var vertexFormatBits = displayStyle == DisplayStyle.FlatColors ? VertexFormatBits.PositionColored : VertexFormatBits.PositionNormalColored;
             var vertexFormat = new VertexFormat(vertexFormatBits);
 
             var vBuffer = new VertexBuffer(GetVertexSize(vertexFormatBits) * numVertices);
@@ -295,7 +300,7 @@ namespace Hypar.Revit
 
             }
 
-            if (displayStyle == DisplayStyle.HLR)
+            if (displayStyle == DisplayStyle.FlatColors)
             {
                 var vPos = vBuffer.GetVertexStreamPositionColored();
                 vPos.AddVertices(verticesFlat);
