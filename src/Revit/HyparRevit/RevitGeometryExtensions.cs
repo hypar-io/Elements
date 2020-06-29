@@ -4,6 +4,7 @@ using Elements.Geometry;
 
 namespace Hypar.Revit
 {
+    // TODO: Move to RevitHyparTools.
     public static class RevitGeometryExtensions
     {
         public static double ToFeet(this double meters)
