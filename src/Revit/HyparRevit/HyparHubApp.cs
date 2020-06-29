@@ -7,7 +7,6 @@ using Hypar.Model;
 using Autodesk.Revit.DB.ExternalService;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Autodesk.Revit.DB;
 
 namespace Hypar.Revit
 {
