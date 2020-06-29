@@ -253,7 +253,19 @@ namespace Hypar.Revit
             var numPrimitives = mesh.Triangles.Count;
             var pType = PrimitiveType.TriangleList;
             var numIndices = GetPrimitiveSize(pType) * numPrimitives;
-            var vertexFormatBits = displayStyle == DisplayStyle.FlatColors ? VertexFormatBits.PositionColored : VertexFormatBits.PositionNormalColored;
+            VertexFormatBits vertexFormatBits;
+            switch (displayStyle)
+            {
+                case DisplayStyle.HLR:
+                    vertexFormatBits = VertexFormatBits.Position;
+                    break;
+                case DisplayStyle.FlatColors:
+                    vertexFormatBits = VertexFormatBits.PositionColored;
+                    break;
+                default:
+                    vertexFormatBits = VertexFormatBits.PositionNormalColored;
+                    break;
+            }
             var vertexFormat = new VertexFormat(vertexFormatBits);
 
             var vBuffer = new VertexBuffer(GetVertexSize(vertexFormatBits) * numVertices);
@@ -262,6 +274,7 @@ namespace Hypar.Revit
             vBuffer.Map(GetVertexSize(vertexFormatBits) * numVertices);
             iBuffer.Map(numIndices);
 
+            var verticesHLR = new List<VertexPosition>();
             var verticesFlat = new List<VertexPositionColored>();
             var vertices = new List<VertexPositionNormalColored>();
             var triangles = new List<IndexTriangle>();
@@ -278,6 +291,9 @@ namespace Hypar.Revit
 
                     switch (vertexFormatBits)
                     {
+                        case VertexFormatBits.Position:
+                            verticesHLR.Add(new VertexPosition(pos));
+                            break;
                         case VertexFormatBits.PositionColored:
                             verticesFlat.Add(new VertexPositionColored(pos, v.Color.ToColorWithTransparency()));
                             break;
@@ -297,18 +313,22 @@ namespace Hypar.Revit
                 }
 
                 triangles.Add(new IndexTriangle(t.Vertices[0].Index, t.Vertices[1].Index, t.Vertices[2].Index));
-
             }
 
-            if (displayStyle == DisplayStyle.FlatColors)
+            switch (displayStyle)
             {
-                var vPos = vBuffer.GetVertexStreamPositionColored();
-                vPos.AddVertices(verticesFlat);
-            }
-            else
-            {
-                var vPos = vBuffer.GetVertexStreamPositionNormalColored();
-                vPos.AddVertices(vertices);
+                case DisplayStyle.HLR:
+                    var p = vBuffer.GetVertexStreamPosition();
+                    p.AddVertices(verticesHLR);
+                    break;
+                case DisplayStyle.FlatColors:
+                    var pc = vBuffer.GetVertexStreamPositionColored();
+                    pc.AddVertices(verticesFlat);
+                    break;
+                default:
+                    var pnc = vBuffer.GetVertexStreamPositionNormalColored();
+                    pnc.AddVertices(vertices);
+                    break;
             }
 
             var iPos = iBuffer.GetIndexStreamTriangle();
@@ -318,6 +338,12 @@ namespace Hypar.Revit
             iBuffer.Unmap();
 
             var effect = new EffectInstance(vertexFormatBits);
+            if (displayStyle == DisplayStyle.HLR)
+            {
+                var color = new ColorWithTransparency(200, 200, 200, 0);
+                effect.SetAmbientColor(color.GetColor());
+                effect.SetDiffuseColor(color.GetColor());
+            }
 
             // Create a render data for reuse 
             // on non-update calls.
