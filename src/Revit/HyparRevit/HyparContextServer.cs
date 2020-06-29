@@ -338,9 +338,14 @@ namespace Hypar.Revit
             iBuffer.Unmap();
 
             var effect = new EffectInstance(vertexFormatBits);
+
+            // There is not reason why this should work.
+            // In other situations, 255 is the 'full' component.
+            // In the case of hidden line rendering, 0, 0, 0 makes white.
             if (displayStyle == DisplayStyle.HLR)
             {
-                var color = new ColorWithTransparency(200, 200, 200, 0);
+                var color = new ColorWithTransparency(0, 0, 0, 0);
+                effect.SetColor(color.GetColor());
                 effect.SetAmbientColor(color.GetColor());
                 effect.SetDiffuseColor(color.GetColor());
             }
