@@ -9,7 +9,7 @@ Hypar for Revit is a Revit addin that connects Revit to the Hypar Hub. Hub workf
 - Unzip into `C:\Users\<you>\AppData\Roaming\Autodesk\Revit\Addins\2020`. After unzipping you should see a `Hypar.Revit.addin` at the top level of the addins folder and a `Hypar.Revit` subfolder.
 
 ## Running
-- Start the hub. From the command line do `hypar hub`.
+- Start the hub. From the command line do `hypar hub`. See the hub instructions [here](./Hub.md).
 - Open Revit. If your addin is installed correctly, two new commands will appear in the External Tools button on the Revit Ribbon.  
 
   ![](./images/RevitExternalCommands.png)
