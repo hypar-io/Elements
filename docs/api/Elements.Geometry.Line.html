@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Line
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -211,6 +211,7 @@ var l = new Line(a, b);
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
@@ -247,7 +248,7 @@ var l = new Line(a, b);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Line_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Line : Curve, ICurve, IEquatable&lt;Line&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Line : Curve, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Line&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -266,8 +267,7 @@ var l = new Line(a, b);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Line(Vector3 start, Vector3 end)</code></pre>
+    <pre><code class="lang-csharp hljs">public Line(Vector3 start, Vector3 end)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -336,8 +336,7 @@ public Line(Vector3 start, Vector3 end)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;End&quot;, Required = Required.AllowNull)]
-public Vector3 End { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -361,8 +360,7 @@ public Vector3 End { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Start&quot;, Required = Required.AllowNull)]
-public Vector3 Start { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -727,13 +725,13 @@ Divisions will be centered along the line.</p>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Line_Intersects_" data-uid="Elements.Geometry.Line.Intersects*"></a>
-  <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean)">Intersects(Line, out Vector3, Boolean)</h4>
+  <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean,System.Boolean)">Intersects(Line, out Vector3, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>Does this line intersect the provided line in 3D?</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Line l, out Vector3 result, bool infinite = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Intersects(Line l, out Vector3 result, bool infinite = false, bool includeEnds = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -759,6 +757,12 @@ Divisions will be centered along the line.</p>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">infinite</span></td>
         <td><p>Treat the lines as infinite?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">includeEnds</span></td>
+        <td><p>If the end of one line lies exactly on the other, count it as an intersection?</p>
 </td>
       </tr>
     </tbody>
@@ -996,6 +1000,54 @@ Direction X Vector3.ZAxis.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
+  <a id="Elements_Geometry_Line_PointOnLine_" data-uid="Elements.Geometry.Line.PointOnLine*"></a>
+  <h4 id="Elements_Geometry_Line_PointOnLine_Elements_Geometry_Vector3_System_Boolean_" data-uid="Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3,System.Boolean)">PointOnLine(Vector3, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Test if a point lies within this line segment</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool PointOnLine(Vector3 point, bool includeEnds = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The point to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">includeEnds</span></td>
+        <td><p>Consider a point at the endpoint as on the line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Line_Reversed_" data-uid="Elements.Geometry.Line.Reversed*"></a>
   <h4 id="Elements_Geometry_Line_Reversed" data-uid="Elements.Geometry.Line.Reversed">Reversed()</h4>
   <div class="markdown level1 summary"><p>Get a new line that is the reverse of the original line.</p>
@@ -1108,6 +1160,141 @@ positive Z axis points along the curve.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
+  <a id="Elements_Geometry_Line_Transformed_" data-uid="Elements.Geometry.Line.Transformed*"></a>
+  <h4 id="Elements_Geometry_Line_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Line.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Curve Transformed(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Transformed_Elements_Geometry_Transform_">Curve.Transformed(Transform)</a></div>
+  <a id="Elements_Geometry_Line_TransformedLine_" data-uid="Elements.Geometry.Line.TransformedLine*"></a>
+  <h4 id="Elements_Geometry_Line_TransformedLine_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Line.TransformedLine(Elements.Geometry.Transform)">TransformedLine(Transform)</h4>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line TransformedLine(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Trim_" data-uid="Elements.Geometry.Line.Trim*"></a>
+  <h4 id="Elements_Geometry_Line_Trim_Elements_Geometry_Polygon_System_Collections_Generic_List_Elements_Geometry_Line___" data-uid="Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,System.Collections.Generic.List{Elements.Geometry.Line}@)">Trim(Polygon, out List&lt;Line&gt;)</h4>
+  <div class="markdown level1 summary"><p>Trim a line with a polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Line&gt; Trim(Polygon polygon, out List&lt;Line&gt; outsideSegments)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon to trim with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="parametername">outsideSegments</span></td>
+        <td><p>A list of the segment(s) of the line outside of the supplied polygon.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><p>A list of the segment(s) of the line within the supplied polygon.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Line_TrimTo_" data-uid="Elements.Geometry.Line.TrimTo*"></a>
   <h4 id="Elements_Geometry_Line_TrimTo_Elements_Geometry_Line_System_Boolean_" data-uid="Elements.Geometry.Line.TrimTo(Elements.Geometry.Line,System.Boolean)">TrimTo(Line, Boolean)</h4>
   <div class="markdown level1 summary"><p>Trim this line to the trimming curve.</p>
@@ -1160,6 +1347,9 @@ positive Z axis points along the curve.</p>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class TypeGenerator
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -144,7 +144,7 @@ Executing Assembly is not necessarily in the same place as the templates (e.g. H
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_" data-uid="Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema*"></a>
-  <h4 id="Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_NJsonSchema_JsonSchema_System_String_System_String____System_Boolean_" data-uid="Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema,System.String,System.String[]@,System.Boolean)">GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)</h4>
+  <h4 id="Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_JsonSchema_System_String_System_String____System_Boolean_" data-uid="Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema,System.String,System.String[]@,System.Boolean)">GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)</h4>
   <div class="markdown level1 summary"><p>For a given schema, generate code, compile an assembly, and write it to disk at the specified path.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -163,7 +163,7 @@ Executing Assembly is not necessarily in the same place as the templates (e.g. H
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NJsonSchema.JsonSchema</span></td>
+        <td><span class="xref">JsonSchema</span></td>
         <td><span class="parametername">schema</span></td>
         <td></td>
       </tr>
@@ -243,13 +243,13 @@ Executing Assembly is not necessarily in the same place as the templates (e.g. H
     </tbody>
   </table>
   <a id="Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_" data-uid="Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync*"></a>
-  <h4 id="Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_System_String___" data-uid="Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[])">GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[])</h4>
+  <h4 id="Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_System_String___System_Boolean_" data-uid="Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[],System.Boolean)">GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[], Boolean)</h4>
   <div class="markdown level1 summary"><p>Generate an in-memory assembly containing all the types generated from the supplied uris.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Task&lt;CompilationResult&gt; GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;CompilationResult&gt; GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris, bool frameworkBuild = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -267,6 +267,12 @@ Executing Assembly is not necessarily in the same place as the templates (e.g. H
         <td><p>A collection of uris to JSON schema. These can be public urls or relative file paths.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">frameworkBuild</span></td>
+        <td><p>If true, the assembly will be built against the .NET framework, otherwise it will be built against .NET core.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -280,7 +286,62 @@ Executing Assembly is not necessarily in the same place as the templates (e.g. H
     <tbody>
       <tr>
         <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Elements.Generate.CompilationResult.html">CompilationResult</a>&gt;</td>
-        <td><p>An assembly containing the generated types or null if no Assembly could be generated.</p>
+        <td><p>A CompilationResult containing information about the compilation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndSaveAsync_" data-uid="Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync*"></a>
+  <h4 id="Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndSaveAsync_System_String___System_String_System_Boolean_" data-uid="Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String[],System.String,System.Boolean)">GenerateInMemoryAssemblyFromUrisAndSaveAsync(String[], String, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Generate an in-memory assembly containing all the types generated from the supplied uris and save it to disk.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Task&lt;CompilationResult&gt; GenerateInMemoryAssemblyFromUrisAndSaveAsync(string[] uris, string dllPath, bool frameworkBuild = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><span class="parametername">uris</span></td>
+        <td><p>A collection of uris to JSON schema. These can be public urls or relative file paths.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">dllPath</span></td>
+        <td><p>The path at which the dll will be written. If this is not null, the assembly will be written but not loaded.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">frameworkBuild</span></td>
+        <td><p>If true, the assembly will be built against the .NET framework, otherwise it will be built against .NET core.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Elements.Generate.CompilationResult.html">CompilationResult</a>&gt;</td>
+        <td><p>A CompilationResult containing information about the compilation.</p>
 </td>
       </tr>
     </tbody>
@@ -475,7 +536,7 @@ it will be loaded from the URL, otherwise it will attempt to load from disk.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">NJsonSchema.JsonSchema</span>&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">JsonSchema</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>

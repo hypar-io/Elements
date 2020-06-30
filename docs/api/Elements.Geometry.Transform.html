@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Transform
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -274,8 +274,7 @@ for(var i=0.0; i&lt;360.0; i+= 360.0/(double)count)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Transform(Matrix matrix)</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform(Matrix matrix)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -538,9 +537,7 @@ along up.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Matrix&quot;, Required = Required.Always)]
-[Required]
-public Matrix Matrix { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Matrix Matrix { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -564,8 +561,7 @@ public Matrix Matrix { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Origin { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Origin { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -589,8 +585,7 @@ public Vector3 Origin { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 XAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 XAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -614,8 +609,7 @@ public Vector3 XAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 YAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 YAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -639,8 +633,7 @@ public Vector3 YAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 ZAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 ZAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -863,7 +856,8 @@ of the curve.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Bezier OfBezier(Bezier bezier)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Bezier.Transformed(Transform) instead.&quot;)]
+public Bezier OfBezier(Bezier bezier)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -899,6 +893,49 @@ of the curve.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Transform_OfCurve_" data-uid="Elements.Geometry.Transform.OfCurve*"></a>
+  <h4 id="Elements_Geometry_Transform_OfCurve_Elements_Geometry_Curve_" data-uid="Elements.Geometry.Transform.OfCurve(Elements.Geometry.Curve)">OfCurve(Curve)</h4>
+  <div class="markdown level1 summary"><p>A transformed copy of the supplied curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Curve.Transformed(Transform) instead.&quot;)]
+public Curve OfCurve(Curve curve)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">curve</span></td>
+        <td><p>The curve to transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Transform_OfLine_" data-uid="Elements.Geometry.Transform.OfLine*"></a>
   <h4 id="Elements_Geometry_Transform_OfLine_Elements_Geometry_Line_" data-uid="Elements.Geometry.Transform.OfLine(Elements.Geometry.Line)">OfLine(Line)</h4>
   <div class="markdown level1 summary"><p>Transform the specified line.</p>
@@ -906,7 +943,8 @@ of the curve.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Line OfLine(Line line)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Line.Transformed(Transform) instead.&quot;)]
+public Line OfLine(Line line)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1035,7 +1073,8 @@ of the curve.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon OfPolygon(Polygon polygon)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Polygon.Transformed(Transform) instead.&quot;)]
+public Polygon OfPolygon(Polygon polygon)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
