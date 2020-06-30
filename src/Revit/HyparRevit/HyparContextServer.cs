@@ -5,6 +5,7 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExternalService;
+using Elements.Geometry;
 using Serilog;
 
 namespace Hypar.Revit
@@ -342,8 +343,6 @@ namespace Hypar.Revit
             switch (displayStyle)
             {
                 case DisplayStyle.HLR:
-                    vertexFormatBits = VertexFormatBits.Position;
-                    break;
                 case DisplayStyle.FlatColors:
                     vertexFormatBits = VertexFormatBits.PositionColored;
                     break;
@@ -359,7 +358,6 @@ namespace Hypar.Revit
             vBuffer.Map(GetVertexSize(vertexFormatBits) * numVertices);
             iBuffer.Map(numIndices);
 
-            var verticesHLR = new List<VertexPosition>();
             var verticesFlat = new List<VertexPositionColored>();
             var vertices = new List<VertexPositionNormalColored>();
             var triangles = new List<IndexTriangle>();
@@ -376,11 +374,9 @@ namespace Hypar.Revit
 
                     switch (vertexFormatBits)
                     {
-                        case VertexFormatBits.Position:
-                            verticesHLR.Add(new VertexPosition(pos));
-                            break;
                         case VertexFormatBits.PositionColored:
-                            verticesFlat.Add(new VertexPositionColored(pos, v.Color.ToColorWithTransparency()));
+                            var color = displayStyle == DisplayStyle.HLR ? new ColorWithTransparency(255, 255, 255, 0) : v.Color.ToColorWithTransparency();
+                            verticesFlat.Add(new VertexPositionColored(pos, color));
                             break;
                         default:
                             vertices.Add(new VertexPositionNormalColored(pos, t.Normal.ToXYZ(), v.Color.ToColorWithTransparency()));
@@ -403,9 +399,6 @@ namespace Hypar.Revit
             switch (displayStyle)
             {
                 case DisplayStyle.HLR:
-                    var p = vBuffer.GetVertexStreamPosition();
-                    p.AddVertices(verticesHLR);
-                    break;
                 case DisplayStyle.FlatColors:
                     var pc = vBuffer.GetVertexStreamPositionColored();
                     pc.AddVertices(verticesFlat);
@@ -426,13 +419,13 @@ namespace Hypar.Revit
             // There is no reason why this should work.
             // In other situations, 255 is the 'full' component.
             // In the case of hidden line rendering, 0, 0, 0 makes white.
-            if (displayStyle == DisplayStyle.HLR)
-            {
-                var color = new ColorWithTransparency(0, 0, 0, 0);
-                effect.SetColor(color.GetColor());
-                effect.SetAmbientColor(color.GetColor());
-                effect.SetDiffuseColor(color.GetColor());
-            }
+            // if (displayStyle == DisplayStyle.HLR)
+            // {
+            //     var color = new ColorWithTransparency(0, 0, 0, 0);
+            //     effect.SetColor(color.GetColor());
+            //     effect.SetAmbientColor(color.GetColor());
+            //     effect.SetDiffuseColor(color.GetColor());
+            // }
 
             // Create a render data for reuse 
             // on non-update calls.
