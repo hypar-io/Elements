@@ -131,13 +131,13 @@ namespace Elements.Geometry.Solids
             }
             else if (curve is Bezier)
             {
-                var startCap = solid.AddFace(transforms[0].OfPolygon(perimeter));
+                var startCap = solid.AddFace((Polygon)perimeter.Transformed(transforms[0]));
                 for (var i = 0; i < transforms.Length - 1; i++)
                 {
                     var next = transforms[i + 1];
                     solid.SweepPolygonBetweenPlanes(perimeter, transforms[i], next);
                 }
-                var endCap = solid.AddFace(transforms[transforms.Length - 1].OfPolygon(perimeter).Reversed());
+                var endCap = solid.AddFace(((Polygon)perimeter.Transformed(transforms[transforms.Length - 1])).Reversed());
             }
             else
             {
@@ -147,12 +147,12 @@ namespace Elements.Geometry.Solids
 
                 if (holes != null)
                 {
-                    cap = solid.AddFace(transforms[0].OfPolygon(perimeter), transforms[0].OfPolygons(holes));
+                    cap = solid.AddFace((Polygon)perimeter.Transformed(transforms[0]), transforms[0].OfPolygons(holes));
                     openEdges = new Edge[1 + holes.Count][];
                 }
                 else
                 {
-                    cap = solid.AddFace(transforms[0].OfPolygon(perimeter));
+                    cap = solid.AddFace((Polygon)perimeter.Transformed(transforms[0]));
                     openEdges = new Edge[1][];
                 }
 
@@ -213,11 +213,11 @@ namespace Elements.Geometry.Solids
                 var t = new Transform(direction.Negate() * (distance / 2), rotation);
                 if (holes != null)
                 {
-                    fStart = solid.AddFace(t.OfPolygon(perimeter.Reversed()), t.OfPolygons(holes.Reversed()));
+                    fStart = solid.AddFace((Polygon)perimeter.Reversed().Transformed(t), t.OfPolygons(holes.Reversed()));
                 }
                 else
                 {
-                    fStart = solid.AddFace(t.OfPolygon(perimeter.Reversed()));
+                    fStart = solid.AddFace((Polygon)perimeter.Reversed().Transformed(t));
                 }
             }
             else
@@ -710,8 +710,8 @@ namespace Elements.Geometry.Solids
             // var v = (end.Origin - start.Origin).Normalized();
             // var startP = mid.ProjectAlong(v, start);
             // var endP = mid.ProjectAlong(v, end);
-            var startP = start.OfPolygon(p);
-            var endP = end.OfPolygon(p);
+            var startP = (Polygon)p.Transformed(start);
+            var endP = (Polygon)p.Transformed(end);
 
             var loop1 = AddEdges(startP);
             var loop2 = AddEdges(endP);

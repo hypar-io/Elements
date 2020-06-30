@@ -24,8 +24,8 @@ namespace Elements.Tests
             this.Name = "MultipleProfileUnion";
             // small grid of rough circles is unioned
             // 2x3 grid shoud produce 2 openings
-            var circle = Polygon.Circle(3, 4);
-            var smallCircle = Polygon.Circle(1, 4);
+            var circle = new Circle(Vector3.Origin, 3).ToPolygon(4);
+            var smallCircle = new Circle(Vector3.Origin, 1).ToPolygon(4);
 
             var seed = new Profile(circle, new List<Polygon> { smallCircle }, Guid.NewGuid(), "");
             for (int i = 0; i < 3; i++)
