@@ -19,7 +19,7 @@ Hypar for Revit is a Revit addin that connects Revit to the Hypar Hub. Hub workf
 - NOTE: If after rotate/pan/zoom, you still don't see visualization of your workflow geometry in the view, the hub may be misconfigured. Ensure that the hub references your workflow, and that the workflow is set to sync with the active Revit model. For more information on setting up the hub go [here](./Hub.md).
 
 ## Troubleshooting
-- The Hypar Revit log is available at `C:/Users/{you}/./hypar/hypar-revit.log. If you run into problems, you can send that log to support@hypar.io.
+- The Hypar Revit log is available at `C:/Users/{you}/./hypar/hypar-revit.log`. If you run into problems, you can send that log to support@hypar.io.
 
 ## Known Limitations
 - When the hub is first started, you will not see any visualizations until you zoom, pan, or rotate. This is a limitation of Revit's `RefreshActiveView` API which does not work as advertised.

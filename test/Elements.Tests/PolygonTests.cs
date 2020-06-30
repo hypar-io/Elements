@@ -630,12 +630,12 @@ namespace Elements.Geometry.Tests
             // Check that the vertices are properly reversed.
             Assert.Equal(a.Vertices.Reverse(), b.Vertices);
             var t = new Transform();
-            var c = t.OfPolygon(a);
+            var c = a.Transformed(t);
             var l = new Line(Vector3.Origin, new Vector3(0.0, 0.5, 0.5));
             var transforms = l.Frames(0.0, 0.0);
 
-            var start = transforms[0].OfPolygon(a);
-            var end = transforms[1].OfPolygon(b);
+            var start = (Polygon)a.Transformed(transforms[0]);
+            var end = (Polygon)b.Transformed(transforms[1]);
 
             var n1 = start.Plane();
             var n2 = end.Plane();
@@ -706,7 +706,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(shape3.Segments().Count() * 2, contour3.Count());
         }
 
-       
+
         [Fact]
         public void PolygonIsAlmostEqualAfterBoolean()
         {

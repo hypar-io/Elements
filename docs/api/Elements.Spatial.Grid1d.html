@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Grid1d
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -883,13 +883,13 @@ For just top-level cells, get the Cells property.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid1d_SplitAtOffset_" data-uid="Elements.Spatial.Grid1d.SplitAtOffset*"></a>
-  <h4 id="Elements_Spatial_Grid1d_SplitAtOffset_System_Double_System_Boolean_" data-uid="Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean)">SplitAtOffset(Double, Boolean)</h4>
+  <h4 id="Elements_Spatial_Grid1d_SplitAtOffset_System_Double_System_Boolean_System_Boolean_" data-uid="Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean,System.Boolean)">SplitAtOffset(Double, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>Split a cell at a relative position measured from its domain start or end.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void SplitAtOffset(double position, bool fromEnd = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public void SplitAtOffset(double position, bool fromEnd = false, bool ignoreOutsideDomain = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -911,6 +911,12 @@ For just top-level cells, get the Cells property.</p>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">fromEnd</span></td>
         <td><p>If true, measure the position from the end rather than the start</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">ignoreOutsideDomain</span></td>
+        <td><p>If true, splits at offsets outside the domain will be silently ignored.</p>
 </td>
       </tr>
     </tbody>
@@ -998,6 +1004,61 @@ For just top-level cells, get the Cells property.</p>
         <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
         <td><span class="parametername">parameters</span></td>
         <td><p>A list of parameters at which to split the grid.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid1d_SplitAtPoint_" data-uid="Elements.Spatial.Grid1d.SplitAtPoint*"></a>
+  <h4 id="Elements_Spatial_Grid1d_SplitAtPoint_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.Grid1d.SplitAtPoint(Elements.Geometry.Vector3)">SplitAtPoint(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Split the grid at a point in world space. Note that for curved grids an approximate
+point will be used.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SplitAtPoint(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid1d_SplitAtPoints_" data-uid="Elements.Spatial.Grid1d.SplitAtPoints*"></a>
+  <h4 id="Elements_Spatial_Grid1d_SplitAtPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">SplitAtPoints(IEnumerable&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Split the grid at points in world space. Note that for curved grids an approximate
+point will be used.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SplitAtPoints(IEnumerable&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points at which to split.</p>
 </td>
       </tr>
     </tbody>

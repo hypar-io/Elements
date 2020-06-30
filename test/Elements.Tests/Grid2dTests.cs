@@ -89,7 +89,7 @@ namespace Elements.Tests
         {
             var rectangle = Polygon.Rectangle(10, 6);
             var rotation = new Transform(Vector3.Origin, 30); //30 degree rotation
-            var rotatedRectangle = rotation.OfPolygon(rectangle);
+            var rotatedRectangle = (Polygon)rectangle.Transformed(rotation);
             var grid = new Grid2d(rotatedRectangle, rotation);
             grid.U.DivideByCount(20);
             grid.V.DivideByCount(12);

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Making Hypar Functions | Hypar Docs </title>
+    <title>NOTE: Hypar for Revit is currently in beta. Do not use Hypar for Revit for production work. | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Making Hypar Functions | Hypar Docs ">
+    <meta name="title" content="NOTE: Hypar for Revit is currently in beta. Do not use Hypar for Revit for production work. | Hypar Docs ">
     <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="favicon.ico">
@@ -64,17 +64,38 @@
         <div class="article row grid">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="making-hypar-functions">Making Hypar Functions</h1>
+<h1 id="note-hypar-for-revit-is-currently-in-beta-do-not-use-hypar-for-revit-for-production-work"><strong>NOTE: Hypar for Revit is currently in beta. Do not use Hypar for Revit for production work.</strong></h1>
 
-<p>Hypar Functions are the building blocks of Hypar. They capture a piece of intelligence: the logic of some system, object, or process. Hypar functions can be created in a number of different ways: you can write <a href="C-Sharp.html">C# Code</a>, build an <a href="Excel.html">Excel spreadsheet</a>, or develop a <a href="Grasshopper.html">Grasshopper script</a>.</p>
-<p>By uploading a function to Hypar you can produce multiple options for a building problem in just a few seconds, and combine them with other people's functions to create rich, realistic designs.</p>
-<p>All Hypar functions describe their inputs and their outputs. The various function languages treat these slightly differently, but the basic concepts are the same: you specify the information your function needs to run -- like numbers, boolean values, choices from a list, or elements from the model -- and you designate these pieces of information as Inputs and Model Dependencies. Similarly, you specify the information your function generates -- numerical data or other elements to be added to the model -- and designate these as Outputs and Model Outputs.</p>
-<p><img src="images/Function.png" alt="Function Diagram"></p>
-<h2 id="choose-a-function-language-to-learn-more">Choose a function language to learn more</h2>
+<h1 id="getting-started-with-hypar-for-revit">Getting Started with Hypar for Revit</h1>
+<p>Hypar for Revit is a Revit addin that connects Revit to the Hypar Hub. Hub workflows will be temporarily visualized in the active 3D view of your Revit document.</p>
+<h2 id="installation-beta">Installation (beta)</h2>
 <ul>
-<li><a href="C-Sharp.html">C#</a></li>
-<li><a href="Grasshopper.html">Grasshopper</a> (Requires Rhino 6 or above)</li>
-<li><a href="Excel.html">Excel</a></li>
+<li><a href="https://hypar-io.github.io/Elements/C-Sharp.html#installing-and-using-the-hypar-cli">Install the latest Hypar CLI</a>. You'll need this to use the <code>hub</code> command.</li>
+<li>Download the latest zip from the <a href="https://github.com/hypar-io/Elements/releases">releases page</a>.</li>
+<li>Unzip into <code>C:\Users\&lt;you&gt;\AppData\Roaming\Autodesk\Revit\Addins\2020</code>. After unzipping you should see a <code>Hypar.Revit.addin</code> at the top level of the addins folder and a <code>Hypar.Revit</code> subfolder.</li>
+</ul>
+<h2 id="running">Running</h2>
+<ul>
+<li><p>Start the hub. From the command line do <code>hypar hub</code>. See the hub instructions <a href="Hub.html">here</a>.</p>
+</li>
+<li><p>Open Revit. If your addin is installed correctly, two new commands will appear in the External Tools button on the Revit Ribbon.</p>
+<p><img src="./images/RevitExternalCommands.png" alt=""></p>
+</li>
+<li><p>Clicking on Hypar Hub Start will start visualization of the hub in your current active 3D view. You may need to rotate/pan/zoom to get the visualization to show.</p>
+</li>
+<li><p>Clicking on Hypar Hub Stop will stop syncing with the hub.</p>
+</li>
+<li><p>NOTE: If after rotate/pan/zoom, you still don't see visualization of your workflow geometry in the view, the hub may be misconfigured. Ensure that the hub references your workflow, and that the workflow is set to sync with the active Revit model. For more information on setting up the hub go <a href="Hub.html">here</a>.</p>
+</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<ul>
+<li>The Hypar Revit log is available at <code>C:/Users/{you}/./hypar/hypar-revit.log</code>. If you run into problems, you can send that log to support@hypar.io.</li>
+</ul>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>When the hub is first started, you will not see any visualizations until you zoom, pan, or rotate. This is a limitation of Revit's <code>RefreshActiveView</code> API which does not work as advertised.</li>
+<li>Transparency is not currently supported.</li>
 </ul>
 </article>
           </div>

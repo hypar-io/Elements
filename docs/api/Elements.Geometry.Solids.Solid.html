@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Solid
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -757,13 +757,13 @@ Additional edge arrays are treated as holes.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_Tessellate_" data-uid="Elements.Geometry.Solids.Solid.Tessellate*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_Tessellate_Elements_Geometry_Mesh__" data-uid="Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@)">Tessellate(ref Mesh)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_Tessellate_Elements_Geometry_Mesh__Elements_Geometry_Transform_Elements_Geometry_Color_" data-uid="Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)">Tessellate(ref Mesh, Transform, Color)</h4>
   <div class="markdown level1 summary"><p>Triangulate this solid.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Tessellate(ref Mesh mesh)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -779,6 +779,18 @@ Additional edge arrays are treated as holes.</p>
         <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
         <td><span class="parametername">mesh</span></td>
         <td><p>The mesh to which the solid's tessellated data will be added.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>An optional transform used to transform the generated vertex coordinates.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
+        <td><span class="parametername">color</span></td>
+        <td><p>An optional color to apply to the vertex.</p>
 </td>
       </tr>
     </tbody>

@@ -74,15 +74,15 @@ references:
   isSpec: "True"
   fullName: Elements.Analysis.AnalysisMesh.Perimeter
   nameWithType: AnalysisMesh.Perimeter
-- uid: Elements.Analysis.AnalysisMesh.Tessellate(Elements.Geometry.Mesh@)
-  name: Tessellate(ref Mesh)
-  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Tessellate_Elements_Geometry_Mesh__
-  commentId: M:Elements.Analysis.AnalysisMesh.Tessellate(Elements.Geometry.Mesh@)
-  name.vb: Tessellate(ByRef Mesh)
-  fullName: Elements.Analysis.AnalysisMesh.Tessellate(ref Elements.Geometry.Mesh)
-  fullName.vb: Elements.Analysis.AnalysisMesh.Tessellate(ByRef Elements.Geometry.Mesh)
-  nameWithType: AnalysisMesh.Tessellate(ref Mesh)
-  nameWithType.vb: AnalysisMesh.Tessellate(ByRef Mesh)
+- uid: Elements.Analysis.AnalysisMesh.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)
+  name: Tessellate(ref Mesh, Transform, Color)
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Tessellate_Elements_Geometry_Mesh__Elements_Geometry_Transform_Elements_Geometry_Color_
+  commentId: M:Elements.Analysis.AnalysisMesh.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)
+  name.vb: Tessellate(ByRef Mesh, Transform, Color)
+  fullName: Elements.Analysis.AnalysisMesh.Tessellate(ref Elements.Geometry.Mesh, Elements.Geometry.Transform, Elements.Geometry.Color)
+  fullName.vb: Elements.Analysis.AnalysisMesh.Tessellate(ByRef Elements.Geometry.Mesh, Elements.Geometry.Transform, Elements.Geometry.Color)
+  nameWithType: AnalysisMesh.Tessellate(ref Mesh, Transform, Color)
+  nameWithType.vb: AnalysisMesh.Tessellate(ByRef Mesh, Transform, Color)
 - uid: Elements.Analysis.AnalysisMesh.Tessellate*
   name: Tessellate
   href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh_Tessellate_
@@ -1004,13 +1004,13 @@ references:
   commentId: T:Elements.Generate.TypeGenerator
   fullName: Elements.Generate.TypeGenerator
   nameWithType: TypeGenerator
-- uid: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema,System.String,System.String[]@,System.Boolean)
+- uid: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema,System.String,System.String[]@,System.Boolean)
   name: GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_NJsonSchema_JsonSchema_System_String_System_String____System_Boolean_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema,System.String,System.String[]@,System.Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_JsonSchema_System_String_System_String____System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema,System.String,System.String[]@,System.Boolean)
   name.vb: GenerateAndSaveDllForSchema(JsonSchema, String, ByRef String(), Boolean)
-  fullName: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema, System.String, out System.String[], System.Boolean)
-  fullName.vb: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(NJsonSchema.JsonSchema, System.String, ByRef System.String(), System.Boolean)
+  fullName: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, System.String, out System.String[], System.Boolean)
+  fullName.vb: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, System.String, ByRef System.String(), System.Boolean)
   nameWithType: TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)
   nameWithType.vb: TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, String, ByRef String(), Boolean)
 - uid: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema*
@@ -1033,15 +1033,15 @@ references:
   isSpec: "True"
   fullName: Elements.Generate.TypeGenerator.GenerateElementTypesAsync
   nameWithType: TypeGenerator.GenerateElementTypesAsync
-- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[])
-  name: GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[])
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_System_String___
-  commentId: M:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[])
-  name.vb: GenerateInMemoryAssemblyFromUrisAndLoadAsync(String())
-  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[])
-  fullName.vb: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String())
-  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[])
-  nameWithType.vb: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(String())
+- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[],System.Boolean)
+  name: GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[], Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_System_String___System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[],System.Boolean)
+  name.vb: GenerateInMemoryAssemblyFromUrisAndLoadAsync(String(), Boolean)
+  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[], System.Boolean)
+  fullName.vb: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String(), System.Boolean)
+  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[], Boolean)
+  nameWithType.vb: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(String(), Boolean)
 - uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync*
   name: GenerateInMemoryAssemblyFromUrisAndLoadAsync
   href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_
@@ -1049,6 +1049,22 @@ references:
   isSpec: "True"
   fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync
   nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync
+- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String[],System.String,System.Boolean)
+  name: GenerateInMemoryAssemblyFromUrisAndSaveAsync(String[], String, Boolean)
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndSaveAsync_System_String___System_String_System_Boolean_
+  commentId: M:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String[],System.String,System.Boolean)
+  name.vb: GenerateInMemoryAssemblyFromUrisAndSaveAsync(String(), String, Boolean)
+  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String[], System.String, System.Boolean)
+  fullName.vb: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String(), System.String, System.Boolean)
+  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(String[], String, Boolean)
+  nameWithType.vb: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(String(), String, Boolean)
+- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync*
+  name: GenerateInMemoryAssemblyFromUrisAndSaveAsync
+  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndSaveAsync_
+  commentId: Overload:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync
+  isSpec: "True"
+  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync
+  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync
 - uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync(System.String,System.String,System.Boolean)
   name: GenerateUserElementTypeFromUriAsync(String, String, Boolean)
   href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUriAsync_System_String_System_String_System_Boolean_
@@ -1935,6 +1951,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Arc.TransformAt
   nameWithType: Arc.TransformAt
+- uid: Elements.Geometry.Arc.Transformed(Elements.Geometry.Transform)
+  name: Transformed(Transform)
+  href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc_Transformed_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Arc.Transformed(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Arc.Transformed(Elements.Geometry.Transform)
+  nameWithType: Arc.Transformed(Transform)
+- uid: Elements.Geometry.Arc.Transformed*
+  name: Transformed
+  href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc_Transformed_
+  commentId: Overload:Elements.Geometry.Arc.Transformed
+  isSpec: "True"
+  fullName: Elements.Geometry.Arc.Transformed
+  nameWithType: Arc.Transformed
+- uid: Elements.Geometry.Arc.TransformedArc(Elements.Geometry.Transform)
+  name: TransformedArc(Transform)
+  href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc_TransformedArc_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Arc.TransformedArc(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Arc.TransformedArc(Elements.Geometry.Transform)
+  nameWithType: Arc.TransformedArc(Transform)
+- uid: Elements.Geometry.Arc.TransformedArc*
+  name: TransformedArc
+  href: api/Elements.Geometry.Arc.html#Elements_Geometry_Arc_TransformedArc_
+  commentId: Overload:Elements.Geometry.Arc.TransformedArc
+  isSpec: "True"
+  fullName: Elements.Geometry.Arc.TransformedArc
+  nameWithType: Arc.TransformedArc
 - uid: Elements.Geometry.BBox3
   name: BBox3
   href: api/Elements.Geometry.BBox3.html
@@ -2182,6 +2224,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Bezier.TransformAt
   nameWithType: Bezier.TransformAt
+- uid: Elements.Geometry.Bezier.Transformed(Elements.Geometry.Transform)
+  name: Transformed(Transform)
+  href: api/Elements.Geometry.Bezier.html#Elements_Geometry_Bezier_Transformed_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Bezier.Transformed(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Bezier.Transformed(Elements.Geometry.Transform)
+  nameWithType: Bezier.Transformed(Transform)
+- uid: Elements.Geometry.Bezier.Transformed*
+  name: Transformed
+  href: api/Elements.Geometry.Bezier.html#Elements_Geometry_Bezier_Transformed_
+  commentId: Overload:Elements.Geometry.Bezier.Transformed
+  isSpec: "True"
+  fullName: Elements.Geometry.Bezier.Transformed
+  nameWithType: Bezier.Transformed
+- uid: Elements.Geometry.Bezier.TransformedBezier(Elements.Geometry.Transform)
+  name: TransformedBezier(Transform)
+  href: api/Elements.Geometry.Bezier.html#Elements_Geometry_Bezier_TransformedBezier_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Bezier.TransformedBezier(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Bezier.TransformedBezier(Elements.Geometry.Transform)
+  nameWithType: Bezier.TransformedBezier(Transform)
+- uid: Elements.Geometry.Bezier.TransformedBezier*
+  name: TransformedBezier
+  href: api/Elements.Geometry.Bezier.html#Elements_Geometry_Bezier_TransformedBezier_
+  commentId: Overload:Elements.Geometry.Bezier.TransformedBezier
+  isSpec: "True"
+  fullName: Elements.Geometry.Bezier.TransformedBezier
+  nameWithType: Bezier.TransformedBezier
 - uid: Elements.Geometry.Bezier.VelocityAt(System.Double)
   name: VelocityAt(Double)
   href: api/Elements.Geometry.Bezier.html#Elements_Geometry_Bezier_VelocityAt_System_Double_
@@ -3037,6 +3105,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Curve.TransformAt
   nameWithType: Curve.TransformAt
+- uid: Elements.Geometry.Curve.Transformed(Elements.Geometry.Transform)
+  name: Transformed(Transform)
+  href: api/Elements.Geometry.Curve.html#Elements_Geometry_Curve_Transformed_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Curve.Transformed(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Curve.Transformed(Elements.Geometry.Transform)
+  nameWithType: Curve.Transformed(Transform)
+- uid: Elements.Geometry.Curve.Transformed*
+  name: Transformed
+  href: api/Elements.Geometry.Curve.html#Elements_Geometry_Curve_Transformed_
+  commentId: Overload:Elements.Geometry.Curve.Transformed
+  isSpec: "True"
+  fullName: Elements.Geometry.Curve.Transformed
+  nameWithType: Curve.Transformed
 - uid: Elements.Geometry.EndType
   name: EndType
   href: api/Elements.Geometry.EndType.html
@@ -3162,15 +3243,15 @@ references:
   commentId: T:Elements.Geometry.Interfaces.ITessellate
   fullName: Elements.Geometry.Interfaces.ITessellate
   nameWithType: ITessellate
-- uid: Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@)
-  name: Tessellate(ref Mesh)
-  href: api/Elements.Geometry.Interfaces.ITessellate.html#Elements_Geometry_Interfaces_ITessellate_Tessellate_Elements_Geometry_Mesh__
-  commentId: M:Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@)
-  name.vb: Tessellate(ByRef Mesh)
-  fullName: Elements.Geometry.Interfaces.ITessellate.Tessellate(ref Elements.Geometry.Mesh)
-  fullName.vb: Elements.Geometry.Interfaces.ITessellate.Tessellate(ByRef Elements.Geometry.Mesh)
-  nameWithType: ITessellate.Tessellate(ref Mesh)
-  nameWithType.vb: ITessellate.Tessellate(ByRef Mesh)
+- uid: Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)
+  name: Tessellate(ref Mesh, Transform, Color)
+  href: api/Elements.Geometry.Interfaces.ITessellate.html#Elements_Geometry_Interfaces_ITessellate_Tessellate_Elements_Geometry_Mesh__Elements_Geometry_Transform_Elements_Geometry_Color_
+  commentId: M:Elements.Geometry.Interfaces.ITessellate.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)
+  name.vb: Tessellate(ByRef Mesh, Transform, Color)
+  fullName: Elements.Geometry.Interfaces.ITessellate.Tessellate(ref Elements.Geometry.Mesh, Elements.Geometry.Transform, Elements.Geometry.Color)
+  fullName.vb: Elements.Geometry.Interfaces.ITessellate.Tessellate(ByRef Elements.Geometry.Mesh, Elements.Geometry.Transform, Elements.Geometry.Color)
+  nameWithType: ITessellate.Tessellate(ref Mesh, Transform, Color)
+  nameWithType.vb: ITessellate.Tessellate(ByRef Mesh, Transform, Color)
 - uid: Elements.Geometry.Interfaces.ITessellate.Tessellate*
   name: Tessellate
   href: api/Elements.Geometry.Interfaces.ITessellate.html#Elements_Geometry_Interfaces_ITessellate_Tessellate_
@@ -3178,6 +3259,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Interfaces.ITessellate.Tessellate
   nameWithType: ITessellate.Tessellate
+- uid: Elements.Geometry.Interfaces.ITransformable`1
+  name: ITransformable<T>
+  href: api/Elements.Geometry.Interfaces.ITransformable-1.html
+  commentId: T:Elements.Geometry.Interfaces.ITransformable`1
+  name.vb: ITransformable(Of T)
+  fullName: Elements.Geometry.Interfaces.ITransformable<T>
+  fullName.vb: Elements.Geometry.Interfaces.ITransformable(Of T)
+  nameWithType: ITransformable<T>
+  nameWithType.vb: ITransformable(Of T)
+- uid: Elements.Geometry.Interfaces.ITransformable`1.Transformed(Elements.Geometry.Transform)
+  name: Transformed(Transform)
+  href: api/Elements.Geometry.Interfaces.ITransformable-1.html#Elements_Geometry_Interfaces_ITransformable_1_Transformed_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Interfaces.ITransformable`1.Transformed(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Interfaces.ITransformable<T>.Transformed(Elements.Geometry.Transform)
+  fullName.vb: Elements.Geometry.Interfaces.ITransformable(Of T).Transformed(Elements.Geometry.Transform)
+  nameWithType: ITransformable<T>.Transformed(Transform)
+  nameWithType.vb: ITransformable(Of T).Transformed(Transform)
+- uid: Elements.Geometry.Interfaces.ITransformable`1.Transformed*
+  name: Transformed
+  href: api/Elements.Geometry.Interfaces.ITransformable-1.html#Elements_Geometry_Interfaces_ITransformable_1_Transformed_
+  commentId: Overload:Elements.Geometry.Interfaces.ITransformable`1.Transformed
+  isSpec: "True"
+  fullName: Elements.Geometry.Interfaces.ITransformable<T>.Transformed
+  fullName.vb: Elements.Geometry.Interfaces.ITransformable(Of T).Transformed
+  nameWithType: ITransformable<T>.Transformed
+  nameWithType.vb: ITransformable(Of T).Transformed
 - uid: Elements.Geometry.Line
   name: Line
   href: api/Elements.Geometry.Line.html
@@ -3339,15 +3446,15 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.GetHashCode
   nameWithType: Line.GetHashCode
-- uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean)
-  name: Intersects(Line, out Vector3, Boolean)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_
-  commentId: M:Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean)
-  name.vb: Intersects(Line, ByRef Vector3, Boolean)
-  fullName: Elements.Geometry.Line.Intersects(Elements.Geometry.Line, out Elements.Geometry.Vector3, System.Boolean)
-  fullName.vb: Elements.Geometry.Line.Intersects(Elements.Geometry.Line, ByRef Elements.Geometry.Vector3, System.Boolean)
-  nameWithType: Line.Intersects(Line, out Vector3, Boolean)
-  nameWithType.vb: Line.Intersects(Line, ByRef Vector3, Boolean)
+- uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean,System.Boolean)
+  name: Intersects(Line, out Vector3, Boolean, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_System_Boolean_
+  commentId: M:Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean,System.Boolean)
+  name.vb: Intersects(Line, ByRef Vector3, Boolean, Boolean)
+  fullName: Elements.Geometry.Line.Intersects(Elements.Geometry.Line, out Elements.Geometry.Vector3, System.Boolean, System.Boolean)
+  fullName.vb: Elements.Geometry.Line.Intersects(Elements.Geometry.Line, ByRef Elements.Geometry.Vector3, System.Boolean, System.Boolean)
+  nameWithType: Line.Intersects(Line, out Vector3, Boolean, Boolean)
+  nameWithType.vb: Line.Intersects(Line, ByRef Vector3, Boolean, Boolean)
 - uid: Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Boolean)
   name: Intersects(Plane, out Vector3, Boolean)
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__System_Boolean_
@@ -3416,6 +3523,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.PointAt
   nameWithType: Line.PointAt
+- uid: Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3,System.Boolean)
+  name: PointOnLine(Vector3, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_PointOnLine_Elements_Geometry_Vector3_System_Boolean_
+  commentId: M:Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3,System.Boolean)
+  fullName: Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3, System.Boolean)
+  nameWithType: Line.PointOnLine(Vector3, Boolean)
+- uid: Elements.Geometry.Line.PointOnLine*
+  name: PointOnLine
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_PointOnLine_
+  commentId: Overload:Elements.Geometry.Line.PointOnLine
+  isSpec: "True"
+  fullName: Elements.Geometry.Line.PointOnLine
+  nameWithType: Line.PointOnLine
 - uid: Elements.Geometry.Line.Reversed
   name: Reversed()
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Reversed
@@ -3468,6 +3588,48 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.TransformAt
   nameWithType: Line.TransformAt
+- uid: Elements.Geometry.Line.Transformed(Elements.Geometry.Transform)
+  name: Transformed(Transform)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Transformed_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Line.Transformed(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Line.Transformed(Elements.Geometry.Transform)
+  nameWithType: Line.Transformed(Transform)
+- uid: Elements.Geometry.Line.Transformed*
+  name: Transformed
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Transformed_
+  commentId: Overload:Elements.Geometry.Line.Transformed
+  isSpec: "True"
+  fullName: Elements.Geometry.Line.Transformed
+  nameWithType: Line.Transformed
+- uid: Elements.Geometry.Line.TransformedLine(Elements.Geometry.Transform)
+  name: TransformedLine(Transform)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_TransformedLine_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Line.TransformedLine(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Line.TransformedLine(Elements.Geometry.Transform)
+  nameWithType: Line.TransformedLine(Transform)
+- uid: Elements.Geometry.Line.TransformedLine*
+  name: TransformedLine
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_TransformedLine_
+  commentId: Overload:Elements.Geometry.Line.TransformedLine
+  isSpec: "True"
+  fullName: Elements.Geometry.Line.TransformedLine
+  nameWithType: Line.TransformedLine
+- uid: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,System.Collections.Generic.List{Elements.Geometry.Line}@)
+  name: Trim(Polygon, out List<Line>)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Trim_Elements_Geometry_Polygon_System_Collections_Generic_List_Elements_Geometry_Line___
+  commentId: M:Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,System.Collections.Generic.List{Elements.Geometry.Line}@)
+  name.vb: Trim(Polygon, ByRef List(Of Line))
+  fullName: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon, out System.Collections.Generic.List<Elements.Geometry.Line>)
+  fullName.vb: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon, ByRef System.Collections.Generic.List(Of Elements.Geometry.Line))
+  nameWithType: Line.Trim(Polygon, out List<Line>)
+  nameWithType.vb: Line.Trim(Polygon, ByRef List(Of Line))
+- uid: Elements.Geometry.Line.Trim*
+  name: Trim
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Trim_
+  commentId: Overload:Elements.Geometry.Line.Trim
+  isSpec: "True"
+  fullName: Elements.Geometry.Line.Trim
+  nameWithType: Line.Trim
 - uid: Elements.Geometry.Line.TrimTo(Elements.Geometry.Line,System.Boolean)
   name: TrimTo(Line, Boolean)
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_TrimTo_Elements_Geometry_Line_System_Boolean_
@@ -4651,6 +4813,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Transform
   nameWithType: Polygon.Transform
+- uid: Elements.Geometry.Polygon.Transformed(Elements.Geometry.Transform)
+  name: Transformed(Transform)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Transformed_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Polygon.Transformed(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Polygon.Transformed(Elements.Geometry.Transform)
+  nameWithType: Polygon.Transformed(Transform)
+- uid: Elements.Geometry.Polygon.Transformed*
+  name: Transformed
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Transformed_
+  commentId: Overload:Elements.Geometry.Polygon.Transformed
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.Transformed
+  nameWithType: Polygon.Transformed
+- uid: Elements.Geometry.Polygon.TransformedPolygon(Elements.Geometry.Transform)
+  name: TransformedPolygon(Transform)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_TransformedPolygon_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Polygon.TransformedPolygon(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Polygon.TransformedPolygon(Elements.Geometry.Transform)
+  nameWithType: Polygon.TransformedPolygon(Transform)
+- uid: Elements.Geometry.Polygon.TransformedPolygon*
+  name: TransformedPolygon
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_TransformedPolygon_
+  commentId: Overload:Elements.Geometry.Polygon.TransformedPolygon
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.TransformedPolygon
+  nameWithType: Polygon.TransformedPolygon
 - uid: Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon)
   name: Union(Polygon)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_Elements_Geometry_Polygon_
@@ -4911,6 +5099,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.TransformAt
   nameWithType: Polyline.TransformAt
+- uid: Elements.Geometry.Polyline.Transformed(Elements.Geometry.Transform)
+  name: Transformed(Transform)
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Transformed_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Polyline.Transformed(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Polyline.Transformed(Elements.Geometry.Transform)
+  nameWithType: Polyline.Transformed(Transform)
+- uid: Elements.Geometry.Polyline.Transformed*
+  name: Transformed
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Transformed_
+  commentId: Overload:Elements.Geometry.Polyline.Transformed
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.Transformed
+  nameWithType: Polyline.Transformed
+- uid: Elements.Geometry.Polyline.TransformedPolyline(Elements.Geometry.Transform)
+  name: TransformedPolyline(Transform)
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_TransformedPolyline_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Polyline.TransformedPolyline(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Polyline.TransformedPolyline(Elements.Geometry.Transform)
+  nameWithType: Polyline.TransformedPolyline(Transform)
+- uid: Elements.Geometry.Polyline.TransformedPolyline*
+  name: TransformedPolyline
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_TransformedPolyline_
+  commentId: Overload:Elements.Geometry.Polyline.TransformedPolyline
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.TransformedPolyline
+  nameWithType: Polyline.TransformedPolyline
 - uid: Elements.Geometry.Polyline.Vertices
   name: Vertices
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Vertices
@@ -9320,15 +9534,15 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve
   nameWithType: Solid.SweepFaceAlongCurve
-- uid: Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@)
-  name: Tessellate(ref Mesh)
-  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Tessellate_Elements_Geometry_Mesh__
-  commentId: M:Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@)
-  name.vb: Tessellate(ByRef Mesh)
-  fullName: Elements.Geometry.Solids.Solid.Tessellate(ref Elements.Geometry.Mesh)
-  fullName.vb: Elements.Geometry.Solids.Solid.Tessellate(ByRef Elements.Geometry.Mesh)
-  nameWithType: Solid.Tessellate(ref Mesh)
-  nameWithType.vb: Solid.Tessellate(ByRef Mesh)
+- uid: Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)
+  name: Tessellate(ref Mesh, Transform, Color)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Tessellate_Elements_Geometry_Mesh__Elements_Geometry_Transform_Elements_Geometry_Color_
+  commentId: M:Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)
+  name.vb: Tessellate(ByRef Mesh, Transform, Color)
+  fullName: Elements.Geometry.Solids.Solid.Tessellate(ref Elements.Geometry.Mesh, Elements.Geometry.Transform, Elements.Geometry.Color)
+  fullName.vb: Elements.Geometry.Solids.Solid.Tessellate(ByRef Elements.Geometry.Mesh, Elements.Geometry.Transform, Elements.Geometry.Color)
+  nameWithType: Solid.Tessellate(ref Mesh, Transform, Color)
+  nameWithType.vb: Solid.Tessellate(ByRef Mesh, Transform, Color)
 - uid: Elements.Geometry.Solids.Solid.Tessellate(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)
   name: Tessellate(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])
   href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_Tessellate_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____
@@ -9722,6 +9936,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Transform.OfBezier
   nameWithType: Transform.OfBezier
+- uid: Elements.Geometry.Transform.OfCurve(Elements.Geometry.Curve)
+  name: OfCurve(Curve)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfCurve_Elements_Geometry_Curve_
+  commentId: M:Elements.Geometry.Transform.OfCurve(Elements.Geometry.Curve)
+  fullName: Elements.Geometry.Transform.OfCurve(Elements.Geometry.Curve)
+  nameWithType: Transform.OfCurve(Curve)
+- uid: Elements.Geometry.Transform.OfCurve*
+  name: OfCurve
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfCurve_
+  commentId: Overload:Elements.Geometry.Transform.OfCurve
+  isSpec: "True"
+  fullName: Elements.Geometry.Transform.OfCurve
+  nameWithType: Transform.OfCurve
 - uid: Elements.Geometry.Transform.OfLine(Elements.Geometry.Line)
   name: OfLine(Line)
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfLine_Elements_Geometry_Line_
@@ -11165,15 +11392,15 @@ references:
   isSpec: "True"
   fullName: Elements.MeshElement.Mesh
   nameWithType: MeshElement.Mesh
-- uid: Elements.MeshElement.Tessellate(Elements.Geometry.Mesh@)
-  name: Tessellate(ref Mesh)
-  href: api/Elements.MeshElement.html#Elements_MeshElement_Tessellate_Elements_Geometry_Mesh__
-  commentId: M:Elements.MeshElement.Tessellate(Elements.Geometry.Mesh@)
-  name.vb: Tessellate(ByRef Mesh)
-  fullName: Elements.MeshElement.Tessellate(ref Elements.Geometry.Mesh)
-  fullName.vb: Elements.MeshElement.Tessellate(ByRef Elements.Geometry.Mesh)
-  nameWithType: MeshElement.Tessellate(ref Mesh)
-  nameWithType.vb: MeshElement.Tessellate(ByRef Mesh)
+- uid: Elements.MeshElement.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)
+  name: Tessellate(ref Mesh, Transform, Color)
+  href: api/Elements.MeshElement.html#Elements_MeshElement_Tessellate_Elements_Geometry_Mesh__Elements_Geometry_Transform_Elements_Geometry_Color_
+  commentId: M:Elements.MeshElement.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)
+  name.vb: Tessellate(ByRef Mesh, Transform, Color)
+  fullName: Elements.MeshElement.Tessellate(ref Elements.Geometry.Mesh, Elements.Geometry.Transform, Elements.Geometry.Color)
+  fullName.vb: Elements.MeshElement.Tessellate(ByRef Elements.Geometry.Mesh, Elements.Geometry.Transform, Elements.Geometry.Color)
+  nameWithType: MeshElement.Tessellate(ref Mesh, Transform, Color)
+  nameWithType.vb: MeshElement.Tessellate(ByRef Mesh, Transform, Color)
 - uid: Elements.MeshElement.Tessellate*
   name: Tessellate
   href: api/Elements.MeshElement.html#Elements_MeshElement_Tessellate_
@@ -11848,11 +12075,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
   nameWithType: JsonInheritanceConverter.Elements
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  name: ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+  nameWithType: JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*
   name: ReadJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_
@@ -11874,11 +12101,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.RefreshUserElementTypeCache
   nameWithType: JsonInheritanceConverter.RefreshUserElementTypeCache
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  name: WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+  nameWithType: JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*
   name: WriteJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_
@@ -12264,12 +12491,12 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.Item
   nameWithType: Grid1d.Item
-- uid: Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean)
-  name: SplitAtOffset(Double, Boolean)
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffset_System_Double_System_Boolean_
-  commentId: M:Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean)
-  fullName: Elements.Spatial.Grid1d.SplitAtOffset(System.Double, System.Boolean)
-  nameWithType: Grid1d.SplitAtOffset(Double, Boolean)
+- uid: Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean,System.Boolean)
+  name: SplitAtOffset(Double, Boolean, Boolean)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffset_System_Double_System_Boolean_System_Boolean_
+  commentId: M:Elements.Spatial.Grid1d.SplitAtOffset(System.Double,System.Boolean,System.Boolean)
+  fullName: Elements.Spatial.Grid1d.SplitAtOffset(System.Double, System.Boolean, System.Boolean)
+  nameWithType: Grid1d.SplitAtOffset(Double, Boolean, Boolean)
 - uid: Elements.Spatial.Grid1d.SplitAtOffset*
   name: SplitAtOffset
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffset_
@@ -12322,6 +12549,35 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.SplitAtParameters
   nameWithType: Grid1d.SplitAtParameters
+- uid: Elements.Spatial.Grid1d.SplitAtPoint(Elements.Geometry.Vector3)
+  name: SplitAtPoint(Vector3)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPoint_Elements_Geometry_Vector3_
+  commentId: M:Elements.Spatial.Grid1d.SplitAtPoint(Elements.Geometry.Vector3)
+  fullName: Elements.Spatial.Grid1d.SplitAtPoint(Elements.Geometry.Vector3)
+  nameWithType: Grid1d.SplitAtPoint(Vector3)
+- uid: Elements.Spatial.Grid1d.SplitAtPoint*
+  name: SplitAtPoint
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPoint_
+  commentId: Overload:Elements.Spatial.Grid1d.SplitAtPoint
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.SplitAtPoint
+  nameWithType: Grid1d.SplitAtPoint
+- uid: Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name: SplitAtPoints(IEnumerable<Vector3>)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name.vb: SplitAtPoints(IEnumerable(Of Vector3))
+  fullName: Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
+  nameWithType: Grid1d.SplitAtPoints(IEnumerable<Vector3>)
+  nameWithType.vb: Grid1d.SplitAtPoints(IEnumerable(Of Vector3))
+- uid: Elements.Spatial.Grid1d.SplitAtPoints*
+  name: SplitAtPoints
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPoints_
+  commentId: Overload:Elements.Spatial.Grid1d.SplitAtPoints
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.SplitAtPoints
+  nameWithType: Grid1d.SplitAtPoints
 - uid: Elements.Spatial.Grid1d.SplitAtPosition(System.Double)
   name: SplitAtPosition(Double)
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPosition_System_Double_
@@ -12382,12 +12638,24 @@ references:
   commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Transform)
   fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Polygon, Elements.Geometry.Transform)
   nameWithType: Grid2d.Grid2d(Polygon, Transform)
+- uid: Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  name: Grid2d(Grid1d, Grid1d)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
+  nameWithType: Grid2d.Grid2d(Grid1d, Grid1d)
 - uid: Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d)
   name: Grid2d(Grid2d)
   href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid2d_
   commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d)
   fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Spatial.Grid2d)
   nameWithType: Grid2d.Grid2d(Grid2d)
+- uid: Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  name: Grid2d(Grid2d, Grid1d, Grid1d)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid2d_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Spatial.Grid2d, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
+  nameWithType: Grid2d.Grid2d(Grid2d, Grid1d, Grid1d)
 - uid: Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)
   name: Grid2d(IList<Polygon>, Transform)
   href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_

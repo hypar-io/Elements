@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Getting Started with the Hypar Hub | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Getting Started with the Hypar Hub | Hypar Docs ">
+    <meta name="generator" content="docfx 2.48.1.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/vs2015.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="index.html">
+          <img id="logo" class="svg" src="logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="getting-started-with-the-hypar-hub">Getting Started with the Hypar Hub</h1>
+
+<p>The Hypar Hub acts as the single point of synchronization between your workflows on Hypar and your local machine. The hub listens for update messages from Hypar, and builds a local cache of data representating the output of the functions in your workflow. By having one hub on the machine manage this communication we remove this requirement from the host application plugins, and we provide an offline store of data.</p>
+<p>After installing the hypar CLI, you can start the hypar hub like this:</p>
+<pre><code>hypar hub
+</code></pre>
+<h2 id="wheres-my-hub">Where's My Hub?</h2>
+<p>The hub writes data into the current user's home directory in a folder called <code>.hypar</code> (this might be hidden on some machines). For example, on Windows, the hub writes its data to <code>C:/Users/{user name}/.hypar</code>. Log files are also written to this directory.</p>
+<h2 id="settings">Settings</h2>
+<ul>
+<li>Do <code>hypar hub</code> on the command line. If no <code>hub.json</code> file exists, one will be created for you.</li>
+<li>After your <code>hub.json</code> file has been created, you can add a workflow with <code>hypar hub --add-workflow &lt;id&gt;</code> where <code>&lt;id&gt;</code> is the id of a workflow on Hypar.
+<ul>
+<li>You can find the id of your workflow by looking at its url in Hypar:
+<blockquote>
+<p>https://hypar.io/workflows/<strong>8026cc62-e421-4790-89a5-a9332c3427a2</strong></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>The <code>hub.json</code> file looks like this:</li>
+</ul>
+<pre><code class="lang-json">{
+    &quot;2e534890-ab60-40ad-9fb0-681d313a08e6&quot;: {
+        &quot;hidden&quot;: [
+            &quot;JSON to Model&quot;,
+            &quot;Panels From Walls&quot;
+        ],
+        &quot;revit&quot;: {
+            &quot;file_name&quot;: &quot;HyparTest.rvt&quot;
+        },
+        &quot;active&quot;: false
+    },
+    &quot;8026cc62-e421-4790-89a5-a9332c3427a2&quot;: {
+        &quot;hidden&quot;: [
+            &quot;Envelope By Sketch&quot;,
+            &quot;Levels By Envelope&quot;
+        ],
+        &quot;active&quot;: false
+    },
+}
+</code></pre>
+<ul>
+<li>The <code>hidden</code> property is an array of function names which you would like to be hidden from hub clients. It's often useful to hide certain functions, like those which provide datums: Levels, Grids, etc., so that your client application doesn't need to draw or import those.</li>
+<li>The <code>active</code> property is a boolean value indicating whether the workflow should be sent to the hub clients. A workflow with <code>&quot;active&quot;: false</code> will still be synced to the hub, but its update notifications will not be sent to the clients.</li>
+<li>The <code>revit</code> property contains information for syncing with Revit. The <code>file_name</code> property on this object specifies the file name (without directory) of the Revit file in which this workflow will be made visible.</li>
+</ul>
+<h2 id="hub-clients">Hub Clients</h2>
+<p>Hub clients receive update messages from the hub when data has changed. For example, when the Revit hub client receives an update message it updates the visualization in the active 3D view to include what's in the hub. If you're interested in seeing how a hub client works internally, you can view the Revit hub source code on github.</p>
+<h2 id="known-limitations">Known Limitations</h2>
+<ul>
+<li>The hub creates dlls containing all the types required by your synced workflows. For applications which will deserialize models from JSON, these assemblies are loaded to provide type definitions for deserialization. In applications like Revit, assemblies can not be unloaded and are locked by the system. After the first load of an assembly, you can not update it or reload it. If you add a function to a workflow, the hub will attempt to create a new assembly containing the types required by that workflow, and will not be able to. You will need to restart the hub.</li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

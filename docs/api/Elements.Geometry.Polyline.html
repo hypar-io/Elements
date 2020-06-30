@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polyline
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.48.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -215,6 +215,7 @@ var offset = pline.Offset(1, EndType.Square);
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
   </div>
@@ -249,7 +250,7 @@ var offset = pline.Offset(1, EndType.Square);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Polyline_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ICurve, IEquatable&lt;Polyline&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ITransformable&lt;Curve&gt;, ICurve, IEquatable&lt;Polyline&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -259,8 +260,7 @@ var offset = pline.Offset(1, EndType.Square);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -288,8 +288,7 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -313,8 +312,7 @@ public Vector3 End { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -338,10 +336,7 @@ public Vector3 Start { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.Always)]
-[Required]
-[MinLength(2)]
-public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -767,7 +762,96 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
+  <a id="Elements_Geometry_Polyline_Transformed_" data-uid="Elements.Geometry.Polyline.Transformed*"></a>
+  <h4 id="Elements_Geometry_Polyline_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Polyline.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Curve Transformed(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Transformed_Elements_Geometry_Transform_">Curve.Transformed(Transform)</a></div>
+  <a id="Elements_Geometry_Polyline_TransformedPolyline_" data-uid="Elements.Geometry.Polyline.TransformedPolyline*"></a>
+  <h4 id="Elements_Geometry_Polyline_TransformedPolyline_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Polyline.TransformedPolyline(Elements.Geometry.Transform)">TransformedPolyline(Transform)</h4>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline TransformedPolyline(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+  </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>

@@ -32,7 +32,7 @@ namespace Elements.Tests
             };
             var l1 = new Bezier(ctrlPoints);
             var a1 = new Arc(new Vector3(5, 0), r, -90.0, 90.0);
-            var l2 = t.OfBezier(l1);
+            var l2 = (Bezier)l1.Transformed(t);
             l2.ControlPoints.Reverse();
             var a2 = new Arc(new Vector3(0, 0), r, 90.0, 270.0);
 

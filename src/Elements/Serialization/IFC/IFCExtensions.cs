@@ -33,7 +33,7 @@ namespace Elements.Serialization.IFC
                 {
                     var cl = new Line(Vector3.Origin,
                         solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
-                    var result = new Beam(solidTransform.OfLine(cl),
+                    var result = new Beam(cl.Transformed(solidTransform),
                                           new Profile((Polygon)c),
                                           BuiltInMaterials.Steel,
                                           0.0,
@@ -391,7 +391,7 @@ namespace Elements.Serialization.IFC
                 var rect = (IfcRectangleProfileDef)profile;
                 var p = Polygon.Rectangle((IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim);
                 var t = new Transform(rect.Position.Location.ToVector3());
-                return t.OfPolygon(p);
+                return p.Transformed(t);
             }
             else if (profile is IfcCircleProfileDef)
             {
