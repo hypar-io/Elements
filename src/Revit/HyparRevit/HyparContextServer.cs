@@ -174,11 +174,15 @@ namespace Hypar.Revit
             }
 
             var meshes = new List<Elements.Geometry.Mesh>();
+            var edgeSet = new List<List<Elements.Geometry.Line>>();
+            var edges = new List<Elements.Geometry.Line>();
+            edgeSet.Add(edges);
 
-            // Draw the meshes in batches. Arbitrarily large meshes
+            // Draw the meshes and edges in batches. Arbitrarily large meshes
             // will overun the max value of ushorts causing data
             // not to show up.
             var meshBatchSize = 500;
+            var edgeBatchSize = 1000;
             var mesh = new Elements.Geometry.Mesh();
 
             var count = 0;
@@ -192,6 +196,15 @@ namespace Hypar.Revit
                 foreach (var solidOp in geom.Representation.SolidOperations)
                 {
                     solidOp.Solid.Tessellate(ref mesh, geom.Transform, geom.Material.Color);
+                    foreach (var e in solidOp.Solid.Edges.Values)
+                    {
+                        edges.Add(new Elements.Geometry.Line(geom.Transform.OfPoint(e.Left.Vertex.Point), geom.Transform.OfPoint(e.Right.Vertex.Point)));
+                        if (edges.Count >= edgeBatchSize)
+                        {
+                            edgeSet.Add(edges);
+                            edges = new List<Elements.Geometry.Line>();
+                        }
+                    }
                 }
 
                 count++;
@@ -214,6 +227,15 @@ namespace Hypar.Revit
                 foreach (var solidOp in instance.BaseDefinition.Representation.SolidOperations)
                 {
                     solidOp.Solid.Tessellate(ref mesh, instance.Transform, instance.BaseDefinition.Material.Color);
+                    foreach (var e in solidOp.Solid.Edges.Values)
+                    {
+                        edges.Add(new Elements.Geometry.Line(instance.Transform.OfPoint(e.Left.Vertex.Point), instance.Transform.OfPoint(e.Right.Vertex.Point)));
+                        if (edges.Count >= edgeBatchSize)
+                        {
+                            edgeSet.Add(edges);
+                            edges = new List<Elements.Geometry.Line>();
+                        }
+                    }
                 }
 
                 count++;
@@ -226,6 +248,7 @@ namespace Hypar.Revit
                 }
             }
             meshes.Add(mesh);
+            edgeSet.Add(edges);
 
             var renderDatas = new List<RenderData>();
             logger.Debug("There are {MeshCount} meshes to be drawn.", meshes.Count);
@@ -233,7 +256,10 @@ namespace Hypar.Revit
             {
                 try
                 {
-                    renderDatas.Add(DrawMesh(subMesh, ref outline, displayStyle));
+                    if (displayStyle != DisplayStyle.Wireframe)
+                    {
+                        renderDatas.Add(DrawMesh(subMesh, ref outline, displayStyle));
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -241,7 +267,66 @@ namespace Hypar.Revit
                 }
             }
 
+            if (displayStyle != DisplayStyle.Shading)
+            {
+                foreach (var e in edgeSet)
+                {
+                    renderDatas.Add(DrawEdges(e));
+                }
+            }
+
             return renderDatas;
+        }
+
+        public static RenderData DrawEdges(List<Elements.Geometry.Line> edges)
+        {
+            var numVertices = edges.Count * 2;
+            var numPrimitives = edges.Count;
+            var pType = PrimitiveType.LineList;
+            var numIndices = GetPrimitiveSize(pType) * numPrimitives;
+            var vertexFormatBits = VertexFormatBits.Position;
+            var vertexFormat = new VertexFormat(vertexFormatBits);
+            var vBuffer = new VertexBuffer(GetVertexSize(vertexFormatBits) * numVertices);
+            var iBuffer = new IndexBuffer(numIndices);
+            vBuffer.Map(GetVertexSize(vertexFormatBits) * numVertices);
+            iBuffer.Map(numIndices);
+
+            var vertices = new List<VertexPosition>();
+            var lines = new List<IndexLine>();
+
+            var index = 0;
+            foreach (var e in edges)
+            {
+                vertices.Add(new VertexPosition(e.Start.ToXYZFeet()));
+                vertices.Add(new VertexPosition(e.End.ToXYZFeet()));
+                lines.Add(new IndexLine(index, index + 1));
+                index += 2;
+            }
+            var p = vBuffer.GetVertexStreamPosition();
+            p.AddVertices(vertices);
+            var iPos = iBuffer.GetIndexStreamLine();
+            iPos.AddLines(lines);
+
+            vBuffer.Unmap();
+            iBuffer.Unmap();
+
+            var effect = new EffectInstance(vertexFormatBits);
+
+            var renderData = new RenderData()
+            {
+                VertexBuffer = vBuffer,
+                VertexCount = numVertices,
+                IndexBuffer = iBuffer,
+                IndexCount = numIndices,
+                VertexFormat = vertexFormat,
+                Effect = effect,
+                PrimitiveType = pType,
+                PrimitiveCount = numPrimitives
+            };
+
+            DrawContext.FlushBuffer(vBuffer, numVertices, iBuffer, numIndices, vertexFormat, effect, pType, 0, numPrimitives);
+
+            return renderData;
         }
 
         public static RenderData DrawMesh(Elements.Geometry.Mesh mesh, ref Outline outline, DisplayStyle displayStyle)
@@ -338,8 +423,7 @@ namespace Hypar.Revit
             iBuffer.Unmap();
 
             var effect = new EffectInstance(vertexFormatBits);
-
-            // There is not reason why this should work.
+            // There is no reason why this should work.
             // In other situations, 255 is the 'full' component.
             // In the case of hidden line rendering, 0, 0, 0 makes white.
             if (displayStyle == DisplayStyle.HLR)
@@ -364,7 +448,10 @@ namespace Hypar.Revit
                 PrimitiveCount = numPrimitives
             };
 
-            DrawContext.FlushBuffer(vBuffer, numVertices, iBuffer, numIndices, vertexFormat, effect, pType, 0, numPrimitives);
+            if (displayStyle != DisplayStyle.Wireframe && numPrimitives > 0)
+            {
+                DrawContext.FlushBuffer(vBuffer, numVertices, iBuffer, numIndices, vertexFormat, effect, pType, 0, numPrimitives);
+            }
 
             return renderData;
         }
