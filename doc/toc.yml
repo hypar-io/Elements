@@ -5,10 +5,14 @@
   items:
     - name: C#
       href: C-Sharp.md
+    - name: Hub
+      href: Hub.md
     - name: Excel
       href: Excel.md
     - name: Grasshopper
       href: Grasshopper.md
+    - name: Revit
+      href: Revit.md
 - name: Types
   href: Types.md
 - name: Elements

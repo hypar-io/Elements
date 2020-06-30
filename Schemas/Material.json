@@ -33,7 +33,7 @@
         },
         "Texture": {
             "description": "A relative file path to an image file to be used as a texture.",
-            "type": "string"
+            "type": ["string","null"]
         },
         "DoubleSided": {
             "description": "Is this material to be rendered from both sides?",

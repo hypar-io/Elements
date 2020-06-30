@@ -212,8 +212,73 @@ namespace Elements.Generate
         /// Generate an in-memory assembly containing all the types generated from the supplied uris.
         /// </summary>
         /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
-        /// <returns>An assembly containing the generated types or null if no Assembly could be generated.</returns>
-        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris)
+        /// <param name="frameworkBuild">If true, the assembly will be built against the .NET framework, otherwise it will be built against .NET core.</param>
+        /// <returns>A CompilationResult containing information about the compilation.</returns>
+        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris, bool frameworkBuild = false)
+        {
+            // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
+            var code = new List<string>();
+            foreach (var uri in uris)
+            {
+                // TODO: We can refactor this inner loop to share the code
+                // with the GenerateInMemoryAssemblyFromUrisAndSaveAsync method.
+                // We didn't do this originally because the return value of the refactored
+                // method would need to be a CompilationResult and the loop would generate a List<string>,
+                // but because it's async we can't do that as a ref parameter. 
+                try
+                {
+                    var schema = await GetSchemaAsync(uri);
+                    string csharp = GenerateCSharpCodeForSchema(schema);
+                    if (csharp == null)
+                    {
+                        continue;
+                    }
+                    code.Add(csharp);
+                }
+                catch (Exception ex)
+                {
+                    var diagnostics = new[]
+                    {
+                        $"There was an error reading the schema at {uri}: {ex.Message}."
+                    };
+                    return new CompilationResult
+                    {
+                        Success = false,
+                        DiagnosticResults = diagnostics
+                    };
+                }
+            }
+
+            var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
+
+            if (TryEmitAndLoad(compilation, out Assembly assembly, out string[] diagnosticResults))
+            {
+                return new CompilationResult
+                {
+                    Success = true,
+                    DiagnosticResults = diagnosticResults,
+                    Assembly = assembly
+                };
+            }
+            else
+            {
+                return new CompilationResult
+                {
+                    Success = false,
+                    DiagnosticResults = diagnosticResults,
+                    Assembly = null
+                };
+            }
+        }
+
+        /// <summary>
+        /// Generate an in-memory assembly containing all the types generated from the supplied uris and save it to disk.
+        /// </summary>
+        /// <param name="uris">A collection of uris to JSON schema. These can be public urls or relative file paths.</param>
+        /// <param name="dllPath">The path at which the dll will be written. If this is not null, the assembly will be written but not loaded.</param>
+        /// <param name="frameworkBuild">If true, the assembly will be built against the .NET framework, otherwise it will be built against .NET core.</param>
+        /// <returns>A CompilationResult containing information about the compilation.</returns>
+        public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndSaveAsync(string[] uris, string dllPath, bool frameworkBuild = false)
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
@@ -244,14 +309,24 @@ namespace Elements.Generate
                 }
             }
 
-            var compilation = GenerateCompilation(code);
-            var assembly = EmitAndLoad(compilation, out string[] diagnosticResults);
-            return new CompilationResult
+            var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
+
+            if (TryEmitAndSave(compilation, dllPath, out string[] diagnosticResults))
             {
-                Success = true,
-                DiagnosticResults = diagnosticResults,
-                Assembly = assembly
-            };
+                return new CompilationResult
+                {
+                    Success = true,
+                    DiagnosticResults = diagnosticResults,
+                };
+            }
+            else
+            {
+                return new CompilationResult
+                {
+                    Success = false,
+                    DiagnosticResults = diagnosticResults,
+                };
+            }
         }
 
 
@@ -438,7 +513,7 @@ namespace Elements.Generate
                 return false;
             }
             var compilation = GenerateCompilation(new List<string> { csharp }, schema.Title, frameworkBuild);
-            return EmitAndSave(compilation, dllPath, out diagnosticResults);
+            return TryEmitAndSave(compilation, dllPath, out diagnosticResults);
         }
 
         private static string GenerateCSharpCodeForSchema(JsonSchema schema)
@@ -476,7 +551,7 @@ namespace Elements.Generate
 
             }
 
-            var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            var assemblyPath = frameworkBuild ? @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" : Path.GetDirectoryName(typeof(object).Assembly.Location);
             var elementsAssemblyPath = Path.GetDirectoryName(typeof(Model).Assembly.Location);
             var newtonSoftPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
 
@@ -520,11 +595,11 @@ namespace Elements.Generate
                                                        compileOptions);
         }
 
-        private static bool EmitAndSave(CSharpCompilation compilation, string outputPath, out string[] diagnosticMessages)
+        private static bool TryEmitAndSave(CSharpCompilation compilation, string outputPath, out string[] diagnosticMessages)
         {
             var emitResult = compilation.Emit(outputPath);
             diagnosticMessages = emitResult.Diagnostics.Select(d => d.ToString()).ToArray();
-            if (!emitResult.Success)
+            if (emitResult.Success == false)
             {
                 if (File.Exists(outputPath))
                 {
@@ -538,9 +613,8 @@ namespace Elements.Generate
             }
         }
 
-        private static Assembly EmitAndLoad(CSharpCompilation compilation, out string[] diagnosticMessages)
+        private static bool TryEmitAndLoad(CSharpCompilation compilation, out Assembly assembly, out string[] diagnosticMessages)
         {
-            Assembly assembly = null;
             using (var ms = new MemoryStream())
             {
                 var emitResult = compilation.Emit(ms);
@@ -549,17 +623,14 @@ namespace Elements.Generate
                 {
                     ms.Seek(0, SeekOrigin.Begin);
                     assembly = Assembly.Load(ms.ToArray());
+                    return true;
                 }
                 else
                 {
-                    foreach (var d in emitResult.Diagnostics)
-                    {
-                        Console.WriteLine(d.ToString());
-                    }
-                    throw new Exception("There was an error creating an assembly for the user defined types. See the console for more information.");
+                    assembly = null;
+                    return false;
                 }
             }
-            return assembly;
         }
     }
 }

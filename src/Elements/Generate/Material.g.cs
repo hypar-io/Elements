@@ -17,7 +17,7 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A material.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.4.0 (Newtonsoft.Json v12.0.0.0)")]
@@ -28,51 +28,51 @@ namespace Elements
             : base(id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Material>();
-            if(validator != null)
+            if (validator != null)
             {
-                validator.PreConstruct(new object[]{ @color, @specularFactor, @glossinessFactor, @unlit, @texture, @doubleSided, @id, @name});
+                validator.PreConstruct(new object[] { @color, @specularFactor, @glossinessFactor, @unlit, @texture, @doubleSided, @id, @name });
             }
-        
+
             this.Color = @color;
             this.SpecularFactor = @specularFactor;
             this.GlossinessFactor = @glossinessFactor;
             this.Unlit = @unlit;
             this.Texture = @texture;
             this.DoubleSided = @doubleSided;
-        
-            if(validator != null)
+
+            if (validator != null)
             {
                 validator.PostConstruct(this);
             }
         }
-    
+
         /// <summary>The material's color.</summary>
         [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public Color Color { get; set; } = new Color();
-    
+
         /// <summary>The specular factor between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("SpecularFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double SpecularFactor { get; set; } = 0.1D;
-    
+
         /// <summary>The glossiness factor between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("GlossinessFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double GlossinessFactor { get; set; } = 0.1D;
-    
+
         /// <summary>Is this material affected by lights?</summary>
         [Newtonsoft.Json.JsonProperty("Unlit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool Unlit { get; set; } = false;
-    
+
         /// <summary>A relative file path to an image file to be used as a texture.</summary>
-        [Newtonsoft.Json.JsonProperty("Texture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("Texture", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Texture { get; set; }
-    
+
         /// <summary>Is this material to be rendered from both sides?</summary>
         [Newtonsoft.Json.JsonProperty("DoubleSided", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool DoubleSided { get; set; } = false;
-    
-    
+
+
     }
 }

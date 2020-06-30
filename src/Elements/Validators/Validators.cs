@@ -110,7 +110,9 @@ namespace Elements.Validators
 
             if (texture != null && !File.Exists(texture))
             {
-                throw new FileNotFoundException("The material could not be created. The specified texture does not exist.");
+                // If the file doesn't exist, set the texture to null,
+                // so the material is still created.
+                texture = null;
             }
 
             if (specularFactor < 0.0 || glossinessFactor < 0.0)
