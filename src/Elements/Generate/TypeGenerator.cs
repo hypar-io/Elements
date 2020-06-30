@@ -220,6 +220,11 @@ namespace Elements.Generate
             var code = new List<string>();
             foreach (var uri in uris)
             {
+                // TODO: We can refactor this inner loop to share the code
+                // with the GenerateInMemoryAssemblyFromUrisAndSaveAsync method.
+                // We didn't do this originally because the return value of the refactored
+                // method would need to be a CompilationResult and the loop would generate a List<string>,
+                // but because it's async we can't do that as a ref parameter. 
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
