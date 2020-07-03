@@ -5,11 +5,6 @@ By uploading a function to Hypar you can produce multiple options for a building
 ## Tutorial Videos
 ### Installing and Using the Hypar CLI
 <iframe width="560" height="315" src="https://www.youtube.com/embed/-0sKYpekdqI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-### Using the Function Builder extension for VS Code
-<iframe width="560" height="315" src="https://www.youtube.com/embed/e-KO5Q9wAAw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
 <div style="page-break-after: always;"></div>
 
 ## Pre-Flight Check
