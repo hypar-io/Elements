@@ -2,7 +2,7 @@
 The Hypar Hub is currently part of the Hypar CLI. If you have not already installed the Hypar CLI, follow [these instructions](./C-Sharp.md) first.
 
 The Hypar Hub acts as the single point of synchronization between your workflows on Hypar and your local machine. The hub listens for update messages from Hypar, and builds a local cache of data representating the output of the functions in your workflow. To learn how to use the hub, you can do `hypar hub -h` from the command line
-```
+```none
 hub:
   Work with the hypar hub.
 
@@ -33,37 +33,37 @@ When changes are made to workflows that are being watched by the hub, the hub wi
 
 ## Hypar Directory
 The hub stores information locally in a `.hypar` directory in the user's "home" folder. For Windows users this will be something like 
-```
+```none
 C:\Users\<you>\.hypar
 ```
 For *nix users this will be
-```
+```none
 ~/.hypar
 ```
 
 ## Examples
 Run the hub:
-```
+```none
 hypar hub
 ```
 Add a workflow to the hub:
-```
+```none
 hypar hub add --id 8026cc62-e421-4790-89a5-a9332c3427a2
 ```
 Remove a workflow from the hub:
-```
+```none
 hypar hub remove --id 8026cc62-e421-4790-89a5-a9332c3427a2
 ```
 Associate a Revit file with a workflow:
-```
+```none
 hypar hub add revit --id 8026cc62-e421-4790-89a5-a9332c3427a2 --file-name Building.rvt
 ```
 Remove the association between a Revit file and a workflow:
-```
+```none
 hypar hub remove revit --id 8026cc62-e421-4790-89a5-a9332c3427a2 --file-name Building.rvt
 ```
 Hide a function in a workflow:
-```
+```none
 hypar hub hide --id 8026cc62-e421-4790-89a5-a9332c3427a2 --function-name Levels by Envelope
 ```
 

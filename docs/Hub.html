@@ -66,42 +66,69 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="getting-started-with-the-hypar-hub">Getting Started with the Hypar Hub</h1>
 
-<p>The Hypar Hub acts as the single point of synchronization between your workflows on Hypar and your local machine. The hub listens for update messages from Hypar, and builds a local cache of data representating the output of the functions in your workflow. By having one hub on the machine manage this communication we remove this requirement from the host application plugins, and we provide an offline store of data.</p>
-<p>After installing the hypar CLI, you can start the hypar hub like this:</p>
+<p>The Hypar Hub is currently part of the Hypar CLI. If you have not already installed the Hypar CLI, follow <a href="C-Sharp.html">these instructions</a> first.</p>
+<p>The Hypar Hub acts as the single point of synchronization between your workflows on Hypar and your local machine. The hub listens for update messages from Hypar, and builds a local cache of data representating the output of the functions in your workflow. To learn how to use the hub, you can do <code>hypar hub -h</code> from the command line</p>
+<pre><code class="lang-none">hub:
+  Work with the hypar hub.
+
+Usage:
+  Hypar hub [command]
+
+Commands:
+  add       Add a workflow to a hub.
+  remove    Remove a workflow from the hub.
+  hide      Hide a function in a workflow.
+  show      Show a function in a workflow.
+</code></pre>
+<p>When run without modifiers, the <code>hypar hub</code> command will use the settings provided by the <code>hub.json</code> in your <a href="#Hypar-Directory">hypar directory</a>. If a <code>hub.json</code> file cannot be found, one will be created for you.</p>
+<p>The first time a <code>hub.json</code> file is created, it will ask you to add a workflow to the hub. You can find the id of a workflow by looking at its url in Hypar. The workflow id is the last part of the url. Here's an example: <code>https://hypar.io/w26cc62-e421-4790-89a5-a9332c3427a2orkflows/80</code>. The workflow id is <code>8026cc62-e421-4790-89a5-a9332c3427a2</code>.</p>
+<p>The next thing the hub command will ask for is a Revit file name. If you associate a Revit file name with a workflow in the hub, the workflow's contents will be visible inside that Revit project. The file name should be added withtout the path, like <code>Building.rvt</code>. You can leave this blank. If you do, the newly added workflow won't show up in any Revit projects.</p>
+<p>If you've already got a <code>hub.json</code> and would like to add or remove a workflow, you can do <code>hypar hub add</code> or <code>hypar hub remove</code> to add or remove workflows. You can see some more examples of how to use the hub <a href="#Examples">here</a></p>
+<p>Once you've got a valid <code>hub.json</code> file, you can run the hub like this:</p>
 <pre><code>hypar hub
 </code></pre>
-<h2 id="wheres-my-hub">Where's My Hub?</h2>
-<p>The hub writes data into the current user's home directory in a folder called <code>.hypar</code> (this might be hidden on some machines). For example, on Windows, the hub writes its data to <code>C:/Users/{user name}/.hypar</code>. Log files are also written to this directory.</p>
+<p>Once started, the hub will do two things. First, it syncs the workflows specified in your <code>hub.json</code> from Hypar to your local hypar directory. Then it creates a .NET assembly containing all of the types that are used by all the functions in your workflows. The hub writes data into the current user's home directory in a folder called <code>.hypar</code> (this might be hidden on some machines). For example, on Windows, the hub writes its data to <code>C:/Users/{user name}/.hypar</code>. Log files are also written to this directory.</p>
+<p>When changes are made to workflows that are being watched by the hub, the hub will receive those changes and update the local data store. It will then emit change notifications to all connected clients.</p>
+<h2 id="hypar-directory">Hypar Directory</h2>
+<p>The hub stores information locally in a <code>.hypar</code> directory in the user's &quot;home&quot; folder. For Windows users this will be something like</p>
+<pre><code class="lang-none">C:\Users\&lt;you&gt;\.hypar
+</code></pre>
+<p>For *nix users this will be</p>
+<pre><code class="lang-none">~/.hypar
+</code></pre>
+<h2 id="examples">Examples</h2>
+<p>Run the hub:</p>
+<pre><code class="lang-none">hypar hub
+</code></pre>
+<p>Add a workflow to the hub:</p>
+<pre><code class="lang-none">hypar hub add --id 8026cc62-e421-4790-89a5-a9332c3427a2
+</code></pre>
+<p>Remove a workflow from the hub:</p>
+<pre><code class="lang-none">hypar hub remove --id 8026cc62-e421-4790-89a5-a9332c3427a2
+</code></pre>
+<p>Associate a Revit file with a workflow:</p>
+<pre><code class="lang-none">hypar hub add revit --id 8026cc62-e421-4790-89a5-a9332c3427a2 --file-name Building.rvt
+</code></pre>
+<p>Remove the association between a Revit file and a workflow:</p>
+<pre><code class="lang-none">hypar hub remove revit --id 8026cc62-e421-4790-89a5-a9332c3427a2 --file-name Building.rvt
+</code></pre>
+<p>Hide a function in a workflow:</p>
+<pre><code class="lang-none">hypar hub hide --id 8026cc62-e421-4790-89a5-a9332c3427a2 --function-name Levels by Envelope
+</code></pre>
 <h2 id="settings">Settings</h2>
+<p>The <code>hub.json</code> file provides configuration information for the hub. You can edit it manually or use the Hypar CLI to add or remove workflows, control visibility of functions in workflows, or sync specific workflows with Revit files.</p>
 <ul>
-<li>Do <code>hypar hub</code> on the command line. If no <code>hub.json</code> file exists, one will be created for you.</li>
-<li>After your <code>hub.json</code> file has been created, you can add a workflow with <code>hypar hub --add-workflow &lt;id&gt;</code> where <code>&lt;id&gt;</code> is the id of a workflow on Hypar.
-<ul>
-<li>You can find the id of your workflow by looking at its url in Hypar:
-<blockquote>
-<p>https://hypar.io/workflows/<strong>8026cc62-e421-4790-89a5-a9332c3427a2</strong></p>
-</blockquote>
-</li>
-</ul>
-</li>
-<li>The <code>hub.json</code> file looks like this:</li>
+<li>A <code>hub.json</code> file looks like this:</li>
 </ul>
 <pre><code class="lang-json">{
-    &quot;2e534890-ab60-40ad-9fb0-681d313a08e6&quot;: {
-        &quot;hidden&quot;: [
-            &quot;JSON to Model&quot;,
-            &quot;Panels From Walls&quot;
-        ],
-        &quot;revit&quot;: {
-            &quot;file_name&quot;: &quot;HyparTest.rvt&quot;
-        },
-        &quot;active&quot;: false
-    },
     &quot;8026cc62-e421-4790-89a5-a9332c3427a2&quot;: {
         &quot;hidden&quot;: [
             &quot;Envelope By Sketch&quot;,
             &quot;Levels By Envelope&quot;
         ],
+        &quot;revit&quot;: {
+            &quot;file_name&quot;: &quot;HyparTest.rvt&quot;
+        },
         &quot;active&quot;: false
     },
 }
