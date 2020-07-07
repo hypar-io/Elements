@@ -21,7 +21,7 @@ namespace HyparDynamo.Hypar
         /// not see it in 3D views in Hypar.
         /// </summary>
         /// <param name="revitArea">The area that is meant to be converted to a Hypar SpaceBoundary.</param>
-        /// <returns name="SpaceBoundar">The Hypar space boundary elements.</returns>
+        /// <returns name="SpaceBoundary">The Hypar space boundary elements.</returns>
         public static Elements.SpaceBoundary[] FromArea(Revit.Elements.Element revitArea)
         {
             var areaElement = (Autodesk.Revit.DB.Area)revitArea.InternalElement;
@@ -34,13 +34,12 @@ namespace HyparDynamo.Hypar
     public static class ModelPoints
     {
         /// <summary>
-        /// Convert a list of points from Dynamo into a ModelPoints element, with the option 
-        /// to add a tag that will be stored in the elements Name field.
+        /// Convert a list of points from Dynamo into a ModelPoints element with optional name.
         /// </summary>
         /// <param name="points">The points that will be stored.</param>
-        /// <param name="tag">The tag to assign to the model points.</param>
+        /// <param name="name">An optional name to be assigned to the model points.</param>
         /// <returns name="ModelPoints">The ModelPoint objects for Hypar.</returns>
-        public static Elements.ModelPoints FromPoints(List<Autodesk.DesignScript.Geometry.Point> points, string tag = "")
+        public static Elements.ModelPoints FromPoints(List<Autodesk.DesignScript.Geometry.Point> points, string name = "")
         {
             return Create.ModelPointsFromPoints(points.Select(p => new XYZ(p.X, p.Y, p.Z)), tag);
         }
@@ -97,7 +96,7 @@ namespace HyparDynamo.Hypar
     public static class Column
     {
         /// <summary>
-        /// Convert a column in Revit into an Elements.Column for use in Hypar models.
+        /// Convert a Revit column to an Elements.Column for use in Hypar models.
         /// </summary>
         /// <param name="revitColumn">The column to be exported.</param>
         /// <returns name="Column">The Hypar column element.</returns>
@@ -118,7 +117,7 @@ namespace HyparDynamo.Hypar
     public static class Model
     {
         /// <summary>
-        /// Write a Hypar model to its JSON representation .
+        /// Write a Hypar model to JSON.
         /// </summary>
         /// <param name="filePath">The path to write the JSON file.</param>
         /// <param name="model">The Hypar Model to write.</param>
@@ -136,9 +135,8 @@ namespace HyparDynamo.Hypar
         }
 
         /// <summary>
-        /// Write a Hypar model to glb.  GLB is a file format that is use for displaying 
-        /// 3D models on the web. This is the format used in the hypar.io website,
-        /// and you can also view these files using https://gltf-viewer.donmccurdy.com/ .
+        /// Write a Hypar model to gLTF. 
+        /// You can view these files using https://gltf-viewer.donmccurdy.com/ .
         /// </summary>
         /// <param name="filePath">The path to write the JSON file.</param>
         /// <param name="model">The Hypar Model to write.</param>
