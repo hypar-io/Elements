@@ -365,22 +365,19 @@
       "output": {
         ".html": {
           "relative_path": "Hub.html",
-          "hash": "PZucGEEJwrc2ye4j2cTE8A=="
+          "hash": "ihQ5006RL+CXrdpmMa/mRg=="
         }
       },
       "is_incremental": false,
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "Revit.md",
       "output": {
         ".html": {
           "relative_path": "Revit.html",
-          "hash": "BpQNBSlmZkCMbcqjLKLzKA=="
+          "hash": "4W7AK4J6iSxUhYxQVshcuA=="
         }
       },
       "is_incremental": false,
@@ -3302,10 +3299,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/RevitExternalCommands.PNG",
+      "source_relative_path": "images/RevitExternalCommands.png",
       "output": {
         "resource": {
-          "relative_path": "images/RevitExternalCommands.PNG"
+          "relative_path": "images/RevitExternalCommands.png"
         }
       },
       "is_incremental": false,
