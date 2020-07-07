@@ -1,4 +1,6 @@
 # Getting Started with the Hypar Hub
+The Hypar Hub is currently part of the Hypar CLI. If you have not already installed the Hypar CLI, follow [these instructions](./C-Sharp.md) first.
+
 The Hypar Hub acts as the single point of synchronization between your workflows on Hypar and your local machine. The hub listens for update messages from Hypar, and builds a local cache of data representating the output of the functions in your workflow. To learn how to use the hub, you can do `hypar hub -h` from the command line
 ```
 hub:
