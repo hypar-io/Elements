@@ -201,7 +201,7 @@
   <pre><code class="lang-csharp" name="Main">var perimeter1 = Polygon.L(10, 10, 3);
 var perimeter2 = Polygon.Ngon(5, 5);
 var move = new Transform(3, 7, 0);
-var perimeter = perimeter1.Union(move.OfPolygon(perimeter2));
+var perimeter = perimeter1.Union((Polygon)perimeter2.Transformed(move));
 var mc = new ModelCurve(perimeter);
 this.Model.AddElement(mc);
 

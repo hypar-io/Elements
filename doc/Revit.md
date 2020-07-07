@@ -4,7 +4,11 @@
 Hypar for Revit is a Revit addin that connects Revit to the Hypar Hub. Hub workflows will be temporarily visualized in the active 3D view of your Revit document.
 
 ## Installation (beta)
-- [Install the latest Hypar CLI](https://hypar-io.github.io/Elements/C-Sharp.html#installing-and-using-the-hypar-cli). You'll need this to use the `hub` command.
+- [Install the latest Hypar CLI](https://hypar-io.github.io/Elements/C-Sharp.html#installing-and-using-the-hypar-cli). You'll need this to use the `hub` command. 
+  - **NOTE: For betas, you'll need to install a beta release of the Hypar CLI which has a slightly different syntax.** 
+  ```
+  dotnet tool install -g hypar.cli --version 0.7.3-beta.1
+  ```
 - Download the latest zip from the [releases page](https://github.com/hypar-io/Elements/releases).
 - Unzip into `C:\Users\<you>\AppData\Roaming\Autodesk\Revit\Addins\2020`. After unzipping you should see a `Hypar.Revit.addin` at the top level of the addins folder and a `Hypar.Revit` subfolder.
 

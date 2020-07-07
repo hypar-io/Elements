@@ -167,3 +167,7 @@ th {
 .xref.text-break {
     font-family: 'Roboto', sans-serif;
 }
+
+.lang-none {
+    color: var(--hy-co-pale-blue);
+}

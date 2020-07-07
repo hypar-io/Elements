@@ -293,7 +293,7 @@
       "output": {
         ".html": {
           "relative_path": "C-Sharp.html",
-          "hash": "qzfdiofue0u4v9gqENF6uA=="
+          "hash": "QI3dEbxKVfdMtDLbG2eUqQ=="
         }
       },
       "is_incremental": false,
@@ -365,22 +365,19 @@
       "output": {
         ".html": {
           "relative_path": "Hub.html",
-          "hash": "yfudqwBVnW5SR8cw1iw49Q=="
+          "hash": "ihQ5006RL+CXrdpmMa/mRg=="
         }
       },
       "is_incremental": false,
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "Revit.md",
       "output": {
         ".html": {
           "relative_path": "Revit.html",
-          "hash": "XsQxQzu9x5HDz0BYkWoThg=="
+          "hash": "4W7AK4J6iSxUhYxQVshcuA=="
         }
       },
       "is_incremental": false,
@@ -404,7 +401,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Analysis.AnalysisMesh.html",
-          "hash": "OIclwclN7rlYPmT1ZmMeag=="
+          "hash": "4eS1SpGrsbP1JiCiuVVcRA=="
         }
       },
       "is_incremental": false,
@@ -872,7 +869,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Contour.html",
-          "hash": "whs+IKLI3iHi/45EZxzwVQ=="
+          "hash": "xVPD+7mMLgZ7FUJoO5voFA=="
         }
       },
       "is_incremental": false,
@@ -3302,10 +3299,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "images/RevitExternalCommands.PNG",
+      "source_relative_path": "images/RevitExternalCommands.png",
       "output": {
         "resource": {
-          "relative_path": "images/RevitExternalCommands.PNG"
+          "relative_path": "images/RevitExternalCommands.png"
         }
       },
       "is_incremental": false,

@@ -70,7 +70,13 @@
 <p>Hypar for Revit is a Revit addin that connects Revit to the Hypar Hub. Hub workflows will be temporarily visualized in the active 3D view of your Revit document.</p>
 <h2 id="installation-beta">Installation (beta)</h2>
 <ul>
-<li><a href="https://hypar-io.github.io/Elements/C-Sharp.html#installing-and-using-the-hypar-cli">Install the latest Hypar CLI</a>. You'll need this to use the <code>hub</code> command.</li>
+<li><a href="https://hypar-io.github.io/Elements/C-Sharp.html#installing-and-using-the-hypar-cli">Install the latest Hypar CLI</a>. You'll need this to use the <code>hub</code> command.
+<ul>
+<li><strong>NOTE: For betas, you'll need to install a beta release of the Hypar CLI which has a slightly different syntax.</strong></li>
+</ul>
+<pre><code>dotnet tool install -g hypar.cli --version 0.7.3-beta.1
+</code></pre>
+</li>
 <li>Download the latest zip from the <a href="https://github.com/hypar-io/Elements/releases">releases page</a>.</li>
 <li>Unzip into <code>C:\Users\&lt;you&gt;\AppData\Roaming\Autodesk\Revit\Addins\2020</code>. After unzipping you should see a <code>Hypar.Revit.addin</code> at the top level of the addins folder and a <code>Hypar.Revit</code> subfolder.</li>
 </ul>
@@ -79,7 +85,7 @@
 <li><p>Start the hub. From the command line do <code>hypar hub</code>. See the hub instructions <a href="Hub.html">here</a>.</p>
 </li>
 <li><p>Open Revit. If your addin is installed correctly, two new commands will appear in the External Tools button on the Revit Ribbon.</p>
-<p><img src="./images/RevitExternalCommands.png" alt=""></p>
+<p><img src="images/RevitExternalCommands.png" alt=""></p>
 </li>
 <li><p>Clicking on Hypar Hub Start will start visualization of the hub in your current active 3D view. You may need to rotate/pan/zoom to get the visualization to show.</p>
 </li>

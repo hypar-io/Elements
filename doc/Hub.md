@@ -1,38 +1,90 @@
-# Getting Started with the Hypar Hub
-The Hypar Hub acts as the single point of synchronization between your workflows on Hypar and your local machine. The hub listens for update messages from Hypar, and builds a local cache of data representating the output of the functions in your workflow. By having one hub on the machine manage this communication we remove this requirement from the host application plugins, and we provide an offline store of data.
+---
+uid: hub
+---
 
-After installing the hypar CLI, you can start the hypar hub like this:
+# Getting Started with the Hypar Hub
+The Hypar Hub is currently part of the Hypar CLI. If you have not already installed the Hypar CLI, follow [these instructions](./C-Sharp.md) first.
+
+The Hypar Hub acts as the single point of synchronization between your workflows on Hypar and your local machine. The hub listens for update messages from Hypar, and builds a local cache of data representating the output of the functions in your workflow. To learn how to use the hub, you can do `hypar hub -h` from the command line
+```none
+hub:
+  Work with the hypar hub.
+
+Usage:
+  Hypar hub [command]
+
+Commands:
+  add       Add a workflow to a hub.
+  remove    Remove a workflow from the hub.
+  hide      Hide a function in a workflow.
+  show      Show a function in a workflow.
 ```
+When run without modifiers, the `hypar hub` command will use the settings provided by the `hub.json` in your [hypar directory](xref:hub#hypar-directory). If a `hub.json` file cannot be found, one will be created for you.
+
+The first time a `hub.json` file is created, it will ask you to add a workflow to the hub. You can find the id of a workflow by looking at its url in Hypar. The workflow id is the last part of the url. Here's an example: `https://hypar.io/w26cc62-e421-4790-89a5-a9332c3427a2orkflows/80`. The workflow id is `8026cc62-e421-4790-89a5-a9332c3427a2`.
+
+The next thing the hub command will ask for is a Revit file name. If you associate a Revit file name with a workflow in the hub, the workflow's contents will be visible inside that Revit project. The file name should be added withtout the path, like `Building.rvt`. You can leave this blank. If you do, the newly added workflow won't show up in any Revit projects.
+
+If you've already got a `hub.json` and would like to add or remove a workflow, you can do `hypar hub add` or `hypar hub remove` to add or remove workflows. You can see some more examples of how to use the hub [here](xref:hub#examples)
+
+Once you've got a valid `hub.json` file, you can run the hub like this:
+```none
 hypar hub
 ```
+Once started, the hub will do two things. First, it syncs the workflows specified in your `hub.json` from Hypar to your local hypar directory. Then it creates a .NET assembly containing all of the types that are used by all the functions in your workflows. The hub writes data into the current user's home directory in a folder called `.hypar` (this might be hidden on some machines). For example, on Windows, the hub writes its data to `C:/Users/{user name}/.hypar`. Log files are also written to this directory.
 
-## Where's My Hub?
-The hub writes data into the current user's home directory in a folder called `.hypar` (this might be hidden on some machines). For example, on Windows, the hub writes its data to `C:/Users/{user name}/.hypar`. Log files are also written to this directory.
+When changes are made to workflows that are being watched by the hub, the hub will receive those changes and update the local data store. It will then emit change notifications to all connected clients.
 
+## Hypar Directory
+The hub stores information locally in a `.hypar` directory in the user's "home" folder. For Windows users this will be something like 
+```none
+C:\Users\<you>\.hypar
+```
+For *nix users this will be
+```none
+~/.hypar
+```
+
+## Examples
+Run the hub:
+```none
+hypar hub
+```
+Add a workflow to the hub:
+```none
+hypar hub add --id 8026cc62-e421-4790-89a5-a9332c3427a2
+```
+Remove a workflow from the hub:
+```none
+hypar hub remove --id 8026cc62-e421-4790-89a5-a9332c3427a2
+```
+Associate a Revit file with a workflow:
+```none
+hypar hub add revit --id 8026cc62-e421-4790-89a5-a9332c3427a2 --file-name Building.rvt
+```
+Remove the association between a Revit file and a workflow:
+```none
+hypar hub remove revit --id 8026cc62-e421-4790-89a5-a9332c3427a2 --file-name Building.rvt
+```
+Hide a function in a workflow:
+```none
+hypar hub hide --id 8026cc62-e421-4790-89a5-a9332c3427a2 --function-name Levels by Envelope
+```
 
 ## Settings
-- Do `hypar hub` on the command line. If no `hub.json` file exists, one will be created for you.
-- After your `hub.json` file has been created, you can add a workflow with `hypar hub --add-workflow <id>` where `<id>` is the id of a workflow on Hypar.
-  - You can find the id of your workflow by looking at its url in Hypar:
-    >https://hypar.io/workflows/**8026cc62-e421-4790-89a5-a9332c3427a2**
-- The `hub.json` file looks like this:
+The `hub.json` file provides configuration information for the hub. You can edit it manually or use the Hypar CLI to add or remove workflows, control visibility of functions in workflows, or sync specific workflows with Revit files.
+
+- A `hub.json` file looks like this:
 ```json
 {
-    "2e534890-ab60-40ad-9fb0-681d313a08e6": {
-        "hidden": [
-            "JSON to Model",
-            "Panels From Walls"
-        ],
-        "revit": {
-            "file_name": "HyparTest.rvt"
-        },
-        "active": false
-    },
     "8026cc62-e421-4790-89a5-a9332c3427a2": {
         "hidden": [
             "Envelope By Sketch",
             "Levels By Envelope"
         ],
+        "revit": {
+            "file_name": "HyparTest.rvt"
+        },
         "active": false
     },
 }
