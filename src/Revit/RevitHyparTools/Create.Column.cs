@@ -8,7 +8,7 @@ namespace Hypar.Revit
 {
     public static partial class Create
     {
-        public static Elements.Column ColumnFromRevitColumn(ADSK.FamilyInstance column)
+        public static Elements.Column ColumnFromRevitColumn(ADSK.FamilyInstance column, Document doc)
         {
             if (column.Category.Id.IntegerValue != (int)BuiltInCategory.OST_Columns)
             {
@@ -24,7 +24,8 @@ namespace Hypar.Revit
                 profile = profile.Reverse();
             }
 
-            var baseCenter = profile.Perimeter.Centroid();
+            var baseCenter = (column.Location as LocationPoint).Point.ToVector3(true);
+            baseCenter.Z = baseCenter.Z + Elements.Units.FeetToMeters((doc.GetElement(column.LevelId) as Level).Elevation);
             var transform = new Elements.Geometry.Transform(-baseCenter.X, -baseCenter.Y, -baseCenter.Z);
 
             var zeroedProfile = transform.OfProfile(profile);

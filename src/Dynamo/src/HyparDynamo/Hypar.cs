@@ -10,6 +10,7 @@ using Elements.Geometry;
 
 using ADSK = Autodesk.Revit.DB;
 using Autodesk.Revit.DB;
+using Autodesk.DesignScript.Runtime;
 
 namespace HyparDynamo.Hypar
 {
@@ -21,13 +22,22 @@ namespace HyparDynamo.Hypar
         /// not see it in 3D views in Hypar.
         /// </summary>
         /// <param name="revitArea">The area that is meant to be converted to a Hypar SpaceBoundary.</param>
+        /// <param name="areaPlan">Provide the view where the area is visible to speed up computation.</param>
         /// <returns name="SpaceBoundary">The Hypar space boundary elements.</returns>
-        public static Elements.SpaceBoundary[] FromArea(Revit.Elements.Element revitArea)
+        public static Elements.SpaceBoundary[] FromArea(Revit.Elements.Element revitArea, [DefaultArgument("HyparDynamo.Hypar.SpaceBoundary.GetNull()")] Revit.Elements.Views.View areaPlan = null)
         {
             var areaElement = (Autodesk.Revit.DB.Area)revitArea.InternalElement;
             var doc = DocumentManager.Instance.CurrentDBDocument;
 
-            return Create.SpaceBoundaryFromRevitArea(areaElement, doc);
+            return Create.SpaceBoundaryFromRevitArea(areaElement, doc, areaPlan == null ? null : (Autodesk.Revit.DB.View)areaPlan?.InternalElement);
+        }
+
+        [IsVisibleInDynamoLibrary(false)]
+        public static object GetNull()
+        {
+            // This technique copied from this example.  Allowing null as a default case appears to be a special case
+            // https://github.com/ksobon/archilab/blob/master/archilabSharedProject/Revit/Selection/Selection.cs
+            return null;
         }
     }
 
@@ -41,7 +51,7 @@ namespace HyparDynamo.Hypar
         /// <returns name="ModelPoints">The ModelPoint objects for Hypar.</returns>
         public static Elements.ModelPoints FromPoints(List<Autodesk.DesignScript.Geometry.Point> points, string name = "")
         {
-            return Create.ModelPointsFromPoints(points.Select(p => new XYZ(p.X, p.Y, p.Z)), tag);
+            return Create.ModelPointsFromPoints(points.Select(p => new XYZ(p.X, p.Y, p.Z)), name);
         }
     }
 
@@ -105,7 +115,7 @@ namespace HyparDynamo.Hypar
             var revitColumnElement = (Autodesk.Revit.DB.FamilyInstance)revitColumn.InternalElement;
             try
             {
-                return Create.ColumnFromRevitColumn(revitColumnElement);
+                return Create.ColumnFromRevitColumn(revitColumnElement, DocumentManager.Instance.CurrentDBDocument);
             }
             catch (Exception ex)
             {
@@ -136,7 +146,6 @@ namespace HyparDynamo.Hypar
 
         /// <summary>
         /// Write a Hypar model to gLTF. 
-        /// You can view these files using https://gltf-viewer.donmccurdy.com/ .
         /// </summary>
         /// <param name="filePath">The path to write the JSON file.</param>
         /// <param name="model">The Hypar Model to write.</param>
