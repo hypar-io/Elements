@@ -19,7 +19,7 @@
     <AddinFiles Include="$(TargetDir)publish\**\*"/>
   </ItemGroup>
 
-  <Target Name="CopyAddin" AfterTargets="AfterBuild">
+  <Target Name="CopyAddin" AfterTargets="Publish">
     <RemoveDir Directories="$(AppData)\Autodesk\Revit\Addins\2020\Hypar.Revit"/>
     <Message Importance="High" Text="Completed CopyAddin target."/>
     <Copy SourceFiles="Hypar.Revit.addin" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\2020" />
