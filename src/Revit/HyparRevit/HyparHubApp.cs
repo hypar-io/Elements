@@ -14,7 +14,6 @@ namespace Hypar.Revit
     {
         private static HubConnection _hyparConnection;
         private static Dictionary<string, WorkflowSettings> _settings;
-        private static bool _isFirstRun = true;
 
         public static HyparHubApp HyparApp { get; private set; }
         public static ILogger HyparLogger { get; private set; }
@@ -105,26 +104,6 @@ namespace Hypar.Revit
                     {
                         HyparLogger.Debug("The current Revit file, {RevitFileName} was not associated with the workflow settings. No sync will occur.", fileName);
                         return;
-                    }
-
-                    if (_isFirstRun)
-                    {
-                        try
-                        {
-                            var depPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".hypar", "workflows", workflow.Id, $"{workflow.Id}.dll");
-                            if (File.Exists(depPath))
-                            {
-                                HyparLogger.Information("Loading the dependencies assembly at {DepPath}.", depPath);
-                                var asmBytes = File.ReadAllBytes(depPath);
-                                var depAsm = AppDomain.CurrentDomain.Load(asmBytes);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            HyparLogger.Debug(ex.Message);
-                            HyparLogger.Debug(ex.StackTrace);
-                        }
-                        _isFirstRun = false;
                     }
 
                     if (!CurrentWorkflows.ContainsKey(workflow.Id))
