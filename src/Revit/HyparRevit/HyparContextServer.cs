@@ -182,22 +182,38 @@ namespace Hypar.Revit
                 foreach (var index in scene.Nodes)
                 {
                     var node = gltf.Nodes[index];
-                    ProcessNodeRecursive(logger, node, gltf, buffers, displayStyle, renderDatas, outline);
+                    ProcessNodeRecursive(logger, node, gltf, buffers, displayStyle, renderDatas, outline, isRoot: true);
                 }
             }
 
             return renderDatas;
         }
 
-        private static void ProcessNodeRecursive(ILogger logger, Node node, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle, List<RenderData> renderDatas, Outline outline)
+        private static void ProcessNodeRecursive(ILogger logger, Node node, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle, List<RenderData> renderDatas, Outline outline, Transform parentTransform = null, bool isRoot = false)
         {
+            Transform transform = null;
+
+            if (node.Matrix != null && !isRoot)
+            {
+                transform = Transform.Identity;
+                transform.set_Basis(0, new XYZ(node.Matrix[0], node.Matrix[1], node.Matrix[2]));
+                transform.set_Basis(1, new XYZ(node.Matrix[4], node.Matrix[5], node.Matrix[6]));
+                transform.set_Basis(2, new XYZ(node.Matrix[8], node.Matrix[9], node.Matrix[10]));
+                transform.Origin = new XYZ(Elements.Units.MetersToFeet(node.Matrix[12]), Elements.Units.MetersToFeet(node.Matrix[13]), Elements.Units.MetersToFeet(node.Matrix[14]));
+
+                if (parentTransform != null)
+                {
+                    transform = parentTransform.Multiply(transform);
+                }
+            }
+
             if (node.Mesh != null)
             {
                 var mesh = gltf.Meshes[(int)node.Mesh];
                 foreach (var primitive in mesh.Primitives)
                 {
                     // logger.Debug("Found a mesh with name {MeshName}.", mesh.Name);
-                    var primitiveData = ProcessPrimitive(logger, primitive, gltf, buffers, displayStyle, outline);
+                    var primitiveData = ProcessPrimitive(logger, primitive, gltf, buffers, displayStyle, outline, transform);
                     if (primitiveData != null)
                     {
                         renderDatas.Add(primitiveData);
@@ -211,12 +227,12 @@ namespace Hypar.Revit
                 {
                     // logger.Debug("Inner id: {InnerId}", inner);
                     var innerNode = gltf.Nodes[inner];
-                    ProcessNodeRecursive(logger, innerNode, gltf, buffers, displayStyle, renderDatas, outline);
+                    ProcessNodeRecursive(logger, innerNode, gltf, buffers, displayStyle, renderDatas, outline, transform);
                 }
             }
         }
 
-        private static RenderData ProcessPrimitive(ILogger logger, glTFLoader.Schema.MeshPrimitive primitive, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle, Outline outline)
+        private static RenderData ProcessPrimitive(ILogger logger, glTFLoader.Schema.MeshPrimitive primitive, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle, Outline outline, Transform transform)
         {
             if (primitive.Mode != MeshPrimitive.ModeEnum.TRIANGLES)
             {
@@ -249,6 +265,10 @@ namespace Hypar.Revit
                 var y = BitConverter.ToSingle(buffers[positionBufferView.Buffer], i + floatSize);
                 var z = BitConverter.ToSingle(buffers[positionBufferView.Buffer], i + floatSize * 2);
                 var pt = new XYZ(Elements.Units.MetersToFeet(x), Elements.Units.MetersToFeet(y), Elements.Units.MetersToFeet(z));
+                if (transform != null)
+                {
+                    pt = transform.OfPoint(pt);
+                }
                 outline.AddPoint(pt);
                 positions.Add(pt);
             }
@@ -260,7 +280,12 @@ namespace Hypar.Revit
                 var x = BitConverter.ToSingle(buffers[normalBufferView.Buffer], i);
                 var y = BitConverter.ToSingle(buffers[normalBufferView.Buffer], i + floatSize);
                 var z = BitConverter.ToSingle(buffers[normalBufferView.Buffer], i + floatSize * 2);
-                normals.Add(new XYZ(x, y, z));
+                var n = new XYZ(x, y, z);
+                if (transform != null)
+                {
+                    n = transform.OfVector(n);
+                }
+                normals.Add(n);
             }
 
             var colors = new List<ColorWithTransparency>();
@@ -344,15 +369,18 @@ namespace Hypar.Revit
                         {
                             color = colors[ia];
                         }
-
-                        verticesFlat.Add(new VertexPositionColored(a, color));
-                        verticesFlat.Add(new VertexPositionColored(b, color));
-                        verticesFlat.Add(new VertexPositionColored(c, color));
+                        verticesFlat.Add(new VertexPositionColored(a, hasColor ? colors[ia] : color));
+                        verticesFlat.Add(new VertexPositionColored(b, hasColor ? colors[ib] : color));
+                        verticesFlat.Add(new VertexPositionColored(c, hasColor ? colors[ic] : color));
                         break;
                     default:
-                        vertices.Add(new VertexPositionNormalColored(a, na, color));
-                        vertices.Add(new VertexPositionNormalColored(b, nb, color));
-                        vertices.Add(new VertexPositionNormalColored(c, nc, color));
+                        if (hasColor)
+                        {
+                            color = colors[ia];
+                        }
+                        vertices.Add(new VertexPositionNormalColored(a, na, hasColor ? colors[ia] : color));
+                        vertices.Add(new VertexPositionNormalColored(b, nb, hasColor ? colors[ib] : color));
+                        vertices.Add(new VertexPositionNormalColored(c, nc, hasColor ? colors[ic] : color));
                         break;
                 }
 
