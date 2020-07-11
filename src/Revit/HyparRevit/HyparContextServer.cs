@@ -121,27 +121,34 @@ namespace Hypar.Revit
             // TODO: This is doing way too much drawing!
             // We should be able to only update render data 
             // for executions which are different.
-            _renderDataCache.Clear();
-            foreach (var workflow in HyparHubApp.CurrentWorkflows.Values)
+            try
             {
-                foreach (var id in executionsToDraw)
+                _renderDataCache.Clear();
+                foreach (var workflow in HyparHubApp.CurrentWorkflows.Values)
                 {
-                    var renderDatas = DrawExecutionFromGlb(_logger, workflow.Id, id, _outline, displayStyle);
-                    _logger.Debug("Drawing resulted in {RenderDataCount} render packages.", renderDatas.Count);
-                    if (renderDatas != null && renderDatas.Count > 0)
+                    foreach (var id in executionsToDraw)
                     {
-                        for (var i = 0; i < renderDatas.Count; i++)
+                        var renderDatas = DrawExecutionFromGlb(_logger, workflow.Id, id, _outline, displayStyle);
+                        if (renderDatas != null && renderDatas.Count > 0)
                         {
-                            var renderData = renderDatas[i];
-                            _renderDataCache.Add($"{id}_{i}", renderData);
+                            for (var i = 0; i < renderDatas.Count; i++)
+                            {
+                                var renderData = renderDatas[i];
+                                _renderDataCache.Add($"{id}_{i}", renderData);
+                            }
                         }
                     }
                 }
+
+                HyparHubApp.RequiresRedraw = false;
+
+                _logger.Debug("Render complete.");
             }
-
-            HyparHubApp.RequiresRedraw = false;
-
-            _logger.Debug("Render complete.");
+            catch (Exception ex)
+            {
+                _logger.Debug(ex.Message);
+                _logger.Debug(ex.StackTrace);
+            }
         }
 
         private static List<RenderData> DrawExecutionFromGlb(ILogger logger,
@@ -175,54 +182,41 @@ namespace Hypar.Revit
                 foreach (var index in scene.Nodes)
                 {
                     var node = gltf.Nodes[index];
-                    renderDatas.AddRange(ProcessNodeRecursive(logger, node, gltf, buffers, displayStyle));
+                    ProcessNodeRecursive(logger, node, gltf, buffers, displayStyle, renderDatas, outline);
                 }
             }
 
             return renderDatas;
         }
 
-        private static List<RenderData> ProcessNodeRecursive(ILogger logger, Node node, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle)
+        private static void ProcessNodeRecursive(ILogger logger, Node node, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle, List<RenderData> renderDatas, Outline outline)
         {
-            // logger.Debug("Found a node with name {NodeName}. The node has {ChildCount} children.", node.Name, node.Children.Length);
-            var renderDatas = new List<RenderData>();
-
-            try
+            if (node.Mesh != null)
             {
-                if (node.Mesh != null)
+                var mesh = gltf.Meshes[(int)node.Mesh];
+                foreach (var primitive in mesh.Primitives)
                 {
-                    var mesh = gltf.Meshes[(int)node.Mesh];
-                    foreach (var primitive in mesh.Primitives)
+                    // logger.Debug("Found a mesh with name {MeshName}.", mesh.Name);
+                    var primitiveData = ProcessPrimitive(logger, primitive, gltf, buffers, displayStyle, outline);
+                    if (primitiveData != null)
                     {
-                        // logger.Debug("Found a mesh with name {MeshName}.", mesh.Name);
-                        var primitiveData = ProcessPrimitive(logger, primitive, gltf, buffers, displayStyle);
-                        if (primitiveData != null)
-                        {
-                            renderDatas.Add(primitiveData);
-                        }
-                    }
-                }
-
-                if (node.Children != null && node.Children.Length > 0)
-                {
-                    foreach (var inner in node.Children)
-                    {
-                        // logger.Debug("Inner id: {InnerId}", inner);
-                        var innerNode = gltf.Nodes[inner];
-                        renderDatas.AddRange(ProcessNodeRecursive(logger, innerNode, gltf, buffers, displayStyle));
+                        renderDatas.Add(primitiveData);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                logger.Debug(ex.Message);
-                logger.Debug(ex.StackTrace);
-            }
 
-            return renderDatas;
+            if (node.Children != null && node.Children.Length > 0)
+            {
+                foreach (var inner in node.Children)
+                {
+                    // logger.Debug("Inner id: {InnerId}", inner);
+                    var innerNode = gltf.Nodes[inner];
+                    ProcessNodeRecursive(logger, innerNode, gltf, buffers, displayStyle, renderDatas, outline);
+                }
+            }
         }
 
-        private static RenderData ProcessPrimitive(ILogger logger, glTFLoader.Schema.MeshPrimitive primitive, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle)
+        private static RenderData ProcessPrimitive(ILogger logger, glTFLoader.Schema.MeshPrimitive primitive, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle, Outline outline)
         {
             if (primitive.Mode != MeshPrimitive.ModeEnum.TRIANGLES)
             {
@@ -254,7 +248,9 @@ namespace Hypar.Revit
                 var x = BitConverter.ToSingle(buffers[positionBufferView.Buffer], i);
                 var y = BitConverter.ToSingle(buffers[positionBufferView.Buffer], i + floatSize);
                 var z = BitConverter.ToSingle(buffers[positionBufferView.Buffer], i + floatSize * 2);
-                positions.Add(new XYZ(Elements.Units.MetersToFeet(x), Elements.Units.MetersToFeet(y), Elements.Units.MetersToFeet(z)));
+                var pt = new XYZ(Elements.Units.MetersToFeet(x), Elements.Units.MetersToFeet(y), Elements.Units.MetersToFeet(z));
+                outline.AddPoint(pt);
+                positions.Add(pt);
             }
 
             var normals = new List<XYZ>();
@@ -270,7 +266,7 @@ namespace Hypar.Revit
             var colors = new List<ColorWithTransparency>();
             if (hasColor)
             {
-                var colorAccessor = gltf.Accessors[primitive.Attributes["COLOR"]];
+                var colorAccessor = gltf.Accessors[primitive.Attributes["COLOR_0"]];
                 var colorBufferView = gltf.BufferViews[(int)colorAccessor.BufferView];
                 for (var i = colorBufferView.ByteOffset; i < colorBufferView.ByteOffset + colorBufferView.ByteLength; i += colorBufferView.ByteStride ?? (floatSize * 3))
                 {
