@@ -26,7 +26,7 @@ namespace Hypar.Revit
             }
 
             var wallPlane = wallFace as PlanarFace;
-            var profiles = wallPlane.GetProfiles();
+            var profiles = wallPlane.GetProfiles(true);
 
             var centerline = (wall.Location as LocationCurve).Curve;
 

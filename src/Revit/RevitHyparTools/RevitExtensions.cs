@@ -23,9 +23,9 @@ namespace Hypar.Revit
         /// Retrieve all of the Element.Geometry.Profiles that describe the Revit PlanarFace
         /// Soemtimes a single PlanarFace in Revit and actually multiple "faces" should be translated into multiple Element Profiles
         /// </summary>
-        internal static Elements.Geometry.Profile[] GetProfiles(this PlanarFace face)
+        internal static Elements.Geometry.Profile[] GetProfiles(this PlanarFace face, bool convertToMeters = false)
         {
-            var polygons = face.GetEdgesAsCurveLoops().Select(cL => cL.ToPolygon(true));
+            var polygons = face.GetEdgesAsCurveLoops().Select(cL => cL.ToPolygon(convertToMeters));
 
             var polygonLoopDict = MatchOuterLoopPolygonsWithInnerHoles(polygons);
 
@@ -36,16 +36,19 @@ namespace Hypar.Revit
 
         /// <summary>
         /// Analyze all of the PlanarFaces of a Revit solid and returns those that 
-        /// face "up" within a certain threshold.
+        /// are horizontal within a certain threshold.  The default is to look for faces
+        /// that face up, with an optional override to look for those that face down.
         /// </summary>
         /// <param name="solid">The revit Solid</param>
         /// <param name="verticalThreshold">The angle (in degrees) that represents the threshold for a face to be considered facing up.  A completely horizontal face will have an angle of 0.  A face that does not face up or down at all will have an angle of 90.</param>
-        internal static PlanarFace[] GetMostLikelyTopFaces(this Solid solid, double verticalThreshold = 30)
+        /// <param name="downardFacing">If true the method will return faces that face down, rather than up.</param>
+        internal static PlanarFace[] GetMostLikelyHorizontalFaces(this Solid solid, double verticalThreshold = 30, bool downwardFacing = false)
         {
             var faces = new List<PlanarFace>();
+            var inversionMultiplier = downwardFacing ? -1 : 1;
             foreach (PlanarFace face in solid.Faces)
             {
-                if (face.FaceNormal.DotProduct(XYZ.BasisZ) > Math.Cos(Elements.Units.DegreesToRadians(verticalThreshold)) && face.FaceNormal.DotProduct(XYZ.BasisZ) <= 1)
+                if (face.FaceNormal.DotProduct(inversionMultiplier * XYZ.BasisZ) > Math.Cos(Elements.Units.DegreesToRadians(verticalThreshold)) && face.FaceNormal.DotProduct(XYZ.BasisZ * inversionMultiplier) <= 1)
                 {
                     faces.Add(face);
                 }

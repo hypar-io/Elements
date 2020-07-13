@@ -38,8 +38,8 @@ namespace Hypar.Revit
         private static ElemGeom.Profile[] GetProfilesOfTopFacesOfFloor(Document doc, Floor floor)
         {
             var geom = floor.get_Geometry(new Options());
-            var topFaces = geom.Cast<Solid>().Where(g => g != null).SelectMany(g => g.GetMostLikelyTopFaces());
-            var profiles = topFaces.SelectMany(f => f.GetProfiles());
+            var topFaces = geom.Cast<Solid>().Where(g => g != null).SelectMany(g => g.GetMostLikelyHorizontalFaces());
+            var profiles = topFaces.SelectMany(f => f.GetProfiles(true));
 
             return profiles.ToArray();
         }
