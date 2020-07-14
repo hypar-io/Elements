@@ -14,8 +14,8 @@
     </ItemGroup>
 
     <Target Name="CopyToPackage" AfterTargets="Build">
-        <Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFolder="$(ProjectDir)../../deploy/HyparDynamo/bin" ContinueOnError="true" />
-        <Copy SourceFiles="HyparDyn_ExtensionDefinition.xml" DestinationFolder="$(ProjectDir)../../deploy/HyparDynamo/extra" ContinueOnError="true" />
+        <Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFolder="$(ProjectDir)../../deploy/Hypar.Dynamo/bin" ContinueOnError="true" />
+        <Copy SourceFiles="HyparDyn_ExtensionDefinition.xml" DestinationFolder="$(ProjectDir)../../deploy/Hypar.Dynamo/extra" ContinueOnError="true" />
     </Target>
 
 </Project>

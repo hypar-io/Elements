@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Windows;
 using Dynamo.Extensions;
 
-namespace HyparDyn
+namespace Hypar.Dynamo
 {
     public class HyparExtension : IExtension
     {

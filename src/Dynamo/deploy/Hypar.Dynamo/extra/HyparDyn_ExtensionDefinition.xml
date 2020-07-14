@@ -1,4 +1,4 @@
 <ExtensionDefinition>
     <AssemblyPath>../bin/HyparDynExtension.dll</AssemblyPath>
-    <TypeName>HyparDyn.HyparExtension</TypeName>
+    <TypeName>Hypar.Dynamo.HyparExtension</TypeName>
 </ExtensionDefinition>
