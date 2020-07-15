@@ -5,7 +5,8 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExternalService;
-using Elements.Geometry;
+using glTFLoader;
+using glTFLoader.Schema;
 using Serilog;
 
 namespace Hypar.Revit
@@ -120,27 +121,311 @@ namespace Hypar.Revit
             // TODO: This is doing way too much drawing!
             // We should be able to only update render data 
             // for executions which are different.
-            _renderDataCache.Clear();
-            foreach (var workflow in HyparHubApp.CurrentWorkflows.Values)
+            try
             {
-                foreach (var id in executionsToDraw)
+                _renderDataCache.Clear();
+                foreach (var workflow in HyparHubApp.CurrentWorkflows.Values)
                 {
-                    var renderDatas = DrawExecution(_logger, workflow.Id, id, _outline, displayStyle);
-                    if (renderDatas != null && renderDatas.Count > 0)
+                    foreach (var id in executionsToDraw)
                     {
-                        for (var i = 0; i < renderDatas.Count; i++)
+                        var renderDatas = DrawExecutionFromGlb(_logger, workflow.Id, id, _outline, displayStyle);
+                        if (renderDatas != null && renderDatas.Count > 0)
                         {
-                            var renderData = renderDatas[i];
-                            _renderDataCache.Add($"{id}_{i}", renderData);
+                            for (var i = 0; i < renderDatas.Count; i++)
+                            {
+                                var renderData = renderDatas[i];
+                                _renderDataCache.Add($"{id}_{i}", renderData);
+                            }
                         }
+                    }
+                }
 
+                HyparHubApp.RequiresRedraw = false;
+
+                _logger.Debug("Render complete.");
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex.Message);
+                _logger.Debug(ex.StackTrace);
+            }
+        }
+
+        private static List<RenderData> DrawExecutionFromGlb(ILogger logger,
+                                                        string workflowId,
+                                                        string executionId,
+                                                        Outline outline,
+                                                        DisplayStyle displayStyle)
+        {
+            var glbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), $".hypar/workflows/{workflowId}/{executionId}/model0.glb");
+            if (!File.Exists(glbPath))
+            {
+                logger.Debug("The execution path {Path} could not be found. Perhaps the workflow was deleted from the cache.", glbPath);
+                return null;
+            }
+
+            var renderDatas = new List<RenderData>();
+
+            var gltf = Interface.LoadModel(glbPath);
+
+            logger.Debug("Parsing gltf for execution {ExecutionId}...", executionId);
+
+            var buffers = new byte[gltf.Buffers.Length][];
+            for (var i = 0; i < gltf.Buffers.Length; i++)
+            {
+                buffers[i] = gltf.LoadBinaryBuffer(i, glbPath);
+            }
+
+            foreach (var scene in gltf.Scenes)
+            {
+                // logger.Debug("Found a scene named {SceneName}.", scene.Name);
+                foreach (var index in scene.Nodes)
+                {
+                    var node = gltf.Nodes[index];
+                    ProcessNodeRecursive(logger, node, gltf, buffers, displayStyle, renderDatas, outline, isRoot: true);
+                }
+            }
+
+            return renderDatas;
+        }
+
+        private static void ProcessNodeRecursive(ILogger logger, Node node, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle, List<RenderData> renderDatas, Outline outline, Transform parentTransform = null, bool isRoot = false)
+        {
+            Transform transform = null;
+
+            if (node.Matrix != null && !isRoot)
+            {
+                transform = Transform.Identity;
+                transform.set_Basis(0, new XYZ(node.Matrix[0], node.Matrix[1], node.Matrix[2]));
+                transform.set_Basis(1, new XYZ(node.Matrix[4], node.Matrix[5], node.Matrix[6]));
+                transform.set_Basis(2, new XYZ(node.Matrix[8], node.Matrix[9], node.Matrix[10]));
+                transform.Origin = new XYZ(Elements.Units.MetersToFeet(node.Matrix[12]), Elements.Units.MetersToFeet(node.Matrix[13]), Elements.Units.MetersToFeet(node.Matrix[14]));
+
+                if (parentTransform != null)
+                {
+                    transform = parentTransform.Multiply(transform);
+                }
+            }
+
+            if (node.Mesh != null)
+            {
+                var mesh = gltf.Meshes[(int)node.Mesh];
+                foreach (var primitive in mesh.Primitives)
+                {
+                    // logger.Debug("Found a mesh with name {MeshName}.", mesh.Name);
+                    var primitiveData = ProcessPrimitive(logger, primitive, gltf, buffers, displayStyle, outline, transform);
+                    if (primitiveData != null)
+                    {
+                        renderDatas.Add(primitiveData);
                     }
                 }
             }
 
-            HyparHubApp.RequiresRedraw = false;
+            if (node.Children != null && node.Children.Length > 0)
+            {
+                foreach (var inner in node.Children)
+                {
+                    // logger.Debug("Inner id: {InnerId}", inner);
+                    var innerNode = gltf.Nodes[inner];
+                    ProcessNodeRecursive(logger, innerNode, gltf, buffers, displayStyle, renderDatas, outline, transform);
+                }
+            }
+        }
 
-            _logger.Debug("Render complete.");
+        private static RenderData ProcessPrimitive(ILogger logger, glTFLoader.Schema.MeshPrimitive primitive, Gltf gltf, byte[][] buffers, DisplayStyle displayStyle, Outline outline, Transform transform)
+        {
+            if (primitive.Mode != MeshPrimitive.ModeEnum.TRIANGLES)
+            {
+                logger.Debug("The selected primitive mode is not supported.");
+                return null;
+            }
+
+            var indexAccessor = gltf.Accessors[(int)primitive.Indices];
+            var positionAccessor = gltf.Accessors[primitive.Attributes["POSITION"]];
+            var normalAccessor = gltf.Accessors[primitive.Attributes["NORMAL"]];
+            var hasColor = primitive.Attributes.ContainsKey("COLOR_0");
+
+            var indexBufferView = gltf.BufferViews[(int)indexAccessor.BufferView];
+            var positionBufferView = gltf.BufferViews[(int)positionAccessor.BufferView];
+            var normalBufferView = gltf.BufferViews[(int)normalAccessor.BufferView];
+
+            var indices = new List<int>();
+            for (var i = indexBufferView.ByteOffset; i < indexBufferView.ByteOffset + indexBufferView.ByteLength; i += indexBufferView.ByteStride ?? sizeof(ushort))
+            {
+                var index = BitConverter.ToUInt16(buffers[indexBufferView.Buffer], i);
+                indices.Add(index);
+            }
+
+            var floatSize = sizeof(float);
+            var positions = new List<XYZ>();
+            for (var i = positionBufferView.ByteOffset; i < positionBufferView.ByteOffset + positionBufferView.ByteLength; i += positionBufferView.ByteStride ?? (floatSize * 3))
+            {
+                // Read x, y, z values
+                var x = BitConverter.ToSingle(buffers[positionBufferView.Buffer], i);
+                var y = BitConverter.ToSingle(buffers[positionBufferView.Buffer], i + floatSize);
+                var z = BitConverter.ToSingle(buffers[positionBufferView.Buffer], i + floatSize * 2);
+                var pt = new XYZ(Elements.Units.MetersToFeet(x), Elements.Units.MetersToFeet(y), Elements.Units.MetersToFeet(z));
+                if (transform != null)
+                {
+                    pt = transform.OfPoint(pt);
+                }
+                outline.AddPoint(pt);
+                positions.Add(pt);
+            }
+
+            var normals = new List<XYZ>();
+            for (var i = normalBufferView.ByteOffset; i < normalBufferView.ByteOffset + normalBufferView.ByteLength; i += normalBufferView.ByteStride ?? (floatSize * 3))
+            {
+                // Read x, y, z values
+                var x = BitConverter.ToSingle(buffers[normalBufferView.Buffer], i);
+                var y = BitConverter.ToSingle(buffers[normalBufferView.Buffer], i + floatSize);
+                var z = BitConverter.ToSingle(buffers[normalBufferView.Buffer], i + floatSize * 2);
+                var n = new XYZ(x, y, z);
+                if (transform != null)
+                {
+                    n = transform.OfVector(n);
+                }
+                normals.Add(n);
+            }
+
+            var colors = new List<ColorWithTransparency>();
+            if (hasColor)
+            {
+                var colorAccessor = gltf.Accessors[primitive.Attributes["COLOR_0"]];
+                var colorBufferView = gltf.BufferViews[(int)colorAccessor.BufferView];
+                for (var i = colorBufferView.ByteOffset; i < colorBufferView.ByteOffset + colorBufferView.ByteLength; i += colorBufferView.ByteStride ?? (floatSize * 3))
+                {
+                    // Read x, y, z values
+                    var r = BitConverter.ToSingle(buffers[colorBufferView.Buffer], i);
+                    var g = BitConverter.ToSingle(buffers[colorBufferView.Buffer], i + floatSize);
+                    var b = BitConverter.ToSingle(buffers[colorBufferView.Buffer], i + floatSize * 2);
+                    colors.Add(displayStyle == DisplayStyle.HLR ? new ColorWithTransparency(255, 255, 255, 0) : new ColorWithTransparency((uint)(r * 255), (uint)(g * 255), (uint)(b * 255), 0));
+                }
+            }
+
+            // The number of vertices will be the same as the length of the indices
+            // because we'll duplicate vertices at every position.
+            var numVertices = indices.Count;
+            var pType = PrimitiveType.TriangleList;
+            var numPrimitives = indices.Count / 3;
+            var numIndices = GetPrimitiveSize(pType) * numPrimitives;
+
+            VertexFormatBits vertexFormatBits;
+            switch (displayStyle)
+            {
+                case DisplayStyle.HLR:
+                case DisplayStyle.FlatColors:
+                    vertexFormatBits = VertexFormatBits.PositionColored;
+                    break;
+                default:
+                    vertexFormatBits = VertexFormatBits.PositionNormalColored;
+                    break;
+            }
+            var vertexFormat = new VertexFormat(vertexFormatBits);
+
+            var vBuffer = new VertexBuffer(GetVertexSize(vertexFormatBits) * numVertices);
+            var iBuffer = new IndexBuffer(numIndices);
+
+            vBuffer.Map(GetVertexSize(vertexFormatBits) * numVertices);
+            iBuffer.Map(numIndices);
+
+            var verticesFlat = new List<VertexPositionColored>();
+            var vertices = new List<VertexPositionNormalColored>();
+            var triangles = new List<IndexTriangle>();
+
+            ColorWithTransparency color = null;
+            if (displayStyle == DisplayStyle.HLR)
+            {
+                color = new ColorWithTransparency(255, 255, 255, 0);
+            }
+            else if (primitive.Material != null)
+            {
+                var material = gltf.Materials[(int)primitive.Material];
+                var r = (uint)(material.PbrMetallicRoughness.BaseColorFactor[0] * 255);
+                var g = (uint)(material.PbrMetallicRoughness.BaseColorFactor[1] * 255);
+                var b = (uint)(material.PbrMetallicRoughness.BaseColorFactor[2] * 255);
+                var a = (uint)(material.PbrMetallicRoughness.BaseColorFactor[3] * 255);
+                color = new ColorWithTransparency(r, g, b, a);
+            }
+
+            for (var i = 0; i < indices.Count; i += 3)
+            {
+                var ia = indices[i];
+                var ib = indices[i + 1];
+                var ic = indices[i + 2];
+
+                var a = positions[ia];
+                var b = positions[ib];
+                var c = positions[ic];
+
+                var na = normals[ia];
+                var nb = normals[ib];
+                var nc = normals[ic];
+
+                switch (vertexFormatBits)
+                {
+                    case VertexFormatBits.PositionColored:
+                        if (hasColor)
+                        {
+                            color = colors[ia];
+                        }
+                        verticesFlat.Add(new VertexPositionColored(a, hasColor ? colors[ia] : color));
+                        verticesFlat.Add(new VertexPositionColored(b, hasColor ? colors[ib] : color));
+                        verticesFlat.Add(new VertexPositionColored(c, hasColor ? colors[ic] : color));
+                        break;
+                    default:
+                        if (hasColor)
+                        {
+                            color = colors[ia];
+                        }
+                        vertices.Add(new VertexPositionNormalColored(a, na, hasColor ? colors[ia] : color));
+                        vertices.Add(new VertexPositionNormalColored(b, nb, hasColor ? colors[ib] : color));
+                        vertices.Add(new VertexPositionNormalColored(c, nc, hasColor ? colors[ic] : color));
+                        break;
+                }
+
+                triangles.Add(new IndexTriangle(i, i + 1, i + 2));
+            }
+
+            switch (displayStyle)
+            {
+                case DisplayStyle.HLR:
+                case DisplayStyle.FlatColors:
+                    var pc = vBuffer.GetVertexStreamPositionColored();
+                    pc.AddVertices(verticesFlat);
+                    break;
+                default:
+                    var pnc = vBuffer.GetVertexStreamPositionNormalColored();
+                    pnc.AddVertices(vertices);
+                    break;
+            }
+
+            var iPos = iBuffer.GetIndexStreamTriangle();
+            iPos.AddTriangles(triangles);
+
+            vBuffer.Unmap();
+            iBuffer.Unmap();
+
+            var effect = new EffectInstance(vertexFormatBits);
+
+            var renderData = new RenderData()
+            {
+                VertexBuffer = vBuffer,
+                VertexCount = numVertices,
+                IndexBuffer = iBuffer,
+                IndexCount = numIndices,
+                VertexFormat = vertexFormat,
+                Effect = effect,
+                PrimitiveType = pType,
+                PrimitiveCount = numPrimitives
+            };
+
+            if (displayStyle != DisplayStyle.Wireframe && numPrimitives > 0)
+            {
+                DrawContext.FlushBuffer(vBuffer, numVertices, iBuffer, numIndices, vertexFormat, effect, pType, 0, numPrimitives);
+            }
+
+            return renderData;
         }
 
         private static List<RenderData> DrawExecution(ILogger logger,
