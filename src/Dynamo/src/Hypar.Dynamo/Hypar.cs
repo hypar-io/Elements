@@ -143,7 +143,7 @@ namespace Hypar.Dynamo
         }
 
         /// <summary>
-        /// Write a Hypar model to gLTF. 
+        /// Write a Hypar model to glTF. 
         /// </summary>
         /// <param name="filePath">The path to write the JSON file.</param>
         /// <param name="model">The Hypar Model to write.</param>
