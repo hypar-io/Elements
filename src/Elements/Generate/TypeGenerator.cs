@@ -429,6 +429,8 @@ namespace Elements.Generate
             if (isUserElement)
             {
                 // remove unncessary imports
+                // TODO: make this a conditional for the code generation using ExtensionData, instead of using string replacement. 
+                // For whatever reason, this was not working with code in File.liquid — only Class.liquid.
                 file = file.Replace(@"
 using Hypar.Functions;
 using Hypar.Functions.Execution;
