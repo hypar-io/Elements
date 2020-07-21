@@ -428,6 +428,11 @@ namespace Elements.Generate
 
             if (isUserElement)
             {
+                // remove unncessary imports
+                file = file.Replace(@"
+using Hypar.Functions;
+using Hypar.Functions.Execution;
+using Hypar.Functions.Execution.AWS;", "");
                 // Insert the UserElement attribute directly before
                 // 'public partial class <typeName>'
                 var start = file.IndexOf($"public partial class {typeName}");
