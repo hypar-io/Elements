@@ -1,4 +1,15 @@
 # Changelog
+## 0.7.3
+### Fixed
+- CodeGen was failing intermittently
+- Elements schemas with Dictionary types were failing to serialize
+### Added
+- Elements supports the [Hub beta](https://hypar-io.github.io/Elements/Hub.html)
+- CodeGen supports `input_schema`
+- Hypar.Revit is completely rewritten as an external application, two external commands, and an IDirectContext3D server.
+### Changed
+- some Tessellate method signatures are updated to allow assigning colors at the time of tessellation as Revit requires vertex colors.
+- Updates are made to the type generator to support compiling multiple types into an assembly on disk.
 
 ## 0.7.2
 ### Fixed
