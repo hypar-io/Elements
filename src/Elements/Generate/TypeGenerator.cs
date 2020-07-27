@@ -104,6 +104,7 @@ namespace Elements.Generate
                 "https://hypar.io/Schemas/Material.json",
                 "https://hypar.io/Schemas/Model.json",
                 "https://hypar.io/Schemas/Geometry/Matrix.json",
+                "https://geojson.org/schema/Point.json",
             };
 
         private const string NAMESPACE_PROPERTY = "x-namespace";
@@ -353,7 +354,10 @@ namespace Elements.Generate
             return allResults;
         }
 
-        private static string[] GetCoreTypeNames()
+        /// <summary>
+        /// Get a list of the core Hypar types, which should be excluded from code generation. 
+        /// </summary>
+        public static string[] GetCoreTypeNames()
         {
             return _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToArray();
         }
