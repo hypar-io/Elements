@@ -335,4 +335,4 @@ appsettings.json
 appsettings.dev.json
 *.icloud
 
-**/Hypar.Revit/*
+**/deploy/Hypar.Revit/*
