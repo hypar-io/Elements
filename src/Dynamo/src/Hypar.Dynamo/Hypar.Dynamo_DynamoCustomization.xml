@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <doc>
   <assembly>
-    <name>HyparDynamo</name>
+    <name>Hypar.Dynamo</name>
   </assembly>
   <namespaces>
-    <namespace name="HyparDynamo.Hypar">
+    <namespace name="Hypar.Dynamo">
       <category>Hypar</category>
     </namespace>
   </namespaces>

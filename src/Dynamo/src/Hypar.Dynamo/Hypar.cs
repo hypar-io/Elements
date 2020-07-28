@@ -1,18 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elements.Serialization.glTF;
-using Hypar.Revit;
-using RevitServices.Persistence;
-using Elements;
-using Elements.Generate;
-using Elements.Geometry;
 
 using ADSK = Autodesk.Revit.DB;
-using Autodesk.Revit.DB;
+using DynamoRevit = Revit.Elements;
+using RevitServices.Persistence;
 using Autodesk.DesignScript.Runtime;
 
-namespace HyparDynamo.Hypar
+using Elements.Serialization.glTF;
+using Hypar.Revit;
+
+namespace Hypar.Dynamo
 {
     public static class SpaceBoundary
     {
@@ -24,9 +22,9 @@ namespace HyparDynamo.Hypar
         /// <param name="revitArea">The area that is meant to be converted to a Hypar SpaceBoundary.</param>
         /// <param name="areaPlan">Provide the view where the area is visible to speed up computation.</param>
         /// <returns name="SpaceBoundary">The Hypar space boundary elements.</returns>
-        public static Elements.SpaceBoundary[] FromArea(Revit.Elements.Element revitArea, [DefaultArgument("HyparDynamo.Hypar.SpaceBoundary.GetNull()")] Revit.Elements.Views.View areaPlan = null)
+        public static Elements.SpaceBoundary[] FromArea(DynamoRevit.Element revitArea, [DefaultArgument("HyparDynamo.Hypar.SpaceBoundary.GetNull()")] DynamoRevit.Views.AreaPlanView areaPlan = null)
         {
-            var areaElement = (Autodesk.Revit.DB.Area)revitArea.InternalElement;
+            var areaElement = (ADSK.Area)revitArea.InternalElement;
             var doc = DocumentManager.Instance.CurrentDBDocument;
 
             return Create.SpaceBoundaryFromRevitArea(areaElement, doc, areaPlan == null ? null : (Autodesk.Revit.DB.View)areaPlan?.InternalElement);
@@ -51,7 +49,7 @@ namespace HyparDynamo.Hypar
         /// <returns name="ModelPoints">The ModelPoint objects for Hypar.</returns>
         public static Elements.ModelPoints FromPoints(List<Autodesk.DesignScript.Geometry.Point> points, string name = "")
         {
-            return Create.ModelPointsFromPoints(points.Select(p => new XYZ(p.X, p.Y, p.Z)), name);
+            return Create.ModelPointsFromPoints(points.Select(p => new ADSK.XYZ(p.X, p.Y, p.Z)), name);
         }
     }
 
@@ -63,7 +61,7 @@ namespace HyparDynamo.Hypar
         /// </summary>
         /// <param name="revitWall">The walls to be exported.</param>
         /// <returns name="WallByProfiles">The Hypar walls.</returns>
-        public static Elements.WallByProfile[] FromRevitWall(this Revit.Elements.Wall revitWall)
+        public static Elements.WallByProfile[] FromRevitWall(DynamoRevit.Wall revitWall)
         {
             var revitWallElement = (Autodesk.Revit.DB.Wall)revitWall.InternalElement;
 
@@ -87,7 +85,7 @@ namespace HyparDynamo.Hypar
         /// </summary>
         /// <param name="revitFloor">The floor to be exported.</param>
         /// <returns name="Floors">The Hypar floors.</returns>
-        public static Elements.Floor[] FromRevitFloor(this Revit.Elements.Floor revitFloor)
+        public static Elements.Floor[] FromRevitFloor(DynamoRevit.Floor revitFloor)
         {
             var revitFloorElement = (Autodesk.Revit.DB.Floor)revitFloor.InternalElement;
 
@@ -110,7 +108,7 @@ namespace HyparDynamo.Hypar
         /// </summary>
         /// <param name="revitColumn">The column to be exported.</param>
         /// <returns name="Column">The Hypar column element.</returns>
-        public static Elements.Column FromRevitColumn(this Revit.Elements.Element revitColumn)
+        public static Elements.Column FromRevitColumn(DynamoRevit.Element revitColumn)
         {
             var revitColumnElement = (Autodesk.Revit.DB.FamilyInstance)revitColumn.InternalElement;
             try
@@ -145,7 +143,7 @@ namespace HyparDynamo.Hypar
         }
 
         /// <summary>
-        /// Write a Hypar model to gLTF. 
+        /// Write a Hypar model to glTF. 
         /// </summary>
         /// <param name="filePath">The path to write the JSON file.</param>
         /// <param name="model">The Hypar Model to write.</param>

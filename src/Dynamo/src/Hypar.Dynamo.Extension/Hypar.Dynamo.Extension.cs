@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Windows;
 using Dynamo.Extensions;
 
-namespace HyparDyn
+namespace Hypar.Dynamo
 {
-    public class HyparExtension : IExtension
+    public class Extension : IExtension
     {
         public string UniqueId => Guid.NewGuid().ToString();
         public string Name => "Hypar Loader Extension";

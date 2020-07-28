@@ -46,18 +46,18 @@
 
   <Target Name="BuildPackage" AfterTargets="AfterBuild">
     <!-- <Copy SourceFiles="@(NodeLibraries)" DestinationFolder="..\..\deploy\HyparDynamo\bin\" /> -->
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
-    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
-    <Copy SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
-    <Copy SourceFiles="$(TargetDir)Hypar.Elements.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
-    <Copy SourceFiles="$(TargetDir)Hypar.IFC4.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
-    <Copy SourceFiles="$(TargetDir)HyparRevit.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
-    <Copy SourceFiles="$(TargetDir)NJsonSchema.dll" DestinationFolder="..\..\deploy\HyparDynamo\bin\" />
-    <Copy SourceFiles="$(ProjectDir)HyparDynamo_DynamoCustomization.xml" DestinationFolder="..\..\deploy\HyparDynamo\bin\" ContinueOnError="true" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" ContinueOnError="true" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" ContinueOnError="true" />
+    <Copy SourceFiles="$(TargetDir)Hypar.Elements.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)Hypar.IFC4.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)HyparRevit.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)NJsonSchema.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
+    <Copy SourceFiles="$(ProjectDir)Hypar.Dynamo_DynamoCustomization.xml" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" ContinueOnError="true" />
   </Target>
 
   <ItemGroup>
-    <DynamoPackage Include="$(ProjectDir)..\..\deploy\HyparDynamo\**\*.*" />
+    <DynamoPackage Include="$(ProjectDir)..\..\deploy\Hypar.Dynamo\**\*.*" />
   </ItemGroup>
   <Target Name="Deploy" AfterTargets="BuildPackage" Condition=" '$(Configuration)' == 'Debug' ">
     <RemoveDir Directories="$(AppData)\Dynamo\Dynamo Revit\2.5\packages\Hypar Dynamo\" />
