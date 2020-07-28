@@ -58,8 +58,10 @@ namespace Hypar.Revit
         {
             var startHubButton = new PushButtonData("StartHub", "Start\nHypar\nHub", Assembly.GetCallingAssembly().Location, "Hypar.Revit.HyparHubStartCommand");
             var stopHubButton = new PushButtonData("StopHub", "Stop\nHypar\nHub", Assembly.GetCallingAssembly().Location, "Hypar.Revit.HyparHubStopCommand");
+            var convertButton = new PushButtonData("HyparConvert", "Convert to Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertVisibleToHypar");
             var hyparHubPanel = application.CreateRibbonPanel("Hypar");
             hyparHubPanel.AddStackedItems(startHubButton, stopHubButton);
+            hyparHubPanel.AddItem(convertButton);
         }
 
         private void OnApplicationInitialized(object sender, EventArgs e)

@@ -1,3 +1,4 @@
+using System;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -32,6 +33,24 @@ namespace Hypar.Revit
             };
 
             return Result.Succeeded;
+        }
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ConvertVisibleToHypar : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            try
+            {
+                ExportToModel.Convert(commandData.Application.ActiveUIDocument.Document, commandData.Application.ActiveUIDocument.ActiveView);
+                return Result.Succeeded;
+            }
+            catch (Exception e)
+            {
+                TaskDialog.Show("Error", $"{e.Message}\n{e.StackTrace}");
+                return Result.Failed;
+            }
         }
     }
 
