@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Revit\RevitHyparTools\HyparRevit.csproj" />
+    <ProjectReference Include="..\..\..\Revit\Hypar.Revit.Converters\Hypar.Revit.Converters.csproj" />
     <ProjectReference Include="..\..\..\Elements\Elements.csproj" />
   </ItemGroup>
 
@@ -51,7 +51,7 @@
     <Copy SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" ContinueOnError="true" />
     <Copy SourceFiles="$(TargetDir)Hypar.Elements.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
     <Copy SourceFiles="$(TargetDir)Hypar.IFC4.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
-    <Copy SourceFiles="$(TargetDir)HyparRevit.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
+    <Copy SourceFiles="$(TargetDir)Hypar.Revit.Converters.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
     <Copy SourceFiles="$(TargetDir)NJsonSchema.dll" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" />
     <Copy SourceFiles="$(ProjectDir)Hypar.Dynamo_DynamoCustomization.xml" DestinationFolder="..\..\deploy\Hypar.Dynamo\bin\" ContinueOnError="true" />
   </Target>

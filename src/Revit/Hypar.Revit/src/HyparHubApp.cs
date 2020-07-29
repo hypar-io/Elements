@@ -7,6 +7,7 @@ using Hypar.Model;
 using Autodesk.Revit.DB.ExternalService;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Hypar.Revit
 {
@@ -48,7 +49,17 @@ namespace Hypar.Revit
 
             application.ControlledApplication.ApplicationInitialized += OnApplicationInitialized;
 
+            AddRibbonButtons(application);
+
             return Result.Succeeded;
+        }
+
+        private void AddRibbonButtons(UIControlledApplication application)
+        {
+            var startHubButton = new PushButtonData("StartHub", "Start\nHypar\nHub", Assembly.GetCallingAssembly().Location, "Hypar.Revit.HyparHubStartCommand");
+            var stopHubButton = new PushButtonData("StopHub", "Stop\nHypar\nHub", Assembly.GetCallingAssembly().Location, "Hypar.Revit.HyparHubStopCommand");
+            var hyparHubPanel = application.CreateRibbonPanel("Hypar");
+            hyparHubPanel.AddStackedItems(startHubButton, stopHubButton);
         }
 
         private void OnApplicationInitialized(object sender, EventArgs e)

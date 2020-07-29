@@ -19,11 +19,22 @@
     <AddinFiles Include="$(TargetDir)publish\**\*"/>
   </ItemGroup>
 
-  <Target Name="CopyAddin" AfterTargets="Publish">
+  <Target Name="GatherAddin" AfterTargets="Publish">
+    <RemoveDir Directories="../deploy/Hypar.Revit"/>
+    <Message Importance="High" Text="Completed GatherAddin target."/>
+    <Copy SourceFiles="Hypar.Revit.addin" DestinationFolder="..\deploy" />
+    <Copy SourceFiles="@(AddinFiles)" DestinationFolder="..\deploy\Hypar.Revit\%(RecursiveDir)" />
+  </Target>
+
+  <ItemGroup>
+    <DeploymentFiles Include="../deploy/**/*"/>
+  </ItemGroup>
+
+  <Target Name="DeployAddin" AfterTargets="GatherAddin">
     <RemoveDir Directories="$(AppData)\Autodesk\Revit\Addins\2020\Hypar.Revit"/>
-    <Message Importance="High" Text="Completed CopyAddin target."/>
-    <Copy SourceFiles="Hypar.Revit.addin" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\2020" />
-    <Copy SourceFiles="@(AddinFiles)" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\2020\Hypar.Revit\%(RecursiveDir)" />
+    <Delete Files="$(AppData)\Autodesk\Revit\Addins\2020\Hypar.Revit.addin"/>
+    <Message Importance="High" Text="Doing DeployAddin Target"/>
+    <Copy SourceFiles="@(DeploymentFiles)" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\2020\%(RecursiveDir)" />
   </Target>
 
   <ItemGroup>
@@ -33,8 +44,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Elements\Elements.csproj" />
-    <ProjectReference Include="..\..\..\..\Model\Hypar.Model.csproj" />
+    <ProjectReference Include="..\..\..\Elements\Elements.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Model\Hypar.Model.csproj" />
   </ItemGroup>
 
 </Project>

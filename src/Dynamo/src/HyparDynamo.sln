@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyparDynExtension", "HyparD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyparDynamo", "HyparDynamo\HyparDynamo.csproj", "{936EB91C-2361-4AAA-894C-282202E0A6B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyparRevit", "..\..\Revit\RevitHyparTools\HyparRevit.csproj", "{CB33228B-B669-47BE-BF67-6FFD73A96010}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypar.Revit.Converters", "..\..\Revit\Hypar.Revit.Converters\Hypar.Revit.Converters.csproj", "{CB33228B-B669-47BE-BF67-6FFD73A96010}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
