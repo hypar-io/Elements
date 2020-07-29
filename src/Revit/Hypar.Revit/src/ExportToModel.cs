@@ -12,24 +12,34 @@ namespace Hypar.Revit
 {
     public static class ExportToModel
     {
-        public static void Convert(Document doc, View view)
+        public static void ConvertSelectedElements(Document doc, ICollection<ElementId> elementIds)
         {
-            // var convert = new Hypar.Revit.Converters.WallConverter();
-            // var walls = new FilteredElementCollector(doc)
-            //                                 .OfCategory(BuiltInCategory.OST_Walls)
-            //                                 .WhereElementIsNotElementType()
-            //                                 .ToElements();
-            // var wall = walls.Cast<Wall>().First(e => e != null);
-            // var hyWalls = convert.FromRevit(wall as Wall, doc);
+            var toConvert = ConversionRunner.AllCategories.ToDictionary(cat => cat, cat => GetAllOfCategory(doc, cat, null, elementIds));
 
-            var toConvert = new Dictionary<BuiltInCategory, Element[]> {
-                {BuiltInCategory.OST_Floors, GetFirstOfCategory(doc, BuiltInCategory.OST_Floors)},
-                {BuiltInCategory.OST_Walls, GetFirstOfCategory(doc, BuiltInCategory.OST_Walls)}
-            };
+            ConvertAndExportElements(doc, toConvert);
+        }
 
-            var model = ConversionRunner.RunConverters(toConvert, doc);
+        public static void ConvertAll(Document doc)
+        {
+            var toConvert = ConversionRunner.AllCategories.ToDictionary(cat => cat, cat => GetAllOfCategory(doc, cat));
 
-            TaskDialog.Show("done it", $"Num elemets = {model.Elements.Count()}");
+            ConvertAndExportElements(doc, toConvert);
+        }
+
+        public static void ConvertView(Document doc, View view)
+        {
+            var toConvert = ConversionRunner.AllCategories.ToDictionary(cat => cat, cat => GetAllOfCategory(doc, cat, view));
+
+            ConvertAndExportElements(doc, toConvert);
+        }
+
+        private static void ConvertAndExportElements(Document doc, Dictionary<BuiltInCategory, Element[]> toConvert)
+        {
+            var model = ConversionRunner.RunConverters(toConvert, doc, out List<Exception> conversionExceptions);
+
+            var exceptionMessage = String.Join("\n", conversionExceptions.Select(e => e.InnerException?.Message));
+            TaskDialog.Show("Some Problems", exceptionMessage);
+            TaskDialog.Show("Export Results", $"Num elemets = {model.Elements.Count()}");
 
             var savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "FromRevit.json");
             File.WriteAllText(savePath, model.ToJson());
@@ -37,13 +47,31 @@ namespace Hypar.Revit
             return;
         }
 
-        private static Element[] GetFirstOfCategory(Document document, BuiltInCategory category)
+        private static Element[] GetAllOfCategory(Document document, BuiltInCategory category, View view = null, ICollection<ElementId> selectedElementIds = null)
         {
-            var elems = new FilteredElementCollector(document)
-                                            .OfCategory(category)
-                                            .WhereElementIsNotElementType()
-                                            .ToElements();
-            var elem = elems.First(e => e != null);
+            List<Element> elems = null;
+            if (view != null)
+            {
+                elems = new FilteredElementCollector(document, view.Id)
+                                                .OfCategory(category)
+                                                .WhereElementIsNotElementType()
+                                                .ToElements().ToList();
+            }
+            else if (selectedElementIds != null)
+            {
+                elems = new FilteredElementCollector(document, selectedElementIds)
+                                                .OfCategory(category)
+                                                .WhereElementIsNotElementType()
+                                                .ToElements().ToList();
+            }
+            else
+            {
+                elems = new FilteredElementCollector(document)
+                                                .OfCategory(category)
+                                                .WhereElementIsNotElementType()
+                                                .ToElements().ToList();
+            }
+
             return elems.Where(e => e != null).ToArray();
         }
     }

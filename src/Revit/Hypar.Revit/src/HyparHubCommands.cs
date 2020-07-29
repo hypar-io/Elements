@@ -35,15 +35,56 @@ namespace Hypar.Revit
             return Result.Succeeded;
         }
     }
+
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class ConvertVisibleToHypar : IExternalCommand
+    public class ConvertSelectionToHypar : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             try
             {
-                ExportToModel.Convert(commandData.Application.ActiveUIDocument.Document, commandData.Application.ActiveUIDocument.ActiveView);
+                var selection = commandData.Application.ActiveUIDocument.Selection.GetElementIds();
+                ExportToModel.ConvertSelectedElements(commandData.Application.ActiveUIDocument.Document, selection);
+                return Result.Succeeded;
+            }
+            catch (Exception e)
+            {
+                TaskDialog.Show("Error", $"{e.Message}\n{e.StackTrace}");
+                return Result.Failed;
+            }
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ConvertViewToHypar : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            try
+            {
+                var view = commandData.Application.ActiveUIDocument.ActiveView;
+                ExportToModel.ConvertView(commandData.Application.ActiveUIDocument.Document, view);
+                return Result.Succeeded;
+            }
+            catch (Exception e)
+            {
+                TaskDialog.Show("Error", $"{e.Message}\n{e.StackTrace}");
+                return Result.Failed;
+            }
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ConvertAllToHypar : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            try
+            {
+                ExportToModel.ConvertAll(commandData.Application.ActiveUIDocument.Document);
                 return Result.Succeeded;
             }
             catch (Exception e)

@@ -17,6 +17,10 @@ namespace Hypar.Revit
             if (view == null)
             {
                 view = GetViewWhereElemIsVisible(doc, area);
+                if (view == null)
+                {
+                    return Array.Empty<SpaceBoundary>();
+                }
             }
 
             var geom = area.get_Geometry(new Options()

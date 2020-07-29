@@ -1,9 +1,7 @@
-
-
 using System;
 using System.Linq;
 using Autodesk.Revit.DB;
-
+using Elements;
 
 namespace Hypar.Revit.Converters
 {
@@ -23,6 +21,26 @@ namespace Hypar.Revit.Converters
         public Elements.Floor[] FromRevit(Autodesk.Revit.DB.Floor floor, Autodesk.Revit.DB.Document document)
         {
             return Create.FloorsFromRevitFloor(document, floor);
+        }
+    }
+
+    public class ColumnConverter : IFromRevitConverter<Autodesk.Revit.DB.FamilyInstance, Elements.Column>
+    {
+        public BuiltInCategory Category => BuiltInCategory.OST_Columns;
+
+        public Elements.Column[] FromRevit(Autodesk.Revit.DB.FamilyInstance revitElement, Document doc)
+        {
+            return new[] { Create.ColumnFromRevitColumn(revitElement, doc) };
+        }
+    }
+
+    public class AreaConverter : IFromRevitConverter<Autodesk.Revit.DB.Area, Elements.SpaceBoundary>
+    {
+        public BuiltInCategory Category => BuiltInCategory.OST_Areas;
+
+        public SpaceBoundary[] FromRevit(Area revitElement, Document doc)
+        {
+            return Create.SpaceBoundaryFromRevitArea(revitElement, doc);
         }
     }
 }
