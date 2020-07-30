@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DotLiquid;
 using Microsoft.CodeAnalysis;
@@ -10,6 +11,66 @@ using Microsoft.CodeAnalysis.CSharp;
 using Newtonsoft.Json;
 using NJsonSchema;
 using NJsonSchema.CodeGeneration.CSharp;
+using Elements.Generate.StringUtils;
+using NJsonSchema.CodeGeneration;
+
+namespace Elements.Generate.StringUtils
+{
+    public static class StringUtilities
+    {
+        // TODO: This is a direct copy of the method in Hypar.Model.
+        // We should move type generation out of elements to a place where it can refer to Hypar.Model.
+        public static string ToSafeIdentifier(this string name, bool firstCharLowercase = false)
+        {
+            if (String.IsNullOrWhiteSpace(name) || String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Invalid name.");
+            }
+            //remove special characters except for space, dash, period, and underscore
+            name = Regex.Replace(name, @"[^A-Za-z0-9 _\.-]", "");
+            //remove any numbers or whitespace/separator characters from the front
+            while (Char.IsDigit(name.First()) || name.First() == ' ' || name.First() == '_' || name.First() == '-' || name.First() == '.')
+            {
+                if (name.Length < 2)
+                {
+                    throw new ArgumentException("Name is invalid: nothing is left after removing numeric characters. Names must contain at least one letter.");
+                }
+                name = name.Substring(1);
+            }
+            //split on whitespace or - or _
+            var splits = name.Split(new[] { ' ', '-', '_', '.' });
+            var cleanName = "";
+            var dontCapitalize = firstCharLowercase;
+            foreach (var split in splits)
+            {
+                if (split.Length == 0)
+                {
+                    continue;
+                }
+                if (dontCapitalize)
+                {
+                    cleanName += split.First().ToString().ToLower();
+                    dontCapitalize = false;
+                }
+                else
+                {
+                    cleanName += split.First().ToString().ToUpper();
+                }
+                if (split.Length > 1)
+                {
+                    cleanName += split.Substring(1);
+                }
+            }
+            if (string.IsNullOrEmpty(cleanName))
+            {
+                throw new ArgumentException("Names must have at least one letter character.");
+            }
+            return cleanName;
+        }
+
+    }
+
+}
 
 namespace Elements.Generate
 {
@@ -68,11 +129,18 @@ namespace Elements.Generate
             }
             else
             {
-                return schema.Title;
+                return schema.Title.ToSafeIdentifier();
             }
         }
     }
 
+    class ElementsPropertyNameGenerator : IPropertyNameGenerator
+    {
+        public string Generate(JsonSchemaProperty property)
+        {
+            return property.Name.ToSafeIdentifier();
+        }
+    }
     /// <summary>
     /// TypeGenerator contains logic for generating element types from JSON schemas.
     /// </summary>
@@ -132,11 +200,21 @@ namespace Elements.Generate
         // This HyparFilters class contains filters that are copied directly from the NJsonSchema repo
         // because the filters are not public but we need to register them globally for async code gen.
         // Copied from https://github.com/RicoSuter/NJsonSchema/blob/687efeabdc30ddacd235e85213f3594458ed48b4/src/NJsonSchema.CodeGeneration/DefaultTemplateFactory.cs#L183
-        internal static class HyparFilters
+        public static class HyparFilters
         {
             public static string Lowercamelcase(Context context, string input, bool firstCharacterMustBeAlpha = true)
             {
                 return ConversionUtilities.ConvertToLowerCamelCase(input, firstCharacterMustBeAlpha);
+            }
+
+            public static string Safeidentifierlower(Context context, string input, bool firstCharacterMustBeAlpha = true)
+            {
+                return input.ToSafeIdentifier(true);
+            }
+
+            public static string Safeidentifierupper(Context context, string input, bool firstCharacterMustBeAlpha = true)
+            {
+                return input.ToSafeIdentifier();
             }
 
             public static string Csharpdocs(string input, int tabCount)
@@ -426,7 +504,8 @@ namespace Elements.Generate
                 TemplateDirectory = templates,
                 GenerateJsonMethods = false,
                 ClassStyle = solidOpTypes.Contains(typeName) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
-                TypeNameGenerator = new ElementsTypeNameGenerator()
+                TypeNameGenerator = new ElementsTypeNameGenerator(),
+                PropertyNameGenerator = new ElementsPropertyNameGenerator(),
             });
             var file = generator.GenerateFile();
 
