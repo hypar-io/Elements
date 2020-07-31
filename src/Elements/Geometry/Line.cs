@@ -1,4 +1,3 @@
-using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -470,7 +469,8 @@ namespace Elements.Geometry
 
             // Add the segment's starting point.
             intersections.Add(this.Start);
-            var StartsOutsidePolygon = !polygon.Contains(this.Start);
+            polygon.Contains(this.Start, out var containment);
+            var StartsOutsidePolygon = containment == Containment.Outside;
 
             var hasVertexIntersections = false;
 
@@ -514,7 +514,7 @@ namespace Elements.Geometry
                     continue;
                 }
                 var segment = new Line(A, B);
-                if (hasVertexIntersections) // if it passed through a vertex, we can't rely on alternating, so check each midpoint
+                if (hasVertexIntersections || containment == Containment.CoincidesAtEdge) // if it passed through a vertex, or started at an edge, we can't rely on alternating, so check each midpoint
                 {
                     currentlyIn = polygon.Contains((A + B) / 2);
                 }
