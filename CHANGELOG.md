@@ -3,6 +3,7 @@
 ### Fixed
 - CodeGen was failing intermittently
 - Elements schemas with Dictionary types were failing to serialize
+- [#355](https://github.com/hypar-io/Elements/issues/355)
 ### Added
 - Elements supports the [Hub beta](https://hypar-io.github.io/Elements/Hub.html)
 - CodeGen supports `input_schema`

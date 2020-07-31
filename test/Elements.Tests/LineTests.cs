@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Elements.Tests;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Elements.Geometry.Tests
@@ -172,6 +175,16 @@ namespace Elements.Geometry.Tests
             Line l3 = l1.TrimTo(l2);
 
             Assert.NotNull(l3);
+        }
+
+        [Fact]
+        public void TrimLineThatStartsAtPolygonEdge()
+        {
+            var polygon = JsonConvert.DeserializeObject<Polygon>(File.ReadAllText("../../../models/Geometry/ConcavePolygon.json"));
+            var line = JsonConvert.DeserializeObject<Line>(File.ReadAllText("../../../models/Geometry/LineThatFailsTrim.json"));
+            var lines = line.Trim(polygon, out var _);
+
+            Assert.Equal(4.186147, lines[0].Length(), 2);
         }
 
 
