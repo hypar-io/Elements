@@ -56,9 +56,9 @@ namespace Hypar.Revit
         {
             var startHubButton = new PushButtonData("StartHub", "Start\nHypar\nHub", Assembly.GetCallingAssembly().Location, "Hypar.Revit.HyparHubStartCommand");
             var stopHubButton = new PushButtonData("StopHub", "Stop\nHypar\nHub", Assembly.GetCallingAssembly().Location, "Hypar.Revit.HyparHubStopCommand");
-            var convertAllButton = new PushButtonData("HyparConvertAll", "Convert All\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertAllToHypar");
-            var convertSelectionButton = new PushButtonData("HyparConvertSelection", "Convert Selection\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertSelectionToHypar");
-            var convertViewButton = new PushButtonData("HyparConvertView", "Convert View\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertViewToHypar");
+            var convertAllButton = new PushButtonData("HyparConvertAll", "Send All\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertAllToHypar");
+            var convertSelectionButton = new PushButtonData("HyparConvertSelection", "Send Selection\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertSelectionToHypar");
+            var convertViewButton = new PushButtonData("HyparConvertView", "Send Elements\nin View\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertViewToHypar");
             var hyparHubPanel = application.CreateRibbonPanel("Hypar");
             hyparHubPanel.AddStackedItems(startHubButton, stopHubButton);
             hyparHubPanel.AddItem(convertAllButton);

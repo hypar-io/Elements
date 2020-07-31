@@ -7,17 +7,18 @@ using Autodesk.Revit.DB;
 
 namespace Hypar.Revit.Converters
 {
-    public interface IRevitConverter<R, H>
+    public interface IRevitConverter<TRevit, THypar>
     {
         BuiltInCategory Category { get; }
-        H[] FromRevit(R revitElement, Autodesk.Revit.DB.Document doc);
+        THypar[] FromRevit(TRevit revitElement, Autodesk.Revit.DB.Document doc);
     }
 
-    // TODO this dictionary is to find an appropriate converter given the category of an element
-    // Next step will be to have a dicionary to lookup converters basd on the hypar elements needed
     public static class ConversionRunner
     {
+        // TODO this dictionary is to find an appropriate converter given the category of an element.
+        // Next step will be to have a dictionary to lookup converters based on the hypar elements needed.
         private static Dictionary<BuiltInCategory, List<object>> _converters = null;
+
         public static Dictionary<BuiltInCategory, List<object>> Converters
         {
             get
@@ -29,6 +30,13 @@ namespace Hypar.Revit.Converters
                 return _converters;
             }
         }
+
+        /// <summary>
+        /// Run all converters available on the dictionary of incoming elements.
+        /// </summary>
+        /// <param name="elements">Dictionary of elements grouped by their BuiltInCategory.</param>
+        /// <param name="document">The Revit document where elements originated.</param>
+        /// <param name="conversionExceptions">An outgoing list of exceptions that occurred during converting elements.</param>
         public static Elements.Model RunConverters(Dictionary<BuiltInCategory, Element[]> elements, Document document, out List<Exception> conversionExceptions)
         {
             var model = new Elements.Model();
@@ -37,9 +45,9 @@ namespace Hypar.Revit.Converters
             // TODO use delegates to improve speed https://stackoverflow.com/questions/10313979/methodinfo-invoke-performance-issue 
             // blog ref https://blogs.msmvps.com/jonskeet/2008/08/09/making-reflection-fly-and-exploring-delegates/
 
-            foreach (var converterKVP in Converters)
+            foreach (var converterList in Converters.Values)
             {
-                var converter = converterKVP.Value[0];
+                var converter = converterList[0];
                 Type revitType = converter.GetType().GetInterfaces()[0].GenericTypeArguments[0];
 
                 var fromRevitMethod = converter.GetType().GetMethod("FromRevit");
@@ -68,8 +76,7 @@ namespace Hypar.Revit.Converters
             var converters = new Dictionary<BuiltInCategory, List<object>>();
             foreach (var converterType in Assembly.GetExecutingAssembly().GetTypes())
             {
-                if (converterType.IsAbstract) continue;
-                if (converterType.IsInterface) continue;
+                if (converterType.IsAbstract || converterType.IsInterface) continue;
                 var inter = converterType.GetInterface("IRevitConverter`2");
                 if (inter != null)
                 {
