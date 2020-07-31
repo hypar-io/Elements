@@ -178,17 +178,6 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void ShortLineTrim()
-        {
-            var boundary = new Polygon(new[] { new Vector3(30.0596079459439, 28.2900892254263), new Vector3(30.0596079459439, 25.2563767254263), new Vector3(30.0596079459439, 12.5928892254263), new Vector3(45.7568079459439, 12.5928892254263), new Vector3(45.7568079459439, 13.7104892254263), new Vector3(54.4436079459439, 13.7104892254263), new Vector3(54.4436079459439, 12.5928892254264), new Vector3(70.1408079459439, 12.5928892254263), new Vector3(70.1408079459439, 40.4820892254263), new Vector3(67.0928079459439, 40.4820892254263), new Vector3(67.0928079459439, 46.5780892254262), new Vector3(33.1076079459439, 46.5780892254263), new Vector3(33.1076079459439, 28.2900892254263) });
-            var line = new Line(new Vector3(67.257907945943941, 46.208201725426342), new Vector3(66.595920445943946, 46.208201725426342));
-            var segmentsIn = line.Trim(boundary, out var segmentsOut);
-            var obj = new Dictionary<string, object> { { "SegmentsIn", segmentsIn }, { "SegmentsOut", segmentsOut } };
-            var json = JsonConvert.SerializeObject(obj);
-            
-        }
-
-        [Fact]
         public void TrimLineThatStartsAtPolygonEdge()
         {
             var polygon = JsonConvert.DeserializeObject<Polygon>(File.ReadAllText("../../../models/Geometry/ConcavePolygon.json"));
