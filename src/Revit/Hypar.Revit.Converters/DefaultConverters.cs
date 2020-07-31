@@ -1,12 +1,11 @@
 using System;
-using System.Linq;
 using Autodesk.Revit.DB;
 using Elements;
 
 namespace Hypar.Revit.Converters
 {
 
-    public class WallConverter : IFromRevitConverter<Autodesk.Revit.DB.Wall, Elements.WallByProfile>
+    public class WallConverter : IRevitConverter<Autodesk.Revit.DB.Wall, Elements.WallByProfile>
     {
         public BuiltInCategory Category { get { return BuiltInCategory.OST_Walls; } }
         public Elements.WallByProfile[] FromRevit(Autodesk.Revit.DB.Wall wall, Autodesk.Revit.DB.Document document)
@@ -15,7 +14,7 @@ namespace Hypar.Revit.Converters
         }
     }
 
-    public class FloorConverter : IFromRevitConverter<Autodesk.Revit.DB.Floor, Elements.Floor>
+    public class FloorConverter : IRevitConverter<Autodesk.Revit.DB.Floor, Elements.Floor>
     {
         public BuiltInCategory Category { get { return BuiltInCategory.OST_Floors; } }
         public Elements.Floor[] FromRevit(Autodesk.Revit.DB.Floor floor, Autodesk.Revit.DB.Document document)
@@ -24,7 +23,7 @@ namespace Hypar.Revit.Converters
         }
     }
 
-    public class ColumnConverter : IFromRevitConverter<Autodesk.Revit.DB.FamilyInstance, Elements.Column>
+    public class ColumnConverter : IRevitConverter<Autodesk.Revit.DB.FamilyInstance, Elements.Column>
     {
         public BuiltInCategory Category => BuiltInCategory.OST_Columns;
 
@@ -34,7 +33,7 @@ namespace Hypar.Revit.Converters
         }
     }
 
-    public class AreaConverter : IFromRevitConverter<Autodesk.Revit.DB.Area, Elements.SpaceBoundary>
+    public class AreaConverter : IRevitConverter<Autodesk.Revit.DB.Area, Elements.SpaceBoundary>
     {
         public BuiltInCategory Category => BuiltInCategory.OST_Areas;
 
