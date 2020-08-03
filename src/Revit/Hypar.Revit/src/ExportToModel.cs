@@ -43,9 +43,12 @@ namespace Hypar.Revit
             {
                 // TODO this is acceptable messaging for debugging, but we'll want to provide different message and do logging before release
                 var exceptionMessage = String.Join("\n", conversionExceptions.Select(e => e.InnerException?.Message));
-                TaskDialog.Show("Some Problems", exceptionMessage);
+                TaskDialog.Show("Hypar Errors", "Export completed, but there were some exceptions.  You may be able to ignore some of these\n" + exceptionMessage);
             }
-            TaskDialog.Show("Export Results", $"Num elemets = {model.Elements.Count()}\nTime = {sw.ElapsedMilliseconds}ms");
+            else
+            {
+                TaskDialog.Show("Export Complete", "Exporting Revit to Hypar Elements is complete.");
+            }
 
             var savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "FromRevit.json");
             File.WriteAllText(savePath, model.ToJson());

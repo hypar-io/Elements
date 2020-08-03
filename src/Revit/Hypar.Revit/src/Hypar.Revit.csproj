@@ -33,7 +33,7 @@
 
   <Target Name="DeployAddin" AfterTargets="GatherAddin">
     <RemoveDir Directories="$(AppData)\Autodesk\Revit\Addins\2021\Hypar.Revit" />
-    <Delete Files="$(AppData)\Autodesk\Revit\Addins\2020\Hypar.Revit.addin" />
+    <Delete Files="$(AppData)\Autodesk\Revit\Addins\2021\Hypar.Revit.addin" />
     <Message Importance="High" Text="Executing DeployAddin Target" />
     <Copy SourceFiles="@(DeploymentFiles)" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\2021\%(RecursiveDir)" />
   </Target>
