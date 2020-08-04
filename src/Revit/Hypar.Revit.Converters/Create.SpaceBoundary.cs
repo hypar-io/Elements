@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
 using Elements;
-using Elements.Geometry;
-using Elements.Geometry.Solids;
-using Hypar.Revit;
 using ADSK = Autodesk.Revit.DB;
 
 namespace Hypar.Revit
@@ -17,6 +14,10 @@ namespace Hypar.Revit
             if (view == null)
             {
                 view = GetViewWhereElemIsVisible(doc, area);
+                if (view == null)
+                {
+                    return Array.Empty<SpaceBoundary>();
+                }
             }
 
             var geom = area.get_Geometry(new Options()
