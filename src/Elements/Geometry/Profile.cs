@@ -139,24 +139,25 @@ namespace Elements.Geometry
         /// <summary>
         /// Perform a union operation, returning a new profile that is the union of the current profile with the other profile
         /// <param name="profile">The profile with which to create a union.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// </summary>
-        public Profile Union(Profile profile)
+        public Profile Union(Profile profile, double tolerance = Vector3.EPSILON)
         {
             var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this.Perimeter.ToClipperPath(), PolyType.ptSubject, true);
-            clipper.AddPath(profile.Perimeter.ToClipperPath(), PolyType.ptClip, true);
+            clipper.AddPath(this.Perimeter.ToClipperPath(tolerance), PolyType.ptSubject, true);
+            clipper.AddPath(profile.Perimeter.ToClipperPath(tolerance), PolyType.ptClip, true);
 
             if (this.Voids != null && this.Voids.Count > 0)
             {
-                clipper.AddPaths(this.Voids.Select(v => v.ToClipperPath()).ToList(), PolyType.ptSubject, true);
+                clipper.AddPaths(this.Voids.Select(v => v.ToClipperPath(tolerance)).ToList(), PolyType.ptSubject, true);
             }
             if (profile.Voids != null && profile.Voids.Count > 0)
             {
-                clipper.AddPaths(profile.Voids.Select(v => v.ToClipperPath()).ToList(), PolyType.ptClip, true);
+                clipper.AddPaths(profile.Voids.Select(v => v.ToClipperPath(tolerance)).ToList(), PolyType.ptClip, true);
             }
             var solution = new List<List<ClipperLib.IntPoint>>();
             clipper.Execute(ClipType.ctUnion, solution);
-            return new Profile(solution.Select(s => s.ToPolygon()).ToList());
+            return new Profile(solution.Select(s => s.ToPolygon(tolerance)).ToList());
         }
 
         /// <summary>
@@ -167,17 +168,17 @@ namespace Elements.Geometry
         /// <summary>
         ///  Conduct a clip operation on this profile.
         /// </summary>
-        internal void Clip(IEnumerable<Profile> additionalHoles = null)
+        internal void Clip(IEnumerable<Profile> additionalHoles = null, double tolerance = Vector3.EPSILON)
         {
             var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            clipper.AddPath(this.Perimeter.ToClipperPath(tolerance), ClipperLib.PolyType.ptSubject, true);
             if (this.Voids != null)
             {
-                clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+                clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath(tolerance)).ToList(), ClipperLib.PolyType.ptClip, true);
             }
             if (additionalHoles != null)
             {
-                clipper.AddPaths(additionalHoles.Select(h => h.Perimeter.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+                clipper.AddPaths(additionalHoles.Select(h => h.Perimeter.ToClipperPath(tolerance)).ToList(), ClipperLib.PolyType.ptClip, true);
             }
             var solution = new List<List<ClipperLib.IntPoint>>();
             var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
@@ -186,7 +187,7 @@ namespace Elements.Geometry
             // profile will result in an empty solution.
             if (solution.Count > 0)
             {
-                var polys = solution.Select(s => s.ToPolygon()).ToArray();
+                var polys = solution.Select(s => s.ToPolygon(tolerance)).ToArray();
                 this.Perimeter = polys[0];
                 this.Voids = polys.Skip(1).ToArray();
             }
@@ -204,7 +205,7 @@ namespace Elements.Geometry
             clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             var solution = new List<List<ClipperLib.IntPoint>>();
             clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-            return solution.Sum(s => ClipperLib.Clipper.Area(s)) / Math.Pow(1024.0, 2);
+            return solution.Sum(s => ClipperLib.Clipper.Area(s)) / Math.Pow(1.0 / Vector3.EPSILON, 2);
         }
 
         private Transform ComputeTransform()
