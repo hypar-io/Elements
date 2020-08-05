@@ -1,4 +1,12 @@
 # Changelog
+
+## 0.8.0
+### Added
+- `Hypar.Elements.Serialization.IFC` - IFC serialization code has been moved to a new project.
+- `Hypar.Elements.CodeGeneration` - Code generation has been moved to a new project.
+
+### Fixed
+
 ## 0.7.3
 ### Fixed
 - CodeGen was failing intermittently
