@@ -12,10 +12,6 @@ namespace Hypar.Revit
 {
     public static class ExportToModel
     {
-        public static void UnloadConverters()
-        {
-            ConversionRunner.UnloadConverters();
-        }
         public static void ConvertSelectedElements(Document doc, ICollection<ElementId> elementIds)
         {
             var toConvert = ConversionRunner.Converters.Keys.ToDictionary(cat => cat, cat => GetAllOfCategory(doc, cat, null, elementIds));
