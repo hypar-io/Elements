@@ -4,10 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <!-- <ItemGroup> -->
-  <!-- <PackageReference Include="GeometryEx" Version="2.27.0"/> -->
-  <!-- </ItemGroup> -->
-
   <ItemGroup>
     <Reference Include="RevitAPI">
       <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
@@ -17,10 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Elements\Elements.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
