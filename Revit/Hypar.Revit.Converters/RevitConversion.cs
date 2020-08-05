@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 using Autodesk.Revit.DB;
 
 
@@ -111,28 +110,16 @@ namespace Hypar.Revit.Converters
         {
             var allPotentialConverters = Assembly.GetExecutingAssembly().GetTypes().ToList();
 
-            var converterDomainTypes = ConverterAssemblies.SelectMany(a => a.GetTypes());
+            var converterDomainTypes = LoadCustomConverterAssemblies().SelectMany(a => a.GetTypes());
 
             allPotentialConverters.AddRange(converterDomainTypes);
             return allPotentialConverters.Where(t => TypeIsAConverter(t)).ToArray();
         }
 
-        private static List<Assembly> _converterAssemblies = null;
-        private static List<Assembly> ConverterAssemblies
-        {
-            get
-            {
-                if (_converterAssemblies == null)
-                {
-                    LoadConverterAssemblies();
-                }
-                return _converterAssemblies;
-            }
-        }
-        private static void LoadConverterAssemblies()
+        private static List<Assembly> LoadCustomConverterAssemblies()
         {
             var converterFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Converters");
-            _converterAssemblies = new List<Assembly>();
+            var converterAssemblies = new List<Assembly>();
 
             if (Directory.Exists(converterFolder))
             {
@@ -142,7 +129,7 @@ namespace Hypar.Revit.Converters
                     try
                     {
                         var loaded = AppDomain.CurrentDomain.Load(dllPath);
-                        _converterAssemblies.Add(loaded);
+                        converterAssemblies.Add(loaded);
                     }
                     catch
                     {
@@ -150,6 +137,7 @@ namespace Hypar.Revit.Converters
                     }
                 }
             }
+            return converterAssemblies;
         }
     }
 }
