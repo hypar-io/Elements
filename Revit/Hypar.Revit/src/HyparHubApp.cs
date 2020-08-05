@@ -59,11 +59,13 @@ namespace Hypar.Revit
             var convertAllButton = new PushButtonData("HyparConvertAll", "Send All\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertAllToHypar");
             var convertSelectionButton = new PushButtonData("HyparConvertSelection", "Send Selection\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertSelectionToHypar");
             var convertViewButton = new PushButtonData("HyparConvertView", "Send Elements\nin View\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertViewToHypar");
+            var unloadConverters = new PushButtonData("HyparUnloadConverters", "Unload\nConverters", Assembly.GetCallingAssembly().Location, "Hypar.Revit.UnloadConverters");
             var hyparHubPanel = application.CreateRibbonPanel("Hypar");
             hyparHubPanel.AddStackedItems(startHubButton, stopHubButton);
             hyparHubPanel.AddItem(convertAllButton);
             hyparHubPanel.AddItem(convertSelectionButton);
             hyparHubPanel.AddItem(convertViewButton);
+            hyparHubPanel.AddItem(unloadConverters);
         }
 
         private void OnApplicationInitialized(object sender, EventArgs e)
