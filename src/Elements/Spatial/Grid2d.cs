@@ -519,8 +519,7 @@ namespace Elements.Spatial
 
             var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
             if (trimmedRect == null || trimmedRect.Count > 1 || trimmedRect.Count < 1) return false;
-            return !trimmedRect[0].IsAlmostEqualTo(baseRect, 1 / Polyline.CLIPPER_SCALE);
-            //TODO: decide if clipper_scale should be adjusted to reflect global tolerance settings so that 1 / polyline.clipper_scale = vector3.epsilon.
+            return !trimmedRect[0].IsAlmostEqualTo(baseRect, Vector3.EPSILON);
         }
 
         #endregion

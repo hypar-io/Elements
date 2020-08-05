@@ -15,11 +15,6 @@ namespace Elements.Geometry
     public partial class Polyline : ICurve, IEquatable<Polyline>
     {
         /// <summary>
-        /// Scale used during clipper operations.
-        /// </summary>
-        internal const double CLIPPER_SCALE = 1024.0;
-
-        /// <summary>
         /// Calculate the length of the polygon.
         /// </summary>
         public override double Length()
@@ -390,10 +385,12 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
         /// <param name="endType">The closure type to use on the offset polygon.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>A new closed Polygon offset in all directions by offset from the polyline.</returns>
-        public virtual Polygon[] Offset(double offset, EndType endType)
+        public virtual Polygon[] Offset(double offset, EndType endType, double tolerance = Vector3.EPSILON)
         {
-            var path = this.ToClipperPath();
+            var clipperScale = 1.0 / tolerance;
+            var path = this.ToClipperPath(tolerance);
 
             var solution = new List<List<IntPoint>>();
             var co = new ClipperOffset();
@@ -412,12 +409,12 @@ namespace Elements.Geometry
                     break;
             }
             co.AddPath(path, JoinType.jtMiter, clEndType);
-            co.Execute(ref solution, offset * CLIPPER_SCALE);  // important, scale also used here
+            co.Execute(ref solution, offset * clipperScale);  // important, scale also used here
 
             var result = new Polygon[solution.Count];
             for (var i = 0; i < result.Length; i++)
             {
-                result[i] = solution[i].ToPolygon();
+                result[i] = solution[i].ToPolygon(tolerance);
             }
             return result;
         }
@@ -453,13 +450,15 @@ namespace Elements.Geometry
         /// Construct a clipper path from a Polygon.
         /// </summary>
         /// <param name="p"></param>
+        /// <param name="tolerance">An optional tolerance. If converting back to a Polyline, be sure to use the same tolerance.</param>
         /// <returns></returns>
-        internal static List<IntPoint> ToClipperPath(this Polyline p)
+        internal static List<IntPoint> ToClipperPath(this Polyline p, double tolerance = Vector3.EPSILON)
         {
+            var clipperScale = Math.Round(1.0 / tolerance);
             var path = new List<IntPoint>();
             foreach (var v in p.Vertices)
             {
-                path.Add(new IntPoint(v.X * Polyline.CLIPPER_SCALE, v.Y * Polyline.CLIPPER_SCALE));
+                path.Add(new IntPoint(Math.Round(v.X * clipperScale), Math.Round(v.Y * clipperScale)));
             }
             return path;
         }

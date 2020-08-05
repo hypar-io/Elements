@@ -5,6 +5,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Newtonsoft.Json;
 using Elements.Tests;
+using Elements.Serialization.glTF;
 
 namespace Elements.Geometry.Tests
 {
@@ -369,12 +370,12 @@ namespace Elements.Geometry.Tests
             );
             var vertices = p1.Difference(p2).First().Vertices;
 
-            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
-            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 0.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 0.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 4.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 4.0));
         }
 
         [Fact]
@@ -413,10 +414,10 @@ namespace Elements.Geometry.Tests
             var ps = new List<Polygon> { p2, p3 };
             var vertices = p1.Intersection(p2).First().Vertices;
 
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 4.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 4.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 4.0));
         }
 
         [Fact]
@@ -456,29 +457,29 @@ namespace Elements.Geometry.Tests
 
             var vertices = p1.Union(p2).Vertices;
 
-            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 5.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
-            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 0.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 0.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(7.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(7.0, 5.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 5.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 4.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 4.0));
 
             vertices = p1.Union(ps).Vertices;
 
-            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 2.0);
-            Assert.Contains(vertices, p => p.X == 8.0 && p.Y == 2.0);
-            Assert.Contains(vertices, p => p.X == 8.0 && p.Y == 3.0);
-            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 3.0);
-            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 5.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
-            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 0.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 0.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(7.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(7.0, 2.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(8.0, 2.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(8.0, 3.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(7.0, 3.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(7.0, 5.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 5.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 4.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 4.0));
 
         }
 
@@ -507,14 +508,14 @@ namespace Elements.Geometry.Tests
             );
             var vertices = p1.XOR(p2).First().Vertices;
 
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 1.0);
-            Assert.Contains(vertices, p => p.X == 7.0 && p.Y == 5.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 5.0);
-            Assert.Contains(vertices, p => p.X == 3.0 && p.Y == 4.0);
-            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 4.0);
-            Assert.Contains(vertices, p => p.X == 0.0 && p.Y == 0.0);
-            Assert.Contains(vertices, p => p.X == 4.0 && p.Y == 0.0);
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(7.0, 1.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(7.0, 5.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 5.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 4.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 4.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 0.0));
+            Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 0.0));
         }
 
         [Fact]
@@ -706,6 +707,39 @@ namespace Elements.Geometry.Tests
             Assert.Equal(shape3.Segments().Count() * 2, contour3.Count());
         }
 
+        [Fact]
+        public void PolygonDifferenceWithManyCoincidentEdges()
+        {
+            // an angle of 47 remains known to fail. This may be a fundamental limitation of clipper w/r/t
+            // polygon differences with coincident edges at an angle.
+            // var rotations = new[] { 0, 47, 90 };
+            var rotations = new[] { 0, 90 };
+            var areas = new List<double>();
+            foreach (var rotation in rotations)
+            {
+
+                var tR = new Transform(Vector3.Origin, rotation);
+                var polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(100.0, 50.0)).TransformedPolygon(tR);
+                var subtracts = new List<Polygon>();
+
+                var side1 = Polygon.Rectangle(Vector3.Origin, new Vector3(1.0, 20.0));
+                var side2 = Polygon.Rectangle(new Vector3(0.0, 30.0), new Vector3(1.0, 50.0));
+                for (var i = 1; i < 99; i++)
+                {
+                    var translate = new Transform(i, 0, 0);
+                    subtracts.Add(side1.TransformedPolygon(translate).TransformedPolygon(tR));
+                    subtracts.Add(side2.TransformedPolygon(translate).TransformedPolygon(tR));
+                }
+                var polygons = polygon.Difference(subtracts);
+
+                areas.Add(polygons.First().Area());
+            }
+            var targetArea = areas[0];
+            for (int i = 1; i < areas.Count; i++)
+            {
+                Assert.Equal(targetArea, areas[i], 4);
+            }
+        }
 
         [Fact]
         public void PolygonIsAlmostEqualAfterBoolean()
@@ -730,8 +764,7 @@ namespace Elements.Geometry.Tests
 
             var intersection = innerPolygon.Intersection(outerPolygon);
 
-            Assert.True(intersection[0].IsAlmostEqualTo(innerPolygon, 1 / Polyline.CLIPPER_SCALE));
-            //TODO: decide if clipper_scale should be adjusted to reflect global tolerance settings so that 1 / polyline.clipper_scale = vector3.epsilon.
+            Assert.True(intersection[0].IsAlmostEqualTo(innerPolygon, Vector3.EPSILON));
         }
     }
 }

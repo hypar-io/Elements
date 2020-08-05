@@ -191,8 +191,9 @@ namespace Elements.Geometry
         /// </returns>
         public bool Covers(Vector3 vector)
         {
+            var clipperScale = 1 / Vector3.EPSILON;
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
+            var intPoint = new IntPoint(vector.X * clipperScale, vector.Y * clipperScale);
             if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
             {
                 return false;
@@ -238,8 +239,9 @@ namespace Elements.Geometry
         /// </returns>
         public bool Disjoint(Vector3 vector)
         {
+            var clipperScale = 1.0 / Vector3.EPSILON;
             var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
+            var intPoint = new IntPoint(vector.X * clipperScale, vector.Y * clipperScale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != 0)
             {
                 return false;
@@ -304,13 +306,15 @@ namespace Elements.Geometry
         /// Tests if the supplied Vector3 is coincident with an edge of this Polygon when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>
         /// Returns true if the supplied Vector3 coincides with an edge of this Polygon when compared on a shared plane. Returns false if the supplied Vector3 is not coincident with an edge of this Polygon, or if the supplied Vector3 is null.
         /// </returns>
-        public bool Touches(Vector3 vector)
+        public bool Touches(Vector3 vector, double tolerance = Vector3.EPSILON)
         {
-            var thisPath = this.ToClipperPath();
-            var intPoint = new IntPoint(vector.X * CLIPPER_SCALE, vector.Y * CLIPPER_SCALE);
+            var clipperScale = 1.0 / tolerance;
+            var thisPath = this.ToClipperPath(tolerance);
+            var intPoint = new IntPoint(vector.X * clipperScale, vector.Y * clipperScale);
             if (Clipper.PointInPolygon(intPoint, thisPath) != -1)
             {
                 return false;
@@ -322,17 +326,18 @@ namespace Elements.Geometry
         /// Tests if at least one point of an edge of the supplied Polygon is shared with an edge of this Polygon without the Polygons interesecting when compared on a shared plane.
         /// </summary>
         /// <param name="polygon">The Polygon to compare to this Polygon.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>
         /// Returns true if the supplied Polygon shares at least one edge point with this Polygon without the Polygons intersecting when compared on a shared plane. Returns false if the Polygons intersect, are disjoint, or if the supplied Polygon is null.
         /// </returns>
-        public bool Touches(Polygon polygon)
+        public bool Touches(Polygon polygon, double tolerance = Vector3.EPSILON)
         {
             if (polygon == null || this.Intersects(polygon))
             {
                 return false;
             }
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
+            var thisPath = this.ToClipperPath(tolerance);
+            var polyPath = polygon.ToClipperPath(tolerance);
             foreach (IntPoint vertex in thisPath)
             {
                 if (Clipper.PointInPolygon(vertex, polyPath) == -1)
@@ -348,10 +353,11 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="firstSet">First set of polygons</param>
         /// <param name="secondSet">Second set of polygons</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>Returns a list of Polygons representing the subtraction of the second set of polygons from the first set.</returns>
-        public static IList<Polygon> Difference(IList<Polygon> firstSet, IList<Polygon> secondSet)
+        public static IList<Polygon> Difference(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Difference);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Difference, tolerance);
         }
 
         /// <summary>
@@ -359,10 +365,11 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="firstSet">First set of polygons</param>
         /// <param name="secondSet">Second set of polygons</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>Returns a list of Polygons representing the union of both sets of polygons.</returns>
-        public static IList<Polygon> Union(IList<Polygon> firstSet, IList<Polygon> secondSet)
+        public static IList<Polygon> Union(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Union);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Union, tolerance);
         }
 
         /// <summary>
@@ -370,13 +377,14 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="firstSet">First set of polygons</param>
         /// <param name="secondSet">Second set of polygons</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>
         /// Returns a list of Polygons representing the symmetric difference of these two sets of polygons.
         /// Returns a representation of all polygons if they do not intersect.
         /// </returns>
-        public static IList<Polygon> XOR(IList<Polygon> firstSet, IList<Polygon> secondSet)
+        public static IList<Polygon> XOR(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.XOr);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.XOr, tolerance);
         }
 
         /// <summary>
@@ -384,13 +392,14 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="firstSet">First set of polygons</param>
         /// <param name="secondSet">Second set of polygons</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>
         /// Returns a list of Polygons representing the intersection of the first set of Polygons with the second set.
         /// Returns null if the Polygons do not intersect.
         /// </returns>
-        public static IList<Polygon> Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet)
+        public static IList<Polygon> Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Intersection);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Intersection, tolerance);
         }
 
 
@@ -401,10 +410,10 @@ namespace Elements.Geometry
         /// <param name="clippingPolygons">Polygons with which to clip</param>
         /// <param name="mode">The operation to apply: Union, Difference, Intersection, or XOr</param>
         /// <returns></returns>
-        private static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode mode)
+        private static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode mode, double tolerance = Vector3.EPSILON)
         {
-            var subjectPaths = subjectPolygons.Select(s => s.ToClipperPath()).ToList();
-            var clipPaths = clippingPolygons.Select(s => s.ToClipperPath()).ToList();
+            var subjectPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
+            var clipPaths = clippingPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
             Clipper clipper = new Clipper();
             clipper.AddPaths(subjectPaths, PolyType.ptSubject, true);
             clipper.AddPaths(clipPaths, PolyType.ptClip, true);
@@ -433,7 +442,7 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path));
+                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
             }
             return polygons;
         }
@@ -442,20 +451,21 @@ namespace Elements.Geometry
         /// Constructs the geometric difference between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
+        /// <param name="tolerance">An optional tolerance value.</param>
         /// <returns>
         /// Returns a list of Polygons representing the subtraction of the supplied Polygon from this Polygon.
         /// Returns null if the area of this Polygon is entirely subtracted.
         /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
         /// </returns>
-        public IList<Polygon> Difference(Polygon polygon)
+        public IList<Polygon> Difference(Polygon polygon, double tolerance = Vector3.EPSILON)
         {
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
+            var thisPath = this.ToClipperPath(tolerance);
+            var polyPath = polygon.ToClipperPath(tolerance);
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
-            clipper.Execute(ClipType.ctDifference, solution);
+            clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
             if (solution.Count == 0)
             {
                 return null;
@@ -463,7 +473,7 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path));
+                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
             }
             return polygons;
         }
@@ -472,18 +482,19 @@ namespace Elements.Geometry
         /// Constructs the geometric difference between this Polygon and the supplied Polygons.
         /// </summary>
         /// <param name="difPolys">The list of intersecting Polygons.</param>
+        /// <param name="tolerance">An optional tolerance value.</param>
         /// <returns>
         /// Returns a list of Polygons representing the subtraction of the supplied Polygons from this Polygon.
         /// Returns null if the area of this Polygon is entirely subtracted.
         /// Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.
         /// </returns>
-        public IList<Polygon> Difference(IList<Polygon> difPolys)
+        public IList<Polygon> Difference(IList<Polygon> difPolys, double tolerance = Vector3.EPSILON)
         {
-            var thisPath = this.ToClipperPath();
+            var thisPath = this.ToClipperPath(tolerance);
             var polyPaths = new List<List<IntPoint>>();
             foreach (Polygon polygon in difPolys)
             {
-                polyPaths.Add(polygon.ToClipperPath());
+                polyPaths.Add(polygon.ToClipperPath(tolerance));
             }
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
@@ -497,7 +508,14 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path.Distinct().ToList()));
+                try
+                {
+                    polygons.Add(PolygonExtensions.ToPolygon(path.Distinct().ToList(), tolerance));
+                }
+                catch
+                {
+                    // swallow invalid polygons
+                }
             }
             return polygons;
         }
@@ -506,14 +524,15 @@ namespace Elements.Geometry
         /// Constructs the Polygon intersections between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting Polygon.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>
         /// Returns a list of Polygons representing the intersection of this Polygon with the supplied Polygon.
         /// Returns null if the two Polygons do not intersect.
         /// </returns>
-        public IList<Polygon> Intersection(Polygon polygon)
+        public IList<Polygon> Intersection(Polygon polygon, double tolerance = Vector3.EPSILON)
         {
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
+            var thisPath = this.ToClipperPath(tolerance);
+            var polyPath = polygon.ToClipperPath(tolerance);
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);
@@ -526,7 +545,7 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path));
+                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
             }
             return polygons;
         }
@@ -535,14 +554,15 @@ namespace Elements.Geometry
         /// Constructs the geometric union between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The Polygon to be combined with this Polygon.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>
         /// Returns a single Polygon from a successful union.
         /// Returns null if a union cannot be performed on the two Polygons.
         /// </returns>
-        public Polygon Union(Polygon polygon)
+        public Polygon Union(Polygon polygon, double tolerance = Vector3.EPSILON)
         {
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
+            var thisPath = this.ToClipperPath(tolerance);
+            var polyPath = polygon.ToClipperPath(tolerance);
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);
@@ -552,24 +572,25 @@ namespace Elements.Geometry
             {
                 return null;
             }
-            return solution.First().ToPolygon();
+            return solution.First().ToPolygon(tolerance);
         }
 
         /// <summary>
         /// Constructs the geometric union between this Polygon and the supplied list of Polygons.
         /// </summary>
         /// <param name="polygons">The list of Polygons to be combined with this Polygon.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>
         /// Returns a single Polygon from a successful union.
         /// Returns null if a union cannot be performed on the complete list of Polygons.
         /// </returns>
-        public Polygon Union(IList<Polygon> polygons)
+        public Polygon Union(IList<Polygon> polygons, double tolerance = Vector3.EPSILON)
         {
-            var thisPath = this.ToClipperPath();
+            var thisPath = this.ToClipperPath(tolerance);
             var polyPaths = new List<List<IntPoint>>();
             foreach (Polygon polygon in polygons)
             {
-                polyPaths.Add(polygon.ToClipperPath());
+                polyPaths.Add(polygon.ToClipperPath(tolerance));
             }
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
@@ -580,21 +601,22 @@ namespace Elements.Geometry
             {
                 return null;
             }
-            return solution.First().Distinct().ToList().ToPolygon();
+            return solution.First().Distinct().ToList().ToPolygon(tolerance);
         }
 
         /// <summary>
         /// Returns Polygons representing the symmetric difference between this Polygon and the supplied Polygon.
         /// </summary>
         /// <param name="polygon">The intersecting polygon.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>
         /// Returns a list of Polygons representing the symmetric difference of this Polygon and the supplied Polygon.
         /// Returns a representation of this Polygon and the supplied Polygon if the Polygons do not intersect.
         /// </returns>
-        public IList<Polygon> XOR(Polygon polygon)
+        public IList<Polygon> XOR(Polygon polygon, double tolerance = Vector3.EPSILON)
         {
-            var thisPath = this.ToClipperPath();
-            var polyPath = polygon.ToClipperPath();
+            var thisPath = this.ToClipperPath(tolerance);
+            var polyPath = polygon.ToClipperPath(tolerance);
             Clipper clipper = new Clipper();
             clipper.AddPath(thisPath, PolyType.ptSubject, true);
             clipper.AddPath(polyPath, PolyType.ptClip, true);
@@ -603,7 +625,7 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path));
+                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
             }
             return polygons;
         }
@@ -613,11 +635,12 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
         /// <param name="endType">The type of closure used for the offset polygon.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>A new Polygon offset by offset.</returns>
         ///
-        public override Polygon[] Offset(double offset, EndType endType = EndType.ClosedPolygon)
+        public override Polygon[] Offset(double offset, EndType endType = EndType.ClosedPolygon, double tolerance = Vector3.EPSILON)
         {
-            return base.Offset(offset, endType);
+            return base.Offset(offset, endType, tolerance);
         }
 
 
@@ -921,19 +944,19 @@ namespace Elements.Geometry
     /// </summary>
     internal static class PolygonExtensions
     {
-        private const double scale = Polyline.CLIPPER_SCALE;
-
         /// <summary>
         /// Construct a clipper path from a Polygon.
         /// </summary>
         /// <param name="p"></param>
+        /// <param name="tolerance">Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.</param>
         /// <returns></returns>
-        internal static List<IntPoint> ToClipperPath(this Polygon p)
+        internal static List<IntPoint> ToClipperPath(this Polygon p, double tolerance = Vector3.EPSILON)
         {
+            var scale = Math.Round(1.0 / tolerance);
             var path = new List<IntPoint>();
             foreach (var v in p.Vertices)
             {
-                path.Add(new IntPoint(v.X * scale, v.Y * scale));
+                path.Add(new IntPoint(Math.Round(v.X * scale), Math.Round(v.Y * scale)));
             }
             return path;
         }
@@ -942,9 +965,11 @@ namespace Elements.Geometry
         /// Construct a Polygon from a clipper path 
         /// </summary>
         /// <param name="p"></param>
+        /// <param name="tolerance">Optional tolerance value. Be sure to use the same tolerance value as you used when converting to Clipper path.</param>
         /// <returns></returns>
-        internal static Polygon ToPolygon(this List<IntPoint> p)
+        internal static Polygon ToPolygon(this List<IntPoint> p, double tolerance = Vector3.EPSILON)
         {
+            var scale = Math.Round(1.0 / tolerance);
             var converted = new Vector3[p.Count];
             for (var i = 0; i < converted.Length; i++)
             {
