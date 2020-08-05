@@ -17,11 +17,9 @@ namespace Hypar.Revit.Converters
     public static class ConversionRunner
     {
         const string CONVERTER_FOLDER_NAME = "Converters";
-        // TODO this dictionary is to find an appropriate converter given the category of an element.
-        // Next step will be to have a dictionary to lookup converters based on the hypar elements needed.
-        private static Dictionary<BuiltInCategory, List<object>> _converters = null;
+        private static List<object> _converters = null;
 
-        public static Dictionary<BuiltInCategory, List<object>> Converters
+        public static List<object> Converters
         {
             get
             {
@@ -32,6 +30,18 @@ namespace Hypar.Revit.Converters
                 return _converters;
             }
         }
+        private static BuiltInCategory[] _allCategories = null;
+        public static BuiltInCategory[] AllCategories
+        {
+            get
+            {
+                if (_allCategories == null)
+                {
+                    _allCategories = Converters.Select(converter => (BuiltInCategory)converter.GetType().GetProperty("Category").GetValue(converter)).ToArray();
+                }
+                return _allCategories;
+            }
+        }
 
         /// <summary>
         /// Run all converters available on the dictionary of incoming elements.
@@ -39,7 +49,7 @@ namespace Hypar.Revit.Converters
         /// <param name="elements">Dictionary of elements grouped by their BuiltInCategory.</param>
         /// <param name="document">The Revit document where elements originated.</param>
         /// <param name="conversionExceptions">An outgoing list of exceptions that occurred during converting elements.</param>
-        public static Elements.Model RunConverters(Dictionary<BuiltInCategory, Element[]> elements, Document document, out List<Exception> conversionExceptions)
+        public static Elements.Model RunConverters(Element[] elements, Document document, out List<Exception> conversionExceptions)
         {
             var model = new Elements.Model();
             conversionExceptions = new List<Exception>();
@@ -47,14 +57,19 @@ namespace Hypar.Revit.Converters
             // TODO use delegates to improve speed https://stackoverflow.com/questions/10313979/methodinfo-invoke-performance-issue 
             // blog ref https://blogs.msmvps.com/jonskeet/2008/08/09/making-reflection-fly-and-exploring-delegates/
 
-            foreach (var converterList in Converters.Values)
+            var elementGroups = elements.GroupBy(e => (BuiltInCategory)e.Category.Id.IntegerValue).ToDictionary(g => g.Key);
+
+            foreach (var converter in Converters)
             {
-                var converter = converterList[0];
+                var category = (BuiltInCategory)converter.GetType().GetProperty("Category").GetValue(converter);
+                if (!elementGroups.ContainsKey(category))
+                {
+                    continue;
+                }
                 Type revitType = converter.GetType().GetInterfaces()[0].GenericTypeArguments[0];
 
                 var fromRevitMethod = converter.GetType().GetMethod("FromRevit");
-                var cat = (BuiltInCategory)converter.GetType().GetProperty("Category").GetValue(converter);
-                foreach (var elem in elements[cat])
+                foreach (var elem in elementGroups[category])
                 {
                     try
                     {
@@ -71,20 +86,16 @@ namespace Hypar.Revit.Converters
             return model;
         }
 
-        private static Dictionary<BuiltInCategory, List<object>> LoadAllConverters()
+        private static List<object> LoadAllConverters()
         {
             var converterInterface = typeof(IRevitConverter<,>);
 
-            var converters = new Dictionary<BuiltInCategory, List<object>>();
+            var converters = new List<object>();
             foreach (var converterType in GetAllConverterTypes())
             {
                 var instanceOfConverter = Activator.CreateInstance(converterType);
                 var cat = (BuiltInCategory)converterType.GetProperty("Category").GetValue(instanceOfConverter);
-                if (!converters.ContainsKey(cat))
-                {
-                    converters[cat] = new List<object>();
-                }
-                converters[cat].Add((object)instanceOfConverter);
+                converters.Add((object)instanceOfConverter);
             }
 
             return converters;
