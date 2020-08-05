@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Collections;
 using Newtonsoft.Json;
 using Elements.Serialization.JSON;
-using Elements.Serialization.IFC;
 using Elements.Geometry;
 using Elements.Validators;
 
@@ -195,25 +194,6 @@ namespace Elements
             });
             JsonInheritanceConverter.Elements.Clear();
             return model;
-        }
-
-        /// <summary>
-        /// Serialize the model to IFC.
-        /// </summary>
-        /// <param name="path">The output path for the IFC file.</param>
-        public void ToIFC(string path)
-        {
-            IFCModelExtensions.ToIFC(this, path);
-        }
-
-        /// <summary>
-        /// Deserialize a model from IFC.
-        /// </summary>
-        /// <param name="path">The path to the IFC file.</param>
-        /// <param name="idsToConvert">An optional collection of IFC identifiers to convert.</param>
-        public static Model FromIFC(string path, string[] idsToConvert = null)
-        {
-            return IFCModelExtensions.FromIFC(path, idsToConvert);
         }
 
         private List<Element> RecursiveGatherSubElements(object obj)

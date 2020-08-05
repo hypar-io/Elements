@@ -12,7 +12,7 @@ namespace Elements.Serialization.IFC
     /// <summary>
     /// Extension methods for writing elements to and from IFC.
     /// </summary>
-    internal static class IFCModelExtensions
+    public static class IFCModelExtensions
     {
         /// <summary>
         /// Load a model from IFC.
@@ -20,7 +20,7 @@ namespace Elements.Serialization.IFC
         /// <param name="path">The path to an IFC STEP file.</param>
         /// <param name="idsToConvert">An array of element ids to convert.</param>
         /// <returns>A model.</returns>
-        internal static Model FromIFC(string path, IList<string> idsToConvert = null)
+        public static Model FromIFC(string path, IList<string> idsToConvert = null)
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
@@ -80,7 +80,7 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="model"></param>
         /// <param name="path">The path to the generated IFC STEP file.</param>
-        internal static void ToIFC(Model model, string path)
+        public static void ToIFC(this Model model, string path)
         {
             var ifc = new Document("Elements", "Elements", Environment.UserName,
                                     null, null, null, "Elements", null, null,
@@ -174,7 +174,7 @@ namespace Elements.Serialization.IFC
                 ifc.AddEntity(surfaceStyle);
 
                 var styleAssign = new IfcStyleAssignmentSelect(surfaceStyle);
-                var assignments = new List<IfcStyleAssignmentSelect>(){styleAssign};
+                var assignments = new List<IfcStyleAssignmentSelect>() { styleAssign };
                 styleAssignments.Add(m.Id, assignments);
             }
 
@@ -182,7 +182,7 @@ namespace Elements.Serialization.IFC
             foreach (var e in model.Elements.Values.Where(e =>
             {
                 var t = e.GetType();
-                return ((e is GeometricElement && 
+                return ((e is GeometricElement &&
                         !((GeometricElement)e).IsElementDefinition) || e is ElementInstance) &&
                         t != typeof(ModelCurve) &&
                         t != typeof(ModelPoints) &&
