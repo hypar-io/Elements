@@ -97,27 +97,6 @@ namespace Hypar.Revit
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class UnloadConverters : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            try
-            {
-                ExportToModel.UnloadConverters();
-                // var view = commandData.Application.ActiveUIDocument.ActiveView;
-                // ExportToModel.ConvertView(commandData.Application.ActiveUIDocument.Document, view);
-                return Result.Succeeded;
-            }
-            catch (Exception e)
-            {
-                TaskDialog.Show("Error", $"{e.Message}\n{e.StackTrace}");
-                return Result.Failed;
-            }
-        }
-    }
-
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
     public class HyparHubStopCommand : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
