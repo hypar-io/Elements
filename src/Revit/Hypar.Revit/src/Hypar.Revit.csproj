@@ -21,7 +21,7 @@
 
   <Target Name="GatherAddin" AfterTargets="Publish">
     <RemoveDir Directories="../deploy" />
-    <MakeDir Directories="../deploy"/>
+    <MakeDir Directories="../deploy" />
     <Message Importance="High" Text="Executing GatherAddin target." />
     <Copy SourceFiles="Hypar.Revit.addin" DestinationFolder="..\deploy" />
     <Copy SourceFiles="@(AddinFiles)" DestinationFolder="..\deploy\Hypar.Revit\%(RecursiveDir)" />
@@ -48,6 +48,9 @@
     <ProjectReference Include="..\..\..\Elements\Elements.csproj" />
     <ProjectReference Include="..\..\..\..\..\Model\Hypar.Model.csproj" />
     <ProjectReference Include="..\..\Hypar.Revit.Converters\Hypar.Revit.Converters.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
