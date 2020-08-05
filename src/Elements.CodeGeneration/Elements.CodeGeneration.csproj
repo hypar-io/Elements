@@ -2,11 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Hypar.Elements.CodeGeneration</AssemblyName>
+    <PackageTitle>Hypar Elements Code Generation</PackageTitle>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Title>Hypar Elements Code Generation</Title>
+    <PackageId>Hypar.Elements.CodeGeneration</PackageId>
+    <PackageDescription>Code generation utilities for Hypar.Elements.</PackageDescription>
+    <Summary>Code generation utilities for Hypar.Elements.</Summary>
+    <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>$(Version)</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NJsonSchema.CodeGeneration" Version="10.1.21" />
     <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="10.1.21" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.3.1" />
   </ItemGroup>
 
   <ItemGroup>
