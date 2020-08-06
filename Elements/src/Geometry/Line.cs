@@ -503,7 +503,7 @@ namespace Elements.Geometry
 
             var intersectionsOrdered = intersections.OrderBy(v => v.DistanceTo(Start)).ToArray();
             var inSegments = new List<Line>();
-            var outSegments = new List<Line>();
+            outsideSegments = new List<Line>();
             var currentlyIn = !StartsOutsidePolygon;
             for (int i = 0; i < intersectionsOrdered.Length - 1; i++)
             {
@@ -524,12 +524,11 @@ namespace Elements.Geometry
                 }
                 else
                 {
-                    outSegments.Add(segment);
+                    outsideSegments.Add(segment);
                 }
                 currentlyIn = !currentlyIn;
             }
 
-            outsideSegments = outSegments;
             return inSegments;
         }
 

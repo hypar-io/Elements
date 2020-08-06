@@ -5,6 +5,6 @@ mono: none
 dotnet: 2.1.502
 script:
   - dotnet build ./Elements.sln
-  - dotnet test ./test/Elements.Tests/Elements.Tests.csproj
+  - dotnet test ./Elements/test/Elements.Tests.csproj
 env:
   - TRAVIS=true

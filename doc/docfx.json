@@ -48,7 +48,7 @@
         ]
       },
       {
-        "src": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/",
+        "src": "../Elements/test/bin/debug/netcoreapp2.1/models/",
         "files": [
           "Elements_**.glb"
         ],
@@ -67,7 +67,7 @@
     "dest": "../docs/",
     "globalMetadata": {
       "_appTitle": "Hypar Docs",
-      "_appFooter": "Copyright © Hypar Inc., 2019",
+      "_appFooter": "Copyright © Hypar Inc., 2020",
       "_disableContribution": true,
       "_enableSearch": true,
       "_disableBreadcrumb": true,
