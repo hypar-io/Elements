@@ -6,6 +6,7 @@
 - `Hypar.Elements.CodeGeneration` - Code generation has been moved to a new project.
 
 ### Changed
+- Updated ImageSharp to 1.0.0.
 - The source code is now structured with the typical .NET project layout of `/src` and `/test` per folder.
 
 ## 0.7.3
