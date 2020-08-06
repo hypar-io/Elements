@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
+    <ProjectReference Include="..\src\Elements.Serialization.IFC.csproj" />
   </ItemGroup>
 
 </Project>

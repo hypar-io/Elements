@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Version>$(Version)</Version>
+    <PackageOutputPath>../../nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
