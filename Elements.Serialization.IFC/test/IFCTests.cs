@@ -163,7 +163,12 @@ namespace Elements.IFC.Tests
 
         private string ConstructGlbPath(string modelName)
         {
-            return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, basePath, $"{modelName}.glb"));
+            var modelsDirectory = Path.Combine(Environment.CurrentDirectory, basePath);
+            if (!Directory.Exists(modelsDirectory))
+            {
+                Directory.CreateDirectory(modelsDirectory);
+            }
+            return Path.GetFullPath(Path.Combine(modelsDirectory, $"{modelName}.glb"));
         }
     }
 }
