@@ -16,6 +16,7 @@ namespace Hypar.Revit.Converters
 
     public static class ConversionRunner
     {
+        const string CONVERTER_FOLDER_NAME = "Converters";
         // TODO this dictionary is to find an appropriate converter given the category of an element.
         // Next step will be to have a dictionary to lookup converters based on the hypar elements needed.
         private static Dictionary<BuiltInCategory, List<object>> _converters = null;
@@ -26,7 +27,7 @@ namespace Hypar.Revit.Converters
             {
                 if (_converters == null)
                 {
-                    _converters = GetAllConverters();
+                    _converters = LoadAllConverters();
                 }
                 return _converters;
             }
@@ -70,7 +71,7 @@ namespace Hypar.Revit.Converters
             return model;
         }
 
-        private static Dictionary<BuiltInCategory, List<object>> GetAllConverters()
+        private static Dictionary<BuiltInCategory, List<object>> LoadAllConverters()
         {
             var converterInterface = typeof(IRevitConverter<,>);
 
@@ -89,41 +90,32 @@ namespace Hypar.Revit.Converters
             return converters;
         }
 
-        private static bool TypeIsAConverter(Type t)
+        private static bool IsTypeAConverter(Type t)
         {
             if (t.IsAbstract || t.IsInterface)
             {
                 return false;
             }
-            var inter = t.GetInterface("IRevitConverter`2");
-            if (inter == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return t.GetInterface("IRevitConverter`2") != null;
         }
 
         private static Type[] GetAllConverterTypes()
         {
-            var allPotentialConverters = Assembly.GetExecutingAssembly().GetTypes().ToList();
+            var defaultConverterTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => IsTypeAConverter(t));
 
-            var converterDomainTypes = LoadCustomConverterAssemblies().SelectMany(a => a.GetTypes());
+            var converterFolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), CONVERTER_FOLDER_NAME);
+            var customConverterTypes = LoadCustomConverterTypes(converterFolderPath);
 
-            allPotentialConverters.AddRange(converterDomainTypes);
-            return allPotentialConverters.Where(t => TypeIsAConverter(t)).ToArray();
+            return defaultConverterTypes.Concat(customConverterTypes).ToArray();
         }
 
-        private static List<Assembly> LoadCustomConverterAssemblies()
+        private static Type[] LoadCustomConverterTypes(string converterFolderPath)
         {
-            var converterFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Converters");
             var converterAssemblies = new List<Assembly>();
 
-            if (Directory.Exists(converterFolder))
+            if (Directory.Exists(converterFolderPath))
             {
-                var dllPaths = Directory.EnumerateFiles(converterFolder, "*.dll");
+                var dllPaths = Directory.EnumerateFiles(converterFolderPath, "*.dll");
                 foreach (string dllPath in dllPaths)
                 {
                     try
@@ -133,11 +125,13 @@ namespace Hypar.Revit.Converters
                     }
                     catch
                     {
+                        // TODO log to the local log file that an assembly could not be loaded
                         continue;
                     }
                 }
             }
-            return converterAssemblies;
+            // TODO in an `else` log to the local log file that a folder was expected but did not exist
+            return converterAssemblies.SelectMany(a => a.GetTypes().Where(t => IsTypeAConverter(t))).ToArray();
         }
     }
 }
