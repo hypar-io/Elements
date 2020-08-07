@@ -207,26 +207,26 @@ namespace Elements.Geometry.Tests
             });
 
             var i1 = startsOutsideAndCrossesTwice.Trim(Polygon, out var o1);
-            Assert.Equal(1, i1.Count);
+            Assert.Single(i1);
             Assert.Equal(2, o1.Count);
             var i2 = fullyInside.Trim(Polygon, out var o2);
-            Assert.Equal(1, i2.Count);
-            Assert.Equal(0, o2.Count);
+            Assert.Single(i2);
+            Assert.Empty(o2);
             var i3 = fullyOutside.Trim(Polygon, out var o3);
-            Assert.Equal(0, i3.Count);
-            Assert.Equal(1, o3.Count);
+            Assert.Empty(i3);
+            Assert.Single(o3);
             var i4 = startsInsideAndCrossesOnce.Trim(Polygon, out var o4);
-            Assert.Equal(1, i4.Count);
-            Assert.Equal(1, o4.Count);
+            Assert.Single(i4);
+            Assert.Single(o4);
             var i5 = startsOutsideAndLandsOnEdge.Trim(Polygon, out var o5);
-            Assert.Equal(1, i5.Count);
-            Assert.Equal(1, o5.Count);
+            Assert.Single(i5);
+            Assert.Single(o5);
             var i6 = crossesAtVertexStaysOutside.Trim(Polygon, out var o6);
-            Assert.Equal(0, i6.Count);
+            Assert.Empty(i6);
             Assert.Equal(2, o6.Count);
             var i7 = passesThroughAtVertex.Trim(Polygon, out var o7);
-            Assert.Equal(1, i7.Count);
-            Assert.Equal(1, o7.Count);
+            Assert.Single(i7);
+            Assert.Single(o7);
 
         }
     }

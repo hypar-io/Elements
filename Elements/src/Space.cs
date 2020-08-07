@@ -77,7 +77,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
-        internal Space(Solid geometry,
+        public Space(Solid geometry,
                        Transform transform = null,
                        Material material = null,
                        bool isElementDefinition = false,
@@ -131,7 +131,7 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             // Don't override imported geometry.
-            if(this.Representation.SolidOperations.Count > 0 && this.Representation.SolidOperations.All(s=>s.GetType() == typeof(Import)))
+            if (this.Representation.SolidOperations.Count > 0 && this.Representation.SolidOperations.All(s => s.GetType() == typeof(Import)))
             {
                 return;
             }

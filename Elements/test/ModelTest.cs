@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Elements.Geometry;
 using System.Linq;
+using Elements.Serialization.IFC;
 using Elements.Serialization.glTF;
 using System.Reflection;
 
@@ -28,15 +29,15 @@ namespace Elements.Tests
             set => _name = value;
         }
 
-        public bool GenerateIfc{get;set;}
+        public bool GenerateIfc { get; set; }
 
-        public bool GenerateGlb{get;set;}
+        public bool GenerateGlb { get; set; }
 
-        public bool GenerateJson{get;set;}
+        public bool GenerateJson { get; set; }
 
-        internal static Line TestLine = new Line(Vector3.Origin, new Vector3(5,5,5));
+        internal static Line TestLine = new Line(Vector3.Origin, new Vector3(5, 5, 5));
         internal static Arc TestArc = new Arc(Vector3.Origin, 2.0, 0.0, 90.0);
-        internal static Polyline TestPolyline = new Polyline(new []{new Vector3(0,0), new Vector3(0,2), new Vector3(0,3,1)});
+        internal static Polyline TestPolyline = new Polyline(new[] { new Vector3(0, 0), new Vector3(0, 2), new Vector3(0, 3, 1) });
         internal static Polygon TestPolygon = Polygon.Ngon(5, 2);
         internal static Circle TestCircle = new Circle(Vector3.Origin, 5);
 
@@ -48,7 +49,7 @@ namespace Elements.Tests
             this.GenerateJson = true;
 
             var modelsDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "models");
-            if(!Directory.Exists(modelsDir))
+            if (!Directory.Exists(modelsDir))
             {
                 Directory.CreateDirectory(modelsDir);
             }
@@ -56,15 +57,15 @@ namespace Elements.Tests
 
         public virtual void Dispose()
         {
-            if(this._model.Elements.Any())
+            if (this._model.Elements.Any())
             {
-                if(this.GenerateGlb)
+                if (this.GenerateGlb)
                 {
                     var modelPath = $"models/{this._name}.glb";
                     this._model.ToGlTF(modelPath, true);
                 }
 
-                if(this.GenerateJson)
+                if (this.GenerateJson)
                 {
                     var jsonPath = $"models/{this._name}.json";
                     File.WriteAllText(jsonPath, this._model.ToJson());
@@ -72,17 +73,17 @@ namespace Elements.Tests
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
 
                     var elements = this._model.AllElementsOfType<Element>();
-                    foreach(var e in elements)
+                    foreach (var e in elements)
                     {
                         var newEl = newModel.GetElementOfType<Element>(e.Id);
-                        if(newEl == null)
+                        if (newEl == null)
                         {
                             throw new Exception($"{this.Name}: An element with the id {e.Id}, could not be found in the new model.");
                         }
                     }
                 }
 
-                if(this.GenerateIfc)
+                if (this.GenerateIfc)
                 {
                     var ifcPath = $"models/{this._name}.ifc";
                     this._model.ToIFC(ifcPath);
