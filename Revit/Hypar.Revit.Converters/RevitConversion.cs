@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autodesk.Revit.DB;
@@ -15,6 +16,7 @@ namespace Hypar.Revit.Converters
 
     public static class ConversionRunner
     {
+        const string CONVERTER_FOLDER_NAME = "Converters";
         // TODO this dictionary is to find an appropriate converter given the category of an element.
         // Next step will be to have a dictionary to lookup converters based on the hypar elements needed.
         private static Dictionary<BuiltInCategory, List<object>> _converters = null;
@@ -25,7 +27,7 @@ namespace Hypar.Revit.Converters
             {
                 if (_converters == null)
                 {
-                    _converters = GetAllConverters();
+                    _converters = LoadAllConverters();
                 }
                 return _converters;
             }
@@ -69,28 +71,67 @@ namespace Hypar.Revit.Converters
             return model;
         }
 
-        private static Dictionary<BuiltInCategory, List<object>> GetAllConverters()
+        private static Dictionary<BuiltInCategory, List<object>> LoadAllConverters()
         {
             var converterInterface = typeof(IRevitConverter<,>);
 
             var converters = new Dictionary<BuiltInCategory, List<object>>();
-            foreach (var converterType in Assembly.GetExecutingAssembly().GetTypes())
+            foreach (var converterType in GetAllConverterTypes())
             {
-                if (converterType.IsAbstract || converterType.IsInterface) continue;
-                var inter = converterType.GetInterface("IRevitConverter`2");
-                if (inter != null)
+                var instanceOfConverter = Activator.CreateInstance(converterType);
+                var cat = (BuiltInCategory)converterType.GetProperty("Category").GetValue(instanceOfConverter);
+                if (!converters.ContainsKey(cat))
                 {
-                    var instanceOfConverter = Activator.CreateInstance(converterType);
-                    var cat = (BuiltInCategory)converterType.GetProperty("Category").GetValue(instanceOfConverter);
-                    if (!converters.ContainsKey(cat))
-                    {
-                        converters[cat] = new List<object>();
-                    }
-                    converters[cat].Add((object)instanceOfConverter);
+                    converters[cat] = new List<object>();
                 }
+                converters[cat].Add((object)instanceOfConverter);
             }
 
             return converters;
+        }
+
+        private static bool IsTypeAConverter(Type t)
+        {
+            if (t.IsAbstract || t.IsInterface)
+            {
+                return false;
+            }
+            return t.GetInterface("IRevitConverter`2") != null;
+        }
+
+        private static Type[] GetAllConverterTypes()
+        {
+            var defaultConverterTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => IsTypeAConverter(t));
+
+            var converterFolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), CONVERTER_FOLDER_NAME);
+            var customConverterTypes = LoadCustomConverterTypes(converterFolderPath);
+
+            return defaultConverterTypes.Concat(customConverterTypes).ToArray();
+        }
+
+        private static Type[] LoadCustomConverterTypes(string converterFolderPath)
+        {
+            var converterAssemblies = new List<Assembly>();
+
+            if (Directory.Exists(converterFolderPath))
+            {
+                var dllPaths = Directory.EnumerateFiles(converterFolderPath, "*.dll");
+                foreach (string dllPath in dllPaths)
+                {
+                    try
+                    {
+                        var loaded = AppDomain.CurrentDomain.Load(dllPath);
+                        converterAssemblies.Add(loaded);
+                    }
+                    catch
+                    {
+                        // TODO log to the local log file that an assembly could not be loaded
+                        continue;
+                    }
+                }
+            }
+            // TODO in an `else` log to the local log file that a folder was expected but did not exist
+            return converterAssemblies.SelectMany(a => a.GetTypes().Where(t => IsTypeAConverter(t))).ToArray();
         }
     }
 }

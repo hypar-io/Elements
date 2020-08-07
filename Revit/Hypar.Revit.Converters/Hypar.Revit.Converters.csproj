@@ -5,12 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GeometryEx" Version="2.27.0"/>
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="RevitAPI">
-      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -18,4 +14,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Elements\Elements.csproj" />
   </ItemGroup>
+
 </Project>
