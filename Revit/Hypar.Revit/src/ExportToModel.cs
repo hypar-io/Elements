@@ -63,8 +63,8 @@ namespace Hypar.Revit
             {
                 // TODO this is acceptable messaging for debugging, but we'll want to provide different message and do logging before release
                 var exceptionMessage = String.Join("\n", conversionExceptions.Select(e => e.InnerException?.Message));
-                var dialog = new TaskDialog("Hypar Errors");
-                dialog.MainInstruction = "Export completed, but there were some exceptions.  You may be able to ignore some of these";
+                var dialog = new TaskDialog("Hypar Warnings");
+                dialog.MainInstruction = "Export completed, but there were some exceptions.  You may be able to ignore these.";
                 dialog.MainContent = exceptionMessage;
                 dialog.Show();
             }
