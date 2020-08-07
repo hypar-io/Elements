@@ -200,7 +200,7 @@ namespace Elements.Generate
         // This HyparFilters class contains filters that are copied directly from the NJsonSchema repo
         // because the filters are not public but we need to register them globally for async code gen.
         // Copied from https://github.com/RicoSuter/NJsonSchema/blob/687efeabdc30ddacd235e85213f3594458ed48b4/src/NJsonSchema.CodeGeneration/DefaultTemplateFactory.cs#L183
-        internal static class HyparFilters
+        public static class HyparFilters
         {
             public static string Lowercamelcase(Context context, string input, bool firstCharacterMustBeAlpha = true)
             {
