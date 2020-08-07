@@ -45,8 +45,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Elements\Elements.csproj" />
-    <ProjectReference Include="..\..\..\..\..\Model\Hypar.Model.csproj" />
+    <ProjectReference Include="..\..\..\Elements\src\Elements.csproj" />
+    <ProjectReference Include="..\..\..\..\Hypar\Hypar.Model\Hypar.Model.csproj" />
     <ProjectReference Include="..\..\Hypar.Revit.Converters\Hypar.Revit.Converters.csproj" />
   </ItemGroup>
 
