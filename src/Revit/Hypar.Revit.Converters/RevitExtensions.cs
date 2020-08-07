@@ -46,11 +46,14 @@ namespace Hypar.Revit
         {
             var faces = new List<PlanarFace>();
             var inversionMultiplier = downwardFacing ? -1 : 1;
-            foreach (PlanarFace face in solid.Faces)
+            foreach (Face face in solid.Faces)
             {
-                if (face.FaceNormal.DotProduct(inversionMultiplier * XYZ.BasisZ) > Math.Cos(Elements.Units.DegreesToRadians(verticalThreshold)) && face.FaceNormal.DotProduct(XYZ.BasisZ * inversionMultiplier) <= 1)
+                if (face is PlanarFace planarFace)
                 {
-                    faces.Add(face);
+                    if (planarFace.FaceNormal.DotProduct(inversionMultiplier * XYZ.BasisZ) > Math.Cos(Elements.Units.DegreesToRadians(verticalThreshold)) && planarFace.FaceNormal.DotProduct(XYZ.BasisZ * inversionMultiplier) <= 1)
+                    {
+                        faces.Add(planarFace);
+                    }
                 }
             }
             return faces.ToArray();
@@ -58,8 +61,21 @@ namespace Hypar.Revit
 
         private static Polygon ToPolygon(this CurveLoop curveLoop, bool scaleToMeters = false)
         {
-            return new Polygon(curveLoop.Select(l => l.GetEndPoint(0).ToVector3(scaleToMeters)).ToList());
+            var vertices = curveLoop.SelectMany(l =>
+            {
+                if (l is Autodesk.Revit.DB.Arc arc)
+                {
+                    return arc.Tessellate().Select(p => p.ToVector3(scaleToMeters));
+                }
+                else
+                {
+                    return new[] { l.GetEndPoint(0).ToVector3(scaleToMeters) };
+                }
+
+            }).Distinct().ToList();
+            return new Polygon(vertices);
         }
+
 
         private static Dictionary<Polygon, List<Polygon>> MatchOuterLoopPolygonsWithInnerHoles(IEnumerable<Polygon> polygons)
         {

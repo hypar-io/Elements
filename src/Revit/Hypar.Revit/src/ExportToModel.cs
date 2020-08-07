@@ -16,7 +16,7 @@ namespace Hypar.Revit
         {
             var toConvert = ConversionRunner.AllCategories.SelectMany(category => GetElements(doc, category, null, elementIds));
 
-            var model = ConvertElements(doc, toConvert.ToArray(), out List<Exception> conversionExceptions);
+            var model = ConvertElements(doc, toConvert.ToArray(), out List<ExportException> conversionExceptions);
             SaveModel(model);
             FinishAndShowResults(conversionExceptions);
         }
@@ -25,12 +25,12 @@ namespace Hypar.Revit
         {
             var model = new Elements.Model();
             var levels = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsNotElementType().ToElements().Cast<Level>();
-            var allConversionErrors = new List<Exception>();
+            var allConversionErrors = new List<ExportException>();
             foreach (var level in levels)
             {
                 var toConvert = ConversionRunner.AllCategories.SelectMany(category => GetElements(doc, category, null, null, level));
 
-                var elements = ConvertElements(doc, toConvert.ToArray(), out List<Exception> conversionExceptions);
+                var elements = ConvertElements(doc, toConvert.ToArray(), out List<ExportException> conversionExceptions);
                 var levelElements = new Elements.LevelElements(elements.Elements.Values.ToList(), Guid.NewGuid(), level.Name);
                 allConversionErrors.AddRange(conversionExceptions);
 
@@ -44,25 +44,25 @@ namespace Hypar.Revit
         {
             var toConvert = ConversionRunner.AllCategories.SelectMany(category => GetElements(doc, category, view, null));
 
-            var model = ConvertElements(doc, toConvert.ToArray(), out List<Exception> conversionExceptions);
+            var model = ConvertElements(doc, toConvert.ToArray(), out List<ExportException> conversionExceptions);
             SaveModel(model);
             FinishAndShowResults(conversionExceptions);
         }
 
-        private static Elements.Model ConvertElements(Document doc, Element[] toConvert, out List<Exception> exceptions)
+        private static Elements.Model ConvertElements(Document doc, Element[] toConvert, out List<ExportException> exceptions)
         {
-            var model = ConversionRunner.RunConverters(toConvert, doc, out List<Exception> conversionExceptions);
+            var model = ConversionRunner.RunConverters(toConvert, doc, out List<ExportException> conversionExceptions);
             exceptions = conversionExceptions;
 
             return model;
         }
 
-        private static void FinishAndShowResults(List<Exception> conversionExceptions)
+        private static void FinishAndShowResults(List<ExportException> conversionExceptions)
         {
             if (conversionExceptions.Count > 0)
             {
                 // TODO this is acceptable messaging for debugging, but we'll want to provide different message and do logging before release
-                var exceptionMessage = String.Join("\n", conversionExceptions.Select(e => e.InnerException?.Message));
+                var exceptionMessage = String.Join("\n", conversionExceptions.Select(e => $"{e.ElementId.IntegerValue} - {e.Exception.InnerException?.Message}"));
                 var dialog = new TaskDialog("Hypar Errors");
                 dialog.MainInstruction = "Export completed, but there were some exceptions.  You may be able to ignore some of these";
                 dialog.MainContent = exceptionMessage;

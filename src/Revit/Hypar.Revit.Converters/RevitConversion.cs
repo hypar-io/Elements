@@ -13,6 +13,12 @@ namespace Hypar.Revit.Converters
         BuiltInCategory Category { get; }
         THypar[] FromRevit(TRevit revitElement, Autodesk.Revit.DB.Document doc);
     }
+    public class ExportException
+    {
+        public ElementId ElementId { get; set; }
+        public Exception Exception { get; set; }
+    }
+
 
     public static class ConversionRunner
     {
@@ -49,10 +55,10 @@ namespace Hypar.Revit.Converters
         /// <param name="elements">Dictionary of elements grouped by their BuiltInCategory.</param>
         /// <param name="document">The Revit document where elements originated.</param>
         /// <param name="conversionExceptions">An outgoing list of exceptions that occurred during converting elements.</param>
-        public static Elements.Model RunConverters(Element[] elements, Document document, out List<Exception> conversionExceptions)
+        public static Elements.Model RunConverters(Element[] elements, Document document, out List<ExportException> conversionExceptions)
         {
             var model = new Elements.Model();
-            conversionExceptions = new List<Exception>();
+            conversionExceptions = new List<ExportException>();
 
             // TODO use delegates to improve speed https://stackoverflow.com/questions/10313979/methodinfo-invoke-performance-issue 
             // blog ref https://blogs.msmvps.com/jonskeet/2008/08/09/making-reflection-fly-and-exploring-delegates/
@@ -78,7 +84,7 @@ namespace Hypar.Revit.Converters
                     }
                     catch (Exception e)
                     {
-                        conversionExceptions.Add(e);
+                        conversionExceptions.Add(new ExportException() { ElementId = elem.Id, Exception = e });
                     }
                 }
             }

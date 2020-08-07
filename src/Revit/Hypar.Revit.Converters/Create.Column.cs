@@ -16,7 +16,8 @@ namespace Hypar.Revit
             }
 
             var geom = column.get_Geometry(new Options());
-            var downfaces = geom.Where(g => g.GetType() == typeof(Solid)).Cast<Solid>().Where(s => s != null).SelectMany(s => s.GetMostLikelyHorizontalFaces(30, true));
+            var inst = geom.SelectMany(g => ((GeometryInstance)g).GetInstanceGeometry());
+            var downfaces = inst.Where(g => g.GetType() == typeof(Solid)).Cast<Solid>().Where(s => s != null).SelectMany(s => s.GetMostLikelyHorizontalFaces(30, true));
 
             var profile = downfaces.First().GetProfiles(true).First();
             if (profile.Area() < 0)
