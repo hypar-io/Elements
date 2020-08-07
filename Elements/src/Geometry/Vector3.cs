@@ -346,6 +346,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Determine whether this vector's components are equal to the provided components, within tolerance.
+        /// </summary>
+        /// <param name="x">The x component to compare.</param>
+        /// <param name="y">The y component to compare.</param>
+        /// <param name="z">The z component to compare.</param>
+        /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
+        public bool IsAlmostEqualTo(double x, double y, double z = 0)
+        {
+            return IsAlmostEqualTo(new Vector3(x, y, z));
+        }
+
+        /// <summary>
         /// The distance from this point to b.
         /// </summary>
         /// <param name="v">The target vector.</param>

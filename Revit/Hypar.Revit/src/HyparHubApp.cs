@@ -15,11 +15,9 @@ namespace Hypar.Revit
     {
         private static HubConnection _hyparConnection;
         private static Dictionary<string, WorkflowSettings> _settings;
-
         public static HyparHubApp HyparApp { get; private set; }
         public static ILogger HyparLogger { get; private set; }
         public static Dictionary<string, Workflow> CurrentWorkflows { get; private set; }
-
         public static bool RequiresRedraw { get; set; }
 
         public Result OnShutdown(UIControlledApplication application)
@@ -58,8 +56,14 @@ namespace Hypar.Revit
         {
             var startHubButton = new PushButtonData("StartHub", "Start\nHypar\nHub", Assembly.GetCallingAssembly().Location, "Hypar.Revit.HyparHubStartCommand");
             var stopHubButton = new PushButtonData("StopHub", "Stop\nHypar\nHub", Assembly.GetCallingAssembly().Location, "Hypar.Revit.HyparHubStopCommand");
+            var convertAllButton = new PushButtonData("HyparConvertAll", "Send All\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertAllToHypar");
+            var convertSelectionButton = new PushButtonData("HyparConvertSelection", "Send Selection\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertSelectionToHypar");
+            var convertViewButton = new PushButtonData("HyparConvertView", "Send Elements\nin View\nto Hypar", Assembly.GetCallingAssembly().Location, "Hypar.Revit.ConvertViewToHypar");
             var hyparHubPanel = application.CreateRibbonPanel("Hypar");
             hyparHubPanel.AddStackedItems(startHubButton, stopHubButton);
+            hyparHubPanel.AddItem(convertAllButton);
+            hyparHubPanel.AddItem(convertSelectionButton);
+            hyparHubPanel.AddItem(convertViewButton);
         }
 
         private void OnApplicationInitialized(object sender, EventArgs e)
