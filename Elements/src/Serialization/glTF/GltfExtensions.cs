@@ -687,8 +687,8 @@ namespace Elements.Serialization.glTF
             var accessors = new List<Accessor>();
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
-            if(drawEdges)
-            {   
+            if (drawEdges)
+            {
                 materialsToAdd.Add(BuiltInMaterials.Edges);
             }
             var materials = gltf.AddMaterials(materialsToAdd, buffer, bufferViews);
@@ -716,17 +716,24 @@ namespace Elements.Serialization.glTF
                     lines.Add(currLines);
                 }
 
-                GetRenderDataForElement(e,
-                                        gltf,
-                                        materials,
-                                        buffer,
-                                        bufferViews,
-                                        accessors,
-                                        meshes,
-                                        nodes,
-                                        meshElementMap,
-                                        currLines,
-                                        drawEdges);
+                try
+                {
+                    GetRenderDataForElement(e,
+                                            gltf,
+                                            materials,
+                                            buffer,
+                                            bufferViews,
+                                            accessors,
+                                            meshes,
+                                            nodes,
+                                            meshElementMap,
+                                            currLines,
+                                            drawEdges);
+                }
+                catch
+                {
+                    throw;
+                }
             }
             if (buffer.Count == 0)
             {
@@ -849,7 +856,10 @@ namespace Elements.Serialization.glTF
             if (e is ModelPoints)
             {
                 var mp = (ModelPoints)e;
-                AddPoints(GetNextId(), mp.Locations, gltf, materials[mp.Material.Name], buffer, bufferViews, accessors, meshes, nodes, mp.Transform);
+                if (mp.Locations.Count != 0)
+                {
+                    AddPoints(GetNextId(), mp.Locations, gltf, materials[mp.Material.Name], buffer, bufferViews, accessors, meshes, nodes, mp.Transform);
+                }
             }
 
             if (e is ITessellate)
@@ -918,7 +928,7 @@ namespace Elements.Serialization.glTF
                 meshElementMap[e.Id].Add(meshId);
 
                 var geom = (GeometricElement)e;
-                if(!geom.IsElementDefinition)
+                if (!geom.IsElementDefinition)
                 {
                     CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
                 }
