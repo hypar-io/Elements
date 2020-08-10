@@ -716,24 +716,17 @@ namespace Elements.Serialization.glTF
                     lines.Add(currLines);
                 }
 
-                try
-                {
-                    GetRenderDataForElement(e,
-                                            gltf,
-                                            materials,
-                                            buffer,
-                                            bufferViews,
-                                            accessors,
-                                            meshes,
-                                            nodes,
-                                            meshElementMap,
-                                            currLines,
-                                            drawEdges);
-                }
-                catch
-                {
-                    throw;
-                }
+                GetRenderDataForElement(e,
+                                        gltf,
+                                        materials,
+                                        buffer,
+                                        bufferViews,
+                                        accessors,
+                                        meshes,
+                                        nodes,
+                                        meshElementMap,
+                                        currLines,
+                                        drawEdges);
             }
             if (buffer.Count == 0)
             {
