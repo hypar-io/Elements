@@ -158,6 +158,11 @@ namespace Elements.IFC.Tests
 
         private string ConstructIfcPath(string modelName)
         {
+            var modelsDirectory = Path.Combine(Environment.CurrentDirectory, basePath);
+            if (!Directory.Exists(modelsDirectory))
+            {
+                Directory.CreateDirectory(modelsDirectory);
+            }
             return Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, basePath, $"{modelName}.ifc"));
         }
 
