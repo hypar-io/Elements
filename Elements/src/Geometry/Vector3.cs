@@ -589,7 +589,7 @@ namespace Elements.Geometry
             {
                 b = (points[i] - points[1]).Unitized();
                 var dot = b.Dot(a);
-                if (dot > -1 && dot < 1)
+                if (dot > -1 + Vector3.EPSILON && dot < 1 - Vector3.EPSILON)
                 {
                     // Console.WriteLine("Found valid second vector.");
                     break;

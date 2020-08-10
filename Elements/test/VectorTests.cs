@@ -66,6 +66,24 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void CreateTransform()
+        {
+            // This list of vectors will make an invalid transform unless we
+            // have the Vector3.Epsilon tolerance while doing the dot comparison
+            // in the ToTransform() method.
+            var points = new List<Vector3>{
+                new Vector3(84.65819230015089, 45.936106099249145, 0),
+                new Vector3(84.73003434911944, 45.864264050280596, 0),
+                new Vector3(85.04991559960003, 45.544382799800005, 0),
+                new Vector3(85.04991559960003, 45.544382799800005, 3.0480000000001444),
+            };
+            var t = points.ToTransform();
+            Assert.True(t.XAxis.Length() > 0);
+            Assert.True(t.YAxis.Length() > 0);
+            Assert.True(t.ZAxis.Length() > 0);
+        }
+
+        [Fact]
         public void DistanceToPlane()
         {
             var v = new Vector3(0.5, 0.5, 1.0);
