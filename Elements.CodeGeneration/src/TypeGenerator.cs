@@ -519,9 +519,20 @@ using Hypar.Functions;
 using Hypar.Functions.Execution;
 using Hypar.Functions.Execution.AWS;", "");
                 // Insert the UserElement attribute directly before
-                // 'public partial class <typeName>'
-                var start = file.IndexOf($"public partial class {typeName}");
-                file = file.Insert(start, $"[UserElement]\n\t");
+                // 'public partial class ' any time it occurs in the file
+                // because we may be generating code for multiple user types in 
+                // the same file.
+                var start = 0;
+                while (true)
+                {
+                    start = file.IndexOf($"public partial class ", start);
+                    if (start == -1)
+                    {
+                        break;
+                    }
+                    file = file.Insert(start, $"[UserElement]\n\t");
+                    start += 16;  // increment chars to get past the recent insertion
+                }
             }
 
             if (typeName == "Model")
