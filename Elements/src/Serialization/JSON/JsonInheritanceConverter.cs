@@ -24,12 +24,12 @@ namespace Elements.Serialization.JSON
 
         [System.ThreadStatic]
         private static Dictionary<Guid, Element> _elements;
-        
+
         public static Dictionary<Guid, Element> Elements
         {
             get
             {
-                if(_elements == null)
+                if (_elements == null)
                 {
                     _elements = new Dictionary<Guid, Element>();
                 }
@@ -60,12 +60,12 @@ namespace Elements.Serialization.JSON
 
             // Build the user element type cache
             var asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach(var asm in asms)
+            foreach (var asm in asms)
             {
                 try
                 {
-                    var userTypes = asm.GetTypes().Where(t=>t.GetCustomAttributes(typeof(UserElement), true).Length > 0);
-                    foreach(var ut in userTypes)
+                    var userTypes = asm.GetTypes().Where(t => t.GetCustomAttributes(typeof(UserElement), true).Length > 0);
+                    foreach (var ut in userTypes)
                     {
                         typeCache.Add(ut.FullName, ut);
                     }
@@ -87,7 +87,7 @@ namespace Elements.Serialization.JSON
 
                 // Operate on all identifiables with a path less than Entities.xxxxx
                 // This will get all properties.
-                if(value is Element && writer.Path.Split('.').Length == 1)
+                if (value is Element && writer.Path.Split('.').Length == 1)
                 {
                     var ident = (Element)value;
                     writer.WriteValue(ident.Id);
@@ -140,7 +140,7 @@ namespace Elements.Serialization.JSON
         {
             // The serialized value is an identifier, so the expectation is 
             // that the element with that id has already been deserialized.
-            if(typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1)
+            if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1 && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
                 return Elements[id];
@@ -151,7 +151,7 @@ namespace Elements.Serialization.JSON
             {
                 return null;
             }
-            
+
             // We need to handle both cases where we're receiving JSON that has a
             // discriminator, like that produced by serializing using this
             // converter, and the case where the JSON does not have a discriminator,
@@ -160,11 +160,11 @@ namespace Elements.Serialization.JSON
             JToken discriminatorToken;
             string discriminator = null;
             jObject.TryGetValue(_discriminator, out discriminatorToken);
-            if(discriminatorToken != null)
-            {   
+            if (discriminatorToken != null)
+            {
                 discriminator = Newtonsoft.Json.Linq.Extensions.Value<string>(discriminatorToken);
-                subtype = GetObjectSubtype(objectType, discriminator);
-            
+                subtype = GetObjectSubtype(objectType, discriminator, jObject);
+
                 var objectContract = serializer.ContractResolver.ResolveContract(subtype) as Newtonsoft.Json.Serialization.JsonObjectContract;
                 if (objectContract == null || System.Linq.Enumerable.All(objectContract.Properties, p => p.PropertyName != _discriminator))
                 {
@@ -176,7 +176,7 @@ namespace Elements.Serialization.JSON
                 // Without a discriminator the call to GetObjectSubtype will
                 // fall through to returning either a [UserElement] type or 
                 // the object type.
-                subtype = GetObjectSubtype(objectType, null);
+                subtype = GetObjectSubtype(objectType, null, jObject);
             }
 
             try
@@ -186,10 +186,10 @@ namespace Elements.Serialization.JSON
 
                 // Write the id to the cache so that we can retrieve it next time
                 // instead of de-serializing it again.
-                if(typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
+                if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
                 {
                     var ident = (Element)obj;
-                    if(!Elements.ContainsKey(ident.Id))
+                    if (!Elements.ContainsKey(ident.Id))
                     {
                         Elements.Add(ident.Id, ident);
                     }
@@ -197,12 +197,12 @@ namespace Elements.Serialization.JSON
 
                 return obj;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var baseMessage = "This may happen if the type is not recognized in the system.";
                 var moreInfoMessage = "See the inner exception for more details.";
 
-                if(discriminator != null)
+                if (discriminator != null)
                 {
                     throw new Exception($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage} {moreInfoMessage}", ex);
                 }
@@ -217,7 +217,7 @@ namespace Elements.Serialization.JSON
             }
         }
 
-        private System.Type GetObjectSubtype(System.Type objectType, string discriminator)
+        private System.Type GetObjectSubtype(System.Type objectType, string discriminator, JObject jObject)
         {
             // Check the existing inheritance attributes.
             // This block will be hit when a type contains
@@ -231,9 +231,14 @@ namespace Elements.Serialization.JSON
             // If the inheritance attributes is not supplied, as in the case
             // of a user-provided type, then we use the type cache of all
             // types with the UserElementType attribute.
-            if(discriminator != null && _typeCache.ContainsKey(discriminator))
+            if (discriminator != null && _typeCache.ContainsKey(discriminator))
             {
                 return _typeCache[discriminator];
+            }
+
+            if (jObject.TryGetValue("Representation", out JToken representationToken))
+            {
+                return typeof(GeometricElement);
             }
 
             // The default behavior for this converter, as provided by nJSONSchema
@@ -248,7 +253,7 @@ namespace Elements.Serialization.JSON
                 if (attribute.Type == objectType)
                     return attribute.Key;
             }
-            
+
             return objectType.FullName;
         }
     }

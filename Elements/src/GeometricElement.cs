@@ -3,7 +3,7 @@ using Elements.Geometry;
 
 namespace Elements
 {
-    public abstract partial class GeometricElement
+    public partial class GeometricElement
     {
         /// <summary>
         /// This method provides an opportunity for geometric elements
@@ -24,7 +24,7 @@ namespace Elements
         /// <param name="name">The name of this element instance.</param>
         public ElementInstance CreateInstance(Transform transform, string name)
         {
-            if(!this.IsElementDefinition)
+            if (!this.IsElementDefinition)
             {
                 throw new Exception($"An instance cannot be created of the type {this.GetType().Name} because it is not marked as an element definition. Set the IsElementDefinition flag to true.");
             }
