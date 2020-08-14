@@ -13,6 +13,7 @@ using NJsonSchema;
 using NJsonSchema.CodeGeneration.CSharp;
 using Elements.Generate.StringUtils;
 using NJsonSchema.CodeGeneration;
+using NJsonSchema.CodeGeneration.CSharp.Models;
 
 namespace Elements.Generate.StringUtils
 {
@@ -261,13 +262,12 @@ namespace Elements.Generate
             }
 
             var typeName = schema.Title;
-            var filePath = Path.Combine(outputBaseDir, GetFileNameFromTypeName(typeName));
             if (_coreTypeNames == null)
             {
                 _coreTypeNames = GetCoreTypeNames();
             }
             var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
-            return WriteTypeFromSchemaToDisk(schema, filePath, typeName, ns, isUserElement, excludedTypeNames);
+            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, isUserElement, excludedTypeNames);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Elements.Generate
         public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris, bool frameworkBuild = false)
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
-            var code = new List<string>();
+            var code = new Dictionary<string, string>();
             foreach (var uri in uris)
             {
                 // TODO: We can refactor this inner loop to share the code
@@ -307,12 +307,15 @@ namespace Elements.Generate
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
-                    string csharp = GenerateCSharpCodeForSchema(schema);
-                    if (csharp == null)
+                    var csharpFileContents = GenerateCSharpCodeForSchema(schema);
+                    foreach (var csharp in csharpFileContents)
                     {
-                        continue;
+                        if (code.ContainsKey(csharp.Key))
+                        {
+                            continue;
+                        }
+                        code[csharp.Key] = csharp.Value;
                     }
-                    code.Add(csharp);
                 }
                 catch (Exception ex)
                 {
@@ -328,7 +331,7 @@ namespace Elements.Generate
                 }
             }
 
-            var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
+            var compilation = GenerateCompilation(code.Values.ToList(), frameworkBuild: frameworkBuild);
 
             if (TryEmitAndLoad(compilation, out Assembly assembly, out string[] diagnosticResults))
             {
@@ -361,18 +364,21 @@ namespace Elements.Generate
         {
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
-            var code = new List<string>();
+            var code = new Dictionary<string, string>();
             foreach (var uri in uris)
             {
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
-                    string csharp = GenerateCSharpCodeForSchema(schema);
-                    if (csharp == null)
+                    var csharpFileContents = GenerateCSharpCodeForSchema(schema);
+                    foreach (var csharp in csharpFileContents)
                     {
-                        continue;
+                        if (code.ContainsKey(csharp.Key))
+                        {
+                            continue;
+                        }
+                        code[csharp.Key] = csharp.Value;
                     }
-                    code.Add(csharp);
                 }
                 catch (Exception ex)
                 {
@@ -388,7 +394,7 @@ namespace Elements.Generate
                 }
             }
 
-            var compilation = GenerateCompilation(code, frameworkBuild: frameworkBuild);
+            var compilation = GenerateCompilation(code.Values.ToList(), frameworkBuild: frameworkBuild);
 
             if (TryEmitAndSave(compilation, dllPath, out string[] diagnosticResults))
             {
@@ -463,7 +469,7 @@ namespace Elements.Generate
             }
             else
             {
-                var path = Path.GetFullPath(Path.Combine(System.Environment.CurrentDirectory, uri));
+                var path = Path.GetFullPath(Path.Combine(Assembly.GetExecutingAssembly().Location, uri));
                 if (!File.Exists(path))
                 {
                     throw new Exception($"The specified schema, {uri}, can not be found as a relative file or a url.");
@@ -484,7 +490,7 @@ namespace Elements.Generate
             return true;
         }
 
-        private static string WriteTypeFromSchema(JsonSchema schema, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
+        private static Dictionary<string, string> GetCodeForTypesFromSchema(JsonSchema schema, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
             var templates = TemplatesPath;
 
@@ -495,7 +501,7 @@ namespace Elements.Generate
             // base class SolidOperation, or the Import class.
             var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina" };
 
-            var generator = new CSharpGenerator(schema, new CSharpGeneratorSettings()
+            var settings = new CSharpGeneratorSettings()
             {
                 Namespace = ns,
                 ArrayType = "IList",
@@ -506,9 +512,38 @@ namespace Elements.Generate
                 ClassStyle = solidOpTypes.Contains(typeName) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
                 TypeNameGenerator = new ElementsTypeNameGenerator(),
                 PropertyNameGenerator = new ElementsPropertyNameGenerator(),
-            });
-            var file = generator.GenerateFile();
+            };
 
+            var generator = new CSharpGenerator(schema, settings);
+
+            var typeFiles = new Dictionary<string, string>();
+            var file = generator.GenerateFile();
+            var typeArtifacts = generator.GenerateTypes();
+
+            foreach (var fileArtifact in typeArtifacts)
+            {
+                if (String.IsNullOrWhiteSpace(fileArtifact.Code))
+                {
+                    continue;
+                }
+                // strategy for using templates taken from the NJsonSchema source 
+                // https://github.com/RicoSuter/NJsonSchema/blob/master/src/NJsonSchema.CodeGeneration.CSharp/CSharpGenerator.cs#L50
+                var model = new FileTemplateModel
+                {
+                    Namespace = settings.Namespace ?? string.Empty,
+                    TypesCode = fileArtifact.Code
+                };
+                var template = settings.TemplateFactory.CreateTemplate("CSharp", "File", model);
+                var code = template.Render();
+                var fileContents = FileTweaksAndCleanup(typeName, isUserElement, structTypes, code);
+                typeFiles[fileArtifact.TypeName] = fileContents;
+            }
+
+            return typeFiles;
+        }
+
+        private static string FileTweaksAndCleanup(string typeName, bool isUserElement, string[] structTypes, string file)
+        {
             if (isUserElement)
             {
                 // remove unncessary imports
@@ -554,15 +589,32 @@ using Hypar.Functions.Execution.AWS;", "");
             return file;
         }
 
-        private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
+        private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outDirPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
-            Console.WriteLine($"Generating type {@ns}.{typeName} in {outPath}...");
-            var type = WriteTypeFromSchema(schema, typeName, ns, isUserElement, excludedTypes);
-            File.WriteAllText(outPath, type);
+            var diagnosticMessages = new List<string>();
+            Console.WriteLine($"Generating type {@ns}.{typeName} in {outDirPath}...");
+            var typeCodeDict = GetCodeForTypesFromSchema(schema, typeName, ns, isUserElement, excludedTypes);
+            foreach (var kvp in typeCodeDict)
+            {
+                var path = Path.Combine(outDirPath, $"{kvp.Key}.g.cs");
+                if (File.Exists(path))
+                {
+                    continue;
+                }
+                try
+                {
+
+                    File.WriteAllText(path, kvp.Value);
+                }
+                catch (IOException ioe)
+                {
+                    diagnosticMessages.Add($"{typeName} failed to write, possibly because it was already being written to disk.");
+                }
+            }
             return new GenerationResult
             {
                 Success = true,
-                FilePath = outPath,
+                FilePath = outDirPath,
                 DiagnosticResults = new string[0]
             };
         }
@@ -607,17 +659,17 @@ using Hypar.Functions.Execution.AWS;", "");
         /// <returns>Returns true if the dll was generated successfully, otherwise false.</returns>
         public static bool GenerateAndSaveDllForSchema(JsonSchema schema, string dllPath, out string[] diagnosticResults, bool frameworkBuild = false)
         {
-            var csharp = GenerateCSharpCodeForSchema(schema);
-            if (csharp == null)
+            var csharpFileContents = GenerateCSharpCodeForSchema(schema);
+            if (csharpFileContents == null)
             {
                 diagnosticResults = new string[] { };
                 return false;
             }
-            var compilation = GenerateCompilation(new List<string> { csharp }, schema.Title, frameworkBuild);
+            var compilation = GenerateCompilation(csharpFileContents.Select(kvp => kvp.Value).ToList(), schema.Title, frameworkBuild);
             return TryEmitAndSave(compilation, dllPath, out diagnosticResults);
         }
 
-        private static string GenerateCSharpCodeForSchema(JsonSchema schema)
+        private static Dictionary<string, string> GenerateCSharpCodeForSchema(JsonSchema schema)
         {
             string ns;
             if (!GetNamespace(schema, out ns))
@@ -632,10 +684,10 @@ using Hypar.Functions.Execution.AWS;", "");
             }
 
             var loadedTypes = GetLoadedElementTypes(true).Select(t => t.Name);
-            if (loadedTypes.Contains(typeName)) return null;
+            if (loadedTypes.Contains(typeName)) return new Dictionary<string, string>();
             var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
 
-            return WriteTypeFromSchema(schema, typeName, ns, true, localExcludes);
+            return GetCodeForTypesFromSchema(schema, typeName, ns, true, localExcludes);
         }
 
         private static CSharpCompilation GenerateCompilation(List<string> code, string compilationName = "UserElements", bool frameworkBuild = false)
