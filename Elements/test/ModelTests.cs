@@ -245,6 +245,31 @@ namespace Elements.Tests
             Assert.Empty(newModel.AllElementsOfType<Column>());
         }
 
+        [Fact]
+        public void DeserializesToGeometricElementsWhenTypeIsUnknownAndRepresentationExists()
+        {
+            var profile = new Profile(Polygon.Rectangle(1, 1));
+            var red = new Material("Red", Colors.Red);
+            var green = new Material("Green", Colors.Green);
+            var column = new Column(new Vector3(5, 0), 5, profile, red);
+            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), profile, green);
+            var model = new Model();
+            model.AddElements(beam, column);
+            var json = model.ToJson(true);
+            this._output.WriteLine(json);
+
+            // We want to test that unknown element types will still deserialize 
+            // to geometric elements.
+            json = json.Replace("Elements.Beam", "Foo");
+            json = json.Replace("Elements.Column", "Bar");
+
+            var newModel = Model.FromJson(json);
+            Assert.Equal(2, newModel.AllElementsOfType<Material>().Count());
+            Assert.Equal(2, newModel.AllElementsOfType<GeometricElement>().Count());
+            var modelPath = $"models/geometric_elements.glb";
+            newModel.ToGlTF(modelPath, true);
+        }
+
         private Model QuadPanelModel()
         {
             var model = new Model();
