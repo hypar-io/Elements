@@ -414,7 +414,6 @@ namespace Elements.Generate
             }
         }
 
-
         /// <summary>
         /// Generate the core element types as .cs files to the specified output directory.
         /// </summary>
@@ -517,6 +516,8 @@ namespace Elements.Generate
             var generator = new CSharpGenerator(schema, settings);
 
             var typeFiles = new Dictionary<string, string>();
+            // still need this call to GenerateFile() even though we don't use the files
+            // text.  It is already a documented issue https://github.com/RicoSuter/NJsonSchema/issues/893
             var file = generator.GenerateFile();
             var typeArtifacts = generator.GenerateTypes();
 
