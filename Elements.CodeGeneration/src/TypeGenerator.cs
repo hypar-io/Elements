@@ -287,6 +287,7 @@ namespace Elements.Generate
             return allResults;
         }
 
+
         /// <summary>
         /// Generate an in-memory assembly containing all the types generated from the supplied uris.
         /// </summary>
@@ -566,8 +567,9 @@ using Hypar.Functions.Execution.AWS;", "");
                     {
                         break;
                     }
-                    file = file.Insert(start, $"[UserElement]\n\t");
-                    start += 16;  // increment chars to get past the recent insertion
+                    var userElementAttribute = $"[UserElement]\n\t";
+                    file = file.Insert(start, userElementAttribute);
+                    start += userElementAttribute.Length;  // increment chars to get past the recent insertion
                 }
             }
 
@@ -590,6 +592,30 @@ using Hypar.Functions.Execution.AWS;", "");
             return file;
         }
 
+
+        // file lock test taken from https://stackoverflow.com/questions/876473/is-there-a-way-to-check-if-a-file-is-in-use
+        private static bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
+        }
+
         private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outDirPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
             var diagnosticMessages = new List<string>();
@@ -600,11 +626,21 @@ using Hypar.Functions.Execution.AWS;", "");
                 var path = Path.Combine(outDirPath, $"{kvp.Key}.g.cs");
                 if (File.Exists(path))
                 {
+                    // need to wait for file to be available because code gen is async
+                    while (IsFileLocked(new FileInfo(path)))
+                    {
+                        System.Threading.Thread.Sleep(100);
+                        continue;
+                    }
+                    var existing = File.ReadAllText(path);
+                    if (existing != kvp.Value)
+                    {
+                        Console.WriteLine($"There were two versions of code generated for the type {kvp.Key}");
+                    }
                     continue;
                 }
                 try
                 {
-
                     File.WriteAllText(path, kvp.Value);
                 }
                 catch (IOException ioe)
@@ -685,7 +721,10 @@ using Hypar.Functions.Execution.AWS;", "");
             }
 
             var loadedTypes = GetLoadedElementTypes(true).Select(t => t.Name);
-            if (loadedTypes.Contains(typeName)) return new Dictionary<string, string>();
+            if (loadedTypes.Contains(typeName))
+            {
+                return new Dictionary<string, string>();
+            }
             var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
 
             return GetCodeForTypesFromSchema(schema, typeName, ns, true, localExcludes);
