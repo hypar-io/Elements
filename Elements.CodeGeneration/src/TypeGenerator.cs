@@ -569,7 +569,7 @@ using Hypar.Functions.Execution.AWS;", "");
                     }
                     var userElementAttribute = $"[UserElement]\n\t";
                     file = file.Insert(start, userElementAttribute);
-                    start += userElementAttribute.Length;  // increment chars to get past the recent insertion
+                    start += userElementAttribute.Length + 1;  // increment chars to get past the recent insertion
                 }
             }
 
