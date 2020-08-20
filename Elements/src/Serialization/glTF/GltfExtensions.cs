@@ -680,7 +680,8 @@ namespace Elements.Serialization.glTF
 
             gltf.ExtensionsUsed = new[] {
                 "KHR_materials_pbrSpecularGlossiness",
-                "KHR_materials_unlit"
+                "KHR_materials_unlit",
+                "KHR_lights_punctual"
             };
 
             var bufferViews = new List<BufferView>();
@@ -744,6 +745,44 @@ namespace Elements.Serialization.glTF
                     AddLines(GetNextId(), lineSet, gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors, meshes, nodes, false);
                 }
             }
+
+            // Add Lights
+            var lights = model.AllElementsOfType<DirectionalLight>().ToList();
+            gltf.Extensions = new Dictionary<string, object>();
+            var lightCount = 0;
+            var lightsArr = new List<object>();
+            foreach (var light in lights)
+            {
+                // Create the top level collection of lights.
+                var gltfLight = new Dictionary<string, object>(){
+                    {"color", new[]{light.Color.Red, light.Color.Green, light.Color.Blue}},
+                    {"type", "directional"},
+                    {"intensity", light.Intensity},
+                    {"name", light.Name != null ? light.Name : string.Empty}
+                };
+                lightsArr.Add(gltfLight);
+
+                // Create the light nodes
+                var lightNode = new Node();
+                lightNode.Extensions = new Dictionary<string, object>(){
+                    {"KHR_lights_punctual", new Dictionary<string,object>(){
+                        {"light", lightCount}
+                    }}
+                };
+
+                var ml = light.Transform.Matrix;
+                lightNode.Matrix = new float[]{
+                (float)ml.m11, (float)ml.m12, (float)ml.m13, 0f,
+                (float)ml.m21, (float)ml.m22, (float)ml.m23, 0f,
+                (float)ml.m31, (float)ml.m32, (float)ml.m33, 0f,
+                (float)ml.tx, (float)ml.ty, (float)ml.tz, 1f};
+
+                gltf.AddNode(nodes, lightNode, 0);
+                lightCount++;
+            }
+            gltf.Extensions.Add("KHR_lights_punctual", new Dictionary<string, object>{
+                {"lights", lightsArr}
+            });
 
             var buff = new glTFLoader.Schema.Buffer();
             buff.ByteLength = buffer.Count;
