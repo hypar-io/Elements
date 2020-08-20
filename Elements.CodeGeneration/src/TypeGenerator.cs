@@ -173,6 +173,7 @@ namespace Elements.Generate
                 "https://hypar.io/Schemas/Material.json",
                 "https://hypar.io/Schemas/Model.json",
                 "https://hypar.io/Schemas/Geometry/Matrix.json",
+                "https://hypar.io/Schemas/InputData.json",
                 "https://geojson.org/schema/Point.json",
             };
 
