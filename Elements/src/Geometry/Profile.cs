@@ -70,6 +70,7 @@ namespace Elements.Geometry
             var voids = indices.Except(outerMostIndices).Select(i => polygons[i]);
             this.Perimeter = perimeter;
             this.Voids = voids.ToList();
+            OrientVoids();
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a new profile which is the reverse of this profile.
         /// </summary>
-        public Profile Reverse()
+        public Profile Reversed()
         {
             Polygon[] voids = null;
             if (this.Voids != null)
@@ -191,6 +192,28 @@ namespace Elements.Geometry
                 this.Perimeter = polys[0];
                 this.Voids = polys.Skip(1).ToArray();
             }
+        }
+
+        /// <summary>
+        /// Ensure that voids run in an opposite winding direction to the perimeter of the profile.
+        /// Be sure to call this if you modify the Profile's Voids array directly.
+        /// </summary>
+        public void OrientVoids()
+        {
+            var correctedVoids = new List<Polygon>();
+            var perimeterNormal = Perimeter.Normal();
+            foreach (var voidCrv in Voids)
+            {
+                if (voidCrv.Normal().Dot(perimeterNormal) > 0)
+                {
+                    correctedVoids.Add(voidCrv.Reversed());
+                }
+                else
+                {
+                    correctedVoids.Add(voidCrv);
+                }
+            }
+            this.Voids = correctedVoids;
         }
 
         private double ClippedArea()
