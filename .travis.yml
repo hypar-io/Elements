@@ -1,8 +1,9 @@
 language: csharp
-solution: ./hypar.sln
-dist: trusty
+dist: xenial
 mono: none
 dotnet: 3.1
+install:
+  - dotnet restore
 script:
   - dotnet build ./Elements.sln
   - dotnet test ./Elements/test/Elements.Tests.csproj
