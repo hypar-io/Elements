@@ -48,5 +48,47 @@ namespace Elements.Tests
 
             Assert.Equal(8, seed.Voids.Count());
         }
+
+        [Fact]
+        public void VoidsOrientedCorrectly()
+        {
+            this.Name = "VoidsOrientedCorrectly";
+            var outerRing = new Polygon(new[]
+            {
+                new Vector3(0,0,0),
+                new Vector3(10,0,0),
+                new Vector3(10,10,0),
+                new Vector3(0,10,0),
+            });
+            var innerRing1 = new Polygon(new[]
+            {
+                new Vector3(2,2,0),
+                new Vector3(4,2,0),
+                new Vector3(4,4,0),
+                new Vector3(2,4,0),
+            });
+            var innerRing2 = new Polygon(new[]
+            {
+                new Vector3(8,8,0),
+                new Vector3(8,6,0),
+                new Vector3(6,6,0),
+                new Vector3(6,8,0)
+            });
+
+            var profile1 = new Profile(new Polygon[] { innerRing2, outerRing, innerRing1 });
+            var profile2 = new Profile(outerRing.Reversed(), new[] { innerRing1, innerRing2 }, Guid.NewGuid(), null);
+            foreach (var profile in new[] { profile1, profile2 })
+            {
+                foreach (var curve in profile.Voids)
+                {
+                    Assert.NotEqual(curve.IsClockWise(), profile.Perimeter.IsClockWise());
+                }
+            }
+
+            var mass1 = new Mass(profile1, 1);
+            var mass2 = new Mass(profile2, 1, null, new Transform(0, 0, 10));
+            Model.AddElement(mass1);
+            Model.AddElement(mass2);
+        }
     }
 }

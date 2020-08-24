@@ -76,6 +76,7 @@ namespace Elements.Validators
             {
                 profile.Voids = new List<Polygon>();
             }
+            profile.OrientVoids();
         }
 
         public void PreConstruct(object[] args)
@@ -83,7 +84,7 @@ namespace Elements.Validators
             var perimeter = (Polygon)args[0];
             if (perimeter != null && !perimeter.Vertices.AreCoplanar())
             {
-                throw new Exception("To construct a profile, all points must line in the same plane.");
+                throw new Exception("To construct a profile, all points must lie in the same plane.");
             }
         }
     }
