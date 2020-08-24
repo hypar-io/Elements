@@ -6,7 +6,7 @@ namespace Elements.Tests
     public class LightTests : ModelTest
     {
         [Fact]
-        public void DirectionLightConstruction()
+        public void DirectionLight()
         {
             this.Name = "DirectionalLight";
             var origin = new Vector3(10, 10, 10);
