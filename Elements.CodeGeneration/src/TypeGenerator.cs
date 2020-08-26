@@ -124,7 +124,7 @@ namespace Elements.Generate
         public string Generate(JsonSchema schema, string typeNameHint, IEnumerable<string> reservedTypeNames)
         {
             // Console.WriteLine(typeNameHint + ":" + schema.InheritedSchema ?? "none");
-            if (schema.IsEnumeration)
+            if (schema.IsEnumeration || String.IsNullOrEmpty(schema.Title))
             {
                 return typeNameHint;
             }
