@@ -373,6 +373,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Constructs the geometric union of a set of polygons.
+        /// </summary>
+        /// <param name="polygons">The polygons to union</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>Returns a list of Polygons representing the union of all polygons.</returns>
+        public static IList<Polygon> Union(IList<Polygon> polygons, double tolerance = Vector3.EPSILON)
+        {
+            return Union(polygons, new List<Polygon> { }, tolerance);
+        }
+
+        /// <summary>
         /// Returns Polygons representing the symmetric difference between two sets of polygons.
         /// </summary>
         /// <param name="firstSet">First set of polygons</param>
