@@ -367,9 +367,21 @@ namespace Elements.Geometry
         /// <param name="secondSet">Second set of polygons</param>
         /// <param name="tolerance">An optional tolerance.</param>
         /// <returns>Returns a list of Polygons representing the union of both sets of polygons.</returns>
+        [Obsolete("Please use UnionAll, which takes a single list of polygons.")]
         public static IList<Polygon> Union(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
             return BooleanTwoSets(firstSet, secondSet, BooleanMode.Union, tolerance);
+        }
+
+        /// <summary>
+        /// Constructs the geometric union of a set of polygons.
+        /// </summary>
+        /// <param name="polygons">The polygons to union</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>Returns a list of Polygons representing the union of all polygons.</returns>
+        public static IList<Polygon> UnionAll(IList<Polygon> polygons, double tolerance = Vector3.EPSILON)
+        {
+            return BooleanTwoSets(polygons, new List<Polygon>(), BooleanMode.Union, tolerance);
         }
 
         /// <summary>
