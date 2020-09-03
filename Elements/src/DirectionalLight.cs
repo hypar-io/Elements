@@ -7,7 +7,7 @@ namespace Elements
     /// A directional light.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/LightTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/LightTests.cs?name=example)]
     /// </example>
     public class DirectionalLight : Element
     {

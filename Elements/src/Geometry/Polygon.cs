@@ -11,7 +11,7 @@ namespace Elements.Geometry
     /// A closed planar polygon.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/PolygonTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
     /// </example>
     public partial class Polygon : Polyline
     {

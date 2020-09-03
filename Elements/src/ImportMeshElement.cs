@@ -9,7 +9,7 @@ namespace Elements
     /// An element definition whose representation is provided by an imported mesh like an STL.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/ImportMeshElementTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/ImportMeshElementTests.cs?name=example)]
     /// </example>
     [UserElement]
     public sealed class ImportMeshElement : MeshElement
@@ -40,11 +40,11 @@ namespace Elements
         {
             this.Path = path;
 
-            if(!File.Exists(path))
+            if (!File.Exists(path))
             {
                 throw new Exception("The provided path does not exist.");
             }
-            
+
             // TODO: Currently we only support STL. In the future we should
             // support glTF as well, and possibly others.
             this._mesh = Mesh.FromSTL(path, lengthUnit);

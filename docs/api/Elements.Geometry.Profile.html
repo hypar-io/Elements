@@ -493,14 +493,24 @@ be used as voids.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Profile_Reverse_" data-uid="Elements.Geometry.Profile.Reverse*"></a>
-  <h4 id="Elements_Geometry_Profile_Reverse" data-uid="Elements.Geometry.Profile.Reverse">Reverse()</h4>
+  <a id="Elements_Geometry_Profile_OrientVoids_" data-uid="Elements.Geometry.Profile.OrientVoids*"></a>
+  <h4 id="Elements_Geometry_Profile_OrientVoids" data-uid="Elements.Geometry.Profile.OrientVoids">OrientVoids()</h4>
+  <div class="markdown level1 summary"><p>Ensure that voids run in an opposite winding direction to the perimeter of the profile.
+Be sure to call this if you modify the Profile's Voids array directly.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OrientVoids()</code></pre>
+  </div>
+  <a id="Elements_Geometry_Profile_Reversed_" data-uid="Elements.Geometry.Profile.Reversed*"></a>
+  <h4 id="Elements_Geometry_Profile_Reversed" data-uid="Elements.Geometry.Profile.Reversed">Reversed()</h4>
   <div class="markdown level1 summary"><p>Get a new profile which is the reverse of this profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Profile Reverse()</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile Reversed()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -586,14 +596,15 @@ be used as voids.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile_Union_" data-uid="Elements.Geometry.Profile.Union*"></a>
-  <h4 id="Elements_Geometry_Profile_Union_Elements_Geometry_Profile_" data-uid="Elements.Geometry.Profile.Union(Elements.Geometry.Profile)">Union(Profile)</h4>
+  <h4 id="Elements_Geometry_Profile_Union_Elements_Geometry_Profile_System_Double_" data-uid="Elements.Geometry.Profile.Union(Elements.Geometry.Profile,System.Double)">Union(Profile, Double)</h4>
   <div class="markdown level1 summary"><p>Perform a union operation, returning a new profile that is the union of the current profile with the other profile</p>
 <param name="profile">The profile with which to create a union.
+<param name="tolerance">An optional tolerance.
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Profile Union(Profile profile)</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile Union(Profile profile, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -608,6 +619,11 @@ be used as voids.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
         <td><span class="parametername">profile</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
         <td></td>
       </tr>
     </tbody>

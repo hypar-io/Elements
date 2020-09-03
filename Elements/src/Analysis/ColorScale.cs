@@ -10,7 +10,7 @@ namespace Elements.Analysis
     /// a number of key values.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/ColorScaleTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/ColorScaleTests.cs?name=example)]
     /// </example>
     public class ColorScale
     {
@@ -69,7 +69,7 @@ namespace Elements.Analysis
         /// <returns>A color.</returns>
         public Color GetColorForValue(double t)
         {
-            if(t < 0.0 || t > 1.0)
+            if (t < 0.0 || t > 1.0)
             {
                 throw new ArgumentException("The value of t must be between 0.0 and 1.0");
             }

@@ -8,15 +8,15 @@ namespace Elements
     /// A curve which is visible in 3D.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/ModelCurveTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/ModelCurveTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class ModelCurve: GeometricElement
-    {   
+    public class ModelCurve : GeometricElement
+    {
         /// <summary>
         /// The curve.
         /// </summary>
-        public Curve Curve { get; set;}
+        public Curve Curve { get; set; }
 
         /// <summary>
         /// Create a model curve.
@@ -45,7 +45,7 @@ namespace Elements
             this.Material = material != null ? material : BuiltInMaterials.Edges;
         }
     }
-    
+
     /// <summary>
     /// Extension methods for model curves.
     /// </summary>
@@ -62,7 +62,7 @@ namespace Elements
             var x = new ModelCurve(new Line(t.Origin, t.XAxis, 1.0), BuiltInMaterials.XAxis, context);
             var y = new ModelCurve(new Line(t.Origin, t.YAxis, 1.0), BuiltInMaterials.YAxis, context);
             var z = new ModelCurve(new Line(t.Origin, t.ZAxis, 1.0), BuiltInMaterials.ZAxis, context);
-            mc.AddRange(new[]{x,y,z});
+            mc.AddRange(new[] { x, y, z });
             return mc;
         }
     }

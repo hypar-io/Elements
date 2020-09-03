@@ -8,7 +8,7 @@ namespace Elements.Tests
         [Fact, Trait("Category", "Examples")]
         public void DirectionLight()
         {
-            this.Name = "DirectionalLight";
+            this.Name = "Elements_DirectionalLight";
 
             // <example>
             // Create a directional light.

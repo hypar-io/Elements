@@ -10,7 +10,7 @@ namespace Elements
     /// individual ids and transforms.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/ElementInstanceTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/ElementInstanceTests.cs?name=example)]
     /// </example>
     public class ElementInstance : Element
     {
