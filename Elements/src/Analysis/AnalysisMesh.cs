@@ -10,7 +10,7 @@ namespace Elements.Analysis
     /// A visualization of computed values at locations in space.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/AnalysisMeshTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/AnalysisMeshTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class AnalysisMesh : GeometricElement, ITessellate

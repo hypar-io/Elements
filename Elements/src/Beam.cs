@@ -7,7 +7,7 @@ namespace Elements
     /// A structural framing element defined by a center line curve and a profile.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/StructuralFramingTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/StructuralFramingTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class Beam : StructuralFraming
@@ -34,7 +34,7 @@ namespace Elements
                     Transform transform = null,
                     bool isElementDefinition = false,
                     Guid id = default(Guid),
-                    string name = null) 
+                    string name = null)
             : base(curve,
                    profile,
                    material,
@@ -45,6 +45,7 @@ namespace Elements
                    null,
                    isElementDefinition,
                    id,
-                   name) { }
+                   name)
+        { }
     }
 }

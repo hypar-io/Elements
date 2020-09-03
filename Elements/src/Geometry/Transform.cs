@@ -8,7 +8,7 @@ namespace Elements.Geometry
     /// A right-handed coordinate with +z up.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/TransformTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/TransformTests.cs?name=example)]
     /// </example>
     public partial class Transform : IEquatable<Transform>
     {

@@ -9,7 +9,7 @@ namespace Elements
     /// An element whose representation is provided by a mesh.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/MeshElementTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/MeshElementTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class MeshElement : GeometricElement, ITessellate

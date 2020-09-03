@@ -6,6 +6,9 @@ namespace Elements
     /// <summary>
     /// A directional light.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/LightTests.cs?name=example)]
+    /// </example>
     public class DirectionalLight : Element
     {
         /// <summary>
@@ -21,7 +24,7 @@ namespace Elements
 
         /// <summary>
         /// The light's transform.
-        /// The transform's -Z axis will be the direction of the light.
+        /// The light will be aimed along the transform's -Z axis.
         /// </summary>
         public Transform Transform { get; set; }
 

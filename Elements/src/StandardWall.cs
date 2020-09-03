@@ -11,7 +11,7 @@ namespace Elements
     /// A wall defined by a planar curve, a height, and a thickness.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/WallTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/WallTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class StandardWall : Wall, IHasOpenings
@@ -24,12 +24,12 @@ namespace Elements
         /// <summary>
         /// The thickness of the wall.
         /// </summary>
-        public double Thickness { get; set;}
+        public double Thickness { get; set; }
 
         /// <summary>
         /// A collection of openings in the floor.
         /// </summary>
-        public List<Opening> Openings{ get; } = new List<Opening>();
+        public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
         /// Construct a wall along a line.
@@ -94,18 +94,18 @@ namespace Elements
 
             var wallProfile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(this.CenterLine.Length(), this.Height)));
 
-            if(this.Openings.Count > 0)
+            if (this.Openings.Count > 0)
             {
-                this.Openings.ForEach(o=>o.UpdateRepresentations());
-                
+                this.Openings.ForEach(o => o.UpdateRepresentations());
+
                 // Find all the void ops which point in the same direction.
-                var holes = this.Openings.SelectMany(o=>o.Representation.SolidOperations.
-                                                        Where(op=>op is Extrude && op.IsVoid == true).
+                var holes = this.Openings.SelectMany(o => o.Representation.SolidOperations.
+                                                        Where(op => op is Extrude && op.IsVoid == true).
                                                         Cast<Extrude>().
-                                                        Where(ex=>ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
-                if(holes.Any())
+                                                        Where(ex => ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
+                if (holes.Any())
                 {
-                    var holeProfiles = holes.Select(ex=>ex.Profile);
+                    var holeProfiles = holes.Select(ex => ex.Profile);
                     wallProfile.Clip(holeProfiles);
                 }
             }

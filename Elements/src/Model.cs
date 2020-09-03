@@ -13,7 +13,7 @@ using Elements.Validators;
 namespace Elements
 {
     /// <summary>
-    /// A container for elements, element types, materials, and profiles.
+    /// A container for elements.
     /// </summary>
     public partial class Model
     {

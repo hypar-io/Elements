@@ -10,7 +10,7 @@ namespace Elements
     /// An extruded volume.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/MassTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/MassTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class Mass : GeometricElement
@@ -74,7 +74,7 @@ namespace Elements
         {
             return Math.Abs(this.Profile.Area()) * this.Height;
         }
-    
+
         /// <summary>
         /// Get the profile of the mass transformed by the mass' transform.
         /// </summary>

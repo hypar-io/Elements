@@ -476,6 +476,64 @@ references:
   isSpec: "True"
   fullName: Elements.Column.Location
   nameWithType: Column.Location
+- uid: Elements.DirectionalLight
+  name: DirectionalLight
+  href: api/Elements.DirectionalLight.html
+  commentId: T:Elements.DirectionalLight
+  fullName: Elements.DirectionalLight
+  nameWithType: DirectionalLight
+- uid: Elements.DirectionalLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Guid,System.String)
+  name: DirectionalLight(Color, Transform, Double, Guid, String)
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_System_Guid_System_String_
+  commentId: M:Elements.DirectionalLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Guid,System.String)
+  fullName: Elements.DirectionalLight.DirectionalLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, System.Guid, System.String)
+  nameWithType: DirectionalLight.DirectionalLight(Color, Transform, Double, Guid, String)
+- uid: Elements.DirectionalLight.#ctor*
+  name: DirectionalLight
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight__ctor_
+  commentId: Overload:Elements.DirectionalLight.#ctor
+  isSpec: "True"
+  fullName: Elements.DirectionalLight.DirectionalLight
+  nameWithType: DirectionalLight.DirectionalLight
+- uid: Elements.DirectionalLight.Color
+  name: Color
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Color
+  commentId: P:Elements.DirectionalLight.Color
+  fullName: Elements.DirectionalLight.Color
+  nameWithType: DirectionalLight.Color
+- uid: Elements.DirectionalLight.Color*
+  name: Color
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Color_
+  commentId: Overload:Elements.DirectionalLight.Color
+  isSpec: "True"
+  fullName: Elements.DirectionalLight.Color
+  nameWithType: DirectionalLight.Color
+- uid: Elements.DirectionalLight.Intensity
+  name: Intensity
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Intensity
+  commentId: P:Elements.DirectionalLight.Intensity
+  fullName: Elements.DirectionalLight.Intensity
+  nameWithType: DirectionalLight.Intensity
+- uid: Elements.DirectionalLight.Intensity*
+  name: Intensity
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Intensity_
+  commentId: Overload:Elements.DirectionalLight.Intensity
+  isSpec: "True"
+  fullName: Elements.DirectionalLight.Intensity
+  nameWithType: DirectionalLight.Intensity
+- uid: Elements.DirectionalLight.Transform
+  name: Transform
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Transform
+  commentId: P:Elements.DirectionalLight.Transform
+  fullName: Elements.DirectionalLight.Transform
+  nameWithType: DirectionalLight.Transform
+- uid: Elements.DirectionalLight.Transform*
+  name: Transform
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Transform_
+  commentId: Overload:Elements.DirectionalLight.Transform
+  isSpec: "True"
+  fullName: Elements.DirectionalLight.Transform
+  nameWithType: DirectionalLight.Transform
 - uid: Elements.Domain1d
   name: Domain1d
   href: api/Elements.Domain1d.html
@@ -902,237 +960,6 @@ references:
   isSpec: "True"
   fullName: Elements.Frame.UpdateRepresentations
   nameWithType: Frame.UpdateRepresentations
-- uid: Elements.Generate
-  name: Elements.Generate
-  href: api/Elements.Generate.html
-  commentId: N:Elements.Generate
-  fullName: Elements.Generate
-  nameWithType: Elements.Generate
-- uid: Elements.Generate.CompilationResult
-  name: CompilationResult
-  href: api/Elements.Generate.CompilationResult.html
-  commentId: T:Elements.Generate.CompilationResult
-  fullName: Elements.Generate.CompilationResult
-  nameWithType: CompilationResult
-- uid: Elements.Generate.CompilationResult.Assembly
-  name: Assembly
-  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_Assembly
-  commentId: P:Elements.Generate.CompilationResult.Assembly
-  fullName: Elements.Generate.CompilationResult.Assembly
-  nameWithType: CompilationResult.Assembly
-- uid: Elements.Generate.CompilationResult.Assembly*
-  name: Assembly
-  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_Assembly_
-  commentId: Overload:Elements.Generate.CompilationResult.Assembly
-  isSpec: "True"
-  fullName: Elements.Generate.CompilationResult.Assembly
-  nameWithType: CompilationResult.Assembly
-- uid: Elements.Generate.CompilationResult.DiagnosticResults
-  name: DiagnosticResults
-  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_DiagnosticResults
-  commentId: P:Elements.Generate.CompilationResult.DiagnosticResults
-  fullName: Elements.Generate.CompilationResult.DiagnosticResults
-  nameWithType: CompilationResult.DiagnosticResults
-- uid: Elements.Generate.CompilationResult.DiagnosticResults*
-  name: DiagnosticResults
-  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_DiagnosticResults_
-  commentId: Overload:Elements.Generate.CompilationResult.DiagnosticResults
-  isSpec: "True"
-  fullName: Elements.Generate.CompilationResult.DiagnosticResults
-  nameWithType: CompilationResult.DiagnosticResults
-- uid: Elements.Generate.CompilationResult.Success
-  name: Success
-  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_Success
-  commentId: P:Elements.Generate.CompilationResult.Success
-  fullName: Elements.Generate.CompilationResult.Success
-  nameWithType: CompilationResult.Success
-- uid: Elements.Generate.CompilationResult.Success*
-  name: Success
-  href: api/Elements.Generate.CompilationResult.html#Elements_Generate_CompilationResult_Success_
-  commentId: Overload:Elements.Generate.CompilationResult.Success
-  isSpec: "True"
-  fullName: Elements.Generate.CompilationResult.Success
-  nameWithType: CompilationResult.Success
-- uid: Elements.Generate.GenerationResult
-  name: GenerationResult
-  href: api/Elements.Generate.GenerationResult.html
-  commentId: T:Elements.Generate.GenerationResult
-  fullName: Elements.Generate.GenerationResult
-  nameWithType: GenerationResult
-- uid: Elements.Generate.GenerationResult.DiagnosticResults
-  name: DiagnosticResults
-  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_DiagnosticResults
-  commentId: P:Elements.Generate.GenerationResult.DiagnosticResults
-  fullName: Elements.Generate.GenerationResult.DiagnosticResults
-  nameWithType: GenerationResult.DiagnosticResults
-- uid: Elements.Generate.GenerationResult.DiagnosticResults*
-  name: DiagnosticResults
-  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_DiagnosticResults_
-  commentId: Overload:Elements.Generate.GenerationResult.DiagnosticResults
-  isSpec: "True"
-  fullName: Elements.Generate.GenerationResult.DiagnosticResults
-  nameWithType: GenerationResult.DiagnosticResults
-- uid: Elements.Generate.GenerationResult.FilePath
-  name: FilePath
-  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_FilePath
-  commentId: P:Elements.Generate.GenerationResult.FilePath
-  fullName: Elements.Generate.GenerationResult.FilePath
-  nameWithType: GenerationResult.FilePath
-- uid: Elements.Generate.GenerationResult.FilePath*
-  name: FilePath
-  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_FilePath_
-  commentId: Overload:Elements.Generate.GenerationResult.FilePath
-  isSpec: "True"
-  fullName: Elements.Generate.GenerationResult.FilePath
-  nameWithType: GenerationResult.FilePath
-- uid: Elements.Generate.GenerationResult.Success
-  name: Success
-  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_Success
-  commentId: P:Elements.Generate.GenerationResult.Success
-  fullName: Elements.Generate.GenerationResult.Success
-  nameWithType: GenerationResult.Success
-- uid: Elements.Generate.GenerationResult.Success*
-  name: Success
-  href: api/Elements.Generate.GenerationResult.html#Elements_Generate_GenerationResult_Success_
-  commentId: Overload:Elements.Generate.GenerationResult.Success
-  isSpec: "True"
-  fullName: Elements.Generate.GenerationResult.Success
-  nameWithType: GenerationResult.Success
-- uid: Elements.Generate.TypeGenerator
-  name: TypeGenerator
-  href: api/Elements.Generate.TypeGenerator.html
-  commentId: T:Elements.Generate.TypeGenerator
-  fullName: Elements.Generate.TypeGenerator
-  nameWithType: TypeGenerator
-- uid: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema,System.String,System.String[]@,System.Boolean)
-  name: GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_JsonSchema_System_String_System_String____System_Boolean_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema,System.String,System.String[]@,System.Boolean)
-  name.vb: GenerateAndSaveDllForSchema(JsonSchema, String, ByRef String(), Boolean)
-  fullName: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, System.String, out System.String[], System.Boolean)
-  fullName.vb: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, System.String, ByRef System.String(), System.Boolean)
-  nameWithType: TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, String, out String[], Boolean)
-  nameWithType.vb: TypeGenerator.GenerateAndSaveDllForSchema(JsonSchema, String, ByRef String(), Boolean)
-- uid: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema*
-  name: GenerateAndSaveDllForSchema
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateAndSaveDllForSchema_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateAndSaveDllForSchema
-  nameWithType: TypeGenerator.GenerateAndSaveDllForSchema
-- uid: Elements.Generate.TypeGenerator.GenerateElementTypesAsync(System.String)
-  name: GenerateElementTypesAsync(String)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypesAsync_System_String_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateElementTypesAsync(System.String)
-  fullName: Elements.Generate.TypeGenerator.GenerateElementTypesAsync(System.String)
-  nameWithType: TypeGenerator.GenerateElementTypesAsync(String)
-- uid: Elements.Generate.TypeGenerator.GenerateElementTypesAsync*
-  name: GenerateElementTypesAsync
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateElementTypesAsync_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateElementTypesAsync
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateElementTypesAsync
-  nameWithType: TypeGenerator.GenerateElementTypesAsync
-- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[],System.Boolean)
-  name: GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[], Boolean)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_System_String___System_Boolean_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[],System.Boolean)
-  name.vb: GenerateInMemoryAssemblyFromUrisAndLoadAsync(String(), Boolean)
-  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String[], System.Boolean)
-  fullName.vb: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(System.String(), System.Boolean)
-  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(String[], Boolean)
-  nameWithType.vb: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync(String(), Boolean)
-- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync*
-  name: GenerateInMemoryAssemblyFromUrisAndLoadAsync
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndLoadAsync_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync
-  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndLoadAsync
-- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String[],System.String,System.Boolean)
-  name: GenerateInMemoryAssemblyFromUrisAndSaveAsync(String[], String, Boolean)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndSaveAsync_System_String___System_String_System_Boolean_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String[],System.String,System.Boolean)
-  name.vb: GenerateInMemoryAssemblyFromUrisAndSaveAsync(String(), String, Boolean)
-  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String[], System.String, System.Boolean)
-  fullName.vb: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(System.String(), System.String, System.Boolean)
-  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(String[], String, Boolean)
-  nameWithType.vb: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync(String(), String, Boolean)
-- uid: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync*
-  name: GenerateInMemoryAssemblyFromUrisAndSaveAsync
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateInMemoryAssemblyFromUrisAndSaveAsync_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync
-  nameWithType: TypeGenerator.GenerateInMemoryAssemblyFromUrisAndSaveAsync
-- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync(System.String,System.String,System.Boolean)
-  name: GenerateUserElementTypeFromUriAsync(String, String, Boolean)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUriAsync_System_String_System_String_System_Boolean_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync(System.String,System.String,System.Boolean)
-  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync(System.String, System.String, System.Boolean)
-  nameWithType: TypeGenerator.GenerateUserElementTypeFromUriAsync(String, String, Boolean)
-- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync*
-  name: GenerateUserElementTypeFromUriAsync
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypeFromUriAsync_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypeFromUriAsync
-  nameWithType: TypeGenerator.GenerateUserElementTypeFromUriAsync
-- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[],System.String,System.Boolean)
-  name: GenerateUserElementTypesFromUrisAsync(String[], String, Boolean)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypesFromUrisAsync_System_String___System_String_System_Boolean_
-  commentId: M:Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[],System.String,System.Boolean)
-  name.vb: GenerateUserElementTypesFromUrisAsync(String(), String, Boolean)
-  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String[], System.String, System.Boolean)
-  fullName.vb: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync(System.String(), System.String, System.Boolean)
-  nameWithType: TypeGenerator.GenerateUserElementTypesFromUrisAsync(String[], String, Boolean)
-  nameWithType.vb: TypeGenerator.GenerateUserElementTypesFromUrisAsync(String(), String, Boolean)
-- uid: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync*
-  name: GenerateUserElementTypesFromUrisAsync
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GenerateUserElementTypesFromUrisAsync_
-  commentId: Overload:Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GenerateUserElementTypesFromUrisAsync
-  nameWithType: TypeGenerator.GenerateUserElementTypesFromUrisAsync
-- uid: Elements.Generate.TypeGenerator.GetLoadedElementTypes(System.Boolean)
-  name: GetLoadedElementTypes(Boolean)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GetLoadedElementTypes_System_Boolean_
-  commentId: M:Elements.Generate.TypeGenerator.GetLoadedElementTypes(System.Boolean)
-  fullName: Elements.Generate.TypeGenerator.GetLoadedElementTypes(System.Boolean)
-  nameWithType: TypeGenerator.GetLoadedElementTypes(Boolean)
-- uid: Elements.Generate.TypeGenerator.GetLoadedElementTypes*
-  name: GetLoadedElementTypes
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GetLoadedElementTypes_
-  commentId: Overload:Elements.Generate.TypeGenerator.GetLoadedElementTypes
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GetLoadedElementTypes
-  nameWithType: TypeGenerator.GetLoadedElementTypes
-- uid: Elements.Generate.TypeGenerator.GetSchemaAsync(System.String)
-  name: GetSchemaAsync(String)
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GetSchemaAsync_System_String_
-  commentId: M:Elements.Generate.TypeGenerator.GetSchemaAsync(System.String)
-  fullName: Elements.Generate.TypeGenerator.GetSchemaAsync(System.String)
-  nameWithType: TypeGenerator.GetSchemaAsync(String)
-- uid: Elements.Generate.TypeGenerator.GetSchemaAsync*
-  name: GetSchemaAsync
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_GetSchemaAsync_
-  commentId: Overload:Elements.Generate.TypeGenerator.GetSchemaAsync
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.GetSchemaAsync
-  nameWithType: TypeGenerator.GetSchemaAsync
-- uid: Elements.Generate.TypeGenerator.TemplatesPath
-  name: TemplatesPath
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_TemplatesPath
-  commentId: P:Elements.Generate.TypeGenerator.TemplatesPath
-  fullName: Elements.Generate.TypeGenerator.TemplatesPath
-  nameWithType: TypeGenerator.TemplatesPath
-- uid: Elements.Generate.TypeGenerator.TemplatesPath*
-  name: TemplatesPath
-  href: api/Elements.Generate.TypeGenerator.html#Elements_Generate_TypeGenerator_TemplatesPath_
-  commentId: Overload:Elements.Generate.TypeGenerator.TemplatesPath
-  isSpec: "True"
-  fullName: Elements.Generate.TypeGenerator.TemplatesPath
-  nameWithType: TypeGenerator.TemplatesPath
 - uid: Elements.GeoJSON
   name: Elements.GeoJSON
   href: api/Elements.GeoJSON.html
@@ -4437,30 +4264,30 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Covers
   nameWithType: Polygon.Covers
-- uid: Elements.Geometry.Polygon.Difference(Elements.Geometry.Polygon)
-  name: Difference(Polygon)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_Elements_Geometry_Polygon_
-  commentId: M:Elements.Geometry.Polygon.Difference(Elements.Geometry.Polygon)
-  fullName: Elements.Geometry.Polygon.Difference(Elements.Geometry.Polygon)
-  nameWithType: Polygon.Difference(Polygon)
-- uid: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name: Difference(IList<Polygon>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name.vb: Difference(IList(Of Polygon))
-  fullName: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
-  nameWithType: Polygon.Difference(IList<Polygon>)
-  nameWithType.vb: Polygon.Difference(IList(Of Polygon))
-- uid: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name: Difference(IList<Polygon>, IList<Polygon>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name.vb: Difference(IList(Of Polygon), IList(Of Polygon))
-  fullName: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
-  nameWithType: Polygon.Difference(IList<Polygon>, IList<Polygon>)
-  nameWithType.vb: Polygon.Difference(IList(Of Polygon), IList(Of Polygon))
+- uid: Elements.Geometry.Polygon.Difference(Elements.Geometry.Polygon,System.Double)
+  name: Difference(Polygon, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_Elements_Geometry_Polygon_System_Double_
+  commentId: M:Elements.Geometry.Polygon.Difference(Elements.Geometry.Polygon,System.Double)
+  fullName: Elements.Geometry.Polygon.Difference(Elements.Geometry.Polygon, System.Double)
+  nameWithType: Polygon.Difference(Polygon, Double)
+- uid: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name: Difference(IList<Polygon>, IList<Polygon>, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name.vb: Difference(IList(Of Polygon), IList(Of Polygon), Double)
+  fullName: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
+  nameWithType: Polygon.Difference(IList<Polygon>, IList<Polygon>, Double)
+  nameWithType.vb: Polygon.Difference(IList(Of Polygon), IList(Of Polygon), Double)
+- uid: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name: Difference(IList<Polygon>, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name.vb: Difference(IList(Of Polygon), Double)
+  fullName: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
+  nameWithType: Polygon.Difference(IList<Polygon>, Double)
+  nameWithType.vb: Polygon.Difference(IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.Difference*
   name: Difference
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_
@@ -4539,21 +4366,21 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.GetHashCode
   nameWithType: Polygon.GetHashCode
-- uid: Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon)
-  name: Intersection(Polygon)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_Elements_Geometry_Polygon_
-  commentId: M:Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon)
-  fullName: Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon)
-  nameWithType: Polygon.Intersection(Polygon)
-- uid: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name: Intersection(IList<Polygon>, IList<Polygon>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name.vb: Intersection(IList(Of Polygon), IList(Of Polygon))
-  fullName: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
-  nameWithType: Polygon.Intersection(IList<Polygon>, IList<Polygon>)
-  nameWithType.vb: Polygon.Intersection(IList(Of Polygon), IList(Of Polygon))
+- uid: Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon,System.Double)
+  name: Intersection(Polygon, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_Elements_Geometry_Polygon_System_Double_
+  commentId: M:Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon,System.Double)
+  fullName: Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon, System.Double)
+  nameWithType: Polygon.Intersection(Polygon, Double)
+- uid: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name: Intersection(IList<Polygon>, IList<Polygon>, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name.vb: Intersection(IList(Of Polygon), IList(Of Polygon), Double)
+  fullName: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
+  nameWithType: Polygon.Intersection(IList<Polygon>, IList<Polygon>, Double)
+  nameWithType.vb: Polygon.Intersection(IList(Of Polygon), IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.Intersection*
   name: Intersection
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_
@@ -4652,12 +4479,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Normal
   nameWithType: Polygon.Normal
-- uid: Elements.Geometry.Polygon.Offset(System.Double,Elements.Geometry.EndType)
-  name: Offset(Double, EndType)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Offset_System_Double_Elements_Geometry_EndType_
-  commentId: M:Elements.Geometry.Polygon.Offset(System.Double,Elements.Geometry.EndType)
-  fullName: Elements.Geometry.Polygon.Offset(System.Double, Elements.Geometry.EndType)
-  nameWithType: Polygon.Offset(Double, EndType)
+- uid: Elements.Geometry.Polygon.Offset(System.Double,Elements.Geometry.EndType,System.Double)
+  name: Offset(Double, EndType, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Offset_System_Double_Elements_Geometry_EndType_System_Double_
+  commentId: M:Elements.Geometry.Polygon.Offset(System.Double,Elements.Geometry.EndType,System.Double)
+  fullName: Elements.Geometry.Polygon.Offset(System.Double, Elements.Geometry.EndType, System.Double)
+  nameWithType: Polygon.Offset(Double, EndType, Double)
 - uid: Elements.Geometry.Polygon.Offset*
   name: Offset
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Offset_
@@ -4781,18 +4608,18 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.ToString
   nameWithType: Polygon.ToString
-- uid: Elements.Geometry.Polygon.Touches(Elements.Geometry.Polygon)
-  name: Touches(Polygon)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Touches_Elements_Geometry_Polygon_
-  commentId: M:Elements.Geometry.Polygon.Touches(Elements.Geometry.Polygon)
-  fullName: Elements.Geometry.Polygon.Touches(Elements.Geometry.Polygon)
-  nameWithType: Polygon.Touches(Polygon)
-- uid: Elements.Geometry.Polygon.Touches(Elements.Geometry.Vector3)
-  name: Touches(Vector3)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Touches_Elements_Geometry_Vector3_
-  commentId: M:Elements.Geometry.Polygon.Touches(Elements.Geometry.Vector3)
-  fullName: Elements.Geometry.Polygon.Touches(Elements.Geometry.Vector3)
-  nameWithType: Polygon.Touches(Vector3)
+- uid: Elements.Geometry.Polygon.Touches(Elements.Geometry.Polygon,System.Double)
+  name: Touches(Polygon, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Touches_Elements_Geometry_Polygon_System_Double_
+  commentId: M:Elements.Geometry.Polygon.Touches(Elements.Geometry.Polygon,System.Double)
+  fullName: Elements.Geometry.Polygon.Touches(Elements.Geometry.Polygon, System.Double)
+  nameWithType: Polygon.Touches(Polygon, Double)
+- uid: Elements.Geometry.Polygon.Touches(Elements.Geometry.Vector3,System.Double)
+  name: Touches(Vector3, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Touches_Elements_Geometry_Vector3_System_Double_
+  commentId: M:Elements.Geometry.Polygon.Touches(Elements.Geometry.Vector3,System.Double)
+  fullName: Elements.Geometry.Polygon.Touches(Elements.Geometry.Vector3, System.Double)
+  nameWithType: Polygon.Touches(Vector3, Double)
 - uid: Elements.Geometry.Polygon.Touches*
   name: Touches
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Touches_
@@ -4839,30 +4666,30 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.TransformedPolygon
   nameWithType: Polygon.TransformedPolygon
-- uid: Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon)
-  name: Union(Polygon)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_Elements_Geometry_Polygon_
-  commentId: M:Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon)
-  fullName: Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon)
-  nameWithType: Polygon.Union(Polygon)
-- uid: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name: Union(IList<Polygon>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name.vb: Union(IList(Of Polygon))
-  fullName: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
-  nameWithType: Polygon.Union(IList<Polygon>)
-  nameWithType.vb: Polygon.Union(IList(Of Polygon))
-- uid: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name: Union(IList<Polygon>, IList<Polygon>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name.vb: Union(IList(Of Polygon), IList(Of Polygon))
-  fullName: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
-  nameWithType: Polygon.Union(IList<Polygon>, IList<Polygon>)
-  nameWithType.vb: Polygon.Union(IList(Of Polygon), IList(Of Polygon))
+- uid: Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon,System.Double)
+  name: Union(Polygon, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_Elements_Geometry_Polygon_System_Double_
+  commentId: M:Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon,System.Double)
+  fullName: Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon, System.Double)
+  nameWithType: Polygon.Union(Polygon, Double)
+- uid: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name: Union(IList<Polygon>, IList<Polygon>, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name.vb: Union(IList(Of Polygon), IList(Of Polygon), Double)
+  fullName: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
+  nameWithType: Polygon.Union(IList<Polygon>, IList<Polygon>, Double)
+  nameWithType.vb: Polygon.Union(IList(Of Polygon), IList(Of Polygon), Double)
+- uid: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name: Union(IList<Polygon>, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name.vb: Union(IList(Of Polygon), Double)
+  fullName: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
+  nameWithType: Polygon.Union(IList<Polygon>, Double)
+  nameWithType.vb: Polygon.Union(IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.Union*
   name: Union
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_
@@ -4870,21 +4697,37 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Union
   nameWithType: Polygon.Union
-- uid: Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon)
-  name: XOR(Polygon)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_Elements_Geometry_Polygon_
-  commentId: M:Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon)
-  fullName: Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon)
-  nameWithType: Polygon.XOR(Polygon)
-- uid: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name: XOR(IList<Polygon>, IList<Polygon>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon})
-  name.vb: XOR(IList(Of Polygon), IList(Of Polygon))
-  fullName: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
-  nameWithType: Polygon.XOR(IList<Polygon>, IList<Polygon>)
-  nameWithType.vb: Polygon.XOR(IList(Of Polygon), IList(Of Polygon))
+- uid: Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name: UnionAll(IList<Polygon>, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_UnionAll_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name.vb: UnionAll(IList(Of Polygon), Double)
+  fullName: Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
+  nameWithType: Polygon.UnionAll(IList<Polygon>, Double)
+  nameWithType.vb: Polygon.UnionAll(IList(Of Polygon), Double)
+- uid: Elements.Geometry.Polygon.UnionAll*
+  name: UnionAll
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_UnionAll_
+  commentId: Overload:Elements.Geometry.Polygon.UnionAll
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.UnionAll
+  nameWithType: Polygon.UnionAll
+- uid: Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon,System.Double)
+  name: XOR(Polygon, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_Elements_Geometry_Polygon_System_Double_
+  commentId: M:Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon,System.Double)
+  fullName: Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon, System.Double)
+  nameWithType: Polygon.XOR(Polygon, Double)
+- uid: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name: XOR(IList<Polygon>, IList<Polygon>, Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
+  name.vb: XOR(IList(Of Polygon), IList(Of Polygon), Double)
+  fullName: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
+  nameWithType: Polygon.XOR(IList<Polygon>, IList<Polygon>, Double)
+  nameWithType.vb: Polygon.XOR(IList(Of Polygon), IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.XOR*
   name: XOR
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_
@@ -4995,12 +4838,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.Length
   nameWithType: Polyline.Length
-- uid: Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType)
-  name: Offset(Double, EndType)
-  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Offset_System_Double_Elements_Geometry_EndType_
-  commentId: M:Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType)
-  fullName: Elements.Geometry.Polyline.Offset(System.Double, Elements.Geometry.EndType)
-  nameWithType: Polyline.Offset(Double, EndType)
+- uid: Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType,System.Double)
+  name: Offset(Double, EndType, Double)
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Offset_System_Double_Elements_Geometry_EndType_System_Double_
+  commentId: M:Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType,System.Double)
+  fullName: Elements.Geometry.Polyline.Offset(System.Double, Elements.Geometry.EndType, System.Double)
+  nameWithType: Polyline.Offset(Double, EndType, Double)
 - uid: Elements.Geometry.Polyline.Offset*
   name: Offset
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Offset_
@@ -5235,6 +5078,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Equals
   nameWithType: Profile.Equals
+- uid: Elements.Geometry.Profile.OrientVoids
+  name: OrientVoids()
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_OrientVoids
+  commentId: M:Elements.Geometry.Profile.OrientVoids
+  fullName: Elements.Geometry.Profile.OrientVoids()
+  nameWithType: Profile.OrientVoids()
+- uid: Elements.Geometry.Profile.OrientVoids*
+  name: OrientVoids
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_OrientVoids_
+  commentId: Overload:Elements.Geometry.Profile.OrientVoids
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.OrientVoids
+  nameWithType: Profile.OrientVoids
 - uid: Elements.Geometry.Profile.Perimeter
   name: Perimeter
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Perimeter
@@ -5248,19 +5104,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Perimeter
   nameWithType: Profile.Perimeter
-- uid: Elements.Geometry.Profile.Reverse
-  name: Reverse()
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Reverse
-  commentId: M:Elements.Geometry.Profile.Reverse
-  fullName: Elements.Geometry.Profile.Reverse()
-  nameWithType: Profile.Reverse()
-- uid: Elements.Geometry.Profile.Reverse*
-  name: Reverse
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Reverse_
-  commentId: Overload:Elements.Geometry.Profile.Reverse
+- uid: Elements.Geometry.Profile.Reversed
+  name: Reversed()
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Reversed
+  commentId: M:Elements.Geometry.Profile.Reversed
+  fullName: Elements.Geometry.Profile.Reversed()
+  nameWithType: Profile.Reversed()
+- uid: Elements.Geometry.Profile.Reversed*
+  name: Reversed
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Reversed_
+  commentId: Overload:Elements.Geometry.Profile.Reversed
   isSpec: "True"
-  fullName: Elements.Geometry.Profile.Reverse
-  nameWithType: Profile.Reverse
+  fullName: Elements.Geometry.Profile.Reversed
+  nameWithType: Profile.Reversed
 - uid: Elements.Geometry.Profile.Scale(System.Double)
   name: Scale(Double)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Scale_System_Double_
@@ -5287,12 +5143,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Transform
   nameWithType: Profile.Transform
-- uid: Elements.Geometry.Profile.Union(Elements.Geometry.Profile)
-  name: Union(Profile)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Union_Elements_Geometry_Profile_
-  commentId: M:Elements.Geometry.Profile.Union(Elements.Geometry.Profile)
-  fullName: Elements.Geometry.Profile.Union(Elements.Geometry.Profile)
-  nameWithType: Profile.Union(Profile)
+- uid: Elements.Geometry.Profile.Union(Elements.Geometry.Profile,System.Double)
+  name: Union(Profile, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Union_Elements_Geometry_Profile_System_Double_
+  commentId: M:Elements.Geometry.Profile.Union(Elements.Geometry.Profile,System.Double)
+  fullName: Elements.Geometry.Profile.Union(Elements.Geometry.Profile, System.Double)
+  nameWithType: Profile.Union(Profile, Double)
 - uid: Elements.Geometry.Profile.Union*
   name: Union
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Union_
@@ -10499,6 +10355,12 @@ references:
   commentId: M:Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)
   fullName: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)
   nameWithType: Vector3.IsAlmostEqualTo(Vector3)
+- uid: Elements.Geometry.Vector3.IsAlmostEqualTo(System.Double,System.Double,System.Double)
+  name: IsAlmostEqualTo(Double, Double, Double)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsAlmostEqualTo_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Vector3.IsAlmostEqualTo(System.Double,System.Double,System.Double)
+  fullName: Elements.Geometry.Vector3.IsAlmostEqualTo(System.Double, System.Double, System.Double)
+  nameWithType: Vector3.IsAlmostEqualTo(Double, Double, Double)
 - uid: Elements.Geometry.Vector3.IsAlmostEqualTo*
   name: IsAlmostEqualTo
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsAlmostEqualTo_
@@ -11512,22 +11374,6 @@ references:
   isSpec: "True"
   fullName: Elements.Model.Elements
   nameWithType: Model.Elements
-- uid: Elements.Model.FromIFC(System.String,System.String[])
-  name: FromIFC(String, String[])
-  href: api/Elements.Model.html#Elements_Model_FromIFC_System_String_System_String___
-  commentId: M:Elements.Model.FromIFC(System.String,System.String[])
-  name.vb: FromIFC(String, String())
-  fullName: Elements.Model.FromIFC(System.String, System.String[])
-  fullName.vb: Elements.Model.FromIFC(System.String, System.String())
-  nameWithType: Model.FromIFC(String, String[])
-  nameWithType.vb: Model.FromIFC(String, String())
-- uid: Elements.Model.FromIFC*
-  name: FromIFC
-  href: api/Elements.Model.html#Elements_Model_FromIFC_
-  commentId: Overload:Elements.Model.FromIFC
-  isSpec: "True"
-  fullName: Elements.Model.FromIFC
-  nameWithType: Model.FromIFC
 - uid: Elements.Model.FromJson(System.String,System.Collections.Generic.List{System.String})
   name: FromJson(String, List<String>)
   href: api/Elements.Model.html#Elements_Model_FromJson_System_String_System_Collections_Generic_List_System_String__
@@ -11589,19 +11435,6 @@ references:
   isSpec: "True"
   fullName: Elements.Model.Origin
   nameWithType: Model.Origin
-- uid: Elements.Model.ToIFC(System.String)
-  name: ToIFC(String)
-  href: api/Elements.Model.html#Elements_Model_ToIFC_System_String_
-  commentId: M:Elements.Model.ToIFC(System.String)
-  fullName: Elements.Model.ToIFC(System.String)
-  nameWithType: Model.ToIFC(String)
-- uid: Elements.Model.ToIFC*
-  name: ToIFC
-  href: api/Elements.Model.html#Elements_Model_ToIFC_
-  commentId: Overload:Elements.Model.ToIFC
-  isSpec: "True"
-  fullName: Elements.Model.ToIFC
-  nameWithType: Model.ToIFC
 - uid: Elements.Model.ToJson(System.Boolean)
   name: ToJson(Boolean)
   href: api/Elements.Model.html#Elements_Model_ToJson_System_Boolean_
@@ -12125,6 +11958,12 @@ references:
   commentId: M:Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   fullName: Elements.Space.Space(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Space.Space(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
+- uid: Elements.Space.#ctor(Elements.Geometry.Solids.Solid,Elements.Geometry.Transform,Elements.Material,System.Boolean,System.Guid,System.String)
+  name: Space(Solid, Transform, Material, Boolean, Guid, String)
+  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Solids_Solid_Elements_Geometry_Transform_Elements_Material_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Space.#ctor(Elements.Geometry.Solids.Solid,Elements.Geometry.Transform,Elements.Material,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Space.Space(Elements.Geometry.Solids.Solid, Elements.Geometry.Transform, Elements.Material, System.Boolean, System.Guid, System.String)
+  nameWithType: Space.Space(Solid, Transform, Material, Boolean, Guid, String)
 - uid: Elements.Space.#ctor*
   name: Space
   href: api/Elements.Space.html#Elements_Space__ctor_

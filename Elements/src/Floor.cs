@@ -12,7 +12,7 @@ namespace Elements
     /// A floor is a horizontal element defined by a profile.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/FloorTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/FloorTests.cs?name=example)]
     /// </example>
     [UserElement]
     public class Floor : GeometricElement, IHasOpenings
@@ -26,7 +26,7 @@ namespace Elements
         /// <summary>
         /// The thickness of the floor.
         /// </summary>
-        public double Thickness { get; set;}
+        public double Thickness { get; set; }
 
         /// <summary>
         /// The untransformed profile of the floor.
@@ -36,7 +36,7 @@ namespace Elements
         /// <summary>
         /// A collection of openings in the floor.
         /// </summary>
-        public List<Opening> Openings{ get; } = new List<Opening>();
+        public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
         /// Create a floor.
@@ -68,7 +68,7 @@ namespace Elements
 
         private void SetProperties(Profile profile, double thickness)
         {
-            if(thickness <= 0.0) 
+            if (thickness <= 0.0)
             {
                 throw new ArgumentOutOfRangeException($"The floor could not be created. The provided thickness ({thickness}) was less than or equal to zero.");
             }
@@ -108,18 +108,18 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if(this.Openings.Count > 0)
+            if (this.Openings.Count > 0)
             {
-                this.Openings.ForEach(o=>o.UpdateRepresentations());
+                this.Openings.ForEach(o => o.UpdateRepresentations());
 
                 // Find all the void ops which point in the same direction.
-                var holes = this.Openings.SelectMany(o=>o.Representation.SolidOperations.
-                                                        Where(op=>op is Extrude && op.IsVoid == true).
+                var holes = this.Openings.SelectMany(o => o.Representation.SolidOperations.
+                                                        Where(op => op is Extrude && op.IsVoid == true).
                                                         Cast<Extrude>().
-                                                        Where(ex=>ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
-                if(holes.Any())
+                                                        Where(ex => ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
+                if (holes.Any())
                 {
-                    var holeProfiles = holes.Select(ex=>ex.Profile);
+                    var holeProfiles = holes.Select(ex => ex.Profile);
                     this.Profile.Clip(holeProfiles);
                 }
             }
