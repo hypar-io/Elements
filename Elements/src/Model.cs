@@ -183,6 +183,7 @@ namespace Elements
         /// <param name="errors">A collection of deserialization errors.</param>
         public static Model FromJson(string json, List<string> errors = null)
         {
+            JsonInheritanceConverter.RefreshUserElementTypeCache();
             errors = errors ?? new List<string>();
             var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
             {
