@@ -279,6 +279,8 @@ namespace Elements.Generate
         /// <param name="isUserElement">Is the type a user-defined element?</param>
         public static async Task<GenerationResult[]> GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             var results = new List<Task<GenerationResult>>();
             foreach (var uri in uris)
             {
@@ -297,6 +299,8 @@ namespace Elements.Generate
         /// <returns>A CompilationResult containing information about the compilation.</returns>
         public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris, bool frameworkBuild = false)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
             var code = new Dictionary<string, string>();
             foreach (var uri in uris)
@@ -305,7 +309,7 @@ namespace Elements.Generate
                 // with the GenerateInMemoryAssemblyFromUrisAndSaveAsync method.
                 // We didn't do this originally because the return value of the refactored
                 // method would need to be a CompilationResult and the loop would generate a List<string>,
-                // but because it's async we can't do that as a ref parameter. 
+                // but because it's async we can't do that as a ref parameter.
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
@@ -364,6 +368,8 @@ namespace Elements.Generate
         /// <returns>A CompilationResult containing information about the compilation.</returns>
         public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndSaveAsync(string[] uris, string dllPath, bool frameworkBuild = false)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
             var code = new Dictionary<string, string>();
@@ -422,6 +428,8 @@ namespace Elements.Generate
         /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
         public static async Task<GenerationResult[]> GenerateElementTypesAsync(string outputBaseDir)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             var typeNames = _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToList();
             var tasks = new List<Task<GenerationResult>>();
             foreach (var uri in _hyparSchemas)
@@ -440,7 +448,7 @@ namespace Elements.Generate
         }
 
         /// <summary>
-        /// Get a list of the core Hypar types, which should be excluded from code generation. 
+        /// Get a list of the core Hypar types, which should be excluded from code generation.
         /// </summary>
         public static string[] GetCoreTypeNames()
         {
@@ -529,7 +537,7 @@ namespace Elements.Generate
                 {
                     continue;
                 }
-                // strategy for using templates taken from the NJsonSchema source 
+                // strategy for using templates taken from the NJsonSchema source
                 // https://github.com/RicoSuter/NJsonSchema/blob/master/src/NJsonSchema.CodeGeneration.CSharp/CSharpGenerator.cs#L50
                 var model = new FileTemplateModel
                 {
@@ -550,7 +558,7 @@ namespace Elements.Generate
             if (isUserElement)
             {
                 // remove unncessary imports
-                // TODO: make this a conditional for the code generation using ExtensionData, instead of using string replacement. 
+                // TODO: make this a conditional for the code generation using ExtensionData, instead of using string replacement.
                 // For whatever reason, this was not working with code in File.liquid — only Class.liquid.
                 file = file.Replace(@"
 using Hypar.Functions;
@@ -558,7 +566,7 @@ using Hypar.Functions.Execution;
 using Hypar.Functions.Execution.AWS;", "");
                 // Insert the UserElement attribute directly before
                 // 'public partial class ' any time it occurs in the file
-                // because we may be generating code for multiple user types in 
+                // because we may be generating code for multiple user types in
                 // the same file.
                 var start = 0;
                 while (true)
