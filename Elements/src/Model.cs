@@ -46,10 +46,10 @@ namespace Elements
         /// Add an element to the model.
         /// This operation recursively searches the element's properties
         /// for element sub-properties and adds those elements to the elements
-        /// dictionary before adding the element itself. 
+        /// dictionary before adding the element itself.
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
-        /// <param name="gatherSubElements">Should sub-elements in properties be 
+        /// <param name="gatherSubElements">Should sub-elements in properties be
         /// added to the model's elements collection?</param>
         public void AddElement(Element element, bool gatherSubElements = true)
         {
@@ -60,10 +60,10 @@ namespace Elements
 
             if (gatherSubElements)
             {
-                // Look at all public properties of the element. 
+                // Look at all public properties of the element.
                 // For all properties which inherit from element, add those
-                // to the elements dictionary first. This will ensure that 
-                // those elements will be read out and be available before 
+                // to the elements dictionary first. This will ensure that
+                // those elements will be read out and be available before
                 // an attempt is made to deserialize the element itself.
                 var subElements = RecursiveGatherSubElements(element);
                 foreach (var e in subElements)
@@ -87,7 +87,7 @@ namespace Elements
         /// Add a collection of elements to the model.
         /// </summary>
         /// <param name="elements">The elements to add to the model.</param>
-        /// <param name="gatherSubElements">Should sub-elements in properties be 
+        /// <param name="gatherSubElements">Should sub-elements in properties be
         /// added to the model's elements collection?</param>
         public void AddElements(IEnumerable<Element> elements, bool gatherSubElements = true)
         {
@@ -113,7 +113,7 @@ namespace Elements
         /// Get an entity by id from the Model.
         /// </summary>
         /// <param name="id">The identifier of the element.</param>
-        /// <returns>An entity or null if no entity can be found 
+        /// <returns>An entity or null if no entity can be found
         /// with the provided id.</returns>
         public T GetElementOfType<T>(Guid id) where T : Element
         {
@@ -128,7 +128,7 @@ namespace Elements
         /// Get the first entity with the specified name.
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>An entity or null if no entity can be found 
+        /// <returns>An entity or null if no entity can be found
         /// with the provided name.</returns>
         public T GetElementByName<T>(string name) where T : Element
         {
@@ -183,6 +183,10 @@ namespace Elements
         /// <param name="errors">A collection of deserialization errors.</param>
         public static Model FromJson(string json, List<string> errors = null)
         {
+            // When user elements have been loaded into the app domain, they haven't always been
+            // loaded into the InheritanceConverter's Cache.  This does have some overhead,
+            // but is useful here, at the Model level, to ensure user types are available.
+            JsonInheritanceConverter.RefreshUserElementTypeCache();
             errors = errors ?? new List<string>();
             var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
             {
@@ -208,7 +212,7 @@ namespace Elements
             var e = obj as Element;
             if (e != null && Elements.ContainsKey(e.Id))
             {
-                // Do nothing. The Element has already 
+                // Do nothing. The Element has already
                 // been added. This assumes that that the sub-elements
                 // have been added as well and we don't need to continue.
                 return elements;
