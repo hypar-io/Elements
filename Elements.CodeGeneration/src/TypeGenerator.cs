@@ -12,8 +12,6 @@ using NJsonSchema.CodeGeneration.CSharp;
 using Elements.Generate.StringUtils;
 using NJsonSchema.CodeGeneration;
 using NJsonSchema.CodeGeneration.CSharp.Models;
-using Elements.Geometry;
-
 
 namespace Elements.Generate
 {
