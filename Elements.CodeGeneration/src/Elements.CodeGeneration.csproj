@@ -1,35 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Hypar.Elements.CodeGeneration</AssemblyName>
-    <PackageTitle>Hypar Elements Code Generation</PackageTitle>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Title>Hypar Elements Code Generation</Title>
-    <PackageId>Hypar.Elements.CodeGeneration</PackageId>
-    <PackageDescription>Code generation utilities for Hypar.Elements.</PackageDescription>
-    <Summary>Code generation utilities for Hypar.Elements.</Summary>
-    <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <Version>$(Version)</Version>
-    <PackageOutputPath>../../nupkg</PackageOutputPath>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>Hypar.Elements.CodeGeneration</AssemblyName>
+        <PackageTitle>Hypar Elements Code Generation</PackageTitle>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Title>Hypar Elements Code Generation</Title>
+        <PackageId>Hypar.Elements.CodeGeneration</PackageId>
+        <PackageDescription>Code generation utilities for Hypar.Elements.</PackageDescription>
+        <Summary>Code generation utilities for Hypar.Elements.</Summary>
+        <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Version>$(Version)</Version>
+        <PackageOutputPath>../../nupkg</PackageOutputPath>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NJsonSchema.CodeGeneration" Version="10.1.21" />
-    <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="10.1.21" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.3.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="NJsonSchema.CodeGeneration" Version="10.1.21" />
+        <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="10.1.21" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.3.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Content Include="Templates\**\*.*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Nuget solution using build targets came from here https://stackoverflow.com/questions/51924129/copy-files-from-nuget-package-to-output-directory-with-msbuild-in-csproj-and-do  -->
+        <Content Include="Elements.CodeGeneration.targets" PackagePath="build/Hypar.Elements.CodeGeneration.targets" />
+        <Content Include="Templates\**\*.*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <Pack>true</Pack>
+            <PackagePath>contentFiles\Templates</PackagePath>
+        </Content>
+    </ItemGroup>
 </Project>
