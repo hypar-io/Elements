@@ -3,7 +3,10 @@
     <ItemGroup>
         <TemplateFiles Include="$(MSBuildThisFileDirectory)\..\contentFiles\Templates\*.*" />
     </ItemGroup>
-    <Target Name="CopyTemplateFiles" BeforeTargets="Build">
+    <Target Name="BuildCopyTemplateFiles" BeforeTargets="Build">
         <Copy SourceFiles="@(TemplateFiles)" DestinationFolder="$(TargetDir)Templates\" />
+    </Target>
+    <Target Name="PublishCopyTemplateFiles" BeforeTargets="Publish">
+        <Copy SourceFiles="@(TemplateFiles)" DestinationFolder="$(PublishDir)Templates\" />
     </Target>
 </Project>
