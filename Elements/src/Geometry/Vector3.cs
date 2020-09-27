@@ -183,21 +183,24 @@ namespace Elements.Geometry
         /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</returns>
         public double PlaneAngleTo(Vector3 v)
         {
-
             // project to XY Plane
-            Vector3 aProjected = new Vector3(this.X, this.Y, 0).Unitized();
-            Vector3 bProjected = new Vector3(v.X, v.Y, 0).Unitized();
-         
+            Vector3 a = new Vector3(this.X, this.Y, 0);
+            Vector3 b = new Vector3(v.X, v.Y, 0);
+
             // reject very small vectors
-            if (aProjected.Length() < Vector3.EPSILON || bProjected.Length() < Vector3.EPSILON)
+            if (a.Length() < Vector3.EPSILON || b.Length() < Vector3.EPSILON )
             {
                 return double.NaN;
             }
+
+            Vector3 aUnitized = a.Unitized();
+            Vector3 bUnitized = b.Unitized();
+
             // Cos^-1(a dot b), a dot b clamped to [-1, 1]
-            var angle = Math.Acos(Math.Max(Math.Min(aProjected.Dot(bProjected), 1.0), -1.0));
+            var angle = Math.Acos(Math.Max(Math.Min(aUnitized.Dot(bUnitized), 1.0), -1.0));
 
             // check if should be reflex angle
-            Vector3 aCrossB = aProjected.Cross(bProjected).Unitized();
+            Vector3 aCrossB = aUnitized.Cross(bUnitized).Unitized();
             if (Vector3.ZAxis.Dot(aCrossB) > 0.999)
             {
                 return angle * 180 / Math.PI;
