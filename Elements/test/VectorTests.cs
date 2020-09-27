@@ -32,6 +32,18 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Vector3_PlaneAngles()
+        {
+            var a = Vector3.YAxis;
+            var b = new Vector3(3, 7, 0);
+            var z = new Vector3(0, 0, 9);
+
+            Assert.Equal(336.801, a.PlaneAngleTo(b), 2);
+            Assert.Equal(23.198, b.PlaneAngleTo(a), 2);
+            Assert.True(Double.IsNaN(b.PlaneAngleTo(z)));
+        }
+
+        [Fact]
         public void Vector3_Parallel_AngleBetween_Success()
         {
             var a = Vector3.XAxis;
