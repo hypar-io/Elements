@@ -20,6 +20,12 @@ namespace Elements.Geometry
         private static Vector3 _origin = new Vector3();
 
         /// <summary>
+        /// Implicitly convert a Vector3 to a Transform.
+        /// </summary>
+        /// <param name="v">The vector to convert.</param>
+        public static implicit operator Transform(Vector3 v) => new Transform(v);
+
+        /// <summary>
         /// Create a vector at the origin.
         /// </summary>
         /// <returns></returns>

@@ -415,7 +415,7 @@ namespace Elements.Spatial
         public List<ICurve> GetCellSeparators(GridDirection direction)
         {
             var curves = new List<ICurve>();
-            var points = new List<Vector3>();
+            var points = new List<Transform>();
             Curve otherDirection = null;
             Vector3 toOrigin = new Vector3();
             switch (direction)

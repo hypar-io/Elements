@@ -702,12 +702,12 @@ namespace Elements.Spatial
         /// Get the points at the ends and in-between all cells. 
         /// </summary>
         /// <param name="recursive">If true, separators will be retrieved from child cells as well.</param>
-        /// <returns>A list of Vector3d points representing the boundaries between cells.</returns>
-        public List<Vector3> GetCellSeparators(bool recursive = false)
+        /// <returns>A list of transforms representing the boundaries between cells.</returns>
+        public List<Transform> GetCellSeparators(bool recursive = false)
         {
             var values = DomainsToSequence(recursive);
             var t = values.Select(v => v.MapFromDomain(curveDomain));
-            var pts = t.Select(t0 => curve.TransformAt(t0).Origin).ToList();
+            var pts = t.Select(t0 => curve.TransformAt(t0)).ToList();
             return pts;
         }
 

@@ -37,6 +37,12 @@ namespace Elements.Geometry
         public Vector3 ZAxis => this.Matrix.ZAxis;
 
         /// <summary>
+        /// Implicitly convert a Transform to a Vector.
+        /// </summary>
+        /// <param name="x">The transform to convert.</param>
+        public static implicit operator Vector3(Transform x) => x.Origin;
+
+        /// <summary>
         /// Create the identity transform.
         /// </summary>
         public Transform()

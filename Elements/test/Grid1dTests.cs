@@ -127,7 +127,7 @@ namespace Elements.Tests
         {
             var grid = new Grid1d(100);
             grid.DivideByCount(5);
-            var pts = grid.GetCellSeparators();
+            var pts = grid.GetCellSeparators().Select(t => t.Origin).ToList();
             Assert.Equal(6, pts.Count);
             Assert.Equal(pts[0], new Vector3(0, 0, 0));
             Assert.Equal(pts[1], new Vector3(20, 0, 0));
