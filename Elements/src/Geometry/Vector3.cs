@@ -179,8 +179,8 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate a plane angle between this vector and the provided vector in the XY plane.
         /// </summary>
-        /// <param name="v">The vector with which to measure the angle</param>
-        /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid</returns>
+        /// <param name="v">The vector with which to measure the angle.</param>
+        /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</returns>
         public double PlaneAngleTo(Vector3 v)
         {
 
