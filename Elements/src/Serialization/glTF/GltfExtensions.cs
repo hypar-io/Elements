@@ -136,7 +136,7 @@ namespace Elements.Serialization.glTF
                     };
                 }
 
-                if (material.Texture != null)
+                if (material.Texture != null && File.Exists(material.Texture))
                 {
                     // Add the texture
                     var ti = new TextureInfo();
@@ -903,6 +903,10 @@ namespace Elements.Serialization.glTF
                 var geo = (ITessellate)e;
                 var mesh = new Elements.Geometry.Mesh();
                 geo.Tessellate(ref mesh);
+                if (mesh == null)
+                {
+                    return;
+                }
 
                 byte[] vertexBuffer;
                 byte[] normalBuffer;
