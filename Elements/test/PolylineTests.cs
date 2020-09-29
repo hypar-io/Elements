@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Elements.Geometry.Tests
 {
-    public class PolylineTests : ModelTest
+    public class PolylineTests: ModelTest
     {
         public PolylineTests()
         {
