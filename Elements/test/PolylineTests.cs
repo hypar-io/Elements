@@ -51,4 +51,5 @@ namespace Elements.Geometry.Tests
             var targetLength = 2 * length + 8 * offsetAmt;
             Assert.Equal(targetLength, offsetResult.Length(), 2);
         }
+    }
 }
