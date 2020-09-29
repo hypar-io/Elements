@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using Elements.Tests;
 using Xunit;
 
 namespace Elements.Geometry.Tests
 {
-    public class PolylineTests: ModelTest
+    public class PolylineTests : ModelTest
     {
         public PolylineTests()
         {
@@ -49,6 +50,70 @@ namespace Elements.Geometry.Tests
             // each length + 2x offsetAmt, and the short sides are each 2x offsetAmt.
             var targetLength = 2 * length + 8 * offsetAmt;
             Assert.Equal(targetLength, offsetResult.Length(), 2);
+        }
+
+
+        [Fact]
+        public void Polyline_ConsistentFrameOrientation()
+        {
+            var polyline = new Polyline(new[] {
+              new Vector3(0,0,0),
+              new Vector3(20,0,0),
+              new Vector3(20,20,0),
+              new Vector3(0, 20,0),
+            });
+
+            var bezier = new Bezier(new List<Vector3>{
+                 new Vector3(0,0,0),
+              new Vector3(20,0,0),
+              new Vector3(20,20,0),
+              new Vector3(0, 20,0),
+            });
+
+            var t_bez = bezier.TransformAt(0);
+
+            var t1 = polyline.TransformAt(0);
+
+            var p1 = $"🐝: {t_bez.XAxis}, {t_bez.YAxis}, {t_bez.ZAxis}";
+            var p2 =  $"🍐: {t1.XAxis}, {t1.YAxis}, {t1.ZAxis}";
+
+            //var polyline = new Polyline(new[] {
+            //  new Vector3(0,0,0),
+            //  new Vector3(20,0,0),
+            //  new Vector3(20,20,0),
+            //  new Vector3(0, 20,0),
+            //});
+
+            //var bz = new Bezier(new List<Vector3>
+            //{
+            //     new Vector3(0,0,0),
+            //  new Vector3(20,0,0),
+            //  new Vector3(20,20,0),
+            //  new Vector3(0, 20,0),
+            //});
+
+            //var b1 = bz.TransformAt(0);
+            //var t1 = polyline.TransformAt(0);
+            //var t2 = polyline.TransformAt(0.01);
+
+            //Assert.Equal(1.0, t1.XAxis.Dot(t2.XAxis));
+            //Assert.Equal(1.0, t1.YAxis.Dot(t2.YAxis));
+            //Assert.Equal(1.0, t1.ZAxis.Dot(t2.ZAxis));
+        }
+
+        [Fact]
+        public void Polyline_ConsistentMiterFrameOrientation()
+        {
+            var polyline = new Polyline(new[] {
+              new Vector3(0,0,0),
+              new Vector3(10,0,0),
+              new Vector3(20,0,0)
+            });
+            var t1 = polyline.TransformAt(0);
+            var t2 = polyline.TransformAt(0.5);
+            Assert.Equal(1.0, t1.XAxis.Dot(t2.XAxis));
+            Assert.Equal(1.0, t1.YAxis.Dot(t2.YAxis));
+            Assert.Equal(1.0, t1.ZAxis.Dot(t2.ZAxis));
         }
     }
 }

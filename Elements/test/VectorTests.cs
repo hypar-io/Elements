@@ -41,6 +41,19 @@ namespace Elements.Tests
             Assert.Equal(336.801, a.PlaneAngleTo(b), 2);
             Assert.Equal(23.198, b.PlaneAngleTo(a), 2);
             Assert.True(Double.IsNaN(b.PlaneAngleTo(z)));
+
+            // parallel
+            var p1 = new Vector3(2, 3);
+            var p2 = new Vector3(4, 6);
+            Assert.Equal(0, p1.PlaneAngleTo(p2, new Vector3(8, 2, 12)));
+
+            // anti-parallel
+            Assert.Equal(180, p1.PlaneAngleTo(p2.Negate(), new Vector3(8, 2, 12)));
+
+            // projected very small
+            Assert.True(Double.IsNaN(a.PlaneAngleTo(b, b)));
+            Assert.True(Double.IsNaN(a.PlaneAngleTo(b, a)));
+
         }
 
         [Fact]
