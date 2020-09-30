@@ -164,13 +164,69 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The angle in degrees from this vector to the provided vector.
+        /// The angle in degrees from this vector to the provided vector. 
+        /// Note that for angles in the plane that can be greater than 180 degrees, 
+        /// you should use Vector3.PlaneAngleTo.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
+        /// <returns>The angle in degrees between 0 and 180. </returns>
         public double AngleTo(Vector3 v)
         {
             var rad = Math.Acos((Dot(v) / (Length() * v.Length())));
             return rad * 180 / Math.PI;
+        }
+
+        /// <summary>
+        /// Calculate a counter-clockwise plane angle between this vector and the provided vector in the XY plane.
+        /// </summary>
+        /// <param name="v">The vector with which to measure the angle.</param>
+        /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</returns>
+        public double PlaneAngleTo(Vector3 v)
+        {
+            return PlaneAngleTo(v, ZAxis);
+        }
+
+        /// <summary>
+        /// Calculate a counter-clockwise plane angle between this vector and the provided vector, projected to the plane perpendicular to the provided normal.
+        /// </summary>
+        /// <param name="v">The vector with which to measure the angle.</param>
+        /// <param name="normal">The normal of the plane in which you wish to calculate the angle.</param>
+        /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</returns>
+        public double PlaneAngleTo(Vector3 v, Vector3 normal)
+        {
+            var transformFromPlane = new Transform(Vector3.Origin, normal);
+            transformFromPlane.Invert();
+            var thisTransformed = transformFromPlane.OfVector(this);
+            var otherTransformed = transformFromPlane.OfVector(v);
+            // project to Plane
+            Vector3 a = new Vector3(thisTransformed.X, thisTransformed.Y, 0);
+            Vector3 b = new Vector3(otherTransformed.X, otherTransformed.Y, 0);
+
+            // reject very small vectors
+            if (a.Length() < Vector3.EPSILON || b.Length() < Vector3.EPSILON )
+            {
+                return double.NaN;
+            }
+
+            Vector3 aUnitized = a.Unitized();
+            Vector3 bUnitized = b.Unitized();
+
+            // Cos^-1(a dot b), a dot b clamped to [-1, 1]
+            var angle = Math.Acos(Math.Max(Math.Min(aUnitized.Dot(bUnitized), 1.0), -1.0));
+            if(Math.Abs(angle) < Vector3.EPSILON)
+            {
+                return 0;
+            }
+            // check if should be reflex angle
+            Vector3 aCrossB = aUnitized.Cross(bUnitized).Unitized();
+            if (Vector3.ZAxis.Dot(aCrossB) > 0)
+            {
+                return angle * 180 / Math.PI;
+            }
+            else
+            {
+                return (Math.PI * 2 - angle) * 180 / Math.PI;
+            }
         }
 
         /// <summary>
