@@ -523,13 +523,13 @@ var offset = pline.Offset(1, EndType.Square);
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
   <a id="Elements_Geometry_Polyline_Offset_" data-uid="Elements.Geometry.Polyline.Offset*"></a>
-  <h4 id="Elements_Geometry_Polyline_Offset_System_Double_Elements_Geometry_EndType_" data-uid="Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType)">Offset(Double, EndType)</h4>
+  <h4 id="Elements_Geometry_Polyline_Offset_System_Double_Elements_Geometry_EndType_System_Double_" data-uid="Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType,System.Double)">Offset(Double, EndType, Double)</h4>
   <div class="markdown level1 summary"><p>Offset this polyline by the specified amount.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual Polygon[] Offset(double offset, EndType endType)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Polygon[] Offset(double offset, EndType endType, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -551,6 +551,12 @@ var offset = pline.Offset(1, EndType.Square);
         <td><a class="xref" href="Elements.Geometry.EndType.html">EndType</a></td>
         <td><span class="parametername">endType</span></td>
         <td><p>The closure type to use on the offset polygon.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional tolerance.</p>
 </td>
       </tr>
     </tbody>

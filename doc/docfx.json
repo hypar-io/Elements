@@ -5,14 +5,11 @@
         {
           "cwd": "..",
           "files": [
-            "src/**.csproj"
+            "Elements/src/**.csproj"
           ],
           "exclude": [
             "**/bin/**",
-            "**/obj/**",
-            "src/Dynamo/**",
-            "src/Revit/**",
-            "src/Unity/**"
+            "**/obj/**"
           ]
         }
       ],
@@ -48,7 +45,7 @@
         ]
       },
       {
-        "src": "../Elements/test/bin/debug/netcoreapp2.1/models/",
+        "src": "../Elements/test/bin/debug/netcoreapp3.1/models/",
         "files": [
           "Elements_**.glb"
         ],

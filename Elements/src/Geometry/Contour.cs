@@ -9,7 +9,7 @@ namespace Elements.Geometry
     /// A continguous set of curves.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/ContourTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/ContourTests.cs?name=example)]
     /// </example>
     public class Contour : IEnumerable<Curve>
     {
@@ -27,7 +27,7 @@ namespace Elements.Geometry
                 var a = curves[i];
                 var next = i == curves.Count - 1 ? 0 : i + 1;
                 var b = curves[next];
-                if (a.PointAt(1).IsAlmostEqualTo(b.PointAt(0)) || 
+                if (a.PointAt(1).IsAlmostEqualTo(b.PointAt(0)) ||
                     a.PointAt(1).IsAlmostEqualTo(b.PointAt(1)) ||
                     a.PointAt(0).IsAlmostEqualTo(b.PointAt(0)))
                 {
@@ -57,23 +57,23 @@ namespace Elements.Geometry
             // Convert the contour into a polygon.
             // Merge the coincident points.
             var verts = new List<Vector3>();
-            foreach(var c in this._curves)
+            foreach (var c in this._curves)
             {
                 var v = c.RenderVertices();
-                if(verts.Any())
+                if (verts.Any())
                 {
-                    if(verts.Last().IsAlmostEqualTo(v.First()))
+                    if (verts.Last().IsAlmostEqualTo(v.First()))
                     {
                         verts.AddRange(v.Skip(1));
                     }
-                    else if(verts.Last().IsAlmostEqualTo(v.Last()))
+                    else if (verts.Last().IsAlmostEqualTo(v.Last()))
                     {
                         var revVerts = v.Reverse();
                         verts.AddRange(revVerts.Skip(1));
                     }
                     else
                     {
-                        verts.AddRange(v);  
+                        verts.AddRange(v);
                     }
                 }
                 else

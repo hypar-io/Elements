@@ -277,7 +277,7 @@ namespace Elements.Validators
             var components = (IList<double>)args[0];
             if (components.Count != 12)
             {
-                throw new ArgumentOutOfRangeException("The matrix could not be created. The component array must have 16 values.");
+                throw new ArgumentOutOfRangeException("The matrix could not be created. The component array must have 12 values.");
             }
         }
     }

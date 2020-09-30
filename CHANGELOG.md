@@ -4,6 +4,7 @@
 ### Added
 - `Hypar.Elements.Serialization.IFC` - IFC serialization code has been moved to a new project.
 - `Hypar.Elements.CodeGeneration` - Code generation has been moved to a new project.
+- `Elements.DirectionalLight` - You can now create a directional light in the model which will be written to glTF using the `KHR_lights_punctual` extension.
 
 ### Changed
 - Updated ImageSharp to 1.0.0.

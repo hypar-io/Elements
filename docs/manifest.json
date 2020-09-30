@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "/Users/ikeough/Documents/Hypar/Hypar/Elements/doc",
+  "source_base_path": "/Users/ikeough/Documents/Hypar/Elements/doc",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -14,7 +14,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Analysis_AnalysisMesh.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Analysis_AnalysisMesh.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Analysis_AnalysisMesh.glb"
@@ -25,7 +25,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Analysis_ColorScale.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Analysis_ColorScale.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Analysis_ColorScale.glb"
@@ -36,7 +36,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Beam.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Beam.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Beam.glb"
@@ -47,7 +47,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Column.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Column.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Column.glb"
@@ -58,10 +58,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Component.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_DirectionalLight.glb",
       "output": {
         "resource": {
-          "relative_path": "models/Elements_Component.glb"
+          "relative_path": "models/Elements_DirectionalLight.glb"
         }
       },
       "is_incremental": false,
@@ -69,7 +69,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_ElementInstance.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_ElementInstance.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_ElementInstance.glb"
@@ -80,7 +80,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Floor.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Floor.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Floor.glb"
@@ -91,7 +91,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Geometry_Arc.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Arc.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Geometry_Arc.glb"
@@ -102,7 +102,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Geometry_Bezier.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Bezier.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Geometry_Bezier.glb"
@@ -113,7 +113,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Geometry_Contour.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Contour.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Geometry_Contour.glb"
@@ -124,7 +124,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Geometry_Line.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Line.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Geometry_Line.glb"
@@ -135,7 +135,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Geometry_Polygon.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Polygon.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Geometry_Polygon.glb"
@@ -146,7 +146,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Geometry_Polyline.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Polyline.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Geometry_Polyline.glb"
@@ -157,7 +157,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Geometry_Transform.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Transform.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Geometry_Transform.glb"
@@ -168,7 +168,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_ImportMeshElement.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_ImportMeshElement.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_ImportMeshElement.glb"
@@ -179,7 +179,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Mass.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Mass.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Mass.glb"
@@ -190,7 +190,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_MeshElement.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_MeshElement.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_MeshElement.glb"
@@ -201,7 +201,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_ModelCurve.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_ModelCurve.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_ModelCurve.glb"
@@ -212,7 +212,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_ModelPoints.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_ModelPoints.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_ModelPoints.glb"
@@ -223,7 +223,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Panel.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Panel.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Panel.glb"
@@ -234,7 +234,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Space.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Space.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Space.glb"
@@ -245,7 +245,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Spatial_Grid1d.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Spatial_Grid1d.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Spatial_Grid1d.glb"
@@ -256,7 +256,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Spatial_Grid2d.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Spatial_Grid2d.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Spatial_Grid2d.glb"
@@ -267,7 +267,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_StandardWall.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_StandardWall.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_StandardWall.glb"
@@ -278,7 +278,7 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../test/Elements.Tests/bin/debug/netcoreapp2.1/models/Elements_Topography.glb",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Topography.glb",
       "output": {
         "resource": {
           "relative_path": "models/Elements_Topography.glb"
@@ -317,7 +317,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "ncTA1VJuxFo3Rj85oV7ETA=="
+          "hash": "WsObqPftHkYCrm8YrDpvhQ=="
         }
       },
       "is_incremental": false,
@@ -481,6 +481,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Elements.DirectionalLight.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.DirectionalLight.html",
+          "hash": "8UjJrrcVruryHqk0vxXRgw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Domain1d.yml",
       "output": {
         ".html": {
@@ -509,7 +521,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Element.html",
-          "hash": "FaXSyDnEDfvV3xoBSVLI4w=="
+          "hash": "E9SACiaUUfeqo+6yQL6O4w=="
         }
       },
       "is_incremental": false,
@@ -546,54 +558,6 @@
         ".html": {
           "relative_path": "api/Elements.Frame.html",
           "hash": "rebBKTOuoGqJYKXe2ONEsw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Generate.CompilationResult.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Generate.CompilationResult.html",
-          "hash": "HHPegzCtSvAQLnwqS53pUA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Generate.GenerationResult.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Generate.GenerationResult.html",
-          "hash": "/3WZaWqW0Kf5NC0APEAc/Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Generate.TypeGenerator.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Generate.TypeGenerator.html",
-          "hash": "t2xu7pWeUp05mLXECKkw3A=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Generate.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Generate.html",
-          "hash": "3TdiU3F2NJPh9+5qprs/tA=="
         }
       },
       "is_incremental": false,
@@ -761,7 +725,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeometricElement.html",
-          "hash": "v7oWYnoB6HLPP1rEGvITpg=="
+          "hash": "mqYmjrxM1X2NYlJIKQZpEw=="
         }
       },
       "is_incremental": false,
@@ -1013,7 +977,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "Jgyrj4/dYyzDXf8JOOJBcQ=="
+          "hash": "+wKxCtKSZieaX+TtEJLNoQ=="
         }
       },
       "is_incremental": false,
@@ -1025,7 +989,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polyline.html",
-          "hash": "yHLDk9mMYHqS1fEm/v5Kbw=="
+          "hash": "VtGf4XLNMosBjAeuH7EbHQ=="
         }
       },
       "is_incremental": false,
@@ -1037,7 +1001,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profile.html",
-          "hash": "C+FC8VDRgWyNfGl/j7Hchw=="
+          "hash": "GTOB6UHeTBDQWBif9a44Ow=="
         }
       },
       "is_incremental": false,
@@ -1049,7 +1013,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.HSSPipeProfile.html",
-          "hash": "pCLwghEjVN4+8g36djkaAw=="
+          "hash": "eRYKx6+xCwLGcolbP0joog=="
         }
       },
       "is_incremental": false,
@@ -1121,7 +1085,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.WideFlangeProfile.html",
-          "hash": "Bj2fGZcjdwm6beJisAvEgA=="
+          "hash": "hKLvbW8u75WeFWrU2v6ZFg=="
         }
       },
       "is_incremental": false,
@@ -1361,7 +1325,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Vector3.html",
-          "hash": "99PmsylxR2YwuNpiSuw28w=="
+          "hash": "FvWjnYdZiX4aMxfMinnnEw=="
         }
       },
       "is_incremental": false,
@@ -1481,7 +1445,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Model.html",
-          "hash": "faW5M2b4v142fiTqPwq0dg=="
+          "hash": "YgacXg4z7LndwPh3U1t+KQ=="
         }
       },
       "is_incremental": false,
@@ -1637,7 +1601,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Space.html",
-          "hash": "EZv6RkCWFR9iiOdkdFPjHA=="
+          "hash": "FPP8ZNJaoEtwwDLKHnEDXA=="
         }
       },
       "is_incremental": false,
@@ -2081,7 +2045,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.html",
-          "hash": "ngFXBxNVddWC7mZcOeT2Gg=="
+          "hash": "c6HYDzorIU+N9aW2Ky2w7A=="
         }
       },
       "is_incremental": false,
@@ -3498,6 +3462,13 @@
         "full_build_reason_code": "ForceRebuild"
       },
       "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
@@ -3505,23 +3476,16 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 138,
+          "skipped_file_count": 0
+        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 9,
-          "skipped_file_count": 0
-        },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 141,
-          "skipped_file_count": 0
-        },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }

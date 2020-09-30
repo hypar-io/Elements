@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DotLiquid;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Newtonsoft.Json;
@@ -15,103 +13,8 @@ using Elements.Generate.StringUtils;
 using NJsonSchema.CodeGeneration;
 using NJsonSchema.CodeGeneration.CSharp.Models;
 
-namespace Elements.Generate.StringUtils
-{
-    public static class StringUtilities
-    {
-        // TODO: This is a direct copy of the method in Hypar.Model.
-        // We should move type generation out of elements to a place where it can refer to Hypar.Model.
-        public static string ToSafeIdentifier(this string name, bool firstCharLowercase = false)
-        {
-            if (String.IsNullOrWhiteSpace(name) || String.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("Invalid name.");
-            }
-            //remove special characters except for space, dash, period, and underscore
-            name = Regex.Replace(name, @"[^A-Za-z0-9 _\.-]", "");
-            //remove any numbers or whitespace/separator characters from the front
-            while (Char.IsDigit(name.First()) || name.First() == ' ' || name.First() == '_' || name.First() == '-' || name.First() == '.')
-            {
-                if (name.Length < 2)
-                {
-                    throw new ArgumentException("Name is invalid: nothing is left after removing numeric characters. Names must contain at least one letter.");
-                }
-                name = name.Substring(1);
-            }
-            //split on whitespace or - or _
-            var splits = name.Split(new[] { ' ', '-', '_', '.' });
-            var cleanName = "";
-            var dontCapitalize = firstCharLowercase;
-            foreach (var split in splits)
-            {
-                if (split.Length == 0)
-                {
-                    continue;
-                }
-                if (dontCapitalize)
-                {
-                    cleanName += split.First().ToString().ToLower();
-                    dontCapitalize = false;
-                }
-                else
-                {
-                    cleanName += split.First().ToString().ToUpper();
-                }
-                if (split.Length > 1)
-                {
-                    cleanName += split.Substring(1);
-                }
-            }
-            if (string.IsNullOrEmpty(cleanName))
-            {
-                throw new ArgumentException("Names must have at least one letter character.");
-            }
-            return cleanName;
-        }
-
-    }
-
-}
-
 namespace Elements.Generate
 {
-    /// <summary>
-    /// The result of a compilation.
-    /// </summary>
-    public struct CompilationResult
-    {
-        /// <summary>
-        /// True if the compilation succeeded.
-        /// </summary>
-        public bool Success { get; internal set; }
-        /// <summary>
-        /// The Assembly loaded from the compilation, if successful.
-        /// </summary>
-        public Assembly Assembly { get; internal set; }
-        /// <summary>
-        /// Any messages or errors that arose during compilation.
-        /// </summary>
-        public string[] DiagnosticResults { get; internal set; }
-    }
-
-    /// <summary>
-    /// The result of code generation.
-    /// </summary>
-    public struct GenerationResult
-    {
-        /// <summary>
-        /// True if the code was generated successfully.
-        /// </summary>
-        public bool Success { get; internal set; }
-        /// <summary>
-        /// The file path to the generated code.
-        /// </summary>
-        public string FilePath { get; internal set; }
-        /// <summary>
-        /// Any messages or errors that arose during code generation.
-        /// </summary>
-        public string[] DiagnosticResults { get; internal set; }
-    }
     class ElementsTypeNameGenerator : ITypeNameGenerator
     {
         // TODO(Ian): This type name generator is only required because njsonschema
@@ -124,7 +27,7 @@ namespace Elements.Generate
         public string Generate(JsonSchema schema, string typeNameHint, IEnumerable<string> reservedTypeNames)
         {
             // Console.WriteLine(typeNameHint + ":" + schema.InheritedSchema ?? "none");
-            if (schema.IsEnumeration)
+            if (schema.IsEnumeration || String.IsNullOrEmpty(schema.Title))
             {
                 return typeNameHint;
             }
@@ -142,6 +45,7 @@ namespace Elements.Generate
             return property.Name.ToSafeIdentifier();
         }
     }
+
     /// <summary>
     /// TypeGenerator contains logic for generating element types from JSON schemas.
     /// </summary>
@@ -193,47 +97,16 @@ namespace Elements.Generate
                 {
                     _templatesPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "./Templates"));
                 }
+                if (!Directory.Exists(_templatesPath))
+                {
+                    Console.WriteLine("Templates path attempted: " + _templatesPath);
+                    throw new InvalidDataException("The templates folder cannot be found and is necessary for successful code generation. Be sure that the Hypar.Elements.CodeGeneration nuget package is referenced in all of your projects.");
+                }
                 return _templatesPath;
             }
             set => _templatesPath = value;
         }
 
-        // TODO Delete this HyparFilters class when this issue gets resolved. https://github.com/RicoSuter/NJsonSchema/issues/1199
-        // This HyparFilters class contains filters that are copied directly from the NJsonSchema repo
-        // because the filters are not public but we need to register them globally for async code gen.
-        // Copied from https://github.com/RicoSuter/NJsonSchema/blob/687efeabdc30ddacd235e85213f3594458ed48b4/src/NJsonSchema.CodeGeneration/DefaultTemplateFactory.cs#L183
-        public static class HyparFilters
-        {
-            public static string Lowercamelcase(Context context, string input, bool firstCharacterMustBeAlpha = true)
-            {
-                return ConversionUtilities.ConvertToLowerCamelCase(input, firstCharacterMustBeAlpha);
-            }
-
-            public static string Safeidentifierlower(Context context, string input, bool firstCharacterMustBeAlpha = true)
-            {
-                return input.ToSafeIdentifier(true);
-            }
-
-            public static string Safeidentifierupper(Context context, string input, bool firstCharacterMustBeAlpha = true)
-            {
-                return input.ToSafeIdentifier();
-            }
-
-            public static string Csharpdocs(string input, int tabCount)
-            {
-                return ConversionUtilities.ConvertCSharpDocs(input, tabCount);
-            }
-
-            public static IEnumerable<object> Empty(Context context, object input)
-            {
-                return Enumerable.Empty<object>();
-            }
-
-            public static string Tab(Context context, string input, int tabCount)
-            {
-                return ConversionUtilities.Tab(input, tabCount);
-            }
-        }
 
         /// <summary>
         /// Generate a user-defined type in a .g.cs file from a schema.
@@ -279,6 +152,8 @@ namespace Elements.Generate
         /// <param name="isUserElement">Is the type a user-defined element?</param>
         public static async Task<GenerationResult[]> GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             var results = new List<Task<GenerationResult>>();
             foreach (var uri in uris)
             {
@@ -297,6 +172,8 @@ namespace Elements.Generate
         /// <returns>A CompilationResult containing information about the compilation.</returns>
         public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndLoadAsync(string[] uris, bool frameworkBuild = false)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
             var code = new Dictionary<string, string>();
             foreach (var uri in uris)
@@ -305,7 +182,7 @@ namespace Elements.Generate
                 // with the GenerateInMemoryAssemblyFromUrisAndSaveAsync method.
                 // We didn't do this originally because the return value of the refactored
                 // method would need to be a CompilationResult and the loop would generate a List<string>,
-                // but because it's async we can't do that as a ref parameter. 
+                // but because it's async we can't do that as a ref parameter.
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
@@ -364,6 +241,8 @@ namespace Elements.Generate
         /// <returns>A CompilationResult containing information about the compilation.</returns>
         public static async Task<CompilationResult> GenerateInMemoryAssemblyFromUrisAndSaveAsync(string[] uris, string dllPath, bool frameworkBuild = false)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/may/net-core-cross-platform-code-generation-with-roslyn-and-net-core
 
             var code = new Dictionary<string, string>();
@@ -422,6 +301,8 @@ namespace Elements.Generate
         /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
         public static async Task<GenerationResult[]> GenerateElementTypesAsync(string outputBaseDir)
         {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             var typeNames = _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToList();
             var tasks = new List<Task<GenerationResult>>();
             foreach (var uri in _hyparSchemas)
@@ -440,7 +321,7 @@ namespace Elements.Generate
         }
 
         /// <summary>
-        /// Get a list of the core Hypar types, which should be excluded from code generation. 
+        /// Get a list of the core Hypar types, which should be excluded from code generation.
         /// </summary>
         public static string[] GetCoreTypeNames()
         {
@@ -529,7 +410,7 @@ namespace Elements.Generate
                 {
                     continue;
                 }
-                // strategy for using templates taken from the NJsonSchema source 
+                // strategy for using templates taken from the NJsonSchema source
                 // https://github.com/RicoSuter/NJsonSchema/blob/master/src/NJsonSchema.CodeGeneration.CSharp/CSharpGenerator.cs#L50
                 var model = new FileTemplateModel
                 {
@@ -550,7 +431,7 @@ namespace Elements.Generate
             if (isUserElement)
             {
                 // remove unncessary imports
-                // TODO: make this a conditional for the code generation using ExtensionData, instead of using string replacement. 
+                // TODO: make this a conditional for the code generation using ExtensionData, instead of using string replacement.
                 // For whatever reason, this was not working with code in File.liquid — only Class.liquid.
                 file = file.Replace(@"
 using Hypar.Functions;
@@ -558,7 +439,7 @@ using Hypar.Functions.Execution;
 using Hypar.Functions.Execution.AWS;", "");
                 // Insert the UserElement attribute directly before
                 // 'public partial class ' any time it occurs in the file
-                // because we may be generating code for multiple user types in 
+                // because we may be generating code for multiple user types in
                 // the same file.
                 var start = 0;
                 while (true)
@@ -742,7 +623,6 @@ using Hypar.Functions.Execution.AWS;", "");
             {
                 var tree = CSharpSyntaxTree.ParseText(cs, options);
                 syntaxTrees.Add(tree);
-
             }
 
             var assemblyPath = frameworkBuild ? @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" : Path.GetDirectoryName(typeof(object).Assembly.Location);
@@ -750,7 +630,7 @@ using Hypar.Functions.Execution.AWS;", "");
             var newtonSoftPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
 
             IEnumerable<MetadataReference> defaultReferences = new[]
-           {
+            {
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "netstandard.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.ComponentModel.Annotations.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Diagnostics.Tools.dll")),

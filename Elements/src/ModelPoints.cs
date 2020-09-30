@@ -9,15 +9,15 @@ namespace Elements
     /// A collection of points which are visible in 3D.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../test/Elements.Tests/ModelPointsTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/ModelPointsTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class ModelPoints: GeometricElement
-    {   
+    public class ModelPoints : GeometricElement
+    {
         /// <summary>
         /// The locations of the points.
         /// </summary>
-        public IList<Vector3> Locations { get; set;}
+        public IList<Vector3> Locations { get; set; }
 
         /// <summary>
         /// Create a collection of points.
