@@ -265,9 +265,12 @@ namespace Elements.Serialization.glTF
                 gltf.AddNode(nodes, lightNode, 0);
                 lightCount++;
             }
-            gltf.Extensions.Add("KHR_lights_punctual", new Dictionary<string, object>{
+            if (lightsArr.Count > 0)
+            {
+                gltf.Extensions.Add("KHR_lights_punctual", new Dictionary<string, object>{
                 {"lights", lightsArr}
             });
+            }
         }
 
         private static int AddAccessor(List<Accessor> accessors, int bufferView, int byteOffset, Accessor.ComponentTypeEnum componentType, int count, float[] min, float[] max, Accessor.TypeEnum accessorType)
@@ -810,15 +813,14 @@ namespace Elements.Serialization.glTF
                 if (typeof(ContentElement).IsAssignableFrom(e.GetType()))
                 {
                     var content = e as ContentElement;
-                    if (File.Exists(content.GltfLocation))
-                    // if (false)
+                    // if (File.Exists(content.GltfLocation))
+                    if (false)
                     {
 
                     }
                     else
                     {
                         var vertices = new List<Vector3> { content.BBox.Min, content.BBox.Max };
-                        // AddLines(GetNextId(), vertices, gltf, materials[BuiltInMaterials.Default.Name], buffer, bufferViews, accessors, meshes, nodes, true, content.Transform);
                         var bottomProfile = new Polygon(new List<Vector3>{
                             new Vector3(content.BBox.Min.X, content.BBox.Min.Y, content.BBox.Min.Z),
                             new Vector3(content.BBox.Min.X, content.BBox.Max.Y, content.BBox.Min.Z),

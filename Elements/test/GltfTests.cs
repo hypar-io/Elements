@@ -34,28 +34,53 @@ namespace Elements.Tests
             var ours = Interface.LoadModel(testPath);
             var buffers = ours.Buffers.ToList();
             var buffViews = ours.BufferViews.ToList();
-            // var materials = ours1.Materials;
             var accessors = ours.Accessors.ToList();
             var meshes = ours.Meshes.ToList();
+            var materials = ours.Materials.ToList();
+            var images = ours.Images != null ? ours.Images.ToList() : new List<Image>();
+            var textures = ours.Textures != null ? ours.Textures.ToList() : new List<Texture>();
+            var samplers = ours.Samplers != null ? ours.Samplers.ToList() : new List<Sampler>();
 
             var bufferByteArrays = ours.GetAllBufferByteArrays(testPath);
 
-            GlftMergingUtils.AddAllMeshesFromFromGlb("../../../models/MergeGlTF/Duck.glb", buffers, bufferByteArrays, buffViews, accessors, meshes);
+            GlftMergingUtils.AddAllMeshesFromFromGlb("../../../models/MergeGlTF/Avocado.glb",
+                                                     buffers,
+                                                     bufferByteArrays,
+                                                     buffViews,
+                                                     accessors,
+                                                     meshes,
+                                                     materials,
+                                                     images,
+                                                     textures,
+                                                     samplers
+                                                     );
 
             ours.Buffers = buffers.ToArray();
             ours.BufferViews = buffViews.ToArray();
             ours.Accessors = accessors.ToArray();
             ours.Meshes = meshes.ToArray();
+            ours.Materials = materials.ToArray();
+            ours.Images = images.ToArray();
+            ours.Textures = textures.ToArray();
+            if (samplers.Count > 0)
+            {
+                ours.Samplers = samplers.ToArray();
+            }
 
             var savepath = "../../../GltfTestResult.gltf";
             ours.SaveBuffersAndUris(savepath, bufferByteArrays);
 
             var nodeList = ours.Nodes.ToList();
-            var duckTransform = new Transform(new Vector3(), Vector3.XAxis, Vector3.YAxis.Negate());
-            duckTransform.Scale(1.0 / 100);
-            GltfExtensions.CreateNodeForMesh(ours, ours.Meshes.Length - 1, nodeList, duckTransform);
+            var transform = new Transform(new Vector3(.1, .1, 0), Vector3.XAxis, Vector3.YAxis.Negate());
+            transform.Scale(1.0 / .01);
+            GltfExtensions.CreateNodeForMesh(ours, ours.Meshes.Length - 1, nodeList, transform);
             ours.Nodes = nodeList.ToArray();
             ours.SaveModel(savepath);
+            var mergedBuffer = ours.GetCombinedBufferAndInternalTweak(bufferByteArrays.ToArray());
+            // var mergedSavePath = "../../../GltfMerged.gltf";
+            // ours.SaveBuffersAndUris(mergedSavePath, new List<byte[]> { mergedBuffer });
+            // ours.SaveModel(mergedSavePath);
+            ours.SaveBinaryModel(mergedBuffer, "../../../GltfMerged.glb");
 
         }
     }

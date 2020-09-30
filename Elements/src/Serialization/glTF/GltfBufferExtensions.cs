@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using glTFLoader;
 using glTFLoader.Schema;
@@ -50,6 +51,29 @@ namespace Elements.Serialization.glTF
                 bufferByteArrays.Add(byteArray);
             }
             return bufferByteArrays;
+        }
+
+        internal static byte[] GetCombinedBufferAndInternalTweak(this Gltf gltf, byte[][] buffers)
+        {
+            var fullBuffer = new List<byte>();
+            for (int i = 0; i < buffers.Length; i++)
+            {
+                var buff = buffers[i];
+                if (i > 0)
+                {
+                    var referringViews = gltf.BufferViews.Where(bv => bv.Buffer == i);
+                    foreach (var buffView in referringViews)
+                    {
+                        buffView.Buffer = 0;
+                        buffView.ByteOffset = buffView.ByteOffset + fullBuffer.Count;
+                    }
+                }
+                fullBuffer.AddRange(buff);
+            }
+            var onlyBuffer = new Buffer();
+            onlyBuffer.ByteLength = fullBuffer.Count;
+            gltf.Buffers = new[] { onlyBuffer };
+            return fullBuffer.ToArray();
         }
     }
 }

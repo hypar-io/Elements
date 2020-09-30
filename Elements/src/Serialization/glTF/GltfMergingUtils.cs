@@ -17,7 +17,11 @@ namespace Elements.Serialization.glTF
                                         List<byte[]> bufferByteArrays,
                                         List<BufferView> bufferViews,
                                         List<Accessor> accessors,
-                                        List<glTFLoader.Schema.Mesh> meshes
+                                        List<glTFLoader.Schema.Mesh> meshes,
+                                        List<glTFLoader.Schema.Material> materials,
+                                        List<Image> images,
+                                        List<Texture> textures,
+                                        List<Sampler> samplers
                                         )
         {
             var newMaterials = new Dictionary<int, int>();
@@ -45,6 +49,51 @@ namespace Elements.Serialization.glTF
                 accessors.Add(originAccessor);
             }
 
+            var imageIncrement = images.Count;
+            foreach (var originImage in loaded.Images)
+            {
+                if (originImage.BufferView.HasValue)
+                {
+                    originImage.BufferView = originImage.BufferView + buffViewIncrement;
+                }
+                images.Add(originImage);
+            }
+
+            var samplerIncrement = samplers.Count;
+            if (loaded.Samplers != null)
+            {
+                foreach (var originSampler in loaded.Samplers)
+                {
+                    samplers.Add(originSampler);
+                }
+            }
+
+            var textureIncrement = textures.Count;
+            foreach (var originTexture in loaded.Textures)
+            {
+                originTexture.Source = originTexture.Source + imageIncrement;
+                originTexture.Sampler = originTexture.Sampler + samplerIncrement;
+                textures.Add(originTexture);
+            }
+
+            var materialIncrement = materials.Count;
+            foreach (var originMaterial in loaded.Materials)
+            {
+                if (originMaterial.EmissiveTexture != null)
+                {
+                    originMaterial.EmissiveTexture.Index = originMaterial.EmissiveTexture.Index + textureIncrement;
+                }
+                if (originMaterial.NormalTexture != null)
+                {
+                    originMaterial.NormalTexture.Index = originMaterial.NormalTexture.Index + textureIncrement;
+                }
+                if (originMaterial.OcclusionTexture != null)
+                {
+                    originMaterial.OcclusionTexture.Index = originMaterial.OcclusionTexture.Index + textureIncrement;
+                }
+                materials.Add(originMaterial);
+            }
+
             foreach (var originMesh in loaded.Meshes)
             {
                 foreach (var prim in originMesh.Primitives)
@@ -56,6 +105,7 @@ namespace Elements.Serialization.glTF
                     }
                     prim.Attributes = attributes;
                     prim.Indices = prim.Indices + accessorIncrement;
+                    prim.Material = prim.Material + materialIncrement;
                 }
                 meshes.Add(originMesh);
             }

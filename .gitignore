@@ -336,3 +336,6 @@ appsettings.dev.json
 *.icloud
 
 **/deploy/*
+
+Elements/test/*.bin
+Elements/test/*.gltf
