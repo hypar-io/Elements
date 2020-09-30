@@ -61,7 +61,9 @@ namespace Elements.Generate
                 "https://hypar.io/Schemas/Geometry/Solids/SolidOperation.json",
                 "https://hypar.io/Schemas/Geometry/Solids/Sweep.json",
                 "https://hypar.io/Schemas/Geometry/Arc.json",
+                "https://dev-api.hypar.io/schemas/BBox3",
                 "https://hypar.io/Schemas/Geometry/Color.json",
+                "https://dev-api.hypar.io/schemas/ContentElement",
                 "https://hypar.io/Schemas/Geometry/Curve.json",
                 "https://hypar.io/Schemas/Geometry/Line.json",
                 "https://hypar.io/Schemas/Geometry/Plane.json",
@@ -376,7 +378,7 @@ namespace Elements.Generate
         {
             var templates = TemplatesPath;
 
-            var structTypes = new[] { "Color", "Vector3" };
+            var structTypes = new[] { "Color", "Vector3", "BBox3" };
 
             // A limited set of the solid operation types. This will be used
             // to add INotifyPropertyChanged logic, so we don't add the
@@ -428,6 +430,11 @@ namespace Elements.Generate
 
         private static string FileTweaksAndCleanup(string typeName, bool isUserElement, string[] structTypes, string file)
         {
+            // Convert some classes to structs.
+            if (structTypes.Contains(typeName))
+            {
+                file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
+            }
             if (isUserElement)
             {
                 // remove unncessary imports
@@ -464,11 +471,6 @@ using Hypar.Functions.Execution.AWS;", "");
 
                 // Obsolete the origin property on Model.
                 file = file.Replace("public Position Origin { get; set; }", "[Obsolete(\"Use Transform instead.\")]\n\t\tpublic Position Origin { get; set; }");
-            }
-            // Convert some classes to structs.
-            else if (structTypes.Contains(typeName))
-            {
-                file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
             }
 
             return file;

@@ -431,7 +431,7 @@ namespace Elements.Serialization.glTF
             return meshes.Count - 1;
         }
 
-        private static int CreateNodeForMesh(Gltf gltf, int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
+        public static int CreateNodeForMesh(Gltf gltf, int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
         {
             var parentId = 0;
 
@@ -669,20 +669,8 @@ namespace Elements.Serialization.glTF
                 return false;
             }
 
-            var uri = Path.GetFileNameWithoutExtension(path) + ".bin";
-            gltf.Buffers[0].Uri = uri;
-
-            var binSaveDir = Path.GetDirectoryName(path);
-            var binSaveName = Path.GetFileNameWithoutExtension(path) + ".bin";
-            var binSavePath = Path.Combine(binSaveDir, binSaveName);
-            if (File.Exists(binSavePath))
-            {
-                File.Delete(binSavePath);
-            }
-            using (var fs = new FileStream(binSavePath, FileMode.Create, FileAccess.Write))
-            {
-                fs.Write(buffer.ToArray(), 0, buffer.Count);
-            }
+            // Buffers must be saved first, URIs may be set or modified inside the save Buffer method
+            gltf.SaveBuffersAndUris(path, new List<byte[]> { buffer.ToArray() });
             gltf.SaveModel(path);
             return true;
         }
@@ -819,19 +807,30 @@ namespace Elements.Serialization.glTF
 
             if (e is GeometricElement)
             {
-                var geom = (GeometricElement)e;
-                materialName = geom.Material.Name;
-
-                geom.UpdateRepresentations();
-                if (geom.Representation != null)
+                if (typeof(ContentElement).IsAssignableFrom(e.GetType()))
                 {
-                    foreach (var solidOp in geom.Representation.SolidOperations)
+                    var content = e as ContentElement;
+                    if (File.Exists(content.GltfLocation))
+                    // if (false)
                     {
-                        if (solidOp.Solid != null)
-                        {
-                            meshId = ProcessSolid(solidOp.Solid,
-                                                  e.Id.ToString(),
-                                                  materialName,
+
+                    }
+                    else
+                    {
+                        var vertices = new List<Vector3> { content.BBox.Min, content.BBox.Max };
+                        // AddLines(GetNextId(), vertices, gltf, materials[BuiltInMaterials.Default.Name], buffer, bufferViews, accessors, meshes, nodes, true, content.Transform);
+                        var bottomProfile = new Polygon(new List<Vector3>{
+                            new Vector3(content.BBox.Min.X, content.BBox.Min.Y, content.BBox.Min.Z),
+                            new Vector3(content.BBox.Min.X, content.BBox.Max.Y, content.BBox.Min.Z),
+                            new Vector3(content.BBox.Max.X, content.BBox.Max.Y, content.BBox.Min.Z),
+                            new Vector3(content.BBox.Max.X, content.BBox.Min.Y, content.BBox.Min.Z),
+
+                        });
+                        var height = content.BBox.Max.Z - content.BBox.Min.Z;
+                        var boxSolid = new Extrude(bottomProfile, height, Vector3.ZAxis, false);
+                        meshId = ProcessSolid(boxSolid.Solid,
+                                                  content.Id.ToString(),
+                                                  BuiltInMaterials.Default.Name,
                                                   ref gltf,
                                                   ref materials,
                                                   ref buffer,
@@ -839,17 +838,55 @@ namespace Elements.Serialization.glTF
                                                   accessors,
                                                   meshes,
                                                   lines,
-                                                  geom.IsElementDefinition ? false : drawEdges,
-                                                  geom.Transform);
-                            if (!meshElementMap.ContainsKey(e.Id))
-                            {
-                                meshElementMap.Add(e.Id, new List<int>());
-                            }
-                            meshElementMap[e.Id].Add(meshId);
+                                                  content.IsElementDefinition ? false : drawEdges,
+                                                  content.Transform);
 
-                            if (!geom.IsElementDefinition)
+                        if (!meshElementMap.ContainsKey(e.Id))
+                        {
+                            meshElementMap.Add(e.Id, new List<int>());
+                        }
+                        meshElementMap[e.Id].Add(meshId);
+
+                        if (!content.IsElementDefinition)
+                        {
+                            CreateNodeForMesh(gltf, meshId, nodes, content.Transform);
+                        }
+                    }
+                }
+                else
+                {
+                    var geom = (GeometricElement)e;
+                    materialName = geom.Material.Name;
+
+                    geom.UpdateRepresentations();
+                    if (geom.Representation != null)
+                    {
+                        foreach (var solidOp in geom.Representation.SolidOperations)
+                        {
+                            if (solidOp.Solid != null)
                             {
-                                CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
+                                meshId = ProcessSolid(solidOp.Solid,
+                                                      e.Id.ToString(),
+                                                      materialName,
+                                                      ref gltf,
+                                                      ref materials,
+                                                      ref buffer,
+                                                      bufferViews,
+                                                      accessors,
+                                                      meshes,
+                                                      lines,
+                                                      geom.IsElementDefinition ? false : drawEdges,
+                                                      geom.Transform);
+                                if (!meshElementMap.ContainsKey(e.Id))
+                                {
+                                    meshElementMap.Add(e.Id, new List<int>());
+                                }
+                                meshElementMap[e.Id].Add(meshId);
+
+                                if (!geom.IsElementDefinition)
+                                {
+                                    CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
+                                }
                             }
                         }
                     }
