@@ -75,7 +75,11 @@ namespace Elements.Serialization.glTF
                 foreach (var originTexture in loaded.Textures)
                 {
                     originTexture.Source = originTexture.Source + imageIncrement;
-                    originTexture.Sampler = originTexture.Sampler + samplerIncrement;
+                    if (originTexture.Sampler.HasValue)
+                    {
+                        originTexture.Sampler = originTexture.Sampler + samplerIncrement;
+
+                    }
                     textures.Add(originTexture);
                 }
             }
@@ -95,6 +99,18 @@ namespace Elements.Serialization.glTF
                 {
                     originMaterial.OcclusionTexture.Index = originMaterial.OcclusionTexture.Index + textureIncrement;
                 }
+                if (originMaterial.PbrMetallicRoughness != null)
+                {
+                    if (originMaterial.PbrMetallicRoughness.MetallicRoughnessTexture != null)
+                    {
+                        originMaterial.PbrMetallicRoughness.MetallicRoughnessTexture.Index = originMaterial.PbrMetallicRoughness.MetallicRoughnessTexture.Index + textureIncrement;
+                    }
+                    if (originMaterial.PbrMetallicRoughness.BaseColorTexture != null)
+                    {
+                        originMaterial.PbrMetallicRoughness.BaseColorTexture.Index = originMaterial.PbrMetallicRoughness.BaseColorTexture.Index + textureIncrement;
+                    }
+                }
+
                 materials.Add(originMaterial);
             }
 

@@ -337,6 +337,7 @@ namespace Elements.Serialization.glTF
             var b = transform.YAxis;
             var c = transform.ZAxis;
 
+
             var matrix = new[]{
                     (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
                     (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
@@ -720,16 +721,13 @@ namespace Elements.Serialization.glTF
             };
 
             var bufferViews = new List<BufferView>();
-            var accessors = new List<Accessor>();
-            var textures = new List<Texture>();
-            var images = new List<Image>();
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
             if (drawEdges)
             {
                 materialsToAdd.Add(BuiltInMaterials.Edges);
             }
-            var materials = gltf.AddMaterials(materialsToAdd, bufferBytes, bufferViews);
+            var materialIndexMap = gltf.AddMaterials(materialsToAdd, bufferBytes, bufferViews);
 
             var elements = model.Elements.Where(e =>
             {
@@ -745,6 +743,12 @@ namespace Elements.Serialization.glTF
             var currLines = new List<Vector3>();
             lines.Add(currLines);
 
+            var accessors = new List<Accessor>();
+            var textures = new List<Texture>();
+            var images = new List<Image>();
+            var samplers = new List<Sampler>();
+            var materials = gltf.Materials != null ? gltf.Materials.ToList() : new List<glTFLoader.Schema.Material>();
+
             var meshElementMap = new Dictionary<Guid, List<int>>();
             foreach (var e in elements)
             {
@@ -759,14 +763,16 @@ namespace Elements.Serialization.glTF
 
                 GetRenderDataForElement(e,
                                         gltf,
-                                        materials,
+                                        materialIndexMap,
                                         bufferBytes,
                                         allBufferByteArrays,
                                         buffers,
                                         bufferViews,
                                         accessors,
+                                        materials,
                                         textures,
                                         images,
+                                        samplers,
                                         meshes,
                                         nodes,
                                         meshElementMap,
@@ -786,7 +792,7 @@ namespace Elements.Serialization.glTF
                     {
                         continue;
                     }
-                    AddLines(GetNextId(), lineSet, gltf, materials[BuiltInMaterials.Edges.Name], bufferBytes, bufferViews, accessors, meshes, nodes, false);
+                    AddLines(GetNextId(), lineSet, gltf, materialIndexMap[BuiltInMaterials.Edges.Name], bufferBytes, bufferViews, accessors, meshes, nodes, false);
                 }
             }
 
@@ -797,6 +803,7 @@ namespace Elements.Serialization.glTF
             gltf.Buffers = buffers.ToArray();
             gltf.BufferViews = bufferViews.ToArray();
             gltf.Accessors = accessors.ToArray();
+            gltf.Materials = materials.ToArray();
             if (textures.Count > 0)
             {
                 gltf.Textures = textures.ToArray();
@@ -804,6 +811,10 @@ namespace Elements.Serialization.glTF
             if (images.Count > 0)
             {
                 gltf.Images = images.ToArray();
+            }
+            if (samplers.Count > 0)
+            {
+                gltf.Samplers = samplers.ToArray();
             }
             gltf.Nodes = nodes.ToArray();
             if (meshes.Count > 0)
@@ -818,14 +829,16 @@ namespace Elements.Serialization.glTF
 
         private static void GetRenderDataForElement(Element e,
                                                     Gltf gltf,
-                                                    Dictionary<string, int> materials,
+                                                    Dictionary<string, int> materialIndexMap,
                                                     List<byte> bufferBytes,
                                                     List<byte[]> allBuffersByteArrays,
                                                     List<glTFLoader.Schema.Buffer> buffers,
                                                     List<BufferView> bufferViews,
                                                     List<Accessor> accessors,
+                                                    List<glTFLoader.Schema.Material> materials,
                                                     List<Texture> textures,
                                                     List<Image> images,
+                                                    List<Sampler> samplers,
                                                     List<glTFLoader.Schema.Mesh> meshes,
                                                     List<glTFLoader.Schema.Node> nodes,
                                                     Dictionary<Guid, List<int>> meshElementMap,
@@ -842,27 +855,26 @@ namespace Elements.Serialization.glTF
                     var content = e as ContentElement;
                     if (File.Exists(content.GltfLocation))
                     {
-                        var currentMaterials = gltf.Materials.ToList();
+                        // var currentMaterials = gltf.Materials.ToList();
                         // var currentImages = gltf.Images != null ? gltf.Images.ToList() : new List<Image>();
                         // var currentTextures = gltf.Textures != null ? gltf.Textures.ToList() : new List<Texture>();
-                        var currentSamplers = gltf.Samplers != null ? gltf.Samplers.ToList() : new List<Sampler>();
                         var meshIndices = GlftMergingUtils.AddAllMeshesFromFromGlb(content.GltfLocation,
                                                                 buffers,
                                                                 allBuffersByteArrays,
                                                                 bufferViews,
                                                                 accessors,
                                                                 meshes,
-                                                                currentMaterials,
+                                                                materials,
                                                                 textures,
                                                                 images,
-                                                                currentSamplers
+                                                                samplers
                                                                 );
 
                         if (!meshElementMap.ContainsKey(e.Id))
                         {
                             meshElementMap.Add(e.Id, meshIndices);
                         }
-                        gltf.Materials = currentMaterials.ToArray();
+                        // gltf.Materials = currentMaterials.ToArray();
                     }
                     else
                     {
@@ -880,7 +892,7 @@ namespace Elements.Serialization.glTF
                                                   content.Id.ToString(),
                                                   BuiltInMaterials.Default.Name,
                                                   ref gltf,
-                                                  ref materials,
+                                                  ref materialIndexMap,
                                                   ref bufferBytes,
                                                   bufferViews,
                                                   accessors,
@@ -917,7 +929,7 @@ namespace Elements.Serialization.glTF
                                                       e.Id.ToString(),
                                                       materialName,
                                                       ref gltf,
-                                                      ref materials,
+                                                      ref materialIndexMap,
                                                       ref bufferBytes,
                                                       bufferViews,
                                                       accessors,
@@ -944,13 +956,14 @@ namespace Elements.Serialization.glTF
             if (e is ElementInstance)
             {
                 var i = (ElementInstance)e;
-                var instanceTransform = i.Transform;
+                var transform = new Transform();
                 if (i.BaseDefinition is ContentElement contentBase)
                 {
-                    instanceTransform.Concatenate(contentBase.Transform);
+                    transform.Concatenate(contentBase.Transform);
                 }
+                transform.Concatenate(i.Transform);
                 // Lookup the corresponding mesh in the map.
-                AddInstanceMesh(gltf, nodes, meshElementMap[i.BaseDefinition.Id], instanceTransform);
+                AddInstanceMesh(gltf, nodes, meshElementMap[i.BaseDefinition.Id], transform);
 
                 if (drawEdges)
                 {
@@ -975,7 +988,7 @@ namespace Elements.Serialization.glTF
             if (e is ModelCurve)
             {
                 var mc = (ModelCurve)e;
-                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materials[mc.Material.Name], bufferBytes, bufferViews, accessors, meshes, nodes, true, mc.Transform);
+                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materialIndexMap[mc.Material.Name], bufferBytes, bufferViews, accessors, meshes, nodes, true, mc.Transform);
             }
 
             if (e is ModelPoints)
@@ -983,7 +996,7 @@ namespace Elements.Serialization.glTF
                 var mp = (ModelPoints)e;
                 if (mp.Locations.Count != 0)
                 {
-                    AddPoints(GetNextId(), mp.Locations, gltf, materials[mp.Material.Name], bufferBytes, bufferViews, accessors, meshes, nodes, mp.Transform);
+                    AddPoints(GetNextId(), mp.Locations, gltf, materialIndexMap[mp.Material.Name], bufferBytes, bufferViews, accessors, meshes, nodes, mp.Transform);
                 }
             }
 
@@ -1044,7 +1057,7 @@ namespace Elements.Serialization.glTF
                                      imax,
                                      uvmax,
                                      uvmin,
-                                     materials[materialName],
+                                     materialIndexMap[materialName],
                                      cmin,
                                      cmax,
                                      null,

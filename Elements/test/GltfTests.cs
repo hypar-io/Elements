@@ -36,26 +36,33 @@ namespace Elements.Tests
             }
 
         }
+
         [Fact]
         public void InstanceContentElement()
         {
             var model = new Model();
             var boxType = new BoxElem("../../../models/MergeGlTF/Avocado.glb",
                                       new BBox3(new Vector3(-1, 1, 0), new Vector3(1, 1, 4)),
-                                      new Transform(new Vector3(), Vector3.YAxis).Scaled(1000),
+                                      new Transform(new Vector3(), Vector3.YAxis).Scaled(20),
                                       BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
                                       "BoxyType");
-            // var newBox = boxType.CreateInstance(new Transform(), "first one");
-            var secondTransform = new Transform();
-            secondTransform.Move(0.01, 0.01, 0.01);
-            secondTransform.Scale(10);
-            var twoBox = boxType.CreateInstance(secondTransform, "then two");
-            model.AddElement(boxType);
-            // model.AddElement(newBox);
+            var boxType2 = new BoxElem("../../../models/MergeGlTF/Duck.glb",
+                                      new BBox3(new Vector3(-1, 1, 0), new Vector3(1, 1, 4)),
+                                      new Transform(new Vector3(), Vector3.YAxis).Scaled(0.01),
+                                      BuiltInMaterials.Default,
+                                      null,
+                                      true,
+                                      Guid.NewGuid(),
+                                      "BoxyType");
+            var newBox = boxType.CreateInstance(new Transform(), "first one");
+            var twoBox = boxType2.CreateInstance(new Transform(new Vector3(2, 0, 0)), "then two");
+            var threeBox = boxType2.CreateInstance(new Transform(new Vector3(4, 0, 0)), "then two");
+            model.AddElement(newBox);
             model.AddElement(twoBox);
+            model.AddElement(threeBox);
             model.ToGlTF("../../../GltfInstancing.gltf", false);
             model.ToGlTF("../../../GltfInstancing.glb");
         }
