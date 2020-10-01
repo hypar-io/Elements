@@ -5,6 +5,7 @@ using glTFLoader;
 using System.Linq;
 using System.Collections.Generic;
 using glTFLoader.Schema;
+using System;
 
 namespace Elements.Tests
 {
@@ -26,6 +27,38 @@ namespace Elements.Tests
             var str = model.ToBase64String();
         }
 
+        private class BoxElem : ContentElement
+        {
+            public BoxElem(string @gltfLocation, BBox3 @bBox, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
+                        : base(gltfLocation, bBox, transform, material, representation, isElementDefinition, id, name)
+            {
+
+            }
+
+        }
+        [Fact]
+        public void InstanceContentElement()
+        {
+            var model = new Model();
+            var boxType = new BoxElem("../../../models/MergeGlTF/Avocado.glb",
+                                      new BBox3(new Vector3(-1, 1, 0), new Vector3(1, 1, 4)),
+                                      new Transform(new Vector3(), Vector3.YAxis).Scaled(1000),
+                                      BuiltInMaterials.Default,
+                                      null,
+                                      true,
+                                      Guid.NewGuid(),
+                                      "BoxyType");
+            // var newBox = boxType.CreateInstance(new Transform(), "first one");
+            var secondTransform = new Transform();
+            secondTransform.Move(0.01, 0.01, 0.01);
+            secondTransform.Scale(10);
+            var twoBox = boxType.CreateInstance(secondTransform, "then two");
+            model.AddElement(boxType);
+            // model.AddElement(newBox);
+            model.AddElement(twoBox);
+            model.ToGlTF("../../../GltfInstancing.gltf", false);
+            model.ToGlTF("../../../GltfInstancing.glb");
+        }
 
         [Fact]
         public void MergeGlbFiles()
@@ -50,8 +83,8 @@ namespace Elements.Tests
                                                      accessors,
                                                      meshes,
                                                      materials,
-                                                     images,
                                                      textures,
+                                                     images,
                                                      samplers
                                                      );
 
@@ -68,8 +101,7 @@ namespace Elements.Tests
             }
 
             var nodeList = ours.Nodes.ToList();
-            var transform = new Transform(new Vector3(.1, .1, 0), Vector3.XAxis, Vector3.YAxis.Negate());
-            transform.Scale(1.0 / .01);
+            var transform = new Transform(new Vector3(.1, .1, 0), Vector3.XAxis, Vector3.YAxis.Negate()).Scaled(0.01);
             GltfExtensions.CreateNodeForMesh(ours, ours.Meshes.Length - 1, nodeList, transform);
             ours.Nodes = nodeList.ToArray();
 
@@ -78,7 +110,7 @@ namespace Elements.Tests
             ours.SaveModel(savepath);
 
             var mergedBuffer = ours.CombineBufferAndFixRefs(bufferByteArrays.ToArray());
-            ours.SaveBinaryModel(mergedBuffer, "../../../GltfMerged.glb");
+            ours.SaveBinaryModel(mergedBuffer, "../../../GltfTestMerged.glb");
         }
     }
 }

@@ -75,14 +75,15 @@ namespace Elements.Serialization.glTF
         /// <returns>A Base64 string representing the Model.</returns>
         public static string ToBase64String(this Model model, bool drawEdges = false)
         {
-            var buffer = new List<byte>();
+            // var buffer = new List<byte>();
             var tmp = Path.GetTempFileName();
-            var gltf = InitializeGlTF(model, buffer, drawEdges);
+            var gltf = InitializeGlTF(model, out var buffers, drawEdges);
             if (gltf == null)
             {
                 return "";
             }
-            gltf.SaveBinaryModel(buffer.ToArray(), tmp);
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray());
+            gltf.SaveBinaryModel(mergedBuffer, tmp);
             var bytes = File.ReadAllBytes(tmp);
             return Convert.ToBase64String(bytes);
         }
@@ -650,15 +651,14 @@ namespace Elements.Serialization.glTF
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
         private static bool SaveGlb(Model model, string path, bool drawEdges = false)
         {
-            var buffer = new List<byte>();
-            var gltf = InitializeGlTF(model, buffer, drawEdges);
+            var gltf = InitializeGlTF(model, out var buffers, drawEdges);
             if (gltf == null)
             {
                 return false;
             }
 
             //TODO handle initializing multiple gltf buffers at once.
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(new[] { buffer.ToArray() });
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray());
             gltf.SaveBinaryModel(mergedBuffer, path);
             return true;
         }
@@ -666,22 +666,25 @@ namespace Elements.Serialization.glTF
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
         private static bool SaveGltf(Model model, string path, bool drawEdges = false)
         {
-            var buffer = new List<byte>();
-
-            var gltf = InitializeGlTF(model, buffer, drawEdges);
+            var gltf = InitializeGlTF(model, out List<byte[]> buffers, drawEdges);
             if (gltf == null)
             {
                 return false;
             }
 
             // Buffers must be saved first, URIs may be set or modified inside this method.
-            gltf.SaveBuffersAndAddUris(path, new List<byte[]> { buffer.ToArray() });
+            gltf.SaveBuffersAndAddUris(path, buffers);
             gltf.SaveModel(path);
             return true;
         }
 
-        private static Gltf InitializeGlTF(Model model, List<byte> buffer, bool drawEdges = false)
+        private static Gltf InitializeGlTF(Model model, out List<byte[]> allBufferByteArrays, bool drawEdges = false)
         {
+            var buff = new glTFLoader.Schema.Buffer();
+            var buffers = new List<glTFLoader.Schema.Buffer> { buff };
+            var bufferBytes = new List<byte>();
+            allBufferByteArrays = new List<byte[]> { Array.Empty<byte>() };
+
             var gltf = new Gltf();
             var asset = new Asset();
             asset.Version = "2.0";
@@ -697,10 +700,10 @@ namespace Elements.Serialization.glTF
             rootTransform.Rotate(new Vector3(1, 0, 0), -90.0);
             var m = rootTransform.Matrix;
             root.Matrix = new float[]{
-                (float)m.m11, (float)m.m12, (float)m.m13, 0f,
-                (float)m.m21, (float)m.m22, (float)m.m23, 0f,
-                (float)m.m31, (float)m.m32, (float)m.m33, 0f,
-                (float)m.tx, (float)m.ty, (float)m.tz, 1f};
+                (float) m.m11, (float) m.m12, (float) m.m13, 0f,
+                (float) m.m21, (float) m.m22, (float) m.m23, 0f,
+                (float) m.m31, (float) m.m32, (float) m.m33, 0f,
+                (float) m.tx, (float) m.ty, (float) m.tz, 1f};
 
             var nodes = new List<glTFLoader.Schema.Node> { root };
             var meshes = new List<glTFLoader.Schema.Mesh>();
@@ -718,13 +721,15 @@ namespace Elements.Serialization.glTF
 
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
+            var textures = new List<Texture>();
+            var images = new List<Image>();
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
             if (drawEdges)
             {
                 materialsToAdd.Add(BuiltInMaterials.Edges);
             }
-            var materials = gltf.AddMaterials(materialsToAdd, buffer, bufferViews);
+            var materials = gltf.AddMaterials(materialsToAdd, bufferBytes, bufferViews);
 
             var elements = model.Elements.Where(e =>
             {
@@ -755,16 +760,20 @@ namespace Elements.Serialization.glTF
                 GetRenderDataForElement(e,
                                         gltf,
                                         materials,
-                                        buffer,
+                                        bufferBytes,
+                                        allBufferByteArrays,
+                                        buffers,
                                         bufferViews,
                                         accessors,
+                                        textures,
+                                        images,
                                         meshes,
                                         nodes,
                                         meshElementMap,
                                         currLines,
                                         drawEdges);
             }
-            if (buffer.Count == 0 && lights.Count == 0)
+            if (allBufferByteArrays.Sum(b => b.Count()) + bufferBytes.Count == 0 && lights.Count == 0)
             {
                 return null;
             }
@@ -777,20 +786,32 @@ namespace Elements.Serialization.glTF
                     {
                         continue;
                     }
-                    AddLines(GetNextId(), lineSet, gltf, materials[BuiltInMaterials.Edges.Name], buffer, bufferViews, accessors, meshes, nodes, false);
+                    AddLines(GetNextId(), lineSet, gltf, materials[BuiltInMaterials.Edges.Name], bufferBytes, bufferViews, accessors, meshes, nodes, false);
                 }
             }
 
-            var buff = new glTFLoader.Schema.Buffer();
-            buff.ByteLength = buffer.Count;
-            gltf.Buffers = new[] { buff };
+            if (bufferBytes.Count > 0)
+            {
+                buffers[0].ByteLength = bufferBytes.Count;
+            }
+            gltf.Buffers = buffers.ToArray();
             gltf.BufferViews = bufferViews.ToArray();
             gltf.Accessors = accessors.ToArray();
+            if (textures.Count > 0)
+            {
+                gltf.Textures = textures.ToArray();
+            }
+            if (images.Count > 0)
+            {
+                gltf.Images = images.ToArray();
+            }
             gltf.Nodes = nodes.ToArray();
             if (meshes.Count > 0)
             {
                 gltf.Meshes = meshes.ToArray();
             }
+
+            allBufferByteArrays[0] = bufferBytes.ToArray();
 
             return gltf;
         }
@@ -798,9 +819,13 @@ namespace Elements.Serialization.glTF
         private static void GetRenderDataForElement(Element e,
                                                     Gltf gltf,
                                                     Dictionary<string, int> materials,
-                                                    List<byte> buffer,
+                                                    List<byte> bufferBytes,
+                                                    List<byte[]> allBuffersByteArrays,
+                                                    List<glTFLoader.Schema.Buffer> buffers,
                                                     List<BufferView> bufferViews,
                                                     List<Accessor> accessors,
+                                                    List<Texture> textures,
+                                                    List<Image> images,
                                                     List<glTFLoader.Schema.Mesh> meshes,
                                                     List<glTFLoader.Schema.Node> nodes,
                                                     Dictionary<Guid, List<int>> meshElementMap,
@@ -817,7 +842,27 @@ namespace Elements.Serialization.glTF
                     var content = e as ContentElement;
                     if (File.Exists(content.GltfLocation))
                     {
-                        throw new NotImplementedException("Drawing content is not yet supported");
+                        var currentMaterials = gltf.Materials.ToList();
+                        // var currentImages = gltf.Images != null ? gltf.Images.ToList() : new List<Image>();
+                        // var currentTextures = gltf.Textures != null ? gltf.Textures.ToList() : new List<Texture>();
+                        var currentSamplers = gltf.Samplers != null ? gltf.Samplers.ToList() : new List<Sampler>();
+                        var meshIndices = GlftMergingUtils.AddAllMeshesFromFromGlb(content.GltfLocation,
+                                                                buffers,
+                                                                allBuffersByteArrays,
+                                                                bufferViews,
+                                                                accessors,
+                                                                meshes,
+                                                                currentMaterials,
+                                                                textures,
+                                                                images,
+                                                                currentSamplers
+                                                                );
+
+                        if (!meshElementMap.ContainsKey(e.Id))
+                        {
+                            meshElementMap.Add(e.Id, meshIndices);
+                        }
+                        gltf.Materials = currentMaterials.ToArray();
                     }
                     else
                     {
@@ -836,7 +881,7 @@ namespace Elements.Serialization.glTF
                                                   BuiltInMaterials.Default.Name,
                                                   ref gltf,
                                                   ref materials,
-                                                  ref buffer,
+                                                  ref bufferBytes,
                                                   bufferViews,
                                                   accessors,
                                                   meshes,
@@ -850,10 +895,10 @@ namespace Elements.Serialization.glTF
                         }
                         meshElementMap[e.Id].Add(meshId);
 
-                        if (!content.IsElementDefinition)
-                        {
-                            CreateNodeForMesh(gltf, meshId, nodes, content.Transform);
-                        }
+                    }
+                    if (!content.IsElementDefinition)
+                    {
+                        CreateNodeForMesh(gltf, meshId, nodes, content.Transform);
                     }
                 }
                 else
@@ -873,7 +918,7 @@ namespace Elements.Serialization.glTF
                                                       materialName,
                                                       ref gltf,
                                                       ref materials,
-                                                      ref buffer,
+                                                      ref bufferBytes,
                                                       bufferViews,
                                                       accessors,
                                                       meshes,
@@ -899,9 +944,13 @@ namespace Elements.Serialization.glTF
             if (e is ElementInstance)
             {
                 var i = (ElementInstance)e;
-
+                var instanceTransform = i.Transform;
+                if (i.BaseDefinition is ContentElement contentBase)
+                {
+                    instanceTransform.Concatenate(contentBase.Transform);
+                }
                 // Lookup the corresponding mesh in the map.
-                AddInstanceMesh(gltf, nodes, meshElementMap[i.BaseDefinition.Id], i.Transform);
+                AddInstanceMesh(gltf, nodes, meshElementMap[i.BaseDefinition.Id], instanceTransform);
 
                 if (drawEdges)
                 {
@@ -926,7 +975,7 @@ namespace Elements.Serialization.glTF
             if (e is ModelCurve)
             {
                 var mc = (ModelCurve)e;
-                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materials[mc.Material.Name], buffer, bufferViews, accessors, meshes, nodes, true, mc.Transform);
+                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materials[mc.Material.Name], bufferBytes, bufferViews, accessors, meshes, nodes, true, mc.Transform);
             }
 
             if (e is ModelPoints)
@@ -934,7 +983,7 @@ namespace Elements.Serialization.glTF
                 var mp = (ModelPoints)e;
                 if (mp.Locations.Count != 0)
                 {
-                    AddPoints(GetNextId(), mp.Locations, gltf, materials[mp.Material.Name], buffer, bufferViews, accessors, meshes, nodes, mp.Transform);
+                    AddPoints(GetNextId(), mp.Locations, gltf, materials[mp.Material.Name], bufferBytes, bufferViews, accessors, meshes, nodes, mp.Transform);
                 }
             }
 
@@ -979,7 +1028,7 @@ namespace Elements.Serialization.glTF
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.
                 meshId = gltf.AddTriangleMesh(e.Id + "_mesh",
-                                     buffer,
+                                     bufferBytes,
                                      bufferViews,
                                      accessors,
                                      vertexBuffer,

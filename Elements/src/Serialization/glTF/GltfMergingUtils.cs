@@ -10,15 +10,15 @@ namespace Elements.Serialization.glTF
 
     internal static class GlftMergingUtils
     {
-        public static void AddAllMeshesFromFromGlb(string glbPath,
+        public static List<int> AddAllMeshesFromFromGlb(string glbPath,
                                         List<Buffer> buffers,
                                         List<byte[]> bufferByteArrays,
                                         List<BufferView> bufferViews,
                                         List<Accessor> accessors,
                                         List<glTFLoader.Schema.Mesh> meshes,
                                         List<glTFLoader.Schema.Material> materials,
-                                        List<Image> images,
                                         List<Texture> textures,
+                                        List<Image> images,
                                         List<Sampler> samplers
                                         )
         {
@@ -48,13 +48,16 @@ namespace Elements.Serialization.glTF
             }
 
             var imageIncrement = images.Count;
-            foreach (var originImage in loaded.Images)
+            if (loaded.Images != null)
             {
-                if (originImage.BufferView.HasValue)
+                foreach (var originImage in loaded.Images)
                 {
-                    originImage.BufferView = originImage.BufferView + buffViewIncrement;
+                    if (originImage.BufferView.HasValue)
+                    {
+                        originImage.BufferView = originImage.BufferView + buffViewIncrement;
+                    }
+                    images.Add(originImage);
                 }
-                images.Add(originImage);
             }
 
             var samplerIncrement = samplers.Count;
@@ -67,11 +70,14 @@ namespace Elements.Serialization.glTF
             }
 
             var textureIncrement = textures.Count;
-            foreach (var originTexture in loaded.Textures)
+            if (loaded.Textures != null)
             {
-                originTexture.Source = originTexture.Source + imageIncrement;
-                originTexture.Sampler = originTexture.Sampler + samplerIncrement;
-                textures.Add(originTexture);
+                foreach (var originTexture in loaded.Textures)
+                {
+                    originTexture.Source = originTexture.Source + imageIncrement;
+                    originTexture.Sampler = originTexture.Sampler + samplerIncrement;
+                    textures.Add(originTexture);
+                }
             }
 
             var materialIncrement = materials.Count;
@@ -92,6 +98,7 @@ namespace Elements.Serialization.glTF
                 materials.Add(originMaterial);
             }
 
+            var meshIndices = new List<int>();
             foreach (var originMesh in loaded.Meshes)
             {
                 foreach (var prim in originMesh.Primitives)
@@ -106,7 +113,10 @@ namespace Elements.Serialization.glTF
                     prim.Material = prim.Material + materialIncrement;
                 }
                 meshes.Add(originMesh);
+                meshIndices.Add(meshes.Count - 1);
             }
+
+            return meshIndices;
         }
     }
 }
