@@ -434,7 +434,7 @@ namespace Elements.Serialization.glTF
             return meshes.Count - 1;
         }
 
-        public static int CreateNodeForMesh(Gltf gltf, int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
+        internal static int CreateNodeForMesh(Gltf gltf, int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
         {
             var parentId = 0;
 
@@ -657,7 +657,9 @@ namespace Elements.Serialization.glTF
                 return false;
             }
 
-            gltf.SaveBinaryModel(buffer.ToArray(), path);
+            //TODO handle initializing multiple gltf buffers at once.
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(new[] { buffer.ToArray() });
+            gltf.SaveBinaryModel(mergedBuffer, path);
             return true;
         }
 
@@ -672,8 +674,8 @@ namespace Elements.Serialization.glTF
                 return false;
             }
 
-            // Buffers must be saved first, URIs may be set or modified inside the save Buffer method
-            gltf.SaveBuffersAndUris(path, new List<byte[]> { buffer.ToArray() });
+            // Buffers must be saved first, URIs may be set or modified inside this method.
+            gltf.SaveBuffersAndAddUris(path, new List<byte[]> { buffer.ToArray() });
             gltf.SaveModel(path);
             return true;
         }
@@ -813,10 +815,9 @@ namespace Elements.Serialization.glTF
                 if (typeof(ContentElement).IsAssignableFrom(e.GetType()))
                 {
                     var content = e as ContentElement;
-                    // if (File.Exists(content.GltfLocation))
-                    if (false)
+                    if (File.Exists(content.GltfLocation))
                     {
-
+                        throw new NotImplementedException("Drawing content is not yet supported");
                     }
                     else
                     {

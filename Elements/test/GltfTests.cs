@@ -67,21 +67,18 @@ namespace Elements.Tests
                 ours.Samplers = samplers.ToArray();
             }
 
-            var savepath = "../../../GltfTestResult.gltf";
-            ours.SaveBuffersAndUris(savepath, bufferByteArrays);
-
             var nodeList = ours.Nodes.ToList();
             var transform = new Transform(new Vector3(.1, .1, 0), Vector3.XAxis, Vector3.YAxis.Negate());
             transform.Scale(1.0 / .01);
             GltfExtensions.CreateNodeForMesh(ours, ours.Meshes.Length - 1, nodeList, transform);
             ours.Nodes = nodeList.ToArray();
-            ours.SaveModel(savepath);
-            var mergedBuffer = ours.GetCombinedBufferAndInternalTweak(bufferByteArrays.ToArray());
-            // var mergedSavePath = "../../../GltfMerged.gltf";
-            // ours.SaveBuffersAndUris(mergedSavePath, new List<byte[]> { mergedBuffer });
-            // ours.SaveModel(mergedSavePath);
-            ours.SaveBinaryModel(mergedBuffer, "../../../GltfMerged.glb");
 
+            var savepath = "../../../GltfTestResult.gltf";
+            ours.SaveBuffersAndAddUris(savepath, bufferByteArrays);
+            ours.SaveModel(savepath);
+
+            var mergedBuffer = ours.CombineBufferAndFixRefs(bufferByteArrays.ToArray());
+            ours.SaveBinaryModel(mergedBuffer, "../../../GltfMerged.glb");
         }
     }
 }

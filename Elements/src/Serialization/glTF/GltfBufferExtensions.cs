@@ -15,7 +15,7 @@ namespace Elements.Serialization.glTF
     /// </summary>
     public static class GltfBufferExtensions
     {
-        internal static void SaveBuffersAndUris(this Gltf gltf, string gltfPath, List<byte[]> buffers)
+        internal static void SaveBuffersAndAddUris(this Gltf gltf, string gltfPath, List<byte[]> buffers)
         {
             if (gltf.Buffers.Length != buffers.Count)
             {
@@ -53,7 +53,7 @@ namespace Elements.Serialization.glTF
             return bufferByteArrays;
         }
 
-        internal static byte[] GetCombinedBufferAndInternalTweak(this Gltf gltf, byte[][] buffers)
+        internal static byte[] CombineBufferAndFixRefs(this Gltf gltf, byte[][] buffers)
         {
             var fullBuffer = new List<byte>();
             for (int i = 0; i < buffers.Length; i++)

@@ -11,8 +11,6 @@ namespace Elements.Serialization.glTF
     internal static class GlftMergingUtils
     {
         public static void AddAllMeshesFromFromGlb(string glbPath,
-                                        // Dictionary<string, int> materials,
-                                        // List<byte> buffer,
                                         List<Buffer> buffers,
                                         List<byte[]> bufferByteArrays,
                                         List<BufferView> bufferViews,
