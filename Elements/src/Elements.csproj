@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <Reference Include="Csg ">
-      <HintPath>/Users/ikeough/.nuget/packages/solidgeometry/0.3.26/lib/netstandard1.0/Csg.dll</HintPath>
+      <HintPath>../../../../Csg/Csg/bin/Debug/netstandard2.0/Csg.dll</HintPath>
     </Reference>
   </ItemGroup>
   
