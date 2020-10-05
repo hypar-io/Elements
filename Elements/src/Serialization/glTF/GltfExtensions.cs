@@ -563,7 +563,7 @@ namespace Elements.Serialization.glTF
             scene.Nodes = new[] { 0 };
             gltf.Scenes = new[] { scene };
 
-            gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness" };
+            gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness", "KHR_materials_unlit" };
 
             var buffer = new List<byte>();
             var bufferViews = new List<BufferView>();
@@ -574,6 +574,7 @@ namespace Elements.Serialization.glTF
 
             var mesh = new Elements.Geometry.Mesh();
             solid.Tessellate(ref mesh);
+            mesh.ComputeNormals();
 
             byte[] vertexBuffer;
             byte[] normalBuffer;
@@ -717,11 +718,14 @@ namespace Elements.Serialization.glTF
             scene.Nodes = new[] { 0 };
             gltf.Scenes = new[] { scene };
 
-            gltf.ExtensionsUsed = new[] {
+            var lights = model.AllElementsOfType<DirectionalLight>().ToList();
+            gltf.ExtensionsUsed = lights.Any() ? new[] {
                 "KHR_materials_pbrSpecularGlossiness",
                 "KHR_materials_unlit",
                 "KHR_lights_punctual"
-            };
+            } : new[] {
+                "KHR_materials_pbrSpecularGlossiness",
+                "KHR_materials_unlit"};
 
             var bufferViews = new List<BufferView>();
             var accessors = new List<Accessor>();
@@ -738,8 +742,11 @@ namespace Elements.Serialization.glTF
                 return e.Value is GeometricElement || e.Value is ElementInstance;
             }).Select(e => e.Value).ToList();
 
-            var lights = model.AllElementsOfType<DirectionalLight>().ToList();
-            gltf.AddLights(lights, nodes);
+
+            if (lights.Any())
+            {
+                gltf.AddLights(lights, nodes);
+            }
 
             // Lines are stored in a list of lists
             // according to the max available index size.
