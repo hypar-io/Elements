@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct Vector3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.52.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -173,7 +173,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Vector3(double x, double y, double z)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -260,7 +261,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double X { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;X&quot;, Required = Required.Always)]
+public double X { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -308,7 +310,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Y { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Y&quot;, Required = Required.Always)]
+public double Y { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -356,7 +359,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Z { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Z&quot;, Required = Required.Always)]
+public double Z { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -401,7 +405,9 @@
   </h3>
   <a id="Elements_Geometry_Vector3_AngleTo_" data-uid="Elements.Geometry.Vector3.AngleTo*"></a>
   <h4 id="Elements_Geometry_Vector3_AngleTo_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.AngleTo(Elements.Geometry.Vector3)">AngleTo(Vector3)</h4>
-  <div class="markdown level1 summary"><p>The angle in degrees from this vector to the provided vector.</p>
+  <div class="markdown level1 summary"><p>The angle in degrees from this vector to the provided vector.
+Note that for angles in the plane that can be greater than 180 degrees,
+you should use Vector3.PlaneAngleTo.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -437,7 +443,8 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td></td>
+        <td><p>The angle in degrees between 0 and 180.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -1154,6 +1161,98 @@ The distance will be negative when this vector lies
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>A new vector which is the inverse of this vector.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_PlaneAngleTo_" data-uid="Elements.Geometry.Vector3.PlaneAngleTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_PlaneAngleTo_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.PlaneAngleTo(Elements.Geometry.Vector3)">PlaneAngleTo(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Calculate a counter-clockwise plane angle between this vector and the provided vector in the XY plane.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double PlaneAngleTo(Vector3 v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The vector with which to measure the angle.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_PlaneAngleTo_" data-uid="Elements.Geometry.Vector3.PlaneAngleTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_PlaneAngleTo_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.PlaneAngleTo(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">PlaneAngleTo(Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Calculate a counter-clockwise plane angle between this vector and the provided vector, projected to the plane perpendicular to the provided normal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double PlaneAngleTo(Vector3 v, Vector3 normal)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The vector with which to measure the angle.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">normal</span></td>
+        <td><p>The normal of the plane in which you wish to calculate the angle.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</p>
 </td>
       </tr>
     </tbody>
