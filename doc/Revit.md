@@ -31,7 +31,7 @@ Hypar for Revit is a Revit addin that allows you to connect your Revit models to
 - Transparency is not currently supported.
 
 # Converting Revit to and from Hypar
-The conversion process is designed so anyone using the Elements library can add their own custom converters that will be run by the addin.  For more information about writing Element Converters refer to the 
+The conversion process is designed so anyone using the Elements library can add their own custom converters that will be run by the addin.  For more information about writing Element Converters refer to the [Sample Converter Repo](https://github.com/hypar-io/ElementConverterSamples).
 
 ## Extracting a Revit model to Elements
 There are three buttons that support different filters while extracting your Revit model into a Hypar model.  
