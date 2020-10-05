@@ -799,9 +799,12 @@ namespace Elements.Geometry.Solids
             var polygons = new List<Csg.Polygon>();
             var mesh = new Mesh();
             solid.Tessellate(ref mesh);
+            mesh.ComputeNormals();
             foreach (var t in mesh.Triangles)
             {
+                // var p = new Csg.Polygon(t.Vertices.Select(v => new Csg.Vertex(new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z), new Csg.Vector2D())).ToList(), plane: new Csg.Plane(new Csg.Vector3D(t.Normal.X, t.Normal.Y, t.Normal.Z), t.Vertices[0].Position.DistanceTo(Vector3.Origin)));
                 var p = new Csg.Polygon(t.Vertices.Select(v => new Csg.Vertex(new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z), new Csg.Vector2D())).ToList());
+
                 polygons.Add(p);
             }
             var csgSolid = Csg.Solid.FromPolygons(polygons);
