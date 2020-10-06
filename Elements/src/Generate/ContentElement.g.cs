@@ -26,18 +26,19 @@ namespace Elements
 	public partial class ContentElement : GeometricElement
     {
         [Newtonsoft.Json.JsonConstructor]
-        public ContentElement(string @gltfLocation, BBox3 @bBox, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
+        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
             : base(transform, material, representation, isElementDefinition, id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<ContentElement>
             ();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @gltfLocation, @bBox, @transform, @material, @representation, @isElementDefinition, @id, @name});
+                validator.PreConstruct(new object[]{ @gltfLocation, @boundingBox, @gltfScaleToMeters, @transform, @material, @representation, @isElementDefinition, @id, @name});
             }
         
                 this.GltfLocation = @gltfLocation;
-                this.BBox = @bBox;
+                this.BoundingBox = @boundingBox;
+                this.GltfScaleToMeters = @gltfScaleToMeters;
             
             if(validator != null)
             {
@@ -49,9 +50,13 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("gltfLocation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string GltfLocation { get; set; }
     
-        /// <summary>The bounding box of the content</summary>
-        [Newtonsoft.Json.JsonProperty("BBox", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public BBox3 BBox { get; set; }
+        /// <summary>The bounding box of the content.</summary>
+        [Newtonsoft.Json.JsonProperty("Bounding Box", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public BBox3 BoundingBox { get; set; }
+    
+        /// <summary>The scale needed to convert the gltf to meters.</summary>
+        [Newtonsoft.Json.JsonProperty("Gltf Scale to Meters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double GltfScaleToMeters { get; set; }
     
     
     }

@@ -8,7 +8,7 @@ using glTFLoader.Schema;
 namespace Elements.Serialization.glTF
 {
 
-    internal static class GlftMergingUtils
+    internal static class GltfMergingUtils
     {
         public static List<int> AddAllMeshesFromFromGlb(string glbPath,
                                         List<Buffer> buffers,

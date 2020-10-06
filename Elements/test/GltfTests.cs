@@ -27,42 +27,43 @@ namespace Elements.Tests
             var str = model.ToBase64String();
         }
 
-        private class BoxElem : ContentElement
+        private class TestContentElem : ContentElement
         {
-            public BoxElem(string @gltfLocation, BBox3 @bBox, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
-                        : base(gltfLocation, bBox, transform, material, representation, isElementDefinition, id, name)
-            {
-
-            }
-
+            public TestContentElem(string @gltfLocation, BBox3 @bBox, Transform @transform, double scale, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
+                        : base(gltfLocation, bBox, scale, transform, material, representation, isElementDefinition, id, name)
+            { }
         }
 
         [Fact]
         public void InstanceContentElement()
         {
             var model = new Model();
-            var boxType = new BoxElem("../../../models/MergeGlTF/Avocado.glb",
-                                      new BBox3(new Vector3(-1, 1, 0), new Vector3(1, 1, 4)),
-                                      new Transform(new Vector3(), Vector3.YAxis).Scaled(20),
+            var boxType = new TestContentElem("../../../models/MergeGlTF/Avocado.glb",
+                                      new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
+                                      new Transform(new Vector3(), Vector3.YAxis),
+                                      20,
                                       BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
                                       "BoxyType");
-            var boxType2 = new BoxElem("../../../models/MergeGlTF/Duck.glb",
-                                      new BBox3(new Vector3(-1, 1, 0), new Vector3(1, 1, 4)),
-                                      new Transform(new Vector3(), Vector3.YAxis).Scaled(0.01),
+            var boxType2 = new TestContentElem("../../../models/MergeGlTF/Duck.glb",
+                                      new BBox3(new Vector3(-1, -1, 0), new Vector3(1, 1, 2)),
+                                      new Transform(new Vector3(), Vector3.YAxis),
+                                      .01,
                                       BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
                                       "BoxyType");
             var newBox = boxType.CreateInstance(new Transform(), "first one");
-            var twoBox = boxType2.CreateInstance(new Transform(new Vector3(2, 0, 0)), "then two");
-            var threeBox = boxType2.CreateInstance(new Transform(new Vector3(4, 0, 0)), "then two");
+            var twoBox = boxType2.CreateInstance(new Transform(new Vector3(5, 0, 0)), "then two");
+            var threeBox = boxType2.CreateInstance(new Transform(new Vector3(15, 0, 0)), "then two");
+            var beam = new Beam(new Line(new Vector3(), new Vector3(0, 5, -0.5)), new Circle(new Vector3(), 0.3).ToPolygon());
             model.AddElement(newBox);
             model.AddElement(twoBox);
             model.AddElement(threeBox);
+            model.AddElement(beam);
             model.ToGlTF("../../../GltfInstancing.gltf", false);
             model.ToGlTF("../../../GltfInstancing.glb");
         }
@@ -83,7 +84,7 @@ namespace Elements.Tests
 
             var bufferByteArrays = ours.GetAllBufferByteArrays(testPath);
 
-            GlftMergingUtils.AddAllMeshesFromFromGlb("../../../models/MergeGlTF/Avocado.glb",
+            GltfMergingUtils.AddAllMeshesFromFromGlb("../../../models/MergeGlTF/Avocado.glb",
                                                      buffers,
                                                      bufferByteArrays,
                                                      buffViews,

@@ -1,8 +1,8 @@
-
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Elements.Collections.Generics;
 using glTFLoader;
 using glTFLoader.Schema;
 
@@ -24,11 +24,10 @@ namespace Elements.Serialization.glTF
             for (int i = 0; i < gltf.Buffers.Length; i++)
             {
                 var buffer = buffers[i];
-                var relativeUri = Path.GetFileNameWithoutExtension(gltfPath) + $"_{i}.bin";
-                gltf.Buffers[i].Uri = relativeUri;
+                var binSaveName = Path.GetFileNameWithoutExtension(gltfPath) + $"_{i}.bin";
+                gltf.Buffers[i].Uri = binSaveName;
 
                 var binSaveDir = Path.GetDirectoryName(gltfPath);
-                var binSaveName = relativeUri;
                 var binSavePath = Path.Combine(binSaveDir, binSaveName);
                 if (File.Exists(binSavePath))
                 {
@@ -73,7 +72,7 @@ namespace Elements.Serialization.glTF
             var onlyBuffer = new Buffer();
             onlyBuffer.ByteLength = fullBuffer.Count;
             gltf.Buffers = new[] { onlyBuffer };
-            return fullBuffer.ToArray();
+            return fullBuffer.ToArray(fullBuffer.Count);
         }
     }
 }
