@@ -26,14 +26,14 @@ namespace Elements.Geometry
 	public partial class Mesh : Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Mesh(IList<Vertex> @vertices, IList<Triangle> @triangles, Material @material, System.Guid @id, string @name)
-            : base(material, id, name)
+        public Mesh(IList<Vertex> @vertices, IList<Triangle> @triangles, Material @material)
+            : base(material)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Mesh>
             ();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @vertices, @triangles, @material, @id, @name});
+                validator.PreConstruct(new object[]{ @vertices, @triangles, @material});
             }
         
                 this.Vertices = @vertices;

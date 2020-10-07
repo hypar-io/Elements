@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
 {
@@ -10,6 +11,7 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// The triangles which contain this vertex.
         /// </summary>
+        [JsonIgnore]
         public List<Triangle> Triangles { get; } = new List<Triangle>();
 
         /// <summary>

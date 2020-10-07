@@ -14,7 +14,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Construct an empty mesh.
         /// </summary>
-        public Mesh() : base(BuiltInMaterials.Default, Guid.NewGuid(), "")
+        public Mesh() : base(BuiltInMaterials.Default)
         {
             this.Vertices = new List<Vertex>();
             this.Triangles = new List<Triangle>();

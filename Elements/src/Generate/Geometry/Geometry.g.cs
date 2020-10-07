@@ -25,17 +25,16 @@ namespace Elements.Geometry
     [JsonInheritanceAttribute("Mesh", typeof(Mesh))]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
     [UserElement]
-    public partial class Geometry : Element
+    public partial class Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Geometry(Material @material, System.Guid @id, string @name)
-            : base(id, name)
+        public Geometry(Material @material)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Geometry>
             ();
             if (validator != null)
             {
-                validator.PreConstruct(new object[] { @material, @id, @name });
+                validator.PreConstruct(new object[] { @material });
             }
 
             this.Material = @material;
