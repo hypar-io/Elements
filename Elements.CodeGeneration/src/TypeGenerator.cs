@@ -378,7 +378,7 @@ namespace Elements.Generate
         {
             var templates = TemplatesPath;
 
-            var structTypes = new[] { "Color", "Vector3", "BBox3" };
+            var structTypes = new[] { "Color", "Vector3", "BBox3", "UV" };
 
             // A limited set of the solid operation types. This will be used
             // to add INotifyPropertyChanged logic, so we don't add the
@@ -437,7 +437,7 @@ namespace Elements.Generate
             }
             if (isUserElement)
             {
-                // remove unncessary imports
+                // remove unnecessary imports
                 // TODO: make this a conditional for the code generation using ExtensionData, instead of using string replacement.
                 // For whatever reason, this was not working with code in File.liquid — only Class.liquid.
                 file = file.Replace(@"

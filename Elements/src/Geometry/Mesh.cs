@@ -1,3 +1,4 @@
+using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
@@ -8,218 +9,15 @@ using static Elements.Units;
 
 namespace Elements.Geometry
 {
-    /// <summary>
-    /// A mesh triangle.
-    /// </summary>
-    public class Triangle
+    public partial class Mesh
     {
-        /// <summary>
-        /// The triangle's vertices.
-        /// </summary>
-        public Vertex[] Vertices { get; }
-
-        /// <summary>
-        /// The triangle's normal.
-        /// </summary>
-        /// <value></value>
-        public Vector3 Normal { get; }
-
-        /// <summary>
-        /// Create a triangle.
-        /// </summary>
-        /// <param name="a">The index of the first vertex of the triangle.</param>
-        /// <param name="b">The index of the second vertex of the triangle.</param>
-        /// <param name="c">The index of the third vertex of the triangle.</param>
-        public Triangle(Vertex a, Vertex b, Vertex c)
-        {
-            this.Vertices = new[] { a, b, c };
-
-            if (!a.Triangles.Contains(this))
-            {
-                a.Triangles.Add(this);
-            }
-
-            if (!b.Triangles.Contains(this))
-            {
-                b.Triangles.Add(this);
-            }
-
-            if (!c.Triangles.Contains(this))
-            {
-                c.Triangles.Add(this);
-            }
-
-            var ab = (b.Position - a.Position).Unitized();
-            var bc = (c.Position - a.Position).Unitized();
-            this.Normal = ab.Cross(bc).Unitized();
-
-            if (Double.IsNaN(this.Normal.X) || Double.IsNaN(this.Normal.Y) || Double.IsNaN(this.Normal.Z))
-            {
-                Debug.WriteLine("Degenerate triangle found.");
-            }
-        }
-
-        [JsonConstructor]
-        internal Triangle(Vertex[] vertices)
-        {
-            if (vertices.Length != 3)
-            {
-                throw new ArgumentException("Triangles can only be created with three vertices.");
-            }
-
-            this.Vertices = vertices;
-            foreach (var v in vertices)
-            {
-                if (!v.Triangles.Contains(this))
-                {
-                    v.Triangles.Add(this);
-                }
-            }
-            var a = vertices[0];
-            var b = vertices[1];
-            var c = vertices[2];
-
-            var ab = (b.Position - a.Position).Unitized();
-            var bc = (c.Position - a.Position).Unitized();
-            this.Normal = ab.Cross(bc).Unitized();
-        }
-
-        /// <summary>
-        /// The area of the triangle.
-        /// </summary>
-        public double Area()
-        {
-            var a = this.Vertices[0].Position;
-            var b = this.Vertices[1].Position;
-            var c = this.Vertices[2].Position;
-
-            // Heron's formula
-            var l1 = a.DistanceTo(b);
-            var l2 = b.DistanceTo(c);
-            var l3 = c.DistanceTo(a);
-
-            var s = (l1 + l2 + l3) / 2;
-            return Math.Sqrt(s * (s - l1) * (s - l2) * (s - l3));
-        }
-
-        internal Polygon ToPolygon()
-        {
-            return new Polygon(new[] { this.Vertices[0].Position, this.Vertices[1].Position, this.Vertices[2].Position });
-        }
-
-        internal ContourVertex[] ToContourVertexArray()
-        {
-            var contour = new ContourVertex[this.Vertices.Length];
-            for (var i = 0; i < this.Vertices.Length; i++)
-            {
-                var v = this.Vertices[i];
-                contour[i] = new ContourVertex();
-                contour[i].Position = new Vec3 { X = v.Position.X, Y = v.Position.Y, Z = v.Position.Z };
-            }
-            return contour;
-        }
-    }
-
-    /// <summary>
-    /// A UV texture coordinate.
-    /// </summary>
-    public struct UV
-    {
-        /// <summary>
-        /// The U coordinate.
-        /// </summary>
-        public double U { get; set; }
-
-        /// <summary>
-        /// The v coordinate.
-        /// </summary>
-        public double V { get; set; }
-
-        /// <summary>
-        /// Construct a UV.
-        /// </summary>
-        /// <param name="u">The u parameter.</param>
-        /// <param name="v">The v parameter.</param>
-        public UV(double u, double v)
-        {
-            this.U = u;
-            this.V = v;
-        }
-    }
-
-    /// <summary>
-    /// A mesh vertex.
-    /// </summary>
-    public class Vertex
-    {
-        /// <summary>
-        /// The position of the vertex.
-        /// </summary>
-        public Vector3 Position { get; set; }
-
-        /// <summary>
-        /// The vertex's normal.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 Normal { get; set; }
-
-        /// <summary>
-        /// The vertex's color.
-        /// </summary>
-        public Color Color { get; set; }
-
-        /// <summary>
-        /// The index of the vertex within a mesh.
-        /// </summary>
-        public int Index { get; internal set; }
-
-        /// <summary>
-        /// The texture coordinate of the vertex.
-        /// </summary>
-        public UV UV { get; set; }
-
-        /// <summary>
-        /// The triangles which contain this vertex.
-        /// </summary>
-        public List<Triangle> Triangles { get; } = new List<Triangle>();
-
-        /// <summary>
-        /// Create a vertex.
-        /// </summary>
-        /// <param name="position">The position of the vertex.</param>
-        /// <param name="normal">The vertex's normal.</param>
-        /// <param name="color">The vertex's color.</param>
-        public Vertex(Vector3 position, Vector3? normal = null, Color color = default(Color))
-        {
-            this.Position = position;
-            this.Normal = normal ?? Vector3.Origin;
-            this.Color = color;
-        }
-    }
-
-    /// <summary>
-    /// An indexed mesh.
-    /// </summary>
-    public class Mesh
-    {
-        private List<Vertex> _vertices = new List<Vertex>();
-        private List<Triangle> _triangles = new List<Triangle>();
-
-        /// <summary>
-        /// The mesh's vertices.
-        /// </summary>
-        public List<Vertex> Vertices => _vertices;
-
-        /// <summary>
-        /// The mesh's triangles.
-        /// </summary>
-        public List<Triangle> Triangles => _triangles;
-
         /// <summary>
         /// Construct an empty mesh.
         /// </summary>
-        public Mesh()
+        public Mesh() : base(BuiltInMaterials.Default, Guid.NewGuid(), "")
         {
+            this.Vertices = new List<Vertex>();
+            this.Triangles = new List<Triangle>();
             // An empty mesh.
         }
 
@@ -277,8 +75,8 @@ namespace Elements.Geometry
         public override string ToString()
         {
             return $@"
-Vertices:{_vertices.Count},
-Triangles:{_triangles.Count}";
+Vertices:{Vertices.Count},
+Triangles:{Triangles.Count}";
         }
 
         /// <summary>
@@ -289,7 +87,7 @@ Triangles:{_triangles.Count}";
         {
             foreach (var v in this.Vertices)
             {
-                if(v.Triangles.Count == 0)
+                if (v.Triangles.Count == 0)
                 {
                     v.Normal = default(Vector3);
                     continue;
@@ -315,14 +113,14 @@ Triangles:{_triangles.Count}";
             var floatSize = sizeof(float);
             var ushortSize = sizeof(ushort);
 
-            vertexBuffer = new byte[this._vertices.Count * floatSize * 3];
-            normalBuffer = new byte[this._vertices.Count * floatSize * 3];
-            indexBuffer = new byte[this._triangles.Count * ushortSize * 3];
-            uvBuffer = new byte[this._vertices.Count * floatSize * 2];
+            vertexBuffer = new byte[this.Vertices.Count * floatSize * 3];
+            normalBuffer = new byte[this.Vertices.Count * floatSize * 3];
+            indexBuffer = new byte[this.Triangles.Count * ushortSize * 3];
+            uvBuffer = new byte[this.Vertices.Count * floatSize * 2];
 
-            if (!this._vertices[0].Color.Equals(default(Color)))
+            if (!this.Vertices[0].Color.Equals(default(Color)))
             {
-                colorBuffer = new byte[this._vertices.Count * floatSize * 3];
+                colorBuffer = new byte[this.Vertices.Count * floatSize * 3];
                 c_min = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
                 c_max = new float[] { float.MinValue, float.MinValue, float.MinValue };
             }
@@ -348,9 +146,9 @@ Triangles:{_triangles.Count}";
             var ci = 0;
             var uvi = 0;
 
-            for (var i = 0; i < this._vertices.Count; i++)
+            for (var i = 0; i < this.Vertices.Count; i++)
             {
-                var v = this._vertices[i];
+                var v = this.Vertices[i];
 
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.X), 0, vertexBuffer, vi, floatSize);
                 System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Y), 0, vertexBuffer, vi + floatSize, floatSize);
@@ -404,9 +202,9 @@ Triangles:{_triangles.Count}";
                 }
             }
 
-            for (var i = 0; i < this._triangles.Count; i++)
+            for (var i = 0; i < this.Triangles.Count; i++)
             {
-                var t = this._triangles[i];
+                var t = this.Triangles[i];
 
                 System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)t.Vertices[0].Index), 0, indexBuffer, ii, ushortSize);
                 System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)t.Vertices[1].Index), 0, indexBuffer, ii + ushortSize, ushortSize);
@@ -424,7 +222,7 @@ Triangles:{_triangles.Count}";
         public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
         {
             var t = new Triangle(a, b, c);
-            this._triangles.Add(t);
+            this.Triangles.Add(t);
             return t;
         }
 
@@ -434,7 +232,7 @@ Triangles:{_triangles.Count}";
         /// <param name="t">The triangle to add.</param>
         public Triangle AddTriangle(Triangle t)
         {
-            this._triangles.Add(t);
+            this.Triangles.Add(t);
             return t;
         }
 
@@ -450,8 +248,8 @@ Triangles:{_triangles.Count}";
         {
             var v = new Vertex(position, normal, color);
             v.UV = uv;
-            this._vertices.Add(v);
-            v.Index = (this._vertices.Count) - 1;
+            this.Vertices.Add(v);
+            v.Index = (this.Vertices.Count) - 1;
             return v;
         }
 
@@ -461,8 +259,8 @@ Triangles:{_triangles.Count}";
         /// <param name="v">The vertex to add.</param>
         public Vertex AddVertex(Vertex v)
         {
-            this._vertices.Add(v);
-            v.Index = (this._vertices.Count) - 1;
+            this.Vertices.Add(v);
+            v.Index = (this.Vertices.Count) - 1;
             return v;
         }
 
@@ -479,7 +277,7 @@ Triangles:{_triangles.Count}";
             }
         }
 
-        private bool IsInvalid(Elements.Geometry.Vertex v)
+        private bool IsInvalid(Vertex v)
         {
             if (v.Position.IsNaN())
             {
