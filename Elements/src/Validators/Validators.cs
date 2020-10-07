@@ -54,7 +54,7 @@ namespace Elements.Validators
             var max = (Vector3)args[1];
             if (min.X == max.X
              || min.Y == max.Y
-             || min.Z == max.Z)
+             )
             {
                 throw new System.ArgumentException("The bounding box will have zero volume, please ensure that the Min and Max don't have any identical vertex values.");
             }
