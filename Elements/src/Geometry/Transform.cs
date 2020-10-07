@@ -397,7 +397,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Return copy of this transform scaled uniformly about the origin.
+        /// Return a copy of this transform scaled uniformly.
         /// </summary>
         /// <param name="factor">The amount to scale uniformly</param>
         public Transform Scaled(double factor)

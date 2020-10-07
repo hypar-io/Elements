@@ -880,20 +880,17 @@ namespace Elements.Serialization.glTF
                         {
                             // This element is not used for instancing.
                             // apply scale transform here to bring the content glb into meters
-                            var transform = new Transform().Scaled(content.GltfScaleToMeters);
-                            transform.Concatenate(content.Transform);
+                            var transform = content.Transform.Scaled(content.GltfScaleToMeters);
                             CreateNodeForMesh(gltf, meshId, nodes, transform);
                         }
                         else
                         {
-                            // This element will be used for instancing.  Save the trasnform of the
+                            // This element will be used for instancing.  Save the transform of the
                             // content element base that will be needed when instances are placed.
-                            // The scaled transform is only necessary becuase we are using the glb.
+                            // The scaled transform is only necessary because we are using the glb.
                             if (!meshTransformMap.ContainsKey(e.Id))
                             {
-                                var transform = new Transform(content.Transform);
-                                transform.Concatenate(new Transform().Scaled(content.GltfScaleToMeters));
-                                meshTransformMap[e.Id] = transform;
+                                meshTransformMap[e.Id] = content.Transform.Scaled(content.GltfScaleToMeters);
                             }
                         }
                     }
