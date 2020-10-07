@@ -5,18 +5,8 @@ namespace Elements.Geometry
     /// <summary>
     /// An axis-aligned bounding box.
     /// </summary>
-    public struct BBox3
+    public partial struct BBox3
     {
-        /// <summary>
-        /// The maximum extent of the bounding box.
-        /// </summary>
-        public Vector3 Max { get; private set; }
-
-        /// <summary>
-        /// The minimum extent of the bounding box.
-        /// </summary>
-        public Vector3 Min { get; private set; }
-
         /// <summary>
         /// Construct a bounding box from an array of points.
         /// </summary>
@@ -84,17 +74,6 @@ namespace Elements.Geometry
                     this.Extend(v);
                 }
             }
-        }
-
-        /// <summary>
-        /// Create a bounding box specifying minimum and maximum extents.
-        /// </summary>
-        /// <param name="min">The minimum extent of the bounding box.</param>
-        /// <param name="max">The maximum extent of the bounding box.</param>
-        public BBox3(Vector3 min, Vector3 max)
-        {
-            this.Min = min;
-            this.Max = max;
         }
 
         /// <summary>

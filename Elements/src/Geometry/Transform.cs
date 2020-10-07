@@ -341,6 +341,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Return a copy of this transform scaled by the given value.
+        /// </summary>
+        /// <param name="amount">The amount to scale.</param>
+        public Transform Scaled(Vector3 amount)
+        {
+            var m = new Matrix();
+            m.SetupScale(amount);
+            var copy = new Transform(this.Matrix * m);
+            return copy;
+        }
+
+        /// <summary>
         /// Reflect about the plane with normal n.
         /// </summary>
         /// <param name="n">The normal of the reflection plane.</param>
@@ -374,6 +386,7 @@ namespace Elements.Geometry
         {
             return new Plane(this.Origin, this.YAxis);
         }
+
         /// <summary>
         /// Scale uniformly about the origin.
         /// </summary>
@@ -382,6 +395,16 @@ namespace Elements.Geometry
         {
             Scale(new Vector3(factor, factor, factor));
         }
+
+        /// <summary>
+        /// Return a copy of this transform scaled uniformly.
+        /// </summary>
+        /// <param name="factor">The amount to scale uniformly</param>
+        public Transform Scaled(double factor)
+        {
+            return Scaled(new Vector3(factor, factor, factor));
+        }
+
         /// <summary>
         /// Scale uniformly about a point
         /// </summary>
