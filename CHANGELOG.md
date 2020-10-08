@@ -8,6 +8,7 @@
 - `Elements.ContentElement` - This new class represents a piece of content meant to be instanced throughout a model.
   - The ContentElement is also added to the model by first checking for an available gltf, and then using a bounding box representation as a fallback.
 - `Transform.Scaled()` - This new method returns a scaled copy of the transform, allowing for a fluent like api.
+- `Elements.Geometry.CSG` - Union, difference, and intersect csg created from solids or meshes.
 
 ### Changed
 - Updated ImageSharp to 1.0.0.
