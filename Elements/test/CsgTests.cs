@@ -51,26 +51,5 @@ namespace Elements.Tests
             var me2 = new MeshElement(result);
             this.Model.AddElement(me2);
         }
-
-        [Fact]
-        public void Merge()
-        {
-            var panel = new Lamina(Polygon.Rectangle(1, 1), false);
-            var result = new Mesh();
-            panel.Solid.Tessellate(ref result);
-            Assert.Equal(4, result.Triangles.Count);
-            Assert.Equal(8, result.Vertices.Count);
-
-            var box = new Extrude(Polygon.Rectangle(1, 1), 1, Vector3.ZAxis, false);
-            var boxResult = new Mesh();
-            box.Solid.Tessellate(ref boxResult);
-            Assert.Equal(24, boxResult.Vertices.Count);
-            Assert.Equal(12, boxResult.Triangles.Count);
-
-            var pipe = new Extrude(new Profile(new Circle(1.0).ToPolygon(10), new Circle(0.5).ToPolygon(10)).Reversed(), 1.0, Vector3.ZAxis, false);
-            var pipeResult = new Mesh();
-            pipe.Solid.Tessellate(ref pipeResult);
-            Assert.Equal(40, pipeResult.Vertices.Count);
-        }
     }
 }
