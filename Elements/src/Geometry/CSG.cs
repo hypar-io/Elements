@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
@@ -27,7 +26,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Construct a CSG from a solid.
         /// </summary>
-        /// <param name="solid"></param>
+        /// <param name="solid">The solid which defines the CSG.</param>
         /// <param name="transform"></param>
         public CSG(Elements.Geometry.Solids.Solid solid, Transform transform = null)
         {
@@ -35,7 +34,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Union this solid with the provided solid.
+        /// Construct a CSG from a mesh.
+        /// </summary>
+        /// <param name="mesh">The mesh which defines the CSG.</param>
+        /// <param name="transform"></param>
+        public CSG(Elements.Geometry.Mesh mesh, Transform transform = null)
+        {
+            _csg = mesh.TessellateAsCSG(transform);
+        }
+
+        /// <summary>
+        /// Union this csg with the provided solid.
         /// </summary>
         /// <param name="solid"></param>
         /// <param name="transform"></param>
@@ -45,13 +54,23 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Difference this solid with the provided solid.
+        /// Difference this csg with the provided solid.
         /// </summary>
         /// <param name="solid"></param>
         /// <param name="transform"></param>
         public void Difference(Elements.Geometry.Solids.Solid solid, Transform transform = null)
         {
             _csg = Csg.Solids.Difference(_csg, solid.TessellateAsCSG(transform));
+        }
+
+        /// <summary>
+        /// Intersect this csg with the provided solid.
+        /// </summary>
+        /// <param name="solid"></param>
+        /// <param name="transform"></param>
+        public void Intersect(Elements.Geometry.Solids.Solid solid, Transform transform = null)
+        {
+            _csg = Csg.Solids.Intersection(_csg, solid.TessellateAsCSG(transform));
         }
 
         /// <summary>
@@ -85,9 +104,13 @@ namespace Elements.Geometry
                 var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
                 var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
 
-                var v1 = mesh.AddVertex(a, new UV(), merge: false);
-                var v2 = mesh.AddVertex(b, new UV(), merge: false);
-                var v3 = mesh.AddVertex(c, new UV(), merge: false);
+                var uva = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3]].Data;
+                var uvb = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 1]].Data;
+                var uvc = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 2]].Data;
+
+                var v1 = mesh.AddVertex(a, uva.ToUV());
+                var v2 = mesh.AddVertex(b, uvb.ToUV());
+                var v3 = mesh.AddVertex(c, uvc.ToUV());
                 mesh.AddTriangle(v1, v2, v3);
             }
         }
@@ -102,6 +125,11 @@ namespace Elements.Geometry
             return new Vector3(v.X, v.Y, v.Z);
         }
 
+        private static UV ToUV(this Csg.Vector2D uv)
+        {
+            return new UV(uv.X, uv.Y);
+        }
+
         private static Csg.Vector3D ToCsgVector3(this ContourVertex v)
         {
             return new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z);
@@ -112,7 +140,7 @@ namespace Elements.Geometry
             var result = new ContourVertex[vertices.Count];
             for (var i = 0; i < vertices.Count; i++)
             {
-                result[i] = new ContourVertex() { Position = new Vec3() { X = vertices[i].Pos.X, Y = vertices[i].Pos.Y, Z = vertices[i].Pos.Z } };
+                result[i] = new ContourVertex() { Position = new Vec3() { X = vertices[i].Pos.X, Y = vertices[i].Pos.Y, Z = vertices[i].Pos.Z }, Data = vertices[i].Tex };
             }
             return result;
         }
@@ -136,6 +164,16 @@ namespace Elements.Geometry
                 return true;
             }
             return false;
+        }
+
+        private static Csg.Vector3D ToCsgVector3(this Vector3 v)
+        {
+            return new Csg.Vector3D(v.X, v.Y, v.Z);
+        }
+
+        private static Csg.Vector2D ToCsgVector2(this UV uv)
+        {
+            return new Csg.Vector2D(uv.U, uv.V);
         }
 
         internal static Csg.Solid TessellateAsCSG(this Solid solid, Transform transform = null)
@@ -216,6 +254,28 @@ namespace Elements.Geometry
                     polygons.Add(p);
                 }
             }
+            return Csg.Solid.FromPolygons(polygons);
+        }
+
+        internal static Csg.Solid TessellateAsCSG(this Mesh mesh, Transform transform = null)
+        {
+            var vertices = new List<Csg.Vertex>();
+            foreach (var v in mesh.Vertices)
+            {
+                var vv = new Csg.Vertex(v.Position.ToCsgVector3(), v.UV.ToCsgVector2());
+                vertices.Add(vv);
+            }
+
+            var polygons = new List<Csg.Polygon>();
+            foreach (var t in mesh.Triangles)
+            {
+                var a = vertices[t.Vertices[0].Index];
+                var b = vertices[t.Vertices[1].Index];
+                var c = vertices[t.Vertices[2].Index];
+                var polygon = new Csg.Polygon(new List<Csg.Vertex>() { a, b, c });
+                polygons.Add(polygon);
+            }
+
             return Csg.Solid.FromPolygons(polygons);
         }
     }
