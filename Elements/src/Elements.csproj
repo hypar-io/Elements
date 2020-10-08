@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <Reference Include="Csg ">
-      <HintPath>../../../../Csg/Csg/bin/Debug/netstandard2.0/Csg.dll</HintPath>
+      <HintPath>../lib/Csg.dll</HintPath>
     </Reference>
   </ItemGroup>
   
