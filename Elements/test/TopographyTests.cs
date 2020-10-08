@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Elements.Spatial;
 using Newtonsoft.Json;
 using SixLabors.ImageSharp;
@@ -215,6 +216,23 @@ namespace Elements.Tests
             topographies[0].AverageEdges(topographies[2], Units.CardinalDirection.South);
             topographies[1].AverageEdges(topographies[3], Units.CardinalDirection.South);
             topographies[2].AverageEdges(topographies[3], Units.CardinalDirection.East);
+        }
+
+        [Fact]
+        public void CSG()
+        {
+            this.Name = "Topography_CSG";
+            var topo = CreateTopoFromMapboxElevations();
+            var csg = new CSG(topo.Mesh);
+
+            var box = new Extrude(Polygon.Star(200, 100, 5), 100, Vector3.ZAxis, false);
+            csg.Difference(box.Solid, new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)));
+
+            var result = new Mesh();
+            csg.Tessellate(ref result);
+            result.ComputeNormals();
+            var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg");
+            this.Model.AddElement(new MeshElement(result, material));
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
