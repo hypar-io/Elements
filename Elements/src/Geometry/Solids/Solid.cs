@@ -394,6 +394,7 @@ namespace Elements.Geometry.Solids
 
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
+                var faceMesh = new Mesh();
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
                     var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
@@ -407,11 +408,12 @@ namespace Elements.Geometry.Solids
                         c = transform.OfPoint(c);
                     }
 
-                    var v1 = mesh.AddVertex(a, new UV(), color: color);
-                    var v2 = mesh.AddVertex(b, new UV(), color: color);
-                    var v3 = mesh.AddVertex(c, new UV(), color: color);
-                    mesh.AddTriangle(v1, v2, v3);
+                    var v1 = faceMesh.AddVertex(a, new UV(), color: color, merge: true);
+                    var v2 = faceMesh.AddVertex(b, new UV(), color: color, merge: true);
+                    var v3 = faceMesh.AddVertex(c, new UV(), color: color, merge: true);
+                    faceMesh.AddTriangle(v1, v2, v3);
                 }
+                mesh.AddMesh(faceMesh);
             }
         }
 
@@ -764,84 +766,6 @@ namespace Elements.Geometry.Solids
             {
                 e.Right.Loop.InsertEdgeBefore(e.Right, e1.Right);
             }
-        }
-
-        public Mesh Union(Solid solid)
-        {
-            var s1 = ConvertSolidToCsg(this);
-            var s2 = ConvertSolidToCsg(solid);
-            var union = Csg.Solids.Union(s1, s2);
-            var mesh = new Mesh();
-            foreach (var p in union.Polygons)
-            {
-                p.AddToMesh(ref mesh);
-            }
-            mesh.ComputeNormals();
-            return mesh;
-        }
-
-        public Mesh Difference(Solid solid)
-        {
-            var s1 = ConvertSolidToCsg(this);
-            var s2 = ConvertSolidToCsg(solid);
-            var difference = Csg.Solids.Difference(s1, s2);
-            var mesh = new Mesh();
-            foreach (var p in difference.Polygons)
-            {
-                p.AddToMesh(ref mesh);
-            }
-            mesh.ComputeNormals();
-            return mesh;
-        }
-
-        private static Csg.Solid ConvertSolidToCsg(Solid solid)
-        {
-            var polygons = new List<Csg.Polygon>();
-            var mesh = new Mesh();
-            solid.Tessellate(ref mesh);
-            mesh.ComputeNormals();
-            foreach (var t in mesh.Triangles)
-            {
-                // var p = new Csg.Polygon(t.Vertices.Select(v => new Csg.Vertex(new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z), new Csg.Vector2D())).ToList(), plane: new Csg.Plane(new Csg.Vector3D(t.Normal.X, t.Normal.Y, t.Normal.Z), t.Vertices[0].Position.DistanceTo(Vector3.Origin)));
-                var p = new Csg.Polygon(t.Vertices.Select(v => new Csg.Vertex(new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z), new Csg.Vector2D())).ToList());
-
-                polygons.Add(p);
-            }
-            var csgSolid = Csg.Solid.FromPolygons(polygons);
-            return csgSolid;
-        }
-    }
-
-    public static class CsgExtensions
-    {
-        public static void AddToMesh(this Csg.Polygon p, ref Mesh mesh)
-        {
-            var triangles = new List<Triangle>();
-            var a = p.Vertices[0].ToElementsVertex();
-            var b = p.Vertices[1].ToElementsVertex();
-            var c = p.Vertices[2].ToElementsVertex();
-            mesh.AddVertex(a);
-            mesh.AddVertex(b);
-            mesh.AddVertex(c);
-            var t1 = new Triangle(a, b, c);
-            mesh.AddTriangle(t1);
-            if (p.Vertices.Count == 4)
-            {
-                var d = p.Vertices[3].ToElementsVertex();
-                mesh.AddVertex(d);
-                var t2 = new Triangle(a, c, d);
-                mesh.AddTriangle(t2);
-            }
-        }
-
-        public static Elements.Geometry.Vertex ToElementsVertex(this Csg.Vertex v)
-        {
-            return new Elements.Geometry.Vertex(v.Pos.ToElementsVector());
-        }
-
-        public static Vector3 ToElementsVector(this Csg.Vector3D v)
-        {
-            return new Vector3(v.X, v.Y, v.Z);
         }
     }
 }
