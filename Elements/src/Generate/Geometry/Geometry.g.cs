@@ -8,8 +8,8 @@ using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
-using Elements.Serialization.JSON;
 using Elements.Validators;
+using Elements.Serialization.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,37 +18,37 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry
 {
-#pragma warning disable // Disable all warnings
+    #pragma warning disable // Disable all warnings
 
     /// <summary>The base class for all geometry</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [JsonInheritanceAttribute("Mesh", typeof(Mesh))]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
     [UserElement]
-    public partial class Geometry
+	public partial class Geometry 
     {
         [Newtonsoft.Json.JsonConstructor]
         public Geometry(Material @material)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Geometry>
             ();
-            if (validator != null)
+            if(validator != null)
             {
-                validator.PreConstruct(new object[] { @material });
+                validator.PreConstruct(new object[]{ @material});
             }
-
-            this.Material = @material;
-
-            if (validator != null)
+        
+                this.Material = @material;
+            
+            if(validator != null)
             {
-                validator.PostConstruct(this);
+            validator.PostConstruct(this);
             }
-        }
-
+            }
+    
         /// <summary>The material for this piece of geometry.</summary>
         [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Material Material { get; set; }
-
-
+    
+    
     }
 }
