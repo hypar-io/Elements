@@ -408,9 +408,9 @@ namespace Elements.Geometry.Solids
                         c = transform.OfPoint(c);
                     }
 
-                    var v1 = faceMesh.AddVertex(a, new UV(), color: color, merge: true);
-                    var v2 = faceMesh.AddVertex(b, new UV(), color: color, merge: true);
-                    var v3 = faceMesh.AddVertex(c, new UV(), color: color, merge: true);
+                    var v1 = faceMesh.AddVertex(a, new UV(), color: color);
+                    var v2 = faceMesh.AddVertex(b, new UV(), color: color);
+                    var v3 = faceMesh.AddVertex(c, new UV(), color: color);
                     faceMesh.AddTriangle(v1, v2, v3);
                 }
                 mesh.AddMesh(faceMesh);
