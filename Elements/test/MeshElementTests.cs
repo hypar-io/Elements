@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using System;
 using Xunit;
 
