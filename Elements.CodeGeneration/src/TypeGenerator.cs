@@ -110,11 +110,11 @@ namespace Elements.Generate
         }
 
         /// <summary>
-        /// Genereate a user  defined type in a .g.cs file directly from the json.
+        /// Generate a user defined type in a .g.cs file JSON.
         /// </summary>
-        /// <param name="schemaJson"></param>
-        /// <param name="outputBaseDir"></param>
-        /// <param name="isUserElement"></param>
+        /// <param name="schemaJson">The JSON of the schema.</param>
+        /// <param name="outputBaseDir">The base output directory.</param>
+        /// <param name="isUserElement">Is the type a user-defined element?</param>
         /// <returns></returns>
         public static async Task<GenerationResult> GenerateUserElementTypeFromJsonAsync(string schemaJson, string outputBaseDir, bool isUserElement = false)
         {
