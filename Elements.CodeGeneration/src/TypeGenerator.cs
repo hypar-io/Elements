@@ -110,7 +110,7 @@ namespace Elements.Generate
         }
 
         /// <summary>
-        /// Generate a user defined type in a .g.cs file JSON.
+        /// Generate a user defined type in a .g.cs file from JSON.
         /// </summary>
         /// <param name="schemaJson">The JSON of the schema.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
