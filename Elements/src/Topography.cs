@@ -194,8 +194,8 @@ namespace Elements
                 throw new ArgumentException("The specified topographies do not have the same number of vertices.");
             }
 
-            Elements.Geometry.Vertex[] e1 = null;
-            Elements.Geometry.Vertex[] e2 = null;
+            Vertex[] e1 = null;
+            Vertex[] e2 = null;
 
             switch (edgeToAverage)
             {
@@ -230,7 +230,7 @@ namespace Elements
         /// </summary>
         /// <param name="direction">The edge of vertices to return.</param>
         /// <returns>A collection of vertices.</returns>
-        public Elements.Geometry.Vertex[] GetEdgeVertices(Units.CardinalDirection direction)
+        public Vertex[] GetEdgeVertices(Units.CardinalDirection direction)
         {
             var range = Enumerable.Range(0, this.RowWidth);
             var start = 0;
@@ -344,7 +344,7 @@ namespace Elements
             Inside, Outside, Intersect, Unknown
         }
 
-        private Elements.Geometry.Vertex MergeOrReturnNew(Vector3 v)
+        private Vertex MergeOrReturnNew(Vector3 v)
         {
             foreach (var vx in this._mesh.Vertices)
             {

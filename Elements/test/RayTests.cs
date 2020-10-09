@@ -6,6 +6,7 @@ using solids = Elements.Geometry.Solids;
 using Xunit;
 using Xunit.Abstractions;
 using System.Diagnostics;
+using Elements.Geometry.Solids;
 
 namespace Elements.Tests
 {
@@ -17,7 +18,7 @@ namespace Elements.Tests
         {
             this._output = output;
         }
-        
+
         [Fact]
         public void TriangleIntersection()
         {
@@ -223,23 +224,24 @@ namespace Elements.Tests
         public void RayShadowTest()
         {
             this.Name = "RayShadowTest";
-            
-            var outer = Polygon.Rectangle(3,3);
-            var inner = Polygon.Rectangle(1.5,1.5);
+
+            var outer = Polygon.Rectangle(3, 3);
+            var inner = Polygon.Rectangle(1.5, 1.5);
 
             var mass = new Mass(new Profile(outer, inner.Reversed()), 2);
-            mass.Transform.Move(new Vector3(0,0,1));
+            mass.Transform.Move(new Vector3(0, 0, 1));
             mass.Transform.Rotate(Vector3.ZAxis, 45);
             mass.UpdateRepresentations();
 
-            var light = new Vector3(4,4,10);
+            var light = new Vector3(4, 4, 10);
             var colorScale = new ColorScale(new List<Color> { Colors.White, Colors.Darkgray });
-            var analyze = new Func<Vector3, double>((v) => {
+            var analyze = new Func<Vector3, double>((v) =>
+            {
                 var ray = new Ray(v, (light - v).Unitized());
-                if(ray.Intersects(mass, out List<Vector3> results))
+                if (ray.Intersects(mass, out List<Vector3> results))
                 {
                     var hit = results[results.Count - 1];
-                    if(!v.Equals(hit))
+                    if (!v.Equals(hit))
                     {
                         var hitLine = new ModelCurve(new Line(light, hit), BuiltInMaterials.XAxis);
                         this.Model.AddElement(hitLine);
@@ -261,7 +263,7 @@ namespace Elements.Tests
             sw.Stop();
             this._output.WriteLine($"Shot {analysisMesh.TotalAnalysisLocations} rays in {sw.Elapsed.TotalMilliseconds}ms.");
 
-            this.Model.AddElements(new Element[]{mass, analysisMesh});
+            this.Model.AddElements(new Element[] { mass, analysisMesh });
         }
 
         private static Vector3 Center(Triangle t)
