@@ -1156,8 +1156,8 @@ namespace Elements.Serialization.glTF
         {
             CSG csg = null;
 
-            var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid = false).ToList();
-            var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid = true).ToList();
+            var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false).ToList();
+            var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true).ToList();
 
             for (var i = 0; i < solids.Count; i++)
             {
