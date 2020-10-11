@@ -239,7 +239,7 @@ namespace Elements.Validators
         private void UpdateGeometry(Extrude extrude)
         {
             extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction);
-            extrude._csg = extrude._solid.TessellateAsCSG();
+            extrude._csg = extrude._solid.ToCsg();
         }
 
         public void PreConstruct(object[] args)
@@ -270,7 +270,7 @@ namespace Elements.Validators
         private void UpdateGeometry(Sweep sweep)
         {
             sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback);
-            sweep._csg = sweep._solid.TessellateAsCSG();
+            sweep._csg = sweep._solid.ToCsg();
         }
 
         public void PreConstruct(object[] args)
@@ -293,7 +293,7 @@ namespace Elements.Validators
         private void UpdateGeometry(Lamina lamina)
         {
             lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);
-            lamina._csg = lamina._solid.TessellateAsCSG();
+            lamina._csg = lamina._solid.ToCsg();
         }
 
         public void PreConstruct(object[] args)

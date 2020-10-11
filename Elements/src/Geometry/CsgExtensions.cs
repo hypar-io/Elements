@@ -239,7 +239,7 @@ namespace Elements.Geometry
             return new Csg.Vector2D(uv.U, uv.V);
         }
 
-        internal static Csg.Solid TessellateAsCSG(this Solid solid)
+        internal static Csg.Solid ToCsg(this Solid solid)
         {
             var polygons = new List<Csg.Polygon>();
 
@@ -313,7 +313,7 @@ namespace Elements.Geometry
             return Csg.Solid.FromPolygons(polygons);
         }
 
-        internal static Csg.Solid TessellateAsCSG(this Mesh mesh)
+        internal static Csg.Solid ToCsg(this Mesh mesh)
         {
             var vertices = new List<Csg.Vertex>();
             foreach (var v in mesh.Vertices)
