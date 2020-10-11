@@ -4,17 +4,9 @@
     "title": "Extrude",
     "x-namespace": "Elements.Geometry.Solids",
     "type": "object",
-    "allOf": [
-        {
-            "$ref": "https://hypar.io/Schemas/Geometry/Solids/SolidOperation.json"
-        }
-    ],
+    "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Solids/SolidOperation.json"}],
     "description": "An extrusion of a profile, in a direction, to a height.",
-    "required": [
-        "Profile",
-        "Height",
-        "Direction"
-    ],
+    "required": ["Profile", "Height", "Direction"],
     "properties": {
         "Profile": {
             "description": "The id of the profile to extrude.",
@@ -28,10 +20,6 @@
         "Direction": {
             "description": "The direction in which to extrude.",
             "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
-        },
-        "BothSides": {
-            "description": "Should the extrusion happen along the vector in both directions?",
-            "type": "boolean"
         }
     },
     "additionalProperties": false

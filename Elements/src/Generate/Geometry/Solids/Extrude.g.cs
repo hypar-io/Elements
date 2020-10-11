@@ -17,7 +17,7 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry.Solids
 {
-#pragma warning disable // Disable all warnings
+    #pragma warning disable // Disable all warnings
 
     /// <summary>An extrusion of a profile, in a direction, to a height.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.4.0 (Newtonsoft.Json v12.0.0.0)")]
@@ -26,99 +26,82 @@ namespace Elements.Geometry.Solids
         private Profile _profile;
         private double _height;
         private Vector3 _direction;
-        private bool _bothSides;
-
+    
         [Newtonsoft.Json.JsonConstructor]
-        public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid, bool @bothSides)
+        public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid)
             : base(isVoid)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Extrude>();
-            if (validator != null)
+            if(validator != null)
             {
-                validator.PreConstruct(new object[] { @profile, @height, @direction, @isVoid });
+                validator.PreConstruct(new object[]{ @profile, @height, @direction, @isVoid});
             }
-
+        
             this.Profile = @profile;
             this.Height = @height;
             this.Direction = @direction;
-            this.BothSides = @bothSides;
-
-            if (validator != null)
+        
+            if(validator != null)
             {
                 validator.PostConstruct(this);
             }
         }
-
+    
         /// <summary>The id of the profile to extrude.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
         public Profile Profile
         {
             get { return _profile; }
-            set
+            set 
             {
                 if (_profile != value)
                 {
-                    _profile = value;
+                    _profile = value; 
                     RaisePropertyChanged();
                 }
             }
         }
-
+    
         /// <summary>The height of the extrusion.</summary>
         [Newtonsoft.Json.JsonProperty("Height", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
         public double Height
         {
             get { return _height; }
-            set
+            set 
             {
                 if (_height != value)
                 {
-                    _height = value;
+                    _height = value; 
                     RaisePropertyChanged();
                 }
             }
         }
-
+    
         /// <summary>The direction in which to extrude.</summary>
         [Newtonsoft.Json.JsonProperty("Direction", Required = Newtonsoft.Json.Required.AllowNull)]
         public Vector3 Direction
         {
             get { return _direction; }
-            set
+            set 
             {
                 if (_direction != value)
                 {
-                    _direction = value;
+                    _direction = value; 
                     RaisePropertyChanged();
                 }
             }
         }
-
-        /// <summary>Should the extrusion happen along the vector in both directions?</summary>
-        [Newtonsoft.Json.JsonProperty("BothSides", Required = Newtonsoft.Json.Required.AllowNull)]
-        public bool BothSides
-        {
-            get { return _bothSides; }
-            set
-            {
-                if (_bothSides != value)
-                {
-                    _bothSides = value;
-                    RaisePropertyChanged();
-                }
-            }
-        }
-
-
+    
+    
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
+        
         protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;
-            if (handler != null)
+            if (handler != null) 
                 handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-
+    
     }
 }
