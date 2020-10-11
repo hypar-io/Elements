@@ -232,7 +232,12 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var extrude = (Extrude)obj;
-            extrude.PropertyChanged += (sender, args) => { extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction); };
+            extrude.PropertyChanged += (sender, args) => { UpdateGeometry(extrude); };
+            UpdateGeometry(extrude);
+        }
+
+        private void UpdateGeometry(Extrude extrude)
+        {
             extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction);
             extrude._csg = extrude._solid.TessellateAsCSG();
         }
@@ -258,7 +263,12 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var sweep = (Sweep)obj;
-            sweep.PropertyChanged += (sender, args) => { sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback); ; };
+            sweep.PropertyChanged += (sender, args) => { UpdateGeometry(sweep); };
+            UpdateGeometry(sweep);
+        }
+
+        private void UpdateGeometry(Sweep sweep)
+        {
             sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback);
             sweep._csg = sweep._solid.TessellateAsCSG();
         }
@@ -276,7 +286,12 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var lamina = (Lamina)obj;
-            lamina.PropertyChanged += (sender, args) => { lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter); ; };
+            lamina.PropertyChanged += (sender, args) => { UpdateGeometry(lamina); };
+            UpdateGeometry(lamina);
+        }
+
+        private void UpdateGeometry(Lamina lamina)
+        {
             lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);
             lamina._csg = lamina._solid.TessellateAsCSG();
         }
