@@ -1088,35 +1088,6 @@ namespace Elements.Serialization.glTF
             geometricElement.UpdateRepresentations();
             if (geometricElement.Representation != null)
             {
-                // foreach (var solidOp in geometricElement.Representation.SolidOperations)
-                // {
-                //     if (solidOp.Solid != null)
-                //     {
-                //         meshId = ProcessSolid(solidOp.Solid,
-                //                               e.Id.ToString(),
-                //                               materialName,
-                //                               ref gltf,
-                //                               ref materialIndexMap,
-                //                               ref buffers,
-                //                               bufferViews,
-                //                               accessors,
-                //                               meshes,
-                //                               lines,
-                //                               geometricElement.IsElementDefinition ? false : drawEdges,
-                //                               geometricElement.Transform);
-                //         if (!meshElementMap.ContainsKey(e.Id))
-                //         {
-                //             meshElementMap.Add(e.Id, new List<int>());
-                //         }
-                //         meshElementMap[e.Id].Add(meshId);
-
-                //         if (!geometricElement.IsElementDefinition)
-                //         {
-                //             CreateNodeForMesh(gltf, meshId, nodes, geometricElement.Transform);
-                //         }
-                //     }
-                // }
-
                 meshId = ProcessSolidsAsCSG(geometricElement,
                                     e.Id.ToString(),
                                     materialName,
