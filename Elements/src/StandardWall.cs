@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
@@ -86,37 +85,28 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            // Construct a transform whose X axis is the centerline of the wall.
-            // The wall is described as if it's lying flat in the XY plane of that Transform.
-            var d = this.CenterLine.Direction();
-            var z = d.Cross(Vector3.ZAxis);
-            var wallTransform = new Transform(this.CenterLine.Start, d, z);
-
-            var wallProfile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(this.CenterLine.Length(), this.Height)));
-
-            if (this.Openings.Count > 0)
-            {
-                this.Openings.ForEach(o => o.UpdateRepresentations());
-
-                // Find all the void ops which point in the same direction.
-                var holes = this.Openings.SelectMany(o => o.Representation.SolidOperations.
-                                                        Where(op => op is Extrude && op.IsVoid == true).
-                                                        Cast<Extrude>().
-                                                        Where(ex => ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
-                if (holes.Any())
-                {
-                    var holeProfiles = holes.Select(ex => ex.Profile);
-                    wallProfile.Clip(holeProfiles);
-                }
-            }
-
-            // Set the wall's profile to the wallProfile created here
-            // as we will use it for the solid op below. 
-            this.Profile = wallTransform.OfProfile(wallProfile);
             this.Representation.SolidOperations.Clear();
 
-            // Transform the wall profile to be "standing up".
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, z, false));
+            var x = this.CenterLine.Direction();
+            var y = Vector3.ZAxis;
+            var z = x.Cross(y);
+            var wallTransform = new Transform(this.CenterLine.Start, x, z);
+            foreach (var o in this.Openings)
+            {
+                var ot = new Transform(wallTransform);
+                ot.Concatenate(o.Transform);
+                // Set the opening down into the wall, so
+                // it cuts all the way through.
+                ot.Move(ot.ZAxis * -this.Thickness / 2);
+                this.Representation.SolidOperations.Add(new Extrude(o.Profile, this.Thickness, Vector3.ZAxis, true)
+                {
+                    LocalTransform = ot
+                });
+            }
+            var e1 = this.CenterLine.Offset(this.Thickness / 2, false);
+            var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
+            var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
+            this.Representation.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
         }
     }
 }

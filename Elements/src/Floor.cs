@@ -3,7 +3,6 @@ using Elements.Interfaces;
 using System;
 using Elements.Geometry.Solids;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -108,22 +107,14 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if (this.Openings.Count > 0)
-            {
-                this.Openings.ForEach(o => o.UpdateRepresentations());
-
-                // Find all the void ops which point in the same direction.
-                var holes = this.Openings.SelectMany(o => o.Representation.SolidOperations.
-                                                        Where(op => op is Extrude && op.IsVoid == true).
-                                                        Cast<Extrude>().
-                                                        Where(ex => ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
-                if (holes.Any())
-                {
-                    var holeProfiles = holes.Select(ex => ex.Profile);
-                    this.Profile.Clip(holeProfiles);
-                }
-            }
             this.Representation.SolidOperations.Clear();
+            foreach (var o in this.Openings)
+            {
+                this.Representation.SolidOperations.Add(new Extrude(o.Profile, this.Thickness, Vector3.ZAxis, true)
+                {
+                    LocalTransform = o.Transform
+                });
+            }
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
         }
     }
