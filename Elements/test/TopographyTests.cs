@@ -219,14 +219,14 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void CSG()
+        public void Csg()
         {
             this.Name = "Topography_CSG";
             var topo = CreateTopoFromMapboxElevations();
-            var csg = new CSG(topo.Mesh);
+            var csg = topo.Mesh.TessellateAsCSG();
 
             var box = new Extrude(Polygon.Star(200, 100, 5), 100, Vector3.ZAxis, false);
-            csg.Difference(box.Solid, new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)));
+            csg = csg.Substract(box._csg.Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
 
             var result = new Mesh();
             csg.Tessellate(ref result);
