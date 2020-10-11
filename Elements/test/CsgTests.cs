@@ -26,7 +26,7 @@ namespace Elements.Tests
             });
             var s4 = new Sweep(poly, new Line(new Vector3(0, 30, 0), new Vector3(30, 30, 0)), 0, 0, false);
             csg = csg.Substract(s4.Solid.ToCsg());
-            // </example>
+
             var result = new Mesh();
             csg.Tessellate(ref result);
             this.Model.AddElement(new MeshElement(result, new Material("Mod", Colors.Red, 0.5, 0.5)));
