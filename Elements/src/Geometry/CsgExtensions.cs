@@ -151,94 +151,6 @@ namespace Elements.Geometry
             });
         }
 
-        internal static void AddToMesh(this Csg.Polygon p, ref Mesh mesh)
-        {
-            // Polygons coming back from Csg can have an arbitrary number
-            // of vertices. We need to retessellate the returned polygon.
-            var tess = new Tess();
-            tess.NoEmptyPolygons = true;
-
-            tess.AddContour(p.Vertices.ToContourVertices());
-
-            tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-            for (var i = 0; i < tess.ElementCount; i++)
-            {
-                var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
-                var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
-                var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
-
-                var uva = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3]].Data;
-                var uvb = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 1]].Data;
-                var uvc = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 2]].Data;
-
-                var v1 = mesh.AddVertex(a, uva.ToUV());
-                var v2 = mesh.AddVertex(b, uvb.ToUV());
-                var v3 = mesh.AddVertex(c, uvc.ToUV());
-                mesh.AddTriangle(v1, v2, v3);
-            }
-        }
-
-        private static Vertex ToElementsVertex(this Csg.Vertex v)
-        {
-            return new Vertex(v.Pos.ToElementsVector());
-        }
-
-        private static Vector3 ToElementsVector(this Csg.Vector3D v)
-        {
-            return new Vector3(v.X, v.Y, v.Z);
-        }
-
-        private static UV ToUV(this Csg.Vector2D uv)
-        {
-            return new UV(uv.X, uv.Y);
-        }
-
-        private static Csg.Vector3D ToCsgVector3(this ContourVertex v)
-        {
-            return new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z);
-        }
-
-        internal static ContourVertex[] ToContourVertices(this List<Csg.Vertex> vertices)
-        {
-            var result = new ContourVertex[vertices.Count];
-            for (var i = 0; i < vertices.Count; i++)
-            {
-                result[i] = new ContourVertex() { Position = new Vec3() { X = vertices[i].Pos.X, Y = vertices[i].Pos.Y, Z = vertices[i].Pos.Z }, Data = vertices[i].Tex };
-            }
-            return result;
-        }
-
-        private static Csg.Vector3D OfCsgVector3(this Transform transform, Csg.Vector3D p)
-        {
-            var m = transform.Matrix;
-            return new Csg.Vector3D(
-                p.X * m.m11 + p.Y * m.m21 + p.Z * m.m31 + m.tx,
-                p.X * m.m12 + p.Y * m.m22 + p.Z * m.m32 + m.ty,
-                p.X * m.m13 + p.Y * m.m23 + p.Z * m.m33 + m.tz
-            );
-        }
-
-        private static bool IsAlmostEqualTo(this Csg.Vector3D target, Csg.Vector3D v)
-        {
-            if (Math.Abs(target.X - v.X) < Vector3.EPSILON &&
-                Math.Abs(target.Y - v.Y) < Vector3.EPSILON &&
-                Math.Abs(target.Z - v.Z) < Vector3.EPSILON)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private static Csg.Vector3D ToCsgVector3(this Vector3 v)
-        {
-            return new Csg.Vector3D(v.X, v.Y, v.Z);
-        }
-
-        private static Csg.Vector2D ToCsgVector2(this UV uv)
-        {
-            return new Csg.Vector2D(uv.U, uv.V);
-        }
-
         internal static Csg.Solid ToCsg(this Solid solid)
         {
             var polygons = new List<Csg.Polygon>();
@@ -334,5 +246,94 @@ namespace Elements.Geometry
 
             return Csg.Solid.FromPolygons(polygons);
         }
+        
+        private static void AddToMesh(this Csg.Polygon p, ref Mesh mesh)
+        {
+            // Polygons coming back from Csg can have an arbitrary number
+            // of vertices. We need to retessellate the returned polygon.
+            var tess = new Tess();
+            tess.NoEmptyPolygons = true;
+
+            tess.AddContour(p.Vertices.ToContourVertices());
+
+            tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+            for (var i = 0; i < tess.ElementCount; i++)
+            {
+                var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
+                var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
+                var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
+
+                var uva = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3]].Data;
+                var uvb = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 1]].Data;
+                var uvc = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 2]].Data;
+
+                var v1 = mesh.AddVertex(a, uva.ToUV());
+                var v2 = mesh.AddVertex(b, uvb.ToUV());
+                var v3 = mesh.AddVertex(c, uvc.ToUV());
+                mesh.AddTriangle(v1, v2, v3);
+            }
+        }
+
+        private static Vertex ToElementsVertex(this Csg.Vertex v)
+        {
+            return new Vertex(v.Pos.ToElementsVector());
+        }
+
+        private static Vector3 ToElementsVector(this Csg.Vector3D v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
+
+        private static UV ToUV(this Csg.Vector2D uv)
+        {
+            return new UV(uv.X, uv.Y);
+        }
+
+        private static Csg.Vector3D ToCsgVector3(this ContourVertex v)
+        {
+            return new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z);
+        }
+
+        private static ContourVertex[] ToContourVertices(this List<Csg.Vertex> vertices)
+        {
+            var result = new ContourVertex[vertices.Count];
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                result[i] = new ContourVertex() { Position = new Vec3() { X = vertices[i].Pos.X, Y = vertices[i].Pos.Y, Z = vertices[i].Pos.Z }, Data = vertices[i].Tex };
+            }
+            return result;
+        }
+
+        private static Csg.Vector3D OfCsgVector3(this Transform transform, Csg.Vector3D p)
+        {
+            var m = transform.Matrix;
+            return new Csg.Vector3D(
+                p.X * m.m11 + p.Y * m.m21 + p.Z * m.m31 + m.tx,
+                p.X * m.m12 + p.Y * m.m22 + p.Z * m.m32 + m.ty,
+                p.X * m.m13 + p.Y * m.m23 + p.Z * m.m33 + m.tz
+            );
+        }
+
+        private static bool IsAlmostEqualTo(this Csg.Vector3D target, Csg.Vector3D v)
+        {
+            if (Math.Abs(target.X - v.X) < Vector3.EPSILON &&
+                Math.Abs(target.Y - v.Y) < Vector3.EPSILON &&
+                Math.Abs(target.Z - v.Z) < Vector3.EPSILON)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private static Csg.Vector3D ToCsgVector3(this Vector3 v)
+        {
+            return new Csg.Vector3D(v.X, v.Y, v.Z);
+        }
+
+        private static Csg.Vector2D ToCsgVector2(this UV uv)
+        {
+            return new Csg.Vector2D(uv.U, uv.V);
+        }
+
     }
 }
