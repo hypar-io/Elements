@@ -1088,35 +1088,122 @@ namespace Elements.Serialization.glTF
             geometricElement.UpdateRepresentations();
             if (geometricElement.Representation != null)
             {
-                foreach (var solidOp in geometricElement.Representation.SolidOperations)
-                {
-                    if (solidOp.Solid != null)
-                    {
-                        meshId = ProcessSolid(solidOp.Solid,
-                                              e.Id.ToString(),
-                                              materialName,
-                                              ref gltf,
-                                              ref materialIndexMap,
-                                              ref buffers,
-                                              bufferViews,
-                                              accessors,
-                                              meshes,
-                                              lines,
-                                              geometricElement.IsElementDefinition ? false : drawEdges,
-                                              geometricElement.Transform);
-                        if (!meshElementMap.ContainsKey(e.Id))
-                        {
-                            meshElementMap.Add(e.Id, new List<int>());
-                        }
-                        meshElementMap[e.Id].Add(meshId);
+                // foreach (var solidOp in geometricElement.Representation.SolidOperations)
+                // {
+                //     if (solidOp.Solid != null)
+                //     {
+                //         meshId = ProcessSolid(solidOp.Solid,
+                //                               e.Id.ToString(),
+                //                               materialName,
+                //                               ref gltf,
+                //                               ref materialIndexMap,
+                //                               ref buffers,
+                //                               bufferViews,
+                //                               accessors,
+                //                               meshes,
+                //                               lines,
+                //                               geometricElement.IsElementDefinition ? false : drawEdges,
+                //                               geometricElement.Transform);
+                //         if (!meshElementMap.ContainsKey(e.Id))
+                //         {
+                //             meshElementMap.Add(e.Id, new List<int>());
+                //         }
+                //         meshElementMap[e.Id].Add(meshId);
 
-                        if (!geometricElement.IsElementDefinition)
-                        {
-                            CreateNodeForMesh(gltf, meshId, nodes, geometricElement.Transform);
-                        }
-                    }
+                //         if (!geometricElement.IsElementDefinition)
+                //         {
+                //             CreateNodeForMesh(gltf, meshId, nodes, geometricElement.Transform);
+                //         }
+                //     }
+                // }
+
+                meshId = ProcessSolidsAsCSG(geometricElement,
+                                    e.Id.ToString(),
+                                    materialName,
+                                    ref gltf,
+                                    ref materialIndexMap,
+                                    ref buffers,
+                                    bufferViews,
+                                    accessors,
+                                    meshes,
+                                    lines,
+                                    geometricElement.Transform);
+
+                if (!meshElementMap.ContainsKey(e.Id))
+                {
+                    meshElementMap.Add(e.Id, new List<int>());
+                }
+                meshElementMap[e.Id].Add(meshId);
+
+                if (!geometricElement.IsElementDefinition)
+                {
+                    CreateNodeForMesh(gltf, meshId, nodes, geometricElement.Transform);
                 }
             }
+        }
+
+        private static int ProcessSolidsAsCSG(GeometricElement geometricElement,
+                                      string id,
+                                      string materialName,
+                                      ref Gltf gltf,
+                                      ref Dictionary<string, int> materials,
+                                      ref List<byte> buffer,
+                                      List<BufferView> bufferViews,
+                                      List<Accessor> accessors,
+                                      List<glTFLoader.Schema.Mesh> meshes,
+                                      List<Vector3> lines,
+                                      Transform t = null)
+        {
+            CSG csg = null;
+
+            var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid = false).ToList();
+            var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid = true).ToList();
+
+            for (var i = 0; i < solids.Count; i++)
+            {
+                var op = solids[i];
+                if (csg == null)
+                {
+                    csg = new CSG(op.Solid);
+                }
+                else
+                {
+                    csg.Union(op.Solid, op.LocalTransform);
+                }
+            }
+
+            for (var i = 0; i < voids.Count; i++)
+            {
+                var op = voids[i];
+                if (csg == null)
+                {
+                    csg = new CSG(op.Solid);
+                }
+                else
+                {
+                    csg.Difference(op.Solid, op.LocalTransform);
+                }
+            }
+
+            byte[] vertexBuffer;
+            byte[] normalBuffer;
+            byte[] indexBuffer;
+            byte[] colorBuffer;
+            byte[] uvBuffer;
+
+            double[] vmin; double[] vmax;
+            double[] nmin; double[] nmax;
+            float[] cmin; float[] cmax;
+            ushort imin; ushort imax;
+            double[] uvmin; double[] uvmax;
+
+            csg.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
+                            out vmax, out vmin, out nmin, out nmax, out cmin,
+                            out cmax, out imin, out imax, out uvmax, out uvmin);
+
+            return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
+                                indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
+                                imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, meshes);
         }
 
         private static int ProcessSolid(Solid solid,

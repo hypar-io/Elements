@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
@@ -11,6 +12,9 @@ namespace Elements.Geometry
     /// This type provides a thing wrapper around Frank Krueger's CSG library
     /// which is a port of OpenSCGCad's csg.js: https://github.com/praeclarum/Csg.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/CsgTests.cs?name=example)]
+    /// </example>
     public class CSG : ITessellate
     {
         private Csg.Solid _csg;
@@ -64,6 +68,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Difference this csg with the provided csg.
+        /// </summary>
+        /// <param name="csg"></param>
+        public void Difference(CSG csg)
+        {
+            _csg = Csg.Solids.Difference(csg._csg);
+        }
+
+        /// <summary>
         /// Intersect this csg with the provided solid.
         /// </summary>
         /// <param name="solid"></param>
@@ -83,6 +96,129 @@ namespace Elements.Geometry
                 p.AddToMesh(ref mesh);
             }
             mesh.ComputeNormals();
+        }
+
+        /// <summary>
+        /// Triangulate this solid and pack the triangulated data into buffers
+        /// appropriate for use with gltf.
+        /// </summary>
+        public void Tessellate(out byte[] vertexBuffer,
+            out byte[] indexBuffer, out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer,
+            out double[] vmax, out double[] vmin, out double[] nmin, out double[] nmax,
+            out float[] cmin, out float[] cmax, out ushort imin, out ushort imax, out double[] uvmin, out double[] uvmax)
+        {
+
+            var tessellations = new Tess[this._csg.Polygons.Count];
+
+            var fi = 0;
+            foreach (var p in this._csg.Polygons)
+            {
+                var tess = new Tess();
+                tess.NoEmptyPolygons = true;
+                tess.AddContour(p.Vertices.ToContourVertices());
+
+                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+                tessellations[fi] = tess;
+                fi++;
+            }
+
+            var floatSize = sizeof(float);
+            var ushortSize = sizeof(ushort);
+
+            var vertexCount = tessellations.Sum(t => t.VertexCount);
+            var indexCount = tessellations.Sum(t => t.Elements.Length);
+
+            vertexBuffer = new byte[vertexCount * floatSize * 3];
+            normalBuffer = new byte[vertexCount * floatSize * 3];
+            indexBuffer = new byte[indexCount * ushortSize];
+            uvBuffer = new byte[vertexCount * floatSize * 2];
+
+            // Vertex colors are not used in this context currently.
+            colorBuffer = new byte[0];
+            cmin = new float[0];
+            cmax = new float[0];
+
+            vmax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+            vmin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            nmin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            nmax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+
+            // TODO: Set this properly when solids get UV coordinates.
+            uvmin = new double[2] { 0, 0 };
+            uvmax = new double[2] { 0, 0 };
+
+            imax = ushort.MinValue;
+            imin = ushort.MaxValue;
+
+            var vi = 0;
+            var ii = 0;
+            var uvi = 0;
+
+            var iCursor = 0;
+
+            for (var i = 0; i < tessellations.Length; i++)
+            {
+                var tess = tessellations[i];
+                if (tess.ElementCount == 0)
+                {
+                    continue;
+                }
+                var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
+                var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
+                var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
+                var n = (b - a).Cross(c - a).Unitized();
+
+                for (var j = 0; j < tess.Vertices.Length; j++)
+                {
+                    var v = tess.Vertices[j];
+
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.X), 0, vertexBuffer, vi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Y), 0, vertexBuffer, vi + floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Z), 0, vertexBuffer, vi + 2 * floatSize, floatSize);
+
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.X), 0, normalBuffer, vi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Y), 0, normalBuffer, vi + floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
+
+                    // TODO: Update Solids to use something other than UV = {0,0}.
+                    System.Buffer.BlockCopy(BitConverter.GetBytes(0f), 0, uvBuffer, uvi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes(0f), 0, uvBuffer, uvi + floatSize, floatSize);
+
+                    uvi += 2 * floatSize;
+                    vi += 3 * floatSize;
+
+                    vmax[0] = Math.Max(vmax[0], v.Position.X);
+                    vmax[1] = Math.Max(vmax[1], v.Position.Y);
+                    vmax[2] = Math.Max(vmax[2], v.Position.Z);
+                    vmin[0] = Math.Min(vmin[0], v.Position.X);
+                    vmin[1] = Math.Min(vmin[1], v.Position.Y);
+                    vmin[2] = Math.Min(vmin[2], v.Position.Z);
+
+                    nmax[0] = Math.Max(nmax[0], n.X);
+                    nmax[1] = Math.Max(nmax[1], n.Y);
+                    nmax[2] = Math.Max(nmax[2], n.Z);
+                    nmin[0] = Math.Min(nmin[0], n.X);
+                    nmin[1] = Math.Min(nmin[1], n.Y);
+                    nmin[2] = Math.Min(nmin[2], n.Z);
+
+                    // uvmax[0] = Math.Max(uvmax[0], 0);
+                    // uvmax[1] = Math.Max(uvmax[1], 0);
+                    // uvmin[0] = Math.Min(uvmin[0], 0);
+                    // uvmin[1] = Math.Min(uvmin[1], 0);
+                }
+
+                for (var k = 0; k < tess.Elements.Length; k++)
+                {
+                    var t = tess.Elements[k];
+                    var index = (ushort)(t + iCursor);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes(index), 0, indexBuffer, ii, ushortSize);
+                    imax = Math.Max(imax, index);
+                    imin = Math.Min(imin, index);
+                    ii += ushortSize;
+                }
+
+                iCursor = imax + 1;
+            }
         }
     }
 
@@ -115,9 +251,9 @@ namespace Elements.Geometry
             }
         }
 
-        private static Elements.Geometry.Vertex ToElementsVertex(this Csg.Vertex v)
+        private static Vertex ToElementsVertex(this Csg.Vertex v)
         {
-            return new Elements.Geometry.Vertex(v.Pos.ToElementsVector());
+            return new Vertex(v.Pos.ToElementsVector());
         }
 
         private static Vector3 ToElementsVector(this Csg.Vector3D v)
@@ -135,7 +271,7 @@ namespace Elements.Geometry
             return new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z);
         }
 
-        private static ContourVertex[] ToContourVertices(this List<Csg.Vertex> vertices)
+        internal static ContourVertex[] ToContourVertices(this List<Csg.Vertex> vertices)
         {
             var result = new ContourVertex[vertices.Count];
             for (var i = 0; i < vertices.Count; i++)
