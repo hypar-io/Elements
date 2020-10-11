@@ -1125,36 +1125,17 @@ namespace Elements.Serialization.glTF
                                       List<Vector3> lines,
                                       Transform t = null)
         {
-            Csg.Solid csg = null;
+            Csg.Solid csg = new Csg.Solid();
 
-            var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false).ToList();
-            var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true).ToList();
+            var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false)
+                                                                        .Select(op => op.LocalTransform != null ? op._csg.Transform(op.LocalTransform.ToMatrix4x4()) : op._csg)
+                                                                        .ToArray();
+            var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true)
+                                                                       .Select(op => op.LocalTransform != null ? op._csg.Transform(op.LocalTransform.ToMatrix4x4()) : op._csg)
+                                                                       .ToArray();
 
-            for (var i = 0; i < solids.Count; i++)
-            {
-                var op = solids[i];
-                if (csg == null)
-                {
-                    csg = op._csg;
-                }
-                else
-                {
-                    csg = csg.Union(op._csg.Transform(op.LocalTransform.ToMatrix4x4()));
-                }
-            }
-
-            for (var i = 0; i < voids.Count; i++)
-            {
-                var op = voids[i];
-                if (csg == null)
-                {
-                    csg = op._csg;
-                }
-                else
-                {
-                    csg = csg.Substract(op._csg.Transform(op.LocalTransform.ToMatrix4x4()));
-                }
-            }
+            csg = csg.Union(solids);
+            csg = csg.Substract(voids);
 
             byte[] vertexBuffer;
             byte[] normalBuffer;
