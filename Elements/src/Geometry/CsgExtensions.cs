@@ -1,97 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 
 namespace Elements.Geometry
 {
-    /// <summary>
-    /// A CSG solid.
-    /// This type provides a thing wrapper around Frank Krueger's CSG library
-    /// which is a port of OpenSCGCad's csg.js: https://github.com/praeclarum/Csg.
-    /// </summary>
-    /// <example>
-    /// [!code-csharp[Main](../../Elements/test/CsgTests.cs?name=example)]
-    /// </example>
-    public class CSG : ITessellate
+    internal static class CsgExtensions
     {
-        private Csg.Solid _csg;
-
-        /// <summary>
-        /// Construct a CSG.
-        /// </summary>
-        public CSG()
+        internal static void Tessellate(this Csg.Solid csg, ref Mesh mesh, Transform transform = null, Color color = default(Color))
         {
-            this._csg = new Csg.Solid();
-        }
-
-        /// <summary>
-        /// Construct a CSG from a solid.
-        /// </summary>
-        /// <param name="solid">The solid which defines the CSG.</param>
-        /// <param name="transform"></param>
-        public CSG(Elements.Geometry.Solids.Solid solid, Transform transform = null)
-        {
-            _csg = solid.TessellateAsCSG(transform);
-        }
-
-        /// <summary>
-        /// Construct a CSG from a mesh.
-        /// </summary>
-        /// <param name="mesh">The mesh which defines the CSG.</param>
-        /// <param name="transform"></param>
-        public CSG(Elements.Geometry.Mesh mesh, Transform transform = null)
-        {
-            _csg = mesh.TessellateAsCSG(transform);
-        }
-
-        /// <summary>
-        /// Union this csg with the provided solid.
-        /// </summary>
-        /// <param name="solid"></param>
-        /// <param name="transform"></param>
-        public void Union(Elements.Geometry.Solids.Solid solid, Transform transform = null)
-        {
-            _csg = Csg.Solids.Union(_csg, solid.TessellateAsCSG());
-        }
-
-        /// <summary>
-        /// Difference this csg with the provided solid.
-        /// </summary>
-        /// <param name="solid"></param>
-        /// <param name="transform"></param>
-        public void Difference(Elements.Geometry.Solids.Solid solid, Transform transform = null)
-        {
-            _csg = Csg.Solids.Difference(_csg, solid.TessellateAsCSG(transform));
-        }
-
-        /// <summary>
-        /// Difference this csg with the provided csg.
-        /// </summary>
-        /// <param name="csg"></param>
-        public void Difference(CSG csg)
-        {
-            _csg = Csg.Solids.Difference(csg._csg);
-        }
-
-        /// <summary>
-        /// Intersect this csg with the provided solid.
-        /// </summary>
-        /// <param name="solid"></param>
-        /// <param name="transform"></param>
-        public void Intersect(Elements.Geometry.Solids.Solid solid, Transform transform = null)
-        {
-            _csg = Csg.Solids.Intersection(_csg, solid.TessellateAsCSG(transform));
-        }
-
-        /// <summary>
-        /// Implement ITessellate
-        /// </summary>
-        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
-        {
-            foreach (var p in _csg.Polygons)
+            foreach (var p in csg.Polygons)
             {
                 p.AddToMesh(ref mesh);
             }
@@ -102,16 +21,16 @@ namespace Elements.Geometry
         /// Triangulate this solid and pack the triangulated data into buffers
         /// appropriate for use with gltf.
         /// </summary>
-        public void Tessellate(out byte[] vertexBuffer,
+        internal static void Tessellate(this Csg.Solid csg, out byte[] vertexBuffer,
             out byte[] indexBuffer, out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer,
             out double[] vmax, out double[] vmin, out double[] nmin, out double[] nmax,
             out float[] cmin, out float[] cmax, out ushort imin, out ushort imax, out double[] uvmin, out double[] uvmax)
         {
 
-            var tessellations = new Tess[this._csg.Polygons.Count];
+            var tessellations = new Tess[csg.Polygons.Count];
 
             var fi = 0;
-            foreach (var p in this._csg.Polygons)
+            foreach (var p in csg.Polygons)
             {
                 var tess = new Tess();
                 tess.NoEmptyPolygons = true;
@@ -220,10 +139,18 @@ namespace Elements.Geometry
                 iCursor = imax + 1;
             }
         }
-    }
 
-    internal static class CsgExtensions
-    {
+        internal static Csg.Matrix4x4 ToMatrix4x4(this Transform transform)
+        {
+            var m = transform.Matrix;
+            return new Csg.Matrix4x4(new[]{
+                m.m11, m.m12, m.m13, 0.0,
+                m.m21, m.m22, m.m23, 0.0,
+                m.m31, m.m32, m.m33, 0.0,
+                m.tx, m.ty, m.tz, 1.0
+            });
+        }
+
         internal static void AddToMesh(this Csg.Polygon p, ref Mesh mesh)
         {
             // Polygons coming back from Csg can have an arbitrary number
@@ -312,7 +239,7 @@ namespace Elements.Geometry
             return new Csg.Vector2D(uv.U, uv.V);
         }
 
-        internal static Csg.Solid TessellateAsCSG(this Solid solid, Transform transform = null)
+        internal static Csg.Solid TessellateAsCSG(this Solid solid)
         {
             var polygons = new List<Csg.Polygon>();
 
@@ -339,13 +266,6 @@ namespace Elements.Geometry
                     var a = tess.Vertices[tess.Elements[i * 3]].ToCsgVector3();
                     var b = tess.Vertices[tess.Elements[i * 3 + 1]].ToCsgVector3();
                     var c = tess.Vertices[tess.Elements[i * 3 + 2]].ToCsgVector3();
-
-                    if (transform != null)
-                    {
-                        a = transform.OfCsgVector3(a);
-                        b = transform.OfCsgVector3(b);
-                        c = transform.OfCsgVector3(c);
-                    }
 
                     Csg.Vertex av = null;
                     Csg.Vertex bv = null;
@@ -393,7 +313,7 @@ namespace Elements.Geometry
             return Csg.Solid.FromPolygons(polygons);
         }
 
-        internal static Csg.Solid TessellateAsCSG(this Mesh mesh, Transform transform = null)
+        internal static Csg.Solid TessellateAsCSG(this Mesh mesh)
         {
             var vertices = new List<Csg.Vertex>();
             foreach (var v in mesh.Vertices)
