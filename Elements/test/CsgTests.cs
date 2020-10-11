@@ -19,7 +19,7 @@ namespace Elements.Tests
             for (var i = 0.1; i <= 0.9; i += 0.1)
             {
                 var t = line.TransformAt(i);
-                var hole = new Extrude(Polygon.Rectangle(0.1, 0.1), 1.0, Vector3.ZAxis, true, true)
+                var hole = new Extrude(Polygon.Rectangle(0.1, 0.1), 1.0, Vector3.ZAxis, true)
                 {
                     LocalTransform = new Transform(t.Origin, t.ZAxis, t.XAxis.Negate())
                 };
@@ -34,10 +34,10 @@ namespace Elements.Tests
         public void Union()
         {
             this.Name = "CSG_Union";
-            var s1 = new Extrude(Polygon.Rectangle(1, 1), 1, Vector3.ZAxis, false, false);
+            var s1 = new Extrude(Polygon.Rectangle(1, 1), 1, Vector3.ZAxis, false);
             var csg = new CSG(s1.Solid);
 
-            var s2 = new Extrude(Polygon.L(1.0, 2.0, 0.5), 1, Vector3.ZAxis, false, false);
+            var s2 = new Extrude(Polygon.L(1.0, 2.0, 0.5), 1, Vector3.ZAxis, false);
             csg.Union(s2.Solid);
 
             var result = new Mesh();
@@ -51,10 +51,10 @@ namespace Elements.Tests
         public void ModShape()
         {
             this.Name = "CSG_ModShape";
-            var s1 = new Extrude(Polygon.Rectangle(Vector3.Origin, new Vector3(30, 30)), 50, Vector3.ZAxis, false, false);
+            var s1 = new Extrude(Polygon.Rectangle(Vector3.Origin, new Vector3(30, 30)), 50, Vector3.ZAxis, false);
             var csg = new CSG(s1.Solid);
 
-            var s2 = new Extrude(Polygon.Rectangle(30, 30), 30, Vector3.ZAxis, false, false);
+            var s2 = new Extrude(Polygon.Rectangle(30, 30), 30, Vector3.ZAxis, false);
             csg.Difference(s2.Solid);
 
             var s3 = new Sweep(Polygon.Rectangle(Vector3.Origin, new Vector3(5, 5)), new Line(new Vector3(0, 0, 45), new Vector3(30, 0, 45)), 0, 0, false);
@@ -82,13 +82,13 @@ namespace Elements.Tests
             var s1 = new Sweep(profile, path, 0, 0, true);
             var csg = new CSG(s1.Solid);
 
-            var s2 = new Extrude(new Circle(Vector3.Origin, 6).ToPolygon(20), 1, Vector3.ZAxis, false, false);
+            var s2 = new Extrude(new Circle(Vector3.Origin, 6).ToPolygon(20), 1, Vector3.ZAxis, false);
             csg.Difference(s2.Solid);
 
             for (var i = 0.0; i < 1.0; i += 0.05)
             {
                 var pt = path.PointAt(i);
-                var hole = new Extrude(new Circle(Vector3.Origin, 0.05).ToPolygon(), 3, Vector3.ZAxis, false, false);
+                var hole = new Extrude(new Circle(Vector3.Origin, 0.05).ToPolygon(), 3, Vector3.ZAxis, false);
                 csg.Difference(hole.Solid, new Transform(pt + new Vector3(0, 0, -2)));
             }
 
