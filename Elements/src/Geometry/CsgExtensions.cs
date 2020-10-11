@@ -8,6 +8,9 @@ namespace Elements.Geometry
 {
     internal static class CsgExtensions
     {
+        /// <summary>
+        /// Write the csg into a mesh.
+        /// </summary>
         internal static void Tessellate(this Csg.Solid csg, ref Mesh mesh, Transform transform = null, Color color = default(Color))
         {
             foreach (var p in csg.Polygons)
@@ -18,7 +21,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Triangulate this solid and pack the triangulated data into buffers
+        /// Triangulate this csg and pack the triangulated data into buffers
         /// appropriate for use with gltf.
         /// </summary>
         internal static void Tessellate(this Csg.Solid csg, out byte[] vertexBuffer,
@@ -246,7 +249,7 @@ namespace Elements.Geometry
 
             return Csg.Solid.FromPolygons(polygons);
         }
-        
+
         private static void AddToMesh(this Csg.Polygon p, ref Mesh mesh)
         {
             // Polygons coming back from Csg can have an arbitrary number
