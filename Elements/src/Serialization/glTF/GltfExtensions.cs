@@ -1125,7 +1125,7 @@ namespace Elements.Serialization.glTF
                                       List<Vector3> lines,
                                       Transform t = null)
         {
-            CSG csg = null;
+            Csg.Solid csg = null;
 
             var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false).ToList();
             var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true).ToList();
@@ -1135,11 +1135,11 @@ namespace Elements.Serialization.glTF
                 var op = solids[i];
                 if (csg == null)
                 {
-                    csg = new CSG(op.Solid);
+                    csg = op._csg;
                 }
                 else
                 {
-                    csg.Union(op.Solid, op.LocalTransform);
+                    csg = csg.Union(op._csg.Transform(op.LocalTransform.ToMatrix4x4()));
                 }
             }
 
@@ -1148,11 +1148,11 @@ namespace Elements.Serialization.glTF
                 var op = voids[i];
                 if (csg == null)
                 {
-                    csg = new CSG(op.Solid);
+                    csg = op._csg;
                 }
                 else
                 {
-                    csg.Difference(op.Solid, op.LocalTransform);
+                    csg = csg.Substract(op._csg.Transform(op.LocalTransform.ToMatrix4x4()));
                 }
             }
 

@@ -233,7 +233,8 @@ namespace Elements.Validators
         {
             var extrude = (Extrude)obj;
             extrude.PropertyChanged += (sender, args) => { extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction); };
-            extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction); ;
+            extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction);
+            extrude._csg = extrude._solid.TessellateAsCSG();
         }
 
         public void PreConstruct(object[] args)
@@ -258,7 +259,8 @@ namespace Elements.Validators
         {
             var sweep = (Sweep)obj;
             sweep.PropertyChanged += (sender, args) => { sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback); ; };
-            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback); ;
+            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback);
+            sweep._csg = sweep._solid.TessellateAsCSG();
         }
 
         public void PreConstruct(object[] args)
@@ -275,7 +277,8 @@ namespace Elements.Validators
         {
             var lamina = (Lamina)obj;
             lamina.PropertyChanged += (sender, args) => { lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter); ; };
-            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter); ;
+            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);
+            lamina._csg = lamina._solid.TessellateAsCSG();
         }
 
         public void PreConstruct(object[] args)
