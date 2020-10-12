@@ -109,6 +109,44 @@ namespace Elements.Generate
             set => _templatesPath = value;
         }
 
+        /// <summary>
+        /// Generate a user defined type in a .g.cs file from JSON.
+        /// </summary>
+        /// <param name="schemaJson">The JSON of the schema.</param>
+        /// <param name="outputBaseDir">The base output directory.</param>
+        /// <param name="isUserElement">Is the type a user-defined element?</param>
+        /// <returns></returns>
+        public static async Task<GenerationResult> GenerateUserElementTypeFromJsonAsync(string schemaJson, string outputBaseDir, bool isUserElement = false)
+        {
+            DotLiquid.Template.DefaultIsThreadSafe = true;
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
+
+            var schema = await JsonSchema.FromJsonAsync(schemaJson);
+
+            return ValidateAndWriteTypeToDisk(schema, outputBaseDir, isUserElement);
+
+        }
+
+        private static GenerationResult ValidateAndWriteTypeToDisk(JsonSchema schema, string outputBaseDir, bool isUserElement)
+        {
+            string ns;
+            if (!GetNamespace(schema, out ns))
+            {
+                return new GenerationResult
+                {
+                    Success = false,
+                    DiagnosticResults = new[] { "The provided schema does not contain the required 'x-namespace' property." }
+                };
+            }
+
+            var typeName = schema.Title;
+            if (_coreTypeNames == null)
+            {
+                _coreTypeNames = GetCoreTypeNames();
+            }
+            var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
+            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, isUserElement, excludedTypeNames);
+        }
 
         /// <summary>
         /// Generate a user-defined type in a .g.cs file from a schema.
@@ -127,23 +165,7 @@ namespace Elements.Generate
 
             var schema = await GetSchemaAsync(uri);
 
-            string ns;
-            if (!GetNamespace(schema, out ns))
-            {
-                return new GenerationResult
-                {
-                    Success = false,
-                    DiagnosticResults = new[] { "The provided schema does not contain the required 'x-namespace' property." }
-                };
-            }
-
-            var typeName = schema.Title;
-            if (_coreTypeNames == null)
-            {
-                _coreTypeNames = GetCoreTypeNames();
-            }
-            var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
-            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, isUserElement, excludedTypeNames);
+            return ValidateAndWriteTypeToDisk(schema, outputBaseDir, isUserElement);
         }
 
         /// <summary>
