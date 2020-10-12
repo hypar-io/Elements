@@ -11,6 +11,7 @@ using Elements.Geometry.Solids;
 using Elements.Geometry.Interfaces;
 using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
+using Elements.Interfaces;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -1133,6 +1134,14 @@ namespace Elements.Serialization.glTF
             var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true)
                                                                        .Select(op => op.LocalTransform != null ? op._csg.Transform(op.LocalTransform.ToMatrix4x4()) : op._csg)
                                                                        .ToArray();
+
+            if (geometricElement is IHasOpenings)
+            {
+                var openingContainer = (IHasOpenings)geometricElement;
+                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
+                                                      .Where(op => op.IsVoid == true)
+                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
+            }
 
             csg = csg.Union(solids);
             csg = csg.Substract(voids);

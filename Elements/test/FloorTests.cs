@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Elements.Tests
@@ -18,18 +17,13 @@ namespace Elements.Tests
             var floor1 = new Floor(p, 0.1);
 
             // Create a floor with an elevation.
-            var floor2 = new Floor(p, 0.1, new Transform(0,0,3));
+            var floor2 = new Floor(p, 0.1, new Transform(0, 0, 3));
 
             // Create some openings.
-            var openings = new List<Opening>(){
-                new Opening(1, 1, 1, 1),
-                new Opening(3, 3, 1, 3),
-            };
-            
-            // Add the openings to the floor's 
-            // openings collection.
-            floor1.Openings.AddRange(openings);
+            floor1.AddOpening(1, 1, 1, 1);
+            floor1.AddOpening(3, 3, 1, 3);
             // </example>
+
             Assert.Equal(0.0, floor1.Elevation);
             Assert.Equal(0.1, floor1.Thickness);
             Assert.Equal(0.0, floor1.Transform.Origin.Z);
@@ -44,24 +38,24 @@ namespace Elements.Tests
             this.Name = "FloorWithAddedOpenings";
 
             var p = Polygon.L(10, 20, 5);
-            var floor1 = new Floor(p, 0.1, new Transform(0,0,0.5), material: new Material("green", Colors.Green, 0.0f, 0.0f));
+            var floor1 = new Floor(p, 0.1, new Transform(0, 0, 0.5), material: new Material("green", Colors.Green, 0.0f, 0.0f));
 
             var transRotate = new Transform();
             transRotate.Rotate(Vector3.ZAxis, 20.0);
-            transRotate.Move(new Vector3(0,0,2));
+            transRotate.Move(new Vector3(0, 0, 2));
             var floor2 = new Floor(p, 0.1, transRotate, material: new Material("blue", Colors.Blue, 0.0f, 0.0f));
-            var openings = new List<Opening>(){
-                new Opening(1, 1, 1, 1),
-                new Opening(3, 3, 1, 3),
-            };
-            floor1.Openings.AddRange(openings);
-            floor2.Openings.AddRange(openings);
+
+            floor1.AddOpening(1, 1, 1, 1);
+            floor1.AddOpening(3, 3, 1, 3);
+
+            floor2.AddOpening(1, 1, 1, 1);
+            floor2.AddOpening(3, 3, 1, 3);
 
             Assert.Equal(0.5, floor1.Elevation);
             Assert.Equal(0.1, floor1.Thickness);
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
-            
-            this.Model.AddElements(new[]{floor1, floor2});
+
+            this.Model.AddElements(new[] { floor1, floor2 });
         }
 
         [Fact]

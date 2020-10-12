@@ -108,14 +108,34 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
-            foreach (var o in this.Openings)
-            {
-                this.Representation.SolidOperations.Add(new Extrude(o.Profile, this.Thickness, Vector3.ZAxis, true)
-                {
-                    LocalTransform = o.Transform
-                });
-            }
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
+        }
+
+        /// <summary>
+        /// Add an opening.
+        /// </summary>
+        /// <param name="width">The width of the opening.</param>
+        /// <param name="height">The height of the opening.</param>
+        /// <param name="x">The distance to the center of the opening along the host's x axis.</param>
+        /// <param name="y">The distance to the center of the opening along the host's y axis.</param>
+        /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
+        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
+        public void AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
+        {
+            this.Openings.Add(new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, new Transform(x, y, 0)));
+        }
+
+        /// <summary>
+        /// Add an opening in the wall.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the opening.</param>
+        /// <param name="x">The distance to the origin of the perimeter along the host's x axis.</param>
+        /// <param name="y">The height to the origin of the perimeter along the host's y axis.</param>
+        /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
+        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
+        public void AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
+        {
+            this.Openings.Add(new Opening(perimeter, depthFront, depthBack, new Transform(x, y, 0)));
         }
     }
 }

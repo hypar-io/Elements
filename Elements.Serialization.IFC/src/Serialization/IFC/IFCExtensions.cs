@@ -234,6 +234,7 @@ namespace Elements.Serialization.IFC
 
                 var newOpening = new Opening(profile,
                                              (IfcLengthMeasure)s.Depth,
+                                             0,
                                              solidTransform,
                                              null,
                                              false,

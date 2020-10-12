@@ -81,28 +81,50 @@ namespace Elements
         }
 
         /// <summary>
+        /// Add an opening in the wall.
+        /// </summary>
+        /// <param name="width">The width of the opening.</param>
+        /// <param name="height">The height of the opening.</param>
+        /// <param name="x">The distance to the center of the opening along the center line of the wall.</param>
+        /// <param name="y">The height to the center of the opening along the center line of the wall.</param>
+        /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
+        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
+        public void AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        {
+            var xAxis = this.CenterLine.Direction();
+            var yAxis = Vector3.ZAxis;
+            var zAxis = xAxis.Cross(yAxis);
+            var wallTransform = new Transform(this.CenterLine.Start, xAxis, zAxis);
+
+            var m = wallTransform.OfVector(new Vector3(x, y));
+            this.Openings.Add(new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, wallTransform.Moved(m)));
+        }
+
+        /// <summary>
+        /// Add an opening in the wall.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the opening.</param>
+        /// <param name="x">The distance to the origin of the perimeter opening along the center line of the wall.</param>
+        /// <param name="y">The height to the origin of the perimeter along the center line of the wall.</param>
+        /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
+        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
+        public void AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        {
+            var xAxis = this.CenterLine.Direction();
+            var yAxis = Vector3.ZAxis;
+            var zAxis = xAxis.Cross(yAxis);
+            var wallTransform = new Transform(this.CenterLine.Start, xAxis, zAxis);
+
+            var m = wallTransform.OfVector(new Vector3(x, y));
+            this.Openings.Add(new Opening(perimeter, depthFront, depthBack, wallTransform.Moved(m)));
+        }
+
+        /// <summary>
         /// Update solid operations.
         /// </summary>
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
-
-            var x = this.CenterLine.Direction();
-            var y = Vector3.ZAxis;
-            var z = x.Cross(y);
-            var wallTransform = new Transform(this.CenterLine.Start, x, z);
-            foreach (var o in this.Openings)
-            {
-                var ot = new Transform(wallTransform);
-                ot.Concatenate(o.Transform);
-                // Set the opening down into the wall, so
-                // it cuts all the way through.
-                ot.Move(ot.ZAxis * -this.Thickness / 2);
-                this.Representation.SolidOperations.Add(new Extrude(o.Profile, this.Thickness, Vector3.ZAxis, true)
-                {
-                    LocalTransform = ot
-                });
-            }
             var e1 = this.CenterLine.Offset(this.Thickness / 2, false);
             var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
             var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
