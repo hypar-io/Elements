@@ -21,7 +21,7 @@ namespace Elements.Interfaces
         /// <param name="y">The distance to the center of the opening along the host's y axis.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        void AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0);
+        Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0);
 
         /// <summary>
         /// Add an opening in the wall.
@@ -31,6 +31,6 @@ namespace Elements.Interfaces
         /// <param name="y">The height to the origin of the perimeter along the host's y axis.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        void AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0);
+        Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0);
     }
 }

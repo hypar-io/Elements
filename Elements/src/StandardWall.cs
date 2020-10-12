@@ -89,7 +89,7 @@ namespace Elements
         /// <param name="y">The height to the center of the opening along the center line of the wall.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        public void AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var xAxis = this.CenterLine.Direction();
             var yAxis = Vector3.ZAxis;
@@ -97,7 +97,9 @@ namespace Elements
             var wallTransform = new Transform(this.CenterLine.Start, xAxis, zAxis);
 
             var m = wallTransform.OfVector(new Vector3(x, y));
-            this.Openings.Add(new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, wallTransform.Moved(m)));
+            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, wallTransform.Moved(m));
+            this.Openings.Add(o);
+            return o;
         }
 
         /// <summary>
@@ -108,7 +110,7 @@ namespace Elements
         /// <param name="y">The height to the origin of the perimeter along the center line of the wall.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        public void AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var xAxis = this.CenterLine.Direction();
             var yAxis = Vector3.ZAxis;
@@ -116,7 +118,9 @@ namespace Elements
             var wallTransform = new Transform(this.CenterLine.Start, xAxis, zAxis);
 
             var m = wallTransform.OfVector(new Vector3(x, y));
-            this.Openings.Add(new Opening(perimeter, depthFront, depthBack, wallTransform.Moved(m)));
+            var o = new Opening(perimeter, depthFront, depthBack, wallTransform.Moved(m));
+            this.Openings.Add(o);
+            return o;
         }
 
         /// <summary>

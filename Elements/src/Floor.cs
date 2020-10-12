@@ -120,9 +120,11 @@ namespace Elements
         /// <param name="y">The distance to the center of the opening along the host's y axis.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        public void AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
+        public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
         {
-            this.Openings.Add(new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, new Transform(x, y, 0)));
+            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, new Transform(x, y, 0));
+            this.Openings.Add(o);
+            return o;
         }
 
         /// <summary>
@@ -133,9 +135,11 @@ namespace Elements
         /// <param name="y">The height to the origin of the perimeter along the host's y axis.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        public void AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
+        public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
         {
-            this.Openings.Add(new Opening(perimeter, depthFront, depthBack, new Transform(x, y, 0)));
+            var o = new Opening(perimeter, depthFront, depthBack, new Transform(x, y, 0));
+            this.Openings.Add(o);
+            return o;
         }
     }
 }
