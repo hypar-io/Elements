@@ -309,6 +309,30 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Return a new transform which is this transform moved by the specified amount.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public Transform Moved(double x = 0.0, double y = 0.0, double z = 0.0)
+        {
+            var result = new Transform(this);
+            result.Move(x, y, z);
+            return result;
+        }
+
+        /// <summary>
+        /// Return a new transform which is this transform moved by the specified amount.
+        /// </summary>
+        /// <param name="translation">The translation to apply.</param>
+        public Transform Moved(Vector3 translation)
+        {
+            var result = new Transform(this);
+            result.Move(translation);
+            return result;
+        }
+
+        /// <summary>
         /// Apply a rotation to the transform.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
