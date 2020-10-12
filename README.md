@@ -4,6 +4,13 @@
 ![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
+# Projects
+|Name|Description|
+|----|----|
+|Elements|The core elements library containing base geometric types.|
+|Elements.CodeGeneration|Methods for converting JSON schema of Element types to C#.|
+|Elements.Serialization.IFC|Methods for serializing a `Model` to IFC.|
+
 # Words of Warning
 - The Elements library is currently undergoing rapid development and breaking API changes. Until we achieve a 1.0 release, we are playing a little fast and loose with semantic versioning. Updates will be written to the [`CHANGELOG`](CHANGELOG.md).
 
