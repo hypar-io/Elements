@@ -14,6 +14,7 @@ using Elements.Collections.Generics;
 using Elements.Interfaces;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
+[assembly: InternalsVisibleTo("Elements.Benchmarks")]
 
 namespace Elements.Serialization.glTF
 {
@@ -682,7 +683,7 @@ namespace Elements.Serialization.glTF
             return true;
         }
 
-        private static Gltf InitializeGlTF(Model model, out List<byte[]> allBuffers, bool drawEdges = false)
+        internal static Gltf InitializeGlTF(Model model, out List<byte[]> allBuffers, bool drawEdges = false)
         {
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
