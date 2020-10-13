@@ -72,16 +72,6 @@ namespace Elements
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
 
-        public virtual Opening AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
-        {
-            // Override in derived classes.
-        }
-
-        public virtual Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
-        {
-            // Override in derived classes.
-        }
-
         /// <summary>
         /// A pass-through constructor to set the id, name, and transform.
         /// </summary>
