@@ -1088,6 +1088,16 @@ namespace Elements.Serialization.glTF
                                                            GeometricElement geometricElement)
         {
             geometricElement.UpdateRepresentations();
+
+            // TODO: Remove this when we get rid of UpdateRepresentation.
+            // The only reason we don't fully exclude openings from processing 
+            // is to ensure that openings have some geometry that will be used 
+            // to compute csgs for their hosts.
+            if (e.GetType() == typeof(Opening))
+            {
+                return;
+            }
+
             if (geometricElement.Representation != null)
             {
                 meshId = ProcessSolidsAsCSG(geometricElement,
