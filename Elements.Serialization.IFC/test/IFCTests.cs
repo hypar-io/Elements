@@ -27,10 +27,15 @@ namespace Elements.IFC.Tests
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
         [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc")]
         [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc")]
-        // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
+        // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void IFC4(string name, string ifcPath)
         {
-            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath));
+            var ctorErrors = new List<string>();
+            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out ctorErrors);
+            foreach (var e in ctorErrors)
+            {
+                this.output.WriteLine(e);
+            }
             model.ToGlTF(ConstructGlbPath(name));
         }
 
@@ -42,7 +47,12 @@ namespace Elements.IFC.Tests
         [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
         public void IFC2X3(string name, string ifcPath, string[] idsToConvert = null)
         {
-            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), idsToConvert);
+            var ctorErrors = new List<string>();
+            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out ctorErrors, idsToConvert);
+            foreach (var e in ctorErrors)
+            {
+                this.output.WriteLine(e);
+            }
             model.ToGlTF(ConstructGlbPath(name));
         }
 
@@ -88,7 +98,13 @@ namespace Elements.IFC.Tests
             model.ToIFC(ifcPath);
             model.ToGlTF(ConstructGlbPath("IfcFloor"));
 
-            var newModel = IFCModelExtensions.FromIFC(ifcPath);
+            var ctorErrors = new List<string>();
+            var newModel = IFCModelExtensions.FromIFC(ifcPath, out ctorErrors);
+            foreach (var e in ctorErrors)
+            {
+                this.output.WriteLine(e);
+            }
+
             // We expect two floors, one material, and one profile.
             // TODO(Ian): Update this when we're not duplicating profiles
             // in the output IFC.

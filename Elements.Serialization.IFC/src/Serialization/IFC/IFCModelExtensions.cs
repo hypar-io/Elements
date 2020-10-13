@@ -19,8 +19,9 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="path">The path to an IFC STEP file.</param>
         /// <param name="idsToConvert">An array of element ids to convert.</param>
+        /// <param name="constructionErrors">Error messages which ocurred during model construction.</param>
         /// <returns>A model.</returns>
-        public static Model FromIFC(string path, IList<string> idsToConvert = null)
+        public static Model FromIFC(string path, out List<string> constructionErrors, IList<string> idsToConvert = null)
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
@@ -58,12 +59,78 @@ namespace Elements.Serialization.IFC
                 ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
             }
 
-            var slabs = ifcSlabs.Select(s => s.ToFloor(ifcVoids.Where(v => v.RelatingBuildingElement == s).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
-            var spaces = ifcSpaces.Select(sp => sp.ToSpace());
-            var walls = ifcWalls.Select(w => w.ToWall(
-                ifcVoids.Where(v => v.RelatingBuildingElement == w).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
-            var beams = ifcBeams.Select(b => b.ToBeam());
-            var columns = ifcColumns.Select(c => c.ToColumn());
+            constructionErrors = new List<string>();
+
+            var slabs = new List<Floor>();
+            foreach (var s in ifcSlabs)
+            {
+                try
+                {
+                    slabs.Add(s.ToFloor(ifcVoids.Where(v => v.RelatingBuildingElement == s).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
+                }
+                catch (Exception ex)
+                {
+                    constructionErrors.Add(ex.Message);
+                    continue;
+                }
+
+            }
+
+            var spaces = new List<Space>();
+            foreach (var sp in ifcSpaces)
+            {
+                try
+                {
+                    spaces.Add(sp.ToSpace());
+                }
+                catch (Exception ex)
+                {
+                    constructionErrors.Add(ex.Message);
+                    continue;
+                }
+            }
+
+            var walls = new List<Wall>();
+            foreach (var w in ifcWalls)
+            {
+                try
+                {
+                    walls.Add(w.ToWall(ifcVoids.Where(v => v.RelatingBuildingElement == w).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
+                }
+                catch (Exception ex)
+                {
+                    constructionErrors.Add(ex.Message);
+                    continue;
+                }
+            }
+
+            var beams = new List<Beam>();
+            foreach (var b in ifcBeams)
+            {
+                try
+                {
+                    beams.Add(b.ToBeam());
+                }
+                catch (Exception ex)
+                {
+                    constructionErrors.Add(ex.Message);
+                    continue;
+                }
+            }
+
+            var columns = new List<Column>();
+            foreach (var c in ifcColumns)
+            {
+                try
+                {
+                    columns.Add(c.ToColumn());
+                }
+                catch (Exception ex)
+                {
+                    constructionErrors.Add(ex.Message);
+                    continue;
+                }
+            }
 
             var model = new Model();
             model.AddElements(slabs);
