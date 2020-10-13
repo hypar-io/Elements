@@ -1133,6 +1133,12 @@ namespace Elements.Serialization.glTF
                                       List<Vector3> lines,
                                       Transform t = null)
         {
+            // To properly compute csgs, all solid operation csgs need
+            // to be transformed into their final position. Then the csgs
+            // can be computed and the final csg can have the inverse of the
+            // geometric element's transform applied to "reset" it. 
+            // The transforms applied to each node in the glTF will then 
+            // ensure that the elements are correctly transformed.
             Csg.Solid csg = new Csg.Solid();
 
             var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false)
