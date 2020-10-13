@@ -279,6 +279,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Return a new transform which is the supplied transform concatenated to this transform.
+        /// </summary>
+        /// <param name="transform">The transform to concatenate.</param>
+        public Transform Concatenated(Transform transform)
+        {
+            var result = new Transform(this);
+            result.Concatenate(transform);
+            return result;
+        }
+
+        /// <summary>
         /// Invert this transform.
         /// </summary>
         public void Invert()

@@ -9,7 +9,8 @@
   - The ContentElement is also added to the model by first checking for an available gltf, and then using a bounding box representation as a fallback.
 - `Transform.Scaled()` - This new method returns a scaled copy of the transform, allowing for a fluent like api.
 - `Elements.Geometry.CSG` - Union, difference, and intersect csg created from solids or meshes.
-- `Transform.Moved(...)` - Two new method overloads return a copy of a transform moved by the specified amount.
+- `Transform.Moved(...)` - Return a copy of a transform moved by the specified amount.
+- `Transform.Concatenated(...)` - Return a copy of a transform with the specified transform concatenated with it. 
 - `IHasOpenings.AddOpening(...)` - `AddOpening` provides an API which hides the internals of creating openings.
 - `Opening.DepthFront` & `Opening.DepthBack` enable the creation of openings which extrude different amounts above and below their XY plane.
 
