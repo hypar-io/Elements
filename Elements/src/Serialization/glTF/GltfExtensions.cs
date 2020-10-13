@@ -1101,6 +1101,13 @@ namespace Elements.Serialization.glTF
                                     lines,
                                     geometricElement.Transform);
 
+                // If the id == -1, the mesh is malformed.
+                // It may have no geometry.
+                if (meshId == -1)
+                {
+                    return;
+                }
+
                 if (!meshElementMap.ContainsKey(e.Id))
                 {
                     meshElementMap.Add(e.Id, new List<int>());
@@ -1129,10 +1136,14 @@ namespace Elements.Serialization.glTF
             Csg.Solid csg = new Csg.Solid();
 
             var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false)
-                                                                        .Select(op => op.LocalTransform != null ? op._csg.Transform(op.LocalTransform.ToMatrix4x4()) : op._csg)
+                                                                        .Select(op => op.LocalTransform != null ?
+                                                                            op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
+                                                                            op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
                                                                         .ToArray();
             var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true)
-                                                                       .Select(op => op.LocalTransform != null ? op._csg.Transform(op.LocalTransform.ToMatrix4x4()) : op._csg)
+                                                                       .Select(op => op.LocalTransform != null ?
+                                                                            op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
+                                                                            op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
                                                                        .ToArray();
 
             if (geometricElement is IHasOpenings)
@@ -1145,6 +1156,10 @@ namespace Elements.Serialization.glTF
 
             csg = csg.Union(solids);
             csg = csg.Substract(voids);
+            var inverse = new Transform(geometricElement.Transform);
+            inverse.Invert();
+
+            csg = csg.Transform(inverse.ToMatrix4x4());
 
             byte[] vertexBuffer;
             byte[] normalBuffer;
@@ -1161,6 +1176,11 @@ namespace Elements.Serialization.glTF
             csg.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin,
                             out cmax, out imin, out imax, out uvmax, out uvmin);
+
+            if (vertexBuffer.Length == 0)
+            {
+                return -1;
+            }
 
             return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
                                 indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
