@@ -13,7 +13,7 @@ namespace Elements
     /// [!code-csharp[Main](../../Elements/test/WallTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class StandardWall : Wall, IHasOpenings
+    public class StandardWall : Wall
     {
         /// <summary>
         /// The center line of the wall.
@@ -24,11 +24,6 @@ namespace Elements
         /// The thickness of the wall.
         /// </summary>
         public double Thickness { get; set; }
-
-        /// <summary>
-        /// A collection of openings in the floor.
-        /// </summary>
-        public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
         /// Construct a wall along a line.
@@ -89,7 +84,7 @@ namespace Elements
         /// <param name="y">The height to the center of the opening along the center line of the wall.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        public override Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var xAxis = this.CenterLine.Direction();
             var yAxis = Vector3.ZAxis;
@@ -110,7 +105,7 @@ namespace Elements
         /// <param name="y">The height to the origin of the perimeter along the center line of the wall.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        public override Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var xAxis = this.CenterLine.Direction();
             var yAxis = Vector3.ZAxis;

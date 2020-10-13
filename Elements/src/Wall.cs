@@ -1,5 +1,6 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Elements
     /// A wall defined by a planar profile extruded to a height.
     /// </summary>
     [UserElement]
-    public class Wall : GeometricElement
+    public class Wall : GeometricElement, IHasOpenings
     {
         /// <summary>
         /// The height of the wall.
@@ -21,6 +22,11 @@ namespace Elements
         /// The profile of the wall.
         /// </summary>
         public Profile Profile { get; protected set; }
+
+        /// <summary>
+        /// A collection of openings in the wall.
+        /// </summary>
+        public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
         /// Construct a wall by extruding a profile.
@@ -66,6 +72,16 @@ namespace Elements
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
 
+        public virtual Opening AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
+        {
+            // Override in derived classes.
+        }
+
+        public virtual Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
+        {
+            // Override in derived classes.
+        }
+
         /// <summary>
         /// A pass-through constructor to set the id, name, and transform.
         /// </summary>
@@ -86,7 +102,7 @@ namespace Elements
                                            isElementDefinition,
                                            id == default(Guid) ? Guid.NewGuid() : id,
                                            name)
-        {}
+        { }
 
         /// <summary>
         /// Construct a wall from geometry.
