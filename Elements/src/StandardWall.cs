@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 
 namespace Elements
 {
