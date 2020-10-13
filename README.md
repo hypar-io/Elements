@@ -80,6 +80,12 @@ dotnet build
 dotnet test
 ```
 
+## Benchmark
+```
+cd Elements.Benchmarks
+dotnet run -c Release
+```
+
 ## Building the Documentation
 ```
 cd doc
