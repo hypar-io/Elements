@@ -32,38 +32,6 @@ namespace Elements.Tests
             this.Model.AddElement(new MeshElement(result, new Material("Mod", Colors.Red, 0.5, 0.5)));
         }
 
-        // [Fact]
-        // TODO: Use this test as a benchmark.
-        // public void CSG()
-        // {
-        //     this.Name = "Elements_Geometry_CSG";
-        //     // <example>
-        //     var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
-        //     var bigHole = new Extrude(new Circle(Vector3.Origin, 3).ToPolygon(), 10, Vector3.ZAxis, true)
-        //     {
-        //         LocalTransform = new Transform(5, 5, 0)
-        //     };
-        //     for (var j = 0; j < 10; j++)
-        //     {
-        //         var line = new Line(new Vector3(0, j, 0), new Vector3(10, j, 5));
-        //         var beam = new Beam(line, profile, BuiltInMaterials.Steel);
-        //         for (var i = 0.1; i <= 0.9; i += 0.01)
-        //         {
-        //             var t = line.TransformAt(i);
-        //             var lt = new Transform(t.Origin, t.ZAxis, t.XAxis.Negate());
-        //             lt.Move(lt.ZAxis * -0.5);
-        //             var hole = new Extrude(Polygon.Rectangle(0.1, 0.1), 1.0, Vector3.ZAxis, true)
-        //             {
-        //                 LocalTransform = lt
-        //             };
-        //             beam.Representation.SolidOperations.Add(hole);
-        //         }
-        //         beam.Representation.SolidOperations.Add(bigHole);
-        //         this.Model.AddElement(beam);
-        //     }
-        //     // </example>
-        // }
-
         [Fact]
         public void Union()
         {
