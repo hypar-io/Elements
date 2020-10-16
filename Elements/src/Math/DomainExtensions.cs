@@ -4,7 +4,7 @@ using System.Text;
 namespace Elements
 {
     /// <summary>
-    /// Extension and utility methods for mathematical operations. 
+    /// Extension and utility methods for mathematical operations.
     /// </summary>
     public static class DomainExtensions
     {
@@ -28,11 +28,12 @@ namespace Elements
         /// <returns>(value - domain.Min) / domain.Length</returns>
         public static double MapFromDomain(this double value, Domain1d domain)
         {
-            return (value - domain.Min) / domain.Length;
+            var newValue = (value - domain.Min) / domain.Length;
+            return Math.Round(newValue / Geometry.Vector3.EPSILON) * Geometry.Vector3.EPSILON;
         }
 
         /// <summary>
-        /// Map/scale a value between 0-1 to a target domain. Will not reject values outside 0-1. 
+        /// Map/scale a value between 0-1 to a target domain. Will not reject values outside 0-1.
         /// </summary>
         /// <param name="value">The value to map.</param>
         /// <param name="domain">The domain to map to.</param>
