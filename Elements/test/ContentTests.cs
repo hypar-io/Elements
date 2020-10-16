@@ -45,13 +45,12 @@ namespace Elements.Tests
             var str = boxType2.ToString();
             var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, Guid.NewGuid(), "test");
 
-            var savePath = "../../../ContentCatalog.json";// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "catalog.json"));
+            var savePath = "../../../ContentCatalog.json";
             var catalogJson = JsonConvert.SerializeObject(testCatalog, Formatting.Indented, new JsonSerializerSettings()
             {
                 Converters = null
             });
 
-            // var fromJson = System.Text.Json.JsonSerializer.Deserialize<ContentCatalog>(catalogJson);
             File.WriteAllText(savePath, catalogJson);
         }
 

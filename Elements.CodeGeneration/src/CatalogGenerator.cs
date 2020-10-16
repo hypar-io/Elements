@@ -47,7 +47,6 @@ namespace Elements.Generate
         public static void FromUri(string uri, string saveDirectory)
         {
             Template.RegisterSafeType(typeof(ContentCatalog), new[] { "Name", "Content" });
-            // Template.RegisterSafeType(typeof(ContentElement), new[] { "Name", "GltfLocation" });
             Template.RegisterSafeType(typeof(ContentElement), GetContentElementToRender);
             DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
 
