@@ -11,6 +11,7 @@ using Elements.Geometry.Solids;
 using Elements.Geometry.Interfaces;
 using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
+using System.Net;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -864,9 +865,11 @@ namespace Elements.Serialization.glTF
                 if (typeof(ContentElement).IsAssignableFrom(e.GetType()))
                 {
                     var content = e as ContentElement;
-                    if (File.Exists(content.GltfLocation))
+                    Stream glbStream = GetGlbStreamFromPath(content.GltfLocation);
+                    if (glbStream != null)
+                    // if (File.Exists(content.GltfLocation))
                     {
-                        var meshIndices = GltfMergingUtils.AddAllMeshesFromFromGlb(content.GltfLocation,
+                        var meshIndices = GltfMergingUtils.AddAllMeshesFromFromGlb(glbStream,
                                                                 schemaBuffers,
                                                                 allBuffers,
                                                                 bufferViews,
@@ -1068,6 +1071,27 @@ namespace Elements.Serialization.glTF
                     CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
                 }
             }
+        }
+
+        internal static Stream GetGlbStreamFromPath(string gltfLocation)
+        {
+            var responseStream = new MemoryStream();
+            if (File.Exists(gltfLocation))
+            {
+                File.OpenRead(gltfLocation).CopyTo(responseStream);
+            }
+            else if (gltfLocation.StartsWith("https://"))
+            {
+                WebRequest request = WebRequest.Create(gltfLocation);
+                var response = request.GetResponse();
+                response.GetResponseStream().CopyTo(responseStream);
+            }
+            else
+            {
+                return Stream.Null;
+            }
+            responseStream.Position = 0;
+            return responseStream;
         }
 
         private static void ProcessGeometricRepresentation(Element e,

@@ -1,0 +1,10 @@
+using System;
+using Elements.Geometry;
+
+namespace Elements {
+public static class {{ catalog.name }} {
+    {%for content in catalog.content%}
+    public static ContentElement {{content.name | safeidentifierupper}} = new ContentElement( {{content.constructorArgs}} );
+    {% endfor %}
+    }
+}

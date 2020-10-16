@@ -40,13 +40,14 @@ namespace Elements.Serialization.glTF
             }
         }
 
-        internal static List<byte[]> GetAllBufferByteArrays(this Gltf gltf, string gltfPath)
+        internal static List<byte[]> GetAllBufferByteArrays(this Gltf gltf, Stream gltfStream)
         {
             var bufferByteArrays = new List<byte[]>();
 
             for (int i = 0; i < gltf.Buffers.Length; i++)
             {
-                var byteArray = Interface.LoadBinaryBuffer(gltf, 0, gltfPath);
+                gltfStream.Position = 0;
+                var byteArray = Interface.LoadBinaryBuffer(gltfStream);
                 bufferByteArrays.Add(byteArray);
             }
             return bufferByteArrays;

@@ -27,47 +27,6 @@ namespace Elements.Tests
             var str = model.ToBase64String();
         }
 
-        private class TestContentElem : ContentElement
-        {
-            public TestContentElem(string @gltfLocation, BBox3 @bBox, Transform @transform, double scale, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
-                        : base(gltfLocation, bBox, scale, transform, material, representation, isElementDefinition, id, name)
-            { }
-        }
-
-        [Fact]
-        public void InstanceContentElement()
-        {
-            var model = new Model();
-            var boxType = new TestContentElem("../../../models/MergeGlTF/Avocado.glb",
-                                      new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
-                                      new Transform(new Vector3(), Vector3.YAxis),
-                                      20,
-                                      BuiltInMaterials.Default,
-                                      null,
-                                      true,
-                                      Guid.NewGuid(),
-                                      "BoxyType");
-            var boxType2 = new TestContentElem("../../../models/MergeGlTF/Duck.glb",
-                                      new BBox3(new Vector3(-1, -1, 0), new Vector3(1, 1, 2)),
-                                      new Transform(new Vector3(), Vector3.YAxis),
-                                      .01,
-                                      BuiltInMaterials.Default,
-                                      null,
-                                      true,
-                                      Guid.NewGuid(),
-                                      "BoxyType");
-            var newBox = boxType.CreateInstance(new Transform(), "first one");
-            var twoBox = boxType2.CreateInstance(new Transform(new Vector3(5, 0, 0)), "then two");
-            var threeBox = boxType2.CreateInstance(new Transform(new Vector3(15, 0, 0)), "then two");
-            var beam = new Beam(new Line(new Vector3(), new Vector3(0, 5, -0.5)), new Circle(new Vector3(), 0.3).ToPolygon());
-            model.AddElement(newBox);
-            model.AddElement(twoBox);
-            model.AddElement(threeBox);
-            model.AddElement(beam);
-            model.ToGlTF("../../../GltfInstancing.gltf", false);
-            model.ToGlTF("../../../GltfInstancing.glb");
-        }
-
         [Fact]
         public void MergeGlbFiles()
         {
@@ -82,43 +41,49 @@ namespace Elements.Tests
             var textures = ours.Textures != null ? ours.Textures.ToList() : new List<Texture>();
             var samplers = ours.Samplers != null ? ours.Samplers.ToList() : new List<Sampler>();
 
-            var bufferByteArrays = ours.GetAllBufferByteArrays(testPath);
-
-            GltfMergingUtils.AddAllMeshesFromFromGlb("../../../models/MergeGlTF/Avocado.glb",
-                                                     buffers,
-                                                     bufferByteArrays,
-                                                     buffViews,
-                                                     accessors,
-                                                     meshes,
-                                                     materials,
-                                                     textures,
-                                                     images,
-                                                     samplers
-                                                     );
-
-            ours.Buffers = buffers.ToArray();
-            ours.BufferViews = buffViews.ToArray();
-            ours.Accessors = accessors.ToArray();
-            ours.Meshes = meshes.ToArray();
-            ours.Materials = materials.ToArray();
-            ours.Images = images.ToArray();
-            ours.Textures = textures.ToArray();
-            if (samplers.Count > 0)
+            using (var testStream = GltfExtensions.GetGlbStreamFromPath(testPath))
             {
-                ours.Samplers = samplers.ToArray();
+                var bufferByteArrays = ours.GetAllBufferByteArrays(testStream);
+
+                using (var avocadoStream = GltfExtensions.GetGlbStreamFromPath("../../../models/MergeGlTF/Avocado.glb"))
+                {
+                    GltfMergingUtils.AddAllMeshesFromFromGlb(avocadoStream,
+                                                             buffers,
+                                                             bufferByteArrays,
+                                                             buffViews,
+                                                             accessors,
+                                                             meshes,
+                                                             materials,
+                                                             textures,
+                                                             images,
+                                                             samplers
+                                                             );
+                }
+
+                ours.Buffers = buffers.ToArray();
+                ours.BufferViews = buffViews.ToArray();
+                ours.Accessors = accessors.ToArray();
+                ours.Meshes = meshes.ToArray();
+                ours.Materials = materials.ToArray();
+                ours.Images = images.ToArray();
+                ours.Textures = textures.ToArray();
+                if (samplers.Count > 0)
+                {
+                    ours.Samplers = samplers.ToArray();
+                }
+
+                var nodeList = ours.Nodes.ToList();
+                var transform = new Transform(new Vector3(1, 1, 0), Vector3.XAxis, Vector3.YAxis.Negate()).Scaled(20);
+                GltfExtensions.CreateNodeForMesh(ours, ours.Meshes.Length - 1, nodeList, transform);
+                ours.Nodes = nodeList.ToArray();
+
+                var savepath = "../../../GltfTestResult.gltf";
+                ours.SaveBuffersAndAddUris(savepath, bufferByteArrays);
+                ours.SaveModel(savepath);
+
+                var mergedBuffer = ours.CombineBufferAndFixRefs(bufferByteArrays.ToArray());
+                ours.SaveBinaryModel(mergedBuffer, "../../../GltfTestMerged.glb");
             }
-
-            var nodeList = ours.Nodes.ToList();
-            var transform = new Transform(new Vector3(.1, .1, 0), Vector3.XAxis, Vector3.YAxis.Negate()).Scaled(0.01);
-            GltfExtensions.CreateNodeForMesh(ours, ours.Meshes.Length - 1, nodeList, transform);
-            ours.Nodes = nodeList.ToArray();
-
-            var savepath = "../../../GltfTestResult.gltf";
-            ours.SaveBuffersAndAddUris(savepath, bufferByteArrays);
-            ours.SaveModel(savepath);
-
-            var mergedBuffer = ours.CombineBufferAndFixRefs(bufferByteArrays.ToArray());
-            ours.SaveBinaryModel(mergedBuffer, "../../../GltfTestMerged.glb");
         }
     }
 }

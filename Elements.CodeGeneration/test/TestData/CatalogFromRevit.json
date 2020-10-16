@@ -1,0 +1,153 @@
+{
+    "Transform": {
+        "Matrix": {
+            "Components": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0
+            ]
+        }
+    },
+    "Elements": {
+        "ce742c23-3add-4de0-9789-f1dbb4e6941b": {
+            "discriminator": "Elements.ContentElement",
+            "GltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/Table_Landscape_Barleaner%20-%202200w%20x%20950d%20x%201100h.glb",
+            "BoundingBox": {
+                "Max": {
+                    "X": -6.521206805008476,
+                    "Y": -26.374258543314703,
+                    "Z": 1.100000000000153
+                },
+                "Min": {
+                    "X": -7.471206805008485,
+                    "Y": -28.574258543314706,
+                    "Z": 1.4361525302319934e-13
+                }
+            },
+            "GltfScaleToMeters": 0.3048,
+            "Transform": {
+                "Matrix": {
+                    "Components": [
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0
+                    ]
+                }
+            },
+            "Material": null,
+            "Representation": null,
+            "IsElementDefinition": true,
+            "Id": "ce742c23-3add-4de0-9789-f1dbb4e6941b",
+            "Name": "Table_Landscape_Barleaner - 2200w x 950d x 1100h"
+        },
+        "8316d32b-202b-4ba3-98e3-2246fd5bde5d": {
+            "discriminator": "Elements.ContentElement",
+            "GltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/Table_Koskela_Stirrup%20-%2010%20Person.glb",
+            "BoundingBox": {
+                "Max": {
+                    "X": -4.38903907481615,
+                    "Y": -25.484463660525222,
+                    "Z": 0.720000000000145
+                },
+                "Min": {
+                    "X": -5.489039074816552,
+                    "Y": -28.484463660525233,
+                    "Z": 1.4361525302319934e-13
+                }
+            },
+            "GltfScaleToMeters": 0.3048,
+            "Transform": {
+                "Matrix": {
+                    "Components": [
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0
+                    ]
+                }
+            },
+            "Material": null,
+            "Representation": null,
+            "IsElementDefinition": true,
+            "Id": "8316d32b-202b-4ba3-98e3-2246fd5bde5d",
+            "Name": "Table_Koskela_Stirrup - 10 Person"
+        },
+        "70f6453e-a2d2-432d-a7b0-972efa201548": {
+            "discriminator": "Elements.ContentElement",
+            "GltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/HermanMiller_Prospect_CBTBL_Table%20-%20No%20Cutout%2040Dia%2036H.glb",
+            "BoundingBox": {
+                "Max": {
+                    "X": -0.5869646716266325,
+                    "Y": -27.129963014728396,
+                    "Z": 0.9143999999998927
+                },
+                "Min": {
+                    "X": -1.9022237520463752,
+                    "Y": -28.445222095148136,
+                    "Z": 6.980270231070976e-14
+                }
+            },
+            "GltfScaleToMeters": 0.3048,
+            "Transform": {
+                "Matrix": {
+                    "Components": [
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0
+                    ]
+                }
+            },
+            "Material": null,
+            "Representation": null,
+            "IsElementDefinition": true,
+            "Id": "70f6453e-a2d2-432d-a7b0-972efa201548",
+            "Name": "HermanMiller_Prospect_CBTBL_Table - No Cutout 40Dia 36H"
+        },
+        "0958ec55-2050-4cd0-8ed5-608f7a5ab239": {
+            "discriminator": "Elements.ContentCatalog",
+            "CatalogName": "FromRevit",
+            "Content": [
+                "ce742c23-3add-4de0-9789-f1dbb4e6941b",
+                "8316d32b-202b-4ba3-98e3-2246fd5bde5d",
+                "70f6453e-a2d2-432d-a7b0-972efa201548"
+            ],
+            "Id": "0958ec55-2050-4cd0-8ed5-608f7a5ab239",
+            "Name": "FromRevit"
+        }
+    }
+}

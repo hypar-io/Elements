@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using glTFLoader;
@@ -10,7 +11,7 @@ namespace Elements.Serialization.glTF
 
     internal static class GltfMergingUtils
     {
-        public static List<int> AddAllMeshesFromFromGlb(string glbPath,
+        public static List<int> AddAllMeshesFromFromGlb(Stream glbStream,
                                         List<Buffer> buffers,
                                         List<byte[]> bufferByteArrays,
                                         List<BufferView> bufferViews,
@@ -23,8 +24,11 @@ namespace Elements.Serialization.glTF
                                         )
         {
             var newMaterials = new Dictionary<int, int>();
-            var loaded = Interface.LoadModel(glbPath);
-            var newByteArrays = loaded.GetAllBufferByteArrays(glbPath);
+            var loadingStream = new MemoryStream();
+            glbStream.CopyTo(loadingStream);
+            loadingStream.Position = 0;
+            var loaded = Interface.LoadModel(loadingStream);
+            var newByteArrays = loaded.GetAllBufferByteArrays(glbStream);
             bufferByteArrays.AddRange(newByteArrays);
 
             var bufferIncrement = buffers.Count;

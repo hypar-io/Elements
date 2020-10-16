@@ -88,7 +88,7 @@ namespace Elements.Generate
         private static string _templatesPath;
 
         /// <summary>
-        /// The directory in which to find code templates. Some execution contexts require this to be overriden as the
+        /// The directory in which to find code templates. Some execution contexts require this to be overridden as the
         /// Executing Assembly is not necessarily in the same place as the templates (e.g. Headless Grasshopper Execution)
         /// </summary>
         public static string TemplatesPath
