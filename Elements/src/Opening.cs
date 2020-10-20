@@ -68,7 +68,7 @@ namespace Elements
             {
                 this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Vector3.ZAxis, true));
             }
-            if (this.DepthFront > 0)
+            if (this.DepthBack > 0)
             {
                 this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, Vector3.ZAxis.Negate(), true));
             }
