@@ -1,0 +1,173 @@
+
+:root {
+	/* Hypar brand colors */
+    /* --hy-co-dark-blue:#28455a; */
+    --hy-co-dark-blue: #26455a;
+	--hy-co-dark-blue-half:#27718b;
+	--hy-co-gray:#a3c3cb;
+	--hy-co-white:#eff0f3;
+	--hy-co-pink:#f05b6b;
+	--hy-co-medium-blue:#1e85b4;
+	--hy-co-light-blue:#0dafd3;
+	--hy-co-pale-blue:#ebf6f9; /* Hypar dark blue lightened */
+    --hy-co-warning: #f2cc5a;
+    --hy-co-shadow: #dfe9eb;
+}
+
+a {
+    color: var(--hy-co-pink);
+    font-family: 'Roboto', sans-serif;
+}
+
+article {
+    font-size: 16px;
+}
+
+body {
+    background-color: white;
+}
+
+body .toc {
+    background-color: white;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color: var(--hy-co-dark-blue);
+    font-family: 'Roboto', sans-serif;
+}
+
+header .navbar{
+    border-width: 0px;
+}
+
+li {
+    font-family: 'Roboto', sans-serif;
+}
+
+#logo {
+    height: 50px;
+}
+
+#model {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    /* background-image: linear-gradient(white, var(--hy-co-shadow)) */
+}
+
+.nav {
+    font-size: 18px;
+}
+
+.nav a {
+    color: var(--hy-co-white);
+}
+
+#navbar li:hover ul.nav.level2 {
+    display: block;
+    position: absolute;
+    width: 100%;
+}
+
+#navbar ul.nav.level2 {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: var(--hy-co-pink);
+}
+
+#navbar .nav li.active {
+    background: var(--hy-co-dark-blue);
+}
+
+#navbar .nav li a:hover {
+    background: var(--hy-co-dark-blue);
+}
+
+.navbar-inverse .navbar-nav>.active>a {
+    background: var(--hy-co-dark-blue);
+}
+
+.navbar-inverse .navbar-nav>a:hover {
+    background: var(--hy-co-dark-blue);
+}
+
+.navbar {
+    background: var(--hy-co-pink);
+    min-height: 40px;
+}
+
+.navbar a {
+    background: none;
+}
+
+#navbar > ul > li.active > a.active {
+    background: var(--hy-co-dark-blue);
+    color: var(--hy-co-white);
+}
+
+#navbar > ul > li > a {
+    color: var(--hy-co-white);
+}
+
+p {
+    font-family: 'Roboto', sans-serif;
+}
+
+pre {
+    background: var(--hy-co-dark-blue)
+}
+
+.sidefilter {
+    background: white;
+    border: none
+}
+
+.sidetoc {
+    background: white;
+    border: none
+}
+
+.sidenav {
+    background: var(--hy-co-white);
+}
+
+.sideaffix {
+    min-width: 200px;
+    margin-right: 20px;
+}
+
+.affix > ul.level1 {
+    margin-right: 0;
+}
+
+.subnav {
+    background: var(--hy-co-pale-blue)
+}
+
+th {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700
+}
+
+.title {
+    margin: 0px;
+    padding: 15px;
+    color: var(--hy-co-pink)
+}
+
+.toc {
+    background: white;
+}
+
+#toc > ul > li.active.in > a{
+    color: var(--hy-co-dark-blue)
+}
+
+.xref.text-break {
+    font-family: 'Roboto', sans-serif;
+}
+
+.lang-none {
+    color: var(--hy-co-pale-blue);
+}
