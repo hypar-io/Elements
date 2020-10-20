@@ -46,12 +46,13 @@ namespace Elements.Tests
             var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, Guid.NewGuid(), "test");
 
             var savePath = "../../../ContentCatalog.json";
-            var catalogJson = JsonConvert.SerializeObject(testCatalog, Formatting.Indented, new JsonSerializerSettings()
-            {
-                Converters = null
-            });
+            var json = testCatalog.ToJson();
+            File.WriteAllText(savePath, json);
 
-            File.WriteAllText(savePath, catalogJson);
+            var loadedCatalog = ContentCatalog.FromJson(File.ReadAllText(savePath));
+
+            Assert.Equal(testCatalog.Id, loadedCatalog.Id);
+            Assert.Equal(testCatalog.Content.Count, loadedCatalog.Content.Count);
         }
 
         [Fact]

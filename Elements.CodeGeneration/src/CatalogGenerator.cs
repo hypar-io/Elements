@@ -51,7 +51,7 @@ namespace Elements.Generate
             DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
 
             var json = GetContentsOfUri(uri);
-            ContentCatalog catalog = ContentCatalog.LoadFromJson(json);
+            ContentCatalog catalog = ContentCatalog.FromJson(json);
             var templateText = File.ReadAllText(CatalogTemplatePath);
             var template = DotLiquid.Template.Parse(templateText);
             var result = template.Render(Hash.FromAnonymousObject(new
