@@ -1,7 +1,6 @@
 #pragma warning disable CS1591
 
 using System.Collections.Generic;
-using Elements.Geometry;
 
 namespace Elements.Interfaces
 {
