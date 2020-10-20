@@ -7,6 +7,7 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
+using Newtonsoft.Json;
 
 namespace Elements.IFC.Tests
 {
@@ -154,6 +155,14 @@ namespace Elements.IFC.Tests
             }
 
             return result;
+        }
+
+        [Fact]
+        public void SerializeSingleElement()
+        {
+
+            var elem = new ModelCurve(Polygon.Rectangle(1,1));//new Mass(Polygon.Rectangle(1, 1), 1);
+            var json = JsonConvert.SerializeObject(elem);
         }
 
         private string ConstructIfcPath(string modelName)
