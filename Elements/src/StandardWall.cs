@@ -85,13 +85,8 @@ namespace Elements
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
         public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
-            var xAxis = this.CenterLine.Direction();
-            var yAxis = Vector3.ZAxis;
-            var zAxis = xAxis.Cross(yAxis);
-            var wallTransform = new Transform(this.CenterLine.Start, xAxis, zAxis);
-
-            var m = wallTransform.OfVector(new Vector3(x, y));
-            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, wallTransform.Moved(m));
+            var openingTransform = GetOpeningTransform(x, y);
+            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, openingTransform);
             this.Openings.Add(o);
             return o;
         }
@@ -106,15 +101,21 @@ namespace Elements
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
         public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
-            var xAxis = this.CenterLine.Direction();
-            var yAxis = Vector3.ZAxis;
-            var zAxis = xAxis.Cross(yAxis);
-            var wallTransform = new Transform(this.CenterLine.Start, xAxis, zAxis);
-
-            var m = wallTransform.OfVector(new Vector3(x, y));
-            var o = new Opening(perimeter, depthFront, depthBack, wallTransform.Moved(m));
+            var openingTransform = GetOpeningTransform(x, y);
+            var o = new Opening(perimeter, depthFront, depthBack, openingTransform);
             this.Openings.Add(o);
             return o;
+        }
+
+        private Transform GetOpeningTransform(double x, double y)
+        {
+            var xAxis = this.CenterLine.Direction();
+            var yAxis = xAxis.Cross(Vector3.ZAxis.Negate());
+            var wallTransform = new Transform(this.CenterLine.Start, xAxis, Vector3.ZAxis);
+
+            var m = wallTransform.OfVector(new Vector3(x, 0, y));
+            var openingTransform = new Transform(m, xAxis, xAxis.Cross(Vector3.ZAxis));
+            return openingTransform;
         }
 
         /// <summary>
