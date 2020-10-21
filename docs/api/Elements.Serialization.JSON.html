@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Elements.Serialization.JSON
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.53.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -81,8 +81,17 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="Elements.Serialization.JSON.JsonInheritanceAttribute.html">JsonInheritanceAttribute</a></h4>
+      <section></section>
       <h4><a class="xref" href="Elements.Serialization.JSON.JsonInheritanceConverter.html">JsonInheritanceConverter</a></h4>
       <section></section>
+      <h4><a class="xref" href="Elements.Serialization.JSON.SolidConverter.html">SolidConverter</a></h4>
+      <section><p>The SolidConverter is used to serialize and deserialize a Solid.
+Solids have a self-referencing structure which does not serialize
+effectively using the default serialization logic. The SolidConverter
+serializes and deserializes starting at the Solid's Faces, using
+Vertex and Edge ids to reconstruct and link the Edges and Vertices as necessary.</p>
+</section>
 </article>
           </div>
           

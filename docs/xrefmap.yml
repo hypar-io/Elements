@@ -476,6 +476,77 @@ references:
   isSpec: "True"
   fullName: Elements.Column.Location
   nameWithType: Column.Location
+- uid: Elements.ContentElement
+  name: ContentElement
+  href: api/Elements.ContentElement.html
+  commentId: T:Elements.ContentElement
+  fullName: Elements.ContentElement
+  nameWithType: ContentElement
+- uid: Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: ContentElement(String, BBox3, Double, Transform, Material, Representation, Boolean, Guid, String)
+  href: api/Elements.ContentElement.html#Elements_ContentElement__ctor_System_String_Elements_Geometry_BBox3_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.ContentElement.ContentElement(System.String, Elements.Geometry.BBox3, System.Double, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: ContentElement.ContentElement(String, BBox3, Double, Transform, Material, Representation, Boolean, Guid, String)
+- uid: Elements.ContentElement.#ctor*
+  name: ContentElement
+  href: api/Elements.ContentElement.html#Elements_ContentElement__ctor_
+  commentId: Overload:Elements.ContentElement.#ctor
+  isSpec: "True"
+  fullName: Elements.ContentElement.ContentElement
+  nameWithType: ContentElement.ContentElement
+- uid: Elements.ContentElement.BoundingBox
+  name: BoundingBox
+  href: api/Elements.ContentElement.html#Elements_ContentElement_BoundingBox
+  commentId: P:Elements.ContentElement.BoundingBox
+  fullName: Elements.ContentElement.BoundingBox
+  nameWithType: ContentElement.BoundingBox
+- uid: Elements.ContentElement.BoundingBox*
+  name: BoundingBox
+  href: api/Elements.ContentElement.html#Elements_ContentElement_BoundingBox_
+  commentId: Overload:Elements.ContentElement.BoundingBox
+  isSpec: "True"
+  fullName: Elements.ContentElement.BoundingBox
+  nameWithType: ContentElement.BoundingBox
+- uid: Elements.ContentElement.GltfLocation
+  name: GltfLocation
+  href: api/Elements.ContentElement.html#Elements_ContentElement_GltfLocation
+  commentId: P:Elements.ContentElement.GltfLocation
+  fullName: Elements.ContentElement.GltfLocation
+  nameWithType: ContentElement.GltfLocation
+- uid: Elements.ContentElement.GltfLocation*
+  name: GltfLocation
+  href: api/Elements.ContentElement.html#Elements_ContentElement_GltfLocation_
+  commentId: Overload:Elements.ContentElement.GltfLocation
+  isSpec: "True"
+  fullName: Elements.ContentElement.GltfLocation
+  nameWithType: ContentElement.GltfLocation
+- uid: Elements.ContentElement.GltfScaleToMeters
+  name: GltfScaleToMeters
+  href: api/Elements.ContentElement.html#Elements_ContentElement_GltfScaleToMeters
+  commentId: P:Elements.ContentElement.GltfScaleToMeters
+  fullName: Elements.ContentElement.GltfScaleToMeters
+  nameWithType: ContentElement.GltfScaleToMeters
+- uid: Elements.ContentElement.GltfScaleToMeters*
+  name: GltfScaleToMeters
+  href: api/Elements.ContentElement.html#Elements_ContentElement_GltfScaleToMeters_
+  commentId: Overload:Elements.ContentElement.GltfScaleToMeters
+  isSpec: "True"
+  fullName: Elements.ContentElement.GltfScaleToMeters
+  nameWithType: ContentElement.GltfScaleToMeters
+- uid: Elements.ContentElement.UpdateRepresentations
+  name: UpdateRepresentations()
+  href: api/Elements.ContentElement.html#Elements_ContentElement_UpdateRepresentations
+  commentId: M:Elements.ContentElement.UpdateRepresentations
+  fullName: Elements.ContentElement.UpdateRepresentations()
+  nameWithType: ContentElement.UpdateRepresentations()
+- uid: Elements.ContentElement.UpdateRepresentations*
+  name: UpdateRepresentations
+  href: api/Elements.ContentElement.html#Elements_ContentElement_UpdateRepresentations_
+  commentId: Overload:Elements.ContentElement.UpdateRepresentations
+  isSpec: "True"
+  fullName: Elements.ContentElement.UpdateRepresentations
+  nameWithType: ContentElement.UpdateRepresentations
 - uid: Elements.DirectionalLight
   name: DirectionalLight
   href: api/Elements.DirectionalLight.html
@@ -2987,6 +3058,38 @@ references:
   commentId: F:Elements.Geometry.FrameType.RoadLike
   fullName: Elements.Geometry.FrameType.RoadLike
   nameWithType: FrameType.RoadLike
+- uid: Elements.Geometry.Geometry
+  name: Geometry
+  href: api/Elements.Geometry.Geometry.html
+  commentId: T:Elements.Geometry.Geometry
+  fullName: Elements.Geometry.Geometry
+  nameWithType: Geometry
+- uid: Elements.Geometry.Geometry.#ctor(Elements.Material)
+  name: Geometry(Material)
+  href: api/Elements.Geometry.Geometry.html#Elements_Geometry_Geometry__ctor_Elements_Material_
+  commentId: M:Elements.Geometry.Geometry.#ctor(Elements.Material)
+  fullName: Elements.Geometry.Geometry.Geometry(Elements.Material)
+  nameWithType: Geometry.Geometry(Material)
+- uid: Elements.Geometry.Geometry.#ctor*
+  name: Geometry
+  href: api/Elements.Geometry.Geometry.html#Elements_Geometry_Geometry__ctor_
+  commentId: Overload:Elements.Geometry.Geometry.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.Geometry.Geometry
+  nameWithType: Geometry.Geometry
+- uid: Elements.Geometry.Geometry.Material
+  name: Material
+  href: api/Elements.Geometry.Geometry.html#Elements_Geometry_Geometry_Material
+  commentId: P:Elements.Geometry.Geometry.Material
+  fullName: Elements.Geometry.Geometry.Material
+  nameWithType: Geometry.Material
+- uid: Elements.Geometry.Geometry.Material*
+  name: Material
+  href: api/Elements.Geometry.Geometry.html#Elements_Geometry_Geometry_Material_
+  commentId: Overload:Elements.Geometry.Geometry.Material
+  isSpec: "True"
+  fullName: Elements.Geometry.Geometry.Material
+  nameWithType: Geometry.Material
 - uid: Elements.Geometry.Interfaces
   name: Elements.Geometry.Interfaces
   href: api/Elements.Geometry.Interfaces.html
@@ -3931,6 +4034,15 @@ references:
   commentId: M:Elements.Geometry.Mesh.#ctor
   fullName: Elements.Geometry.Mesh.Mesh()
   nameWithType: Mesh.Mesh()
+- uid: Elements.Geometry.Mesh.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.Vertex},System.Collections.Generic.IList{Elements.Geometry.Triangle},Elements.Material)
+  name: Mesh(IList<Vertex>, IList<Triangle>, Material)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh__ctor_System_Collections_Generic_IList_Elements_Geometry_Solids_Vertex__System_Collections_Generic_IList_Elements_Geometry_Triangle__Elements_Material_
+  commentId: M:Elements.Geometry.Mesh.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.Vertex},System.Collections.Generic.IList{Elements.Geometry.Triangle},Elements.Material)
+  name.vb: Mesh(IList(Of Vertex), IList(Of Triangle), Material)
+  fullName: Elements.Geometry.Mesh.Mesh(System.Collections.Generic.IList<Elements.Geometry.Solids.Vertex>, System.Collections.Generic.IList<Elements.Geometry.Triangle>, Elements.Material)
+  fullName.vb: Elements.Geometry.Mesh.Mesh(System.Collections.Generic.IList(Of Elements.Geometry.Solids.Vertex), System.Collections.Generic.IList(Of Elements.Geometry.Triangle), Elements.Material)
+  nameWithType: Mesh.Mesh(IList<Vertex>, IList<Triangle>, Material)
+  nameWithType.vb: Mesh.Mesh(IList(Of Vertex), IList(Of Triangle), Material)
 - uid: Elements.Geometry.Mesh.#ctor*
   name: Mesh
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh__ctor_
@@ -3938,18 +4050,18 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Mesh.Mesh
   nameWithType: Mesh.Mesh
+- uid: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex)
+  name: AddTriangle(Vertex, Vertex, Vertex)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_
+  commentId: M:Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex)
+  fullName: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Solids.Vertex, Elements.Geometry.Solids.Vertex, Elements.Geometry.Solids.Vertex)
+  nameWithType: Mesh.AddTriangle(Vertex, Vertex, Vertex)
 - uid: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Triangle)
   name: AddTriangle(Triangle)
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Triangle_
   commentId: M:Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Triangle)
   fullName: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Triangle)
   nameWithType: Mesh.AddTriangle(Triangle)
-- uid: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
-  name: AddTriangle(Vertex, Vertex, Vertex)
-  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Vertex_Elements_Geometry_Vertex_Elements_Geometry_Vertex_
-  commentId: M:Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
-  fullName: Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Vertex, Elements.Geometry.Vertex, Elements.Geometry.Vertex)
-  nameWithType: Mesh.AddTriangle(Vertex, Vertex, Vertex)
 - uid: Elements.Geometry.Mesh.AddTriangle*
   name: AddTriangle
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddTriangle_
@@ -3957,18 +4069,18 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Mesh.AddTriangle
   nameWithType: Mesh.AddTriangle
+- uid: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Solids.Vertex)
+  name: AddVertex(Vertex)
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Solids_Vertex_
+  commentId: M:Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Solids.Vertex)
+  fullName: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Solids.Vertex)
+  nameWithType: Mesh.AddVertex(Vertex)
 - uid: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.UV,Elements.Geometry.Vector3,Elements.Geometry.Color)
   name: AddVertex(Vector3, UV, Vector3, Color)
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Vector3_Elements_Geometry_UV_Elements_Geometry_Vector3_Elements_Geometry_Color_
   commentId: M:Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.UV,Elements.Geometry.Vector3,Elements.Geometry.Color)
   fullName: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3, Elements.Geometry.UV, Elements.Geometry.Vector3, Elements.Geometry.Color)
   nameWithType: Mesh.AddVertex(Vector3, UV, Vector3, Color)
-- uid: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vertex)
-  name: AddVertex(Vertex)
-  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Vertex_
-  commentId: M:Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vertex)
-  fullName: Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vertex)
-  nameWithType: Mesh.AddVertex(Vertex)
 - uid: Elements.Geometry.Mesh.AddVertex*
   name: AddVertex
   href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh_AddVertex_
@@ -9582,6 +9694,41 @@ references:
   commentId: T:Elements.Geometry.Solids.Vertex
   fullName: Elements.Geometry.Solids.Vertex
   nameWithType: Vertex
+- uid: Elements.Geometry.Solids.Vertex.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Color,System.Int32,Elements.Geometry.UV)
+  name: Vertex(Vector3, Vector3, Color, Int32, UV)
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Color_System_Int32_Elements_Geometry_UV_
+  commentId: M:Elements.Geometry.Solids.Vertex.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Color,System.Int32,Elements.Geometry.UV)
+  fullName: Elements.Geometry.Solids.Vertex.Vertex(Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Color, System.Int32, Elements.Geometry.UV)
+  nameWithType: Vertex.Vertex(Vector3, Vector3, Color, Int32, UV)
+- uid: Elements.Geometry.Solids.Vertex.#ctor(Elements.Geometry.Vector3,System.Nullable{Elements.Geometry.Vector3},Elements.Geometry.Color)
+  name: Vertex(Vector3, Nullable<Vector3>, Color)
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex__ctor_Elements_Geometry_Vector3_System_Nullable_Elements_Geometry_Vector3__Elements_Geometry_Color_
+  commentId: M:Elements.Geometry.Solids.Vertex.#ctor(Elements.Geometry.Vector3,System.Nullable{Elements.Geometry.Vector3},Elements.Geometry.Color)
+  name.vb: Vertex(Vector3, Nullable(Of Vector3), Color)
+  fullName: Elements.Geometry.Solids.Vertex.Vertex(Elements.Geometry.Vector3, System.Nullable<Elements.Geometry.Vector3>, Elements.Geometry.Color)
+  fullName.vb: Elements.Geometry.Solids.Vertex.Vertex(Elements.Geometry.Vector3, System.Nullable(Of Elements.Geometry.Vector3), Elements.Geometry.Color)
+  nameWithType: Vertex.Vertex(Vector3, Nullable<Vector3>, Color)
+  nameWithType.vb: Vertex.Vertex(Vector3, Nullable(Of Vector3), Color)
+- uid: Elements.Geometry.Solids.Vertex.#ctor*
+  name: Vertex
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex__ctor_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.#ctor
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.Vertex
+  nameWithType: Vertex.Vertex
+- uid: Elements.Geometry.Solids.Vertex.Color
+  name: Color
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Color
+  commentId: P:Elements.Geometry.Solids.Vertex.Color
+  fullName: Elements.Geometry.Solids.Vertex.Color
+  nameWithType: Vertex.Color
+- uid: Elements.Geometry.Solids.Vertex.Color*
+  name: Color
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Color_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.Color
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.Color
+  nameWithType: Vertex.Color
 - uid: Elements.Geometry.Solids.Vertex.HalfEdge
   name: HalfEdge
   href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_HalfEdge
@@ -9608,6 +9755,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Vertex.Id
   nameWithType: Vertex.Id
+- uid: Elements.Geometry.Solids.Vertex.Index
+  name: Index
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Index
+  commentId: P:Elements.Geometry.Solids.Vertex.Index
+  fullName: Elements.Geometry.Solids.Vertex.Index
+  nameWithType: Vertex.Index
+- uid: Elements.Geometry.Solids.Vertex.Index*
+  name: Index
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Index_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.Index
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.Index
+  nameWithType: Vertex.Index
+- uid: Elements.Geometry.Solids.Vertex.Normal
+  name: Normal
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Normal
+  commentId: P:Elements.Geometry.Solids.Vertex.Normal
+  fullName: Elements.Geometry.Solids.Vertex.Normal
+  nameWithType: Vertex.Normal
+- uid: Elements.Geometry.Solids.Vertex.Normal*
+  name: Normal
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Normal_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.Normal
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.Normal
+  nameWithType: Vertex.Normal
 - uid: Elements.Geometry.Solids.Vertex.Point
   name: Point
   href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Point
@@ -9621,6 +9794,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Vertex.Point
   nameWithType: Vertex.Point
+- uid: Elements.Geometry.Solids.Vertex.Position
+  name: Position
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Position
+  commentId: P:Elements.Geometry.Solids.Vertex.Position
+  fullName: Elements.Geometry.Solids.Vertex.Position
+  nameWithType: Vertex.Position
+- uid: Elements.Geometry.Solids.Vertex.Position*
+  name: Position
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Position_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.Position
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.Position
+  nameWithType: Vertex.Position
 - uid: Elements.Geometry.Solids.Vertex.ToString
   name: ToString()
   href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_ToString
@@ -9634,6 +9820,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Vertex.ToString
   nameWithType: Vertex.ToString
+- uid: Elements.Geometry.Solids.Vertex.Triangles
+  name: Triangles
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Triangles
+  commentId: P:Elements.Geometry.Solids.Vertex.Triangles
+  fullName: Elements.Geometry.Solids.Vertex.Triangles
+  nameWithType: Vertex.Triangles
+- uid: Elements.Geometry.Solids.Vertex.Triangles*
+  name: Triangles
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_Triangles_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.Triangles
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.Triangles
+  nameWithType: Vertex.Triangles
+- uid: Elements.Geometry.Solids.Vertex.UV
+  name: UV
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_UV
+  commentId: P:Elements.Geometry.Solids.Vertex.UV
+  fullName: Elements.Geometry.Solids.Vertex.UV
+  nameWithType: Vertex.UV
+- uid: Elements.Geometry.Solids.Vertex.UV*
+  name: UV
+  href: api/Elements.Geometry.Solids.Vertex.html#Elements_Geometry_Solids_Vertex_UV_
+  commentId: Overload:Elements.Geometry.Solids.Vertex.UV
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.Vertex.UV
+  nameWithType: Vertex.UV
 - uid: Elements.Geometry.Transform
   name: Transform
   href: api/Elements.Geometry.Transform.html
@@ -9969,6 +10181,25 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Transform.Scale
   nameWithType: Transform.Scale
+- uid: Elements.Geometry.Transform.Scaled(Elements.Geometry.Vector3)
+  name: Scaled(Vector3)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Scaled_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Transform.Scaled(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Transform.Scaled(Elements.Geometry.Vector3)
+  nameWithType: Transform.Scaled(Vector3)
+- uid: Elements.Geometry.Transform.Scaled(System.Double)
+  name: Scaled(Double)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Scaled_System_Double_
+  commentId: M:Elements.Geometry.Transform.Scaled(System.Double)
+  fullName: Elements.Geometry.Transform.Scaled(System.Double)
+  nameWithType: Transform.Scaled(Double)
+- uid: Elements.Geometry.Transform.Scaled*
+  name: Scaled
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Scaled_
+  commentId: Overload:Elements.Geometry.Transform.Scaled
+  isSpec: "True"
+  fullName: Elements.Geometry.Transform.Scaled
+  nameWithType: Transform.Scaled
 - uid: Elements.Geometry.Transform.ToString
   name: ToString()
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_ToString
@@ -10066,12 +10297,21 @@ references:
   commentId: T:Elements.Geometry.Triangle
   fullName: Elements.Geometry.Triangle
   nameWithType: Triangle
-- uid: Elements.Geometry.Triangle.#ctor(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
+- uid: Elements.Geometry.Triangle.#ctor(Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex)
   name: Triangle(Vertex, Vertex, Vertex)
-  href: api/Elements.Geometry.Triangle.html#Elements_Geometry_Triangle__ctor_Elements_Geometry_Vertex_Elements_Geometry_Vertex_Elements_Geometry_Vertex_
-  commentId: M:Elements.Geometry.Triangle.#ctor(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
-  fullName: Elements.Geometry.Triangle.Triangle(Elements.Geometry.Vertex, Elements.Geometry.Vertex, Elements.Geometry.Vertex)
+  href: api/Elements.Geometry.Triangle.html#Elements_Geometry_Triangle__ctor_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_
+  commentId: M:Elements.Geometry.Triangle.#ctor(Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex)
+  fullName: Elements.Geometry.Triangle.Triangle(Elements.Geometry.Solids.Vertex, Elements.Geometry.Solids.Vertex, Elements.Geometry.Solids.Vertex)
   nameWithType: Triangle.Triangle(Vertex, Vertex, Vertex)
+- uid: Elements.Geometry.Triangle.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.Vertex},Elements.Geometry.Vector3)
+  name: Triangle(IList<Vertex>, Vector3)
+  href: api/Elements.Geometry.Triangle.html#Elements_Geometry_Triangle__ctor_System_Collections_Generic_IList_Elements_Geometry_Solids_Vertex__Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Triangle.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.Vertex},Elements.Geometry.Vector3)
+  name.vb: Triangle(IList(Of Vertex), Vector3)
+  fullName: Elements.Geometry.Triangle.Triangle(System.Collections.Generic.IList<Elements.Geometry.Solids.Vertex>, Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Triangle.Triangle(System.Collections.Generic.IList(Of Elements.Geometry.Solids.Vertex), Elements.Geometry.Vector3)
+  nameWithType: Triangle.Triangle(IList<Vertex>, Vector3)
+  nameWithType.vb: Triangle.Triangle(IList(Of Vertex), Vector3)
 - uid: Elements.Geometry.Triangle.#ctor*
   name: Triangle
   href: api/Elements.Geometry.Triangle.html#Elements_Geometry_Triangle__ctor_
@@ -10846,106 +11086,6 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3Extensions.ToTransform
   nameWithType: Vector3Extensions.ToTransform
-- uid: Elements.Geometry.Vertex
-  name: Vertex
-  href: api/Elements.Geometry.Vertex.html
-  commentId: T:Elements.Geometry.Vertex
-  fullName: Elements.Geometry.Vertex
-  nameWithType: Vertex
-- uid: Elements.Geometry.Vertex.#ctor(Elements.Geometry.Vector3,System.Nullable{Elements.Geometry.Vector3},Elements.Geometry.Color)
-  name: Vertex(Vector3, Nullable<Vector3>, Color)
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex__ctor_Elements_Geometry_Vector3_System_Nullable_Elements_Geometry_Vector3__Elements_Geometry_Color_
-  commentId: M:Elements.Geometry.Vertex.#ctor(Elements.Geometry.Vector3,System.Nullable{Elements.Geometry.Vector3},Elements.Geometry.Color)
-  name.vb: Vertex(Vector3, Nullable(Of Vector3), Color)
-  fullName: Elements.Geometry.Vertex.Vertex(Elements.Geometry.Vector3, System.Nullable<Elements.Geometry.Vector3>, Elements.Geometry.Color)
-  fullName.vb: Elements.Geometry.Vertex.Vertex(Elements.Geometry.Vector3, System.Nullable(Of Elements.Geometry.Vector3), Elements.Geometry.Color)
-  nameWithType: Vertex.Vertex(Vector3, Nullable<Vector3>, Color)
-  nameWithType.vb: Vertex.Vertex(Vector3, Nullable(Of Vector3), Color)
-- uid: Elements.Geometry.Vertex.#ctor*
-  name: Vertex
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex__ctor_
-  commentId: Overload:Elements.Geometry.Vertex.#ctor
-  isSpec: "True"
-  fullName: Elements.Geometry.Vertex.Vertex
-  nameWithType: Vertex.Vertex
-- uid: Elements.Geometry.Vertex.Color
-  name: Color
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Color
-  commentId: P:Elements.Geometry.Vertex.Color
-  fullName: Elements.Geometry.Vertex.Color
-  nameWithType: Vertex.Color
-- uid: Elements.Geometry.Vertex.Color*
-  name: Color
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Color_
-  commentId: Overload:Elements.Geometry.Vertex.Color
-  isSpec: "True"
-  fullName: Elements.Geometry.Vertex.Color
-  nameWithType: Vertex.Color
-- uid: Elements.Geometry.Vertex.Index
-  name: Index
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Index
-  commentId: P:Elements.Geometry.Vertex.Index
-  fullName: Elements.Geometry.Vertex.Index
-  nameWithType: Vertex.Index
-- uid: Elements.Geometry.Vertex.Index*
-  name: Index
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Index_
-  commentId: Overload:Elements.Geometry.Vertex.Index
-  isSpec: "True"
-  fullName: Elements.Geometry.Vertex.Index
-  nameWithType: Vertex.Index
-- uid: Elements.Geometry.Vertex.Normal
-  name: Normal
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Normal
-  commentId: P:Elements.Geometry.Vertex.Normal
-  fullName: Elements.Geometry.Vertex.Normal
-  nameWithType: Vertex.Normal
-- uid: Elements.Geometry.Vertex.Normal*
-  name: Normal
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Normal_
-  commentId: Overload:Elements.Geometry.Vertex.Normal
-  isSpec: "True"
-  fullName: Elements.Geometry.Vertex.Normal
-  nameWithType: Vertex.Normal
-- uid: Elements.Geometry.Vertex.Position
-  name: Position
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Position
-  commentId: P:Elements.Geometry.Vertex.Position
-  fullName: Elements.Geometry.Vertex.Position
-  nameWithType: Vertex.Position
-- uid: Elements.Geometry.Vertex.Position*
-  name: Position
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Position_
-  commentId: Overload:Elements.Geometry.Vertex.Position
-  isSpec: "True"
-  fullName: Elements.Geometry.Vertex.Position
-  nameWithType: Vertex.Position
-- uid: Elements.Geometry.Vertex.Triangles
-  name: Triangles
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Triangles
-  commentId: P:Elements.Geometry.Vertex.Triangles
-  fullName: Elements.Geometry.Vertex.Triangles
-  nameWithType: Vertex.Triangles
-- uid: Elements.Geometry.Vertex.Triangles*
-  name: Triangles
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_Triangles_
-  commentId: Overload:Elements.Geometry.Vertex.Triangles
-  isSpec: "True"
-  fullName: Elements.Geometry.Vertex.Triangles
-  nameWithType: Vertex.Triangles
-- uid: Elements.Geometry.Vertex.UV
-  name: UV
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_UV
-  commentId: P:Elements.Geometry.Vertex.UV
-  fullName: Elements.Geometry.Vertex.UV
-  nameWithType: Vertex.UV
-- uid: Elements.Geometry.Vertex.UV*
-  name: UV
-  href: api/Elements.Geometry.Vertex.html#Elements_Geometry_Vertex_UV_
-  commentId: Overload:Elements.Geometry.Vertex.UV
-  isSpec: "True"
-  fullName: Elements.Geometry.Vertex.UV
-  nameWithType: Vertex.UV
 - uid: Elements.ImportMeshElement
   name: ImportMeshElement
   href: api/Elements.ImportMeshElement.html
@@ -11811,6 +11951,12 @@ references:
   commentId: N:Elements.Serialization.glTF
   fullName: Elements.Serialization.glTF
   nameWithType: Elements.Serialization.glTF
+- uid: Elements.Serialization.glTF.GltfBufferExtensions
+  name: GltfBufferExtensions
+  href: api/Elements.Serialization.glTF.GltfBufferExtensions.html
+  commentId: T:Elements.Serialization.glTF.GltfBufferExtensions
+  fullName: Elements.Serialization.glTF.GltfBufferExtensions
+  nameWithType: GltfBufferExtensions
 - uid: Elements.Serialization.glTF.GltfExtensions
   name: GltfExtensions
   href: api/Elements.Serialization.glTF.GltfExtensions.html
@@ -11849,6 +11995,51 @@ references:
   commentId: N:Elements.Serialization.JSON
   fullName: Elements.Serialization.JSON
   nameWithType: Elements.Serialization.JSON
+- uid: Elements.Serialization.JSON.JsonInheritanceAttribute
+  name: JsonInheritanceAttribute
+  href: api/Elements.Serialization.JSON.JsonInheritanceAttribute.html
+  commentId: T:Elements.Serialization.JSON.JsonInheritanceAttribute
+  fullName: Elements.Serialization.JSON.JsonInheritanceAttribute
+  nameWithType: JsonInheritanceAttribute
+- uid: Elements.Serialization.JSON.JsonInheritanceAttribute.#ctor(System.String,System.Type)
+  name: JsonInheritanceAttribute(String, Type)
+  href: api/Elements.Serialization.JSON.JsonInheritanceAttribute.html#Elements_Serialization_JSON_JsonInheritanceAttribute__ctor_System_String_System_Type_
+  commentId: M:Elements.Serialization.JSON.JsonInheritanceAttribute.#ctor(System.String,System.Type)
+  fullName: Elements.Serialization.JSON.JsonInheritanceAttribute.JsonInheritanceAttribute(System.String, System.Type)
+  nameWithType: JsonInheritanceAttribute.JsonInheritanceAttribute(String, Type)
+- uid: Elements.Serialization.JSON.JsonInheritanceAttribute.#ctor*
+  name: JsonInheritanceAttribute
+  href: api/Elements.Serialization.JSON.JsonInheritanceAttribute.html#Elements_Serialization_JSON_JsonInheritanceAttribute__ctor_
+  commentId: Overload:Elements.Serialization.JSON.JsonInheritanceAttribute.#ctor
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.JsonInheritanceAttribute.JsonInheritanceAttribute
+  nameWithType: JsonInheritanceAttribute.JsonInheritanceAttribute
+- uid: Elements.Serialization.JSON.JsonInheritanceAttribute.Key
+  name: Key
+  href: api/Elements.Serialization.JSON.JsonInheritanceAttribute.html#Elements_Serialization_JSON_JsonInheritanceAttribute_Key
+  commentId: P:Elements.Serialization.JSON.JsonInheritanceAttribute.Key
+  fullName: Elements.Serialization.JSON.JsonInheritanceAttribute.Key
+  nameWithType: JsonInheritanceAttribute.Key
+- uid: Elements.Serialization.JSON.JsonInheritanceAttribute.Key*
+  name: Key
+  href: api/Elements.Serialization.JSON.JsonInheritanceAttribute.html#Elements_Serialization_JSON_JsonInheritanceAttribute_Key_
+  commentId: Overload:Elements.Serialization.JSON.JsonInheritanceAttribute.Key
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.JsonInheritanceAttribute.Key
+  nameWithType: JsonInheritanceAttribute.Key
+- uid: Elements.Serialization.JSON.JsonInheritanceAttribute.Type
+  name: Type
+  href: api/Elements.Serialization.JSON.JsonInheritanceAttribute.html#Elements_Serialization_JSON_JsonInheritanceAttribute_Type
+  commentId: P:Elements.Serialization.JSON.JsonInheritanceAttribute.Type
+  fullName: Elements.Serialization.JSON.JsonInheritanceAttribute.Type
+  nameWithType: JsonInheritanceAttribute.Type
+- uid: Elements.Serialization.JSON.JsonInheritanceAttribute.Type*
+  name: Type
+  href: api/Elements.Serialization.JSON.JsonInheritanceAttribute.html#Elements_Serialization_JSON_JsonInheritanceAttribute_Type_
+  commentId: Overload:Elements.Serialization.JSON.JsonInheritanceAttribute.Type
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.JsonInheritanceAttribute.Type
+  nameWithType: JsonInheritanceAttribute.Type
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter
   name: JsonInheritanceConverter
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html
@@ -11965,6 +12156,67 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson
   nameWithType: JsonInheritanceConverter.WriteJson
+- uid: Elements.Serialization.JSON.SolidConverter
+  name: SolidConverter
+  href: api/Elements.Serialization.JSON.SolidConverter.html
+  commentId: T:Elements.Serialization.JSON.SolidConverter
+  fullName: Elements.Serialization.JSON.SolidConverter
+  nameWithType: SolidConverter
+- uid: Elements.Serialization.JSON.SolidConverter.#ctor(System.Collections.Generic.IDictionary{System.Guid,Elements.Material})
+  name: SolidConverter(IDictionary<Guid, Material>)
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter__ctor_System_Collections_Generic_IDictionary_System_Guid_Elements_Material__
+  commentId: M:Elements.Serialization.JSON.SolidConverter.#ctor(System.Collections.Generic.IDictionary{System.Guid,Elements.Material})
+  name.vb: SolidConverter(IDictionary(Of Guid, Material))
+  fullName: Elements.Serialization.JSON.SolidConverter.SolidConverter(System.Collections.Generic.IDictionary<System.Guid, Elements.Material>)
+  fullName.vb: Elements.Serialization.JSON.SolidConverter.SolidConverter(System.Collections.Generic.IDictionary(Of System.Guid, Elements.Material))
+  nameWithType: SolidConverter.SolidConverter(IDictionary<Guid, Material>)
+  nameWithType.vb: SolidConverter.SolidConverter(IDictionary(Of Guid, Material))
+- uid: Elements.Serialization.JSON.SolidConverter.#ctor*
+  name: SolidConverter
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter__ctor_
+  commentId: Overload:Elements.Serialization.JSON.SolidConverter.#ctor
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.SolidConverter.SolidConverter
+  nameWithType: SolidConverter.SolidConverter
+- uid: Elements.Serialization.JSON.SolidConverter.CanConvert(System.Type)
+  name: CanConvert(Type)
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_CanConvert_System_Type_
+  commentId: M:Elements.Serialization.JSON.SolidConverter.CanConvert(System.Type)
+  fullName: Elements.Serialization.JSON.SolidConverter.CanConvert(System.Type)
+  nameWithType: SolidConverter.CanConvert(Type)
+- uid: Elements.Serialization.JSON.SolidConverter.CanConvert*
+  name: CanConvert
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_CanConvert_
+  commentId: Overload:Elements.Serialization.JSON.SolidConverter.CanConvert
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.SolidConverter.CanConvert
+  nameWithType: SolidConverter.CanConvert
+- uid: Elements.Serialization.JSON.SolidConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:Elements.Serialization.JSON.SolidConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: Elements.Serialization.JSON.SolidConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: SolidConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+- uid: Elements.Serialization.JSON.SolidConverter.ReadJson*
+  name: ReadJson
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_ReadJson_
+  commentId: Overload:Elements.Serialization.JSON.SolidConverter.ReadJson
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.SolidConverter.ReadJson
+  nameWithType: SolidConverter.ReadJson
+- uid: Elements.Serialization.JSON.SolidConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:Elements.Serialization.JSON.SolidConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: Elements.Serialization.JSON.SolidConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: SolidConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+- uid: Elements.Serialization.JSON.SolidConverter.WriteJson*
+  name: WriteJson
+  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_WriteJson_
+  commentId: Overload:Elements.Serialization.JSON.SolidConverter.WriteJson
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.SolidConverter.WriteJson
+  nameWithType: SolidConverter.WriteJson
 - uid: Elements.Space
   name: Space
   href: api/Elements.Space.html
@@ -13629,6 +13881,54 @@ references:
   isSpec: "True"
   fullName: Elements.Validators.ArcValidator.ValidatesType
   nameWithType: ArcValidator.ValidatesType
+- uid: Elements.Validators.BBox3Validator
+  name: BBox3Validator
+  href: api/Elements.Validators.BBox3Validator.html
+  commentId: T:Elements.Validators.BBox3Validator
+  fullName: Elements.Validators.BBox3Validator
+  nameWithType: BBox3Validator
+- uid: Elements.Validators.BBox3Validator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.BBox3Validator.html#Elements_Validators_BBox3Validator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.BBox3Validator.PostConstruct(System.Object)
+  fullName: Elements.Validators.BBox3Validator.PostConstruct(System.Object)
+  nameWithType: BBox3Validator.PostConstruct(Object)
+- uid: Elements.Validators.BBox3Validator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.BBox3Validator.html#Elements_Validators_BBox3Validator_PostConstruct_
+  commentId: Overload:Elements.Validators.BBox3Validator.PostConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.BBox3Validator.PostConstruct
+  nameWithType: BBox3Validator.PostConstruct
+- uid: Elements.Validators.BBox3Validator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.BBox3Validator.html#Elements_Validators_BBox3Validator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.BBox3Validator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.BBox3Validator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.BBox3Validator.PreConstruct(System.Object())
+  nameWithType: BBox3Validator.PreConstruct(Object[])
+  nameWithType.vb: BBox3Validator.PreConstruct(Object())
+- uid: Elements.Validators.BBox3Validator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.BBox3Validator.html#Elements_Validators_BBox3Validator_PreConstruct_
+  commentId: Overload:Elements.Validators.BBox3Validator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.BBox3Validator.PreConstruct
+  nameWithType: BBox3Validator.PreConstruct
+- uid: Elements.Validators.BBox3Validator.ValidatesType
+  name: ValidatesType
+  href: api/Elements.Validators.BBox3Validator.html#Elements_Validators_BBox3Validator_ValidatesType
+  commentId: P:Elements.Validators.BBox3Validator.ValidatesType
+  fullName: Elements.Validators.BBox3Validator.ValidatesType
+  nameWithType: BBox3Validator.ValidatesType
+- uid: Elements.Validators.BBox3Validator.ValidatesType*
+  name: ValidatesType
+  href: api/Elements.Validators.BBox3Validator.html#Elements_Validators_BBox3Validator_ValidatesType_
+  commentId: Overload:Elements.Validators.BBox3Validator.ValidatesType
+  isSpec: "True"
+  fullName: Elements.Validators.BBox3Validator.ValidatesType
+  nameWithType: BBox3Validator.ValidatesType
 - uid: Elements.Validators.ColorValidator
   name: ColorValidator
   href: api/Elements.Validators.ColorValidator.html

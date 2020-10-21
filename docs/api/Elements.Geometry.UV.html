@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct UV
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.53.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -76,7 +76,7 @@
   
   <h1 id="Elements_Geometry_UV" data-uid="Elements.Geometry.UV" class="text-break">Struct UV
   </h1>
-  <div class="markdown level0 summary"><p>A UV texture coordinate.</p>
+  <div class="markdown level0 summary"><p>A UV coordinate.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritedMembers">
@@ -104,18 +104,19 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_UV_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct UV</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
+public struct UV</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_UV__ctor_" data-uid="Elements.Geometry.UV.#ctor*"></a>
   <h4 id="Elements_Geometry_UV__ctor_System_Double_System_Double_" data-uid="Elements.Geometry.UV.#ctor(System.Double,System.Double)">UV(Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Construct a UV.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public UV(double u, double v)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public UV(double u, double v)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -130,14 +131,12 @@
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td><p>The u parameter.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">v</span></td>
-        <td><p>The v parameter.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -150,7 +149,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double U { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;U&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public double U { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -169,12 +169,13 @@
   </table>
   <a id="Elements_Geometry_UV_V_" data-uid="Elements.Geometry.UV.V*"></a>
   <h4 id="Elements_Geometry_UV_V" data-uid="Elements.Geometry.UV.V">V</h4>
-  <div class="markdown level1 summary"><p>The v coordinate.</p>
+  <div class="markdown level1 summary"><p>The V coordinate.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double V { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;V&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public double V { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

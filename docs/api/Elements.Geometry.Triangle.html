@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Triangle
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.53.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -112,12 +112,13 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Triangle_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Triangle</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
+public class Triangle</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Triangle__ctor_" data-uid="Elements.Geometry.Triangle.#ctor*"></a>
-  <h4 id="Elements_Geometry_Triangle__ctor_Elements_Geometry_Vertex_Elements_Geometry_Vertex_Elements_Geometry_Vertex_" data-uid="Elements.Geometry.Triangle.#ctor(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)">Triangle(Vertex, Vertex, Vertex)</h4>
+  <h4 id="Elements_Geometry_Triangle__ctor_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_" data-uid="Elements.Geometry.Triangle.#ctor(Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex)">Triangle(Vertex, Vertex, Vertex)</h4>
   <div class="markdown level1 summary"><p>Create a triangle.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -136,22 +137,53 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
         <td><span class="parametername">a</span></td>
         <td><p>The index of the first vertex of the triangle.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
         <td><span class="parametername">b</span></td>
         <td><p>The index of the second vertex of the triangle.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
         <td><span class="parametername">c</span></td>
         <td><p>The index of the third vertex of the triangle.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Triangle__ctor_" data-uid="Elements.Geometry.Triangle.#ctor*"></a>
+  <h4 id="Elements_Geometry_Triangle__ctor_System_Collections_Generic_IList_Elements_Geometry_Solids_Vertex__Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Triangle.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.Vertex},Elements.Geometry.Vector3)">Triangle(IList&lt;Vertex&gt;, Vector3)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Triangle(IList&lt;Vertex&gt; vertices, Vector3 normal)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a>&gt;</td>
+        <td><span class="parametername">vertices</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">normal</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -164,7 +196,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Normal { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Normal&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public Vector3 Normal { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -188,7 +221,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vertex[] Vertices { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public IList&lt;Vertex&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -200,7 +234,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a>[]</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
