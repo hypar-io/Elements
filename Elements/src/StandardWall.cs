@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 
 namespace Elements
 {
@@ -14,7 +12,7 @@ namespace Elements
     /// [!code-csharp[Main](../../Elements/test/WallTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class StandardWall : Wall, IHasOpenings
+    public class StandardWall : Wall
     {
         /// <summary>
         /// The center line of the wall.
@@ -25,11 +23,6 @@ namespace Elements
         /// The thickness of the wall.
         /// </summary>
         public double Thickness { get; set; }
-
-        /// <summary>
-        /// A collection of openings in the floor.
-        /// </summary>
-        public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
         /// Construct a wall along a line.
@@ -82,41 +75,59 @@ namespace Elements
         }
 
         /// <summary>
+        /// Add an opening in the wall.
+        /// </summary>
+        /// <param name="width">The width of the opening.</param>
+        /// <param name="height">The height of the opening.</param>
+        /// <param name="x">The distance to the center of the opening along the center line of the wall.</param>
+        /// <param name="y">The height to the center of the opening along the center line of the wall.</param>
+        /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
+        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
+        public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        {
+            var openingTransform = GetOpeningTransform(x, y);
+            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, openingTransform);
+            this.Openings.Add(o);
+            return o;
+        }
+
+        /// <summary>
+        /// Add an opening in the wall.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the opening.</param>
+        /// <param name="x">The distance to the origin of the perimeter opening along the center line of the wall.</param>
+        /// <param name="y">The height to the origin of the perimeter along the center line of the wall.</param>
+        /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
+        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
+        public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        {
+            var openingTransform = GetOpeningTransform(x, y);
+            var o = new Opening(perimeter, depthFront, depthBack, openingTransform);
+            this.Openings.Add(o);
+            return o;
+        }
+
+        private Transform GetOpeningTransform(double x, double y)
+        {
+            var xAxis = this.CenterLine.Direction();
+            var yAxis = xAxis.Cross(Vector3.ZAxis.Negate());
+            var wallTransform = new Transform(this.CenterLine.Start, xAxis, Vector3.ZAxis);
+
+            var m = wallTransform.OfVector(new Vector3(x, 0, y));
+            var openingTransform = new Transform(m, xAxis, xAxis.Cross(Vector3.ZAxis));
+            return openingTransform;
+        }
+
+        /// <summary>
         /// Update solid operations.
         /// </summary>
         public override void UpdateRepresentations()
         {
-            // Construct a transform whose X axis is the centerline of the wall.
-            // The wall is described as if it's lying flat in the XY plane of that Transform.
-            var d = this.CenterLine.Direction();
-            var z = d.Cross(Vector3.ZAxis);
-            var wallTransform = new Transform(this.CenterLine.Start, d, z);
-
-            var wallProfile = new Profile(Polygon.Rectangle(Vector3.Origin, new Vector3(this.CenterLine.Length(), this.Height)));
-
-            if (this.Openings.Count > 0)
-            {
-                this.Openings.ForEach(o => o.UpdateRepresentations());
-
-                // Find all the void ops which point in the same direction.
-                var holes = this.Openings.SelectMany(o => o.Representation.SolidOperations.
-                                                        Where(op => op is Extrude && op.IsVoid == true).
-                                                        Cast<Extrude>().
-                                                        Where(ex => ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
-                if (holes.Any())
-                {
-                    var holeProfiles = holes.Select(ex => ex.Profile);
-                    wallProfile.Clip(holeProfiles);
-                }
-            }
-
-            // Set the wall's profile to the wallProfile created here
-            // as we will use it for the solid op below. 
-            this.Profile = wallTransform.OfProfile(wallProfile);
             this.Representation.SolidOperations.Clear();
-
-            // Transform the wall profile to be "standing up".
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, z, false));
+            var e1 = this.CenterLine.Offset(this.Thickness / 2, false);
+            var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
+            var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
+            this.Representation.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
         }
     }
 }

@@ -279,6 +279,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Return a new transform which is the supplied transform concatenated to this transform.
+        /// </summary>
+        /// <param name="transform">The transform to concatenate.</param>
+        public Transform Concatenated(Transform transform)
+        {
+            var result = new Transform(this);
+            result.Concatenate(transform);
+            return result;
+        }
+
+        /// <summary>
         /// Invert this transform.
         /// </summary>
         public void Invert()
@@ -306,6 +317,30 @@ namespace Elements.Geometry
         public void Move(double x = 0.0, double y = 0.0, double z = 0.0)
         {
             Move(new Vector3(x, y, z));
+        }
+
+        /// <summary>
+        /// Return a new transform which is this transform moved by the specified amount.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public Transform Moved(double x = 0.0, double y = 0.0, double z = 0.0)
+        {
+            var result = new Transform(this);
+            result.Move(x, y, z);
+            return result;
+        }
+
+        /// <summary>
+        /// Return a new transform which is this transform moved by the specified amount.
+        /// </summary>
+        /// <param name="translation">The translation to apply.</param>
+        public Transform Moved(Vector3 translation)
+        {
+            var result = new Transform(this);
+            result.Move(translation);
+            return result;
         }
 
         /// <summary>

@@ -394,6 +394,7 @@ namespace Elements.Geometry.Solids
 
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
+                var faceMesh = new Mesh();
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
                     var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
@@ -407,11 +408,12 @@ namespace Elements.Geometry.Solids
                         c = transform.OfPoint(c);
                     }
 
-                    var v1 = mesh.AddVertex(a, new UV(), color: color);
-                    var v2 = mesh.AddVertex(b, new UV(), color: color);
-                    var v3 = mesh.AddVertex(c, new UV(), color: color);
-                    mesh.AddTriangle(v1, v2, v3);
+                    var v1 = faceMesh.AddVertex(a, new UV(), color: color);
+                    var v2 = faceMesh.AddVertex(b, new UV(), color: color);
+                    var v3 = faceMesh.AddVertex(c, new UV(), color: color);
+                    faceMesh.AddTriangle(v1, v2, v3);
                 }
+                mesh.AddMesh(faceMesh);
             }
         }
 

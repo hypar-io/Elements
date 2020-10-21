@@ -170,6 +170,8 @@ namespace Elements.Serialization.IFC
             var transform = new Transform();
             transform.Concatenate(wall.ObjectPlacement.ToTransform());
 
+            var os = openings.Select(o => o.ToOpening());
+
             // An extruded face solid.
             var solid = wall.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
             if (solid == null)
@@ -199,8 +201,6 @@ namespace Elements.Serialization.IFC
                 cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
             }
 
-            // var os = openings.Select(o=>o.ToOpening()).ToArray();
-
             if (solid != null)
             {
                 var c = solid.SweptArea.ToCurve();
@@ -215,6 +215,7 @@ namespace Elements.Serialization.IFC
                                           false,
                                           IfcGuid.FromIfcGUID(wall.GlobalId),
                                           wall.Name);
+                    result.Openings.AddRange(os);
                     return result;
                 }
             }
@@ -230,9 +231,9 @@ namespace Elements.Serialization.IFC
                 var solidTransform = s.Position.ToTransform();
                 solidTransform.Concatenate(openingTransform);
                 var profile = (Polygon)s.SweptArea.ToCurve();
-                // Console.WriteLine($"Opening profile:\n{profile.ToString()}\n");
 
                 var newOpening = new Opening(profile,
+                                             (IfcLengthMeasure)s.Depth,
                                              (IfcLengthMeasure)s.Depth,
                                              solidTransform,
                                              null,

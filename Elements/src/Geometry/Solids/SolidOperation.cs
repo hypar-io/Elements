@@ -13,14 +13,20 @@ namespace Elements.Geometry.Solids
     {
         internal Solid _solid;
 
+        internal Csg.Solid _csg;
+
         /// <summary>
-        /// The solid operation's solid. To update this
-        /// cached representation, call GetSolid().
+        /// The local transform of the operation.
+        /// </summary>
+        public Transform LocalTransform { get; set; }
+
+        /// <summary>
+        /// The solid operation's solid.
         /// </summary>
         [JsonIgnore]
         public Solid Solid
         {
-            get {return _solid;}
+            get { return _solid; }
         }
     }
 }

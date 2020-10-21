@@ -3,7 +3,6 @@ using Elements.Interfaces;
 using System;
 using Elements.Geometry.Solids;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -108,23 +107,39 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if (this.Openings.Count > 0)
-            {
-                this.Openings.ForEach(o => o.UpdateRepresentations());
-
-                // Find all the void ops which point in the same direction.
-                var holes = this.Openings.SelectMany(o => o.Representation.SolidOperations.
-                                                        Where(op => op is Extrude && op.IsVoid == true).
-                                                        Cast<Extrude>().
-                                                        Where(ex => ex.Direction.IsAlmostEqualTo(Vector3.ZAxis)));
-                if (holes.Any())
-                {
-                    var holeProfiles = holes.Select(ex => ex.Profile);
-                    this.Profile.Clip(holeProfiles);
-                }
-            }
             this.Representation.SolidOperations.Clear();
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
+        }
+
+        /// <summary>
+        /// Add an opening.
+        /// </summary>
+        /// <param name="width">The width of the opening.</param>
+        /// <param name="height">The height of the opening.</param>
+        /// <param name="x">The distance to the center of the opening along the host's x axis.</param>
+        /// <param name="y">The distance to the center of the opening along the host's y axis.</param>
+        /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
+        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
+        public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
+        {
+            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, new Transform(x, y, 0));
+            this.Openings.Add(o);
+            return o;
+        }
+
+        /// <summary>
+        /// Add an opening in the wall.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the opening.</param>
+        /// <param name="x">The distance to the origin of the perimeter along the host's x axis.</param>
+        /// <param name="y">The height to the origin of the perimeter along the host's y axis.</param>
+        /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
+        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
+        public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
+        {
+            var o = new Opening(perimeter, depthFront, depthBack, new Transform(x, y, 0));
+            this.Openings.Add(o);
+            return o;
         }
     }
 }
