@@ -87,6 +87,10 @@
     <div class="level3"><span class="xref">Wall</span></div>
       <div class="level4"><a class="xref" href="Elements.StandardWall.html">StandardWall</a></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -136,7 +140,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Wall_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Wall : GeometricElement</code></pre>
+    <pre><code class="lang-csharp hljs">public class Wall : GeometricElement, IHasOpenings</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -288,6 +292,30 @@ public Wall(Profile profile, double height, Material material = null, Transform 
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Wall_Openings_" data-uid="Elements.Wall.Openings*"></a>
+  <h4 id="Elements_Wall_Openings" data-uid="Elements.Wall.Openings">Openings</h4>
+  <div class="markdown level1 summary"><p>A collection of openings in the wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Opening&gt; Openings { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Wall_Profile_" data-uid="Elements.Wall.Profile*"></a>
   <h4 id="Elements_Wall_Profile" data-uid="Elements.Wall.Profile">Profile</h4>
   <div class="markdown level1 summary"><p>The profile of the wall.</p>
@@ -325,6 +353,10 @@ public Wall(Profile profile, double height, Material material = null, Transform 
   </div>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
+  </div>
 </article>
           </div>
           

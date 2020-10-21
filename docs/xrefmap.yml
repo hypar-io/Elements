@@ -869,6 +869,25 @@ references:
   isSpec: "True"
   fullName: Elements.Floor.Floor
   nameWithType: Floor.Floor
+- uid: Elements.Floor.AddOpening(Elements.Geometry.Polygon,System.Double,System.Double,System.Double,System.Double)
+  name: AddOpening(Polygon, Double, Double, Double, Double)
+  href: api/Elements.Floor.html#Elements_Floor_AddOpening_Elements_Geometry_Polygon_System_Double_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Floor.AddOpening(Elements.Geometry.Polygon,System.Double,System.Double,System.Double,System.Double)
+  fullName: Elements.Floor.AddOpening(Elements.Geometry.Polygon, System.Double, System.Double, System.Double, System.Double)
+  nameWithType: Floor.AddOpening(Polygon, Double, Double, Double, Double)
+- uid: Elements.Floor.AddOpening(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)
+  name: AddOpening(Double, Double, Double, Double, Double, Double)
+  href: api/Elements.Floor.html#Elements_Floor_AddOpening_System_Double_System_Double_System_Double_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Floor.AddOpening(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)
+  fullName: Elements.Floor.AddOpening(System.Double, System.Double, System.Double, System.Double, System.Double, System.Double)
+  nameWithType: Floor.AddOpening(Double, Double, Double, Double, Double, Double)
+- uid: Elements.Floor.AddOpening*
+  name: AddOpening
+  href: api/Elements.Floor.html#Elements_Floor_AddOpening_
+  commentId: Overload:Elements.Floor.AddOpening
+  isSpec: "True"
+  fullName: Elements.Floor.AddOpening
+  nameWithType: Floor.AddOpening
 - uid: Elements.Floor.Area
   name: Area()
   href: api/Elements.Floor.html#Elements_Floor_Area
@@ -9585,6 +9604,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.SolidOperation.IsVoid
   nameWithType: SolidOperation.IsVoid
+- uid: Elements.Geometry.Solids.SolidOperation.LocalTransform
+  name: LocalTransform
+  href: api/Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_LocalTransform
+  commentId: P:Elements.Geometry.Solids.SolidOperation.LocalTransform
+  fullName: Elements.Geometry.Solids.SolidOperation.LocalTransform
+  nameWithType: SolidOperation.LocalTransform
+- uid: Elements.Geometry.Solids.SolidOperation.LocalTransform*
+  name: LocalTransform
+  href: api/Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_LocalTransform_
+  commentId: Overload:Elements.Geometry.Solids.SolidOperation.LocalTransform
+  isSpec: "True"
+  fullName: Elements.Geometry.Solids.SolidOperation.LocalTransform
+  nameWithType: SolidOperation.LocalTransform
 - uid: Elements.Geometry.Solids.SolidOperation.Solid
   name: Solid
   href: api/Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_Solid
@@ -9920,6 +9952,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Transform.Concatenate
   nameWithType: Transform.Concatenate
+- uid: Elements.Geometry.Transform.Concatenated(Elements.Geometry.Transform)
+  name: Concatenated(Transform)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Concatenated_Elements_Geometry_Transform_
+  commentId: M:Elements.Geometry.Transform.Concatenated(Elements.Geometry.Transform)
+  fullName: Elements.Geometry.Transform.Concatenated(Elements.Geometry.Transform)
+  nameWithType: Transform.Concatenated(Transform)
+- uid: Elements.Geometry.Transform.Concatenated*
+  name: Concatenated
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Concatenated_
+  commentId: Overload:Elements.Geometry.Transform.Concatenated
+  isSpec: "True"
+  fullName: Elements.Geometry.Transform.Concatenated
+  nameWithType: Transform.Concatenated
 - uid: Elements.Geometry.Transform.CreateOrientedAlongCurve(Elements.Geometry.Curve,System.Double,Elements.Geometry.Vector3)
   name: CreateOrientedAlongCurve(Curve, Double, Vector3)
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_CreateOrientedAlongCurve_Elements_Geometry_Curve_System_Double_Elements_Geometry_Vector3_
@@ -9991,6 +10036,25 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Transform.Move
   nameWithType: Transform.Move
+- uid: Elements.Geometry.Transform.Moved(Elements.Geometry.Vector3)
+  name: Moved(Vector3)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Moved_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Transform.Moved(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Transform.Moved(Elements.Geometry.Vector3)
+  nameWithType: Transform.Moved(Vector3)
+- uid: Elements.Geometry.Transform.Moved(System.Double,System.Double,System.Double)
+  name: Moved(Double, Double, Double)
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Moved_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Transform.Moved(System.Double,System.Double,System.Double)
+  fullName: Elements.Geometry.Transform.Moved(System.Double, System.Double, System.Double)
+  nameWithType: Transform.Moved(Double, Double, Double)
+- uid: Elements.Geometry.Transform.Moved*
+  name: Moved
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_Moved_
+  commentId: Overload:Elements.Geometry.Transform.Moved
+  isSpec: "True"
+  fullName: Elements.Geometry.Transform.Moved
+  nameWithType: Transform.Moved
 - uid: Elements.Geometry.Transform.OfBezier(Elements.Geometry.Bezier)
   name: OfBezier(Bezier)
   href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfBezier_Elements_Geometry_Bezier_
@@ -11712,24 +11776,12 @@ references:
   commentId: T:Elements.Opening
   fullName: Elements.Opening
   nameWithType: Opening
-- uid: Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)
-  name: Opening(Polygon, Double, Double, Transform, Boolean)
-  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_
-  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)
-  fullName: Elements.Opening.Opening(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean)
-  nameWithType: Opening.Opening(Polygon, Double, Double, Transform, Boolean)
-- uid: Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
-  name: Opening(Profile, Double, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
-  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
-  fullName: Elements.Opening.Opening(Elements.Geometry.Profile, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
-  nameWithType: Opening.Opening(Profile, Double, Transform, Representation, Boolean, Guid, String)
-- uid: Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)
-  name: Opening(Double, Double, Double, Double, Transform, Boolean)
-  href: api/Elements.Opening.html#Elements_Opening__ctor_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_
-  commentId: M:Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)
-  fullName: Elements.Opening.Opening(System.Double, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean)
-  nameWithType: Opening.Opening(Double, Double, Double, Double, Transform, Boolean)
+- uid: Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: Opening(Polygon, Double, Double, Transform, Representation, Boolean, Guid, String)
+  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Opening.Opening(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: Opening.Opening(Polygon, Double, Double, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Opening.#ctor*
   name: Opening
   href: api/Elements.Opening.html#Elements_Opening__ctor_
@@ -11737,6 +11789,45 @@ references:
   isSpec: "True"
   fullName: Elements.Opening.Opening
   nameWithType: Opening.Opening
+- uid: Elements.Opening.DepthBack
+  name: DepthBack
+  href: api/Elements.Opening.html#Elements_Opening_DepthBack
+  commentId: P:Elements.Opening.DepthBack
+  fullName: Elements.Opening.DepthBack
+  nameWithType: Opening.DepthBack
+- uid: Elements.Opening.DepthBack*
+  name: DepthBack
+  href: api/Elements.Opening.html#Elements_Opening_DepthBack_
+  commentId: Overload:Elements.Opening.DepthBack
+  isSpec: "True"
+  fullName: Elements.Opening.DepthBack
+  nameWithType: Opening.DepthBack
+- uid: Elements.Opening.DepthFront
+  name: DepthFront
+  href: api/Elements.Opening.html#Elements_Opening_DepthFront
+  commentId: P:Elements.Opening.DepthFront
+  fullName: Elements.Opening.DepthFront
+  nameWithType: Opening.DepthFront
+- uid: Elements.Opening.DepthFront*
+  name: DepthFront
+  href: api/Elements.Opening.html#Elements_Opening_DepthFront_
+  commentId: Overload:Elements.Opening.DepthFront
+  isSpec: "True"
+  fullName: Elements.Opening.DepthFront
+  nameWithType: Opening.DepthFront
+- uid: Elements.Opening.Perimeter
+  name: Perimeter
+  href: api/Elements.Opening.html#Elements_Opening_Perimeter
+  commentId: P:Elements.Opening.Perimeter
+  fullName: Elements.Opening.Perimeter
+  nameWithType: Opening.Perimeter
+- uid: Elements.Opening.Perimeter*
+  name: Perimeter
+  href: api/Elements.Opening.html#Elements_Opening_Perimeter_
+  commentId: Overload:Elements.Opening.Perimeter
+  isSpec: "True"
+  fullName: Elements.Opening.Perimeter
+  nameWithType: Opening.Perimeter
 - uid: Elements.Opening.Profile
   name: Profile
   href: api/Elements.Opening.html#Elements_Opening_Profile
@@ -12156,67 +12247,6 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson
   nameWithType: JsonInheritanceConverter.WriteJson
-- uid: Elements.Serialization.JSON.SolidConverter
-  name: SolidConverter
-  href: api/Elements.Serialization.JSON.SolidConverter.html
-  commentId: T:Elements.Serialization.JSON.SolidConverter
-  fullName: Elements.Serialization.JSON.SolidConverter
-  nameWithType: SolidConverter
-- uid: Elements.Serialization.JSON.SolidConverter.#ctor(System.Collections.Generic.IDictionary{System.Guid,Elements.Material})
-  name: SolidConverter(IDictionary<Guid, Material>)
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter__ctor_System_Collections_Generic_IDictionary_System_Guid_Elements_Material__
-  commentId: M:Elements.Serialization.JSON.SolidConverter.#ctor(System.Collections.Generic.IDictionary{System.Guid,Elements.Material})
-  name.vb: SolidConverter(IDictionary(Of Guid, Material))
-  fullName: Elements.Serialization.JSON.SolidConverter.SolidConverter(System.Collections.Generic.IDictionary<System.Guid, Elements.Material>)
-  fullName.vb: Elements.Serialization.JSON.SolidConverter.SolidConverter(System.Collections.Generic.IDictionary(Of System.Guid, Elements.Material))
-  nameWithType: SolidConverter.SolidConverter(IDictionary<Guid, Material>)
-  nameWithType.vb: SolidConverter.SolidConverter(IDictionary(Of Guid, Material))
-- uid: Elements.Serialization.JSON.SolidConverter.#ctor*
-  name: SolidConverter
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter__ctor_
-  commentId: Overload:Elements.Serialization.JSON.SolidConverter.#ctor
-  isSpec: "True"
-  fullName: Elements.Serialization.JSON.SolidConverter.SolidConverter
-  nameWithType: SolidConverter.SolidConverter
-- uid: Elements.Serialization.JSON.SolidConverter.CanConvert(System.Type)
-  name: CanConvert(Type)
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_CanConvert_System_Type_
-  commentId: M:Elements.Serialization.JSON.SolidConverter.CanConvert(System.Type)
-  fullName: Elements.Serialization.JSON.SolidConverter.CanConvert(System.Type)
-  nameWithType: SolidConverter.CanConvert(Type)
-- uid: Elements.Serialization.JSON.SolidConverter.CanConvert*
-  name: CanConvert
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_CanConvert_
-  commentId: Overload:Elements.Serialization.JSON.SolidConverter.CanConvert
-  isSpec: "True"
-  fullName: Elements.Serialization.JSON.SolidConverter.CanConvert
-  nameWithType: SolidConverter.CanConvert
-- uid: Elements.Serialization.JSON.SolidConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
-  commentId: M:Elements.Serialization.JSON.SolidConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  fullName: Elements.Serialization.JSON.SolidConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: SolidConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
-- uid: Elements.Serialization.JSON.SolidConverter.ReadJson*
-  name: ReadJson
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_ReadJson_
-  commentId: Overload:Elements.Serialization.JSON.SolidConverter.ReadJson
-  isSpec: "True"
-  fullName: Elements.Serialization.JSON.SolidConverter.ReadJson
-  nameWithType: SolidConverter.ReadJson
-- uid: Elements.Serialization.JSON.SolidConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(JsonWriter, Object, JsonSerializer)
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
-  commentId: M:Elements.Serialization.JSON.SolidConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  fullName: Elements.Serialization.JSON.SolidConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: SolidConverter.WriteJson(JsonWriter, Object, JsonSerializer)
-- uid: Elements.Serialization.JSON.SolidConverter.WriteJson*
-  name: WriteJson
-  href: api/Elements.Serialization.JSON.SolidConverter.html#Elements_Serialization_JSON_SolidConverter_WriteJson_
-  commentId: Overload:Elements.Serialization.JSON.SolidConverter.WriteJson
-  isSpec: "True"
-  fullName: Elements.Serialization.JSON.SolidConverter.WriteJson
-  nameWithType: SolidConverter.WriteJson
 - uid: Elements.Space
   name: Space
   href: api/Elements.Space.html
@@ -13240,6 +13270,25 @@ references:
   isSpec: "True"
   fullName: Elements.StandardWall.StandardWall
   nameWithType: StandardWall.StandardWall
+- uid: Elements.StandardWall.AddOpening(Elements.Geometry.Polygon,System.Double,System.Double,System.Double,System.Double)
+  name: AddOpening(Polygon, Double, Double, Double, Double)
+  href: api/Elements.StandardWall.html#Elements_StandardWall_AddOpening_Elements_Geometry_Polygon_System_Double_System_Double_System_Double_System_Double_
+  commentId: M:Elements.StandardWall.AddOpening(Elements.Geometry.Polygon,System.Double,System.Double,System.Double,System.Double)
+  fullName: Elements.StandardWall.AddOpening(Elements.Geometry.Polygon, System.Double, System.Double, System.Double, System.Double)
+  nameWithType: StandardWall.AddOpening(Polygon, Double, Double, Double, Double)
+- uid: Elements.StandardWall.AddOpening(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)
+  name: AddOpening(Double, Double, Double, Double, Double, Double)
+  href: api/Elements.StandardWall.html#Elements_StandardWall_AddOpening_System_Double_System_Double_System_Double_System_Double_System_Double_System_Double_
+  commentId: M:Elements.StandardWall.AddOpening(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)
+  fullName: Elements.StandardWall.AddOpening(System.Double, System.Double, System.Double, System.Double, System.Double, System.Double)
+  nameWithType: StandardWall.AddOpening(Double, Double, Double, Double, Double, Double)
+- uid: Elements.StandardWall.AddOpening*
+  name: AddOpening
+  href: api/Elements.StandardWall.html#Elements_StandardWall_AddOpening_
+  commentId: Overload:Elements.StandardWall.AddOpening
+  isSpec: "True"
+  fullName: Elements.StandardWall.AddOpening
+  nameWithType: StandardWall.AddOpening
 - uid: Elements.StandardWall.CenterLine
   name: CenterLine
   href: api/Elements.StandardWall.html#Elements_StandardWall_CenterLine
@@ -13253,19 +13302,6 @@ references:
   isSpec: "True"
   fullName: Elements.StandardWall.CenterLine
   nameWithType: StandardWall.CenterLine
-- uid: Elements.StandardWall.Openings
-  name: Openings
-  href: api/Elements.StandardWall.html#Elements_StandardWall_Openings
-  commentId: P:Elements.StandardWall.Openings
-  fullName: Elements.StandardWall.Openings
-  nameWithType: StandardWall.Openings
-- uid: Elements.StandardWall.Openings*
-  name: Openings
-  href: api/Elements.StandardWall.html#Elements_StandardWall_Openings_
-  commentId: Overload:Elements.StandardWall.Openings
-  isSpec: "True"
-  fullName: Elements.StandardWall.Openings
-  nameWithType: StandardWall.Openings
 - uid: Elements.StandardWall.Thickness
   name: Thickness
   href: api/Elements.StandardWall.html#Elements_StandardWall_Thickness
@@ -14626,6 +14662,19 @@ references:
   isSpec: "True"
   fullName: Elements.Wall.Height
   nameWithType: Wall.Height
+- uid: Elements.Wall.Openings
+  name: Openings
+  href: api/Elements.Wall.html#Elements_Wall_Openings
+  commentId: P:Elements.Wall.Openings
+  fullName: Elements.Wall.Openings
+  nameWithType: Wall.Openings
+- uid: Elements.Wall.Openings*
+  name: Openings
+  href: api/Elements.Wall.html#Elements_Wall_Openings_
+  commentId: Overload:Elements.Wall.Openings
+  isSpec: "True"
+  fullName: Elements.Wall.Openings
+  nameWithType: Wall.Openings
 - uid: Elements.Wall.Profile
   name: Profile
   href: api/Elements.Wall.html#Elements_Wall_Profile

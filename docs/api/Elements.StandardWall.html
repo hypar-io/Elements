@@ -201,13 +201,8 @@
   <pre><code class="lang-csharp" name="Main">// Create a wall.
 var line = new Line(new Vector3(0, 0, 0), new Vector3(10, 10, 0));
 var wall = new StandardWall(line, 0.1, 3.0);
-
-// Create some openings.
-var openings = new List&lt;Opening&gt;(){
-    new Opening(1.0, 2.0, 1.0, 1.0),
-    new Opening(3.0, 1.0, 1.0, 2.0)
-};
-wall.Openings.AddRange(openings);
+wall.AddOpening(1, 2, 1, 2);
+wall.AddOpening(3, 1, 1, 2);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -228,6 +223,9 @@ wall.Openings.AddRange(openings);
     </div>
     <div>
       <a class="xref" href="Elements.Wall.html#Elements_Wall_Profile">Wall.Profile</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_Openings">Wall.Openings</a>
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
@@ -382,30 +380,6 @@ This transform will be concatenated to the transform created to describe the wal
       </tr>
     </tbody>
   </table>
-  <a id="Elements_StandardWall_Openings_" data-uid="Elements.StandardWall.Openings*"></a>
-  <h4 id="Elements_StandardWall_Openings" data-uid="Elements.StandardWall.Openings">Openings</h4>
-  <div class="markdown level1 summary"><p>A collection of openings in the floor.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;Opening&gt; Openings { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_StandardWall_Thickness_" data-uid="Elements.StandardWall.Thickness*"></a>
   <h4 id="Elements_StandardWall_Thickness" data-uid="Elements.StandardWall.Thickness">Thickness</h4>
   <div class="markdown level1 summary"><p>The thickness of the wall.</p>
@@ -432,6 +406,144 @@ This transform will be concatenated to the transform created to describe the wal
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_StandardWall_AddOpening_" data-uid="Elements.StandardWall.AddOpening*"></a>
+  <h4 id="Elements_StandardWall_AddOpening_Elements_Geometry_Polygon_System_Double_System_Double_System_Double_System_Double_" data-uid="Elements.StandardWall.AddOpening(Elements.Geometry.Polygon,System.Double,System.Double,System.Double,System.Double)">AddOpening(Polygon, Double, Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Add an opening in the wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td><p>The perimeter of the opening.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">x</span></td>
+        <td><p>The distance to the origin of the perimeter opening along the center line of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">y</span></td>
+        <td><p>The height to the origin of the perimeter along the center line of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">depthFront</span></td>
+        <td><p>The depth of the opening along the opening's +Z axis.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">depthBack</span></td>
+        <td><p>The depth of the opening along the opening's -Z axis.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Opening.html">Opening</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_StandardWall_AddOpening_" data-uid="Elements.StandardWall.AddOpening*"></a>
+  <h4 id="Elements_StandardWall_AddOpening_System_Double_System_Double_System_Double_System_Double_System_Double_System_Double_" data-uid="Elements.StandardWall.AddOpening(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">AddOpening(Double, Double, Double, Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Add an opening in the wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">width</span></td>
+        <td><p>The width of the opening.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">height</span></td>
+        <td><p>The height of the opening.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">x</span></td>
+        <td><p>The distance to the center of the opening along the center line of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">y</span></td>
+        <td><p>The height to the center of the opening along the center line of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">depthFront</span></td>
+        <td><p>The depth of the opening along the opening's +Z axis.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">depthBack</span></td>
+        <td><p>The depth of the opening along the opening's -Z axis.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Opening.html">Opening</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_StandardWall_UpdateRepresentations_" data-uid="Elements.StandardWall.UpdateRepresentations*"></a>
   <h4 id="Elements_StandardWall_UpdateRepresentations" data-uid="Elements.StandardWall.UpdateRepresentations">UpdateRepresentations()</h4>
   <div class="markdown level1 summary"><p>Update solid operations.</p>
