@@ -790,7 +790,7 @@ namespace Elements.Serialization.glTF
                                                                 textures,
                                                                 images,
                                                                 samplers,
-                                                                false
+                                                                true
                                                                 );
 
 
