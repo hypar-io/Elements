@@ -8,10 +8,17 @@
 - `Elements.ContentElement` - This new class represents a piece of content meant to be instanced throughout a model.
   - The ContentElement is also added to the model by first checking for an available gltf, and then using a bounding box representation as a fallback.
 - `Transform.Scaled()` - This new method returns a scaled copy of the transform, allowing for a fluent like api.
+- `Elements.Geometry.CSG` - Union, difference, and intersect csg created from solids or meshes.
+- `Transform.Moved(...)` - Return a copy of a transform moved by the specified amount.
+- `Transform.Concatenated(...)` - Return a copy of a transform with the specified transform concatenated with it. 
+- `IHasOpenings.AddOpening(...)` - `AddOpening` provides an API which hides the internals of creating openings.
+- `Opening.DepthFront` & `Opening.DepthBack` enable the creation of openings which extrude different amounts above and below their XY plane.
 
 ### Changed
 - Updated ImageSharp to 1.0.0.
 - The source code is now structured with the typical .NET project layout of `/src` and `/test` per folder.
+- `Opening` now has two primary constructors. The ability to create an opening with a profile has been removed. All profiles are now defined with a polygon as the perimeter.
+- `Opening.Profile` is now deprecated. Please use `Opening.Perimeter`.
 
 ## 0.7.3
 ### Fixed

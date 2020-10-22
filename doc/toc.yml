@@ -15,6 +15,11 @@
       href: Revit.md
 - name: Types
   href: Types.md
+  items:
+  - name: Element Types
+    href: Types.md
+  - name: Input Types
+    href: InputSchema.md
 - name: Elements
   href: Elements/
   homepage: Elements/WhatIsElements.md

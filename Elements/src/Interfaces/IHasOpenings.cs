@@ -9,6 +9,6 @@ namespace Elements.Interfaces
         /// <summary>
         /// A collection of openings.
         /// </summary>
-        List<Opening> Openings {get;}
+        List<Opening> Openings { get; }
     }
 }

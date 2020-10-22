@@ -12,9 +12,10 @@ using Elements.Geometry.Interfaces;
 using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
-using System.Diagnostics;
+using Elements.Interfaces;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
+[assembly: InternalsVisibleTo("Elements.Benchmarks")]
 
 namespace Elements.Serialization.glTF
 {
@@ -594,7 +595,7 @@ namespace Elements.Serialization.glTF
             return true;
         }
 
-        private static Gltf InitializeGlTF(Model model, out List<byte[]> allBuffers, bool drawEdges = false)
+        internal static Gltf InitializeGlTF(Model model, out List<byte[]> allBuffers, bool drawEdges = false)
         {
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
@@ -1022,37 +1023,114 @@ namespace Elements.Serialization.glTF
                                                            GeometricElement geometricElement)
         {
             geometricElement.UpdateRepresentations();
+
+            // TODO: Remove this when we get rid of UpdateRepresentation.
+            // The only reason we don't fully exclude openings from processing 
+            // is to ensure that openings have some geometry that will be used 
+            // to compute csgs for their hosts.
+            if (e.GetType() == typeof(Opening))
+            {
+                return;
+            }
+
             if (geometricElement.Representation != null)
             {
-                foreach (var solidOp in geometricElement.Representation.SolidOperations)
-                {
-                    if (solidOp.Solid != null)
-                    {
-                        meshId = ProcessSolid(solidOp.Solid,
-                                              e.Id.ToString(),
-                                              materialName,
-                                              ref gltf,
-                                              ref materialIndexMap,
-                                              ref buffers,
-                                              bufferViews,
-                                              accessors,
-                                              meshes,
-                                              lines,
-                                              geometricElement.IsElementDefinition ? false : drawEdges,
-                                              geometricElement.Transform);
-                        if (!meshElementMap.ContainsKey(e.Id))
-                        {
-                            meshElementMap.Add(e.Id, new List<int>());
-                        }
-                        meshElementMap[e.Id].Add(meshId);
+                meshId = ProcessSolidsAsCSG(geometricElement,
+                                    e.Id.ToString(),
+                                    materialName,
+                                    ref gltf,
+                                    ref materialIndexMap,
+                                    ref buffers,
+                                    bufferViews,
+                                    accessors,
+                                    meshes,
+                                    lines,
+                                    geometricElement.Transform);
 
-                        if (!geometricElement.IsElementDefinition)
-                        {
-                            NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
-                        }
-                    }
+                // If the id == -1, the mesh is malformed.
+                // It may have no geometry.
+                if (meshId == -1)
+                {
+                    return;
+                }
+
+                if (!geometricElement.IsElementDefinition)
+                {
+                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
                 }
             }
+        }
+
+        private static int ProcessSolidsAsCSG(GeometricElement geometricElement,
+                                      string id,
+                                      string materialName,
+                                      ref Gltf gltf,
+                                      ref Dictionary<string, int> materials,
+                                      ref List<byte> buffer,
+                                      List<BufferView> bufferViews,
+                                      List<Accessor> accessors,
+                                      List<glTFLoader.Schema.Mesh> meshes,
+                                      List<Vector3> lines,
+                                      Transform t = null)
+        {
+            // To properly compute csgs, all solid operation csgs need
+            // to be transformed into their final position. Then the csgs
+            // can be computed and the final csg can have the inverse of the
+            // geometric element's transform applied to "reset" it. 
+            // The transforms applied to each node in the glTF will then 
+            // ensure that the elements are correctly transformed.
+            Csg.Solid csg = new Csg.Solid();
+
+            var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false)
+                                                                        .Select(op => op.LocalTransform != null ?
+                                                                            op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
+                                                                            op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
+                                                                        .ToArray();
+            var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true)
+                                                                       .Select(op => op.LocalTransform != null ?
+                                                                            op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
+                                                                            op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
+                                                                       .ToArray();
+
+            if (geometricElement is IHasOpenings)
+            {
+                var openingContainer = (IHasOpenings)geometricElement;
+                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
+                                                      .Where(op => op.IsVoid == true)
+                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
+            }
+
+            csg = csg.Union(solids);
+            csg = csg.Substract(voids);
+            var inverse = new Transform(geometricElement.Transform);
+            inverse.Invert();
+
+            csg = csg.Transform(inverse.ToMatrix4x4());
+
+            byte[] vertexBuffer;
+            byte[] normalBuffer;
+            byte[] indexBuffer;
+            byte[] colorBuffer;
+            byte[] uvBuffer;
+
+            double[] vmin; double[] vmax;
+            double[] nmin; double[] nmax;
+            float[] cmin; float[] cmax;
+            ushort imin; ushort imax;
+            double[] uvmin; double[] uvmax;
+
+            csg.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
+                            out vmax, out vmin, out nmin, out nmax, out cmin,
+                            out cmax, out imin, out imax, out uvmax, out uvmin);
+
+            if (vertexBuffer.Length == 0)
+            {
+                return -1;
+            }
+
+            return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
+                                indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
+                                imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, meshes);
         }
 
         private static int ProcessSolid(Solid solid,

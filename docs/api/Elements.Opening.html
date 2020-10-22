@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Opening
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.52.0.0">
+    <meta name="generator" content="docfx 2.53.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -142,13 +142,14 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Opening__ctor_" data-uid="Elements.Opening.#ctor*"></a>
-  <h4 id="Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)">Opening(Polygon, Double, Double, Transform, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Create a polygonal opening.</p>
+  <h4 id="Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Opening(Polygon, Double, Double, Transform, Representation, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Create an opening.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Opening(Polygon perimeter, double x = 0, double y = 0, Transform transform = null, bool isElementDefinition = false)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Opening(Polygon perimeter, double depthFront = 1, double depthBack = 1, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -163,158 +164,119 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">perimeter</span></td>
-        <td><p>A polygon representing the perimeter of the opening.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">x</span></td>
-        <td><p>The distance along the x to transform the profile.</p>
-</td>
+        <td><span class="parametername">depthFront</span></td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">y</span></td>
-        <td><p>The distance along the y to transform the profile.</p>
-</td>
+        <td><span class="parametername">depthBack</span></td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td><span class="parametername">transform</span></td>
-        <td><p>The opening's transform.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">isElementDefinition</span></td>
-        <td><p>Is this an element definition?</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Opening__ctor_" data-uid="Elements.Opening.#ctor*"></a>
-  <h4 id="Elements_Opening__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Opening(Profile, Double, Transform, Representation, Boolean, Guid, String)</h4>
-  <div class="markdown level1 summary"><p>Create an opening.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Opening(Profile profile, double depth, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
-        <td><span class="parametername">profile</span></td>
-        <td><p>A polygon representing the perimeter of the opening.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">depth</span></td>
-        <td><p>The depth of the opening's extrusion.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">transform</span></td>
-        <td><p>The opening's transform.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
         <td><span class="parametername">representation</span></td>
-        <td><p>The opening's representation.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">isElementDefinition</span></td>
-        <td><p>Is this an element definition?</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
-        <td><p>The id of the opening.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td><p>The name of the opening.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Opening__ctor_" data-uid="Elements.Opening.#ctor*"></a>
-  <h4 id="Elements_Opening__ctor_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_" data-uid="Elements.Opening.#ctor(System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean)">Opening(Double, Double, Double, Double, Transform, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Create a rectangular opening.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Opening(double x, double y, double width, double height, Transform transform = null, bool isElementDefinition = false)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">x</span></td>
-        <td><p>The distance along the x axis to the center of the opening.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">y</span></td>
-        <td><p>The distance along the y axis to the center of the opening.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">width</span></td>
-        <td><p>The width of the opening.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">height</span></td>
-        <td><p>The height of the opening.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">transform</span></td>
-        <td><p>The opening's transform.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">isElementDefinition</span></td>
-        <td><p>Is this an element definition?</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
+  <a id="Elements_Opening_DepthBack_" data-uid="Elements.Opening.DepthBack*"></a>
+  <h4 id="Elements_Opening_DepthBack" data-uid="Elements.Opening.DepthBack">DepthBack</h4>
+  <div class="markdown level1 summary"><p>The depth of the opening along the opening's -Z axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DepthBack { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Opening_DepthFront_" data-uid="Elements.Opening.DepthFront*"></a>
+  <h4 id="Elements_Opening_DepthFront" data-uid="Elements.Opening.DepthFront">DepthFront</h4>
+  <div class="markdown level1 summary"><p>The depth of the opening along the opening's +Z axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DepthFront { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Opening_Perimeter_" data-uid="Elements.Opening.Perimeter*"></a>
+  <h4 id="Elements_Opening_Perimeter" data-uid="Elements.Opening.Perimeter">Perimeter</h4>
+  <div class="markdown level1 summary"><p>The perimeter of the opening.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polygon Perimeter { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Opening_Profile_" data-uid="Elements.Opening.Profile*"></a>
   <h4 id="Elements_Opening_Profile" data-uid="Elements.Opening.Profile">Profile</h4>
   <div class="markdown level1 summary"><p>The profile of the opening.</p>
@@ -322,7 +284,8 @@ public Opening(Profile profile, double depth, Transform transform = null, Repres
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Profile Profile { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use perimeter instead.&quot;)]
+public Profile Profile { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

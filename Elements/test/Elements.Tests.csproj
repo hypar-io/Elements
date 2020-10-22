@@ -34,4 +34,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Csg ">
+      <HintPath>../lib/Csg.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
