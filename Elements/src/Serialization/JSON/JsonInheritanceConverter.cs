@@ -79,7 +79,7 @@ namespace Elements.Serialization.JSON
             return typeCache;
         }
 
-        public static bool ElementwiseSerialization { get; set; }
+        public static bool ElementwiseSerialization { get; set; } = false;
 
         public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {

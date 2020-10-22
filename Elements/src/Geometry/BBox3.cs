@@ -77,6 +77,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get a transformed copy of the bounding box.
+        /// </summary>
+        /// <param name="bBox">This bounding box.</param>
+        /// <param name="transform">The transform to apply.</param>
+        public BBox3 Transformed(this BBox3 bBox, Transform transform)
+        {
+            return new BBox3(transform.OfPoint(bBox.Min), transform.OfPoint(bBox.Max));
+        }
+
+        /// <summary>
         /// Get the center of the bounding box.
         /// </summary>
         /// <returns>The center of the bounding box.</returns>
