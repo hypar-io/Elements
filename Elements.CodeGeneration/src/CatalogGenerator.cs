@@ -82,7 +82,7 @@ namespace Elements.Generate
                     switch (value)
                     {
                         case string str:
-                            codeToAdd = $"\"{str}\"";
+                            codeToAdd = $"@\"{str}\"";
                             break;
                         case Guid guid:
                             codeToAdd = $"new Guid(\"{guid.ToString()}\")";
@@ -101,9 +101,9 @@ namespace Elements.Generate
                             break;
                         case Transform tr:
                             codeToAdd = $"new Transform(new Vector3({tr.Origin.X},{tr.Origin.Y},{tr.Origin.Z})," +
-                                        $"\nnew Vector3({tr.XAxis.X},{tr.XAxis.Y},{tr.XAxis.Z})," +
-                                        $"\nnew Vector3({tr.YAxis.X},{tr.YAxis.Y},{tr.YAxis.Z})," +
-                                        $"\nnew Vector3({tr.ZAxis.X},{tr.ZAxis.Y},{tr.ZAxis.Z}))";
+                                        $"\n\t\tnew Vector3({tr.XAxis.X},{tr.XAxis.Y},{tr.XAxis.Z})," +
+                                        $"\n\t\tnew Vector3({tr.YAxis.X},{tr.YAxis.Y},{tr.YAxis.Z})," +
+                                        $"\n\t\tnew Vector3({tr.ZAxis.X},{tr.ZAxis.Y},{tr.ZAxis.Z}))";
                             break;
                         default:
                             codeToAdd = "null";
@@ -122,7 +122,7 @@ namespace Elements.Generate
             return new
             {
                 name = content.Name,
-                constructorArgs = string.Join(",\n", constructorParams)
+                constructorArgs = string.Join(",\n", constructorParams).Replace("\n", "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
             };
         };
 
