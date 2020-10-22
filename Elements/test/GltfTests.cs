@@ -56,7 +56,8 @@ namespace Elements.Tests
                                                              materials,
                                                              textures,
                                                              images,
-                                                             samplers
+                                                             samplers,
+                                                             true
                                                              );
                 }
 
@@ -74,7 +75,7 @@ namespace Elements.Tests
 
                 var nodeList = ours.Nodes.ToList();
                 var transform = new Transform(new Vector3(1, 1, 0), Vector3.XAxis, Vector3.YAxis.Negate()).Scaled(20);
-                GltfExtensions.CreateNodeForMesh(ours, ours.Meshes.Length - 1, nodeList, transform);
+                NodeUtilities.CreateNodeForMesh(ours.Meshes.Length - 1, nodeList, transform);
                 ours.Nodes = nodeList.ToArray();
 
                 var savepath = "../../../GltfTestResult.gltf";

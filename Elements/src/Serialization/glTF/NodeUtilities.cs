@@ -65,5 +65,37 @@ namespace Elements.Serialization.glTF
 
             return parentId;
         }
+
+        internal static int[] AddInstanceNode(
+                                            List<glTFLoader.Schema.Node> nodes,
+                                            List<int> meshIds,
+                                            Transform transform)
+        {
+            var a = transform.XAxis;
+            var b = transform.YAxis;
+            var c = transform.ZAxis;
+
+            var matrix = new[]{
+                    (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
+                    (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
+                    (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
+                    (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
+                };
+            var newNodes = meshIds.Select(meshId => new Node() { Matrix = matrix, Mesh = meshId });
+            return AddNodes(nodes, newNodes, 0);
+        }
+
+        internal static int CreateNodeForMesh(int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
+        {
+            var parentId = 0;
+
+            parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId);
+
+            // Add mesh node to gltf nodes
+            var node = new Node();
+            node.Mesh = meshId;
+            var nodeId = AddNode(nodes, node, parentId);
+            return nodeId;
+        }
     }
 }

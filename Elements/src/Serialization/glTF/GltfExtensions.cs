@@ -307,24 +307,6 @@ namespace Elements.Serialization.glTF
             return bufferViews.Count - 1;
         }
 
-        internal static void AddInstanceMesh(this Gltf gltf,
-                                            List<glTFLoader.Schema.Node> nodes,
-                                            List<int> meshIds,
-                                            Transform transform)
-        {
-            var a = transform.XAxis;
-            var b = transform.YAxis;
-            var c = transform.ZAxis;
-
-            var matrix = new[]{
-                    (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
-                    (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
-                    (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
-                    (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
-                };
-            var newNodes = meshIds.Select(meshId => new Node() { Matrix = matrix, Mesh = meshId });
-            NodeUtilities.AddNodes(nodes, newNodes, 0);
-        }
 
         internal static int AddTriangleMesh(this Gltf gltf,
                                             string name,
@@ -408,18 +390,6 @@ namespace Elements.Serialization.glTF
             return meshes.Count - 1;
         }
 
-        internal static int CreateNodeForMesh(Gltf gltf, int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
-        {
-            var parentId = 0;
-
-            parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId);
-
-            // Add mesh node to gltf
-            var node = new Node();
-            node.Mesh = meshId;
-            var nodeId = NodeUtilities.AddNode(nodes, node, parentId);
-            return nodeId;
-        }
 
 
         internal static int AddLineLoop(this Gltf gltf,
@@ -548,7 +518,7 @@ namespace Elements.Serialization.glTF
                                         indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
                                         imin, imax, uvmin, uvmax, materials[BuiltInMaterials.Default.Name], cmin, cmax, null, meshes);
 
-            CreateNodeForMesh(gltf, meshId, nodes, null);
+            NodeUtilities.CreateNodeForMesh(meshId, nodes, null);
 
             var edgeCount = 0;
             var vertices = new List<Vector3>();
@@ -819,7 +789,8 @@ namespace Elements.Serialization.glTF
                                                                 materials,
                                                                 textures,
                                                                 images,
-                                                                samplers
+                                                                samplers,
+                                                                false
                                                                 );
 
 
@@ -832,7 +803,7 @@ namespace Elements.Serialization.glTF
                             // This element is not used for instancing.
                             // apply scale transform here to bring the content glb into meters
                             var transform = content.Transform.Scaled(content.GltfScaleToMeters);
-                            CreateNodeForMesh(gltf, meshId, nodes, transform);
+                            NodeUtilities.CreateNodeForMesh(meshId, nodes, transform);
                         }
                         else
                         {
@@ -900,7 +871,7 @@ namespace Elements.Serialization.glTF
                 }
                 transform.Concatenate(i.Transform);
                 // Lookup the corresponding mesh in the map.
-                AddInstanceMesh(gltf, nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
 
                 if (drawEdges)
                 {
@@ -1009,7 +980,7 @@ namespace Elements.Serialization.glTF
                 var geom = (GeometricElement)e;
                 if (!geom.IsElementDefinition)
                 {
-                    CreateNodeForMesh(gltf, meshId, nodes, geom.Transform);
+                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
                 }
             }
         }
@@ -1077,7 +1048,7 @@ namespace Elements.Serialization.glTF
 
                         if (!geometricElement.IsElementDefinition)
                         {
-                            CreateNodeForMesh(gltf, meshId, nodes, geometricElement.Transform);
+                            NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
                         }
                     }
                 }
