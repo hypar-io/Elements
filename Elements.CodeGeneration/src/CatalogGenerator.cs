@@ -105,6 +105,17 @@ namespace Elements.Generate
                                         $"\n\t\tnew Vector3({tr.YAxis.X},{tr.YAxis.Y},{tr.YAxis.Z})," +
                                         $"\n\t\tnew Vector3({tr.ZAxis.X},{tr.ZAxis.Y},{tr.ZAxis.Z}))";
                             break;
+                        case Material material:
+                            // new Material(material.Color,
+                            //              material.SpecularFactor,
+                            //              material.GlossinessFactor,
+                            //              material.Unlit,
+                            //              material.Texture,
+                            //              material.DoubleSided,
+                            //              material.Id,
+                            //              material.Name);
+                            codeToAdd = "BuiltInMaterials.Default";
+                            break;
                         default:
                             codeToAdd = "null";
                             break;

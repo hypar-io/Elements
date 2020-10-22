@@ -819,20 +819,24 @@ namespace Elements.Serialization.glTF
                     }
                     else
                     {
-                        ProcessGeometricRepresentation(e,
-                                                       ref gltf,
-                                                       ref materialIndexMap,
-                                                       ref buffers,
-                                                       bufferViews,
-                                                       accessors,
-                                                       meshes,
-                                                       nodes,
-                                                       meshElementMap,
-                                                       lines,
-                                                       drawEdges,
-                                                       materialName,
-                                                       ref meshId,
-                                                       content);
+                        meshId = ProcessGeometricRepresentation(e,
+                                                        ref gltf,
+                                                        ref materialIndexMap,
+                                                        ref buffers,
+                                                        bufferViews,
+                                                        accessors,
+                                                        meshes,
+                                                        nodes,
+                                                        meshElementMap,
+                                                        lines,
+                                                        drawEdges,
+                                                        materialName,
+                                                        ref meshId,
+                                                        content);
+                        if (!meshElementMap.ContainsKey(e.Id))
+                        {
+                            meshElementMap.Add(e.Id, new List<int> { meshId });
+                        }
                     }
                 }
                 else
@@ -1007,7 +1011,10 @@ namespace Elements.Serialization.glTF
             return responseStream;
         }
 
-        private static void ProcessGeometricRepresentation(Element e,
+        /// <summary>
+        /// Returns the index of the mesh created while processing the Geometry.
+        /// </summary>
+        private static int ProcessGeometricRepresentation(Element e,
                                                            ref Gltf gltf,
                                                            ref Dictionary<string, int> materialIndexMap,
                                                            ref List<byte> buffers,
@@ -1030,7 +1037,7 @@ namespace Elements.Serialization.glTF
             // to compute csgs for their hosts.
             if (e.GetType() == typeof(Opening))
             {
-                return;
+                return -1;
             }
 
             if (geometricElement.Representation != null)
@@ -1051,14 +1058,16 @@ namespace Elements.Serialization.glTF
                 // It may have no geometry.
                 if (meshId == -1)
                 {
-                    return;
+                    return -1;
                 }
 
                 if (!geometricElement.IsElementDefinition)
                 {
                     NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
                 }
+                return meshId;
             }
+            return -1;
         }
 
         private static int ProcessSolidsAsCSG(GeometricElement geometricElement,
