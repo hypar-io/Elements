@@ -203,7 +203,7 @@ namespace Elements.Geometry
             Vector3 b = new Vector3(otherTransformed.X, otherTransformed.Y, 0);
 
             // reject very small vectors
-            if (a.Length() < Vector3.EPSILON || b.Length() < Vector3.EPSILON )
+            if (a.Length() < Vector3.EPSILON || b.Length() < Vector3.EPSILON)
             {
                 return double.NaN;
             }
@@ -213,7 +213,7 @@ namespace Elements.Geometry
 
             // Cos^-1(a dot b), a dot b clamped to [-1, 1]
             var angle = Math.Acos(Math.Max(Math.Min(aUnitized.Dot(bUnitized), 1.0), -1.0));
-            if(Math.Abs(angle) < Vector3.EPSILON)
+            if (Math.Abs(angle) < Vector3.EPSILON)
             {
                 return 0;
             }
@@ -266,7 +266,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="a">The scalar value to multiply.</param>
         /// <param name="v">The vector to multiply.</param>
-        /// <returns>A vector whose magnitude is mutiplied by a.</returns>
+        /// <returns>A vector whose magnitude is multiplied by a.</returns>
         public static Vector3 operator *(double a, Vector3 v)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
@@ -277,7 +277,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="a">The scalar divisor.</param>
         /// <param name="v">The vector to divide.</param>
-        /// <returns>A vector whose magnitude is mutiplied by a.</returns>
+        /// <returns>A vector whose magnitude is multiplied by a.</returns>
         public static Vector3 operator /(Vector3 v, double a)
         {
             return new Vector3(v.X / a, v.Y / a, v.Z / a);
@@ -411,28 +411,6 @@ namespace Elements.Geometry
         public bool IsAlmostEqualTo(double x, double y, double z = 0)
         {
             return IsAlmostEqualTo(new Vector3(x, y, z));
-        }
-
-        /// <summary>
-        /// The distance from this point to b.
-        /// </summary>
-        /// <param name="v">The target vector.</param>
-        /// <returns>The distance between this vector and the provided vector.</returns>
-        public double DistanceTo(Vector3 v)
-        {
-            return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
-        }
-
-        /// <summary>
-        /// The distance from this vector to p.
-        /// The distance will be negative when this vector lies
-        /// "behind" the plane.
-        /// </summary>
-        /// <param name="p">The plane.</param>
-        public double DistanceTo(Plane p)
-        {
-            var d = p.Origin.Dot(p.Normal);
-            return this.Dot(p.Normal) - d;
         }
 
         /// <summary>
