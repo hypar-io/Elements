@@ -12,6 +12,7 @@ using Elements.Geometry.Interfaces;
 using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
+using System.Diagnostics;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -264,7 +265,7 @@ namespace Elements.Serialization.glTF
                 (float)ml.m31, (float)ml.m32, (float)ml.m33, 0f,
                 (float)ml.tx, (float)ml.ty, (float)ml.tz, 1f};
 
-                gltf.AddNode(nodes, lightNode, 0);
+                NodeUtilities.AddNode(nodes, lightNode, 0);
                 lightCount++;
             }
 
@@ -306,30 +307,6 @@ namespace Elements.Serialization.glTF
             return bufferViews.Count - 1;
         }
 
-        private static int AddNode(this Gltf gltf, List<Node> nodes, Node n, int? parent)
-        {
-            nodes.Add(n);
-            var id = nodes.Count - 1;
-
-            if (parent != null)
-            {
-                if (nodes[(int)parent].Children == null)
-                {
-                    nodes[(int)parent].Children = new[] { id };
-                }
-                else
-                {
-                    // TODO: Get rid of this resizing.
-                    var children = nodes[(int)parent].Children.ToList();
-                    children.Add(id);
-                    nodes[(int)parent].Children = children.ToArray(children.Count);
-                }
-
-            }
-
-            return id;
-        }
-
         internal static void AddInstanceMesh(this Gltf gltf,
                                             List<glTFLoader.Schema.Node> nodes,
                                             List<int> meshIds,
@@ -339,21 +316,14 @@ namespace Elements.Serialization.glTF
             var b = transform.YAxis;
             var c = transform.ZAxis;
 
-
             var matrix = new[]{
                     (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
                     (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
                     (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
                     (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
                 };
-
-            foreach (var meshId in meshIds)
-            {
-                var node = new Node();
-                node.Matrix = matrix;
-                node.Mesh = meshId;
-                gltf.AddNode(nodes, node, 0);
-            }
+            var newNodes = meshIds.Select(meshId => new Node() { Matrix = matrix, Mesh = meshId });
+            NodeUtilities.AddNodes(nodes, newNodes, 0);
         }
 
         internal static int AddTriangleMesh(this Gltf gltf,
@@ -442,30 +412,15 @@ namespace Elements.Serialization.glTF
         {
             var parentId = 0;
 
-            if (transform != null)
-            {
-                var a = transform.XAxis;
-                var b = transform.YAxis;
-                var c = transform.ZAxis;
-
-                var transNode = new Node();
-
-                transNode.Matrix = new[]{
-                    (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
-                    (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
-                    (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
-                    (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
-                };
-
-                parentId = gltf.AddNode(nodes, transNode, 0);
-            }
+            parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId);
 
             // Add mesh node to gltf
             var node = new Node();
             node.Mesh = meshId;
-            var nodeId = gltf.AddNode(nodes, node, parentId);
+            var nodeId = NodeUtilities.AddNode(nodes, node, parentId);
             return nodeId;
         }
+
 
         internal static int AddLineLoop(this Gltf gltf,
                                         string name,
@@ -518,26 +473,13 @@ namespace Elements.Serialization.glTF
 
             if (transform != null)
             {
-                var a = transform.XAxis;
-                var b = transform.YAxis;
-                var c = transform.ZAxis;
-
-                var transNode = new Node();
-
-                transNode.Matrix = new[]{
-                    (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
-                    (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
-                    (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
-                    (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
-                };
-
-                parentId = gltf.AddNode(nodes, transNode, 0);
+                parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId);
             }
 
             // Add mesh node to gltf
             var node = new Node();
             node.Mesh = meshes.Count - 1;
-            gltf.AddNode(nodes, node, parentId);
+            NodeUtilities.AddNode(nodes, node, parentId);
 
             return meshes.Count - 1;
         }
@@ -866,8 +808,7 @@ namespace Elements.Serialization.glTF
                 {
                     var content = e as ContentElement;
                     Stream glbStream = GetGlbStreamFromPath(content.GltfLocation);
-                    if (glbStream != null)
-                    // if (File.Exists(content.GltfLocation))
+                    if (glbStream != System.IO.Stream.Null)
                     {
                         var meshIndices = GltfMergingUtils.AddAllMeshesFromFromGlb(glbStream,
                                                                 schemaBuffers,

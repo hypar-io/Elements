@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 using Elements.Serialization.JSON;
+using System.Diagnostics;
 
 namespace Elements.Tests
 {
@@ -24,7 +25,7 @@ namespace Elements.Tests
         [Fact]
         public void CatalogSerialization()
         {
-            ContentElement boxType = new ContentElement("../../../models/MergeGlTF/High Back.glb",
+            ContentElement boxType = new ContentElement("../../../models/MergeGlTF/Workstation_Pod_SemiPrivate_Harbour - Semi 1600w x 1300d 3.glb",
                                       new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
                                       1,
                                       new Transform(new Vector3(), Vector3.ZAxis),
@@ -59,7 +60,7 @@ namespace Elements.Tests
         public void InstanceContentElement()
         {
             var model = new Model();
-            var boxType = new TestContentElem("../../../models/MergeGlTF/High Back.glb",
+            var boxType = new TestContentElem("../../../models/MergeGlTF/Workstation_Pod_SemiPrivate_Harbour - Semi 1600w x 1300d 3.glb",
                                       new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
                                       new Transform(new Vector3(), Vector3.ZAxis),
                                       1,
@@ -77,12 +78,15 @@ namespace Elements.Tests
                                       true,
                                       Guid.NewGuid(),
                                       "BoxyType");
-            var newBox = boxType.CreateInstance(new Transform(), "first one");
-            model.AddElement(newBox);
-            // var twoBox = boxType2.CreateInstance(new Transform(new Vector3(5, 0, 0)), "then two");
-            // model.AddElement(twoBox);
-            // var threeBox = boxType2.CreateInstance(new Transform(new Vector3(15, 0, 0)), "then two");
-            // model.AddElement(threeBox);
+            for (int i = 0; i < 5; i++)
+            {
+                var newBox = boxType.CreateInstance(new Transform(2 * i, 0, 0), "first one");
+                model.AddElement(newBox);
+            }
+            var twoBox = boxType2.CreateInstance(new Transform(new Vector3(5, 0, 0)), "then two");
+            model.AddElement(twoBox);
+            var threeBox = boxType2.CreateInstance(new Transform(new Vector3(15, 0, 0)), "then two");
+            model.AddElement(threeBox);
             var beam = new Beam(new Line(new Vector3(), new Vector3(0, 5, -0.5)), new Circle(new Vector3(), 0.3).ToPolygon());
             model.AddElement(beam);
             model.ToGlTF("../../../ContentInstancing.gltf", false);
