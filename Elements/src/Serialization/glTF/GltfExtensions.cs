@@ -844,7 +844,7 @@ namespace Elements.Serialization.glTF
                     var geometricElement = (GeometricElement)e;
                     materialName = geometricElement.Material.Name;
 
-                    ProcessGeometricRepresentation(e,
+                    meshId = ProcessGeometricRepresentation(e,
                                                    ref gltf,
                                                    ref materialIndexMap,
                                                    ref buffers,
@@ -858,6 +858,10 @@ namespace Elements.Serialization.glTF
                                                    materialName,
                                                    ref meshId,
                                                    geometricElement);
+                    if (meshId > -1 && !meshElementMap.ContainsKey(e.Id))
+                    {
+                        meshElementMap.Add(e.Id, new List<int> { meshId });
+                    }
                 }
             }
 
