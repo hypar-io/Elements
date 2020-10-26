@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace Elements.Tests
 {
-    public class ContentTests
+    public class ContentTests : ModelTest
     {
         private class TestContentElem : ContentElement
         {
@@ -56,39 +56,39 @@ namespace Elements.Tests
             Assert.Equal(testCatalog.Content.Count, loadedCatalog.Content.Count);
         }
 
-        [Fact]
+        [Fact, Trait("Category", "Example")]
         public void InstanceContentElement()
         {
-            var model = new Model();
-            var boxType = new TestContentElem("../../../models/MergeGlTF/Workstation_Pod_SemiPrivate_Harbour - Semi 1600w x 1300d 3.glb",
+            var model = this.Model;
+            // <example>
+            var avocadoType = new TestContentElem("../../../models/MergeGlTF/Avocado.glb",
                                       new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
-                                      new Transform(new Vector3(), Vector3.ZAxis),
-                                      1,
+                                      new Transform(new Vector3(), Vector3.XAxis),
+                                      20,
                                       BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
-                                      "BoxyType");
-            var boxType2 = new TestContentElem("../../../models/MergeGlTF/Box.glb",
+                                      "Avocado Type");
+            var duckType = new TestContentElem("../../../models/MergeGlTF/Duck.glb",
                                       new BBox3(new Vector3(-1, -1, 0), new Vector3(1, 1, 2)),
                                       new Transform(new Vector3(), Vector3.YAxis),
-                                      1,
+                                      .005,
                                       BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
-                                      "BoxyType");
+                                      "Duck Type");
             for (int i = 0; i < 5; i++)
             {
-                var newBox = boxType.CreateInstance(new Transform(2 * i, 0, 0), "first one");
-                model.AddElement(newBox);
+                var newAvo = avocadoType.CreateInstance(new Transform(2 * i, 0, 0), "An Avocado");
+                model.AddElement(newAvo);
             }
-            var twoBox = boxType2.CreateInstance(new Transform(new Vector3(5, 0, 0)), "then two");
-            model.AddElement(twoBox);
-            var threeBox = boxType2.CreateInstance(new Transform(new Vector3(15, 0, 0)), "then two");
-            model.AddElement(threeBox);
-            var beam = new Beam(new Line(new Vector3(), new Vector3(0, 5, -0.5)), new Circle(new Vector3(), 0.3).ToPolygon());
-            model.AddElement(beam);
+            var oneDuck = duckType.CreateInstance(new Transform(new Vector3(5, 0, 0)), "A Duck");
+            model.AddElement(oneDuck);
+            var twoDuck = duckType.CreateInstance(new Transform(new Vector3(15, 0, 0)), "A Duck");
+            model.AddElement(twoDuck);
+            // </example>
             model.ToGlTF("../../../ContentInstancing.gltf", false);
             model.ToGlTF("../../../ContentInstancing.glb");
         }
