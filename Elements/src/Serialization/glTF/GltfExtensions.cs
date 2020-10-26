@@ -644,7 +644,7 @@ namespace Elements.Serialization.glTF
 
             gltf.BufferViews = bufferViews.ToArray(bufferViews.Count);
             gltf.Accessors = accessors.ToArray(accessors.Count);
-            gltf.Nodes = nodes.ToArray(accessors.Count);
+            gltf.Nodes = nodes.ToArray(nodes.Count);
             if (meshes.Count > 0)
             {
                 gltf.Meshes = meshes.ToArray(meshes.Count);
