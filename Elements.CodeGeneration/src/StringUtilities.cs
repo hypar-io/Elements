@@ -5,10 +5,18 @@ using System.Text.RegularExpressions;
 
 namespace Elements.Generate.StringUtils
 {
+    /// <summary>
+    /// Utility methods for working with strings.
+    /// </summary>
     public static class StringUtilities
     {
         // TODO: This is a direct copy of the method in Hypar.Model.
         // We should move type generation out of elements to a place where it can refer to Hypar.Model.
+        /// <summary>
+        /// Return the string turned into a string safe to use as a C# identifier.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="firstCharLowercase"></param>
         public static string ToSafeIdentifier(this string name, bool firstCharLowercase = false)
         {
             if (String.IsNullOrWhiteSpace(name) || String.IsNullOrEmpty(name))

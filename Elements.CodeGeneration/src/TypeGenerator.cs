@@ -549,7 +549,7 @@ using Hypar.Functions.Execution.AWS;", "");
                 {
                     File.WriteAllText(path, kvp.Value);
                 }
-                catch (IOException ioe)
+                catch
                 {
                     diagnosticMessages.Add($"{typeName} failed to write, possibly because it was already being written to disk.");
                 }
