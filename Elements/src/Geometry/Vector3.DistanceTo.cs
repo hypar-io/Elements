@@ -19,8 +19,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The distance from this vector to the plane.
-        /// The distance will be negative when this vector lies
+        /// The distance from this point to the plane.
+        /// The distance will be negative when this point lies
         /// "behind" the plane.
         /// </summary>
         /// <param name="p">The plane.</param>
@@ -31,50 +31,47 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Find the distance from this vector to the line, and output the location 
+        /// Find the distance from this point to the line, and output the location 
         /// of the closest point on that line.
+        /// Using formula from https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd
         /// </summary>
         /// <param name="line">The line to find the distance to.</param>
         /// <param name="closestPoint">The point on the line that is closest to this point.</param>
         public double DistanceTo(Line line, out Vector3 closestPoint)
         {
-            var p = new Plane(this, line.Direction());
+            var lambda = (this - line.Start).Dot(line.End - line.Start) / (line.End - line.Start).Dot(line.End - line.Start);
+            if (lambda >= 1)
             {
-
-                if (line.Intersects(p, out closestPoint))
-                {
-                    // If the line intersect the plane originating at this point
-                    // then the shortest distance is the distance to that intersection.
-                    return this.DistanceTo(closestPoint);
-                }
-                else
-                {
-                    // If the line does not intersect that plane, then the shortest 
-                    // distance is the distance from the point to the closest end of the line.
-                    var distFromStart = this.DistanceTo(line.Start);
-                    var distFromEnd = this.DistanceTo(line.End);
-                    return distFromStart < distFromEnd ? distFromStart : distFromEnd;
-                }
+                closestPoint = line.End;
+                return this.DistanceTo(line.End);
+            }
+            else if (lambda <= 0)
+            {
+                closestPoint = line.Start;
+                return this.DistanceTo(line.Start);
+            }
+            else
+            {
+                closestPoint = (line.Start + lambda * (line.End - line.Start));
+                return this.DistanceTo(closestPoint);
             }
         }
 
         /// <summary>
-        /// Find the distance from this vector to the line.
+        /// Find the distance from this point to the line.
         /// </summary>
         /// <param name="line"></param>
-        /// <returns></returns>
         public double DistanceTo(Line line)
         {
-            return DistanceTo(line, out var ignoredPoint);
+            return DistanceTo(line, out var _);
         }
 
         /// <summary>
-        /// Find the shortest distance from this vector to any point on the
+        /// Find the shortest distance from this point to any point on the
         /// polyline, and output the location of the closest point on that polyline.
         /// </summary>
-        /// <param name="polyline">The polyline to </param>
+        /// <param name="polyline">The polyline for computing the distance.</param>
         /// <param name="closestPoint">The point on the polyline that is closest to this point.</param>
-        /// <returns></returns>
         public double DistanceTo(Polyline polyline, out Vector3 closestPoint)
         {
             var closest = double.MaxValue;
@@ -87,6 +84,27 @@ namespace Elements.Geometry
                 {
                     closest = distance;
                     closestPoint = thisClosestPoint;
+                }
+            }
+
+            return closest;
+        }
+
+        /// <summary>
+        /// Find the shortest distance from this point to any point on the
+        /// polyline, and output the location of the closest point on that polyline.
+        /// </summary>
+        /// <param name="polyline">The polyline for computing the distance.</param>
+        public double DistanceTo(Polyline polyline)
+        {
+            var closest = double.MaxValue;
+
+            foreach (var line in polyline.Segments())
+            {
+                var distance = this.DistanceTo(line);
+                if (distance < closest)
+                {
+                    closest = distance;
                 }
             }
 
