@@ -8,8 +8,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageOutputPath>$(SolutionDir)nupkg</PackageOutputPath>
-    <PackageProjectUrl>https://github.com/hypar-io/CLI</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/hypar-io/CLI</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/hypar-io/Elements</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hypar-io/Elements</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>$(Version)</Version>
   </PropertyGroup>
