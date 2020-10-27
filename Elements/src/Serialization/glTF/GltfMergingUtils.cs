@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using glTFLoader;
@@ -10,7 +11,7 @@ namespace Elements.Serialization.glTF
 
     internal static class GltfMergingUtils
     {
-        public static List<int> AddAllMeshesFromFromGlb(string glbPath,
+        public static List<int> AddAllMeshesFromFromGlb(Stream glbStream,
                                         List<Buffer> buffers,
                                         List<byte[]> bufferByteArrays,
                                         List<BufferView> bufferViews,
@@ -19,12 +20,15 @@ namespace Elements.Serialization.glTF
                                         List<glTFLoader.Schema.Material> materials,
                                         List<Texture> textures,
                                         List<Image> images,
-                                        List<Sampler> samplers
+                                        List<Sampler> samplers,
+                                        bool shouldAddMaterials
                                         )
         {
-            var newMaterials = new Dictionary<int, int>();
-            var loaded = Interface.LoadModel(glbPath);
-            var newByteArrays = loaded.GetAllBufferByteArrays(glbPath);
+            var loadingStream = new MemoryStream();
+            glbStream.CopyTo(loadingStream);
+            loadingStream.Position = 0;
+            var loaded = Interface.LoadModel(loadingStream);
+            var newByteArrays = loaded.GetAllBufferByteArrays(glbStream);
             bufferByteArrays.AddRange(newByteArrays);
 
             var bufferIncrement = buffers.Count;
@@ -84,7 +88,45 @@ namespace Elements.Serialization.glTF
                 }
             }
 
+
             var materialIncrement = materials.Count;
+
+            if (shouldAddMaterials)
+            {
+                AddMaterials(materials, loaded, textureIncrement);
+            }
+
+            var meshIndices = new List<int>();
+            foreach (var originMesh in loaded.Meshes)
+            {
+                foreach (var prim in originMesh.Primitives)
+                {
+                    var attributes = new Dictionary<string, int>();
+                    foreach (var kvp in prim.Attributes)
+                    {
+                        attributes[kvp.Key] = kvp.Value + accessorIncrement;
+                    }
+                    prim.Attributes = attributes;
+                    prim.Indices = prim.Indices + accessorIncrement;
+                    if (shouldAddMaterials)
+                    {
+                        prim.Material = prim.Material + materialIncrement;
+                    }
+                    else
+                    {
+                        prim.Material = 0;  // This assumes that the default material is at index 0
+                    }
+
+                }
+                meshes.Add(originMesh);
+                meshIndices.Add(meshes.Count - 1);
+            }
+
+            return meshIndices;
+        }
+
+        private static void AddMaterials(List<glTFLoader.Schema.Material> materials, Gltf loaded, int textureIncrement)
+        {
             foreach (var originMaterial in loaded.Materials)
             {
                 if (originMaterial.EmissiveTexture != null)
@@ -113,26 +155,6 @@ namespace Elements.Serialization.glTF
 
                 materials.Add(originMaterial);
             }
-
-            var meshIndices = new List<int>();
-            foreach (var originMesh in loaded.Meshes)
-            {
-                foreach (var prim in originMesh.Primitives)
-                {
-                    var attributes = new Dictionary<string, int>();
-                    foreach (var kvp in prim.Attributes)
-                    {
-                        attributes[kvp.Key] = kvp.Value + accessorIncrement;
-                    }
-                    prim.Attributes = attributes;
-                    prim.Indices = prim.Indices + accessorIncrement;
-                    prim.Material = prim.Material + materialIncrement;
-                }
-                meshes.Add(originMesh);
-                meshIndices.Add(meshes.Count - 1);
-            }
-
-            return meshIndices;
         }
     }
 }

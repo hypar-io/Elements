@@ -59,8 +59,8 @@ namespace Elements.Serialization.JSON
             var typeCache = new Dictionary<string, Type>();
 
             // Build the user element type cache
-            var asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var asm in asms)
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asm in assemblies)
             {
                 try
                 {
@@ -79,15 +79,17 @@ namespace Elements.Serialization.JSON
             return typeCache;
         }
 
+        public static bool ElementwiseSerialization { get; set; } = false;
+
         public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             try
             {
                 _isWriting = true;
 
-                // Operate on all identifiables with a path less than Entities.xxxxx
+                // Operate on all identifiable Elements with a path less than Entities.xxxxx
                 // This will get all properties.
-                if (value is Element && writer.Path.Split('.').Length == 1)
+                if (value is Element && writer.Path.Split('.').Length == 1 && !ElementwiseSerialization)
                 {
                     var ident = (Element)value;
                     writer.WriteValue(ident.Id);

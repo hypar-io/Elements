@@ -77,6 +77,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get a translated copy of the bounding box.
+        /// </summary>
+        /// <param name="translation">The translation to apply.</param>
+        public BBox3 Translated(Vector3 translation)
+        {
+            return new BBox3(this.Min + translation, this.Max + translation);
+        }
+
+        /// <summary>
         /// Get the center of the bounding box.
         /// </summary>
         /// <returns>The center of the bounding box.</returns>

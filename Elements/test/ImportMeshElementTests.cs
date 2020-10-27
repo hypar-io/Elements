@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Elements.Tests
 {
-    public class MeshTests : ModelTest
+    public class ImportMeshElementTests : ModelTest
     {
         [Fact, Trait("Category", "Examples")]
         public void Component()
@@ -19,7 +19,7 @@ namespace Elements.Tests
             model.AddElement(bracket);
 
             var brackets = new List<ElementInstance>();
-            for(var u=0; u<360.0; u += 20)
+            for (var u = 0; u < 360.0; u += 20)
             {
                 var t = new Transform(new Vector3(1, 0, 0));
                 t.Rotate(Vector3.ZAxis, u);

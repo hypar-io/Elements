@@ -62,8 +62,20 @@ namespace Elements.Generate
                 "https://hypar.io/Schemas/Geometry/Solids/Sweep.json",
                 "https://hypar.io/Schemas/Geometry/Arc.json",
                 "https://dev-api.hypar.io/schemas/BBox3",
-                "https://hypar.io/Schemas/Geometry/Color.json",
                 "https://dev-api.hypar.io/schemas/ContentElement",
+                "https://dev-api.hypar.io/schemas/Geometry",
+                "https://dev-api.hypar.io/schemas/Mesh",
+                "https://dev-api.hypar.io/schemas/Triangle",
+                "https://dev-api.hypar.io/schemas/UV",
+                "https://dev-api.hypar.io/schemas/Vertex",
+                "https://prod-api.hypar.io/schemas/BBox3",
+                "https://prod-api.hypar.io/schemas/ContentElement",
+                "https://prod-api.hypar.io/schemas/Geometry",
+                "https://prod-api.hypar.io/schemas/Mesh",
+                "https://prod-api.hypar.io/schemas/Triangle",
+                "https://prod-api.hypar.io/schemas/UV",
+                "https://prod-api.hypar.io/schemas/Vertex",
+                "https://hypar.io/Schemas/Geometry/Color.json",
                 "https://hypar.io/Schemas/Geometry/Curve.json",
                 "https://hypar.io/Schemas/Geometry/Line.json",
                 "https://hypar.io/Schemas/Geometry/Plane.json",
@@ -88,7 +100,7 @@ namespace Elements.Generate
         private static string _templatesPath;
 
         /// <summary>
-        /// The directory in which to find code templates. Some execution contexts require this to be overriden as the
+        /// The directory in which to find code templates. Some execution contexts require this to be overridden as the
         /// Executing Assembly is not necessarily in the same place as the templates (e.g. Headless Grasshopper Execution)
         /// </summary>
         public static string TemplatesPath
