@@ -85,7 +85,7 @@ namespace Elements.Generate
                             codeToAdd = $"@\"{str}\"";
                             break;
                         case Guid guid:
-                            codeToAdd = $"new Guid(\"{guid.ToString()}\")";
+                            codeToAdd = $"new Guid(\"{guid}\")";
                             break;
                         case bool tf:
                             codeToAdd = tf ? "true" : "false";
@@ -139,7 +139,7 @@ namespace Elements.Generate
 
         private static string GetContentsOfUri(string uri)
         {
-            if (uri.StartsWith("https"))
+            if (uri.StartsWith("http://") || uri.StartsWith("https://"))
             {
                 using (WebClient client = new WebClient())
                 {

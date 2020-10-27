@@ -77,12 +77,12 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a transformed copy of the bounding box.
+        /// Get a translated copy of the bounding box.
         /// </summary>
-        /// <param name="transform">The transform to apply.</param>
-        public BBox3 Transformed(Transform transform)
+        /// <param name="translation">The translation to apply.</param>
+        public BBox3 Translated(Vector3 translation)
         {
-            return new BBox3(transform.OfPoint(this.Min), transform.OfPoint(this.Max));
+            return new BBox3(this.Min + translation, this.Max + translation);
         }
 
         /// <summary>
