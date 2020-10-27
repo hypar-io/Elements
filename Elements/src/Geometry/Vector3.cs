@@ -285,7 +285,7 @@ namespace Elements.Geometry
         /// <param name="line"></param>
         public double DistanceTo(Line line)
         {
-            return DistanceTo(line, out var _);
+            return DistanceTo(line, out _);
         }
 
         /// <summary>
@@ -319,18 +319,7 @@ namespace Elements.Geometry
         /// <param name="polyline">The polyline for computing the distance.</param>
         public double DistanceTo(Polyline polyline)
         {
-            var closest = double.MaxValue;
-
-            foreach (var line in polyline.Segments())
-            {
-                var distance = this.DistanceTo(line);
-                if (distance < closest)
-                {
-                    closest = distance;
-                }
-            }
-
-            return closest;
+            return this.DistanceTo(polyline, out _);
         }
         #endregion
 
