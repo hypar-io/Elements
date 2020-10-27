@@ -127,6 +127,30 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DistanceToPolyline()
+        {
+            var v = new Vector3();
+
+            var pLine1 = new Polyline(new List<Vector3> {
+                                            new Vector3(-1,-1),
+                                            new Vector3(0,-1),
+                                            new Vector3(1,-2)
+                                        });
+            var dist1 = v.DistanceTo(pLine1, out var closest1);
+            Assert.Equal(1, dist1);
+            Assert.Equal(new Vector3(0, -1), closest1);
+
+            var pLine2 = new Polyline(new List<Vector3> {
+                                            new Vector3(-2,-2),
+                                            new Vector3(1,-2),
+                                            new Vector3(2,-3)
+                                        });
+            var dist2 = v.DistanceTo(pLine2, out var closest2);
+            Assert.Equal(2, dist2);
+            Assert.Equal(new Vector3(0, -2), closest2);
+        }
+
+        [Fact]
         public void AreCoplanar()
         {
             var a = Vector3.Origin;
