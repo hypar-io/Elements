@@ -26,14 +26,14 @@ jobs:
           current-version: ${{env.NUGET_VERSION}}
           version-fragment: bug
       - name: Bump Alpha
-        if: "contains(env.NUGET_VERSION, 'alpha'))"
+        if: "contains(env.NUGET_VERSION, 'alpha')"
         id: bump-alpha
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{env.NUGET_VERSION}}
           version-fragment: "alpha"
       - name: Bump Beta
-        if: "contains(env.NUGET_VERSION, 'beta'))"
+        if: "contains(env.NUGET_VERSION, 'beta')"
         id: bump-beta
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
