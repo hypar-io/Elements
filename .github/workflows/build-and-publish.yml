@@ -13,34 +13,34 @@ jobs:
     steps:
       - name: Read Version
         id: version
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: version.txt
+        run: |
+          content=`cat ./version.txt`
+          echo "::set-output name=version::$content"
       - name: Set NUGET_VERSION
         run: echo "::set-env name=NUGET_VERSION::${{steps.version.outputs.content}}"
-      - name: Bump Bug
-        if: "!contains(env.NUGET_VERSION, 'alpha') && !contains(env.NUGET_VERSION, 'beta')"
-        id: bump-bug
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: ${{env.NUGET_VERSION}}
-          version-fragment: bug
-      - name: Bump Alpha
-        if: "contains(env.NUGET_VERSION, 'alpha')"
-        id: bump-alpha
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: ${{env.NUGET_VERSION}}
-          version-fragment: "alpha"
-      - name: Bump Beta
-        if: "contains(env.NUGET_VERSION, 'beta')"
-        id: bump-beta
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: ${{env.NUGET_VERSION}}
-          version-fragment: "beta"
-      - name: Echo Version
-        run: echo ${{ env.NUGET_VERSION }}
-      - run: dotnet build -c release -p:Version=${{ steps.version.outputs.content }}
-      - name: Publish Elements
-        run: echo "You made it to the end!"
+      # - name: Bump Bug
+      #   if: "!contains(env.NUGET_VERSION, 'alpha') && !contains(env.NUGET_VERSION, 'beta')"
+      #   id: bump-bug
+      #   uses: christian-draeger/increment-semantic-version@1.0.2
+      #   with:
+      #     current-version: ${{env.NUGET_VERSION}}
+      #     version-fragment: bug
+      # - name: Bump Alpha
+      #   if: "contains(env.NUGET_VERSION, 'alpha')"
+      #   id: bump-alpha
+      #   uses: christian-draeger/increment-semantic-version@1.0.2
+      #   with:
+      #     current-version: ${{env.NUGET_VERSION}}
+      #     version-fragment: "alpha"
+      # - name: Bump Beta
+      #   if: "contains(env.NUGET_VERSION, 'beta')"
+      #   id: bump-beta
+      #   uses: christian-draeger/increment-semantic-version@1.0.2
+      #   with:
+      #     current-version: ${{env.NUGET_VERSION}}
+      #     version-fragment: "beta"
+      # - name: Echo Version
+      #   run: echo ${{ env.NUGET_VERSION }}
+      # - run: dotnet build -c release -p:Version=${{ steps.version.outputs.content }}
+      # - name: Publish Elements
+      #   run: echo "You made it to the end!"
