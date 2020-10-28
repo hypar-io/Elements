@@ -105,10 +105,7 @@ namespace Elements.IFC.Tests
                 this.output.WriteLine(e);
             }
 
-            // We expect two floors, one material, and one profile.
-            // TODO(Ian): Update this when we're not duplicating profiles
-            // in the output IFC.
-            Assert.Equal(8, newModel.Elements.Values.Count);
+            Assert.Equal(7, newModel.Elements.Values.Count);
             newModel.ToGlTF(ConstructGlbPath("IfcFloor2"));
         }
 
