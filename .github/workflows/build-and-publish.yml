@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -58,9 +56,18 @@ jobs:
         run: echo ${{ env.NUGET_VERSION }}
       # - name: Publish NuGet package.
       #   run: dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-      - name: Update the version.txt.
-        run: echo ${{ env.NUGET_VERSION }} > version.txt
-      - name: Commit changes to the version.txt.
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Update the version.txt.
+      # - name: Update the version.txt.
+      #   run: echo ${{ env.NUGET_VERSION }} > version.txt
+      # - name: Commit changes to the version.txt.
+      #   uses: stefanzweifel/git-auto-commit-action@v4
+      #   with:
+      #     commit_message: Update the version.txt.
+      - name: Update and commit the version.txt.
+        uses: actions/checkout@v2
+        run: |
+          echo ${{ env.NUGET_VERSION }} > version.txt
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Update the version.txt."
+          git push
