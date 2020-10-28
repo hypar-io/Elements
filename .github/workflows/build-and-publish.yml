@@ -26,7 +26,7 @@ jobs:
         id: bump-bug
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{env.NUGET_VERSION}}
+          current-version: ${{steps.version.outputs.version}}
           version-fragment: bug
       - name: Set NuGet version from bug.
         if: "!contains(env.NUGET_VERSION, 'alpha') && !contains(env.NUGET_VERSION, 'beta')"
