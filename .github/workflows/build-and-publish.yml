@@ -64,7 +64,7 @@ jobs:
       #   with:
       #     commit_message: Update the version.txt.
       - name: Update and commit the version.txt.
-        uses: actions/checkout@v2
+        # uses: actions/checkout@v2
         run: |
           echo ${{ env.NUGET_VERSION }} > version.txt
           git config user.name github-actions
