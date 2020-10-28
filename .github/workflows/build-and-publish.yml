@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repo.
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
