@@ -11,7 +11,8 @@ jobs:
   increment-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repo.
+        uses: actions/checkout@v2
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -62,12 +63,12 @@ jobs:
       #   uses: stefanzweifel/git-auto-commit-action@v4
       #   with:
       #     commit_message: Update the version.txt.
-      # - name: Update and commit the version.txt.
-      #   uses: actions/checkout@v2
-      #   run: |
-      #     echo ${{ env.NUGET_VERSION }} > version.txt
-      #     git config user.name github-actions
-      #     git config user.email github-actions@github.com
-      #     git add .
-      #     git commit -m "Update the version.txt."
-      #     git push
+      - name: Update and commit the version.txt.
+        uses: actions/checkout@v2
+        run: |
+          echo ${{ env.NUGET_VERSION }} > version.txt
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Update the version.txt."
+          git push
