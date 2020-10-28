@@ -1,20 +1,16 @@
-name: Build/Test on PR
+name: Build and Test on PR
 
 on:
   pull_request:
-  push:
-    branches:
-      - master
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
-      - run: dotnet build --configuration release
-      - run: dotnet test --configuration release
+      - run: dotnet build -c release -p:Version=${{ steps.version.outputs.content }}
+      - run: dotnet test -c release
