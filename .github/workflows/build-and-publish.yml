@@ -61,9 +61,8 @@ jobs:
       - name: Commit changes
         uses: EndBug/add-and-commit@v5
         with:
-          author_name: Master Builder
-          author_email: master-builder@hypar.io
           message: "I've updated the version.txt."
           add: "*.txt"
+          tag: "v${{ env.NUGET_VERSION }} --force"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
