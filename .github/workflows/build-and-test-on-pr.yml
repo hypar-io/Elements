@@ -12,5 +12,5 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
-      - run: dotnet build -c release -p:Version=${{ steps.version.outputs.content }}
+      - run: dotnet build -c release
       - run: dotnet test -c release
