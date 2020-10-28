@@ -1,6 +1,8 @@
 name: Publish NuGet
 
 on:
+  # This will only be required during testing.
+  pull_request:
   push:
     branches:
       - master
