@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  increment:
+  increment-version:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -54,5 +54,16 @@ jobs:
       - run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Tell me the version
         run: echo ${{ env.NUGET_VERSION }}
-      - name: Publish Elements
-        run: echo "You made it to the end!"
+      # - name: Publish NuGet package.
+      #   run: dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+      - name: Update the version.txt.
+        run: ${{ env.NUGET_VERSION }} > version.txt
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v5
+        with:
+          author_name: Master Builder
+          author_email: master-builder@hypar.io
+          message: "I've updated the version.txt."
+          add: "*.txt"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
