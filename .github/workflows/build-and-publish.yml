@@ -57,7 +57,7 @@ jobs:
       # - name: Publish NuGet package.
       #   run: dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
       - name: Update the version.txt.
-        run: ${{ env.NUGET_VERSION }} > version.txt
+        run: echo ${{ env.NUGET_VERSION }} > version.txt
       - name: Commit changes
         uses: EndBug/add-and-commit@v5
         with:
