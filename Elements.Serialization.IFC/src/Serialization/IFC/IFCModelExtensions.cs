@@ -166,8 +166,8 @@ namespace Elements.Serialization.IFC
                                    null,
                                    null,
                                    IfcElementCompositionEnum.ELEMENT,
-                                   new IfcCompoundPlaneAngleMeasure(new List<int> { 0, 0 }),
-                                   new IfcCompoundPlaneAngleMeasure(new List<int> { 0, 0 }),
+                                   new IfcCompoundPlaneAngleMeasure(new List<int> { 0, 0, 0 }),
+                                   new IfcCompoundPlaneAngleMeasure(new List<int> { 0, 0, 0 }),
                                    0,
                                    null,
                                    null);
