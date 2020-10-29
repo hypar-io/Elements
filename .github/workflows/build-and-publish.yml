@@ -27,12 +27,11 @@ jobs:
       #   run: |
       #     version=`cat ./version.txt`
       #     echo "::set-output name=version::$version"
-      # - name: Unformat tag.
-      #   id: version
-      #   run: |
-
-      #     version="${${{steps.tag-version.outputs.tag}}:1}"
-      #     echo "::set-output name=version::$version"
+      - name: Unformat tag.
+        id: version
+        run: |
+          version=${{steps.tag-version.outputs.tag}}
+          echo "::set-output name=version::$version"
       - name: Bump if patch.
         if: ${{!contains(steps.version.outputs.version, 'alpha') && !contains(steps.version.outputs.version, 'beta')}}
         id: bump-bug
