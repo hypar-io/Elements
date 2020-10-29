@@ -1,6 +1,8 @@
 name: Publish NuGet
 
 on:
+  # Remove when merged.
+  pull_request:
   push:
     branches:
       - master
@@ -15,60 +17,49 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
-      - name: Read the version.
+      - name: Get previous tag.
         id: version
-        run: |
-          version=`cat ./version.txt`
-          echo "::set-output name=version::$version"
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+      # - name: Read the version.
+      #   id: version
+      #   run: |
+      #     version=`cat ./version.txt`
+      #     echo "::set-output name=version::$version"
       - name: Bump if patch.
-        if: ${{!contains(steps.version.outputs.version, 'alpha') && !contains(steps.version.outputs.version, 'beta')}}
+        if: ${{!contains(steps.version.outputs.tag, 'alpha') && !contains(steps.version.outputs.tag, 'beta')}}
         id: bump-bug
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{steps.version.outputs.version}}
+          current-version: ${{steps.version.outputs.tag}}
           version-fragment: bug
       - name: Set NuGet version from bug.
-        if: ${{!contains(steps.version.outputs.version, 'alpha') && !contains(steps.version.outputs.version, 'beta')}}
+        if: ${{!contains(steps.version.outputs.tag, 'alpha') && !contains(steps.version.outputs.tag, 'beta')}}
         run: echo "::set-env name=NUGET_VERSION::${{steps.bump-bug.outputs.next-version}}"
       - name: Bump if alpha.
-        if: ${{contains(steps.version.outputs.version, 'alpha')}}
+        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
         id: bump-alpha
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{steps.version.outputs.version}}
+          current-version: ${{steps.version.outputs.tag}}
           version-fragment: "alpha"
       - name: Set NuGet version from alpha.
-        if: ${{contains(steps.version.outputs.version, 'alpha')}}
+        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
         run: echo "::set-env name=NUGET_VERSION::${{steps.bump-alpha.outputs.next-version}}"
       - name: Bump if beta.
-        if: ${{contains(steps.version.outputs.version, 'beta')}}
+        if: ${{contains(steps.version.outputs.tag, 'beta')}}
         id: bump-beta
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{steps.version.outputs.version}}
+          current-version: ${{steps.version.outputs.tag}}
           version-fragment: "beta"
       - name: Set NuGet version from beta.
-        if: ${{contains(steps.version.outputs.version, 'beta')}}
+        if: ${{contains(steps.version.outputs.tag, 'beta')}}
         run: echo "::set-env name=NUGET_VERSION::${{steps.bump-beta.outputs.next-version}}"
       - run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Tell me the version
         run: echo ${{ env.NUGET_VERSION }}
-      - name: Publish NuGet package.
-        run: |
-          dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-          dotnet nuget push ./nupkg/Hypar.Elements.CodeGeneration.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-          dotnet nuget push ./nupkg/Hypar.Elements.Serialization.IFC.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-      - name: Update the version.txt.
-        run: echo ${{ env.NUGET_VERSION }} > version.txt
-      - name: Commit changes to the version.txt.
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Update the version.txt.
-      - name: Update and commit the version.txt.
-        run: |
-          echo ${{ env.NUGET_VERSION }} > version.txt
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "Update the version.txt."
-          git push
+      # - name: Publish NuGet package.
+      #   run: |
+      #     dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+      #     dotnet nuget push ./nupkg/Hypar.Elements.CodeGeneration.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+      #     dotnet nuget push ./nupkg/Hypar.Elements.Serialization.IFC.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
