@@ -30,7 +30,7 @@ jobs:
       - name: Unformat tag.
         id: version
         run: |
-          version="${${{steps.version.outputs.tag}}:1}"
+          version="${${{steps.tag-version.outputs.tag}}:1}"
           echo "::set-output name=version::$version"
       - name: Bump if patch.
         if: ${{!contains(steps.version.outputs.version, 'alpha') && !contains(steps.version.outputs.version, 'beta')}}
