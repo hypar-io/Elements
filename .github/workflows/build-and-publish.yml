@@ -20,42 +20,47 @@ jobs:
         with:
           dotnet-version: 3.1.x
       - name: Get previous tag.
-        id: version
+        id: tag-version
         uses: "WyriHaximus/github-action-get-previous-tag@master"
       # - name: Read the version.
       #   id: version
       #   run: |
       #     version=`cat ./version.txt`
       #     echo "::set-output name=version::$version"
+      - name: Unformat tag.
+        id: version
+        run: |
+          version="${${{steps.version.outputs.tag}}:1}"
+          echo "::set-output name=version::$version"
       - name: Bump if patch.
-        if: ${{!contains(steps.version.outputs.tag, 'alpha') && !contains(steps.version.outputs.tag, 'beta')}}
+        if: ${{!contains(steps.version.outputs.version, 'alpha') && !contains(steps.version.outputs.version, 'beta')}}
         id: bump-bug
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{steps.version.outputs.tag}}
+          current-version: ${{steps.version.outputs.version}}
           version-fragment: bug
       - name: Set NuGet version from bug.
-        if: ${{!contains(steps.version.outputs.tag, 'alpha') && !contains(steps.version.outputs.tag, 'beta')}}
+        if: ${{!contains(steps.version.outputs.version, 'alpha') && !contains(steps.version.outputs.version, 'beta')}}
         run: echo "::set-env name=NUGET_VERSION::${{steps.bump-bug.outputs.next-version}}"
       - name: Bump if alpha.
-        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
+        if: ${{contains(steps.version.outputs.version, 'alpha')}}
         id: bump-alpha
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{steps.version.outputs.tag}}
+          current-version: ${{steps.version.outputs.version}}
           version-fragment: "alpha"
       - name: Set NuGet version from alpha.
-        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
+        if: ${{contains(steps.version.outputs.version, 'alpha')}}
         run: echo "::set-env name=NUGET_VERSION::${{steps.bump-alpha.outputs.next-version}}"
       - name: Bump if beta.
-        if: ${{contains(steps.version.outputs.tag, 'beta')}}
+        if: ${{contains(steps.version.outputs.version, 'beta')}}
         id: bump-beta
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{steps.version.outputs.tag}}
+          current-version: ${{steps.version.outputs.version}}
           version-fragment: "beta"
       - name: Set NuGet version from beta.
-        if: ${{contains(steps.version.outputs.tag, 'beta')}}
+        if: ${{contains(steps.version.outputs.version, 'beta')}}
         run: echo "::set-env name=NUGET_VERSION::${{steps.bump-beta.outputs.next-version}}"
       - run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Tell me the version
@@ -65,3 +70,5 @@ jobs:
       #     dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
       #     dotnet nuget push ./nupkg/Hypar.Elements.CodeGeneration.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
       #     dotnet nuget push ./nupkg/Hypar.Elements.Serialization.IFC.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+      # - name: Create a new version tag.
+      #   run: git tag
