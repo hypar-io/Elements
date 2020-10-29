@@ -172,7 +172,14 @@ namespace Elements.Geometry
         /// <returns>The angle in degrees between 0 and 180. </returns>
         public double AngleTo(Vector3 v)
         {
-            var rad = Math.Acos((Dot(v) / (Length() * v.Length())));
+            var n = Dot(v);
+            var d = Length() * v.Length();
+            var r = n / d;
+            if (r.ApproximatelyEquals(1.0))
+            {
+                return 0.0;
+            }
+            var rad = Math.Acos(r);
             return rad * 180 / Math.PI;
         }
 
