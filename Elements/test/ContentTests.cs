@@ -69,7 +69,7 @@ namespace Elements.Tests
             // <example>
             var avocadoType = new TestContentElem("../../../models/MergeGlTF/Avocado.glb",
                                       new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
-                                      new Transform(),
+                                      new Vector3(),
                                       new Transform(new Vector3(), Vector3.XAxis),
                                       20,
                                       BuiltInMaterials.Default,
@@ -79,7 +79,7 @@ namespace Elements.Tests
                                       "Avocado Type");
             var duckType = new TestContentElem("../../../models/MergeGlTF/Duck.glb",
                                       new BBox3(new Vector3(-1, -1, 0), new Vector3(1, 1, 2)),
-                                      new Transform(),
+                                      new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
                                       .005,
                                       BuiltInMaterials.Default,
