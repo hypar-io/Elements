@@ -320,7 +320,7 @@ namespace Elements.Geometry
             var s2 = new Line(a, c);
             var t1 = s1.TransformAt(1.0);
             var t2 = s2.TransformAt(0.0);
-            return new Transform(a, t1.XAxis.Average(t2.XAxis).Unitized(), t1.YAxis.Average(t2.YAxis).Unitized(), t1.ZAxis.Average(t2.ZAxis).Unitized());
+            return new Transform(a, t1.XAxis.Average(t2.XAxis), t1.YAxis.Average(t2.YAxis), t1.ZAxis.Average(t2.ZAxis));
         }
 
         private Transform CreateOthogonalTransform(int i, Vector3 a)
