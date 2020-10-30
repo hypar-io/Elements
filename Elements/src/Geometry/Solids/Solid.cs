@@ -707,13 +707,14 @@ namespace Elements.Geometry.Solids
 
         private Loop SweepPolygonBetweenPlanes(Polygon p, Transform start, Transform end, double rotation = 0.0)
         {
-            // Transform the polygon to the mid plane between two transforms.
-            // var mid = new Line(start.Origin, end.Origin).TransformAt(0.5, rotation).OfPolygon(p);
-            // var v = (end.Origin - start.Origin).Normalized();
-            // var startP = mid.ProjectAlong(v, start);
-            // var endP = mid.ProjectAlong(v, end);
-            var startP = (Polygon)p.Transformed(start);
-            var endP = (Polygon)p.Transformed(end);
+            // Transform the polygon to the mid plane between two transforms
+            // then project onto the end transforms. We do this so that we 
+            // do not introduce shear into the transform.
+            var midTrans = new Line(start.Origin, end.Origin).TransformAt(0.5);
+            var mid = (Polygon)p.Transformed(midTrans);
+            var v = (end.Origin - start.Origin).Unitized();
+            var startP = mid.ProjectAlong(v, start.XY());
+            var endP = mid.ProjectAlong(v, end.XY());
 
             var loop1 = AddEdges(startP);
             var loop2 = AddEdges(endP);
