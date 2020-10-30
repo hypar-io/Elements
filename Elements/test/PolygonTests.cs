@@ -766,5 +766,21 @@ namespace Elements.Geometry.Tests
 
             Assert.True(intersection[0].IsAlmostEqualTo(innerPolygon, Vector3.EPSILON));
         }
+
+        [Fact]
+        public void PolygonPointsAtToTheEnd()
+        {
+            this.Name = "PolygonPointsAtToTheEnd";
+
+            var polygon = new Circle(Vector3.Origin, 5).ToPolygon(7);
+            this.Model.AddElement(new ModelCurve(polygon));
+
+            var circle = new Circle(Vector3.Origin, 0.1).ToPolygon();
+            for (var u = 0.0; u <= 1.0; u += 0.05)
+            {
+                var pt = polygon.PointAt(u);
+                this.Model.AddElement(new ModelCurve(circle.Transformed(new Transform(pt)), BuiltInMaterials.XAxis));
+            }
+        }
     }
 }

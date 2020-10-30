@@ -79,7 +79,6 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">A value between 0.0 and 1.0.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-
         public override Vector3 PointAt(double u)
         {
             var segmentIndex = 0;
@@ -127,6 +126,7 @@ namespace Elements.Geometry
                 }
                 else
                 {
+                    // Create the average of the 
                     return CreateMiterTransform(idx, a);
                 }
             }
@@ -313,13 +313,13 @@ namespace Elements.Geometry
 
         private Transform CreateMiterTransform(int i, Vector3 a)
         {
-            // Create transforms at 'miter' planes.
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-            var x = (b - a).Unitized().Average((c - a).Unitized()).Negate();
-            var up = x.IsAlmostEqualTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
-
-            return new Transform(this.Vertices[i], x, x.Cross(up));
+            var s1 = new Line(b, a);
+            var s2 = new Line(a, c);
+            var t1 = s1.TransformAt(1.0);
+            var t2 = s2.TransformAt(0.0);
+            return new Transform(a, t1.XAxis.Average(t2.XAxis), t1.YAxis.Average(t2.YAxis), t1.ZAxis.Average(t2.ZAxis));
         }
 
         private Transform CreateOthogonalTransform(int i, Vector3 a)
@@ -354,7 +354,7 @@ namespace Elements.Geometry
         /// <param name="u">A value between 0.0 and 1.0.</param>
         /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        private Vector3 PointAtInternal(double u, out int segmentIndex)
+        protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
         {
             if (u < 0.0 || u > 1.0)
             {

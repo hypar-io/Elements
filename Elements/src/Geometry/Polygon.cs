@@ -918,6 +918,38 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get a point on the polygon at parameter u.
+        /// </summary>
+        /// <param name="u">A value between 0.0 and 1.0.</param>
+        /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
+        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
+        protected override Vector3 PointAtInternal(double u, out int segmentIndex)
+        {
+            if (u < 0.0 || u > 1.0)
+            {
+                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
+            }
+
+            var d = this.Length() * u;
+            var totalLength = 0.0;
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var a = this.Vertices[i];
+                var b = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                var currLength = a.DistanceTo(b);
+                var currVec = (b - a);
+                if (totalLength <= d && totalLength + currLength >= d)
+                {
+                    segmentIndex = i;
+                    return a + currVec * ((d - totalLength) / currLength);
+                }
+                totalLength += currLength;
+            }
+            segmentIndex = this.Vertices.Count - 1;
+            return this.End;
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
