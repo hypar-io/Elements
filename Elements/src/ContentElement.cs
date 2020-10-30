@@ -7,6 +7,13 @@ namespace Elements
 {
     public partial class ContentElement
     {
+        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
+        : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @transform, @material, @representation, @isElementDefinition, @id, @name)
+        {
+            this.AdditionalProperties = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(@additionalProperties);
+        }
+
+
         /// <summary>
         /// Update the ContentElement representation with a solid of the
         /// Bounding Box.  This is used in the absence of finding a the
