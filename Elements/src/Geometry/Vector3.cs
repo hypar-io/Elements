@@ -174,6 +174,11 @@ namespace Elements.Geometry
         {
             var n = Dot(v);
             var d = Length() * v.Length();
+            if (d == 0.0)
+            {
+                // Avoid a division by zero below.
+                return 0;
+            }
             var r = n / d;
             if (r.ApproximatelyEquals(1.0))
             {
