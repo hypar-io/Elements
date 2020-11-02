@@ -159,9 +159,6 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Get the transform on the curve at parameter u.
-        /// The Z axis of the transform will be the inverse of the tangent to the curve.
-        /// The X axis of the transform will be computed by taking the cross product
-        /// of the tanget and the +Z axis.
         /// </summary>
         /// <param name="u">The parameter along the curve between 0.0 and 1.0.</param>
         public override Transform TransformAt(double u)
@@ -171,9 +168,11 @@ namespace Elements.Geometry
                 case FrameType.Frenet:
                     return new Transform(PointAt(u), NormalAt(u), TangentAt(u).Negate());
                 case FrameType.RoadLike:
-                    var up = Vector3.ZAxis;
                     var z = TangentAt(u).Negate();
-                    var x = z.Cross(up);
+                    // If Z is parallel to the Z axis, the other vectors will
+                    // have zero length. We use the -Y axis in that case.
+                    var up = z.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis.Negate() : Vector3.ZAxis;
+                    var x = up.Cross(z);
                     return new Transform(PointAt(u), x, z);
             }
 
