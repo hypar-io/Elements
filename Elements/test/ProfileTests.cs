@@ -104,15 +104,17 @@ namespace Elements.Tests
             var outerL = Polygon.L(5.0, 10.0, 2.0);
             var beam = new Beam(outerL, l);
             this.Model.AddElement(beam);
+            var frames = outerL.Frames(0, 0);
 
-            Model.AddElements(outerL.Frames(0, 0).SelectMany(f => f.ToModelCurves()));
+            // Test that the X axes do not invert from one to the next.
+            for (var i = 0; i < frames.Count(); i++)
+            {
+                var a = frames[i];
+                var b = frames[(i + 1) % frames.Count()];
+                Assert.True(a.XAxis.Dot(b.XAxis) >= 0);
+            }
 
-            var c = new Circle(outerL.Vertices[0], 0.1);
-            Model.AddElements(new ModelCurve(c, BuiltInMaterials.XAxis));
-
-            var c1 = new Circle(outerL.Vertices[1], 0.1);
-            Model.AddElements(new ModelCurve(c1, BuiltInMaterials.YAxis));
-
+            Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
             var star = Polygon.Star(5, 3, 5).Transformed(new Transform(new Vector3(10, 10)));
             var starBeam = new Beam(star, l);
             this.Model.AddElement(starBeam);
