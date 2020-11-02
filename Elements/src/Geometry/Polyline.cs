@@ -204,16 +204,20 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The normal of this polygon, according to Newell's Method.
+        /// The normal of this polyline, according to Newell's Method.
         /// </summary>
         /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
-        public Vector3 Normal()
+        public virtual Vector3 Normal()
         {
+            // This is a slight variation on Newell that does not
+            // close the loop, as we do for polygons. For polylines, 
+            // closing the loop often results in self-intersection
+            // which returns a zero length vector.
             var normal = new Vector3();
-            for (int i = 0; i < Vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count - 1; i++)
             {
                 var p0 = Vertices[i];
-                var p1 = Vertices[(i + 1) % Vertices.Count];
+                var p1 = Vertices[i + 1];
                 normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
                 normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
                 normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
@@ -226,6 +230,9 @@ namespace Elements.Geometry
             // Create an array of transforms with the same
             // number of items as the vertices.
             var result = new Transform[this.Vertices.Count];
+
+            // Cache the normal so we don't have to recalculate
+            // using Newell for every frame.
             var up = Normal();
             for (var i = 0; i < result.Length; i++)
             {

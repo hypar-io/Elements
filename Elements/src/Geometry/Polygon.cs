@@ -900,6 +900,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// The normal of this polygon, according to Newell's Method.
+        /// </summary>
+        /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
+        public override Vector3 Normal()
+        {
+            var normal = new Vector3();
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                var p0 = Vertices[i];
+                var p1 = Vertices[(i + 1) % Vertices.Count];
+                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
+                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
+                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
+            }
+            return normal.Unitized();
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
