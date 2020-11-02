@@ -69,7 +69,7 @@ namespace Elements.Generate
 
         private static Func<object, object> GetContentElementToRender = (element) =>
         {
-            var constructor = element.GetType().GetConstructors().OrderBy(c => c.GetParameters().Length).Reverse();
+            var constructor = element.GetType().GetConstructors().OrderByDescending(c => c.GetParameters().Length);
             List<object> constructorParams = new List<object>();
             var parameters = constructor.FirstOrDefault().GetParameters();
             foreach (var param in parameters)
