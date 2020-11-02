@@ -19,12 +19,14 @@
 - The source code is now structured with the typical .NET project layout of `/src` and `/test` per folder.
 - `Opening` now has two primary constructors. The ability to create an opening with a profile has been removed. All profiles are now defined with a polygon as the perimeter.
 - `Opening.Profile` is now deprecated. Please use `Opening.Perimeter`.
+- `Polygon.Normal()` has been moved to the base class `Polyline.Normal()`.
 
 ### Fixed-
 - Fixed #407.
 - Fixed #416.
 - Fixed #417.
 - Fixed #342.
+- Fixed #392.
 
 ## 0.7.3
 ### Fixed
