@@ -772,13 +772,20 @@ namespace Elements.Geometry.Tests
         {
             this.Name = "PolygonPointsAtToTheEnd";
 
-            var polygon = new Circle(Vector3.Origin, 5).ToPolygon(7);
-            this.Model.AddElement(new ModelCurve(polygon));
+            var polyCircle = new Circle(Vector3.Origin, 5).ToPolygon(7);
+            var polyline = new Polyline(polyCircle.Vertices.Take(polyCircle.Vertices.Count - 1).ToList());
+
+            // Ensure that the PointAt function for u=1.0 is at the
+            // end of the polygon AND at the end of the polyline.
+            Assert.True(polyCircle.PointAt(1.0).IsAlmostEqualTo(polyCircle.Start));
+            Assert.True(polyline.PointAt(1.0).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+
+            this.Model.AddElement(new ModelCurve(polyCircle));
 
             var circle = new Circle(Vector3.Origin, 0.1).ToPolygon();
             for (var u = 0.0; u <= 1.0; u += 0.05)
             {
-                var pt = polygon.PointAt(u);
+                var pt = polyCircle.PointAt(u);
                 this.Model.AddElement(new ModelCurve(circle.Transformed(new Transform(pt)), BuiltInMaterials.XAxis));
             }
         }
