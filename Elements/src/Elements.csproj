@@ -27,15 +27,16 @@
   <ItemGroup>
     <Content Include="Textures\**\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>   
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Csg ">
       <HintPath>../lib/Csg.dll</HintPath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Reference>
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Update="UV.jpg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
