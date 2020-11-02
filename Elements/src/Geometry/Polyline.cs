@@ -101,7 +101,7 @@ namespace Elements.Geometry
 
             var segmentIndex = 0;
             var o = PointAtInternal(u, out segmentIndex);
-            var up = Vector3.ZAxis;
+            var y = Normal();
             Vector3 x = Vector3.XAxis; // Vector3: Convert to XAxis
 
             // Check if the provided parameter is equal
@@ -123,12 +123,11 @@ namespace Elements.Geometry
 
                 if (idx == 0 || idx == this.Vertices.Count - 1)
                 {
-                    return CreateOthogonalTransform(idx, a);
+                    return CreateOthogonalTransform(idx, a, y);
                 }
                 else
                 {
-                    // Create the average of the 
-                    return CreateMiterTransform(idx, a);
+                    return CreateMiterTransform(idx, a, y);
                 }
             }
             else
@@ -143,13 +142,13 @@ namespace Elements.Geometry
                     if (totalLength <= d && totalLength + currLength >= d)
                     {
                         o = s.PointAt((d - totalLength) / currLength);
-                        x = s.Direction().Cross(up);
+                        x = s.Direction().Cross(y);
                         break;
                     }
                     totalLength += currLength;
                 }
             }
-            return new Transform(o, x, up);
+            return new Transform(o, x, y, x.Cross(y));
         }
 
         /// <summary>
@@ -204,21 +203,47 @@ namespace Elements.Geometry
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
         }
 
+        /// <summary>
+        /// The normal of this polyline, according to Newell's Method.
+        /// </summary>
+        /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
+        public virtual Vector3 Normal()
+        {
+            // This is a slight variation on Newell that does not
+            // close the loop, as we do for polygons. For polylines, 
+            // closing the loop often results in self-intersection
+            // which returns a zero length vector.
+            var normal = new Vector3();
+            for (int i = 0; i < Vertices.Count - 1; i++)
+            {
+                var p0 = Vertices[i];
+                var p1 = Vertices[i + 1];
+                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
+                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
+                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
+            }
+            return normal.Unitized();
+        }
+
         internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)
         {
             // Create an array of transforms with the same
             // number of items as the vertices.
             var result = new Transform[this.Vertices.Count];
+
+            // Cache the normal so we don't have to recalculate
+            // using Newell for every frame.
+            var up = Normal();
             for (var i = 0; i < result.Length; i++)
             {
                 var a = this.Vertices[i];
                 if (closed)
                 {
-                    result[i] = CreateMiterTransform(i, a);
+                    result[i] = CreateMiterTransform(i, a, up);
                 }
                 else
                 {
-                    result[i] = CreateOthogonalTransform(i, a);
+                    result[i] = CreateOthogonalTransform(i, a, up);
                 }
             }
             return result;
@@ -312,7 +337,7 @@ namespace Elements.Geometry
             return result;
         }
 
-        private Transform CreateMiterTransform(int i, Vector3 a)
+        private Transform CreateMiterTransform(int i, Vector3 a, Vector3 up)
         {
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
@@ -323,19 +348,21 @@ namespace Elements.Geometry
             return new Transform(a, t1.XAxis.Average(t2.XAxis), t1.YAxis.Average(t2.YAxis), t1.ZAxis.Average(t2.ZAxis));
         }
 
-        private Transform CreateOthogonalTransform(int i, Vector3 a)
+        private Transform CreateOthogonalTransform(int i, Vector3 a, Vector3 up)
         {
             Vector3 b, x, c;
 
             if (i == 0)
             {
                 b = this.Vertices[i + 1];
-                return new Transform(a, (a - b).Unitized());
+                var z = (a - b).Unitized();
+                return new Transform(a, up.Cross(z), z);
             }
             else if (i == this.Vertices.Count - 1)
             {
                 b = this.Vertices[i - 1];
-                return new Transform(a, (b - a).Unitized());
+                var z = (b - a).Unitized();
+                return new Transform(a, up.Cross(z), z);
             }
             else
             {
@@ -344,8 +371,7 @@ namespace Elements.Geometry
                 var v1 = (b - a).Unitized();
                 var v2 = (c - a).Unitized();
                 x = v1.Average(v2).Negate();
-                var up = v2.Cross(v1);
-                return new Transform(this.Vertices[i], x, up.Cross(x));
+                return new Transform(this.Vertices[i], x, x.Cross(up));
             }
         }
 

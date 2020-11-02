@@ -69,7 +69,7 @@ namespace Elements.Generate
 
         private static Func<object, object> GetContentElementToRender = (element) =>
         {
-            var constructor = element.GetType().GetConstructors().OrderBy(c => c.GetParameters().Length);
+            var constructor = element.GetType().GetConstructors().OrderByDescending(c => c.GetParameters().Length);
             List<object> constructorParams = new List<object>();
             var parameters = constructor.FirstOrDefault().GetParameters();
             foreach (var param in parameters)
@@ -104,6 +104,12 @@ namespace Elements.Generate
                                         $"\n\t\tnew Vector3({tr.XAxis.X},{tr.XAxis.Y},{tr.XAxis.Z})," +
                                         $"\n\t\tnew Vector3({tr.YAxis.X},{tr.YAxis.Y},{tr.YAxis.Z})," +
                                         $"\n\t\tnew Vector3({tr.ZAxis.X},{tr.ZAxis.Y},{tr.ZAxis.Z}))";
+                            break;
+                        case Vector3 v:
+                            codeToAdd = $"new Vector3({v.X},{v.Y},{v.Z})";
+                            break;
+                        case Dictionary<string, object> dict:
+                            codeToAdd = "@\"" + Newtonsoft.Json.JsonConvert.SerializeObject(dict).Replace("\"", "\"\"") + "\"";
                             break;
                         case Material material:
                             // new Material(material.Color,
