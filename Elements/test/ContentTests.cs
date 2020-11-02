@@ -17,8 +17,8 @@ namespace Elements.Tests
     {
         private class TestContentElem : ContentElement
         {
-            public TestContentElem(string @gltfLocation, BBox3 @bBox, Transform @transform, double scale, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
-                        : base(gltfLocation, bBox, scale, transform, material, representation, isElementDefinition, id, name)
+            public TestContentElem(string @gltfLocation, BBox3 @bBox, Vector3 @toSource, Transform @transform, double scale, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
+                        : base(gltfLocation, bBox, scale, @toSource, transform, material, representation, isElementDefinition, id, name)
             { }
         }
 
@@ -28,6 +28,7 @@ namespace Elements.Tests
             ContentElement boxType = new ContentElement("../../../models/MergeGlTF/Workstation_Pod_SemiPrivate_Harbour - Semi 1600w x 1300d 3.glb",
                                       new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
                                       1,
+                                      new Vector3(),
                                       new Transform(new Vector3(), Vector3.ZAxis),
                                       BuiltInMaterials.Default,
                                       null,
@@ -37,6 +38,7 @@ namespace Elements.Tests
             ContentElement boxType2 = new ContentElement("../../../models/MergeGlTF/Box.glb",
                                       new BBox3(new Vector3(-1, -1, 0), new Vector3(1, 1, 2)),
                                       1,
+                                      new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
                                       BuiltInMaterials.Default,
                                       null,
@@ -44,6 +46,9 @@ namespace Elements.Tests
                                       Guid.NewGuid(),
                                       "BoxyType");
             var str = boxType2.ToString();
+            boxType.AdditionalProperties["ImportantParameter"] = "The Value";
+
+
             var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, Guid.NewGuid(), "test");
 
             var savePath = "../../../ContentCatalog.json";
@@ -54,6 +59,7 @@ namespace Elements.Tests
 
             Assert.Equal(testCatalog.Id, loadedCatalog.Id);
             Assert.Equal(testCatalog.Content.Count, loadedCatalog.Content.Count);
+            Assert.Equal("The Value", loadedCatalog.Content[0].AdditionalProperties["ImportantParameter"]);
         }
 
         [Fact, Trait("Category", "Example")]
@@ -63,6 +69,7 @@ namespace Elements.Tests
             // <example>
             var avocadoType = new TestContentElem("../../../models/MergeGlTF/Avocado.glb",
                                       new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
+                                      new Vector3(),
                                       new Transform(new Vector3(), Vector3.XAxis),
                                       20,
                                       BuiltInMaterials.Default,
@@ -72,6 +79,7 @@ namespace Elements.Tests
                                       "Avocado Type");
             var duckType = new TestContentElem("../../../models/MergeGlTF/Duck.glb",
                                       new BBox3(new Vector3(-1, -1, 0), new Vector3(1, 1, 2)),
+                                      new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
                                       .005,
                                       BuiltInMaterials.Default,
