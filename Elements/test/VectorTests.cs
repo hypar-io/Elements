@@ -32,6 +32,13 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Vector3AngleBetweenSameAngleEqualsZero()
+        {
+            var a = new Vector3(0.9853, -0.1708);
+            Assert.Equal(0.0, a.AngleTo(a));
+        }
+
+        [Fact]
         public void Vector3_PlaneAngles()
         {
             var a = Vector3.YAxis;
