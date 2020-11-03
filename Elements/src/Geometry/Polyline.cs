@@ -340,7 +340,6 @@ namespace Elements.Geometry
         {
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-            // var x = (b - a).Unitized().Average((c - a).Unitized()).Negate();
             var l1 = (a - b).Unitized();
             var l2 = (c - a).Unitized();
             var x1 = l1.Cross(up);
