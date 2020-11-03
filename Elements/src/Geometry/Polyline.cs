@@ -79,7 +79,6 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">A value between 0.0 and 1.0.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-
         public override Vector3 PointAt(double u)
         {
             var segmentIndex = 0;
@@ -381,7 +380,7 @@ namespace Elements.Geometry
         /// <param name="u">A value between 0.0 and 1.0.</param>
         /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        private Vector3 PointAtInternal(double u, out int segmentIndex)
+        protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
         {
             if (u < 0.0 || u > 1.0)
             {
