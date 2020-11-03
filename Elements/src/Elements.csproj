@@ -28,13 +28,15 @@
     <Content Include="Textures\**\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="../lib/Csg.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Csg">
       <HintPath>../lib/Csg.dll</HintPath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Pack>true</Pack>
     </Reference>
   </ItemGroup>
 
