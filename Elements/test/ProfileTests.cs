@@ -90,5 +90,34 @@ namespace Elements.Tests
             Model.AddElement(mass1);
             Model.AddElement(mass2);
         }
+
+        [Fact]
+        public void ProfileDoesNotReverseWhenWound()
+        {
+            this.Name = "ProfileDoesNotReverseWhenWound";
+
+            // This model should show an L and a star shape
+            // each with an L profile sweep. The sweep should not
+            // invert at any point and should be of constant thickness.
+
+            var l = new Profile(Polygon.L(1.0, 2.0, 0.5));
+            var outerL = Polygon.L(5.0, 10.0, 2.0);
+            var beam = new Beam(outerL, l);
+            this.Model.AddElement(beam);
+            var frames = outerL.Frames(0, 0);
+
+            // Test that the X axes do not invert from one to the next.
+            for (var i = 0; i < frames.Count(); i++)
+            {
+                var a = frames[i];
+                var b = frames[(i + 1) % frames.Count()];
+                Assert.True(a.XAxis.Dot(b.XAxis) >= 0);
+            }
+
+            Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
+            var star = Polygon.Star(5, 3, 5).Transformed(new Transform(new Vector3(10, 10)));
+            var starBeam = new Beam(star, l);
+            this.Model.AddElement(starBeam);
+        }
     }
 }
