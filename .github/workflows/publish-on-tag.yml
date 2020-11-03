@@ -16,11 +16,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
-      - name: Get previous tag.
-        id: version
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
-      - name: Set NuGet version from tag.
-        run: echo "::set-env name=NUGET_VERSION::${{steps.version.outputs.tag}}"
+      - name: Set env
+        run: echo ::set-env name=NUGET_VERSION::$(echo ${GITHUB_REF:10})
       - run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Publish NuGet package.
         run: |
