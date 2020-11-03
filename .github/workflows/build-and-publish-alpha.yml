@@ -39,6 +39,7 @@ jobs:
           version-fragment: "beta"
       - name: Set NuGet version from beta.
         if: ${{contains(steps.version.outputs.tag, 'beta')}}
+        run: echo "::set-env name=NUGET_VERSION::${{steps.bump-beta.outputs.next-version}}"
       - run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Publish NuGet package.
         run: |
