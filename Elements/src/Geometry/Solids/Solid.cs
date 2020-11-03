@@ -710,9 +710,9 @@ namespace Elements.Geometry.Solids
             // Transform the polygon to the mid plane between two transforms
             // then project onto the end transforms. We do this so that we 
             // do not introduce shear into the transform.
-            var midTrans = new Line(start.Origin, end.Origin).TransformAt(0.5);
+            var v = (start.Origin - end.Origin).Unitized();
+            var midTrans = new Transform(end.Origin.Average(start.Origin), start.YAxis.Cross(v), v);
             var mid = (Polygon)p.Transformed(midTrans);
-            var v = (end.Origin - start.Origin).Unitized();
             var startP = mid.ProjectAlong(v, start.XY());
             var endP = mid.ProjectAlong(v, end.XY());
 
