@@ -339,11 +339,13 @@ namespace Elements.Geometry
 
         private Transform CreateMiterTransform(int i, Vector3 a, Vector3 up)
         {
-            // Create transforms at 'miter' planes.
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-            var x = (b - a).Unitized().Average((c - a).Unitized()).Negate();
-            return new Transform(this.Vertices[i], x, x.Cross(up));
+            var s1 = new Line(b, a);
+            var s2 = new Line(a, c);
+            var t1 = s1.TransformAt(1.0);
+            var t2 = s2.TransformAt(0.0);
+            return new Transform(a, t1.XAxis.Average(t2.XAxis), t1.YAxis.Average(t2.YAxis), t1.ZAxis.Average(t2.ZAxis));
         }
 
         private Transform CreateOthogonalTransform(int i, Vector3 a, Vector3 up)
