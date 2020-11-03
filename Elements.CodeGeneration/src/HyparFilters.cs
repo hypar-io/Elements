@@ -11,33 +11,74 @@ namespace Elements.Generate
     // This HyparFilters class contains filters that are copied directly from the NJsonSchema repo
     // because the filters are not public but we need to register them globally for async code gen.
     // Copied from https://github.com/RicoSuter/NJsonSchema/blob/687efeabdc30ddacd235e85213f3594458ed48b4/src/NJsonSchema.CodeGeneration/DefaultTemplateFactory.cs#L183
+    /// <summary>
+    /// This class contains text filtering methods.  They are used during rendering in liquid templates.
+    /// We shouldn't actually need to implement these ourselves. See the TODO in the source code for more information.  
+    /// </summary>
     public static class HyparFilters
     {
+        /// <summary>
+        /// Return the string in lower camel case.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="input"></param>
+        /// <param name="firstCharacterMustBeAlpha"></param>
         public static string Lowercamelcase(Context context, string input, bool firstCharacterMustBeAlpha = true)
         {
             return ConversionUtilities.ConvertToLowerCamelCase(input, firstCharacterMustBeAlpha);
         }
 
+        /// <summary>
+        /// Return the string turned into a save C# identifier lowercased.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="input"></param>
+        /// <param name="firstCharacterMustBeAlpha"></param>
         public static string Safeidentifierlower(Context context, string input, bool firstCharacterMustBeAlpha = true)
         {
             return input.ToSafeIdentifier(true);
         }
 
+        /// <summary>
+        /// Return the string turned into a save C# identifier uppercased.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="input"></param>
+        /// <param name="firstCharacterMustBeAlpha"></param>
+        /// <returns></returns>
         public static string Safeidentifierupper(Context context, string input, bool firstCharacterMustBeAlpha = true)
         {
             return input.ToSafeIdentifier();
         }
 
+        /// <summary>
+        /// Convert the string into a tabbed and line broke text block.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="tabCount"></param>
         public static string Csharpdocs(string input, int tabCount)
         {
             return ConversionUtilities.ConvertCSharpDocs(input, tabCount);
         }
 
+        /// <summary>
+        /// Return an empty list of the input object's type.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static IEnumerable<object> Empty(Context context, object input)
         {
             return Enumerable.Empty<object>();
         }
 
+        /// <summary>
+        /// Add the desired number of tabs to the input string.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="input"></param>
+        /// <param name="tabCount"></param>
+        /// <returns></returns>
         public static string Tab(Context context, string input, int tabCount)
         {
             return ConversionUtilities.Tab(input, tabCount);

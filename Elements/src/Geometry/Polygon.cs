@@ -403,7 +403,7 @@ namespace Elements.Geometry
         /// <param name="subjectPolygons">Polygons to clip</param>
         /// <param name="clippingPolygons">Polygons with which to clip</param>
         /// <param name="mode">The operation to apply: Union, Difference, Intersection, or XOr</param>
-        /// <returns></returns>
+        /// <param name="tolerance">Optional override of the tolerance for determining if two polygons are identical.</param>
         private static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode mode, double tolerance = Vector3.EPSILON)
         {
             var subjectPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
