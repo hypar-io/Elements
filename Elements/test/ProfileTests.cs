@@ -106,18 +106,19 @@ namespace Elements.Tests
             this.Model.AddElement(beam);
             var frames = outerL.Frames(0, 0);
 
+            Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
+            var star = Polygon.Star(5, 3, 5).Transformed(new Transform(new Vector3(10, 10)));
+            var starBeam = new Beam(star, l);
+            this.Model.AddElement(starBeam);
+
             // Test that the X axes do not invert from one to the next.
             for (var i = 0; i < frames.Count(); i++)
             {
                 var a = frames[i];
                 var b = frames[(i + 1) % frames.Count()];
-                Assert.True(a.XAxis.Dot(b.XAxis) >= 0);
+                var dot = a.XAxis.Dot(b.XAxis);
+                Assert.True(dot >= 0);
             }
-
-            Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
-            var star = Polygon.Star(5, 3, 5).Transformed(new Transform(new Vector3(10, 10)));
-            var starBeam = new Beam(star, l);
-            this.Model.AddElement(starBeam);
         }
     }
 }

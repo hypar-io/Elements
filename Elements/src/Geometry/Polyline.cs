@@ -340,11 +340,13 @@ namespace Elements.Geometry
         {
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-            var s1 = new Line(b, a);
-            var s2 = new Line(a, c);
-            var t1 = s1.TransformAt(1.0);
-            var t2 = s2.TransformAt(0.0);
-            return new Transform(a, t1.XAxis.Average(t2.XAxis), t1.YAxis.Average(t2.YAxis), t1.ZAxis.Average(t2.ZAxis));
+            // var x = (b - a).Unitized().Average((c - a).Unitized()).Negate();
+            var l1 = (a - b).Unitized();
+            var l2 = (c - a).Unitized();
+            var x1 = l1.Cross(up);
+            var x2 = l2.Cross(up);
+            var x = x1.Average(x2);
+            return new Transform(this.Vertices[i], x, x.Cross(up));
         }
 
         private Transform CreateOthogonalTransform(int i, Vector3 a, Vector3 up)
