@@ -1,9 +1,9 @@
 name: Publish on Tag Creation
 
 on:
-  create:
+  push:
     tags:
-      - v*
+      - '*'
 
 jobs:
   increment-version:
