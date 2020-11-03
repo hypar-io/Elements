@@ -22,13 +22,11 @@ namespace Elements.Serialization.JSON
         /// <summary>
         /// The key (discriminator) of the type that inherits from this class.
         /// </summary>
-        /// <value></value>
         public string Key { get; }
 
         /// <summary>
         /// The type that inherits from this class with the given key.
         /// </summary>
-        /// <value></value>
         public System.Type Type { get; }
     }
 }

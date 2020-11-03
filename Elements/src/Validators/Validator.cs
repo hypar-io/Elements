@@ -13,8 +13,7 @@ namespace Elements.Validators
         /// <summary>
         /// The type to be validated.
         /// </summary>
-        /// <value></value>
-        Type ValidatesType {get;}
+        Type ValidatesType { get; }
 
         /// <summary>
         /// Validate the object with the provided arguments.
@@ -43,7 +42,7 @@ namespace Elements.Validators
         {
             get
             {
-                if(_validator == null)
+                if (_validator == null)
                 {
                     _validator = new Validator();
                 }
@@ -51,7 +50,7 @@ namespace Elements.Validators
             }
         }
 
-        private Dictionary<Type,IValidator> _validators;
+        private Dictionary<Type, IValidator> _validators;
 
         private Validator()
         {
@@ -76,7 +75,7 @@ namespace Elements.Validators
         /// <returns>A validator for T, or null if no validator for T can be found.</returns>
         public IValidator GetFirstValidatorForType<T>()
         {
-            if(_validators.ContainsKey(typeof(T)))
+            if (_validators.ContainsKey(typeof(T)))
             {
                 return _validators[typeof(T)];
             }
