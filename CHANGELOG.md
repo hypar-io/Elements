@@ -25,6 +25,7 @@
 - Fixed #407.
 - Fixed #416.
 - Fixed #417.
+- Fixed #342.
 - Fixed #392.
 
 ## 0.7.3
