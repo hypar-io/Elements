@@ -1,9 +1,8 @@
-name: Publish on Tag Creation
+name: Publish on Release
 
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
 
 jobs:
   increment-version:
