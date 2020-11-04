@@ -86,5 +86,19 @@ namespace Elements.Tests
                 ours.SaveBinaryModel(mergedBuffer, "../../../GltfTestMerged.glb");
             }
         }
+
+        private class NoMaterial : GeometricElement
+        {
+            public NoMaterial() : base(new Transform(), null, null, false, Guid.NewGuid(), "NoMaterialElement") { }
+        }
+
+        [Fact]
+        public void GeometricElementWithoutMaterialUsesDefaultMaterial()
+        {
+            var testElement = new NoMaterial();
+            var model = new Model();
+            model.AddElement(testElement);
+            Assert.True(testElement.Material == BuiltInMaterials.Default);
+        }
     }
 }
