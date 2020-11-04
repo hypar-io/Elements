@@ -8,6 +8,25 @@ using Elements.Geometry.Solids;
 
 namespace Elements.Validators
 {
+    public class GeometricElementValidator : IValidator
+    {
+        public Type ValidatesType => typeof(GeometricElement);
+
+        public void PostConstruct(object obj)
+        {
+            var geom = (GeometricElement)obj;
+            if (geom.Material == null)
+            {
+                geom.Material = BuiltInMaterials.Default;
+            }
+        }
+
+        public void PreConstruct(object[] args)
+        {
+            // Do nothing.
+        }
+    }
+
     public class ArcValidator : IValidator
     {
         public Type ValidatesType => typeof(Arc);
