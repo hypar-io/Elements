@@ -20,9 +20,9 @@ namespace Elements.Generate
         /// <summary>
         /// Return the string in lower camel case.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="input"></param>
-        /// <param name="firstCharacterMustBeAlpha"></param>
+        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
+        /// <param name="input">The string to be formatted.</param>
+        /// <param name="firstCharacterMustBeAlpha">Should the @ character be prepended to the string.</param>
         public static string Lowercamelcase(Context context, string input, bool firstCharacterMustBeAlpha = true)
         {
             return ConversionUtilities.ConvertToLowerCamelCase(input, firstCharacterMustBeAlpha);
@@ -31,9 +31,9 @@ namespace Elements.Generate
         /// <summary>
         /// Return the string turned into a save C# identifier lowercased.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="input"></param>
-        /// <param name="firstCharacterMustBeAlpha"></param>
+        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
+        /// <param name="input">The string to be formatted.</param>
+        /// <param name="firstCharacterMustBeAlpha">Should the @ character be prepended to the string.</param>
         public static string Safeidentifierlower(Context context, string input, bool firstCharacterMustBeAlpha = true)
         {
             return input.ToSafeIdentifier(true);
@@ -42,20 +42,19 @@ namespace Elements.Generate
         /// <summary>
         /// Return the string turned into a save C# identifier uppercased.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="input"></param>
-        /// <param name="firstCharacterMustBeAlpha"></param>
-        /// <returns></returns>
+        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
+        /// <param name="input">The string to be formatted.</param>
+        /// <param name="firstCharacterMustBeAlpha">Should the @ character be prepended to the string.</param>
         public static string Safeidentifierupper(Context context, string input, bool firstCharacterMustBeAlpha = true)
         {
             return input.ToSafeIdentifier();
         }
 
         /// <summary>
-        /// Convert the string into a tabbed and line broke text block.
+        /// Convert the string into a tabbed text block with line breaks.
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="tabCount"></param>
+        /// <param name="input">The string to be formatted.</param>
+        /// <param name="tabCount">The number of tabs that should be used.</param>
         public static string Csharpdocs(string input, int tabCount)
         {
             return ConversionUtilities.ConvertCSharpDocs(input, tabCount);
@@ -64,9 +63,8 @@ namespace Elements.Generate
         /// <summary>
         /// Return an empty list of the input object's type.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
+        /// <param name="input">The string to be formatted.</param>
         public static IEnumerable<object> Empty(Context context, object input)
         {
             return Enumerable.Empty<object>();
@@ -75,10 +73,9 @@ namespace Elements.Generate
         /// <summary>
         /// Add the desired number of tabs to the input string.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="input"></param>
-        /// <param name="tabCount"></param>
-        /// <returns></returns>
+        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
+        /// <param name="input">The string to be formatted.</param>
+        /// <param name="tabCount">The number of tabs that should be used.</param>
         public static string Tab(Context context, string input, int tabCount)
         {
             return ConversionUtilities.Tab(input, tabCount);
