@@ -59,12 +59,12 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u == 0.0)
+            if (u.ApproximatelyEquals(0.0))
             {
                 return this.Start;
             }
 
-            if (u == 1.0)
+            if (u.ApproximatelyEquals(1.0))
             {
                 return this.End;
             }
@@ -383,7 +383,7 @@ namespace Elements.Geometry
             }
             var lines = new List<Line>();
             var div = 1.0 / (n + 1);
-            for (var t = 0.0; t <= 1.0 - div; t += div)
+            for (var t = 0.0; t <= 1.0 - div + Vector3.EPSILON; t += div)
             {
                 var a = PointAt(t);
                 var b = PointAt(t + div);
