@@ -121,7 +121,7 @@ namespace Elements.Tests
 
             var curves = new List<Curve>();
 
-            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            var line = new Line(Vector3.Origin, new Vector3(1, 2, 5));
             curves.Add(line);
 
             var t = new Transform();
@@ -161,6 +161,22 @@ namespace Elements.Tests
                     last = tu;
                 }
             }
+
+            var centerLine = new Line(new Vector3(15, 0, -1), new Vector3(15, 0, 10));
+            var upT = centerLine.TransformAt(0);
+            this.Model.AddElements(upT.ToModelCurves());
+
+            var beam = new Beam(centerLine, Polygon.Rectangle(0.1, 0.1));
+            this.Model.AddElement(beam);
+
+            var centerLineRev = centerLine.Reversed().Transformed(new Transform(new Vector3(2, 0, 0)));
+            var downT = centerLineRev.TransformAt(0);
+            this.Model.AddElements(downT.ToModelCurves());
+
+            var beamDown = new Beam(centerLineRev, Polygon.Rectangle(0.1, 0.1));
+            this.Model.AddElement(beamDown);
+
+            Assert.Equal(upT.YAxis, downT.YAxis.Negate());
         }
     }
 

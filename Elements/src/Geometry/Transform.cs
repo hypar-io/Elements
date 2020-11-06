@@ -98,6 +98,14 @@ namespace Elements.Geometry
                 x = test.Cross(z).Unitized();
                 y = x.Cross(z.Negate()).Unitized();
             }
+            else
+            {
+                // Ensure that we have a right-handed coordinate system.
+                if (z.Dot(Vector3.ZAxis).ApproximatelyEquals(-1))
+                {
+                    y = Vector3.YAxis.Negate();
+                }
+            }
 
             this.Matrix = new Matrix(x, y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
