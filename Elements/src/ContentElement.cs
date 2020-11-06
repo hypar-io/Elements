@@ -7,6 +7,22 @@ namespace Elements
 {
     public partial class ContentElement
     {
+        /// <summary>
+        /// This constructor adds the ability to include additionalProperties.  The additional properties should be 
+        /// a dictionary that has been serialized to a string, they are deserialized during construction.
+        /// This is used in Revit Content workflows to store instance parameter data.
+        /// </summary>
+        /// <param name="gltfLocation"></param>
+        /// <param name="boundingBox"></param>
+        /// <param name="gltfScaleToMeters"></param>
+        /// <param name="sourceDirection"></param>
+        /// <param name="transform"></param>
+        /// <param name="material"></param>
+        /// <param name="representation"></param>
+        /// <param name="isElementDefinition"></param>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="additionalProperties"></param>
         public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
         : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @transform, @material, @representation, @isElementDefinition, @id, @name)
         {
