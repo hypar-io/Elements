@@ -372,18 +372,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Divide the line into n+1 equal segments.
+        /// Divide the line into n equal segments.
         /// </summary>
         /// <param name="n">The number of segments.</param>
-        public List<Line> DivideByCount(int n)
+        public List<Line> DivideIntoEqualSegments(int n)
         {
             if (n < 0)
             {
                 throw new ArgumentException($"The number of divisions must be greater than 0.");
             }
             var lines = new List<Line>();
-            var div = 1.0 / (n + 1);
-            for (var t = 0.0; t <= 1.0 - div + Vector3.EPSILON; t += div)
+            var div = 1.0 / (n );
+            for (var t = 0.0; t < 1.0 - div + Vector3.EPSILON; t += div)
             {
                 var a = PointAt(t);
                 var b = PointAt(t + div);
