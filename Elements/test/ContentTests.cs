@@ -51,12 +51,13 @@ namespace Elements.Tests
 
             var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, Guid.NewGuid(), "test");
 
-            var savePath = "../../../ContentCatalog.json";
+            var savePath = "../../../models/ContentCatalog.json";
             var json = testCatalog.ToJson();
             File.WriteAllText(savePath, json);
 
             var loadedCatalog = ContentCatalog.FromJson(File.ReadAllText(savePath));
 
+            File.Delete(savePath);
             Assert.Equal(testCatalog.Id, loadedCatalog.Id);
             Assert.Equal(testCatalog.Content.Count, loadedCatalog.Content.Count);
             Assert.Equal("The Value", loadedCatalog.Content[0].AdditionalProperties["ImportantParameter"]);
@@ -97,8 +98,8 @@ namespace Elements.Tests
             var twoDuck = duckType.CreateInstance(new Transform(new Vector3(15, 0, 0)), "A Duck");
             model.AddElement(twoDuck);
             // </example>
-            model.ToGlTF("../../../ContentInstancing.gltf", false);
-            model.ToGlTF("../../../ContentInstancing.glb");
+            model.ToGlTF("./models/ContentInstancing.gltf", false);
+            model.ToGlTF("./models/ContentInstancing.glb");
         }
     }
 }

@@ -78,12 +78,12 @@ namespace Elements.Tests
                 NodeUtilities.CreateNodeForMesh(ours.Meshes.Length - 1, nodeList, transform);
                 ours.Nodes = nodeList.ToArray();
 
-                var savepath = "../../../GltfTestResult.gltf";
+                var savepath = "models/GltfTestResult.gltf";
                 ours.SaveBuffersAndAddUris(savepath, bufferByteArrays);
                 ours.SaveModel(savepath);
 
                 var mergedBuffer = ours.CombineBufferAndFixRefs(bufferByteArrays.ToArray());
-                ours.SaveBinaryModel(mergedBuffer, "../../../GltfTestMerged.glb");
+                ours.SaveBinaryModel(mergedBuffer, "models/GltfTestMerged.glb");
             }
         }
 
