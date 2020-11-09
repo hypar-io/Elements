@@ -377,12 +377,12 @@ namespace Elements.Geometry
         /// <param name="n">The number of segments.</param>
         public List<Line> DivideIntoEqualSegments(int n)
         {
-            if (n < 0)
+            if (n <= 0)
             {
                 throw new ArgumentException($"The number of divisions must be greater than 0.");
             }
             var lines = new List<Line>();
-            var div = 1.0 / (n );
+            var div = 1.0 / n;
             for (var t = 0.0; t < 1.0 - div + Vector3.EPSILON; t += div)
             {
                 var a = PointAt(t);
