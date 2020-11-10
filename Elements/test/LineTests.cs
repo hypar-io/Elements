@@ -101,14 +101,15 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void DivideByCount()
+        public void DivideIntoEqualSegments()
         {
-            var l = new Line(Vector3.Origin, new Vector3(5, 0));
-            var segments = l.DivideByCount(5);
+            var l = new Line(Vector3.Origin, new Vector3(100, 0));
+            var segments = l.DivideIntoEqualSegments(41);
             var len = l.Length();
+            Assert.Equal(41, segments.Count);
             foreach (var s in segments)
             {
-                Assert.Equal(s.Length(), len / 6, 5);
+                Assert.Equal(s.Length(), len / 41, 5);
             }
         }
 

@@ -59,12 +59,12 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u == 0.0)
+            if (u.ApproximatelyEquals(0.0))
             {
                 return this.Start;
             }
 
-            if (u == 1.0)
+            if (u.ApproximatelyEquals(1.0))
             {
                 return this.End;
             }
@@ -372,18 +372,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Divide the line into n+1 equal segments.
+        /// Divide the line into n equal segments.
         /// </summary>
         /// <param name="n">The number of segments.</param>
-        public List<Line> DivideByCount(int n)
+        public List<Line> DivideIntoEqualSegments(int n)
         {
-            if (n < 0)
+            if (n <= 0)
             {
                 throw new ArgumentException($"The number of divisions must be greater than 0.");
             }
             var lines = new List<Line>();
-            var div = 1.0 / (n + 1);
-            for (var t = 0.0; t <= 1.0 - div; t += div)
+            var div = 1.0 / n;
+            for (var t = 0.0; t < 1.0 - div + Vector3.EPSILON; t += div)
             {
                 var a = PointAt(t);
                 var b = PointAt(t + div);
