@@ -202,7 +202,7 @@ This diagram summarizes the process we just went through to create, define, and 
 
 <div style="page-break-after: always;"></div>
 
-## Editing our function
+## Editing your function
 
 While developing a function, you may need to add additional inputs or outputs and change function logic. In this section we'll see how to do this.
 
