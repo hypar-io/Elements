@@ -26,24 +26,17 @@
 
   <ItemGroup>
     <Content Include="Textures\**\*.*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
     <Content Include="../lib/Csg.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Csg">
       <HintPath>../lib/Csg.dll</HintPath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="UV.jpg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
