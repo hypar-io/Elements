@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polyline
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.56.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -260,8 +260,7 @@ var offset = pline.Offset(1, EndType.Square);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -289,8 +288,7 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -314,8 +312,7 @@ public Vector3 End { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -339,10 +336,7 @@ public Vector3 Start { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.Always)]
-[Required]
-[MinLength(2)]
-public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -528,6 +522,31 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <a id="Elements_Geometry_Polyline_Normal_" data-uid="Elements.Geometry.Polyline.Normal*"></a>
+  <h4 id="Elements_Geometry_Polyline_Normal" data-uid="Elements.Geometry.Polyline.Normal">Normal()</h4>
+  <div class="markdown level1 summary"><p>The normal of this polyline, according to Newell's Method.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Vector3 Normal()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>The unitized sum of the cross products of each pair of edges.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_Offset_" data-uid="Elements.Geometry.Polyline.Offset*"></a>
   <h4 id="Elements_Geometry_Polyline_Offset_System_Double_Elements_Geometry_EndType_System_Double_" data-uid="Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType,System.Double)">Offset(Double, EndType, Double)</h4>
   <div class="markdown level1 summary"><p>Offset this polyline by the specified amount.</p>
@@ -653,6 +672,55 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
+  <a id="Elements_Geometry_Polyline_PointAtInternal_" data-uid="Elements.Geometry.Polyline.PointAtInternal*"></a>
+  <h4 id="Elements_Geometry_Polyline_PointAtInternal_System_Double_System_Int32__" data-uid="Elements.Geometry.Polyline.PointAtInternal(System.Double,System.Int32@)">PointAtInternal(Double, out Int32)</h4>
+  <div class="markdown level1 summary"><p>Get a point on the polygon at parameter u.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>A value between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">segmentIndex</span></td>
+        <td><p>The index of the segment containing parameter u.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_Reversed_" data-uid="Elements.Geometry.Polyline.Reversed*"></a>
   <h4 id="Elements_Geometry_Polyline_Reversed" data-uid="Elements.Geometry.Polyline.Reversed">Reversed()</h4>
   <div class="markdown level1 summary"><p>Reverse the direction of a polyline.</p>

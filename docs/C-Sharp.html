@@ -8,7 +8,7 @@
     <title>Writing Hypar Functions in C# | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Writing Hypar Functions in C# | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.56.5.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
@@ -86,20 +86,18 @@
 </li>
 </ul>
 </li>
-<li><strong>VSCode</strong> (Windows, Mac OS, Linux) or any other C#-compatible code editor.
+<li><strong>Visual Studio Code</strong> (Windows, Mac OS, Linux) or any other C#-compatible code editor.
 <ul>
-<li>We strongly suggest using <strong>VSCode</strong>, because we make a very helpful Hypar Plugin for VSCode (see the next bullet).
+<li>We strongly suggest using <strong>VSCode</strong> to follow along with this tutorial, although Visual Studio will also work fine.
 <ul>
 <li><a href="https://code.visualstudio.com/">Download VSCode</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li>If you're using VSCode, install the <strong>Hypar Function Builder</strong> extension:
+<li>A Hypar Account:
 <ul>
-<li>Select <strong>&quot;Extensions&quot;</strong> in the <strong>&quot;View&quot;</strong> menu.</li>
-<li>Search for <strong>&quot;Hypar&quot;.</strong></li>
-<li>Click <strong>&quot;Install&quot;</strong> on <strong>Hypar Function Builder</strong>.</li>
+<li>Sign up at <a href="https://hypar.io" target="_blank">hypar.io</a>.</li>
 </ul>
 </li>
 <li>Access to a command line for your operating system.
@@ -119,12 +117,13 @@
 </li>
 <li><a href="https://dotnet.microsoft.com/download/dotnet-core/3.1">.NET Core 3.1</a>
 <ul>
-<li>Hypar uses the cross-platform dotnet framework created and maintained by Microsoft. The version number is important! There might be issues with earlier or later versions of .NET Core.</li>
+<li>Hypar uses the cross-platform dotnet framework created and maintained by Microsoft. The version number is important! There might be issues with earlier or later versions of .NET Core. <strong>Be sure to download the SDK installer from the left-hand side, not the runtime.</strong></li>
 </ul>
 </li>
 </ul>
 <h3 id="things-you-might-want-to-know">Things you might want to know</h3>
 <ul>
+<li>It's helpful to review the <a href="index.html">short conceptual overview of Hypar Elements, Functions, and Workflows</a> before beginning this tutorial.</li>
 <li>Basic familiarity with the <strong>C#</strong> programming language will help, but if you're not familiar with C# we'll do our best to walk you through making changes to the initial code you'll get by following the steps in this guide.</li>
 <li>If you want to share your Hypar functions, you have to explicitly make your work public, so don't worry that perfect strangers are judging your work. They will, but only if <strong><u>you</u></strong> decide to make them public.</li>
 <li>The procedures you'll use in this guide compile your code on your desktop and only upload the resulting binary file. No one at Hypar will examine your source code because we won't have it unless you make it public by some other means or if you send it to us so we can help you solve a problem.</li>
@@ -132,121 +131,218 @@
 </ul>
 <div style="page-break-after: always;"></div>
 <h2 id="installing-and-using-the-hypar-command-line-interface-cli">Installing and Using the Hypar Command Line Interface (CLI)</h2>
-<p>Open a Command Prompt (<code>cmd.exe</code> on Windows, or Terminal on Mac or Linux) and input the following command:</p>
+<p>Open a Command Prompt (<code>cmd.exe</code> on Windows, or Terminal on Mac or Linux) and input the following command to install the Hypar CLI:</p>
 <pre><code class="lang-bash">dotnet tool install -g hypar.cli
 </code></pre>
-<p><img src="images/HyparCLIinstall2019.06.16.PNG" alt=""></p>
+<p><img src="images/hypar-install.png" alt=""></p>
 <p>Close and reopen the Command Prompt to finish the installation.</p>
-<p>Now you're ready to send your first function to Hypar. First use the command prompt cd (for &quot;<u>c</u>hange <u>d</u>irectory&quot;) command to navigate to the folder where you'd like to place your function project.</p>
-<p>Try this in the Command Prompt:</p>
-<pre><code class="lang-bash">hypar new
+<p>Sign in to Hypar with this command in the Command Prompt:</p>
+<pre><code class="lang-bash">hypar sign-in
 </code></pre>
-<p><img src="images/HyparFunctionName2019.06.16.png" alt=""></p>
+<p><img src="images/hypar_sign-in.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>For consistency with the rest of this example give your function the name <strong>StarterFunction</strong>. A bunch of stuff happens that we'll explain in a moment, but in the meantime enter your Hypar user name and password:</p>
-<p><img src="images/HyparFunctionNewLogin2019.06.16.png" alt=""></p>
+<h2 id="creating-a-function">Creating a Function</h2>
+<p>Next, return to the <a href="https://hypar.io">Hypar web interface</a> and sign in. Scroll down to see <strong>Your Functions</strong>, and click <strong>New Function</strong> followed by <strong>New C# Function</strong>.</p>
+<p><img src="images/new-function.png" alt="">
+<img src="images/new-function-2.png" width="60%"></p>
+<p>This wizard will take you through setting up your function. For consistency with the rest of this example, give your function the name <strong>Starter Function</strong>.</p>
+<img src="images/wizard-step-1.png" width="60%">
+<p>Click <strong>Next</strong> to proceed to configuring your function's inputs. Click or drag three &quot;Range&quot; inputs and name them Width, Length, and Height, and set their minimum values to 1:</p>
+<img src="images/wizard-step-2.png" width="60%">
+<p>Go on to the next step, and click next again so that <strong>Step 4: Outputs</strong> is highlighted at the top. Click the <strong>+</strong> to add a new output to report the box's volume, and configure it like so:</p>
+<img src="images/wizard-step-4.png" width="60%">
+<p>Move on to the final step, <strong>Logic</strong>. Click &quot;Publish Function,&quot; and then click the <img src="images/copy-to-clipboard.png" width="15px"> button to copy the terminal command.</p>
+<img src="images/wizard-step-5.png" width="60%">
+<p>Now your function has been published (privately) to Hypar! Next, we'll write some code to define the logic for the function.</p>
+<p>Return to your command prompt. Decide where you want Hypar to save the code for your function on your computer, and use the <code>cd</code> command to set that location as the current working directory:</p>
+<pre><code class="lang-bash">cd C:/users/yourUserName/repos
+</code></pre>
+<p>Then paste the command you copied from the Hypar web interface, and run that (don't copy the one below, it won't have the right ID):</p>
+<pre><code>hypar new --function-id=96a0df70-2a7d-4612-9c0e-7f6d86830576
+</code></pre>
+<p>A bunch of messages will go by as Hypar sets up your local project.
+<img src="images/hypar-new-fid.png" alt=""></p>
+<p>Next, open VS Code and open the project folder we just created. It should be in the location you picked earlier, with the folder name &quot;StarterFunction.&quot;</p>
+<p>The Hypar CLI just created a bunch of files for you. Here's what that looks like in VS Code:</p>
+<p><img src="images/project-structure.png" alt=""></p>
+<p>It may seem like a lot, but the good news is you rarely have to edit most of these files — Hypar takes care of all of that for you. Any file you see that ends with <code>.g.cs</code> is not meant to be edited by you.</p>
+<p>The file we care about most is StarterFunction.cs in the <code>/src</code> directory — this contains the logic for your function. Let's open it up.</p>
+<p>The <code>Execute</code> method is the entry point into our function. It doesn't do anything very exciting right away; it creates an &quot;Outputs&quot; object, and returns it.</p>
+<p><img src="images/starter-function.png" alt=""></p>
+<p>Note that the method has a few arguments. The one called <code>input</code> contains the inputs we defined earlier, like Width, Length, and Height. Let's use some of those inputs to create a rectangle. Add this line to your function, in between the two existing lines of the method:</p>
+<pre><code class="lang-csharp">var rectangle = Polygon.Rectangle(input.Width, input.Length);
+</code></pre>
+<p><img src="images/method-add-rectangle.png" alt=""></p>
+<p>Next we'll make a <code>Mass</code> Element to pass out to the Hypar 3d environment. Note that if you want something to show up in the 3d view, it has to be an Element of some kind. Add this line after the rectangle:</p>
+<pre><code class="lang-csharp">var mass = new Mass(rectangle, input.Height);
+</code></pre>
+<p><img src="images/method-add-mass.png" alt=""></p>
+<p>We also have to put the mass we created in the output model, like so:</p>
+<pre><code class="lang-csharp">output.Model.AddElement(mass);
+</code></pre>
+<p><img src="images/method-add-to-model.png" alt=""></p>
+<p>Finally, we created an output called <code>Volume</code> to report the box's volume. These data outputs are provided to the constructor for the <code>Outputs</code> object — so let's edit the first line of our method to look like this:</p>
+<pre><code class="lang-csharp">var output = new StarterFunctionOutputs(input.Width * input.Length * input.Height);
+</code></pre>
+<p>Our function should look like this when we're all done. <strong>Be sure to save the file!</strong></p>
+<pre><code class="lang-csharp">public static StarterFunctionOutputs Execute(Dictionary&lt;string, Model&gt; inputModels, StarterFunctionInputs input)
+        {
+            // create an outputs object and populate any output values
+            var output = new StarterFunctionOutputs(input.Width * input.Length * input.Height);
+            // create a rectangle
+            var rectangle = Polygon.Rectangle(input.Width, input.Length);
+
+            // create a mass from the rectangle
+            var mass = new Mass(rectangle, input.Height);
+
+            // add the mass to the output model
+            output.Model.AddElement(mass);
+            return output;
+        }
+</code></pre>
+<p><a href="https://gist.github.com/andrewheumann/665dbc91b9c199973db16ba61627d0ba" target="_new">View on Github</a></p>
+<p>To publish our changes to the web, open up your command prompt again (or open VS Code's integrated terminal). Make sure your working directory is the one Hypar created for you — you might need to <code>cd StarterFunction</code> first. Then publish your function logic like this:</p>
+<pre><code class="lang-bash">hypar publish
+</code></pre>
+<p><img src="images/hypar-publish.png" alt=""></p>
+<p>Now your function logic has been added to your function on Hypar. Let's go test it out! Return to <a href="https://hypar.io" target="_blank">hypar.io</a> and sign in.</p>
+<p>Create a new workflow by clicking <strong>New Workflow</strong> and selecting <strong>New Blank Workflow.</strong> Once it opens up, give it a name in the nav bar. Type in any name you want (perhaps &quot;Starter workflow&quot;). You'll see this screen:</p>
+<p><img src="images/empty-workflow.png" alt=""></p>
+<p>In the Function Library panel, search for &quot;Starter Function&quot; (or whatever you named your function).</p>
+<p>Now let's try out our function. Click <strong>Insert</strong> on Starter Function and <strong>hide</strong> the Function Library by clicking the &quot;X&quot; to close it. Your function will run automatically and you should see something like this:</p>
+<p><img src="images/first-run.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>Now more stuff happens, but the important thing right now is to know that your function has been published (privately) to Hypar!</p>
-<p><img src="images/HyparFunctionPublished2019.06.16.png" alt=""></p>
-<p>With one command you've created a web application that we're going to customize and publish again (and again and again), but first let's see what we've got so far. <a href="https://hypar.io" target="_blank">Back to https://hypar.io</a>.</p>
+<p>You've just run a web application that you created! Click in the 3D view to zoom, pan, and rotate the result. Now click on Starter Function to open up its inputs. Try adjusting the sliders to see how the mass changes shape. Check the &quot;Sample Range&quot; checkbox under the height and width sliders. Then click the &quot;Alternatives&quot; button (<img src="images/alternatives-btn.png" width="30px">) on your workflow to see the options that have been generated.</p>
+<p><img src="images/show-alternatives.png" alt=""></p>
+<p>In the alternatives list, you can see that your function has actually run many times with different input values. Click different alternatives to view them in 3D. The range sliders on the left are set to allow all possible lengths and widths. You can shrink these ranges to generate just the options you want.</p>
+<p>This diagram summarizes the process we just went through to create, define, and publish our function:
+<img src="images/CreatewithWizard.png" alt=""></p>
 <div style="page-break-after: always;"></div>
-<p>This time, click on the <strong>sign in</strong> button on the left below the logo...</p>
-<p><img src="images/HyparLanding2019.11.29.png" alt=""></p>
-<p>...and sign in using your new account:</p>
-<p><img src="images/HyparSignIn2019.06.16.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>Once you sign in, you'll see something like the following screen:</p>
-<p><img src="images/HyparWorkflows2019.11.29.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>Create a new workflow using the form on the bottom left. Type in any name you want (perhaps &quot;Starter workflow&quot;) and click <strong>Create</strong>. You'll see this screen:</p>
-<p><img src="images/HyparEmptyWorkflow2019.11.29.png" alt=""></p>
-<p>Click <strong>Add Function</strong> in the top left of the screen to open the function library and search for &quot;StarterFunction&quot; (or whatever you named your function).</p>
-<p><img src="images/HyparStarterFunction2019.11.29.png" alt=""></p>
-<p>Click on the <strong>more...</strong> link on the lower right of your <strong>StarterFunction</strong> card:</p>
-<p><img src="images/HyparCardFlip2019.11.29.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>That checked <strong>Private</strong> box is what's keeping your new function invisible to everyone but you and the administrators of Hypar. If you ever want everyone to see your function, you'll have to uncheck that box and read our warning that the world is about to see your work. Try changing the setting, then make it private again.</p>
-<p>Now let's make some options. Click <strong>Insert</strong> on StarterFunction and <strong>hide</strong> the Function Library. Your function will run automatically and you should see something like this:</p>
-<p><img src="images/HyparStarterFunctionFirstRun2019.11.29.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>You've run a web application that you created by just typing <code>hypar new</code>! Click in the 3D view to zoom, pan, and rotate the result. Now click on StarterFunction's <strong>Settings</strong> and <strong>Alternatives</strong> buttons, the first two buttons after its name on the left:</p>
-<p><img src="images/HyparOptions2019.11.29.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-In the alternatives list, you can see that your function has actually run many times with different input values. Click different alternatives to view them in 3D. The range sliders on the left are set to allow all possible lengths and widths. You can shrink these ranges to generate just the options you want.
-<p>Now let's go back and look at everything that happened and what it means for writing your own custom Hypar functions in the future. We'll place blue boxes around what we're talking about, like this:</p>
-<p><img src="images/HyparStartFunctionCreate2019.06.16.png" alt=""></p>
-<p>The first thing that happened was that the <strong>hypar new</strong> command created a new local project folder within the current folder. In Windows Explorer, the new folder looks like this:</p>
-<p><img src="images/HyparStarterFolder2019.06.16.png" alt=""></p>
-<p>The next thing <strong>hypar new</strong> did was add a test project into that folder, in the folder called <strong>test</strong> above. This is the project that will help you test your function updates locally before uploading them to Hypar.</p>
-<p><img src="images/HyparStartFunctionTests2019.06.16.PNG" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>Then the <strong>hypar new</strong> command created a <strong>hypar.json</strong> file that you can see in the <strong>StarterFunction</strong> folder above. We'll use this file to customize and extend the default function.</p>
-<p><img src="images/HyparJSONCreate019.06.16.png" alt=""></p>
-<p>Next the <strong>hypar new</strong> command executed something called <strong>hypar init</strong>, which created a couple of more important files in your project, but which you shouldn't have to worry about except to understand what they do and how they change as you edit your <strong>hypar.json</strong> file.</p>
-<p><img src="images/HyparInit2019.06.16.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>If you open the <strong>src</strong> folder, you'll see these files:</p>
-<p><img src="images/HyparSRC2019.06.16.png" alt=""></p>
-<p>The three files with names containing <strong>.g.cs</strong> are generated code files. You never need to edit these directly but it's important to know that the <strong>hypar init</strong> command generates them from the <strong>hypar.json</strong> file that we'll look at in a moment, because when you make changes to the <strong>hypar.json</strong> file you'll have to run <strong>hypar init</strong> again to update these files.</p>
-<p>These three files are what make your C# code compatible with Hypar services. They're kept separate so that your code won't become directly dependent on the Hypar platform but can easily take advantage of its services.</p>
-<p>After <strong>hypar init</strong> executes, there's some housekeeping that completes the local changes, then after you sign in the <strong>hypar new</strong> command uploads your new function.</p>
-<div style="page-break-after: always;"></div>
-<p>Go back and open the StarterFunction directory in VSCode:</p>
-<p><img src="images/HyparOpenVSCode.png" alt=""></p>
-<p>VSCode will look like this, with all of the files in the left column:</p>
-<p><img src="images/HyparVSCodeHome.png" alt=""></p>
-<p>Now use Code to open the <strong>hypar.json</strong> file, and we'll look at how this configuration influences what you see when you work with a function on Hypar.</p>
-<p>The <strong>&quot;inputs&quot;</strong> section of the <strong>hypar.json</strong> determines what inputs you see for the uploaded function:</p>
-<p><img src="images/HyparInputs2020.01.07.png" alt=""></p>
-<p>The <strong>&quot;outputs&quot;</strong> section determines the values you see associated with each option:</p>
-<p><img src="images/HyparOutputs2020.01.07.png" alt=""></p>
-<p>In the next exercise, we're going add a new <strong>Height</strong> input to this function.</p>
-<div style="page-break-after: always;"></div>
-<h2 id="adding-a-new-function-input">Adding a new function input</h2>
-<p>First, let's open the <strong>src/StarterFunctionInputs.g.cs</strong> file in Code and look at the <strong>StarterFunctionInputs</strong> class to see how the <strong>hypar.json</strong> turns into code. Note how the corresponding entries become public class properties:</p>
-<p><img src="images/HyparInputsClassJSON2020.01.07.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>Edit your <strong>hypar.json</strong> file to look like the one illustrated below. Copy the <strong>&quot;Width&quot;</strong> output and change the copy's <strong>name</strong> and <strong>description</strong> values to refer to <strong>&quot;Height&quot;</strong> and <strong>&quot;The height&quot;</strong> instead of <strong>&quot;Width&quot;</strong> and <strong>&quot;The width&quot;</strong>. Insert a comma after the <strong>&quot;Width&quot;</strong> section's closing brace now that it's no longer the last input field:</p>
-<p><img src="images/HyparHeightInputJSON2020.01.07.png" alt=""></p>
-<p>Save this file and open the command prompt again, using the cd command to change the current directory to your project folder. Then run <strong>hypar init</strong>:</p>
-<p><img src="images/HyparInitCommand2019.06.16.png" alt=""></p>
-<p><strong>hypar init</strong> reads the json file to understand how to regenerate the input and output class files as well as the function file. Open <strong>StarterFunctionInputs.g.cs</strong> to see what changed.</p>
-<div style="page-break-after: always;"></div>
-<p><img src="images/HyparInitChange2020.01.07.png" alt=""></p>
-<p>Now that we have this new entry for <strong>Height</strong>, we have to tell our function to use it. Open <strong>StarterFunction.cs</strong> and change the <strong>var height = 1.0;</strong> line to use the height input value instead:</p>
-<p><img src="images/HyparHeightInput2020.01.07.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>Now we have our new <strong>Height</strong> input. Let's send this up to Hypar using <strong>hypar publish</strong> and see how our function works now:</p>
-<p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
-<p>Opening <strong>StarterFunction</strong> on Hypar again, we now have a <strong>Height</strong> input in addition to the <strong>Length</strong> and <strong>Width</strong> inputs.  Unchecking &quot;Sample Range&quot; on height and setting its slider to 10m gives us a set of alternatives with identical heights and varied lengths and widths:</p>
-<p><img src="images/HyparStarterHeight2019.11.29.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>What if we wanted a maximum height of 20m? Let's go back to the <strong>hypar.json</strong> file and change the maximum for the input range:</p>
-<p><img src="images/HyparStarter20Height2020.01.07.png" alt=""></p>
-<p>Save the file and run <strong>hypar publish</strong> again at the command prompt:</p>
-<p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>When we open <strong>StarterFunction</strong> on Hypar again, the range can now be set to 20:</p>
-<p><img src="images/HyparHeightUpdate.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<h2 id="adding-a-new-function-output">Adding a new function output</h2>
-<p>Hypar can also generate non-geometric data. In Hypar, click <strong>&quot;Show outputs&quot;</strong> in the top left. You should see something like this, although your volume result might be different:</p>
-<p><img src="images/HyparOutput2019.11.29.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>What if we also wanted to display the area of our cube? For this exercise we'll add a new output to the <strong>hypar.json</strong> and calculate the result we need. Add these new lines to the <strong>hypar.json</strong>:</p>
-<p><img src="images/HyparJSONOutputs.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>Copy the <strong>&quot;Volume&quot;</strong> section down and change its <strong>&quot;name&quot;</strong> field to <strong>&quot;Area&quot;</strong> and its <strong>&quot;description&quot;</strong> to <strong>&quot;The area&quot;</strong>. After those changes, on the command line in the project folder run <strong>hypar init</strong>:</p>
-<p><img src="images/HyparInitCommand2019.06.16.png" alt=""></p>
-<p>Now in Code let's see what changed. Open <strong>src/StarterFunctionOutputs.g.cs</strong> and you should see your new <strong>Area</strong> output under the <strong>Volume</strong> output:</p>
-<p><img src="images/HyparOutputsChanged.png" alt=""></p>
-<p>Also note that the <strong>StarterFunctionOutputs</strong> constructor at the bottom of the illustration has a new <strong>double area</strong> argument. Calculate and add the <strong>area</strong> output like this:</p>
-<p><img src="images/HyparAreaOutput.png" alt=""></p>
-<div style="page-break-after: always;"></div>
-<p>Once you've made that change and saved the file, publish the function to Hypar again:</p>
-<p><img src="images/HyparPublish2019.06.16.png" alt=""></p>
-<p>Return to Hypar, reload the page, and force StarterFunction to run again by tweaking one of its input parameters. Click <strong>Show outputs</strong> and you should see the result of your area calculation:</p>
-<p><img src="images/HyparAreaResult2019.11.29.png" alt=""></p>
+<h2 id="editing-our-function">Editing our function</h2>
+<p>While developing a function, you may need to add additional inputs or outputs and change function logic. In this section we'll see how to do this.</p>
+<img src="images/About-link.png" width="40%">
+<p>In your workflow, you should see an &quot;About&quot; link under the name of your function. Click it to open the function details. As the owner of this function, you have the ability to make changes here.</p>
+<p><img src="images/function-details.png" alt=""></p>
+<p>Switch to the <strong>Inputs</strong> tab and click <strong>Edit Function Details</strong> at the bottom of the window. This brings us to the same interface we used to create the inputs originally.</p>
+<p><img src="images/edit-inputs.png" alt=""></p>
+<p>Let's add a new Color input by dragging &quot;Color&quot; to the top. We'll call it &quot;Mass Color&quot; and click the color swatch to set a different color as the default. Any value you set in this window will be the default value that shows up when your function is added to a workflow.</p>
+<p><img src="images/add-color.png" alt=""></p>
+<p>Switch to the <strong>Outputs</strong> tab so we can add an output for the base area of our mass. Click <strong>+</strong> to add it, and configure it like so:
+<img src="images/add-output.png" alt=""></p>
+<p>Click <strong>Save Changes</strong> to register your changes to the function's configuration.</p>
+<p>Next, we'll need to pull those changes into our local code files, so that we can use the new input and output. Switch to the <strong>Logic</strong> tab and copy the second command:</p>
+<pre><code class="lang-bash">hypar pull &amp;&amp; hypar init
+</code></pre>
+<p><code>hypar pull</code> pulls the changes we made in the web interface to our <code>hypar.json</code> configuration file, and <code>hypar init</code> generates new code files from that configuration. You are also welcome to run these commands independently — you don't need to copy them from the web every time.</p>
+<p>Let's return to VS Code, and take a closer look. If you select <code>hypar.json</code> in the righthand side, you can view the configuration that describes this function.</p>
+<p><img src="images/hypar-json.png" alt=""></p>
+<p>If you scroll down, you should see our new Color input and Area output reflected:</p>
+<img src="images/hypar-json-new-bits.png" width="60%">
+<div class="NOTE">
+<h5>NOTE</h5>
+Advanced users may find it easier to edit <code>hypar.json</code> manually rather than editing the function in the web UI and running <code>hypar pull</code> — it's completely up to you. Just remember to use <code>hypar init</code> after any changes to <code>hypar.json</code> to make sure the corresponding C# code gets regenerated.
+</div>
+<p>Returning to <code>StarterFunction.cs</code>, we can take advantage of our new inputs and outputs. We'll edit the first line to add the base area output:</p>
+<pre><code class="lang-csharp">var output = new StarterFunctionOutputs(input.Width * input.Length * input.Height, input.Width * input.Length);
+</code></pre>
+<p>And create a new material before we create our mass:</p>
+<pre><code class="lang-csharp">var material = new Material(&quot;Box Color&quot;, input.MassColor);
+</code></pre>
+<p>And finally add the material to the mass.</p>
+<pre><code class="lang-csharp">var mass = new Mass(rectangle, input.Height, material);
+</code></pre>
+<p>Here's how the updated <code>Execute</code> method code should look now:</p>
+<pre><code class="lang-csharp">public static StarterFunctionOutputs Execute(Dictionary&lt;string, Model&gt; inputModels, StarterFunctionInputs input)
+        {
+            // create an output object
+            var output = new StarterFunctionOutputs(input.Width * input.Length * input.Height, input.Width * input.Length);
+
+            // create a rectangle
+            var rectangle = Polygon.Rectangle(input.Width, input.Length);
+
+            // create a new material
+            var material = new Material(&quot;Box Color&quot;, input.MassColor);
+
+            // create a mass from the rectangle
+            var mass = new Mass(rectangle, input.Height, material);
+
+            // add the mass to the output model
+            output.Model.AddElement(mass);
+            return output;
+        }
+</code></pre>
+<p><a href="https://gist.github.com/andrewheumann/283d37500940cbf225d1a541b65e10cc" target="_new">View on Github</a></p>
+<p>Be sure to save the file, and then publish these changes by running <code>hypar publish</code> again. Then we'll return to our workflow on Hypar, and reload the page to update the function. You may have to adjust a slider value to cause the function to recompute.
+<img src="images/workflow-w-color.png" alt=""></p>
+<p>This diagram summarizes the steps we've taken to edit and update our function:</p>
+<p><img src="images/EditFunctionDetails.png" alt=""></p>
+<h2 id="sharing-your-function">Sharing your function</h2>
+<p>Your function always starts out private to you: only you can see and use it in a workflow. Once you're happy with your function, you can share it with the world!</p>
+<p>Click the &quot;About&quot; link under your function name again, and this time navigate to the <strong>Permissions</strong> tab.</p>
+<p><img src="images/permissions.png" alt=""></p>
+<p>Uncheck the <strong>Private</strong> checkbox to make your function public. You can also choose to share it in a more limited way, by sharing with specific email addresses or with a whole email domain (like <code>myfirm.com</code>).</p>
+<p>You may also want to add a thumbnail to your function so others can get a sense of what it does. To do this, go to the <strong>Details</strong> tab, click <strong>Edit Function Details</strong>, and drag-and-drop an image on the drop zone. Then click <strong>Save Changes</strong> to save the thumbnail.
+<img src="images/add-thumbnail.gif" alt=""></p>
+<h2 id="testing-your-function">Testing your function</h2>
+<p>When developing a function, it's useful to be able to make changes and visualize them immediately. The Hypar CLI provides a way to run your function locally and test it in the context of a workflow.</p>
+<p>Return to your workflow, and remove your function from the workflow by clicking the &quot;X.&quot;
+<img src="images/delete-function.png" width="50%"></p>
+<p>Then go to the Hypar menu in the upper-right hand corner of the window, and select <strong>Test a Local Function</strong>
+<img src="images/test-a-local-function.png" width="30%"></p>
+<p>Click the &quot;Copy to clipboard&quot; button under the command:</p>
+<img src="images/copy-run-to-cb.gif" width="50%">
+<p>Then return to your terminal, ensure you're in your project directory (&quot;StarterFunction&quot;) and paste the copied command, which should look like this:</p>
+<pre><code class="lang-bash">hypar run --workflow-id=6bcece6c-2fa5-4a4d-a5c7-43732bff053b
+</code></pre>
+<p>Wait until you see this message:</p>
+<pre><code>Workflow update subscription acknowledgement received with id 518f1c6f-1b07-40e9-8461-fbc8fdbe3c06. Waiting for workspace updates...
+</code></pre>
+<p>And then return to the workflow and click the &quot;Ready&quot; button.
+<img src="images/ready-btn.gif"></p>
+<p>Now, when you edit the inputs of the function, they're passed to your locally-running function, instead of being executed on the cloud.</p>
+<p>The <code>hypar run</code> command we pasted earlier stays running continuously until we exit. While it's running, it serves the local function, and also monitors your code for changes. If you make changes to <code>hypar.json</code> or to your C# code, it will rebuild the function and re-execute dynamically. This makes it easy to write code, quickly try things out, and visualize how they will function on Hypar.</p>
+<p>Let's make some changes to our code, with <code>hypar run</code> still running. We'll insert a void running through our mass. For this we'll need to create a smaller rectangle inside our first one, and create a profile from those two rectangles. First, we'll make the second rectangle:</p>
+<pre><code class="lang-csharp">var innerRectangle = Polygon.Rectangle(input.Width * 0.5, input.Length * 0.5);
+</code></pre>
+<p>And then a Profile from the two rectangles:</p>
+<pre><code class="lang-csharp">var profile = new Profile(rectangle, innerRectangle);
+</code></pre>
+<p>And then edit the line where we make the <code>Mass</code> to use our new profile:</p>
+<pre><code class="lang-csharp">var mass = new Mass(profile, input.Height, material);
+</code></pre>
+<p>The updated execute method should look like this:</p>
+<pre><code class="lang-csharp">public static StarterFunctionOutputs Execute(Dictionary&lt;string, Model&gt; inputModels, StarterFunctionInputs input)
+        {
+            // create an output object
+            var output = new StarterFunctionOutputs(input.Width * input.Length * input.Height, input.Width * input.Length);
+
+            // create a rectangle
+            var rectangle = Polygon.Rectangle(input.Width, input.Length);
+            
+            // create an inner void rectangle
+            var innerRectangle = Polygon.Rectangle(input.Width * 0.5, input.Length * 0.5);
+            
+            // create a profile from the two rectangles
+            var profile = new Profile(rectangle, innerRectangle);
+
+            // create a new material
+            var material = new Material(&quot;Box Color&quot;, input.MassColor);
+
+            // create a mass from the rectangle
+            var mass = new Mass(profile, input.Height, material);
+
+            // add the mass to the output model
+            output.Model.AddElement(mass);
+            return output;
+        }
+</code></pre>
+<p><a href="https://gist.github.com/andrewheumann/f3c47f74047567f6edf9661f795aa3ab" target="_new">View on Github</a></p>
+<p>As soon as you save your code, you should see the function results update in your workflow:
+<img src="images/mass-with-void.png" alt=""></p>
+<p>When you're happy with your local changes, hit ctrl+C in the terminal to stop <code>hypar run</code>.</p>
+<p>Finally, publish your updated function with <code>hypar publish</code>. The next time you use it in a workflow, it will reflect the changes you made. Anyone you've shared your function with will also have access to the latest and greatest version you just published.</p>
+<p>This diagram summarizes the steps we've taken to edit and test our function with live preview:</p>
+<p><img src="images/EditLive.png" alt=""></p>
 <h2 id="whats-next">What's next?</h2>
 <p>Congratulations on creating your first Hypar function! There's more to learn, but you should start thinking about building a real, useful function. Here are a few tips for deciding what to make:</p>
 <ul>
@@ -257,6 +353,7 @@ In the alternatives list, you can see that your function has actually run many t
 </ul>
 <p>Here are some other good resources:</p>
 <ul>
+<li><a href="Hypar-CLI-Reference.html">Hypar CLI Reference</a></li>
 <li><a href="https://discord.gg/Ts6mzXg">Hypar's Discord live chat</a>. Lots of people should be there to answer questions or share ideas.</li>
 <li><a href="https://www.youtube.com/c/hypar">Hypar's YouTube channel</a> has walkthrough videos and livestreams.</li>
 <li>The <a href="https://github.com/hypar-io/Elements">Elements GitHub repository</a> and the tabs on top of this page have more information about Hypar's data model.</li>

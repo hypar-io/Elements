@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ImportMeshElement
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.56.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -204,7 +204,7 @@ var bracket = new ImportMeshElement(path, Units.LengthUnit.Millimeter, shiny);
 model.AddElement(bracket);
 
 var brackets = new List&lt;ElementInstance&gt;();
-for(var u=0; u&lt;360.0; u += 20)
+for (var u = 0; u &lt; 360.0; u += 20)
 {
     var t = new Transform(new Vector3(1, 0, 0));
     t.Rotate(Vector3.ZAxis, u);

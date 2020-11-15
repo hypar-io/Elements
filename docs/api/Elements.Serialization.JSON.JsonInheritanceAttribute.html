@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonInheritanceAttribute
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.56.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -76,7 +76,9 @@
   
   <h1 id="Elements_Serialization_JSON_JsonInheritanceAttribute" data-uid="Elements.Serialization.JSON.JsonInheritanceAttribute" class="text-break">Class JsonInheritanceAttribute
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>The attribute used to store classes that inherit from this class and
+make that information availabe during de/serialization.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -224,7 +226,8 @@ public class JsonInheritanceAttribute : Attribute</code></pre>
   </h3>
   <a id="Elements_Serialization_JSON_JsonInheritanceAttribute__ctor_" data-uid="Elements.Serialization.JSON.JsonInheritanceAttribute.#ctor*"></a>
   <h4 id="Elements_Serialization_JSON_JsonInheritanceAttribute__ctor_System_String_System_Type_" data-uid="Elements.Serialization.JSON.JsonInheritanceAttribute.#ctor(System.String,System.Type)">JsonInheritanceAttribute(String, Type)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct the attribute from a string key and the type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -243,12 +246,14 @@ public class JsonInheritanceAttribute : Attribute</code></pre>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">key</span></td>
-        <td></td>
+        <td><p>The discriminator of the type being de/serialized.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Type</span></td>
         <td><span class="parametername">type</span></td>
-        <td></td>
+        <td><p>The type to pair with the key.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -256,7 +261,8 @@ public class JsonInheritanceAttribute : Attribute</code></pre>
   </h3>
   <a id="Elements_Serialization_JSON_JsonInheritanceAttribute_Key_" data-uid="Elements.Serialization.JSON.JsonInheritanceAttribute.Key*"></a>
   <h4 id="Elements_Serialization_JSON_JsonInheritanceAttribute_Key" data-uid="Elements.Serialization.JSON.JsonInheritanceAttribute.Key">Key</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The key (discriminator) of the type that inherits from this class.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -279,7 +285,8 @@ public class JsonInheritanceAttribute : Attribute</code></pre>
   </table>
   <a id="Elements_Serialization_JSON_JsonInheritanceAttribute_Type_" data-uid="Elements.Serialization.JSON.JsonInheritanceAttribute.Type*"></a>
   <h4 id="Elements_Serialization_JSON_JsonInheritanceAttribute_Type" data-uid="Elements.Serialization.JSON.JsonInheritanceAttribute.Type">Type</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The type that inherits from this class with the given key.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">

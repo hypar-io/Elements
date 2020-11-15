@@ -14,25 +14,25 @@ Hypar is a cloud platform for generating buildings that makes it easy to publish
 To use the Hypar platform, you're going to need an account. 
 Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.io</a>, and you should see a page that looks like this. 
 
-![](./images/HyparLanding2019.11.29.png)
+![](./images/HyparLanding2020.11.16.png)
 
 <div style="page-break-after: always;"></div>
 
 If you don't have an account already, click on the **Create a free account** button below the logo. That should take you to the Sign Up screen.
 
-![](./images/HyparLogin2019.06.16.png)
+![](./images/HyparSignup2020.11.16.png)
 
 <div style="page-break-after: always;"></div>
 
-Fill in a username, an email address you can access, and the password you'd like to use. Then click on the **Sign up** button in the center of the screen.
+Fill in a username, an email address you can access, and the password you'd like to use. Then click on the **Sign up** button.
 
-![](./images/HyparSignUp2019.06.16.png)
+![](./images/HyparSignUpComplete2020.11.16.png)
 
 <div style="page-break-after: always;"></div>
 
 Then we do some explaining:
 
-![](./images/HyparSignUpNotice2019.06.16.png)
+![](./images/HyparSignUpNotice2020.11.16.png)
 
 Now check the email account you supplied for a message that looks something like this:
 

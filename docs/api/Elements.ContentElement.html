@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ContentElement
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.56.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -135,19 +135,17 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_ContentElement_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public class ContentElement : GeometricElement</code></pre>
+    <pre><code class="lang-csharp hljs">public class ContentElement : GeometricElement</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_ContentElement__ctor_" data-uid="Elements.ContentElement.#ctor*"></a>
-  <h4 id="Elements_ContentElement__ctor_System_String_Elements_Geometry_BBox3_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">ContentElement(String, BBox3, Double, Transform, Material, Representation, Boolean, Guid, String)</h4>
+  <h4 id="Elements_ContentElement__ctor_System_String_Elements_Geometry_BBox3_System_Double_Elements_Geometry_Vector3_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Vector3,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">ContentElement(String, BBox3, Double, Vector3, Transform, Material, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleToMeters, Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleToMeters, Vector3 sourceDirection, Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -172,6 +170,11 @@ public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleTo
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">gltfScaleToMeters</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">sourceDirection</span></td>
         <td></td>
       </tr>
       <tr>
@@ -206,8 +209,120 @@ public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleTo
       </tr>
     </tbody>
   </table>
+  <a id="Elements_ContentElement__ctor_" data-uid="Elements.ContentElement.#ctor*"></a>
+  <h4 id="Elements_ContentElement__ctor_System_String_Elements_Geometry_BBox3_System_Double_Elements_Geometry_Vector3_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_System_String_" data-uid="Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Vector3,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String,System.String)">ContentElement(String, BBox3, Double, Vector3, Transform, Material, Representation, Boolean, Guid, String, String)</h4>
+  <div class="markdown level1 summary"><p>This constructor adds the ability to include additionalProperties.  The additional properties should be
+a dictionary that has been serialized to a string, they are deserialized during construction.
+This is used in Revit Content workflows to store instance parameter data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleToMeters, Vector3 sourceDirection, Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name, string additionalProperties)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">gltfLocation</span></td>
+        <td><p>The path to the .glb file.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><span class="parametername">boundingBox</span></td>
+        <td><p>The BBox3 of this Content Element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">gltfScaleToMeters</span></td>
+        <td><p>The number required to scale this contents dimensions to meters.  Used during gltf merging.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">sourceDirection</span></td>
+        <td><p>The direction the element was facing when it was extracted from it's source.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform of this ContentElement.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The material, used for the BBox representation of this element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The representation which will be updated when needed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Should the element be used to create instances, or should it be inserted into a 3D scene.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The guid of this element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of this element.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">additionalProperties</span></td>
+        <td><p>The string json serialization of a dictionary of additional parameters.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
+  <a id="Elements_ContentElement_AdditionalProperties_" data-uid="Elements.ContentElement.AdditionalProperties*"></a>
+  <h4 id="Elements_ContentElement_AdditionalProperties" data-uid="Elements.ContentElement.AdditionalProperties">AdditionalProperties</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;string, object&gt; AdditionalProperties { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_ContentElement_BoundingBox_" data-uid="Elements.ContentElement.BoundingBox*"></a>
   <h4 id="Elements_ContentElement_BoundingBox" data-uid="Elements.ContentElement.BoundingBox">BoundingBox</h4>
   <div class="markdown level1 summary"><p>The bounding box of the content.</p>
@@ -215,8 +330,7 @@ public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleTo
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Bounding Box&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public BBox3 BoundingBox { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public BBox3 BoundingBox { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -240,8 +354,7 @@ public BBox3 BoundingBox { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;gltfLocation&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public string GltfLocation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string GltfLocation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -265,8 +378,7 @@ public string GltfLocation { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Gltf Scale to Meters&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public double GltfScaleToMeters { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double GltfScaleToMeters { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -279,6 +391,30 @@ public double GltfScaleToMeters { get; set; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_ContentElement_SourceDirection_" data-uid="Elements.ContentElement.SourceDirection*"></a>
+  <h4 id="Elements_ContentElement_SourceDirection" data-uid="Elements.ContentElement.SourceDirection">SourceDirection</h4>
+  <div class="markdown level1 summary"><p>A vector indicating the direction the source object was originally facing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 SourceDirection { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td></td>
       </tr>
     </tbody>

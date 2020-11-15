@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct BBox3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.56.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -104,8 +104,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_BBox3_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public struct BBox3</code></pre>
+    <pre><code class="lang-csharp hljs">public struct BBox3</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -142,8 +141,7 @@ public struct BBox3</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public BBox3(Vector3 min, Vector3 max)</code></pre>
+    <pre><code class="lang-csharp hljs">public BBox3(Vector3 min, Vector3 max)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -229,8 +227,7 @@ public BBox3(Vector3 min, Vector3 max)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Max&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public Vector3 Max { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Max { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -254,8 +251,7 @@ public Vector3 Max { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Min&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public Vector3 Min { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Min { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -296,6 +292,48 @@ public Vector3 Min { get; set; }</code></pre>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>The center of the bounding box.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_Translated_" data-uid="Elements.Geometry.BBox3.Translated*"></a>
+  <h4 id="Elements_Geometry_BBox3_Translated_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.Translated(Elements.Geometry.Vector3)">Translated(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Get a translated copy of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BBox3 Translated(Vector3 translation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">translation</span></td>
+        <td><p>The translation to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
