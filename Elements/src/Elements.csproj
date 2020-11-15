@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Content Include="Textures\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
     <Content Include="../lib/Csg.dll">
