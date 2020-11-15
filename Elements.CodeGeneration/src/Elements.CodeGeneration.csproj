@@ -11,9 +11,7 @@
         <Summary>Code generation utilities for Hypar.Elements.</Summary>
         <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
         <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
         <Version>$(Version)</Version>
-        <PackageOutputPath>../../nupkg</PackageOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,12 +26,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- Nuget solution using build targets came from here https://stackoverflow.com/questions/51924129/copy-files-from-nuget-package-to-output-directory-with-msbuild-in-csproj-and-do  -->
-        <Content Include="Elements.CodeGeneration.targets" PackagePath="build/Hypar.Elements.CodeGeneration.targets" />
         <Content Include="Templates\**\*.*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <Pack>true</Pack>
-            <PackagePath>contentFiles\Templates</PackagePath>
+            <PackageCopyToOutput>true</PackageCopyToOutput>
         </Content>
     </ItemGroup>
 </Project>

@@ -11,9 +11,7 @@
     <Summary>The Elements library provides object types for generating the built environment.</Summary>
     <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <Version>$(Version)</Version>
-    <PackageOutputPath>../../nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,23 +25,17 @@
   <ItemGroup>
     <Content Include="Textures\**\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
     <Content Include="../lib/Csg.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Csg">
       <HintPath>../lib/Csg.dll</HintPath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="UV.jpg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
