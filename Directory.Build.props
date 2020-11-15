@@ -12,5 +12,8 @@
     <RepositoryUrl>https://github.com/hypar-io/CLI</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>$(Version)</Version>
+    <PackageOutputPath>../../nupkg</PackageOutputPath>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 </Project>

@@ -11,9 +11,7 @@
         <Summary>Code generation utilities for Hypar.Elements.</Summary>
         <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
         <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
         <Version>$(Version)</Version>
-        <PackageOutputPath>../../nupkg</PackageOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
