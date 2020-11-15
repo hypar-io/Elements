@@ -29,6 +29,7 @@
     </Content>
     <Content Include="../lib/Csg.dll">
       <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>lib\$(TargetFramework)</PackagePath>
     </Content>
   </ItemGroup>
 
