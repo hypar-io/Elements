@@ -476,18 +476,85 @@ references:
   isSpec: "True"
   fullName: Elements.Column.Location
   nameWithType: Column.Location
+- uid: Elements.ContentCatalog
+  name: ContentCatalog
+  href: api/Elements.ContentCatalog.html
+  commentId: T:Elements.ContentCatalog
+  fullName: Elements.ContentCatalog
+  nameWithType: ContentCatalog
+- uid: Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Guid,System.String)
+  name: ContentCatalog(IList<ContentElement>, Guid, String)
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog__ctor_System_Collections_Generic_IList_Elements_ContentElement__System_Guid_System_String_
+  commentId: M:Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Guid,System.String)
+  name.vb: ContentCatalog(IList(Of ContentElement), Guid, String)
+  fullName: Elements.ContentCatalog.ContentCatalog(System.Collections.Generic.IList<Elements.ContentElement>, System.Guid, System.String)
+  fullName.vb: Elements.ContentCatalog.ContentCatalog(System.Collections.Generic.IList(Of Elements.ContentElement), System.Guid, System.String)
+  nameWithType: ContentCatalog.ContentCatalog(IList<ContentElement>, Guid, String)
+  nameWithType.vb: ContentCatalog.ContentCatalog(IList(Of ContentElement), Guid, String)
+- uid: Elements.ContentCatalog.#ctor*
+  name: ContentCatalog
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog__ctor_
+  commentId: Overload:Elements.ContentCatalog.#ctor
+  isSpec: "True"
+  fullName: Elements.ContentCatalog.ContentCatalog
+  nameWithType: ContentCatalog.ContentCatalog
+- uid: Elements.ContentCatalog.Content
+  name: Content
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_Content
+  commentId: P:Elements.ContentCatalog.Content
+  fullName: Elements.ContentCatalog.Content
+  nameWithType: ContentCatalog.Content
+- uid: Elements.ContentCatalog.Content*
+  name: Content
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_Content_
+  commentId: Overload:Elements.ContentCatalog.Content
+  isSpec: "True"
+  fullName: Elements.ContentCatalog.Content
+  nameWithType: ContentCatalog.Content
+- uid: Elements.ContentCatalog.FromJson(System.String)
+  name: FromJson(String)
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_FromJson_System_String_
+  commentId: M:Elements.ContentCatalog.FromJson(System.String)
+  fullName: Elements.ContentCatalog.FromJson(System.String)
+  nameWithType: ContentCatalog.FromJson(String)
+- uid: Elements.ContentCatalog.FromJson*
+  name: FromJson
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_FromJson_
+  commentId: Overload:Elements.ContentCatalog.FromJson
+  isSpec: "True"
+  fullName: Elements.ContentCatalog.FromJson
+  nameWithType: ContentCatalog.FromJson
+- uid: Elements.ContentCatalog.ToJson
+  name: ToJson()
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_ToJson
+  commentId: M:Elements.ContentCatalog.ToJson
+  fullName: Elements.ContentCatalog.ToJson()
+  nameWithType: ContentCatalog.ToJson()
+- uid: Elements.ContentCatalog.ToJson*
+  name: ToJson
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_ToJson_
+  commentId: Overload:Elements.ContentCatalog.ToJson
+  isSpec: "True"
+  fullName: Elements.ContentCatalog.ToJson
+  nameWithType: ContentCatalog.ToJson
 - uid: Elements.ContentElement
   name: ContentElement
   href: api/Elements.ContentElement.html
   commentId: T:Elements.ContentElement
   fullName: Elements.ContentElement
   nameWithType: ContentElement
-- uid: Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
-  name: ContentElement(String, BBox3, Double, Transform, Material, Representation, Boolean, Guid, String)
-  href: api/Elements.ContentElement.html#Elements_ContentElement__ctor_System_String_Elements_Geometry_BBox3_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
-  commentId: M:Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
-  fullName: Elements.ContentElement.ContentElement(System.String, Elements.Geometry.BBox3, System.Double, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
-  nameWithType: ContentElement.ContentElement(String, BBox3, Double, Transform, Material, Representation, Boolean, Guid, String)
+- uid: Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Vector3,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  name: ContentElement(String, BBox3, Double, Vector3, Transform, Material, Representation, Boolean, Guid, String)
+  href: api/Elements.ContentElement.html#Elements_ContentElement__ctor_System_String_Elements_Geometry_BBox3_System_Double_Elements_Geometry_Vector3_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Vector3,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.ContentElement.ContentElement(System.String, Elements.Geometry.BBox3, System.Double, Elements.Geometry.Vector3, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
+  nameWithType: ContentElement.ContentElement(String, BBox3, Double, Vector3, Transform, Material, Representation, Boolean, Guid, String)
+- uid: Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Vector3,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String,System.String)
+  name: ContentElement(String, BBox3, Double, Vector3, Transform, Material, Representation, Boolean, Guid, String, String)
+  href: api/Elements.ContentElement.html#Elements_ContentElement__ctor_System_String_Elements_Geometry_BBox3_System_Double_Elements_Geometry_Vector3_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_System_String_
+  commentId: M:Elements.ContentElement.#ctor(System.String,Elements.Geometry.BBox3,System.Double,Elements.Geometry.Vector3,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String,System.String)
+  fullName: Elements.ContentElement.ContentElement(System.String, Elements.Geometry.BBox3, System.Double, Elements.Geometry.Vector3, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String, System.String)
+  nameWithType: ContentElement.ContentElement(String, BBox3, Double, Vector3, Transform, Material, Representation, Boolean, Guid, String, String)
 - uid: Elements.ContentElement.#ctor*
   name: ContentElement
   href: api/Elements.ContentElement.html#Elements_ContentElement__ctor_
@@ -495,6 +562,19 @@ references:
   isSpec: "True"
   fullName: Elements.ContentElement.ContentElement
   nameWithType: ContentElement.ContentElement
+- uid: Elements.ContentElement.AdditionalProperties
+  name: AdditionalProperties
+  href: api/Elements.ContentElement.html#Elements_ContentElement_AdditionalProperties
+  commentId: P:Elements.ContentElement.AdditionalProperties
+  fullName: Elements.ContentElement.AdditionalProperties
+  nameWithType: ContentElement.AdditionalProperties
+- uid: Elements.ContentElement.AdditionalProperties*
+  name: AdditionalProperties
+  href: api/Elements.ContentElement.html#Elements_ContentElement_AdditionalProperties_
+  commentId: Overload:Elements.ContentElement.AdditionalProperties
+  isSpec: "True"
+  fullName: Elements.ContentElement.AdditionalProperties
+  nameWithType: ContentElement.AdditionalProperties
 - uid: Elements.ContentElement.BoundingBox
   name: BoundingBox
   href: api/Elements.ContentElement.html#Elements_ContentElement_BoundingBox
@@ -534,6 +614,19 @@ references:
   isSpec: "True"
   fullName: Elements.ContentElement.GltfScaleToMeters
   nameWithType: ContentElement.GltfScaleToMeters
+- uid: Elements.ContentElement.SourceDirection
+  name: SourceDirection
+  href: api/Elements.ContentElement.html#Elements_ContentElement_SourceDirection
+  commentId: P:Elements.ContentElement.SourceDirection
+  fullName: Elements.ContentElement.SourceDirection
+  nameWithType: ContentElement.SourceDirection
+- uid: Elements.ContentElement.SourceDirection*
+  name: SourceDirection
+  href: api/Elements.ContentElement.html#Elements_ContentElement_SourceDirection_
+  commentId: Overload:Elements.ContentElement.SourceDirection
+  isSpec: "True"
+  fullName: Elements.ContentElement.SourceDirection
+  nameWithType: ContentElement.SourceDirection
 - uid: Elements.ContentElement.UpdateRepresentations
   name: UpdateRepresentations()
   href: api/Elements.ContentElement.html#Elements_ContentElement_UpdateRepresentations
@@ -1976,6 +2069,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.BBox3.Min
   nameWithType: BBox3.Min
+- uid: Elements.Geometry.BBox3.Translated(Elements.Geometry.Vector3)
+  name: Translated(Vector3)
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_Translated_Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.BBox3.Translated(Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.BBox3.Translated(Elements.Geometry.Vector3)
+  nameWithType: BBox3.Translated(Vector3)
+- uid: Elements.Geometry.BBox3.Translated*
+  name: Translated
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_Translated_
+  commentId: Overload:Elements.Geometry.BBox3.Translated
+  isSpec: "True"
+  fullName: Elements.Geometry.BBox3.Translated
+  nameWithType: BBox3.Translated
 - uid: Elements.Geometry.Bezier
   name: Bezier
   href: api/Elements.Geometry.Bezier.html
@@ -3291,19 +3397,6 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.Direction
   nameWithType: Line.Direction
-- uid: Elements.Geometry.Line.DivideByCount(System.Int32)
-  name: DivideByCount(Int32)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_DivideByCount_System_Int32_
-  commentId: M:Elements.Geometry.Line.DivideByCount(System.Int32)
-  fullName: Elements.Geometry.Line.DivideByCount(System.Int32)
-  nameWithType: Line.DivideByCount(Int32)
-- uid: Elements.Geometry.Line.DivideByCount*
-  name: DivideByCount
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_DivideByCount_
-  commentId: Overload:Elements.Geometry.Line.DivideByCount
-  isSpec: "True"
-  fullName: Elements.Geometry.Line.DivideByCount
-  nameWithType: Line.DivideByCount
 - uid: Elements.Geometry.Line.DivideByLength(System.Double,System.Boolean)
   name: DivideByLength(Double, Boolean)
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_DivideByLength_System_Double_System_Boolean_
@@ -3330,6 +3423,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.DivideByLengthFromCenter
   nameWithType: Line.DivideByLengthFromCenter
+- uid: Elements.Geometry.Line.DivideIntoEqualSegments(System.Int32)
+  name: DivideIntoEqualSegments(Int32)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_DivideIntoEqualSegments_System_Int32_
+  commentId: M:Elements.Geometry.Line.DivideIntoEqualSegments(System.Int32)
+  fullName: Elements.Geometry.Line.DivideIntoEqualSegments(System.Int32)
+  nameWithType: Line.DivideIntoEqualSegments(Int32)
+- uid: Elements.Geometry.Line.DivideIntoEqualSegments*
+  name: DivideIntoEqualSegments
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_DivideIntoEqualSegments_
+  commentId: Overload:Elements.Geometry.Line.DivideIntoEqualSegments
+  isSpec: "True"
+  fullName: Elements.Geometry.Line.DivideIntoEqualSegments
+  nameWithType: Line.DivideIntoEqualSegments
 - uid: Elements.Geometry.Line.End
   name: End
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_End
@@ -4642,6 +4748,22 @@ references:
   fullName.vb: Elements.Geometry.Polygon.Widening
   nameWithType: Polygon.Implicit
   nameWithType.vb: Polygon.Widening
+- uid: Elements.Geometry.Polygon.PointAtInternal(System.Double,System.Int32@)
+  name: PointAtInternal(Double, out Int32)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_PointAtInternal_System_Double_System_Int32__
+  commentId: M:Elements.Geometry.Polygon.PointAtInternal(System.Double,System.Int32@)
+  name.vb: PointAtInternal(Double, ByRef Int32)
+  fullName: Elements.Geometry.Polygon.PointAtInternal(System.Double, out System.Int32)
+  fullName.vb: Elements.Geometry.Polygon.PointAtInternal(System.Double, ByRef System.Int32)
+  nameWithType: Polygon.PointAtInternal(Double, out Int32)
+  nameWithType.vb: Polygon.PointAtInternal(Double, ByRef Int32)
+- uid: Elements.Geometry.Polygon.PointAtInternal*
+  name: PointAtInternal
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_PointAtInternal_
+  commentId: Overload:Elements.Geometry.Polygon.PointAtInternal
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.PointAtInternal
+  nameWithType: Polygon.PointAtInternal
 - uid: Elements.Geometry.Polygon.Project(Elements.Geometry.Plane)
   name: Project(Plane)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Project_Elements_Geometry_Plane_
@@ -4969,6 +5091,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.Length
   nameWithType: Polyline.Length
+- uid: Elements.Geometry.Polyline.Normal
+  name: Normal()
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Normal
+  commentId: M:Elements.Geometry.Polyline.Normal
+  fullName: Elements.Geometry.Polyline.Normal()
+  nameWithType: Polyline.Normal()
+- uid: Elements.Geometry.Polyline.Normal*
+  name: Normal
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Normal_
+  commentId: Overload:Elements.Geometry.Polyline.Normal
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.Normal
+  nameWithType: Polyline.Normal
 - uid: Elements.Geometry.Polyline.Offset(System.Double,Elements.Geometry.EndType,System.Double)
   name: Offset(Double, EndType, Double)
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Offset_System_Double_Elements_Geometry_EndType_System_Double_
@@ -5008,6 +5143,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.PointAt
   nameWithType: Polyline.PointAt
+- uid: Elements.Geometry.Polyline.PointAtInternal(System.Double,System.Int32@)
+  name: PointAtInternal(Double, out Int32)
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_PointAtInternal_System_Double_System_Int32__
+  commentId: M:Elements.Geometry.Polyline.PointAtInternal(System.Double,System.Int32@)
+  name.vb: PointAtInternal(Double, ByRef Int32)
+  fullName: Elements.Geometry.Polyline.PointAtInternal(System.Double, out System.Int32)
+  fullName.vb: Elements.Geometry.Polyline.PointAtInternal(System.Double, ByRef System.Int32)
+  nameWithType: Polyline.PointAtInternal(Double, out Int32)
+  nameWithType.vb: Polyline.PointAtInternal(Double, ByRef Int32)
+- uid: Elements.Geometry.Polyline.PointAtInternal*
+  name: PointAtInternal
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_PointAtInternal_
+  commentId: Overload:Elements.Geometry.Polyline.PointAtInternal
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.PointAtInternal
+  nameWithType: Polyline.PointAtInternal
 - uid: Elements.Geometry.Polyline.Reversed
   name: Reversed()
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Reversed
@@ -10589,12 +10740,42 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.Cross
   nameWithType: Vector3.Cross
+- uid: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line)
+  name: DistanceTo(Line)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Line_
+  commentId: M:Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line)
+  fullName: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line)
+  nameWithType: Vector3.DistanceTo(Line)
+- uid: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line,Elements.Geometry.Vector3@)
+  name: DistanceTo(Line, out Vector3)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Line_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line,Elements.Geometry.Vector3@)
+  name.vb: DistanceTo(Line, ByRef Vector3)
+  fullName: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line, out Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line, ByRef Elements.Geometry.Vector3)
+  nameWithType: Vector3.DistanceTo(Line, out Vector3)
+  nameWithType.vb: Vector3.DistanceTo(Line, ByRef Vector3)
 - uid: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Plane)
   name: DistanceTo(Plane)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Plane_
   commentId: M:Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Plane)
   fullName: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Plane)
   nameWithType: Vector3.DistanceTo(Plane)
+- uid: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline)
+  name: DistanceTo(Polyline)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polyline_
+  commentId: M:Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline)
+  fullName: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline)
+  nameWithType: Vector3.DistanceTo(Polyline)
+- uid: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline,Elements.Geometry.Vector3@)
+  name: DistanceTo(Polyline, out Vector3)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polyline_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline,Elements.Geometry.Vector3@)
+  name.vb: DistanceTo(Polyline, ByRef Vector3)
+  fullName: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline, out Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline, ByRef Elements.Geometry.Vector3)
+  nameWithType: Vector3.DistanceTo(Polyline, out Vector3)
+  nameWithType.vb: Vector3.DistanceTo(Polyline, ByRef Vector3)
 - uid: Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Vector3)
   name: DistanceTo(Vector3)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Vector3_
@@ -12208,12 +12389,25 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.Elements
   nameWithType: JsonInheritanceConverter.Elements
+- uid: Elements.Serialization.JSON.JsonInheritanceConverter.ElementwiseSerialization
+  name: ElementwiseSerialization
+  href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ElementwiseSerialization
+  commentId: P:Elements.Serialization.JSON.JsonInheritanceConverter.ElementwiseSerialization
+  fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ElementwiseSerialization
+  nameWithType: JsonInheritanceConverter.ElementwiseSerialization
+- uid: Elements.Serialization.JSON.JsonInheritanceConverter.ElementwiseSerialization*
+  name: ElementwiseSerialization
+  href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ElementwiseSerialization_
+  commentId: Overload:Elements.Serialization.JSON.JsonInheritanceConverter.ElementwiseSerialization
+  isSpec: "True"
+  fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ElementwiseSerialization
+  nameWithType: JsonInheritanceConverter.ElementwiseSerialization
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  name: ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+  nameWithType: JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*
   name: ReadJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_
@@ -12235,11 +12429,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.RefreshUserElementTypeCache
   nameWithType: JsonInheritanceConverter.RefreshUserElementTypeCache
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(JsonWriter, Object, JsonSerializer)
+  name: WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+  nameWithType: JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*
   name: WriteJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_
@@ -14061,6 +14255,54 @@ references:
   isSpec: "True"
   fullName: Elements.Validators.ExtrudeValidator.ValidatesType
   nameWithType: ExtrudeValidator.ValidatesType
+- uid: Elements.Validators.GeometricElementValidator
+  name: GeometricElementValidator
+  href: api/Elements.Validators.GeometricElementValidator.html
+  commentId: T:Elements.Validators.GeometricElementValidator
+  fullName: Elements.Validators.GeometricElementValidator
+  nameWithType: GeometricElementValidator
+- uid: Elements.Validators.GeometricElementValidator.PostConstruct(System.Object)
+  name: PostConstruct(Object)
+  href: api/Elements.Validators.GeometricElementValidator.html#Elements_Validators_GeometricElementValidator_PostConstruct_System_Object_
+  commentId: M:Elements.Validators.GeometricElementValidator.PostConstruct(System.Object)
+  fullName: Elements.Validators.GeometricElementValidator.PostConstruct(System.Object)
+  nameWithType: GeometricElementValidator.PostConstruct(Object)
+- uid: Elements.Validators.GeometricElementValidator.PostConstruct*
+  name: PostConstruct
+  href: api/Elements.Validators.GeometricElementValidator.html#Elements_Validators_GeometricElementValidator_PostConstruct_
+  commentId: Overload:Elements.Validators.GeometricElementValidator.PostConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.GeometricElementValidator.PostConstruct
+  nameWithType: GeometricElementValidator.PostConstruct
+- uid: Elements.Validators.GeometricElementValidator.PreConstruct(System.Object[])
+  name: PreConstruct(Object[])
+  href: api/Elements.Validators.GeometricElementValidator.html#Elements_Validators_GeometricElementValidator_PreConstruct_System_Object___
+  commentId: M:Elements.Validators.GeometricElementValidator.PreConstruct(System.Object[])
+  name.vb: PreConstruct(Object())
+  fullName: Elements.Validators.GeometricElementValidator.PreConstruct(System.Object[])
+  fullName.vb: Elements.Validators.GeometricElementValidator.PreConstruct(System.Object())
+  nameWithType: GeometricElementValidator.PreConstruct(Object[])
+  nameWithType.vb: GeometricElementValidator.PreConstruct(Object())
+- uid: Elements.Validators.GeometricElementValidator.PreConstruct*
+  name: PreConstruct
+  href: api/Elements.Validators.GeometricElementValidator.html#Elements_Validators_GeometricElementValidator_PreConstruct_
+  commentId: Overload:Elements.Validators.GeometricElementValidator.PreConstruct
+  isSpec: "True"
+  fullName: Elements.Validators.GeometricElementValidator.PreConstruct
+  nameWithType: GeometricElementValidator.PreConstruct
+- uid: Elements.Validators.GeometricElementValidator.ValidatesType
+  name: ValidatesType
+  href: api/Elements.Validators.GeometricElementValidator.html#Elements_Validators_GeometricElementValidator_ValidatesType
+  commentId: P:Elements.Validators.GeometricElementValidator.ValidatesType
+  fullName: Elements.Validators.GeometricElementValidator.ValidatesType
+  nameWithType: GeometricElementValidator.ValidatesType
+- uid: Elements.Validators.GeometricElementValidator.ValidatesType*
+  name: ValidatesType
+  href: api/Elements.Validators.GeometricElementValidator.html#Elements_Validators_GeometricElementValidator_ValidatesType_
+  commentId: Overload:Elements.Validators.GeometricElementValidator.ValidatesType
+  isSpec: "True"
+  fullName: Elements.Validators.GeometricElementValidator.ValidatesType
+  nameWithType: GeometricElementValidator.ValidatesType
 - uid: Elements.Validators.IValidator
   name: IValidator
   href: api/Elements.Validators.IValidator.html

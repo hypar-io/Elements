@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct Vector3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.53.1.0">
+    <meta name="generator" content="docfx 2.56.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -173,8 +173,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Vector3(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3(double x, double y, double z)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -261,8 +260,7 @@ public Vector3(double x, double y, double z)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;X&quot;, Required = Required.Always)]
-public double X { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double X { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -310,8 +308,7 @@ public double X { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Y&quot;, Required = Required.Always)]
-public double Y { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Y { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -359,8 +356,7 @@ public double Y { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Z&quot;, Required = Required.Always)]
-public double Z { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Z { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -727,9 +723,100 @@ you should use Vector3.PlaneAngleTo.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Line_" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line)">DistanceTo(Line)</h4>
+  <div class="markdown level1 summary"><p>Find the distance from this point to the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Line line)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Line_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line,Elements.Geometry.Vector3@)">DistanceTo(Line, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find the distance from this point to the line, and output the location
+of the closest point on that line.
+Using formula from <a href="https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd">https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Line line, out Vector3 closestPoint)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>The line to find the distance to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">closestPoint</span></td>
+        <td><p>The point on the line that is closest to this point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
   <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Plane)">DistanceTo(Plane)</h4>
-  <div class="markdown level1 summary"><p>The distance from this vector to p.
-The distance will be negative when this vector lies
+  <div class="markdown level1 summary"><p>The distance from this point to the plane.
+The distance will be negative when this point lies
 &quot;behind&quot; the plane.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -751,6 +838,98 @@ The distance will be negative when this vector lies
         <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
         <td><span class="parametername">p</span></td>
         <td><p>The plane.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polyline_" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline)">DistanceTo(Polyline)</h4>
+  <div class="markdown level1 summary"><p>Find the shortest distance from this point to any point on the
+polyline, and output the location of the closest point on that polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Polyline polyline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><span class="parametername">polyline</span></td>
+        <td><p>The polyline for computing the distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polyline_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline,Elements.Geometry.Vector3@)">DistanceTo(Polyline, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find the shortest distance from this point to any point on the
+polyline, and output the location of the closest point on that polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Polyline polyline, out Vector3 closestPoint)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><span class="parametername">polyline</span></td>
+        <td><p>The polyline for computing the distance.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">closestPoint</span></td>
+        <td><p>The point on the polyline that is closest to this point.</p>
 </td>
       </tr>
     </tbody>
@@ -1611,7 +1790,7 @@ The distance will be negative when this vector lies
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><p>A vector whose magnitude is mutiplied by a.</p>
+        <td><p>A vector whose magnitude is multiplied by a.</p>
 </td>
       </tr>
     </tbody>
@@ -1899,7 +2078,7 @@ The distance will be negative when this vector lies
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><p>A vector whose magnitude is mutiplied by a.</p>
+        <td><p>A vector whose magnitude is multiplied by a.</p>
 </td>
       </tr>
     </tbody>

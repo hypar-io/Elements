@@ -13,13 +13,12 @@
       href: Grasshopper.md
     - name: Revit
       href: Revit.md
-- name: Types
+- name: Element Types
   href: Types.md
-  items:
-  - name: Element Types
-    href: Types.md
-  - name: Input Types
-    href: InputSchema.md
+- name: Input Types
+  href: InputSchema.md
+- name: CLI Reference
+  href: Hypar-CLI-Reference.md
 - name: Elements
   href: Elements/
   homepage: Elements/WhatIsElements.md
