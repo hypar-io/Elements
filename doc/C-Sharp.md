@@ -4,9 +4,9 @@ By uploading a function to Hypar you can produce multiple options for a building
 
 ## Tutorial Videos
 
-### Installing and Using the Hypar CLI
+### Creating Functions in C#
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/-0sKYpekdqI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EdzOV0Vul-A" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <div style="page-break-after: always;"></div>
 
 ## Pre-Flight Check
@@ -80,11 +80,13 @@ Click **Next** to proceed to configuring your function's inputs. Click or drag t
 
 <img src="./images/wizard-step-2.png" width="60%">
 
-Go on to the next step, and click next again so that **Step 4: Outputs** is highlighted at the top. Click the **+** to add a new output to report the box's volume, and configure it like so:
+You can also select "Preview" to visualize how the inputs will look in the function. 
+
+Go on to the next step. We'll save the **Connections** section for another tutorial, so click **next** again so that **Step 4: Outputs** is highlighted at the top. Click the **+** to add a new output to report the box's volume, and configure it like so:
 
 <img src="./images/wizard-step-4.png" width="60%">
 
-Move on to the final step, **Logic**. Click "Publish Function," and then click the <img src="./images/copy-to-clipboard.png" width="15px" /> button to copy the terminal command.
+Move on to the final step, **Logic**. Click "**Publish Function**," and then click the <img src="./images/copy-to-clipboard.png" width="30px" /> button to copy the terminal command.
 
 <img src="./images/wizard-step-5.png" width="60%">
 
@@ -113,7 +115,7 @@ The Hypar CLI just created a bunch of files for you. Here's what that looks like
 
 It may seem like a lot, but the good news is you rarely have to edit most of these files — Hypar takes care of all of that for you. Any file you see that ends with `.g.cs` is not meant to be edited by you.
 
-The file we care about most is StarterFunction.cs in the `/src` directory — this contains the logic for your function. Let's open it up.
+The file we care about most is **StarterFunction.cs** in the `/src` directory — this contains the logic for your function. Let's open it up.
 
 The `Execute` method is the entry point into our function. It doesn't do anything very exciting right away; it creates an "Outputs" object, and returns it.
 
@@ -191,7 +193,9 @@ Now let's try out our function. Click **Insert** on Starter Function and **hide*
 
 <div style="page-break-after: always;"></div>
 
-You've just run a web application that you created! Click in the 3D view to zoom, pan, and rotate the result. Now click on Starter Function to open up its inputs. Try adjusting the sliders to see how the mass changes shape. Check the "Sample Range" checkbox under the height and width sliders. Then click the "Alternatives" button (<img src="./images/alternatives-btn.png" width="30px" />) on your workflow to see the options that have been generated.
+<p style="font-size: 20px; font-weight: bold;">You've just run a web application that you created!</p> 
+
+Click in the 3D view to zoom, pan, and rotate the result. Now click on Starter Function to open up its inputs. Try adjusting the sliders to see how the mass changes shape. Check the "**Sample Range**" checkbox under the height and width sliders. Then click the "**Alternatives**" button (<img src="./images/alternatives-btn.png" width="30px" />) on your workflow to see the options that have been generated.
 
 ![](./images/show-alternatives.png)
 
@@ -208,7 +212,7 @@ While developing a function, you may need to add additional inputs or outputs an
 
 <img src="./images/About-link.png" width="40%">
 
-In your workflow, you should see an "About" link under the name of your function. Click it to open the function details. As the owner of this function, you have the ability to make changes here.
+In your workflow, you should see an "**About**" link under the name of your function. Click it to open the function details. As the owner of this function, you have the ability to make changes here.
 
 ![](./images/function-details.png)
 
@@ -336,7 +340,11 @@ And then return to the workflow and click the "Ready" button.
 
 Now, when you edit the inputs of the function, they're passed to your locally-running function, instead of being executed on the cloud.
 
-The `hypar run` command we pasted earlier stays running continuously until we exit. While it's running, it serves the local function, and also monitors your code for changes. If you make changes to `hypar.json` or to your C# code, it will rebuild the function and re-execute dynamically. This makes it easy to write code, quickly try things out, and visualize how they will function on Hypar.
+<div class="NOTE">
+<h5>HYPAR RUN</h5>
+The <code>hypar run</code> command we pasted earlier stays running continuously until we exit. While it's running, it serves the local function, and also monitors your code for changes. If you make changes to <code>hypar.json</code> or to your C# code, it will rebuild the function and re-execute dynamically. This makes it easy to write code, quickly try things out, and visualize how they will function on Hypar.
+</div>
+
 
 Let's make some changes to our code, with `hypar run` still running. We'll insert a void running through our mass. For this we'll need to create a smaller rectangle inside our first one, and create a profile from those two rectangles. First, we'll make the second rectangle: 
 ```csharp
