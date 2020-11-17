@@ -110,6 +110,11 @@ li {
     color: var(--hy-co-white);
 }
 
+img {
+    padding-bottom: 8px;
+    padding-top: 8px;
+}
+
 p {
     font-family: 'Roboto', sans-serif;
 }
