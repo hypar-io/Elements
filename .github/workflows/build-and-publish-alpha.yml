@@ -19,7 +19,7 @@ jobs:
           dotnet-version: 3.1.x
       - name: Get previous tag.
         id: version
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        uses: "WyriHaximus/github-action-get-previous-tag@1.0.0"
       - name: Bump if alpha.
         if: ${{contains(steps.version.outputs.tag, 'alpha')}}
         id: bump-alpha
