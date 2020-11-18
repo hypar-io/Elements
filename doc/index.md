@@ -44,7 +44,11 @@ Click on the <u>Verify Email</u> link in the message and you should see a confir
 
 ![](./images/HyparSignUpConfirm2019.06.16.png)
 
-That's it! You now have a Hypar account. Time to start building some workflows or [authoring some functions](./Functions.md)! 
+## Where to go next
+
+That's it! You now have a Hypar account. Time to start building some workflows or [authoring some functions](./Functions.md)! You might also explore these resources to get ideas for building a function, or learn more about the platform:
+- [Hypar's Discord live chat](https://discord.gg/Ts6mzXg). Lots of people should be there to answer questions or share ideas.
+- [Hypar's YouTube channel](https://www.youtube.com/c/hypar) has walkthrough videos and livestreams.
 
 <!--
 TODO: Labels can't be trivially added to masses right now.
