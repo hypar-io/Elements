@@ -339,7 +339,7 @@ namespace Elements.Geometry
         /// <returns>Returns a list of Polygons representing the subtraction of the second set of polygons from the first set.</returns>
         public static IList<Polygon> Difference(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Difference, tolerance);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Difference, VoidTreatment.PreserveInternalVoids, tolerance);
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace Elements.Geometry
         [Obsolete("Please use UnionAll, which takes a single list of polygons.")]
         public static IList<Polygon> Union(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Union, tolerance);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Union, VoidTreatment.IgnoreInternalVoids, tolerance);
         }
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace Elements.Geometry
         /// <returns>Returns a list of Polygons representing the union of all polygons.</returns>
         public static IList<Polygon> UnionAll(IList<Polygon> polygons, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(polygons, new List<Polygon>(), BooleanMode.Union, tolerance);
+            return BooleanTwoSets(polygons, new List<Polygon>(), BooleanMode.Union, VoidTreatment.IgnoreInternalVoids, tolerance);
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace Elements.Geometry
         /// </returns>
         public static IList<Polygon> XOR(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.XOr, tolerance);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.XOr, VoidTreatment.PreserveInternalVoids, tolerance);
         }
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace Elements.Geometry
         /// </returns>
         public static IList<Polygon> Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Intersection, tolerance);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Intersection, VoidTreatment.PreserveInternalVoids, tolerance);
         }
 
 
@@ -402,9 +402,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="subjectPolygons">Polygons to clip</param>
         /// <param name="clippingPolygons">Polygons with which to clip</param>
-        /// <param name="mode">The operation to apply: Union, Difference, Intersection, or XOr</param>
+        /// <param name="booleanMode">The operation to apply: Union, Difference, Intersection, or XOr</param>
+        /// <param name="voidTreatment">Optional setting for how to process the polygons in each set: either treat polygons inside others as voids, or treat them all as solid (thereby ignoring internal polygons).</param>
         /// <param name="tolerance">Optional override of the tolerance for determining if two polygons are identical.</param>
-        private static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode mode, double tolerance = Vector3.EPSILON)
+        private static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode booleanMode, VoidTreatment voidTreatment = VoidTreatment.PreserveInternalVoids, double tolerance = Vector3.EPSILON)
         {
             var subjectPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
             var clipPaths = clippingPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
@@ -413,7 +414,12 @@ namespace Elements.Geometry
             clipper.AddPaths(clipPaths, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
             var executionMode = ClipType.ctDifference;
-            switch (mode)
+            var polyFillType = PolyFillType.pftEvenOdd;
+            if (voidTreatment == VoidTreatment.IgnoreInternalVoids)
+            {
+                polyFillType = PolyFillType.pftPositive;
+            }
+            switch (booleanMode)
             {
                 case BooleanMode.Difference:
                     executionMode = ClipType.ctDifference;
@@ -428,7 +434,7 @@ namespace Elements.Geometry
                     executionMode = ClipType.ctXor;
                     break;
             }
-            clipper.Execute(executionMode, solution);
+            clipper.Execute(executionMode, solution, polyFillType);
             if (solution.Count == 0)
             {
                 return null;
@@ -981,6 +987,24 @@ namespace Elements.Geometry
         /// Exclusive or — either A or B but not both. 
         /// </summary>
         XOr
+    }
+
+
+    /// <summary>
+    /// Controls the handling of internal regions in a polygon boolean operation.
+    /// </summary>
+    public enum VoidTreatment
+    {
+        /// <summary>
+        /// Use an Even/Odd fill pattern to decide whether internal polygons are solid or void.
+        /// This corresponds to Clipper's "EvenOdd" PolyFillType. 
+        /// </summary>
+        PreserveInternalVoids = 0,
+        /// <summary>
+        /// Treat all contained or overlapping polygons as solid.
+        /// This corresponds to Clipper's "Positive" PolyFillType. 
+        /// </summary>
+        IgnoreInternalVoids = 1
     }
 
     /// <summary>

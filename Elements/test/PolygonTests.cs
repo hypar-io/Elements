@@ -421,6 +421,18 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void UnionAll()
+        {
+            var polygons = new List<Polygon> {
+                Polygon.Rectangle(10, 10),
+                Polygon.Rectangle(10, 10).TransformedPolygon(new Transform(5,5,0))
+            };
+
+            var result = Polygon.UnionAll(polygons).First();
+            Assert.Equal(175, result.Area());
+        }
+
+        [Fact]
         public void Union()
         {
             var p1 = new Polygon
