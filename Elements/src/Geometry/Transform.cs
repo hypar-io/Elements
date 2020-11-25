@@ -162,7 +162,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform a vector into the coordinate space defined by this transform ignoring the translation.
+        /// Transform a point into the coordinate space defined by this transform.
         /// </summary>
         /// <param name="vector">The vector to transform.</param>
         /// <returns>A new vector transformed by this transform.</returns>
@@ -178,12 +178,9 @@ namespace Elements.Geometry
         /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfVector(Vector3 vector)
         {
-            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, this.Origin);
-            return new Vector3(
-                vector.X * m.XAxis.X + vector.Y * YAxis.X + vector.Z * ZAxis.X + this.Origin.X,
-                vector.X * m.XAxis.Y + vector.Y * YAxis.Y + vector.Z * ZAxis.Y + this.Origin.Y,
-                vector.X * m.XAxis.Z + vector.Y * YAxis.Z + vector.Z * ZAxis.Z + this.Origin.Z
-            );
+            // Construct a matrix that removes the translation.
+            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, Vector3.Origin);
+            return vector * m;
         }
 
         /// <summary>
