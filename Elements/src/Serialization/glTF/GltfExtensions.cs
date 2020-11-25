@@ -12,7 +12,6 @@ using Elements.Geometry.Interfaces;
 using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
-using Elements.Interfaces;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -1087,11 +1086,7 @@ namespace Elements.Serialization.glTF
                                       Transform t = null)
         {
             // To properly compute csgs, all solid operation csgs need
-            // to be transformed into their final position. Then the csgs
-            // can be computed and the final csg can have the inverse of the
-            // geometric element's transform applied to "reset" it. 
-            // The transforms applied to each node in the glTF will then 
-            // ensure that the elements are correctly transformed.
+            // to be transformed into their final position. 
             Csg.Solid csg = new Csg.Solid();
 
             var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false)
@@ -1105,16 +1100,17 @@ namespace Elements.Serialization.glTF
                                                                             op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
                                                                        .ToArray();
 
-            if (geometricElement is IHasOpenings)
-            {
-                var openingContainer = (IHasOpenings)geometricElement;
-                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
-                                                      .Where(op => op.IsVoid == true)
-                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
-            }
+            voids = voids.Concat(geometricElement.Openings.SelectMany(o => o.Representation.SolidOperations
+                                                  .Where(op => op.IsVoid == true)
+                                                  .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
 
             csg = csg.Union(solids);
             csg = csg.Substract(voids);
+
+            // Apply the inverse of the geometric element's transform applied 
+            // to remove the affect of the transform. 
+            // The transforms applied to the node in the glTF will then 
+            // ensure that the elements are correctly transformed.
             var inverse = new Transform(geometricElement.Transform);
             inverse.Invert();
 

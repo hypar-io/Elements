@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ namespace Elements
     /// A wall defined by a planar profile extruded to a height.
     /// </summary>
     [UserElement]
-    public class Wall : GeometricElement, IHasOpenings
+    public class Wall : GeometricElement
     {
         /// <summary>
         /// The height of the wall.
@@ -22,11 +21,6 @@ namespace Elements
         /// The profile of the wall.
         /// </summary>
         public Profile Profile { get; protected set; }
-
-        /// <summary>
-        /// A collection of openings in the wall.
-        /// </summary>
-        public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
         /// Construct a wall by extruding a profile.

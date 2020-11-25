@@ -1,10 +1,16 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry;
 
 namespace Elements
 {
     public partial class GeometricElement
     {
+        /// <summary>
+        /// A collection of openings.
+        /// </summary>
+        public List<Opening> Openings { get; } = new List<Opening>();
+
         /// <summary>
         /// This method provides an opportunity for geometric elements
         /// to adjust their solid operations before tesselation. As an example,
