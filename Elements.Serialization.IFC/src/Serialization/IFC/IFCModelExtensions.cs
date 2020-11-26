@@ -39,22 +39,82 @@ namespace Elements.Serialization.IFC
 
             Dictionary<Guid, GeometricElement> elementDefinitions = new Dictionary<Guid, GeometricElement>();
 
+            // var types = ifcModel.AllInstancesDerivedFromType<IfcBuildingElementType>();
+            // var relTypes = ifcModel.AllInstancesOfType<IfcRelDefinesByType>();
+
+            var materials = new Dictionary<string, Material>();
+            var repMaterialMap = new Dictionary<Guid, Material>();
+
+            // Get a unique set of materials that are used for all 
+            // styled items. While we're doing that we also build
+            // a map of the items that are being styled and their materials.
+            var styledItems = ifcModel.AllInstancesOfType<IfcStyledItem>();
+            foreach (var styledItem in styledItems)
+            {
+                var item = styledItem.Item; // The representation item that is styled.
+                if (item == null)
+                {
+                    continue;
+                }
+                foreach (var style in styledItem.Styles)
+                {
+                    if (style.Choice is IfcPresentationStyleAssignment)
+                    {
+                        var styleAssign = (IfcPresentationStyleAssignment)style.Choice;
+                        foreach (var presentationStyle in styleAssign.Styles)
+                        {
+                            if (presentationStyle.Choice is IfcSurfaceStyle)
+                            {
+                                var surfaceStyle = (IfcSurfaceStyle)presentationStyle.Choice;
+                                foreach (var styleElement in surfaceStyle.Styles)
+                                {
+                                    if (styleElement.Choice is IfcSurfaceStyleRendering)
+                                    {
+                                        var rendering = (IfcSurfaceStyleRendering)styleElement.Choice;
+                                        var transparency = (IfcRatioMeasure)rendering.Transparency;
+                                        var color = rendering.SurfaceColour.ToColor(1.0 - transparency);
+                                        var name = surfaceStyle.Name;
+                                        Material material = null;
+                                        if (!materials.ContainsKey(name))
+                                        {
+                                            material = new Material(color, 0.4, 0.4, false, null, false, surfaceStyle.Id, surfaceStyle.Name);
+                                            materials.Add(material.Name, material);
+                                        }
+                                        else
+                                        {
+                                            material = materials[name];
+                                        }
+                                        repMaterialMap.Add(item.Id, material);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             var sites = ifcModel.AllInstancesOfType<IfcSite>();
             foreach (var site in sites)
             {
                 var transform = site.ObjectPlacement.ToTransform();
-                var rep = site.GetRepresentationFromProduct(model, constructionErrors, out Transform mapTransform, out Guid mapId);
+                var rep = site.GetRepresentationFromProduct(model,
+                                                            constructionErrors,
+                                                            repMaterialMap,
+                                                            out Transform mapTransform,
+                                                            out Guid mapId,
+                                                            out Material materialHint);
+                if (rep == null)
+                {
+                    continue;
+                }
                 var geom = new GeometricElement(transform,
-                                                        BuiltInMaterials.Default,
+                                                        materialHint ?? BuiltInMaterials.Default,
                                                         rep,
                                                         false,
                                                         IfcGuid.FromIfcGUID(site.GlobalId),
                                                         site.Name);
                 model.AddElement(geom);
             }
-
-            // var types = ifcModel.AllInstancesDerivedFromType<IfcBuildingElementType>();
-            // var relTypes = ifcModel.AllInstancesOfType<IfcRelDefinesByType>();
 
             foreach (var buildingElement in buildingElements)
             {
@@ -69,7 +129,12 @@ namespace Elements.Serialization.IFC
                         transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
                     }
 
-                    var rep = buildingElement.GetRepresentationFromProduct(model, constructionErrors, out Transform mapTransform, out Guid mapId);
+                    var rep = buildingElement.GetRepresentationFromProduct(model,
+                                                                           constructionErrors,
+                                                                           repMaterialMap,
+                                                                           out Transform mapTransform,
+                                                                           out Guid mapId,
+                                                                           out Material materialHint);
 
                     if (mapTransform != null)
                     {
@@ -81,7 +146,7 @@ namespace Elements.Serialization.IFC
                         else
                         {
                             definition = new GeometricElement(transform,
-                                                        BuiltInMaterials.Default,
+                                                        materialHint ?? BuiltInMaterials.Default,
                                                         rep,
                                                         true,
                                                         IfcGuid.FromIfcGUID(buildingElement.GlobalId),
@@ -110,7 +175,7 @@ namespace Elements.Serialization.IFC
                         // - Idea: Make Representations an Element, so that they can be shared.
                         // - Idea: Make PropertySet an Element. PropertySets can store type properties.
                         var geom = new GeometricElement(transform,
-                                                        BuiltInMaterials.Default,
+                                                        materialHint ?? BuiltInMaterials.Default,
                                                         rep,
                                                         false,
                                                         IfcGuid.FromIfcGUID(buildingElement.GlobalId),

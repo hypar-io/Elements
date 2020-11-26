@@ -674,33 +674,40 @@ namespace Elements.Serialization.glTF
             var meshTransformMap = new Dictionary<Guid, Transform>();
             foreach (var e in elements)
             {
-                // Check if we'll overrun the index size
-                // for the current line array. If so,
-                // create a new line array.
-                if (currLines.Count * 2 > ushort.MaxValue)
+                try
                 {
-                    currLines = new List<Vector3>();
-                    lines.Add(currLines);
-                }
+                    // Check if we'll overrun the index size
+                    // for the current line array. If so,
+                    // create a new line array.
+                    if (currLines.Count * 2 > ushort.MaxValue)
+                    {
+                        currLines = new List<Vector3>();
+                        lines.Add(currLines);
+                    }
 
-                GetRenderDataForElement(e,
-                                        gltf,
-                                        materialIndexMap,
-                                        buffers,
-                                        allBuffers,
-                                        schemaBuffers,
-                                        bufferViews,
-                                        accessors,
-                                        materials,
-                                        textures,
-                                        images,
-                                        samplers,
-                                        meshes,
-                                        nodes,
-                                        meshElementMap,
-                                        meshTransformMap,
-                                        currLines,
-                                        drawEdges);
+                    GetRenderDataForElement(e,
+                                            gltf,
+                                            materialIndexMap,
+                                            buffers,
+                                            allBuffers,
+                                            schemaBuffers,
+                                            bufferViews,
+                                            accessors,
+                                            materials,
+                                            textures,
+                                            images,
+                                            samplers,
+                                            meshes,
+                                            nodes,
+                                            meshElementMap,
+                                            meshTransformMap,
+                                            currLines,
+                                            drawEdges);
+                }
+                catch
+                {
+                    continue;
+                }
             }
             if (allBuffers.Sum(b => b.Count()) + buffers.Count == 0 && lights.Count == 0)
             {
@@ -878,6 +885,7 @@ namespace Elements.Serialization.glTF
                     }
                 }
                 transform.Concatenate(i.Transform);
+
                 // Lookup the corresponding mesh in the map.
                 NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
 

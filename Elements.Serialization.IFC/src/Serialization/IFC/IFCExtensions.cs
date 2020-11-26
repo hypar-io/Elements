@@ -17,26 +17,48 @@ namespace Elements.Serialization.IFC
         internal static Representation GetRepresentationFromProduct(this IfcProduct product,
                                                                     Model model,
                                                                     List<string> constructionErrors,
+                                                                    Dictionary<Guid, Material> repMaterialMap,
                                                                     out Transform mapTransform,
-                                                                    out Guid mapId)
+                                                                    out Guid mapId,
+                                                                    out Material materialHint)
         {
+            if (product.Representation == null)
+            {
+                mapTransform = null;
+                materialHint = null;
+                return null;
+            }
             var repItems = product.Representation.Representations.SelectMany(r => r.Items);
             var repMap = new Dictionary<Guid, List<SolidOperation>>();
-            var ops = ParseRepresentationItems(repItems, constructionErrors, repMap, out mapTransform, out mapId);
+            var ops = ParseRepresentationItems(repItems,
+                                               constructionErrors,
+                                               repMap,
+                                               repMaterialMap,
+                                               out mapTransform,
+                                               out mapId,
+                                               out materialHint);
             return new Representation(ops);
         }
 
         private static List<SolidOperation> ParseRepresentationItems(IEnumerable<IfcRepresentationItem> repItems,
                                                                      List<string> constructionErrors,
                                                                      Dictionary<Guid, List<SolidOperation>> repMap,
+                                                                     Dictionary<Guid, Material> repMaterialMap,
                                                                      out Transform mapTransform,
-                                                                     out Guid mapId)
+                                                                     out Guid mapId,
+                                                                     out Material materialHint)
         {
             var solidOps = new List<SolidOperation>();
             mapTransform = null;
+            materialHint = null;
 
             foreach (var item in repItems)
             {
+                if (repMaterialMap.ContainsKey(item.Id))
+                {
+                    materialHint = repMaterialMap[item.Id];
+                }
+
                 var notImplementedException = $"{item.GetType().Name} is not yet supported.";
 
                 if (item is IfcConnectedFaceSet)
@@ -135,8 +157,10 @@ namespace Elements.Serialization.IFC
                         var ops = ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items,
                                                        constructionErrors,
                                                        repMap,
+                                                       repMaterialMap,
                                                        out mapTransform,
-                                                       out mapId);
+                                                       out mapId,
+                                                       out materialHint);
                         repMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, ops);
                         solidOps.AddRange(ops);
                     }
@@ -822,6 +846,11 @@ namespace Elements.Serialization.IFC
         private static Polygon ToPolygon(this IfcPolyLoop loop)
         {
             return loop.Polygon.ToPolygon();
+        }
+
+        internal static Color ToColor(this IfcColourRgb rgb, double transparency)
+        {
+            return new Color((IfcRatioMeasure)rgb.Red, (IfcRatioMeasure)rgb.Green, (IfcRatioMeasure)rgb.Blue, transparency);
         }
     }
 }
