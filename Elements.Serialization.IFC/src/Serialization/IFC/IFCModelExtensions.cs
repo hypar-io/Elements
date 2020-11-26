@@ -1,5 +1,6 @@
 using Elements.Analysis;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using IFC;
 using STEP;
 using System;
@@ -15,9 +16,128 @@ namespace Elements.Serialization.IFC
     public static class IFCModelExtensions
     {
         /// <summary>
+        /// Construct a model from an IFC.
+        /// </summary>
+        /// <param name="path">The path to an IFC Express file.</param>
+        /// <param name="constructionErrors">Error messages which ocurred during model construction.</param>
+        public static Model FromIFC2(string path, out List<string> constructionErrors)
+        {
+            List<STEPError> errors;
+            var ifcModel = new Document(path, out errors);
+            foreach (var error in errors)
+            {
+                Console.WriteLine("***IFC ERROR***" + error.Message);
+            }
+
+            var buildingElements = ifcModel.AllInstancesDerivedFromType<IfcBuildingElement>();
+
+            var relVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
+
+            var model = new Model();
+
+            constructionErrors = new List<string>();
+
+            Dictionary<Guid, GeometricElement> elementDefinitions = new Dictionary<Guid, GeometricElement>();
+
+            var sites = ifcModel.AllInstancesOfType<IfcSite>();
+            foreach (var site in sites)
+            {
+                var transform = site.ObjectPlacement.ToTransform();
+                var rep = site.GetRepresentationFromProduct(model, constructionErrors, out Transform mapTransform, out Guid mapId);
+                var geom = new GeometricElement(transform,
+                                                        BuiltInMaterials.Default,
+                                                        rep,
+                                                        false,
+                                                        IfcGuid.FromIfcGUID(site.GlobalId),
+                                                        site.Name);
+                model.AddElement(geom);
+            }
+
+            // var types = ifcModel.AllInstancesDerivedFromType<IfcBuildingElementType>();
+            // var relTypes = ifcModel.AllInstancesOfType<IfcRelDefinesByType>();
+
+            foreach (var buildingElement in buildingElements)
+            {
+                try
+                {
+                    var transform = new Transform();
+                    transform.Concatenate(buildingElement.ObjectPlacement.ToTransform());
+
+                    // Check if the building element is contained in a building storey
+                    foreach (var cis in buildingElement.ContainedInStructure)
+                    {
+                        transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
+                    }
+
+                    var rep = buildingElement.GetRepresentationFromProduct(model, constructionErrors, out Transform mapTransform, out Guid mapId);
+
+                    if (mapTransform != null)
+                    {
+                        GeometricElement definition = null;
+                        if (elementDefinitions.ContainsKey(mapId))
+                        {
+                            definition = elementDefinitions[mapId];
+                        }
+                        else
+                        {
+                            definition = new GeometricElement(transform,
+                                                        BuiltInMaterials.Default,
+                                                        rep,
+                                                        true,
+                                                        IfcGuid.FromIfcGUID(buildingElement.GlobalId),
+                                                        buildingElement.Name);
+                            elementDefinitions.Add(mapId, definition);
+                        }
+
+                        // The cartesian transform needs to be applied 
+                        // before the element transormation because it
+                        // may contain scale and rotation.
+                        var instanceTransform = new Transform(mapTransform);
+                        instanceTransform.Concatenate(transform);
+                        var instance = definition.CreateInstance(instanceTransform, "test");
+
+                        model.AddElement(instance);
+                    }
+                    else
+                    {
+                        if (rep.SolidOperations.Count == 0)
+                        {
+                            constructionErrors.Add($"{buildingElement.GetType().Name} did not have any solid operations in its representation.");
+                            continue;
+                        }
+
+                        // TODO: Handle IfcMappedItem
+                        // - Idea: Make Representations an Element, so that they can be shared.
+                        // - Idea: Make PropertySet an Element. PropertySets can store type properties.
+                        var geom = new GeometricElement(transform,
+                                                        BuiltInMaterials.Default,
+                                                        rep,
+                                                        false,
+                                                        IfcGuid.FromIfcGUID(buildingElement.GlobalId),
+                                                        buildingElement.Name);
+
+                        var voids = relVoids.Where(v => v.RelatingBuildingElement == buildingElement).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>();
+                        foreach (var v in voids)
+                        {
+                            var opening = v.ToOpening();
+                            geom.Openings.Add(opening);
+                        }
+
+                        model.AddElement(geom);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    constructionErrors.Add(ex.Message);
+                }
+            }
+            return model;
+        }
+
+        /// <summary>
         /// Load a model from IFC.
         /// </summary>
-        /// <param name="path">The path to an IFC STEP file.</param>
+        /// <param name="path">The path to an IFC Express file.</param>
         /// <param name="idsToConvert">An array of element ids to convert.</param>
         /// <param name="constructionErrors">Error messages which ocurred during model construction.</param>
         /// <returns>A model.</returns>
