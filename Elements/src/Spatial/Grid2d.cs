@@ -577,15 +577,10 @@ namespace Elements.Spatial
                 return false;
             }
 
-            if (boundariesInGridSpace.Count > 1)
-            {
-                return true;
-            }
-
             var baseRect = GetBaseRectangleTransformed();
-
             var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
-            if (trimmedRect == null || trimmedRect.Count > 1 || trimmedRect.Count < 1) return false;
+            if (trimmedRect == null || trimmedRect.Count < 1) { return false; }
+            if (trimmedRect.Count > 1) { return true; }
             return !trimmedRect[0].IsAlmostEqualTo(baseRect, Vector3.EPSILON);
         }
 
