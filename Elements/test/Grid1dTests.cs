@@ -103,9 +103,18 @@ namespace Elements.Tests
         public void DivideFromPosition()
         {
             var grid = new Grid1d(new Domain1d(-8, 8));
-            Assert.Throws<ArgumentException>(() => grid.DivideByFixedLengthFromPosition(1, 10));
+            grid.DivideByFixedLengthFromPosition(20, 10);
+            Assert.Null(grid.Cells); // this should have been left undivided
             grid.DivideByFixedLengthFromPosition(4, 0);
             Assert.Equal(4, grid.Cells.Count);
+        }
+
+        [Fact]
+        public void DivideFromPoint()
+        {
+            var grid = new Grid1d(new Line(new Vector3(-5, -5), new Vector3(5, 5)));
+            grid.DivideByFixedLengthFromPoint(3, new Vector3(-4, 4));
+            Assert.Equal(6, grid.Cells.Count);
         }
 
         [Fact]

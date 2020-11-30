@@ -85,6 +85,35 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void CellSeparatorsTrimmed()
+        {
+            Name = "CellSeparatorsTrimmed";
+            var polygon = new Polygon(new[] {
+                Vector3.Origin,
+                new Vector3(4,2),
+                new Vector3(5,3),
+                new Vector3(7,7),
+                new Vector3(3,6)
+            });
+            var polygon2 = new Polygon(new[] {
+                new Vector3(1.1,1),
+                new Vector3(1.5,1),
+                new Vector3(1.5,2),
+                new Vector3(1.1,2)
+            });
+            var polygons = new[] { polygon, polygon2 };
+            var grid2d = new Grid2d(polygons);
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByFixedLength(1);
+            var csu = grid2d.GetCellSeparators(GridDirection.U, true);
+            var csv = grid2d.GetCellSeparators(GridDirection.V, true);
+            Assert.Equal(10, csu.Count);
+            Assert.Equal(10, csv.Count);
+            Model.AddElements(polygons.Select(p => new ModelCurve(p, BuiltInMaterials.XAxis)));
+            Model.AddElements(csu.Union(csv).Select(l => new ModelCurve(l as Line)));
+        }
+
+        [Fact]
         public void RotationOfTransform()
         {
             var rectangle = Polygon.Rectangle(10, 6);

@@ -472,7 +472,7 @@ namespace Elements.Geometry
             polygon.Contains(this.Start, out var containment);
             var StartsOutsidePolygon = containment == Containment.Outside;
 
-            var hasVertexIntersections = false;
+            var hasVertexIntersections = containment == Containment.CoincidesAtVertex;
 
             // Examine the polygon's edges.
             for (int i1 = 0; i1 < polygon.Vertices.Count; i1++)
@@ -514,7 +514,7 @@ namespace Elements.Geometry
                     continue;
                 }
                 var segment = new Line(A, B);
-                if (hasVertexIntersections || containment == Containment.CoincidesAtEdge) // if it passed through a vertex, or started at an edge, we can't rely on alternating, so check each midpoint
+                if (hasVertexIntersections || containment == Containment.CoincidesAtEdge) // if it passed through a vertex, or started at an edge or vertex, we can't rely on alternating, so check each midpoint
                 {
                     currentlyIn = polygon.Contains((A + B) / 2);
                 }
