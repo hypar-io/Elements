@@ -1094,6 +1094,10 @@ namespace Elements.Serialization.glTF
             // ensure that the elements are correctly transformed.
             Csg.Solid csg = new Csg.Solid();
 
+            if (geometricElement.Representation == null || geometricElement.Representation.SolidOperations == null)
+            {
+                throw new NullReferenceException($"A representation, or the solids list, is null on a {geometricElement.GetType().FullName} object.  Please ensure all geometric elements have representations.");
+            }
             var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false)
                                                                         .Select(op => op.LocalTransform != null ?
                                                                             op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
