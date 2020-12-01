@@ -226,8 +226,13 @@ namespace Elements.Serialization.JSON
             // an inheritance attribute specifying one of its subtypes.
             foreach (var attribute in System.Reflection.CustomAttributeExtensions.GetCustomAttributes<JsonInheritanceAttribute>(System.Reflection.IntrospectionExtensions.GetTypeInfo(objectType), true))
             {
-                if (attribute.Key == discriminator)
+                // the check for the match after splitting is to handle the descriminator keys that are
+                // written to generated user classes in JsonInheritanceAttribute, those names don't include
+                // the namespace.  This is a little fragile if there are two types with the same name different namespaces.
+                if (attribute.Key == discriminator || attribute.Key.Split('.').Last() == discriminator)
+                {
                     return attribute.Type;
+                }
             }
 
             // If the inheritance attributes is not supplied, as in the case
