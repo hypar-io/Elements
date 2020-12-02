@@ -64,6 +64,7 @@ namespace Elements.Tests
         [Fact]
         public void TrimBehavior()
         {
+            Name = "TrimBehavior";
             var polygonjson = "[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-14.371519985751306,\"Y\":-4.8816304299427005,\"Z\":0.0},{\"X\":-17.661873645682569,\"Y\":9.2555712951713573,\"Z\":0.0},{\"X\":12.965610421927806,\"Y\":9.2555712951713573,\"Z\":0.0},{\"X\":12.965610421927806,\"Y\":3.5538269529982784,\"Z\":0.0},{\"X\":6.4046991240848143,\"Y\":3.5538269529982784,\"Z\":0.0},{\"X\":1.3278034769444158,\"Y\":-4.8816304299427005,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-9.4508365123690652,\"Y\":0.20473478280229102,\"Z\":0.0},{\"X\":-1.8745460850979974,\"Y\":0.20473478280229102,\"Z\":0.0},{\"X\":-1.8745460850979974,\"Y\":5.4378426037008651,\"Z\":0.0},{\"X\":-9.4508365123690652,\"Y\":5.4378426037008651,\"Z\":0.0}]}]\r\n";
             var polygons = JsonConvert.DeserializeObject<List<Polygon>>(polygonjson);
             var grid = new Grid2d(polygons);
@@ -73,15 +74,52 @@ namespace Elements.Tests
             }
             grid.CellsFlat.ForEach(c => c.U.DivideByApproximateLength(1.0, EvenDivisionMode.RoundDown));
 
-            var trimmedCells = grid.GetCells().Select(c => new Dictionary<string, object>
+            var trimmedCells = grid.GetCells().Select(c =>
+                (TrimmedGeometry: c.GetTrimmedCellGeometry(),
+                BaseRect: c.GetCellGeometry(),
+                IsTrimmed: c.IsTrimmed()));
+
+            foreach (var trimGeometry in trimmedCells)
+            {
+                var trimGeo = trimGeometry.TrimmedGeometry.OfType<Polygon>();
+                var material = trimGeometry.IsTrimmed ? BuiltInMaterials.XAxis : BuiltInMaterials.ZAxis;
+                foreach (var t in trimGeo)
                 {
-                    {"TrimmedGeometry", c.GetTrimmedCellGeometry()},
-                    {"BaseRect", c.GetCellGeometry() },
-                    {"IsTrimmed", c.IsTrimmed()}
+                    Model.AddElement(new ModelCurve(t));
+                    Model.AddElement(new Mass(t, 1, material, new Transform(0, 0, -1.001)));
                 }
-            );
+            }
             Assert.Equal(87, trimmedCells.Count());
-            Assert.Equal(18, trimmedCells.Count(c => (bool)c["IsTrimmed"]));
+            Assert.Equal(18, trimmedCells.Count(c => c.IsTrimmed));
+        }
+
+        [Fact]
+        public void CellSeparatorsTrimmed()
+        {
+            Name = "CellSeparatorsTrimmed";
+            var polygon = new Polygon(new[] {
+                Vector3.Origin,
+                new Vector3(4,2),
+                new Vector3(5,3),
+                new Vector3(7,7),
+                new Vector3(3,6)
+            });
+            var polygon2 = new Polygon(new[] {
+                new Vector3(1.1,1),
+                new Vector3(1.5,1),
+                new Vector3(1.5,2),
+                new Vector3(1.1,2)
+            });
+            var polygons = new[] { polygon, polygon2 };
+            var grid2d = new Grid2d(polygons);
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByFixedLength(1);
+            var csu = grid2d.GetCellSeparators(GridDirection.U, true);
+            var csv = grid2d.GetCellSeparators(GridDirection.V, true);
+            Assert.Equal(10, csu.Count);
+            Assert.Equal(10, csv.Count);
+            Model.AddElements(polygons.Select(p => new ModelCurve(p, BuiltInMaterials.XAxis)));
+            Model.AddElements(csu.Union(csv).Select(l => new ModelCurve(l as Line)));
         }
 
         [Fact]
