@@ -40,7 +40,7 @@ namespace Elements.Serialization.glTF
 }";
 
         /// <summary>
-        /// Serialize the model to gltf file on disk.
+        /// Serialize the model to a gltf file on disk.
         /// If there is no geometry, an empty GLTF will still be produced.
         /// </summary>
         /// <param name="model">The model to serialize.</param>
