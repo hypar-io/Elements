@@ -47,12 +47,12 @@ namespace Elements.Spatial
         /// <summary>
         /// A transform from grid space to world space
         /// </summary>
-        private Transform fromGrid = new Transform();
+        internal Transform fromGrid = new Transform();
 
         /// <summary>
         /// A transform from world space to grid space
         /// </summary>
-        private Transform toGrid = new Transform();
+        internal Transform toGrid = new Transform();
 
         private Domain1d UDomainInternal = new Domain1d(0, 0);
         private Domain1d VDomainInternal = new Domain1d(0, 0);
@@ -251,9 +251,8 @@ namespace Elements.Spatial
         /// <param name="point">The point at which to split.</param>
         public void SplitAtPoint(Vector3 point)
         {
-            var ptTransformed = toGrid.OfPoint(point);
-            U.SplitAtPoint(AxisTransformPoint(GridDirection.U, ptTransformed));
-            V.SplitAtPoint(AxisTransformPoint(GridDirection.V, ptTransformed));
+            U.SplitAtPoint(AxisTransformPoint(GridDirection.U, point));
+            V.SplitAtPoint(AxisTransformPoint(GridDirection.V, point));
         }
 
         /// <summary>
@@ -408,11 +407,34 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Get the points at the corners of all grid cells.
+        /// /// </summary>
+        /// <returns></returns>
+        public List<Vector3> GetCellNodes()
+        {
+            var points = new List<Vector3>();
+            var origin = GetTransformedOrigin();
+            var vToOrigin = origin - V.StartPoint();
+            var uToOrigin = origin - U.StartPoint();
+            var uPoints = U.GetCellSeparators(true);
+            var vPoints = V.GetCellSeparators(true);
+
+            foreach (var vpt in vPoints)
+            {
+                var displacement = new Transform(vpt - uToOrigin);
+                // points.AddRange(uPoints.Select(u => fromGrid.OfPoint(displacement.OfPoint(u))));
+                points.AddRange(uPoints.Select(u => fromGrid.OfPoint(u + vpt)));
+            }
+            return points;
+        }
+
+        /// <summary>
         /// Get the top-level lines separating cells from one another.
         /// </summary>
         /// <param name="direction">The grid direction in which you want to get separators. </param>
+        /// <param name="trim">Whether or not to trim cell separators with the trimmed cell boundary</param>
         /// <returns>The lines between cells, running parallel to the grid direction selected. </returns>
-        public List<ICurve> GetCellSeparators(GridDirection direction)
+        public List<ICurve> GetCellSeparators(GridDirection direction, bool trim = false)
         {
             var curves = new List<ICurve>();
             var points = new List<Vector3>();
@@ -438,7 +460,47 @@ namespace Elements.Spatial
                 curves.Add(otherDirection.Transformed(displacement).Transformed(fromGrid));
             }
 
-            //TODO: add support for trimmed lines
+
+            if (trim && IsTrimmed())
+            {
+                List<ICurve> trimmedCurves = new List<ICurve>();
+                var trimmedCellGeometry = GetTrimmedCellGeometry().OfType<Polygon>();
+                // TODO: support keeping polylines joined when trimming. This would depend on an implementation of Polyline.Trim(Polygon p)
+                // Currently we simply return the "shattered" lines that result. Since most grids are constructed from linear
+                // axes, this is fine most of the time.
+                if (trimmedCellGeometry.Count() == 1)
+                {
+                    var boundary = trimmedCellGeometry.First();
+                    var lines = curves.OfType<Line>().Union(curves.OfType<Polyline>().SelectMany(c => c.Segments()));
+                    trimmedCurves.AddRange(lines.SelectMany(l => l.Trim(boundary, out var _)));
+                }
+                else
+                {
+                    // If we potentially have nested polygons, assume clockwise winding indicates a hole — trim with all the outer polygons first,
+                    // and then trim out anything inside the holes. 
+                    // TODO: get smarter about complex nesting scenarios taking advantage of clipper's PolyTree structure. 
+                    var outerPolygons = trimmedCellGeometry.Where(p => !p.IsClockWise());
+                    var innerPolygons = trimmedCellGeometry.Where(p => p.IsClockWise());
+                    foreach (var outerPoly in outerPolygons)
+                    {
+                        var lines = curves.OfType<Line>().Union(curves.OfType<Polyline>().SelectMany(c => c.Segments()));
+                        var intermediateResults = lines.SelectMany(l => l.Trim(outerPoly, out var _));
+                        var innerPolygonsWithinOuterPolygon = innerPolygons.Where(i => outerPoly.Contains(i.Vertices.First()));
+                        foreach (var ip in innerPolygonsWithinOuterPolygon)
+                        {
+                            var linesOutsideHole = intermediateResults.SelectMany(ir =>
+                            {
+                                ir.Trim(ip, out var outsideLines);
+                                return outsideLines;
+                            });
+                            intermediateResults = linesOutsideHole;
+                        }
+                        trimmedCurves.AddRange(intermediateResults);
+                    }
+                }
+
+                return trimmedCurves;
+            }
 
             return curves;
 
@@ -516,9 +578,9 @@ namespace Elements.Spatial
             }
 
             var baseRect = GetBaseRectangleTransformed();
-
             var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
-            if (trimmedRect == null || trimmedRect.Count > 1 || trimmedRect.Count < 1) return false;
+            if (trimmedRect == null || trimmedRect.Count < 1) { return false; }
+            if (trimmedRect.Count > 1) { return true; }
             return !trimmedRect[0].IsAlmostEqualTo(baseRect, Vector3.EPSILON);
         }
 
@@ -614,8 +676,8 @@ namespace Elements.Spatial
                 return new List<List<Grid2d>> { new List<Grid2d> { this } };
             }
             var cells = new List<List<Grid2d>>();
-            var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.Cells;
-            var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.Cells;
+            var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.GetCells();
+            var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.GetCells();
             foreach (var uCell in uCells)
             {
                 var column = new List<Grid2d>();

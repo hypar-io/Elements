@@ -277,6 +277,21 @@ namespace Elements.Spatial
         /// <param name="point"></param>
         public void SplitAtPoint(Vector3 point)
         {
+            double posAlongCurve = ClosestPosition(point);
+            SplitAtOffset(posAlongCurve, false, true);
+        }
+
+        /// <summary>
+        /// Get the position along the grid's domain closest to a supplied point.
+        /// </summary>
+        /// <param name="point"></param>
+        public double ClosestPosition(Vector3 point)
+        {
+            // If we have a 2d parent, it's most intuitive to transform the point into grid space before doing this calculation.
+            if (parent != null)
+            {
+                point = parent.toGrid.OfPoint(point);
+            }
             var A = curve.PointAt(0);
             var B = curve.PointAt(1);
             var C = point;
@@ -284,7 +299,7 @@ namespace Elements.Spatial
             AB = AB.Unitized();
             var AC = C - A;
             var posAlongCurve = AC.Dot(AB);
-            SplitAtOffset(posAlongCurve, false, true);
+            return posAlongCurve;
         }
 
 
@@ -355,20 +370,55 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Divide a grid by constant length subdivisions, starting from a point location. 
+        /// </summary>
+        /// <param name="length">The length of subdivisions</param>
+        /// <param name="point">The point at which to begin subdividing.</param>
+        public void DivideByFixedLengthFromPoint(double length, Vector3 point)
+        {
+            var position = ClosestPosition(point);
+            DivideByFixedLengthFromPosition(length, position);
+        }
+
+        /// <summary>
         /// Divide a grid by constant length subdivisions, starting from a position. 
         /// </summary>
         /// <param name="length">The length of subdivisions</param>
         /// <param name="position">The position along the domain at which to begin subdividing.</param>
         public void DivideByFixedLengthFromPosition(double length, double position)
         {
-            if (!Domain.Includes(position))
-            {
-                throw new ArgumentException($"Position {position} is outside of the grid extents: {Domain}");
-            }
             if (length < Vector3.EPSILON)
             {
                 throw new ArgumentException($"Length {length} is smaller than tolerance.");
             }
+
+            if (!Domain.Includes(position))
+            {
+                // attempt to pick a position that is within the domain
+                if (position <= Domain.Min)
+                {
+                    var diffFromMin = Domain.Min - position;
+                    var lengthsAway = Math.Ceiling(diffFromMin / length);
+                    position = position + lengthsAway * length;
+                    if (position >= Domain.Max)
+                    {
+                        // no multiple of the length measured from the position intersects the domain. Leave undivided.
+                        return;
+                    }
+                }
+                else if (position >= Domain.Max)
+                {
+                    var diffFromMax = position - Domain.Max;
+                    var lengthsAway = Math.Ceiling(diffFromMax / length);
+                    position = position - lengthsAway * length;
+                    if (position <= Domain.Min)
+                    {
+                        // no multiple of the length measured from the position intersects the domain. Leave undivided.
+                        return;
+                    }
+                }
+            }
+
 
             for (double p = position; Domain.Includes(p); p += length)
             {
