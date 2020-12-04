@@ -40,7 +40,7 @@ namespace Elements.Serialization.glTF
 }";
 
         /// <summary>
-        /// Save a model to gltf.
+        /// Serialize the model to a gltf file on disk.
         /// If there is no geometry, an empty GLTF will still be produced.
         /// </summary>
         /// <param name="model">The model to serialize.</param>
@@ -74,9 +74,34 @@ namespace Elements.Serialization.glTF
         }
 
         /// <summary>
-        /// Convert the Model to a base64 encoded string.
+        /// Serialize the model to a byte array.
         /// </summary>
-        /// <returns>A Base64 string representing the Model.</returns>
+        /// <param name="model">The model to serialize.</param>
+        /// <returns>A byte array representing the model.</returns>
+        public static byte[] ToGlTF(this Model model)
+        {
+            var gltf = InitializeGlTF(model, out var buffers, false);
+            if (gltf == null)
+            {
+                return null;
+            }
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+
+            byte[] bytes;
+            using (var ms = new MemoryStream())
+            using (var writer = new BinaryWriter(ms))
+            {
+                gltf.SaveBinaryModel(mergedBuffer, writer);
+                bytes = ms.ToArray();
+            }
+
+            return bytes;
+        }
+
+        /// <summary>
+        /// Serialize the model to a base64 encoded string.
+        /// </summary>
+        /// <returns>A Base64 string representing the model.</returns>
         public static string ToBase64String(this Model model, bool drawEdges = false)
         {
             var tmp = Path.GetTempFileName();
@@ -86,9 +111,15 @@ namespace Elements.Serialization.glTF
                 return "";
             }
             var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
-            gltf.SaveBinaryModel(mergedBuffer, tmp);
-            var bytes = File.ReadAllBytes(tmp);
-            return Convert.ToBase64String(bytes);
+            string b64;
+            using (var ms = new MemoryStream())
+            using (var writer = new BinaryWriter(ms))
+            {
+                gltf.SaveBinaryModel(mergedBuffer, writer);
+                b64 = Convert.ToBase64String(ms.ToArray());
+            }
+
+            return b64;
         }
 
         internal static Dictionary<string, int> AddMaterials(this Gltf gltf, IList<Material> materials, List<byte> buffer, List<BufferView> bufferViews)
