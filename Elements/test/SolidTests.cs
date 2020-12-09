@@ -110,10 +110,25 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void SweptSolidPolyline()
+        public void SweptSolidCollinearPolyline()
         {
             var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = new Polyline(new[] { new Vector3(0, 0), new Vector3(0, 2), new Vector3(0, 3, 1), new Vector3(0, 5, 1) });
+            var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
+            foreach (var e in solid.Edges.Values)
+            {
+                Assert.NotNull(e.Left);
+                Assert.NotNull(e.Right);
+                Assert.NotSame(e.Left, e.Right);
+            }
+            solid.ToGlb("models/SweptSolidCollinearPolyline.glb");
+        }
+
+        [Fact]
+        public void SweptSolidPolyline()
+        {
+            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var path = new Polyline(new[] { new Vector3(-2, 2, 0), new Vector3(0, 2, 0), new Vector3(0, 3, 1), new Vector3(0, 5, 1), new Vector3(-2, 6, 0) });
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
             {
