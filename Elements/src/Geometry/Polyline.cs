@@ -524,6 +524,13 @@ namespace Elements.Geometry
             }
             return path;
         }
+
+        /// <summary>
+        /// Convert a line to a polyline
+        /// </summary>
+        /// <param name="l">The line to convert.</param>
+        public static Polyline ToPolyline(this Line l) => new Polyline(new[] { l.Start, l.End });
+   
     }
 
     /// <summary>

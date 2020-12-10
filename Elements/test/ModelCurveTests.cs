@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using Xunit;
 
@@ -11,14 +12,14 @@ namespace Elements.Tests
             this.GenerateIfc = false;
         }
 
-        [Fact, Trait("Category","Examples")]
+        [Fact, Trait("Category", "Examples")]
         public void ModelCurve()
         {
             this.Name = "Elements_ModelCurve";
 
             // <example>
             // A line
-            var line = new Line(Vector3.Origin, new Vector3(5,5,5));
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
 
             // An arc
             var arc = new Arc(Vector3.Origin, 2.0, 45.0, 135.0);
@@ -33,7 +34,7 @@ namespace Elements.Tests
             var d = new Vector3(0, 5, 3);
             var e = new Vector3(0, 0, 4);
             var f = new Vector3(5, 0, 5);
-            var ctrlPts = new List<Vector3>{a,b,c,d,e,f};
+            var ctrlPts = new List<Vector3> { a, b, c, d, e, f };
             var bezier = new Bezier(ctrlPts);
 
             var lineModelCurve = new ModelCurve(line, new Material("Red", Colors.Red));
@@ -42,7 +43,7 @@ namespace Elements.Tests
             var bezierModelCurve = new ModelCurve(bezier, new Material("Green", Colors.Green), new Transform(15, 0, 0));
             // </example>
 
-            this.Model.AddElements(new[]{lineModelCurve, arcModelCurve, plineModelCurve, bezierModelCurve});
+            this.Model.AddElements(new[] { lineModelCurve, arcModelCurve, plineModelCurve, bezierModelCurve });
         }
 
         [Fact]
@@ -50,7 +51,7 @@ namespace Elements.Tests
         {
             this.Name = "OffsetModelCurves";
 
-            var pline = new Polygon(new []{
+            var pline = new Polygon(new[]{
                 new Vector3(0, 0),
                 new Vector3(20, -10),
                 new Vector3(25, 5),
@@ -64,22 +65,22 @@ namespace Elements.Tests
             var plineModelCurve = new ModelCurve(pline, m);
             mcs.Add(plineModelCurve);
             var distance = -0.2;
-            for(var i=0; i<100; i++)
+            for (var i = 0; i < 100; i++)
             {
                 mcs.AddRange(OffsetPolygon(distance, pline, m));
             }
             this.Model.AddElements(mcs);
         }
 
-        private IList<ModelCurve>OffsetPolygon(double distance, Polygon p, Material m)
+        private IList<ModelCurve> OffsetPolygon(double distance, Polygon p, Material m)
         {
             var mcs = new List<ModelCurve>();
             var offset = p.Offset(distance);
-            if(offset == null || offset.Length == 0)
+            if (offset == null || offset.Length == 0)
             {
                 return mcs;
             }
-            foreach(var pin in offset)
+            foreach (var pin in offset)
             {
                 var mc = new ModelCurve(p, m);
                 mcs.Add(mc);
@@ -94,18 +95,31 @@ namespace Elements.Tests
             this.Name = "ModelPoints";
 
             var modelPoints = new ModelPoints();
-            for(var x=0; x<25; x++)
+            for (var x = 0; x < 25; x++)
             {
-                for(var y=0; y<25; y++)
+                for (var y = 0; y < 25; y++)
                 {
-                    for(var z=0; z<25; z++)
+                    for (var z = 0; z < 25; z++)
                     {
-                        modelPoints.Locations.Add(new Vector3(x,y,z));
+                        modelPoints.Locations.Add(new Vector3(x, y, z));
                     }
                 }
             }
-            
+
             this.Model.AddElement(modelPoints);
+        }
+
+        [Fact]
+        public void ImplicitConversion()
+        {
+            this.Name = "ImplicitConversion";
+            var curve = Polygon.Star(10, 5, 5);
+            var polyline = new Polyline(curve.Vertices);
+            var bezier = new Bezier(new List<Vector3>(curve.Vertices), FrameType.RoadLike);
+            this.Model.AddElement(curve);
+            this.Model.AddElement(polyline);
+            this.Model.AddElement(bezier);
+            Assert.Equal(3, this.Model.AllElementsOfType<ModelCurve>().Count());
         }
     }
 }
