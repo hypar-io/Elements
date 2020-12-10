@@ -98,6 +98,6 @@ namespace Elements.Geometry
         /// Implicitly convert a curve to a ModelCurve Element.
         /// </summary>
         /// <param name="c">The curve to convert.</param>
-        public static implicit operator Element(Curve c) => new ModelCurve(c);
+        public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
     }
 }

@@ -21,8 +21,11 @@ namespace Elements.Geometry
         /// <param name="p">The polygon to convert.</param>
         public static implicit operator Profile(Polygon p) => new Profile(p);
 
-         /// <summary>
-        /// Implicitly convert a curve to a ModelCurve.
+        // Though this conversion may seem redundant to the Curve => ModelCurve converter, it is needed to 
+        // make this the default implicit conversion from a polygon to an element (rather than the 
+        // polygon => profile conversion above.)  
+        /// <summary>
+        /// Implicitly convert a Polygon to a ModelCurve Element.
         /// </summary>
         /// <param name="c">The curve to convert.</param>
         public static implicit operator Element(Polygon c) => new ModelCurve(c);
