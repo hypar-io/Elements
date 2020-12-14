@@ -353,11 +353,6 @@ namespace Elements.Validators
         {
             var vertices = (IList<Vector3>)args[0];
 
-            if (!vertices.AreCoplanar())
-            {
-                throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
-            }
-
             var segments = Polyline.SegmentsInternal(vertices);
             Polyline.CheckSegmentLengthAndThrow(segments);
         }

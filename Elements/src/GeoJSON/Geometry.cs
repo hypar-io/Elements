@@ -232,7 +232,7 @@ namespace Elements.GeoJSON
         }
 
         /// <summary>
-        /// Convert the coordinate array to a collection of polylines.
+        /// Convert the coordinate array to a collection of polygons.
         /// The last position of the polygon is dropped.
         /// </summary>
         /// <returns></returns>

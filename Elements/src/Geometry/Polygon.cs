@@ -798,7 +798,19 @@ namespace Elements.Geometry
         /// <param name="endSetback"></param>
         public override Transform[] Frames(double startSetback, double endSetback)
         {
-            return FramesInternal(startSetback, endSetback, true);
+            // Create an array of transforms with the same
+            // number of items as the vertices.
+            var result = new Transform[this.Vertices.Count];
+
+            // Cache the normal so we don't have to recalculate
+            // using Newell for every frame.
+            var up = Normal();
+            for (var i = 0; i < result.Length; i++)
+            {
+                var a = this.Vertices[i];
+                result[i] = CreateMiterTransform(i, a, up);
+            }
+            return result;
         }
 
         /// <summary>
@@ -941,7 +953,7 @@ namespace Elements.Geometry
         /// The normal of this polygon, according to Newell's Method.
         /// </summary>
         /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
-        public override Vector3 Normal()
+        public Vector3 Normal()
         {
             var normal = new Vector3();
             for (int i = 0; i < Vertices.Count; i++)
@@ -953,6 +965,24 @@ namespace Elements.Geometry
                 normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
             }
             return normal.Unitized();
+        }
+        /// <summary>
+        /// Get the normal of each vertex on the polygon.
+        /// </summary>
+        /// <remarks>All normals will be the same since polygons are coplanar by definition.</remarks>
+        /// <returns>A collection of unit vectors, each corresponding to a single vertex.</returns>
+        protected override Vector3[] NormalsAtVertices()
+        {
+            // Create an array of transforms with the same number of items as the vertices.
+            var result = new Vector3[this.Vertices.Count];
+
+            // Since polygons must be coplanar, all vertex normals can match the polygon's normal.
+            var normal = this.Normal();
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                result[i] = normal;
+            }
+            return result;
         }
 
         /// <summary>
