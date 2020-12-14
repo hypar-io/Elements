@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using ClipperLib;
+using Elements.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -12,7 +13,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public partial class Polyline : ICurve, IEquatable<Polyline>
+    public partial class Polyline : ICurve, IEquatable<Polyline>, IRenderable
     {
         /// <summary>
         /// Calculate the length of the polygon.
@@ -281,14 +282,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            return this.Vertices;
-        }
-
-        /// <summary>
         /// Check for coincident vertices in the supplied vertex collection.
         /// </summary>
         /// <param name="vertices"></param>
@@ -500,6 +493,15 @@ namespace Elements.Geometry
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Render the polyline.
+        /// </summary>
+        /// <param name="renderer">The renderer.</param>
+        public virtual void Render(IRenderer renderer)
+        {
+            renderer.Render(this);
         }
     }
 

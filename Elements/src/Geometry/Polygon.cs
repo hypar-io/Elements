@@ -1,5 +1,5 @@
 using ClipperLib;
-using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
 using LibTessDotNet.Double;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
     /// </example>
-    public partial class Polygon : Polyline
+    public partial class Polygon : Polyline, IRenderable
     {
         /// <summary>
         /// Implicitly convert a polygon to a profile.
@@ -966,6 +966,16 @@ namespace Elements.Geometry
             }
             return normal.Unitized();
         }
+
+        /// <summary>
+        /// Render the polygon.
+        /// </summary>
+        /// <param name="renderer">The renderer.</param>
+        public override void Render(IRenderer renderer)
+        {
+            renderer.Render(this);
+        }
+
         /// <summary>
         /// Get the normal of each vertex on the polygon.
         /// </summary>
@@ -983,16 +993,6 @@ namespace Elements.Geometry
                 result[i] = normal;
             }
             return result;
-        }
-
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            var verts = new List<Vector3>(this.Vertices);
-            verts.Add(this.Start);
-            return verts;
         }
     }
 

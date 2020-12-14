@@ -1,6 +1,6 @@
-using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
+using Elements.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -30,7 +30,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/BezierTests.cs?name=example)]
     /// </example>
-    public class Bezier : Curve
+    public class Bezier : Curve, IRenderable
     {
         private int _samples = 50;
 
@@ -247,16 +247,6 @@ namespace Elements.Geometry
             return T.Cross(N);
         }
 
-        internal override IList<Vector3> RenderVertices()
-        {
-            var vertices = new List<Vector3>();
-            for (var i = 0; i <= _samples; i++)
-            {
-                vertices.Add(PointAt(i * 1.0 / _samples));
-            }
-            return vertices;
-        }
-
         /// <summary>
         /// Construct a transformed copy of this Bezier.
         /// </summary>
@@ -278,6 +268,15 @@ namespace Elements.Geometry
         public override Curve Transformed(Transform transform)
         {
             return TransformedBezier(transform);
+        }
+
+        /// <summary>
+        /// Render the bezier.
+        /// </summary>
+        /// <param name="renderer">The renderer.</param>
+        public void Render(IRenderer renderer)
+        {
+            renderer.Render(this);
         }
     }
 }

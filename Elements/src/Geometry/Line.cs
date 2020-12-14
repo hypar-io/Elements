@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Elements.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -10,7 +11,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
     /// </example>
-    public partial class Line : Curve, IEquatable<Line>
+    public partial class Line : Curve, IEquatable<Line>, IRenderable
     {
         /// <summary>
         /// Calculate the length of the line.
@@ -603,14 +604,6 @@ namespace Elements.Geometry
             }
         }
 
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            return new[] { this.Start, this.End };
-        }
-
         #region WindingNumberCalcs
         internal Position RelativePositionOf(Vector3 location)
         {
@@ -644,6 +637,15 @@ namespace Elements.Geometry
             }
 
             return End.X <= location.X;
+        }
+
+        /// <summary>
+        /// Render the line.
+        /// </summary>
+        /// <param name="renderer"></param>
+        public void Render(IRenderer renderer)
+        {
+            renderer.Render(this);
         }
 
         internal enum Position

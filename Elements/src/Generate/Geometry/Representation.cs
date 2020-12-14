@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
 
 namespace Elements.Geometry
 {
