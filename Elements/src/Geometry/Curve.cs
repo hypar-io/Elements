@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
 using Elements.Serialization.JSON;
 
 namespace Elements.Geometry

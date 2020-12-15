@@ -43,6 +43,7 @@ namespace Elements
         {
             this.Curve = curve;
             this.Material = material != null ? material : BuiltInMaterials.Edges;
+            this.Renderables.Add(this.Curve);
         }
     }
 

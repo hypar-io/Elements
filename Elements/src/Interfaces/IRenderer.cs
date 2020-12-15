@@ -50,5 +50,11 @@ namespace Elements.Interfaces
         /// </summary>
         /// <param name="arc"></param>
         void Render(Arc arc);
+
+        /// <summary>
+        /// Render points.
+        /// </summary>
+        /// <param name="points"></param>
+        void Render(Points points);
     }
 }

@@ -219,6 +219,24 @@ namespace Elements.Serialization.glTF
         }
 
         /// <summary>
+        /// Render the point.
+        /// </summary>
+        /// <param name="pt"></param>
+        public void Render(Vector3 pt)
+        {
+            pointRenderDatas.Add(new GlPointRenderData(new[] { pt }));
+        }
+
+        /// <summary>
+        /// Render the points.
+        /// </summary>
+        /// <param name="points"></param>
+        public void Render(Points points)
+        {
+            pointRenderDatas.Add(new GlPointRenderData(points));
+        }
+
+        /// <summary>
         /// Render a csg.
         /// </summary>
         /// <param name="csg"></param>

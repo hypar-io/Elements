@@ -42,6 +42,7 @@ namespace Elements
                                                      name)
         {
             this.Locations = locations != null ? locations : new List<Vector3>();
+            this.Renderables.Add(new Points(this.Locations));
         }
     }
 }
