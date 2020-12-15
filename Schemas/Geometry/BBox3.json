@@ -4,11 +4,11 @@
     "properties": {
         "Min": {
             "description": "The minimum extent of the bounding box.",
-            "$ref": "https://dev-api.hypar.io/schemas/Vector3"
+            "$ref": "https://hypar.io/Schemas/Geometry/Vector3"
         },
         "Max": {
             "description": "The maximum extent of the bounding box.",
-            "$ref": "https://dev-api.hypar.io/schemas/Vector3"
+            "$ref": "https://hypar.io/Schemas/Geometry/Vector3"
         }
     },
     "additionalProperties": false,

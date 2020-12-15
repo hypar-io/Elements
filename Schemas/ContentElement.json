@@ -2,7 +2,7 @@
     "x-namespace": "Elements",
     "allOf": [
         {
-            "$ref": "https://dev-api.hypar.io/schemas/GeometricElement"
+            "$ref": "https://hypar.io/Schemas/GeometricElement"
         }
     ],
     "required": [],
@@ -13,7 +13,7 @@
         },
         "Bounding Box": {
             "description": "The bounding box of the content.",
-            "$ref": "https://dev-api.hypar.io/schemas/BBox3"
+            "$ref": "https://hypar.io/Schemas/Geometry/BBox3"
         },
         "Gltf Scale to Meters": {
             "description": "The scale needed to convert the gltf to meters.",
@@ -21,7 +21,7 @@
         },
         "SourceDirection": {
             "description": "A vector indicating the direction the source object was originally facing.",
-            "$ref": "https://dev-api.hypar.io/schemas/Vector3"
+            "$ref": "https://hypar.io/Schemas/Geometry/Vector3"
         }
     },
     "additionalProperties": true,
