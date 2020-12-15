@@ -379,10 +379,10 @@ namespace Elements.Generate
             }
             else
             {
-                var path = Path.GetFullPath(Path.Combine(Assembly.GetExecutingAssembly().Location, uri));
+                var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), uri));
                 if (!File.Exists(path))
                 {
-                    throw new Exception($"The specified schema, {uri}, can not be found as a relative file or a url.");
+                    throw new Exception($"The specified schema, {uri}, can not be found at the path {path}.");
                 }
                 return await JsonSchema.FromJsonAsync(File.ReadAllText(path));
             }
