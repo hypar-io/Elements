@@ -93,5 +93,11 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);
+
+         /// <summary>
+        /// Implicitly convert a curve to a ModelCurve Element.
+        /// </summary>
+        /// <param name="c">The curve to convert.</param>
+        public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
     }
 }
