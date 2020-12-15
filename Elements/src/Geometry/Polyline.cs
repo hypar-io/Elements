@@ -282,6 +282,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            return this.Vertices;
+        }
+
+        /// <summary>
         /// Check for coincident vertices in the supplied vertex collection.
         /// </summary>
         /// <param name="vertices"></param>
@@ -498,8 +506,8 @@ namespace Elements.Geometry
         /// <summary>
         /// Render the polyline.
         /// </summary>
-        /// <param name="renderer">The renderer.</param>
-        public virtual void Render(IRenderer renderer)
+        /// <param name="renderer"></param>
+        public void Render(IRenderer renderer)
         {
             renderer.Render(this);
         }

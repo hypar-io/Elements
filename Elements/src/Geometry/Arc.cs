@@ -1,6 +1,7 @@
 using Elements.Geometry.Interfaces;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using Elements.Interfaces;
 
 namespace Elements.Geometry
@@ -152,6 +153,20 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            var parameters = GetSampleParameters();
+            var vertices = new List<Vector3>();
+            foreach (var p in parameters)
+            {
+                vertices.Add(PointAt(p));
+            }
+            return vertices;
+        }
+
+        /// <summary>
         /// Is this arc equal to the provided arc?
         /// </summary>
         /// <param name="other">The arc to test.</param>
@@ -201,7 +216,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Render the arc.
         /// </summary>
-        /// <param name="renderer">The renderer.</param>
+        /// <param name="renderer"></param>
         public void Render(IRenderer renderer)
         {
             renderer.Render(this);

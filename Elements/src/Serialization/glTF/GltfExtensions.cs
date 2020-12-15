@@ -1177,6 +1177,55 @@ namespace Elements.Serialization.glTF
                                 imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, meshes);
         }
 
+        private static int ProcessSolid(Solid solid,
+                                         string id,
+                                         string materialName,
+                                         ref Gltf gltf,
+                                         ref Dictionary<string, int> materials,
+                                         ref List<byte> buffer,
+                                         List<BufferView> bufferViews,
+                                         List<Accessor> accessors,
+                                         List<glTFLoader.Schema.Mesh> meshes,
+                                         List<Vector3> lines,
+                                         bool drawEdges,
+                                         Transform t = null)
+        {
+            byte[] vertexBuffer;
+            byte[] normalBuffer;
+            byte[] indexBuffer;
+            byte[] colorBuffer;
+            byte[] uvBuffer;
+
+            double[] vmin; double[] vmax;
+            double[] nmin; double[] nmax;
+            float[] cmin; float[] cmax;
+            ushort imin; ushort imax;
+            double[] uvmin; double[] uvmax;
+
+            solid.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
+                            out vmax, out vmin, out nmin, out nmax, out cmin,
+                            out cmax, out imin, out imax, out uvmax, out uvmin);
+
+            if (drawEdges)
+            {
+                foreach (var edge in solid.Edges.Values)
+                {
+                    if (t != null)
+                    {
+                        lines.AddRange(new[] { t.OfVector(edge.Left.Vertex.Point), t.OfVector(edge.Right.Vertex.Point) });
+                    }
+                    else
+                    {
+                        lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
+                    }
+                }
+            }
+
+            return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, vertexBuffer, normalBuffer,
+                                indexBuffer, colorBuffer, uvBuffer, vmin, vmax, nmin, nmax,
+                                imin, imax, uvmin, uvmax, materials[materialName], cmin, cmax, null, meshes);
+        }
+
         private static void AddLines(long id,
                                      IList<Vector3> vertices,
                                      Gltf gltf,

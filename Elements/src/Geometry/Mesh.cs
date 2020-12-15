@@ -1,13 +1,15 @@
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using static Elements.Units;
 
 namespace Elements.Geometry
 {
-    public partial class Mesh : IRenderable
+    public partial class Mesh
     {
         /// <summary>
         /// Construct an empty mesh.
@@ -100,6 +102,118 @@ Triangles:{Triangles.Count}";
         }
 
         /// <summary>
+        /// Get all buffers required for rendering.
+        /// </summary>
+        public void GetBuffers(out byte[] vertexBuffer, out byte[] indexBuffer,
+                                out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer,
+                                out double[] v_max, out double[] v_min, out double[] n_min, out double[] n_max,
+                                out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max,
+                                out double[] uv_min, out double[] uv_max)
+        {
+            var floatSize = sizeof(float);
+            var ushortSize = sizeof(ushort);
+
+            vertexBuffer = new byte[this.Vertices.Count * floatSize * 3];
+            normalBuffer = new byte[this.Vertices.Count * floatSize * 3];
+            indexBuffer = new byte[this.Triangles.Count * ushortSize * 3];
+            uvBuffer = new byte[this.Vertices.Count * floatSize * 2];
+
+            if (!this.Vertices[0].Color.Equals(default(Color)))
+            {
+                colorBuffer = new byte[this.Vertices.Count * floatSize * 3];
+                c_min = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
+                c_max = new float[] { float.MinValue, float.MinValue, float.MinValue };
+            }
+            else
+            {
+                colorBuffer = new byte[0];
+                c_min = new float[0];
+                c_max = new float[0];
+            }
+
+            v_max = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+            v_min = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            n_min = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            n_max = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+            uv_max = new double[2] { double.MinValue, double.MinValue };
+            uv_min = new double[2] { double.MaxValue, double.MaxValue };
+
+            index_max = ushort.MinValue;
+            index_min = ushort.MaxValue;
+
+            var vi = 0;
+            var ii = 0;
+            var ci = 0;
+            var uvi = 0;
+
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var v = this.Vertices[i];
+
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.X), 0, vertexBuffer, vi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Y), 0, vertexBuffer, vi + floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Z), 0, vertexBuffer, vi + 2 * floatSize, floatSize);
+
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.X), 0, normalBuffer, vi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.Y), 0, normalBuffer, vi + floatSize, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Normal.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
+
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.UV.U), 0, uvBuffer, uvi, floatSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.UV.V), 0, uvBuffer, uvi + floatSize, floatSize);
+
+                uvi += 2 * floatSize;
+                vi += 3 * floatSize;
+
+                v_max[0] = Math.Max(v_max[0], v.Position.X);
+                v_max[1] = Math.Max(v_max[1], v.Position.Y);
+                v_max[2] = Math.Max(v_max[2], v.Position.Z);
+                v_min[0] = Math.Min(v_min[0], v.Position.X);
+                v_min[1] = Math.Min(v_min[1], v.Position.Y);
+                v_min[2] = Math.Min(v_min[2], v.Position.Z);
+
+                n_max[0] = Math.Max(n_max[0], v.Normal.X);
+                n_max[1] = Math.Max(n_max[1], v.Normal.Y);
+                n_max[2] = Math.Max(n_max[2], v.Normal.Z);
+                n_min[0] = Math.Min(n_min[0], v.Normal.X);
+                n_min[1] = Math.Min(n_min[1], v.Normal.Y);
+                n_min[2] = Math.Min(n_min[2], v.Normal.Z);
+
+                uv_max[0] = Math.Max(uv_max[0], v.UV.U);
+                uv_max[1] = Math.Max(uv_max[1], v.UV.V);
+                uv_min[0] = Math.Min(uv_min[0], v.UV.U);
+                uv_min[1] = Math.Min(uv_min[1], v.UV.V);
+
+                index_max = Math.Max(index_max, (ushort)v.Index);
+                index_min = Math.Min(index_min, (ushort)v.Index);
+
+                if (!v.Color.Equals(default(Color)))
+                {
+                    c_max[0] = Math.Max(c_max[0], (float)v.Color.Red);
+                    c_max[1] = Math.Max(c_max[1], (float)v.Color.Green);
+                    c_max[2] = Math.Max(c_max[2], (float)v.Color.Blue);
+                    c_min[0] = Math.Min(c_min[0], (float)v.Color.Red);
+                    c_min[1] = Math.Min(c_min[1], (float)v.Color.Green);
+                    c_min[2] = Math.Min(c_min[2], (float)v.Color.Blue);
+
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Color.Red), 0, colorBuffer, ci, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Color.Green), 0, colorBuffer, ci + floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Color.Blue), 0, colorBuffer, ci + 2 * floatSize, floatSize);
+                    ci += 3 * floatSize;
+                }
+            }
+
+            for (var i = 0; i < this.Triangles.Count; i++)
+            {
+                var t = this.Triangles[i];
+
+                System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)t.Vertices[0].Index), 0, indexBuffer, ii, ushortSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)t.Vertices[1].Index), 0, indexBuffer, ii + ushortSize, ushortSize);
+                System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)t.Vertices[2].Index), 0, indexBuffer, ii + 2 * ushortSize, ushortSize);
+                ii += 3 * ushortSize;
+            }
+        }
+
+        /// <summary>
         /// Add a triangle to the mesh.
         /// </summary>
         /// <param name="a">The first vertex.</param>
@@ -176,15 +290,6 @@ Triangles:{Triangles.Count}";
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Render the mesh.
-        /// </summary>
-        /// <param name="renderer">The renderer.</param>
-        public void Render(IRenderer renderer)
-        {
-            renderer.Render(this);
         }
     }
 

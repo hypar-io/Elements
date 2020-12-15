@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry;
+using Elements.Interfaces;
 
 namespace Elements
 {
@@ -15,6 +17,11 @@ namespace Elements
         {
             // Override in derived classes.
         }
+
+        /// <summary>
+        /// A collection of renderables.
+        /// </summary>
+        public List<IRenderable> Renderables { get; set; } = new List<IRenderable>();
 
         /// <summary>
         /// Create an instance of this element.

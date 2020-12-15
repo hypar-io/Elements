@@ -604,6 +604,14 @@ namespace Elements.Geometry
             }
         }
 
+        /// <summary>
+        /// A list of vertices describing the arc for rendering.
+        /// </summary>
+        internal override IList<Vector3> RenderVertices()
+        {
+            return new[] { this.Start, this.End };
+        }
+
         #region WindingNumberCalcs
         internal Position RelativePositionOf(Vector3 location)
         {

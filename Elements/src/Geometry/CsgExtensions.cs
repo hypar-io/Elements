@@ -297,7 +297,7 @@ namespace Elements.Geometry
             return new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z);
         }
 
-        private static ContourVertex[] ToContourVertices(this List<Csg.Vertex> vertices)
+        internal static ContourVertex[] ToContourVertices(this List<Csg.Vertex> vertices)
         {
             var result = new ContourVertex[vertices.Count];
             for (var i = 0; i < vertices.Count; i++)

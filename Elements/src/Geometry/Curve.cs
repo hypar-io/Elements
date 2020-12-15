@@ -84,6 +84,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// A list of vertices used to render the curve.
+        /// </summary>
+        internal abstract IList<Vector3> RenderVertices();
+
+        /// <summary>
         /// Construct a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>

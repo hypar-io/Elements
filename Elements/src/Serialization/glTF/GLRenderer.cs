@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
+using LibTessDotNet.Double;
 
 namespace Elements.Serialization.glTF
 {
@@ -214,6 +216,125 @@ namespace Elements.Serialization.glTF
                 vertices.Add(arc.PointAt(p));
             }
             pointRenderDatas.Add(new GlPointRenderData(vertices));
+        }
+
+        /// <summary>
+        /// Render a csg.
+        /// </summary>
+        /// <param name="csg"></param>
+        public void Render(Csg.Solid csg)
+        {
+            var tessellations = new Tess[csg.Polygons.Count];
+
+            var fi = 0;
+            foreach (var p in csg.Polygons)
+            {
+                var tess = new Tess();
+                tess.NoEmptyPolygons = true;
+                tess.AddContour(p.Vertices.ToContourVertices());
+
+                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+                tessellations[fi] = tess;
+                fi++;
+            }
+
+            var floatSize = sizeof(float);
+            var ushortSize = sizeof(ushort);
+
+            var vertexCount = tessellations.Sum(t => t.VertexCount);
+            var indexCount = tessellations.Sum(t => t.Elements.Length);
+
+            var vertexBuffer = new byte[vertexCount * floatSize * 3];
+            var normalBuffer = new byte[vertexCount * floatSize * 3];
+            var indexBuffer = new byte[indexCount * ushortSize];
+            var uvBuffer = new byte[vertexCount * floatSize * 2];
+
+            // Vertex colors are not used in this context currently.
+            var colorBuffer = new byte[0];
+            var cmin = new float[0];
+            var cmax = new float[0];
+
+            var vmax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+            var vmin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            var nmin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            var nmax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+
+            // TODO: Set this properly when solids get UV coordinates.
+            var uvmin = new double[2] { 0, 0 };
+            var uvmax = new double[2] { 0, 0 };
+
+            var imax = ushort.MinValue;
+            var imin = ushort.MaxValue;
+
+            var vi = 0;
+            var ii = 0;
+            var uvi = 0;
+
+            var iCursor = 0;
+
+            for (var i = 0; i < tessellations.Length; i++)
+            {
+                var tess = tessellations[i];
+                if (tess.ElementCount == 0)
+                {
+                    continue;
+                }
+                var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
+                var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
+                var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
+                var n = (b - a).Cross(c - a).Unitized();
+
+                for (var j = 0; j < tess.Vertices.Length; j++)
+                {
+                    var v = tess.Vertices[j];
+
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.X), 0, vertexBuffer, vi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Y), 0, vertexBuffer, vi + floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Z), 0, vertexBuffer, vi + 2 * floatSize, floatSize);
+
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.X), 0, normalBuffer, vi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Y), 0, normalBuffer, vi + floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
+
+                    // TODO: Update Solids to use something other than UV = {0,0}.
+                    System.Buffer.BlockCopy(BitConverter.GetBytes(0f), 0, uvBuffer, uvi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes(0f), 0, uvBuffer, uvi + floatSize, floatSize);
+
+                    uvi += 2 * floatSize;
+                    vi += 3 * floatSize;
+
+                    vmax[0] = Math.Max(vmax[0], v.Position.X);
+                    vmax[1] = Math.Max(vmax[1], v.Position.Y);
+                    vmax[2] = Math.Max(vmax[2], v.Position.Z);
+                    vmin[0] = Math.Min(vmin[0], v.Position.X);
+                    vmin[1] = Math.Min(vmin[1], v.Position.Y);
+                    vmin[2] = Math.Min(vmin[2], v.Position.Z);
+
+                    nmax[0] = Math.Max(nmax[0], n.X);
+                    nmax[1] = Math.Max(nmax[1], n.Y);
+                    nmax[2] = Math.Max(nmax[2], n.Z);
+                    nmin[0] = Math.Min(nmin[0], n.X);
+                    nmin[1] = Math.Min(nmin[1], n.Y);
+                    nmin[2] = Math.Min(nmin[2], n.Z);
+
+                    // uvmax[0] = Math.Max(uvmax[0], 0);
+                    // uvmax[1] = Math.Max(uvmax[1], 0);
+                    // uvmin[0] = Math.Min(uvmin[0], 0);
+                    // uvmin[1] = Math.Min(uvmin[1], 0);
+                }
+
+                for (var k = 0; k < tess.Elements.Length; k++)
+                {
+                    var t = tess.Elements[k];
+                    var index = (ushort)(t + iCursor);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes(index), 0, indexBuffer, ii, ushortSize);
+                    imax = Math.Max(imax, index);
+                    imin = Math.Min(imin, index);
+                    ii += ushortSize;
+                }
+
+                iCursor = imax + 1;
+            }
         }
     }
 }

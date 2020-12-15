@@ -1,6 +1,7 @@
+using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
 using System;
 using System.Collections.Generic;
-using Elements.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -247,6 +248,16 @@ namespace Elements.Geometry
             return T.Cross(N);
         }
 
+        internal override IList<Vector3> RenderVertices()
+        {
+            var vertices = new List<Vector3>();
+            for (var i = 0; i <= _samples; i++)
+            {
+                vertices.Add(PointAt(i * 1.0 / _samples));
+            }
+            return vertices;
+        }
+
         /// <summary>
         /// Construct a transformed copy of this Bezier.
         /// </summary>
@@ -273,7 +284,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Render the bezier.
         /// </summary>
-        /// <param name="renderer">The renderer.</param>
+        /// <param name="renderer"></param>
         public void Render(IRenderer renderer)
         {
             renderer.Render(this);
