@@ -20,24 +20,23 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>The representation of an element.</summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    /// <summary>A representation containing a collection of points.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
     [UserElement]
-	public partial class Representation : Element
+	public partial class PointsRepresentation : Representation
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Representation(Material @material, System.Guid @id, string @name)
-            : base(id, name)
+        public PointsRepresentation(IList<Vector3> @points, Material @material, System.Guid @id, string @name)
+            : base(material, id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Representation>
+            var validator = Validator.Instance.GetFirstValidatorForType<PointsRepresentation>
             ();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @material, @id, @name});
+                validator.PreConstruct(new object[]{ @points, @material, @id, @name});
             }
         
-                this.Material = @material;
+                this.Points = @points;
             
             if(validator != null)
             {
@@ -45,9 +44,10 @@ namespace Elements.Geometry
             }
             }
     
-        /// <summary>The element's material.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Material Material { get; set; }
+        /// <summary>A collection of Points.</summary>
+        [Newtonsoft.Json.JsonProperty("Points", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public IList<Vector3> Points { get; set; } = new List<Vector3>();
     
     
     }

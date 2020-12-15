@@ -44,7 +44,7 @@ namespace Elements
         /// <param name="thickness">The thickness of the floor.</param>
         /// <param name="transform">The floor's transform. Create a transform with a Z coordinate for the origin, to define the elevation of the floor.</param>
         /// <param name="material">The floor's material.</param>
-        /// <param name="representation">The floor's representation.</param>
+        /// <param name="representations">The floor's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The floor's id.</param>
         /// <param name="name">The floor's name.</param>
@@ -52,12 +52,11 @@ namespace Elements
                      double thickness,
                      Transform transform = null,
                      Material material = null,
-                     Representation representation = null,
+                     IList<Representation> representations = null,
                      bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) : base(transform != null ? transform : new Transform(),
-                                                material != null ? material : BuiltInMaterials.Concrete,
-                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                representations != null ? representations : new[] { new SolidRepresentation(material != null ? material : BuiltInMaterials.Concrete) },
                                                 isElementDefinition,
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
@@ -107,8 +106,9 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Clear();
+            rep.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
         }
 
         /// <summary>

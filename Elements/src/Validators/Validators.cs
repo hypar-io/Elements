@@ -15,9 +15,9 @@ namespace Elements.Validators
         public void PostConstruct(object obj)
         {
             var geom = (GeometricElement)obj;
-            if (geom.Material == null)
+            if (geom.Representation.Material == null)
             {
-                geom.Material = BuiltInMaterials.Default;
+                geom.Representation.Material = BuiltInMaterials.Default;
             }
         }
 

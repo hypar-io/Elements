@@ -35,8 +35,7 @@ namespace Elements
                           bool isElementDefinition = false,
                           Guid id = default(Guid),
                           string name = null) : base(transform != null ? transform : new Transform(),
-                                                     material != null ? material : BuiltInMaterials.Points,
-                                                     null,
+                                                     new[] { new PointsRepresentation(locations, material != null ? material : BuiltInMaterials.Points) },
                                                      isElementDefinition,
                                                      id != default(Guid) ? id : Guid.NewGuid(),
                                                      name)

@@ -100,7 +100,8 @@ namespace Elements.Geometry
             var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformMinusTranslation.OfVector(Direction));
             //TODO: extend to handle voids when void solids in Representations are supported generally
             var intersects = false;
-            foreach (var solidOp in element.Representation.SolidOperations.Where(e => !e.IsVoid))
+            var rep = (SolidRepresentation)element.Representations[0];
+            foreach (var solidOp in rep.SolidOperations.Where(e => !e.IsVoid))
             {
                 if (transformedRay.Intersects(solidOp, out List<Vector3> tempResults))
                 {
@@ -167,9 +168,9 @@ namespace Elements.Geometry
                 transformFromPolygon.Invert();
                 var transformedIntersection = transformFromPolygon.OfVector(intersection);
                 IEnumerable<Line> curveList = boundaryPolygon.Segments();
-                if(voids != null)
+                if (voids != null)
                 {
-                    curveList = curveList.Union(voids.SelectMany(v => v.Segments())); 
+                    curveList = curveList.Union(voids.SelectMany(v => v.Segments()));
                 }
                 curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
 

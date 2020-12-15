@@ -29,7 +29,7 @@ namespace Elements
         /// <param name="offset">The amount which the perimeter will be offset internally.</param>
         /// <param name="material">The frame's material.</param>
         /// <param name="transform">The frame's transform.</param>
-        /// <param name="representation">The frame's representation.</param>
+        /// <param name="representations">The frame's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the frame.</param>
         /// <param name="name">The name of the frame.</param>
@@ -38,12 +38,11 @@ namespace Elements
                      double offset = 0.0,
                      Material material = null,
                      Transform transform = null,
-                     Representation representation = null,
+                     IList<Representation> representations = null,
                      bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) : base(transform != null ? transform : new Transform(),
-                                                material != null ? material : BuiltInMaterials.Default,
-                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                representations != null ? representations : new[] { new SolidRepresentation(material != null ? material : BuiltInMaterials.Default) },
                                                 isElementDefinition,
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
@@ -62,8 +61,9 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, false));
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Clear();
+            rep.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, false));
         }
     }
 }

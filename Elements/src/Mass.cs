@@ -41,7 +41,7 @@ namespace Elements
         /// <param name="height">The height of the mass from the bottom elevation.</param>
         /// <param name="material">The mass' material. The default is the built in mass material.</param>
         /// <param name="transform">The mass' transform.</param>
-        /// <param name="representation">The mass' representation.</param>
+        /// <param name="representations">The mass' representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the mass.</param>
         /// <param name="name">The name of the mass.</param>
@@ -49,12 +49,11 @@ namespace Elements
                     double height = 1.0,
                     Material material = null,
                     Transform transform = null,
-                    Representation representation = null,
+                    IList<Representation> representations = null,
                     bool isElementDefinition = false,
                     Guid id = default(Guid),
                     string name = null) : base(transform != null ? transform : new Transform(),
-                                               material != null ? material : BuiltInMaterials.Mass,
-                                               representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                               representations != null ? representations : new[] { new SolidRepresentation(new List<SolidOperation>(), material != null ? material : BuiltInMaterials.Mass) },
                                                isElementDefinition,
                                                id != default(Guid) ? id : Guid.NewGuid(),
                                                name)
@@ -88,8 +87,9 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Clear();
+            rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
     }
 }

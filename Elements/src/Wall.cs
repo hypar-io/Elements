@@ -35,7 +35,7 @@ namespace Elements
         /// <param name="height">The height of the wall.</param>
         /// <param name="material">The material of the wall.</param>
         /// <param name="transform">An option transform for the wall.</param>
-        /// <param name="representation">The wall's representation.</param>
+        /// <param name="representations">The wall's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the wall.</param>
         /// <param name="name">The name of the wall.</param>
@@ -44,12 +44,12 @@ namespace Elements
                       double height,
                       Material material = null,
                       Transform transform = null,
-                      Representation representation = null,
+                      IList<Representation> representations = null,
                       bool isElementDefinition = false,
                       Guid id = default(Guid),
                       string name = null) : base(transform != null ? transform : new Transform(),
-                                                 material != null ? material : BuiltInMaterials.Concrete,
-                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                 representations != null ? representations : new[] {new SolidRepresentation(
+                                                     new List<SolidOperation>(), material != null ? material : BuiltInMaterials.Concrete)},
                                                  isElementDefinition,
                                                  id != default(Guid) ? id : Guid.NewGuid(),
                                                  name)
@@ -68,8 +68,9 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Clear();
+            rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
 
         /// <summary>
@@ -79,16 +80,15 @@ namespace Elements
         /// <param name="name"></param>
         /// <param name="transform"></param>
         /// <param name="material"></param>
-        /// <param name="representation"></param>
+        /// <param name="representations"></param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         protected Wall(Transform transform,
                        Material material,
-                       Representation representation,
+                       IList<Representation> representations,
                        bool isElementDefinition = false,
                        Guid id = default(Guid),
                        string name = null) : base(transform,
-                                           material,
-                                           representation,
+                                           representations,
                                            isElementDefinition,
                                            id == default(Guid) ? Guid.NewGuid() : id,
                                            name)
@@ -103,8 +103,7 @@ namespace Elements
         internal Wall(Solid geometry,
                       Transform transform = null,
                       bool isElementDefinition = false) : base(transform != null ? transform : new Transform(),
-                                                         BuiltInMaterials.Default,
-                                                         new Representation(new List<SolidOperation>()),
+                                                         new[] { new SolidRepresentation() },
                                                          isElementDefinition,
                                                          Guid.NewGuid(),
                                                          null)
@@ -118,7 +117,8 @@ namespace Elements
             {
                 this.Transform = transform;
             }
-            this.Representation.SolidOperations.Add(new Import(geometry));
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Add(new Import(geometry));
         }
     }
 }

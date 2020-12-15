@@ -24,25 +24,24 @@ namespace Elements
         /// <param name="curve">The curve.</param>
         /// <param name="material">The material. Specular and glossiness components will be ignored.</param>
         /// <param name="transform">The model curve's transform.</param>
-        /// <param name="representation">The curve's representation.</param>
+        /// <param name="representations">The curve's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the model curve.</param>
         /// <param name="name">The name of the model curve.</param>
         public ModelCurve(Curve curve,
                           Material material = null,
                           Transform transform = null,
-                          Representation representation = null,
+                          IList<Representation> representations = null,
                           bool isElementDefinition = false,
                           Guid id = default(Guid),
                           string name = null) : base(transform != null ? transform : new Transform(),
-                                                     material != null ? material : BuiltInMaterials.Concrete,
-                                                     null,
+                                                     representations != null ? representations : new[] { new CurveRepresentation(
+                                                         curve,material != null ? material : BuiltInMaterials.Edges) },
                                                      isElementDefinition,
                                                      id != default(Guid) ? id : Guid.NewGuid(),
                                                      name)
         {
             this.Curve = curve;
-            this.Material = material != null ? material : BuiltInMaterials.Edges;
         }
     }
 

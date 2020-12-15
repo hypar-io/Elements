@@ -2,8 +2,8 @@ using Elements.Geometry;
 using System;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -33,7 +33,7 @@ namespace Elements
         /// <param name="height">The height of the space.</param>
         /// <param name="material">The space's material.</param>
         /// <param name="transform">The space's transform.</param>
-        /// <param name="representation">The space's represenation.</param>
+        /// <param name="representations">The space's represenation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the space.</param>
         /// <param name="name">The name of the space.</param>
@@ -43,12 +43,11 @@ namespace Elements
                      double height,
                      Material material = null,
                      Transform transform = null,
-                     Representation representation = null,
+                     IList<Representation> representations = null,
                      bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) : base(transform = transform != null ? transform : new Transform(),
-                                                material = material != null ? material : BuiltInMaterials.Mass,
-                                                representation = representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                representations != null ? representations : new[] { new SolidRepresentation(material = material != null ? material : BuiltInMaterials.Mass) },
                                                 isElementDefinition,
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
@@ -83,8 +82,7 @@ namespace Elements
                        bool isElementDefinition = false,
                        Guid id = default(Guid),
                        string name = null) : base(transform != null ? transform : new Transform(),
-                                                  material != null ? material : BuiltInMaterials.Mass,
-                                                  new Representation(new List<SolidOperation>()),
+                                                  new[] { new Representation(material != null ? material : BuiltInMaterials.Mass) },
                                                   isElementDefinition,
                                                   id != default(Guid) ? id : Guid.NewGuid(),
                                                   name)
@@ -94,7 +92,9 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("You must supply one IBRep to construct a Space.");
             }
             this.Transform = transform;
-            this.Representation.SolidOperations.Add(new Import(geometry));
+
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Add(new Import(geometry));
 
             // TODO(Ian): When receiving a Space as a solid, as we do with IFC,
             // we won't have a profile. This will cause problems with JSON 
@@ -130,13 +130,15 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
+            var rep = (SolidRepresentation)this.Representations[0];
+
             // Don't override imported geometry.
-            if (this.Representation.SolidOperations.Count > 0 && this.Representation.SolidOperations.All(s => s.GetType() == typeof(Import)))
+            if (rep.SolidOperations.Count > 0 && rep.SolidOperations.All(s => s.GetType() == typeof(Import)))
             {
                 return;
             }
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+            rep.SolidOperations.Clear();
+            rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
     }
 }

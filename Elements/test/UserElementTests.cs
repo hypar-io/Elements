@@ -22,12 +22,12 @@ namespace Elements.Tests
         /// </summary>
         public NumericProperty Length => new NumericProperty(this.CenterLine.Length(), NumericPropertyUnitType.Length);
 
-        internal TestUserElement(): base(null,
-                                            BuiltInMaterials.Default,
-                                            new Representation(new List<SolidOperation>()),
+        internal TestUserElement() : base(null,
+                                            new SolidRepresentation(),
                                             false,
                                             Guid.NewGuid(),
-                                            null){}
+                                            null)
+        { }
 
         public TestUserElement(Line centerLine,
                                Profile profile,
@@ -35,8 +35,7 @@ namespace Elements.Tests
                                bool isElementDefinition = false,
                                Guid id = default(Guid),
                                string name = null) : base(new Transform(),
-                                                          material = material != null ? material : BuiltInMaterials.Default,
-                                                          new Representation(new List<SolidOperation>()),
+                                                          new SolidRepresentation(material = material != null ? material : BuiltInMaterials.Default),
                                                           isElementDefinition,
                                                           id = id != default(Guid) ? id : Guid.NewGuid(),
                                                           name)
@@ -48,15 +47,16 @@ namespace Elements.Tests
 
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
+            var rep = (SolidRepresentation)this.Representation;
+            rep.SolidOperations.Clear();
 
             var t = this.CenterLine.TransformAt(0);
             var x = new Line(t.Origin, t.Origin + t.XAxis * this.CenterLine.Length());
             var y = new Line(t.Origin, t.Origin + t.YAxis * this.CenterLine.Length());
 
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine, 0.0, 0.0, false));
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, x,  0.0, 0.0, false));
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, y,  0.0, 0.0, false));
+            rep.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine, 0.0, 0.0, false));
+            rep.SolidOperations.Add(new Sweep(this.Profile, x, 0.0, 0.0, false));
+            rep.SolidOperations.Add(new Sweep(this.Profile, y, 0.0, 0.0, false));
         }
     }
 
@@ -70,8 +70,8 @@ namespace Elements.Tests
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
             var m = new Material("UserElementGreen", Colors.Green);
             var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)), m);
-            
-            var p = new Profile(Polygon.Rectangle(1,1));
+
+            var p = new Profile(Polygon.Rectangle(1, 1));
             var m1 = new Mass(p, 1, BuiltInMaterials.Wood);
             ue.SubElements.Add(m1);
 
@@ -80,12 +80,12 @@ namespace Elements.Tests
             var json = this.Model.ToJson();
             var newModel = Model.FromJson(json);
             var newUe = newModel.AllElementsOfType<TestUserElement>().First();
-            
+
             Assert.Equal(6, newModel.Elements.Count);
-            Assert.Equal(ue.Representation.SolidOperations.Count, newUe.Representation.SolidOperations.Count);
+            Assert.Equal(((SolidRepresentation)ue.Representation).SolidOperations.Count, ((SolidRepresentation)newUe.Representation).SolidOperations.Count);
             Assert.Equal(ue.Id, newUe.Id);
             Assert.Equal(ue.Transform, newUe.Transform);
-            
+
             // Two profiles. The one for the user element
             // and the one for the sub-element masses.
             Assert.Equal(2, newModel.AllElementsOfType<Profile>().Count());

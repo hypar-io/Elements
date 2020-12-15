@@ -25,7 +25,7 @@ namespace Elements
         /// <param name="perimeter">The perimeter of the panel.</param>
         /// <param name="material">The panel's material</param>
         /// <param name="transform">The panel's transform.</param>
-        /// <param name="representation">The panel's representation.</param>
+        /// <param name="representations">The panel's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the panel.</param>
         /// <param name="name">The name of the panel.</param>
@@ -33,12 +33,12 @@ namespace Elements
         public Panel(Polygon perimeter,
                      Material material = null,
                      Transform transform = null,
-                     Representation representation = null,
+                     IList<Representation> representations = null,
                      bool isElementDefinition = false,
                      Guid id = default(Guid),
                      string name = null) : base(transform != null ? transform : new Transform(),
-                                                material != null ? material : BuiltInMaterials.Concrete,
-                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                representations != null ? representations : new[]{new SolidRepresentation(
+                                                    material != null ? material : BuiltInMaterials.Concrete)},
                                                 isElementDefinition,
                                                 id != default(Guid) ? id : Guid.NewGuid(),
                                                 name)
@@ -68,8 +68,9 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Lamina(this.Perimeter, false));
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Clear();
+            rep.SolidOperations.Add(new Lamina(this.Perimeter, false));
         }
     }
 }

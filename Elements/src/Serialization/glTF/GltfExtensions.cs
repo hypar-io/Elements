@@ -873,7 +873,7 @@ namespace Elements.Serialization.glTF
                 else
                 {
                     var geometricElement = (GeometricElement)e;
-                    materialName = geometricElement.Material.Name;
+                    materialName = geometricElement.Representations[0].Material.Name;
 
                     meshId = ProcessGeometricRepresentation(e,
                                                    ref gltf,
@@ -917,9 +917,11 @@ namespace Elements.Serialization.glTF
                 {
                     // Get the edges for the solid
                     var geom = i.BaseDefinition;
-                    if (geom.Representation != null)
+                    if (geom.Representations[0] != null)
                     {
-                        foreach (var solidOp in geom.Representation.SolidOperations)
+                        // TODO: Update this code to support other representation types.
+                        var rep = (SolidRepresentation)geom.Representations[0];
+                        foreach (var solidOp in rep.SolidOperations)
                         {
                             if (solidOp.Solid != null)
                             {
@@ -936,7 +938,7 @@ namespace Elements.Serialization.glTF
             if (e is ModelCurve)
             {
                 var mc = (ModelCurve)e;
-                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materialIndexMap[mc.Material.Name], buffers, bufferViews, accessors, meshes, nodes, true, mc.Transform);
+                AddLines(GetNextId(), mc.Curve.RenderVertices(), gltf, materialIndexMap[mc.Representations[0].Material.Name], buffers, bufferViews, accessors, meshes, nodes, true, mc.Transform);
             }
 
             if (e is ModelPoints)
@@ -944,7 +946,7 @@ namespace Elements.Serialization.glTF
                 var mp = (ModelPoints)e;
                 if (mp.Locations.Count != 0)
                 {
-                    AddPoints(GetNextId(), mp.Locations, gltf, materialIndexMap[mp.Material.Name], buffers, bufferViews, accessors, meshes, nodes, mp.Transform);
+                    AddPoints(GetNextId(), mp.Locations, gltf, materialIndexMap[mp.Representations[0].Material.Name], buffers, bufferViews, accessors, meshes, nodes, mp.Transform);
                 }
             }
 
@@ -1075,7 +1077,7 @@ namespace Elements.Serialization.glTF
                 return -1;
             }
 
-            if (geometricElement.Representation != null)
+            if (geometricElement.Representations[0] != null)
             {
                 meshId = ProcessSolidsAsCSG(geometricElement,
                                     e.Id.ToString(),
@@ -1125,12 +1127,14 @@ namespace Elements.Serialization.glTF
             // ensure that the elements are correctly transformed.
             Csg.Solid csg = new Csg.Solid();
 
-            var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false)
+            // TODO: Make this code SolidRepresentation specific when more representations are supported.
+            var rep = (SolidRepresentation)geometricElement.Representations[0];
+            var solids = rep.SolidOperations.Where(op => op.IsVoid == false)
                                                                         .Select(op => op.LocalTransform != null ?
                                                                             op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
                                                                             op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
                                                                         .ToArray();
-            var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true)
+            var voids = rep.SolidOperations.Where(op => op.IsVoid == true)
                                                                        .Select(op => op.LocalTransform != null ?
                                                                             op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
                                                                             op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
@@ -1139,7 +1143,7 @@ namespace Elements.Serialization.glTF
             if (geometricElement is IHasOpenings)
             {
                 var openingContainer = (IHasOpenings)geometricElement;
-                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
+                voids = voids.Concat(openingContainer.Openings.SelectMany(o => ((SolidRepresentation)o.Representations[0]).SolidOperations
                                                       .Where(op => op.IsVoid == true)
                                                       .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
             }

@@ -43,12 +43,11 @@ namespace Elements
                        double depthFront = 1.0,
                        double depthBack = 1.0,
                        Transform transform = null,
-                       Representation representation = null,
+                       IList<Representation> representations = null,
                        bool isElementDefinition = false,
                        Guid id = default(Guid),
                        string name = null) : base(transform != null ? transform : new Transform(),
-                                                  BuiltInMaterials.Void,
-                                                  representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                  representations != null ? representations : new[] { new SolidRepresentation(BuiltInMaterials.Void) },
                                                   isElementDefinition,
                                                   id != default(Guid) ? id : Guid.NewGuid(),
                                                   name)
@@ -63,14 +62,15 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Clear();
             if (this.DepthFront > 0)
             {
-                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Vector3.ZAxis, true));
+                rep.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Vector3.ZAxis, true));
             }
             if (this.DepthBack > 0)
             {
-                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, Vector3.ZAxis.Negate(), true));
+                rep.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, Vector3.ZAxis.Negate(), true));
             }
         }
     }

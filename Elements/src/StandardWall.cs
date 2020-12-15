@@ -33,7 +33,7 @@ namespace Elements
         /// <param name="material">The wall's material.</param>
         /// <param name="transform">The transform of the wall.
         /// This transform will be concatenated to the transform created to describe the wall in 2D.</param>
-        /// <param name="representation">The wall's representation.</param>
+        /// <param name="representations">The wall's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the wall.</param>
         /// <param name="name">The name of the wall.</param>
@@ -44,14 +44,14 @@ namespace Elements
                             double height,
                             Material material = null,
                             Transform transform = null,
-                            Representation representation = null,
+                            IList<Representation> representations = null,
                             bool isElementDefinition = false,
                             Guid id = default(Guid),
-                            string name = null) : base(transform != null ? transform : new Transform(),
-                                                       material != null ? material : BuiltInMaterials.Concrete,
-                                                       representation != null ? representation : new Representation(new List<SolidOperation>()),
+                            string name = null) : base(transform,
+                                                       material,
+                                                       representations,
                                                        isElementDefinition,
-                                                       id != default(Guid) ? id : Guid.NewGuid(),
+                                                       id,
                                                        name)
         {
             if (height <= 0.0)
@@ -123,11 +123,12 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
+            var rep = (SolidRepresentation)this.Representations[0];
+            rep.SolidOperations.Clear();
             var e1 = this.CenterLine.Offset(this.Thickness / 2, false);
             var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
             var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
-            this.Representation.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
+            rep.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
         }
     }
 }
