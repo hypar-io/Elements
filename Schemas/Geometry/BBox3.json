@@ -1,0 +1,21 @@
+{
+    "x-namespace": "Elements.Geometry",
+    "required": [],
+    "properties": {
+        "Min": {
+            "description": "The minimum extent of the bounding box.",
+            "$ref": "https://dev-api.hypar.io/schemas/Vector3"
+        },
+        "Max": {
+            "description": "The maximum extent of the bounding box.",
+            "$ref": "https://dev-api.hypar.io/schemas/Vector3"
+        }
+    },
+    "additionalProperties": false,
+    "description": "An axis-aligned bounding box.",
+    "$id": "BBox3",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "discriminator": "discriminator",
+    "type": "object",
+    "title": "BBox3"
+}

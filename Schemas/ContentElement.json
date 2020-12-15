@@ -1,0 +1,34 @@
+{
+    "x-namespace": "Elements",
+    "allOf": [
+        {
+            "$ref": "https://dev-api.hypar.io/schemas/GeometricElement"
+        }
+    ],
+    "required": [],
+    "properties": {
+        "gltfLocation": {
+            "description": "The URI of the gltf for this element.",
+            "type": "string"
+        },
+        "Bounding Box": {
+            "description": "The bounding box of the content.",
+            "$ref": "https://dev-api.hypar.io/schemas/BBox3"
+        },
+        "Gltf Scale to Meters": {
+            "description": "The scale needed to convert the gltf to meters.",
+            "type": "number"
+        },
+        "SourceDirection": {
+            "description": "A vector indicating the direction the source object was originally facing.",
+            "$ref": "https://dev-api.hypar.io/schemas/Vector3"
+        }
+    },
+    "additionalProperties": true,
+    "description": "An element representing user content.",
+    "$id": "ContentElement",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "discriminator": "discriminator",
+    "type": "object",
+    "title": "ContentElement"
+}
