@@ -4,22 +4,29 @@
     "description": "An element with a geometric representation.",
     "title": "GeometricElement",
     "x-namespace": "Elements",
-    "type": ["object", "null"],
-    "allOf": [{"$ref": "https://hypar.io/Schemas/Element.json"}],
-    "required": ["Transform","Material","Representation","discriminator"],
+    "type": [
+        "object",
+        "null"
+    ],
+    "allOf": [
+        {
+            "$ref": "https://hypar.io/Schemas/Element.json"
+        }
+    ],
+    "required": [
+        "Transform",
+        "Representation",
+        "discriminator"
+    ],
     "discriminator": "discriminator",
     "properties": {
         "Transform": {
             "description": "The element's transform.",
             "$ref": "https://hypar.io/Schemas/Geometry/Transform.json"
         },
-        "Material": {
-            "description": "The element's material.",
-            "$ref": "https://hypar.io/Schemas/Material.json"
-        },
         "Representation": {
             "description": "The element's representation.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Representation.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Representation.json"
         },
         "IsElementDefinition": {
             "description": "When true, this element will act as the base definition for element instances, and will not appear in visual output.",
