@@ -4,11 +4,11 @@
     "properties": {
         "Min": {
             "description": "The minimum extent of the bounding box.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
         },
         "Max": {
             "description": "The maximum extent of the bounding box.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
         }
     },
     "additionalProperties": false,
