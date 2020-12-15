@@ -15,7 +15,7 @@
     ],
     "required": [
         "Transform",
-        "Representation",
+        "Representations",
         "discriminator"
     ],
     "discriminator": "discriminator",
