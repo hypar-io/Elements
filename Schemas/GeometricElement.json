@@ -24,9 +24,12 @@
             "description": "The element's transform.",
             "$ref": "https://hypar.io/Schemas/Geometry/Transform.json"
         },
-        "Representation": {
+        "Representations": {
+            "type": "array",
             "description": "The element's representation.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Representation.json"
+            "items": {
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Representation.json"
+            }
         },
         "IsElementDefinition": {
             "description": "When true, this element will act as the base definition for element instances, and will not appear in visual output.",
