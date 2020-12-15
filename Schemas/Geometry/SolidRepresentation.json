@@ -9,10 +9,10 @@
         "null"
     ],
     "required": [
-        "Solids"
+        "SolidOperations"
     ],
     "properties": {
-        "Solids": {
+        "SolidOperations": {
             "type": "array",
             "description": "A collection of solids.",
             "items": {
