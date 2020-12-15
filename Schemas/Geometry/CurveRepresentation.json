@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/Schemas/Geometry/CurveRepresentation.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/CurveRepresentation.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "A representation containing a collection of solid operations.",
     "title": "CurveRepresentation",
@@ -15,7 +15,7 @@
         "Curve": {
             "type": "object",
             "description": "A curve.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Curve.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Curve.json"
         }
     },
     "allOf": [

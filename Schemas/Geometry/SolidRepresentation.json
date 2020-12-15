@@ -16,7 +16,7 @@
             "type": "array",
             "description": "A collection of solids.",
             "items": {
-                "$ref": "https://hypar.io/Schemas/Geometry/Solids/SolidOperation.json"
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Solids/SolidOperation.json"
             }
         }
     },

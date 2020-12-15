@@ -1,5 +1,5 @@
 {
-    "$id": "https://hypar.io/Schemas/GeometricElement.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/GeometricElement.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "An element with a geometric representation.",
     "title": "GeometricElement",
@@ -10,7 +10,7 @@
     ],
     "allOf": [
         {
-            "$ref": "https://hypar.io/Schemas/Element.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Element.json"
         }
     ],
     "required": [
@@ -22,7 +22,7 @@
     "properties": {
         "Transform": {
             "description": "The element's transform.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Transform.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Transform.json"
         },
         "Representations": {
             "type": "array",

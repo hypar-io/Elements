@@ -16,12 +16,12 @@
     "properties": {
         "Material": {
             "description": "The element's material.",
-            "$ref": "https://hypar.io/Schemas/Material.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Material.json"
         }
     },
     "allOf": [
         {
-            "$ref": "https://hypar.io/Schemas/Element.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Element.json"
         }
     ],
     "additionalProperties": false
