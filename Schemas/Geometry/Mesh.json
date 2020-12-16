@@ -1,0 +1,29 @@
+{
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Mesh.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Mesh",
+    "x-namespace": "Elements.Geometry",
+    "type": "object",
+    "description": "A triangulated mesh.",
+    "required": [
+        "Vertices",
+        "Triangles"
+    ],
+    "properties": {
+        "Vertices": {
+            "description": "The mesh' vertices.",
+            "type": "array",
+            "items": {
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vertex.json"
+            }
+        },
+        "Triangles": {
+            "description": "The mesh' triangles.",
+            "type": "array",
+            "items": {
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Triangle.json"
+            }
+        }
+    },
+    "additionalProperties": false
+}
