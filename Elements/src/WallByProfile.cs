@@ -6,8 +6,28 @@ using Elements.Geometry.Solids;
 
 namespace Elements
 {
-    public partial class WallByProfile
+    /// <summary>
+    /// A wall drawn using the elevation profile.
+    /// </summary>
+    public partial class WallByProfile : GeometricElement
     {
+        /// <summary>
+        /// The profile of the wall.
+        /// </summary>
+        public Profile Profile { get; set; }
+
+        /// <summary>
+        /// The wall's thickness.
+        /// </summary>
+        /// <value></value>
+        public double Thickness { get; set; }
+
+        /// <summary>
+        /// The wall's center line.
+        /// </summary>
+        /// <value></value>
+        public Line Centerline { get; set}
+
         /// <summary>
         /// Create a wall requiring only the profile, thickness and centerline.
         /// </summary>
