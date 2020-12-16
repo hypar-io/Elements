@@ -1,6 +1,8 @@
 {
     "x-namespace": "Elements",
-    "required": [],
+    "required": [
+        "Content"
+    ],
     "properties": {
         "Content": {
             "description": "The content elements in this catalog.",
