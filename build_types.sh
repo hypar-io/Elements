@@ -42,6 +42,7 @@ hypar generate-types -u $BASE/Schemas/Geometry/Solids/Sweep.json -o ../Elements/
 # Properties
 hypar generate-types -u $BASE/Schemas/Properties/NumericProperty.json -o ../Elements/src/Generate/Properties
 
+hypar generate-types -u $BASE/Schemas/ContentCatalog.json -o ../Elements/src/Generate
 hypar generate-types -u $BASE/Schemas/ContentElement.json -o ../Elements/src/Generate
 hypar generate-types -u $BASE/Schemas/Element.json -o ../Elements/src/Generate
 hypar generate-types -u $BASE/Schemas/GeometricElement.json -o ../Elements/src/Generate

@@ -64,6 +64,7 @@ namespace Elements.Generate
                 $"{_schemaBase}/Schemas/Geometry/Solids/Sweep.json",
                 $"{_schemaBase}/Schemas/Geometry/Arc.json",
                 $"{_schemaBase}/Schemas/Geometry/BBox3.json",
+                $"{_schemaBase}/Schemas/ContentCatalog.json",
                 $"{_schemaBase}/Schemas/ContentElement.json",
                 $"{_schemaBase}/Schemas/Geometry/Color.json",
                 $"{_schemaBase}/Schemas/Geometry/Curve.json",
