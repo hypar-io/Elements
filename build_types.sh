@@ -33,7 +33,7 @@ hypar generate-types -u $BASE/Schemas/Geometry/UV.json -o ../Elements/src/Genera
 hypar generate-types -u $BASE/Schemas/Geometry/Vector3.json -o ../Elements/src/Generate/Geometry
 hypar generate-types -u $BASE/Schemas/Geometry/Vertex.json -o ../Elements/src/Generate/Geometry
 
-# Solids
+Solids
 hypar generate-types -u $BASE/Schemas/Geometry/Solids/Extrude.json -o -o ../Elements/src/Generate/Geometry/Solids
 hypar generate-types -u $BASE/Schemas/Geometry/Solids/Lamina.json -o ../Elements/src/Generate/Geometry/Solids
 hypar generate-types -u $BASE/Schemas/Geometry/Solids/SolidOperation.json -o ../Elements/src/Generate/Geometry/Solids
@@ -42,6 +42,7 @@ hypar generate-types -u $BASE/Schemas/Geometry/Solids/Sweep.json -o ../Elements/
 # Properties
 hypar generate-types -u $BASE/Schemas/Properties/NumericProperty.json -o ../Elements/src/Generate/Properties
 
+# Root
 hypar generate-types -u $BASE/Schemas/ContentCatalog.json -o ../Elements/src/Generate
 hypar generate-types -u $BASE/Schemas/ContentElement.json -o ../Elements/src/Generate
 hypar generate-types -u $BASE/Schemas/Element.json -o ../Elements/src/Generate
