@@ -15,11 +15,11 @@ namespace CoreTypeGenerator
                 return;
             }
 
-            if (!Directory.Exists(args[0]))
+            if (Directory.Exists(args[0]))
             {
-                Console.WriteLine("The specified output directory does not exist.");
-                return;
+                Directory.Delete(args[0], true);
             }
+            Directory.CreateDirectory(args[0]);
 
             await TypeGenerator.GenerateElementTypesAsync(args[0]);
         }
