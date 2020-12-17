@@ -51,50 +51,53 @@ namespace Elements.Generate
     /// </summary>
     public static class TypeGenerator
     {
-        private static string _schemaBase = "https://raw.githubusercontent.com/hypar-io/Elements/representation";
+        /// <summary>
+        /// The base url for schemas.
+        /// </summary>
+        public static string SchemaBase = "https://prod-api.hypar.io";
 
         /// <summary>
         /// These are all the 'base' schemas defined for Elements.
         /// </summary>
         private static readonly string[] _hyparSchemas = new string[]{
-            $"{_schemaBase}/Schemas/ContentCatalog.json",
-            $"{_schemaBase}/Schemas/ContentElement.json",
-            $"{_schemaBase}/Schemas/Element.json",
-            $"{_schemaBase}/Schemas/GeometricElement.json",
-            $"{_schemaBase}/Schemas/Material.json",
-            $"{_schemaBase}/Schemas/Model.json",
+            $"{SchemaBase}/Schemas/ContentCatalog.json",
+            $"{SchemaBase}/Schemas/ContentElement.json",
+            $"{SchemaBase}/Schemas/Element.json",
+            $"{SchemaBase}/Schemas/GeometricElement.json",
+            $"{SchemaBase}/Schemas/Material.json",
+            $"{SchemaBase}/Schemas/Model.json",
 
-            $"{_schemaBase}/Schemas/GeoJSON/Position.json",
+            $"{SchemaBase}/Schemas/GeoJSON/Position.json",
 
-            $"{_schemaBase}/Schemas/Geometry/Solids/Extrude.json",
-            $"{_schemaBase}/Schemas/Geometry/Solids/Lamina.json",
-            $"{_schemaBase}/Schemas/Geometry/Solids/SolidOperation.json",
-            $"{_schemaBase}/Schemas/Geometry/Solids/Sweep.json",
+            $"{SchemaBase}/Schemas/Geometry/Solids/Extrude.json",
+            $"{SchemaBase}/Schemas/Geometry/Solids/Lamina.json",
+            $"{SchemaBase}/Schemas/Geometry/Solids/SolidOperation.json",
+            $"{SchemaBase}/Schemas/Geometry/Solids/Sweep.json",
 
-            $"{_schemaBase}/Schemas/Geometry/Arc.json",
-            $"{_schemaBase}/Schemas/Geometry/BBox3.json",
-            $"{_schemaBase}/Schemas/Geometry/Color.json",
-            $"{_schemaBase}/Schemas/Geometry/Curve.json",
-            $"{_schemaBase}/Schemas/Geometry/CurveRepresentation.json",
-            $"{_schemaBase}/Schemas/Geometry/Line.json",
-            $"{_schemaBase}/Schemas/Geometry/Matrix.json",
-            $"{_schemaBase}/Schemas/Geometry/Mesh.json",
-            $"{_schemaBase}/Schemas/Geometry/MeshRepresentation.json",
-            $"{_schemaBase}/Schemas/Geometry/Plane.json",
-            $"{_schemaBase}/Schemas/Geometry/PointsRepresentation.json",
-            $"{_schemaBase}/Schemas/Geometry/Polygon.json",
-            $"{_schemaBase}/Schemas/Geometry/Polyline.json",
-            $"{_schemaBase}/Schemas/Geometry/Profile.json",
-            $"{_schemaBase}/Schemas/Geometry/Representation.json",
-            $"{_schemaBase}/Schemas/Geometry/SolidRepresentation.json",
-            $"{_schemaBase}/Schemas/Geometry/Transform.json",
-            $"{_schemaBase}/Schemas/Geometry/Triangle.json",
-            $"{_schemaBase}/Schemas/Geometry/UV.json",
-            $"{_schemaBase}/Schemas/Geometry/Vector3.json",
-            $"{_schemaBase}/Schemas/Geometry/Vertex.json",
+            $"{SchemaBase}/Schemas/Geometry/Arc.json",
+            $"{SchemaBase}/Schemas/Geometry/BBox3.json",
+            $"{SchemaBase}/Schemas/Geometry/Color.json",
+            $"{SchemaBase}/Schemas/Geometry/Curve.json",
+            $"{SchemaBase}/Schemas/Geometry/CurveRepresentation.json",
+            $"{SchemaBase}/Schemas/Geometry/Line.json",
+            $"{SchemaBase}/Schemas/Geometry/Matrix.json",
+            $"{SchemaBase}/Schemas/Geometry/Mesh.json",
+            $"{SchemaBase}/Schemas/Geometry/MeshRepresentation.json",
+            $"{SchemaBase}/Schemas/Geometry/Plane.json",
+            $"{SchemaBase}/Schemas/Geometry/PointsRepresentation.json",
+            $"{SchemaBase}/Schemas/Geometry/Polygon.json",
+            $"{SchemaBase}/Schemas/Geometry/Polyline.json",
+            $"{SchemaBase}/Schemas/Geometry/Profile.json",
+            $"{SchemaBase}/Schemas/Geometry/Representation.json",
+            $"{SchemaBase}/Schemas/Geometry/SolidRepresentation.json",
+            $"{SchemaBase}/Schemas/Geometry/Transform.json",
+            $"{SchemaBase}/Schemas/Geometry/Triangle.json",
+            $"{SchemaBase}/Schemas/Geometry/UV.json",
+            $"{SchemaBase}/Schemas/Geometry/Vector3.json",
+            $"{SchemaBase}/Schemas/Geometry/Vertex.json",
 
-            $"{_schemaBase}/Schemas/Properties/NumericProperty.json",
-            $"{_schemaBase}/Schemas/InputData.json",
+            $"{SchemaBase}/Schemas/Properties/NumericProperty.json",
+            $"{SchemaBase}/Schemas/InputData.json",
 
             "https://geojson.org/schema/Point.json",
         };

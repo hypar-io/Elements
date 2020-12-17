@@ -21,6 +21,11 @@ namespace CoreTypeGenerator
             }
             Directory.CreateDirectory(args[0]);
 
+            if (args.Length > 1)
+            {
+                TypeGenerator.SchemaBase = args[1];
+            }
+
             await TypeGenerator.GenerateElementTypesAsync(args[0]);
         }
     }
