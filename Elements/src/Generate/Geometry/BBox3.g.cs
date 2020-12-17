@@ -9,6 +9,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
 using Elements.Validators;
+using Elements.Serialization.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,28 +28,27 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public BBox3(Vector3 @min, Vector3 @max)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<BBox3>
-            ();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @min, @max});
-            }
+        	var validator = Validator.Instance.GetFirstValidatorForType<BBox3>();
+        	if(validator != null)
+        	{
+        			validator.PreConstruct(new object[]{ @min, @max});
+        	}
         
-                this.Min = @min;
-                this.Max = @max;
-            
-            if(validator != null)
-            {
-            validator.PostConstruct(this);
-            }
-            }
+        		this.Min = @min;
+        		this.Max = @max;
+        	
+        	if(validator != null)
+        	{
+        		validator.PostConstruct(this);
+        	}
+        }
     
         /// <summary>The minimum extent of the bounding box.</summary>
-        [Newtonsoft.Json.JsonProperty("Min", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("Min", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 Min { get; set; }
     
         /// <summary>The maximum extent of the bounding box.</summary>
-        [Newtonsoft.Json.JsonProperty("Max", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("Max", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 Max { get; set; }
     
     

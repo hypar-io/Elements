@@ -67,7 +67,7 @@ namespace Elements.Serialization.IFC
             }
             else
             {
-                foreach (var op in geoElement.Representation.SolidOperations)
+                foreach (var op in ((SolidRepresentation)geoElement.Representations[0]).SolidOperations)
                 {
                     if (op is Sweep)
                     {
@@ -188,7 +188,7 @@ namespace Elements.Serialization.IFC
 
             foreach (var geom in geoms)
             {
-                var styledItem = new IfcStyledItem(geom, styleAssignments[geoElement.Material.Id], null);
+                var styledItem = new IfcStyledItem(geom, styleAssignments[geoElement.Representations[0].Material.Id], null);
                 doc.AddEntity(styledItem);
             }
 

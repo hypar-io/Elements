@@ -29,7 +29,7 @@ namespace Elements.Benchmarks
                 {
                     LocalTransform = lt
                 };
-                beam.Representation.SolidOperations.Add(hole);
+                ((SolidRepresentation)beam.Representations[0]).SolidOperations.Add(hole);
             }
             var model = new Model();
             model.AddElement(beam);

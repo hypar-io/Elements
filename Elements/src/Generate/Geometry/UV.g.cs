@@ -9,6 +9,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Properties;
 using Elements.Validators;
+using Elements.Serialization.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,15 +21,13 @@ namespace Elements.Geometry
 #pragma warning disable // Disable all warnings
 
     /// <summary>A UV coordinate.</summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial struct UV
+    public struct UV
     {
         [Newtonsoft.Json.JsonConstructor]
         public UV(double @u, double @v)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<UV>
-            ();
+            var validator = Validator.Instance.GetFirstValidatorForType<UV>();
             if (validator != null)
             {
                 validator.PreConstruct(new object[] { @u, @v });
@@ -44,13 +43,13 @@ namespace Elements.Geometry
         }
 
         /// <summary>The U coordinate.</summary>
-        [Newtonsoft.Json.JsonProperty("U", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("U", Required = Newtonsoft.Json.Required.Always)]
         public double U { get; set; }
 
         /// <summary>The V coordinate.</summary>
-        [Newtonsoft.Json.JsonProperty("V", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("V", Required = Newtonsoft.Json.Required.Always)]
         public double V { get; set; }
 
 
-    }
+}
 }

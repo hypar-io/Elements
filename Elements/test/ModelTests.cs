@@ -125,7 +125,7 @@ namespace Elements.Tests
                                 1,
                                 BuiltInMaterials.Mass,
                                 new Transform(),
-                                new SolidRepresentation(new List<SolidOperation> { new Extrude(p, 2, Vector3.ZAxis, false) }));
+                                new[] { new SolidRepresentation(new List<SolidOperation> { new Extrude(p, 2, Vector3.ZAxis, false) }) });
             // A second mass that uses a separate embedded profile.
             // This is really a mistake because the user wants the profile
             // that they supply in the constructor to be used, but the profile
@@ -134,7 +134,7 @@ namespace Elements.Tests
                                 1,
                                 BuiltInMaterials.Mass,
                                 new Transform(),
-                                new SolidRepresentation(new List<SolidOperation> { new Extrude(new Profile(Polygon.Rectangle(1, 1)), 2, Vector3.ZAxis, false) }));
+                                new[] { new SolidRepresentation(new List<SolidOperation> { new Extrude(new Profile(Polygon.Rectangle(1, 1)), 2, Vector3.ZAxis, false) }) });
             var model = new Model();
             model.AddElement(mass1);
             model.AddElement(mass2);

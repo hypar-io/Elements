@@ -7,6 +7,7 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Diagnostics;
 using Elements.Geometry.Solids;
+using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements.Tests
 {

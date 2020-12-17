@@ -26,7 +26,7 @@ namespace Elements
         /// The wall's center line.
         /// </summary>
         /// <value></value>
-        public Line Centerline { get; set}
+        public Line Centerline { get; set; }
 
         /// <summary>
         /// Create a wall requiring only the profile, thickness and centerline.

@@ -18,36 +18,35 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry
 {
-#pragma warning disable // Disable all warnings
+    #pragma warning disable // Disable all warnings
 
     /// <summary>A representation containing a collection of solid operations.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
     [UserElement]
-    public partial class CurveRepresentation : Representation
+	public partial class CurveRepresentation : Representation
     {
         [Newtonsoft.Json.JsonConstructor]
         public CurveRepresentation(Curve @curve, Material @material, System.Guid @id, string @name)
-            : base(material, id, name)
+        	: base(material, id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<CurveRepresentation>
-            ();
-            if (validator != null)
-            {
-                validator.PreConstruct(new object[] { @curve, @material, @id, @name });
-            }
-
-            this.Curve = @curve;
-
-            if (validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+        	var validator = Validator.Instance.GetFirstValidatorForType<CurveRepresentation>();
+        	if(validator != null)
+        	{
+        			validator.PreConstruct(new object[]{ @curve, @material, @id, @name});
+        	}
+        
+        		this.Curve = @curve;
+        	
+        	if(validator != null)
+        	{
+        		validator.PostConstruct(this);
+        	}
         }
-
+    
         /// <summary>A curve.</summary>
         [Newtonsoft.Json.JsonProperty("Curve", Required = Newtonsoft.Json.Required.AllowNull)]
         public Curve Curve { get; set; }
-
-
+    
+    
     }
 }

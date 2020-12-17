@@ -28,26 +28,26 @@ namespace Elements
     {
         [Newtonsoft.Json.JsonConstructor]
         public ContentCatalog(IList<ContentElement> @content, System.Guid @id, string @name)
-            : base(id, name)
+        	: base(id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<ContentCatalog>
-            ();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @content, @id, @name});
-            }
+        	var validator = Validator.Instance.GetFirstValidatorForType<ContentCatalog>();
+        	if(validator != null)
+        	{
+        			validator.PreConstruct(new object[]{ @content, @id, @name});
+        	}
         
-                this.Content = @content;
-            
-            if(validator != null)
-            {
-            validator.PostConstruct(this);
-            }
-            }
+        		this.Content = @content;
+        	
+        	if(validator != null)
+        	{
+        		validator.PostConstruct(this);
+        	}
+        }
     
         /// <summary>The content elements in this catalog.</summary>
-        [Newtonsoft.Json.JsonProperty("Content", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public IList<ContentElement> Content { get; set; }
+        [Newtonsoft.Json.JsonProperty("Content", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public IList<ContentElement> Content { get; set; } = new List<ContentElement>();
     
     
     }

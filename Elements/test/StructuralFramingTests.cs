@@ -80,7 +80,7 @@ namespace Elements.Tests
             }
 
             var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel, startSetback, endSetback);
-            Assert.Equal(BuiltInMaterials.Steel, beam.Material);
+            Assert.Equal(BuiltInMaterials.Steel, beam.Representations[0].Material);
             Assert.Equal(cl, beam.Curve);
 
             this.Model.AddElement(beam);
@@ -151,7 +151,7 @@ namespace Elements.Tests
         {
             this.Name = "Column";
             var column = new Column(Vector3.Origin, 3.0, this._testProfile);
-            Assert.Equal(BuiltInMaterials.Steel, column.Material);
+            Assert.Equal(BuiltInMaterials.Steel, column.Representations[0].Material);
             Assert.Equal(3.0, column.Curve.Length());
             this.Model.AddElement(column);
         }
@@ -162,7 +162,7 @@ namespace Elements.Tests
             this.Name = "Brace";
             var line = new Line(Vector3.Origin, new Vector3(3, 3, 3));
             var brace = new Brace(line, this._testProfile, BuiltInMaterials.Steel);
-            Assert.Equal(BuiltInMaterials.Steel, brace.Material);
+            Assert.Equal(BuiltInMaterials.Steel, brace.Representations[0].Material);
             Assert.Equal(line, brace.Curve);
             this.Model.AddElement(brace);
         }
@@ -206,7 +206,8 @@ namespace Elements.Tests
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
                 var beam = new Beam(line, profile, BuiltInMaterials.Steel);
                 beam.UpdateRepresentations();
-                beam.Representation.SolidOperations.First().Solid.Tessellate(ref mesh);
+                var rep = (SolidRepresentation)beam.Representations[0];
+                rep.SolidOperations.First().Solid.Tessellate(ref mesh);
                 x += 2.0;
                 if (x > 20.0)
                 {

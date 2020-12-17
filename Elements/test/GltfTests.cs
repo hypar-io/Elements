@@ -89,7 +89,7 @@ namespace Elements.Tests
 
         private class NoMaterial : GeometricElement
         {
-            public NoMaterial() : base(new Transform(), null, null, false, Guid.NewGuid(), "NoMaterialElement") { }
+            public NoMaterial() : base(new Transform(), null, false, Guid.NewGuid(), "NoMaterialElement") { }
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace Elements.Tests
             var testElement = new NoMaterial();
             var model = new Model();
             model.AddElement(testElement);
-            Assert.True(testElement.Material == BuiltInMaterials.Default);
+            Assert.True(testElement.Representations[0].Material == BuiltInMaterials.Default);
         }
     }
 }

@@ -17,8 +17,8 @@ namespace Elements.Tests
     {
         private class TestContentElem : ContentElement
         {
-            public TestContentElem(string @gltfLocation, BBox3 @bBox, Vector3 @toSource, Transform @transform, double scale, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
-                        : base(gltfLocation, bBox, scale, @toSource, transform, material, representation, isElementDefinition, id, name)
+            public TestContentElem(string @gltfLocation, BBox3 @bBox, Vector3 @toSource, Transform @transform, double scale, Material @material, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name)
+                        : base(gltfLocation, bBox, scale, @toSource, transform, representations, isElementDefinition, id, name)
             { }
         }
 
@@ -30,7 +30,6 @@ namespace Elements.Tests
                                       1,
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.ZAxis),
-                                      BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
@@ -40,7 +39,6 @@ namespace Elements.Tests
                                       1,
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
-                                      BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),

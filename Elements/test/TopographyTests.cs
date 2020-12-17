@@ -85,7 +85,7 @@ namespace Elements.Tests
             sw.Reset();
             sw.Start();
             this.Model.AddElement(BuiltInMaterials.Topography);
-            topo.Material = BuiltInMaterials.Topography;
+            topo.Representations[0].Material = BuiltInMaterials.Topography;
             this.Model.AddElement(topo, false);
             sw.Stop();
             _output.WriteLine($"Serialization of topography w/out recursive gather: {sw.ElapsedMilliseconds.ToString()}ms");

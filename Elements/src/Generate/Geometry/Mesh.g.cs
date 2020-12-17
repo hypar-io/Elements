@@ -21,36 +21,33 @@ namespace Elements.Geometry
     #pragma warning disable // Disable all warnings
 
     /// <summary>A triangulated mesh.</summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
     [UserElement]
-	public partial class Mesh : Geometry
+	public partial class Mesh 
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Mesh(IList<Vertex> @vertices, IList<Triangle> @triangles, Material @material)
-            : base(material)
+        public Mesh(IList<Vertex> @vertices, IList<Triangle> @triangles)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Mesh>
-            ();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @vertices, @triangles, @material});
-            }
+        	var validator = Validator.Instance.GetFirstValidatorForType<Mesh>();
+        	if(validator != null)
+        	{
+        			validator.PreConstruct(new object[]{ @vertices, @triangles});
+        	}
         
-                this.Vertices = @vertices;
-                this.Triangles = @triangles;
-            
-            if(validator != null)
-            {
-            validator.PostConstruct(this);
-            }
-            }
+        		this.Vertices = @vertices;
+        		this.Triangles = @triangles;
+        	
+        	if(validator != null)
+        	{
+        		validator.PostConstruct(this);
+        	}
+        }
     
-        /// <summary>The vertices of the mesh.</summary>
+        /// <summary>The mesh' vertices.</summary>
         [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Vertex> Vertices { get; set; }
     
-        /// <summary>The triangles of the mesh</summary>
+        /// <summary>The mesh' triangles.</summary>
         [Newtonsoft.Json.JsonProperty("Triangles", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Triangle> Triangles { get; set; }
     

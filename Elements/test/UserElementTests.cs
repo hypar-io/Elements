@@ -23,7 +23,7 @@ namespace Elements.Tests
         public NumericProperty Length => new NumericProperty(this.CenterLine.Length(), NumericPropertyUnitType.Length);
 
         internal TestUserElement() : base(null,
-                                            new SolidRepresentation(),
+                                            new[] { new SolidRepresentation() },
                                             false,
                                             Guid.NewGuid(),
                                             null)
@@ -35,7 +35,7 @@ namespace Elements.Tests
                                bool isElementDefinition = false,
                                Guid id = default(Guid),
                                string name = null) : base(new Transform(),
-                                                          new SolidRepresentation(material = material != null ? material : BuiltInMaterials.Default),
+                                                          new[] { new SolidRepresentation(material = material != null ? material : BuiltInMaterials.Default) },
                                                           isElementDefinition,
                                                           id = id != default(Guid) ? id : Guid.NewGuid(),
                                                           name)
@@ -47,7 +47,7 @@ namespace Elements.Tests
 
         public override void UpdateRepresentations()
         {
-            var rep = (SolidRepresentation)this.Representation;
+            var rep = (SolidRepresentation)this.Representations[0];
             rep.SolidOperations.Clear();
 
             var t = this.CenterLine.TransformAt(0);
@@ -82,7 +82,7 @@ namespace Elements.Tests
             var newUe = newModel.AllElementsOfType<TestUserElement>().First();
 
             Assert.Equal(6, newModel.Elements.Count);
-            Assert.Equal(((SolidRepresentation)ue.Representation).SolidOperations.Count, ((SolidRepresentation)newUe.Representation).SolidOperations.Count);
+            Assert.Equal(((SolidRepresentation)ue.Representations[0]).SolidOperations.Count, ((SolidRepresentation)newUe.Representations[0]).SolidOperations.Count);
             Assert.Equal(ue.Id, newUe.Id);
             Assert.Equal(ue.Transform, newUe.Transform);
 

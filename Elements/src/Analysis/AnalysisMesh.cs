@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements.Analysis
@@ -13,7 +12,7 @@ namespace Elements.Analysis
     /// [!code-csharp[Main](../../Elements/test/AnalysisMeshTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class AnalysisMesh : GeometricElement, ITessellate
+    public class AnalysisMesh : GeometricElement
     {
         private List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();
         private Func<Vector3, double> _analyze;
@@ -66,7 +65,6 @@ namespace Elements.Analysis
                             Func<Vector3, double> analyze,
                             Guid id = default(Guid),
                             string name = null) : base(new Transform(),
-                                                       BuiltInMaterials.Default,
                                                        null,
                                                        false,
                                                        id == default(Guid) ? Guid.NewGuid() : id,
@@ -77,7 +75,21 @@ namespace Elements.Analysis
             this.VLength = vLength;
             this.ColorScale = colorScale;
             this._analyze = analyze;
-            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
+        }
+
+        /// <summary>
+        /// Update the analysis mesh's representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            this.Representations.Clear();
+            var material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
+
+            var mesh = new Mesh();
+
+            // TODO: Move tesselate code into Update Representation.
+            Tessellate(ref mesh);
+            this.Representations.Add(new MeshRepresentation(mesh, material));
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using System;
 using Xunit;
+using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements.Tests
 {

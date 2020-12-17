@@ -20,21 +20,22 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>A right-handed coordinate system with +Z up.</summary>
+    /// <summary>A representation containing a mesh.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
     [UserElement]
-	public partial class Transform 
+	public partial class MeshRepresentation : Representation
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Transform(Matrix @matrix)
+        public MeshRepresentation(Mesh @mesh, Material @material, System.Guid @id, string @name)
+        	: base(material, id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Transform>();
+        	var validator = Validator.Instance.GetFirstValidatorForType<MeshRepresentation>();
         	if(validator != null)
         	{
-        			validator.PreConstruct(new object[]{ @matrix});
+        			validator.PreConstruct(new object[]{ @mesh, @material, @id, @name});
         	}
         
-        		this.Matrix = @matrix;
+        		this.Mesh = @mesh;
         	
         	if(validator != null)
         	{
@@ -42,10 +43,10 @@ namespace Elements.Geometry
         	}
         }
     
-        /// <summary>The transform's matrix.</summary>
-        [Newtonsoft.Json.JsonProperty("Matrix", Required = Newtonsoft.Json.Required.Always)]
+        /// <summary>A mesh.</summary>
+        [Newtonsoft.Json.JsonProperty("Mesh", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Matrix Matrix { get; set; } = new Matrix();
+        public Mesh Mesh { get; set; } = new Mesh();
     
     
     }

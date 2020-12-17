@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
+using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements
 {
@@ -16,7 +16,7 @@ namespace Elements
     /// [!code-csharp[Main](../../Elements/test/TopographyTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Topography : MeshElement, ITessellate
+    public class Topography : MeshElement
     {
         private double _minElevation = double.PositiveInfinity;
 
@@ -453,13 +453,6 @@ namespace Elements
             return output;
         }
 
-        /// <summary>
-        /// Update the representations.
-        /// </summary>
-        public override void UpdateRepresentations()
-        {
-            return;
-        }
     }
 
     internal static class TopographyExtensions

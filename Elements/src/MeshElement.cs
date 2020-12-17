@@ -1,6 +1,5 @@
 using System;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -12,7 +11,7 @@ namespace Elements
     /// [!code-csharp[Main](../../Elements/test/MeshElementTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class MeshElement : GeometricElement, ITessellate
+    public class MeshElement : GeometricElement
     {
         /// <summary>
         /// The mesh.
@@ -41,8 +40,7 @@ namespace Elements
                             bool isElementDefinition = false,
                             Guid id = default(Guid),
                             string name = null) : base(transform == null ? new Transform() : transform,
-                                                       material == null ? BuiltInMaterials.Default : material,
-                                                       null,
+                                                       new[] { new MeshRepresentation(mesh, material == null ? BuiltInMaterials.Default : material) },
                                                        isElementDefinition,
                                                        id == default(Guid) ? Guid.NewGuid() : id,
                                                        name)
@@ -55,8 +53,7 @@ namespace Elements
                             bool isElementDefinition = false,
                             Guid id = default(Guid),
                             string name = null) : base(transform == null ? new Transform() : transform,
-                                                       material == null ? BuiltInMaterials.Default : material,
-                                                       null,
+                                                       new[] { new MeshRepresentation(material == null ? BuiltInMaterials.Default : material) },
                                                        isElementDefinition,
                                                        id == default(Guid) ? Guid.NewGuid() : id,
                                                        name)
@@ -65,14 +62,12 @@ namespace Elements
         }
 
         /// <summary>
-        /// Tessellate the element.
+        /// Update the mesh element's representations.
         /// </summary>
-        /// <param name="mesh"></param>
-        /// <param name="transform"></param>
-        /// <param name="color"></param>
-        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
+        public override void UpdateRepresentations()
         {
-            mesh = this._mesh;
+            var rep = ((MeshRepresentation)this.Representations[0]);
+            rep.Mesh = this.Mesh;
         }
     }
 }

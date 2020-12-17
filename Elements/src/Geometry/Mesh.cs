@@ -1,4 +1,3 @@
-using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Construct an empty mesh.
         /// </summary>
-        public Mesh() : base(BuiltInMaterials.Default)
+        public Mesh()
         {
             this.Vertices = new List<Vertex>();
             this.Triangles = new List<Triangle>();
