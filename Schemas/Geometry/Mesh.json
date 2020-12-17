@@ -5,10 +5,7 @@
     "x-namespace": "Elements.Geometry",
     "type": "object",
     "description": "A triangulated mesh.",
-    "required": [
-        "Vertices",
-        "Triangles"
-    ],
+    "required": [],
     "properties": {
         "Vertices": {
             "description": "The mesh' vertices.",
