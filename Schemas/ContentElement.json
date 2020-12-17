@@ -24,7 +24,7 @@
             "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
         }
     },
-    "additionalProperties": false,
+    "additionalProperties": true,
     "description": "An element representing user content.",
     "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/ContentElement.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
