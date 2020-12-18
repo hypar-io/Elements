@@ -57,7 +57,6 @@ namespace CoreTypeGenerator
                 {
                     File.Delete(classPath);
                 }
-                Console.WriteLine($"Generating type {classPath}...");
 
                 var schema = File.ReadAllText(fi);
                 tasks.Add(TypeGenerator.GenerateUserElementTypeFromJsonAsync(schema, outDir));

@@ -519,11 +519,14 @@ using Hypar.Functions.Execution.AWS;", "");
         private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outDirPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
             var diagnosticMessages = new List<string>();
-            Console.WriteLine($"Generating type {@ns}.{typeName} in {outDirPath}...");
+
             var typeCodeDict = GetCodeForTypesFromSchema(schema, typeName, ns, isUserElement, excludedTypes);
             foreach (var kvp in typeCodeDict)
             {
                 var path = Path.Combine(outDirPath, $"{kvp.Key}.g.cs");
+
+                Console.WriteLine($"Generating type {@ns}.{typeName} in {path}...");
+
                 if (File.Exists(path))
                 {
                     // need to wait for file to be available because code gen is async
