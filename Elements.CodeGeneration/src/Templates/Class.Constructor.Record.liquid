@@ -23,7 +23,7 @@
 	}
 
 	{% for property in Properties -%}
-	this.{{property.PropertyName}} = @{{property.Name | safeidentifierlower}};
+this.{{property.PropertyName}} = @{{property.Name | safeidentifierlower}};
 	{% endfor -%}
 
 	if(validator != null)
