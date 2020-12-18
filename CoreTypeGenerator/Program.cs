@@ -40,7 +40,7 @@ namespace CoreTypeGenerator
 
         private static void ProcessFilesInDir(string dir, string inputDir, string outputDir, ref List<Task<GenerationResult>> tasks)
         {
-            foreach (var fi in Directory.EnumerateFiles(dir, "*.json", SearchOption.AllDirectories))
+            foreach (var fi in Directory.EnumerateFiles(dir, "*.json"))
             {
                 // ../Geometry/Vector3.json => Geometry/
                 var schemaSubDir = Path.GetDirectoryName(fi).Replace(inputDir, ".");
