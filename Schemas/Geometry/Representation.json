@@ -1,5 +1,5 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Representation.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Representation.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "The representation of an element.",
     "title": "Representation",
@@ -16,12 +16,12 @@
     "properties": {
         "Material": {
             "description": "The element's material.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Material.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Material.json"
         }
     },
     "allOf": [
         {
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Element.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Element.json"
         }
     ],
     "additionalProperties": false

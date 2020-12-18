@@ -1,5 +1,5 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/UV.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/UV.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "A UV coordinate.",
     "title": "UV",

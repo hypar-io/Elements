@@ -1,5 +1,5 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/PointsRepresentation.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/PointsRepresentation.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "A representation containing a collection of points.",
     "title": "PointsRepresentation",
@@ -16,13 +16,13 @@
             "type": "array",
             "description": "A collection of Points.",
             "items": {
-                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Vector3.json"
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
             }
         }
     },
     "allOf": [
         {
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Representation.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Representation.json"
         }
     ],
     "additionalProperties": false
