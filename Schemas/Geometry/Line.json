@@ -1,5 +1,5 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Line.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Line.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Line",
     "x-namespace": "Elements.Geometry",
@@ -10,7 +10,7 @@
     "description": "A line between two points. The line is parameterized from 0.0(start) to 1.0(end)",
     "allOf": [
         {
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Curve.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Curve.json"
         }
     ],
     "required": [
@@ -20,11 +20,11 @@
     "properties": {
         "Start": {
             "description": "The start of the line.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Vector3.json"
         },
         "End": {
             "description": "The end of the line.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Vector3.json"
         }
     },
     "additionalProperties": false

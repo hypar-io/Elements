@@ -1,5 +1,5 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Components/Material.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Components/Material.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Material",
     "x-namespace": "Elements",
@@ -9,7 +9,7 @@
     ],
     "allOf": [
         {
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Element.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Element.json"
         }
     ],
     "description": "A material.",
@@ -21,7 +21,7 @@
     "properties": {
         "Color": {
             "description": "The material's color.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Color.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Color.json"
         },
         "SpecularFactor": {
             "description": "The specular factor between 0.0 and 1.0.",
