@@ -60,44 +60,44 @@ namespace Elements.Generate
         /// These are all the 'base' schemas defined for Elements.
         /// </summary>
         private static readonly string[] _hyparSchemas = new string[]{
-            $"{SchemaBase}/Schemas/ContentCatalog.json",
-            $"{SchemaBase}/Schemas/ContentElement.json",
-            $"{SchemaBase}/Schemas/Element.json",
-            $"{SchemaBase}/Schemas/GeometricElement.json",
-            $"{SchemaBase}/Schemas/Material.json",
-            $"{SchemaBase}/Schemas/Model.json",
+            $"{SchemaBase}/ContentCatalog.json",
+            $"{SchemaBase}/ContentElement.json",
+            $"{SchemaBase}/Element.json",
+            $"{SchemaBase}/GeometricElement.json",
+            $"{SchemaBase}/Material.json",
+            $"{SchemaBase}/Model.json",
 
-            $"{SchemaBase}/Schemas/GeoJSON/Position.json",
+            $"{SchemaBase}/GeoJSON/Position.json",
 
-            $"{SchemaBase}/Schemas/Geometry/Solids/Extrude.json",
-            $"{SchemaBase}/Schemas/Geometry/Solids/Lamina.json",
-            $"{SchemaBase}/Schemas/Geometry/Solids/SolidOperation.json",
-            $"{SchemaBase}/Schemas/Geometry/Solids/Sweep.json",
+            $"{SchemaBase}/Geometry/Solids/Extrude.json",
+            $"{SchemaBase}/Geometry/Solids/Lamina.json",
+            $"{SchemaBase}/Geometry/Solids/SolidOperation.json",
+            $"{SchemaBase}/Geometry/Solids/Sweep.json",
 
-            $"{SchemaBase}/Schemas/Geometry/Arc.json",
-            $"{SchemaBase}/Schemas/Geometry/BBox3.json",
-            $"{SchemaBase}/Schemas/Geometry/Color.json",
-            $"{SchemaBase}/Schemas/Geometry/Curve.json",
-            $"{SchemaBase}/Schemas/Geometry/CurveRepresentation.json",
-            $"{SchemaBase}/Schemas/Geometry/Line.json",
-            $"{SchemaBase}/Schemas/Geometry/Matrix.json",
-            $"{SchemaBase}/Schemas/Geometry/Mesh.json",
-            $"{SchemaBase}/Schemas/Geometry/MeshRepresentation.json",
-            $"{SchemaBase}/Schemas/Geometry/Plane.json",
-            $"{SchemaBase}/Schemas/Geometry/PointsRepresentation.json",
-            $"{SchemaBase}/Schemas/Geometry/Polygon.json",
-            $"{SchemaBase}/Schemas/Geometry/Polyline.json",
-            $"{SchemaBase}/Schemas/Geometry/Profile.json",
-            $"{SchemaBase}/Schemas/Geometry/Representation.json",
-            $"{SchemaBase}/Schemas/Geometry/SolidRepresentation.json",
-            $"{SchemaBase}/Schemas/Geometry/Transform.json",
-            $"{SchemaBase}/Schemas/Geometry/Triangle.json",
-            $"{SchemaBase}/Schemas/Geometry/UV.json",
-            $"{SchemaBase}/Schemas/Geometry/Vector3.json",
-            $"{SchemaBase}/Schemas/Geometry/Vertex.json",
+            $"{SchemaBase}/Geometry/Arc.json",
+            $"{SchemaBase}/Geometry/BBox3.json",
+            $"{SchemaBase}/Geometry/Color.json",
+            $"{SchemaBase}/Geometry/Curve.json",
+            $"{SchemaBase}/Geometry/CurveRepresentation.json",
+            $"{SchemaBase}/Geometry/Line.json",
+            $"{SchemaBase}/Geometry/Matrix.json",
+            $"{SchemaBase}/Geometry/Mesh.json",
+            $"{SchemaBase}/Geometry/MeshRepresentation.json",
+            $"{SchemaBase}/Geometry/Plane.json",
+            $"{SchemaBase}/Geometry/PointsRepresentation.json",
+            $"{SchemaBase}/Geometry/Polygon.json",
+            $"{SchemaBase}/Geometry/Polyline.json",
+            $"{SchemaBase}/Geometry/Profile.json",
+            $"{SchemaBase}/Geometry/Representation.json",
+            $"{SchemaBase}/Geometry/SolidRepresentation.json",
+            $"{SchemaBase}/Geometry/Transform.json",
+            $"{SchemaBase}/Geometry/Triangle.json",
+            $"{SchemaBase}/Geometry/UV.json",
+            $"{SchemaBase}/Geometry/Vector3.json",
+            $"{SchemaBase}/Geometry/Vertex.json",
 
-            $"{SchemaBase}/Schemas/Properties/NumericProperty.json",
-            $"{SchemaBase}/Schemas/InputData.json",
+            $"{SchemaBase}/Properties/NumericProperty.json",
+            $"{SchemaBase}/InputData.json",
 
             "https://geojson.org/schema/Point.json",
         };
@@ -336,31 +336,6 @@ namespace Elements.Generate
                     DiagnosticResults = diagnosticResults,
                 };
             }
-        }
-
-        /// <summary>
-        /// Generate the core element types as .cs files to the specified output directory.
-        /// </summary>
-        /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
-        public static async Task<GenerationResult[]> GenerateElementTypesAsync(string outputBaseDir)
-        {
-            DotLiquid.Template.DefaultIsThreadSafe = true;
-            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
-            var typeNames = _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToList();
-            var tasks = new List<Task<GenerationResult>>();
-            foreach (var uri in _hyparSchemas)
-            {
-                var split = uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Skip(3);
-                var outDir = Path.Combine(outputBaseDir, string.Join("/", split.Take(split.Count() - 1)).TrimEnd('.'));
-                if (!Directory.Exists(outDir))
-                {
-                    Directory.CreateDirectory(outDir);
-                }
-
-                tasks.Add(GenerateUserElementTypeFromUriAsync(uri, outDir));
-            }
-            var allResults = await Task.WhenAll(tasks);
-            return allResults;
         }
 
         /// <summary>
