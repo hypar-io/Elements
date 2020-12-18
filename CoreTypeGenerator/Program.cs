@@ -27,18 +27,24 @@ namespace CoreTypeGenerator
                 TypeGenerator.SchemaBase = args[2];
             }
 
+            var branch = "master";
+            if (args.Length == 4)
+            {
+                branch = args[3];
+            }
+
             var tasks = new List<Task<GenerationResult>>();
 
             foreach (var dir in Directory.EnumerateDirectories(inputDir, "*.*", SearchOption.AllDirectories))
             {
-                ProcessFilesInDir(dir, inputDir, outputDir, ref tasks);
+                ProcessFilesInDir(dir, inputDir, outputDir, ref tasks, branch);
             }
-            ProcessFilesInDir(inputDir, inputDir, outputDir, ref tasks);
+            ProcessFilesInDir(inputDir, inputDir, outputDir, ref tasks, branch);
 
             await Task.WhenAll(tasks.ToArray());
         }
 
-        private static void ProcessFilesInDir(string dir, string inputDir, string outputDir, ref List<Task<GenerationResult>> tasks)
+        private static void ProcessFilesInDir(string dir, string inputDir, string outputDir, ref List<Task<GenerationResult>> tasks, string branch = "master")
         {
             foreach (var fi in Directory.EnumerateFiles(dir, "*.json"))
             {
@@ -59,6 +65,7 @@ namespace CoreTypeGenerator
                 }
 
                 var schema = File.ReadAllText(fi);
+                schema = schema.Replace("https://raw.githubusercontent.com/hypar-io/Elements/master", $"https://raw.githubusercontent.com/hypar-io/Elements/{branch}");
                 tasks.Add(TypeGenerator.GenerateUserElementTypeFromJsonAsync(schema, outDir));
             }
         }
