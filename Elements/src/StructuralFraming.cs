@@ -60,7 +60,7 @@ namespace Elements
                                  bool isElementDefinition = false,
                                  Guid id = default(Guid),
                                  string name = null) : base(transform != null ? transform : new Transform(),
-                                                            representations != null ? representations : new[] { new Representation(material != null ? material : BuiltInMaterials.Steel) },
+                                                            representations != null ? representations : new[] { new SolidRepresentation(material != null ? material : BuiltInMaterials.Steel) },
                                                             isElementDefinition,
                                                             id != default(Guid) ? id : Guid.NewGuid(),
                                                             name)
