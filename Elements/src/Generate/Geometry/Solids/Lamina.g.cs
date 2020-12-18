@@ -28,20 +28,20 @@ namespace Elements.Geometry.Solids
     
         [Newtonsoft.Json.JsonConstructor]
         public Lamina(Polygon @perimeter, bool @isVoid)
-        	: base(isVoid)
+            : base(isVoid)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Lamina>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @perimeter, @isVoid});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Lamina>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @perimeter, @isVoid});
+            }
         
-        	this.Perimeter = @perimeter;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Perimeter = @perimeter;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The perimeter.</summary>

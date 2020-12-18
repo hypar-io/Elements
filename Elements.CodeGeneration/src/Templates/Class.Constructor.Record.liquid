@@ -12,22 +12,22 @@
 {% if IsAbstract %}protected{% else %}public{% endif %} {{ClassName}}({% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%} {{ property.Type }} @{{ property.Name | safeidentifierlower }}{% endfor -%})
 {% assign skipComma = true -%}
 {% if HasInheritance -%}
-	: base({% for property in parentProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}{{ property.Name | safeidentifierlower }}{% endfor -%})
+    : base({% for property in parentProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}{{ property.Name | safeidentifierlower }}{% endfor -%})
 {% endif -%}
 {
-	var validator = Validator.Instance.GetFirstValidatorForType<{{ClassName}}>();
-	if(validator != null)
-	{
-	{% assign skipComma = true -%}
-	validator.PreConstruct(new object[]{ {% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}@{{ property.Name | safeidentifierlower }}{% endfor -%} });
-	}
+    var validator = Validator.Instance.GetFirstValidatorForType<{{ClassName}}>();
+    if(validator != null)
+    {
+    {% assign skipComma = true -%}
+    validator.PreConstruct(new object[]{ {% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}@{{ property.Name | safeidentifierlower }}{% endfor -%} });
+    }
 
-	{% for property in Properties -%}
+    {% for property in Properties -%}
 this.{{property.PropertyName}} = @{{property.Name | safeidentifierlower}};
-	{% endfor -%}
+    {% endfor -%}
 
-	if(validator != null)
-	{
-		validator.PostConstruct(this);
-	}
+    if(validator != null)
+    {
+        validator.PostConstruct(this);
+    }
 }

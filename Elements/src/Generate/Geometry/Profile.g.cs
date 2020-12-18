@@ -26,21 +26,21 @@ namespace Elements.Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
         public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id, string @name)
-        	: base(id, name)
+            : base(id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Profile>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @perimeter, @voids, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Profile>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @perimeter, @voids, @id, @name});
+            }
         
-        	this.Perimeter = @perimeter;
-        	this.Voids = @voids;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Perimeter = @perimeter;
+            this.Voids = @voids;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The perimeter of the profile.</summary>

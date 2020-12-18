@@ -27,19 +27,19 @@ namespace Elements.GeoJSON
         [Newtonsoft.Json.JsonConstructor]
         public Position(double @latitude, double @longitude)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Position>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @latitude, @longitude});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Position>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @latitude, @longitude});
+            }
         
-        	this.Latitude = @latitude;
-        	this.Longitude = @longitude;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Latitude = @latitude;
+            this.Longitude = @longitude;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The latitude in decimal degrees.</summary>

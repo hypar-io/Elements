@@ -26,20 +26,20 @@ namespace Elements.Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
         public SolidRepresentation(IList<SolidOperation> @solidOperations, Material @material, System.Guid @id, string @name)
-        	: base(material, id, name)
+            : base(material, id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<SolidRepresentation>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @solidOperations, @material, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<SolidRepresentation>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @solidOperations, @material, @id, @name});
+            }
         
-        	this.SolidOperations = @solidOperations;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.SolidOperations = @solidOperations;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>A collection of solids.</summary>

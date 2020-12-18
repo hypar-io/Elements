@@ -27,19 +27,19 @@ namespace Elements.Properties
         [Newtonsoft.Json.JsonConstructor]
         public NumericProperty(double @value, NumericPropertyUnitType @unitType)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<NumericProperty>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @value, @unitType});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<NumericProperty>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @value, @unitType});
+            }
         
-        	this.Value = @value;
-        	this.UnitType = @unitType;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Value = @value;
+            this.UnitType = @unitType;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The property's value</summary>

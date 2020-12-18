@@ -27,23 +27,23 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Vertex(Vector3 @position, Vector3 @normal, Color @color, int @index, UV @uV, IList<Triangle> @triangles)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Vertex>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @position, @normal, @color, @index, @uV, @triangles});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Vertex>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @position, @normal, @color, @index, @uV, @triangles});
+            }
         
-        	this.Position = @position;
-        	this.Normal = @normal;
-        	this.Color = @color;
-        	this.Index = @index;
-        	this.UV = @uV;
-        	this.Triangles = @triangles;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Position = @position;
+            this.Normal = @normal;
+            this.Color = @color;
+            this.Index = @index;
+            this.UV = @uV;
+            this.Triangles = @triangles;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The vertex's position.</summary>

@@ -26,19 +26,19 @@ namespace Elements.Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
         public Polygon(IList<Vector3> @vertices)
-        	: base(vertices)
+            : base(vertices)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Polygon>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @vertices});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Polygon>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @vertices});
+            }
         
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
     

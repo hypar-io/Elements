@@ -26,25 +26,25 @@ namespace Elements
     {
         [Newtonsoft.Json.JsonConstructor]
         public Material(Color @color, double @specularFactor, double @glossinessFactor, bool @unlit, string @texture, bool @doubleSided, System.Guid @id, string @name)
-        	: base(id, name)
+            : base(id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Material>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @color, @specularFactor, @glossinessFactor, @unlit, @texture, @doubleSided, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Material>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @color, @specularFactor, @glossinessFactor, @unlit, @texture, @doubleSided, @id, @name});
+            }
         
-        	this.Color = @color;
-        	this.SpecularFactor = @specularFactor;
-        	this.GlossinessFactor = @glossinessFactor;
-        	this.Unlit = @unlit;
-        	this.Texture = @texture;
-        	this.DoubleSided = @doubleSided;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Color = @color;
+            this.SpecularFactor = @specularFactor;
+            this.GlossinessFactor = @glossinessFactor;
+            this.Unlit = @unlit;
+            this.Texture = @texture;
+            this.DoubleSided = @doubleSided;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The material's color.</summary>

@@ -30,22 +30,22 @@ namespace Elements.Geometry.Solids
     
         [Newtonsoft.Json.JsonConstructor]
         public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid)
-        	: base(isVoid)
+            : base(isVoid)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Extrude>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @profile, @height, @direction, @isVoid});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Extrude>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @profile, @height, @direction, @isVoid});
+            }
         
-        	this.Profile = @profile;
-        	this.Height = @height;
-        	this.Direction = @direction;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Profile = @profile;
+            this.Height = @height;
+            this.Direction = @direction;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The id of the profile to extrude.</summary>

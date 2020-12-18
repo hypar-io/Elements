@@ -26,20 +26,20 @@ namespace Elements.Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
         public MeshRepresentation(Mesh @mesh, Material @material, System.Guid @id, string @name)
-        	: base(material, id, name)
+            : base(material, id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<MeshRepresentation>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @mesh, @material, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<MeshRepresentation>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @mesh, @material, @id, @name});
+            }
         
-        	this.Mesh = @mesh;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Mesh = @mesh;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>A mesh.</summary>

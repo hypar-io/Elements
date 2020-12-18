@@ -26,21 +26,21 @@ namespace Elements.Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
         public Line(Vector3 @start, Vector3 @end)
-        	: base()
+            : base()
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Line>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @start, @end});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Line>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @start, @end});
+            }
         
-        	this.Start = @start;
-        	this.End = @end;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Start = @start;
+            this.End = @end;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The start of the line.</summary>

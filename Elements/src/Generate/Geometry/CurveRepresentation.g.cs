@@ -26,20 +26,20 @@ namespace Elements.Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
         public CurveRepresentation(Curve @curve, Material @material, System.Guid @id, string @name)
-        	: base(material, id, name)
+            : base(material, id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<CurveRepresentation>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @curve, @material, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<CurveRepresentation>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @curve, @material, @id, @name});
+            }
         
-        	this.Curve = @curve;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Curve = @curve;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>A curve.</summary>

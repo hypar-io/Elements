@@ -27,20 +27,20 @@ namespace Elements.Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
         public Representation(Material @material, System.Guid @id, string @name)
-        	: base(id, name)
+            : base(id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Representation>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @material, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Representation>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @material, @id, @name});
+            }
         
-        	this.Material = @material;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Material = @material;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The element's material.</summary>

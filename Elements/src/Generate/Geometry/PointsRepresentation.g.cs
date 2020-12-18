@@ -26,20 +26,20 @@ namespace Elements.Geometry
     {
         [Newtonsoft.Json.JsonConstructor]
         public PointsRepresentation(IList<Vector3> @points, Material @material, System.Guid @id, string @name)
-        	: base(material, id, name)
+            : base(material, id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<PointsRepresentation>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @points, @material, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<PointsRepresentation>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @points, @material, @id, @name});
+            }
         
-        	this.Points = @points;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Points = @points;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>A collection of Points.</summary>

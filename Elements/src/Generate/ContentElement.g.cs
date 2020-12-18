@@ -27,23 +27,23 @@ namespace Elements
     {
         [Newtonsoft.Json.JsonConstructor]
         public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name)
-        	: base(transform, representations, isElementDefinition, id, name)
+            : base(transform, representations, isElementDefinition, id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<ContentElement>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @transform, @representations, @isElementDefinition, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<ContentElement>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @transform, @representations, @isElementDefinition, @id, @name});
+            }
         
-        	this.GltfLocation = @gltfLocation;
-        	this.BoundingBox = @boundingBox;
-        	this.GltfScaleToMeters = @gltfScaleToMeters;
-        	this.SourceDirection = @sourceDirection;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.GltfLocation = @gltfLocation;
+            this.BoundingBox = @boundingBox;
+            this.GltfScaleToMeters = @gltfScaleToMeters;
+            this.SourceDirection = @sourceDirection;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The URI of the gltf for this element.</summary>

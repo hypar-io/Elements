@@ -27,22 +27,22 @@ namespace Elements
     {
         [Newtonsoft.Json.JsonConstructor]
         public GeometricElement(Transform @transform, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name)
-        	: base(id, name)
+            : base(id, name)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @transform, @representations, @isElementDefinition, @id, @name});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @transform, @representations, @isElementDefinition, @id, @name});
+            }
         
-        	this.Transform = @transform;
-        	this.Representations = @representations;
-        	this.IsElementDefinition = @isElementDefinition;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Transform = @transform;
+            this.Representations = @representations;
+            this.IsElementDefinition = @isElementDefinition;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The element's transform.</summary>

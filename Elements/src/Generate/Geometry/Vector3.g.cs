@@ -27,20 +27,20 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Vector3(double @x, double @y, double @z)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Vector3>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @x, @y, @z});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Vector3>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @x, @y, @z});
+            }
         
-        	this.X = @x;
-        	this.Y = @y;
-        	this.Z = @z;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.X = @x;
+            this.Y = @y;
+            this.Z = @z;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The X component of the vector.</summary>

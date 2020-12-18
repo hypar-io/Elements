@@ -31,23 +31,23 @@ namespace Elements.Geometry.Solids
     
         [Newtonsoft.Json.JsonConstructor]
         public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, bool @isVoid)
-        	: base(isVoid)
+            : base(isVoid)
         {
-        	var validator = Validator.Instance.GetFirstValidatorForType<Sweep>();
-        	if(validator != null)
-        	{
-        		validator.PreConstruct(new object[]{ @profile, @curve, @startSetback, @endSetback, @isVoid});
-        	}
+            var validator = Validator.Instance.GetFirstValidatorForType<Sweep>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @profile, @curve, @startSetback, @endSetback, @isVoid});
+            }
         
-        	this.Profile = @profile;
-        	this.Curve = @curve;
-        	this.StartSetback = @startSetback;
-        	this.EndSetback = @endSetback;
-        	
-        	if(validator != null)
-        	{
-        		validator.PostConstruct(this);
-        	}
+            this.Profile = @profile;
+            this.Curve = @curve;
+            this.StartSetback = @startSetback;
+            this.EndSetback = @endSetback;
+            
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
         }
     
         /// <summary>The id of the profile to be swept along the curve.</summary>
