@@ -15,11 +15,11 @@
     "properties": {
         "Origin": {
             "description": "The origin of the plane.",
-            "$ref": "Vector3.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
         },
         "Normal": {
             "description": "The normal of the plane.",
-            "$ref": "Vector3.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
         }
     },
     "additionalProperties": false
