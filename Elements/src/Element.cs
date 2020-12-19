@@ -14,6 +14,11 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.Geometry.Profiles.HSSPipeProfile", typeof(Elements.Geometry.Profiles.HSSPipeProfile))]
     [JsonInheritanceAttribute("Elements.ElementInstance", typeof(Elements.ElementInstance))]
     [JsonInheritanceAttribute("Elements.DirectionalLight", typeof(Elements.DirectionalLight))]
+    [JsonInheritanceAttribute("Elements.Geometry.Representation", typeof(Elements.DirectionalLight))]
+    [JsonInheritanceAttribute("Elements.Geometry.SolidRepresentation", typeof(Elements.Geometry.SolidRepresentation))]
+    [JsonInheritanceAttribute("Elements.Geometry.CurveRepresentation", typeof(Elements.Geometry.CurveRepresentation))]
+    [JsonInheritanceAttribute("Elements.Geometry.PointsRepresentation", typeof(Elements.Geometry.PointsRepresentation))]
+    [JsonInheritanceAttribute("Elements.Geometry.MeshRepresentation", typeof(Elements.Geometry.MeshRepresentation))]
     public abstract partial class Element
     {
     }

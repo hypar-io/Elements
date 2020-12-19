@@ -48,8 +48,7 @@ namespace Elements
                       bool isElementDefinition = false,
                       Guid id = default(Guid),
                       string name = null) : base(transform != null ? transform : new Transform(),
-                                                 representations != null ? representations : new[] {new SolidRepresentation(
-                                                     new List<SolidOperation>(), material != null ? material : BuiltInMaterials.Concrete)},
+                                                 representations != null ? representations : new[] { new SolidRepresentation(material != null ? material : BuiltInMaterials.Concrete) },
                                                  isElementDefinition,
                                                  id != default(Guid) ? id : Guid.NewGuid(),
                                                  name)
@@ -88,7 +87,7 @@ namespace Elements
                        bool isElementDefinition = false,
                        Guid id = default(Guid),
                        string name = null) : base(transform,
-                                           representations,
+                                           representations != null ? representations : new[] { new SolidRepresentation(material != null ? material : BuiltInMaterials.Concrete) },
                                            isElementDefinition,
                                            id == default(Guid) ? Guid.NewGuid() : id,
                                            name)
@@ -103,7 +102,7 @@ namespace Elements
         internal Wall(Solid geometry,
                       Transform transform = null,
                       bool isElementDefinition = false) : base(transform != null ? transform : new Transform(),
-                                                         new[] { new SolidRepresentation() },
+                                                         new[] { new SolidRepresentation(BuiltInMaterials.Concrete) },
                                                          isElementDefinition,
                                                          Guid.NewGuid(),
                                                          null)

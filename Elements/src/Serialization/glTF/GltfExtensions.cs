@@ -804,7 +804,7 @@ namespace Elements.Serialization.glTF
             var materialName = BuiltInMaterials.Default.Name;
             int meshId = -1;
 
-            if (e is GeometricElement)
+            if (e is GeometricElement && e.GetType() != typeof(ModelCurve) && e.GetType() != typeof(ModelPoints))
             {
                 if (typeof(ContentElement).IsAssignableFrom(e.GetType()))
                 {
