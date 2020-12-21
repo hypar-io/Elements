@@ -184,7 +184,11 @@ namespace Elements.Geometry
             {
                 return 0.0;
             }
-            var rad = Math.Acos(Math.Round(r, 5));
+            if (r.ApproximatelyEquals(-1.0))
+            {
+                return 180.0;
+            }
+            var rad = Math.Acos(r);
             return rad * 180 / Math.PI;
         }
 
