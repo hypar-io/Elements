@@ -164,8 +164,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The angle in degrees from this vector to the provided vector. 
-        /// Note that for angles in the plane that can be greater than 180 degrees, 
+        /// The angle in degrees from this vector to the provided vector.
+        /// Note that for angles in the plane that can be greater than 180 degrees,
         /// you should use Vector3.PlaneAngleTo.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
@@ -184,7 +184,7 @@ namespace Elements.Geometry
             {
                 return 0.0;
             }
-            var rad = Math.Acos(r);
+            var rad = Math.Acos(Math.Round(r, 5));
             return rad * 180 / Math.PI;
         }
 
@@ -265,7 +265,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Find the distance from this point to the line, and output the location 
+        /// Find the distance from this point to the line, and output the location
         /// of the closest point on that line.
         /// Using formula from https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd
         /// </summary>
@@ -712,7 +712,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute a transform with the origin at points[0], with
         /// an X axis along points[1]->points[0], and a normal
-        /// computed using the vectors points[2]->points[1] and 
+        /// computed using the vectors points[2]->points[1] and
         /// points[1]->points[0].
         /// </summary>
         /// <param name="points"></param>
@@ -720,9 +720,9 @@ namespace Elements.Geometry
         public static Transform ToTransform(this IList<Vector3> points)
         {
             var a = (points[1] - points[0]).Unitized();
-            // We need to search for a second vector that is not colinear 
+            // We need to search for a second vector that is not colinear
             // with the first. If all the vectors are tried, and one isn't
-            // found that's not parallel to the first, you'll 
+            // found that's not parallel to the first, you'll
             // get a zero-length normal.
             Vector3 b = new Vector3();
             for (var i = 2; i < points.Count; i++)
