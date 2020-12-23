@@ -13,7 +13,14 @@ namespace Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        public Curve Curve { get; set; }
+        public Curve Curve
+        {
+            get
+            {
+                var rep = this.FirstRepresentationOfType<CurveRepresentation>();
+                return rep != null ? rep.Curve : null;
+            }
+        }
 
         /// <summary>
         /// The setback of the framing's extrusion at the start.
@@ -59,11 +66,12 @@ namespace Elements
                                  IList<Representation> representations = null,
                                  bool isElementDefinition = false,
                                  Guid id = default(Guid),
-                                 string name = null) : base(transform != null ? transform : new Transform(),
-                                                            representations != null ? representations : new[] { new SolidRepresentation(material != null ? material : BuiltInMaterials.Steel) },
-                                                            isElementDefinition,
-                                                            id != default(Guid) ? id : Guid.NewGuid(),
-                                                            name)
+                                 string name = null) : base(
+                                     transform != null ? transform : new Transform(),
+                                     representations != null ? representations : new Representation[] { new CurveRepresentation(curve, BuiltInMaterials.Edges), new SolidRepresentation(material != null ? material : BuiltInMaterials.Steel) },
+                                     isElementDefinition,
+                                     id != default(Guid) ? id : Guid.NewGuid(),
+                                     name)
         {
             SetProperties(curve, profile, startSetback, endSetback, rotation);
         }
@@ -74,7 +82,6 @@ namespace Elements
                                    double endSetback,
                                    double rotation)
         {
-            this.Curve = curve;
             var l = this.Curve.Length();
             if (startSetback > l || endSetback > l)
             {
@@ -112,7 +119,7 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
 
             rep.SolidOperations.Clear();
             var profileTrans = new Transform();

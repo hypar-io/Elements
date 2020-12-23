@@ -47,7 +47,7 @@ namespace Elements.Tests
 
         public override void UpdateRepresentations()
         {
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             rep.SolidOperations.Clear();
 
             var t = this.CenterLine.TransformAt(0);
@@ -82,7 +82,7 @@ namespace Elements.Tests
             var newUe = newModel.AllElementsOfType<TestUserElement>().First();
 
             Assert.Equal(6, newModel.Elements.Count);
-            Assert.Equal(((SolidRepresentation)ue.Representations[0]).SolidOperations.Count, ((SolidRepresentation)newUe.Representations[0]).SolidOperations.Count);
+            Assert.Equal(ue.FirstRepresentationOfType<SolidRepresentation>().SolidOperations.Count, newUe.FirstRepresentationOfType<SolidRepresentation>().SolidOperations.Count);
             Assert.Equal(ue.Id, newUe.Id);
             Assert.Equal(ue.Transform, newUe.Transform);
 

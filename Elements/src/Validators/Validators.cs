@@ -14,10 +14,24 @@ namespace Elements.Validators
 
         public void PostConstruct(object obj)
         {
+            // TODO: This code is terrible. We should be able to 
+            // set default values for materials but it's not currently
+            // supported through NJSON Schema.
             var geom = (GeometricElement)obj;
-            if (geom.Representations[0].Material == null)
+            foreach (var r in geom.Representations)
             {
-                geom.Representations[0].Material = BuiltInMaterials.Default;
+                if (r.Material != null)
+                {
+                    continue;
+                }
+                if (r is CurveRepresentation)
+                {
+                    r.Material = BuiltInMaterials.Edges;
+                }
+                else
+                {
+                    r.Material = BuiltInMaterials.Default;
+                }
             }
         }
 

@@ -100,7 +100,7 @@ namespace Elements.Geometry
             var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformMinusTranslation.OfVector(Direction));
             //TODO: extend to handle voids when void solids in Representations are supported generally
             var intersects = false;
-            var rep = (SolidRepresentation)element.Representations[0];
+            var rep = element.FirstRepresentationOfType<SolidRepresentation>();
             foreach (var solidOp in rep.SolidOperations.Where(e => !e.IsVoid))
             {
                 if (transformedRay.Intersects(solidOp, out List<Vector3> tempResults))

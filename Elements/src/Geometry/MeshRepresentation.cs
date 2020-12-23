@@ -18,7 +18,6 @@ namespace Elements.Geometry
         public MeshRepresentation(Mesh mesh, Material material) : base(material, Guid.NewGuid(), null)
         {
             this.Mesh = mesh;
-            this.Material = material;
         }
     }
 }

@@ -93,7 +93,7 @@ namespace Elements
             }
             this.Transform = transform;
 
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             rep.SolidOperations.Add(new Import(geometry));
 
             // TODO(Ian): When receiving a Space as a solid, as we do with IFC,
@@ -130,7 +130,7 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
 
             // Don't override imported geometry.
             if (rep.SolidOperations.Count > 0 && rep.SolidOperations.All(s => s.GetType() == typeof(Import)))

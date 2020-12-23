@@ -67,7 +67,7 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             rep.SolidOperations.Clear();
             rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
@@ -86,7 +86,7 @@ namespace Elements
                        IList<Representation> representations,
                        bool isElementDefinition = false,
                        Guid id = default(Guid),
-                       string name = null) : base(transform,
+                       string name = null) : base(transform != null ? transform : new Transform(),
                                            representations != null ? representations : new[] { new SolidRepresentation(material != null ? material : BuiltInMaterials.Concrete) },
                                            isElementDefinition,
                                            id == default(Guid) ? Guid.NewGuid() : id,
@@ -116,7 +116,7 @@ namespace Elements
             {
                 this.Transform = transform;
             }
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             rep.SolidOperations.Add(new Import(geometry));
         }
     }

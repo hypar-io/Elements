@@ -66,7 +66,7 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            var rep = ((MeshRepresentation)this.Representations[0]);
+            var rep = this.FirstRepresentationOfType<MeshRepresentation>();
             rep.Mesh = this.Mesh;
         }
     }

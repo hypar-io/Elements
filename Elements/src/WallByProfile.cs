@@ -54,7 +54,7 @@ namespace Elements
         public override void UpdateRepresentations()
         {
 
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             rep.SolidOperations.Clear();
 
             // to ensure the correct direction, we find the direction form a point on the polygon to the vertical plane of the centerline

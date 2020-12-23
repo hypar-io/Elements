@@ -123,7 +123,7 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             rep.SolidOperations.Clear();
             var e1 = this.CenterLine.Offset(this.Thickness / 2, false);
             var e2 = this.CenterLine.Offset(this.Thickness / 2, true);

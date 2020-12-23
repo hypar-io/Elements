@@ -61,7 +61,7 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            var rep = (SolidRepresentation)this.Representations[0];
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             rep.SolidOperations.Clear();
             rep.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, false));
         }

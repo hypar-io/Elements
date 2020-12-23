@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 
 namespace Elements
@@ -8,7 +10,7 @@ namespace Elements
         /// <summary>
         /// The geometric element's representation.
         /// </summary>
-        [Obsolete("Geometric elements can now store multiple representations. Use representations instead.")]
+        [Obsolete("Geometric elements can now store multiple representations. Use Representations instead.")]
         public SolidRepresentation Representation
         {
             // Geometric elements previously only stored one type of representation,
@@ -18,18 +20,7 @@ namespace Elements
             // a representation we do similarly, setting it to the first representation.
             get
             {
-                if (this.Representations != null && this.Representations.Count >= 1 && this.Representations[0].GetType() == typeof(SolidRepresentation))
-                {
-                    return (SolidRepresentation)this.Representations[0];
-                }
-                return null;
-            }
-            set
-            {
-                if (this.Representations != null && value.GetType() == typeof(SolidRepresentation))
-                {
-                    this.Representations[0] = value;
-                }
+                return this.FirstRepresentationOfType<SolidRepresentation>();
             }
         }
 
@@ -58,6 +49,27 @@ namespace Elements
             }
 
             return new ElementInstance(this, transform, name, Guid.NewGuid());
+        }
+
+        /// <summary>
+        /// Get the first representation of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of the representation.</typeparam>
+        /// <returns>A representation or null if no representations of the specified type exist.</returns>
+        public T FirstRepresentationOfType<T>()
+        {
+            var reps = this.Representations.OfType<T>();
+            return reps.Count() > 0 ? (T)reps.First() : default(T);
+        }
+
+        /// <summary>
+        /// Get all representations of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of the representation.</typeparam>
+        /// <returns>A collection of representations</returns>
+        public List<T> AllRepresentationsOfType<T>()
+        {
+            return this.Representations.OfType<T>().ToList();
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Elements.Serialization.IFC
             }
             else
             {
-                foreach (var op in ((SolidRepresentation)geoElement.Representations[0]).SolidOperations)
+                foreach (var op in geoElement.FirstRepresentationOfType<SolidRepresentation>().SolidOperations)
                 {
                     if (op is Sweep)
                     {
