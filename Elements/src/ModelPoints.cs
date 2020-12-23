@@ -17,7 +17,15 @@ namespace Elements
         /// <summary>
         /// The locations of the points.
         /// </summary>
-        public IList<Vector3> Locations { get; set; }
+        [JsonIgnore]
+        public IList<Vector3> Locations
+        {
+            get
+            {
+                var rep = FirstRepresentationOfType<PointsRepresentation>();
+                return rep != null ? rep.Points : null;
+            }
+        }
 
         /// <summary>
         /// Create a collection of points.
@@ -35,12 +43,10 @@ namespace Elements
                           bool isElementDefinition = false,
                           Guid id = default(Guid),
                           string name = null) : base(transform != null ? transform : new Transform(),
-                                                     new[] { new PointsRepresentation(locations, material != null ? material : BuiltInMaterials.Points) },
+                                                     new[] { new PointsRepresentation(locations != null ? locations : new List<Vector3>(), material != null ? material : BuiltInMaterials.Points) },
                                                      isElementDefinition,
                                                      id != default(Guid) ? id : Guid.NewGuid(),
                                                      name)
-        {
-            this.Locations = locations != null ? locations : new List<Vector3>();
-        }
+        { }
     }
 }
