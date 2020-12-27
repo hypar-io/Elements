@@ -32,6 +32,10 @@
         "EndSetback": {
             "description": "The amount to set back the resulting solid from the end of the curve.",
             "type": "number"
+        },
+        "ProfileRotation": {
+            "description": "The rotation of the profile around the sweep's curve.",
+            "type": "number"
         }
     },
     "additionalProperties": false
