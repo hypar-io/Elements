@@ -82,8 +82,6 @@ namespace Elements
                                                      id == null ? Guid.NewGuid() : id,
                                                      name)
         {
-            this.mesh = new Mesh();
-
             this.Origin = origin;
             this.Elevations = elevations;
             this.RowWidth = (int)Math.Sqrt(elevations.Length);
@@ -93,6 +91,9 @@ namespace Elements
             this.mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
+
+            var rep = FirstRepresentationOfType<MeshRepresentation>();
+            rep.Mesh = this.Mesh;
         }
 
         [JsonConstructor]
@@ -119,6 +120,9 @@ namespace Elements
             this.mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
+
+            var rep = FirstRepresentationOfType<MeshRepresentation>();
+            rep.Mesh = this.Mesh;
         }
 
         private static (Mesh Mesh, double MaxElevation, double MinElevation) GenerateMesh(

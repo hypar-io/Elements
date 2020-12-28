@@ -17,6 +17,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a color from an array.
+        /// </summary>
+        /// <param name="c"></param>
+        public static Color FromArray(double[] c)
+        {
+            if (c.Length != 4)
+            {
+                throw new Exception($"A color cannot be created from an array of {c.Length} numbers.");
+            }
+            return new Color(c[0], c[1], c[2], c[3]);
+        }
+
+        /// <summary>
         /// Is this color equal to the provided color?
         /// </summary>
         /// <param name="obj"></param>

@@ -360,5 +360,26 @@ namespace Elements.Tests
                 Assert.True(includes == pt.Value);
             }
         }
+
+        [Fact]
+        public void SerializesAndDeserializesUsingConverter()
+        {
+            var v1 = new Vector3(0, 0, 0);
+            var v2 = new Vector3(1, 2, 3);
+            var v3 = new Vector3(5, 5, 5);
+            var pline = new Polyline(new[] { v1, v2, v3 });
+            var modelCurve = new ModelCurve(pline);
+            var model = new Model();
+            model.AddElement(modelCurve);
+            var json = model.ToJson(true);
+            Console.WriteLine(json);
+
+            var newModel = Model.FromJson(json);
+            var newModelCurve = model.GetElementOfType<ModelCurve>(modelCurve.Id);
+            var newVertices = ((Polyline)newModelCurve.Curve).Vertices;
+            Assert.Equal(newVertices[0], v1);
+            Assert.Equal(newVertices[1], v2);
+            Assert.Equal(newVertices[2], v3);
+        }
     }
 }

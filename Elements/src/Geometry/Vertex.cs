@@ -1,7 +1,20 @@
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace Elements.Geometry
 {
     public partial class Vertex
     {
+        // The associated triangles are not defined on the 
+        // auto-generated vertex class because doing so causes a circular reference
+        // during serialization.
+
+        /// <summary>The triangles associated with this vertex.</summary>
+        [Newtonsoft.Json.JsonProperty("Triangles", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [JsonIgnore]
+        public IList<Triangle> Triangles { get; set; } = new List<Triangle>();
+
         /// <summary>
         /// Create a vertex.
         /// </summary>

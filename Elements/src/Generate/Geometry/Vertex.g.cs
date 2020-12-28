@@ -25,12 +25,12 @@ namespace Elements.Geometry
     public partial class Vertex 
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Vertex(Vector3 @position, Vector3 @normal, Color @color, int @index, UV @uV, IList<Triangle> @triangles)
+        public Vertex(Vector3 @position, Vector3 @normal, Color @color, int @index, UV @uV)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Vertex>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @position, @normal, @color, @index, @uV, @triangles});
+                validator.PreConstruct(new object[]{ @position, @normal, @color, @index, @uV});
             }
         
             this.Position = @position;
@@ -38,7 +38,6 @@ namespace Elements.Geometry
             this.Color = @color;
             this.Index = @index;
             this.UV = @uV;
-            this.Triangles = @triangles;
             
             if(validator != null)
             {
@@ -67,11 +66,6 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonProperty("UV", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public UV UV { get; set; } = new UV();
-    
-        /// <summary>The triangles associated with this vertex.</summary>
-        [Newtonsoft.Json.JsonProperty("Triangles", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public IList<Triangle> Triangles { get; set; } = new List<Triangle>();
     
     
     }
