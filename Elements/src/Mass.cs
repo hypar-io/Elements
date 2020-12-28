@@ -16,16 +16,39 @@ namespace Elements
     public class Mass : GeometricElement
     {
         private Profile profile;
+        private double height;
 
         /// <summary>
         /// The profile of the mass.
         /// </summary>
-        public Profile Profile { get; set; }
+        public Profile Profile
+        {
+            get => profile;
+            set
+            {
+                if (profile != value)
+                {
+                    profile = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The height of the mass.
         /// </summary>
-        public double Height { get; set; }
+        public double Height
+        {
+            get => height;
+            set
+            {
+                if (height != value)
+                {
+                    height = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The thickness of the mass' extrusion.
@@ -94,6 +117,7 @@ namespace Elements
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Profile = this.Profile;
             extrude.Height = this.Height;
         }
     }

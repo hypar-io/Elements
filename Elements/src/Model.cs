@@ -71,6 +71,16 @@ namespace Elements
                     if (!this.Elements.ContainsKey(e.Id))
                     {
                         this.Elements.Add(e.Id, e);
+
+                        element.PropertyChanged += (target, args) =>
+                        {
+                            var geom = element as GeometricElement;
+                            if (geom != null)
+                            {
+                                geom.UpdateRepresentations();
+                                AddElement(geom);
+                            }
+                        };
                     }
                 }
             }
@@ -80,10 +90,6 @@ namespace Elements
                 {
                     this.Elements.Add(element.Id, element);
 
-                    // Whenever a property is changed on an element
-                    // we do an additional add here to ensure that 
-                    // any properties of element types were subsequently 
-                    // added to the model.
                     element.PropertyChanged += (target, args) =>
                     {
                         var geom = element as GeometricElement;
