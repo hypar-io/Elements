@@ -22,11 +22,8 @@ namespace Elements.Geometry
 
     /// <summary>A line between two points. The line is parameterized from 0.0(start) to 1.0(end)</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Line : Curve, System.ComponentModel.INotifyPropertyChanged
+    public partial class Line : Curve
     {
-        private Vector3 _start;
-        private Vector3 _end;
-    
         [Newtonsoft.Json.JsonConstructor]
         public Line(Vector3 @start, Vector3 @end)
             : base()
@@ -48,43 +45,12 @@ namespace Elements.Geometry
     
         /// <summary>The start of the line.</summary>
         [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Start
-        {
-            get { return _start; }
-            set 
-            {
-                if (_start != value)
-                {
-                    _start = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public Vector3 Start { get; set; }
     
         /// <summary>The end of the line.</summary>
         [Newtonsoft.Json.JsonProperty("End", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 End
-        {
-            get { return _end; }
-            set 
-            {
-                if (_end != value)
-                {
-                    _end = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public Vector3 End { get; set; }
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

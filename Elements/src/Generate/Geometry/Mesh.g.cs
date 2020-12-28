@@ -22,11 +22,8 @@ namespace Elements.Geometry
 
     /// <summary>A triangulated mesh.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Mesh : System.ComponentModel.INotifyPropertyChanged
+    public partial class Mesh 
     {
-        private IList<Vertex> _vertices;
-        private IList<Triangle> _triangles;
-    
         [Newtonsoft.Json.JsonConstructor]
         public Mesh(IList<Vertex> @vertices, IList<Triangle> @triangles)
         {
@@ -47,43 +44,12 @@ namespace Elements.Geometry
     
         /// <summary>The mesh' vertices.</summary>
         [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public IList<Vertex> Vertices
-        {
-            get { return _vertices; }
-            set 
-            {
-                if (_vertices != value)
-                {
-                    _vertices = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public IList<Vertex> Vertices { get; set; }
     
         /// <summary>The mesh' triangles.</summary>
         [Newtonsoft.Json.JsonProperty("Triangles", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public IList<Triangle> Triangles
-        {
-            get { return _triangles; }
-            set 
-            {
-                if (_triangles != value)
-                {
-                    _triangles = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public IList<Triangle> Triangles { get; set; }
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

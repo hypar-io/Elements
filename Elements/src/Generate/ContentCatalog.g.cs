@@ -23,10 +23,8 @@ namespace Elements
     /// <summary>A collection of ContentElements</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class ContentCatalog : Element, System.ComponentModel.INotifyPropertyChanged
+    public partial class ContentCatalog : Element
     {
-        private IList<ContentElement> _content = new List<ContentElement>();
-    
         [Newtonsoft.Json.JsonConstructor]
         public ContentCatalog(IList<ContentElement> @content, System.Guid @id, string @name)
             : base(id, name)
@@ -48,28 +46,8 @@ namespace Elements
         /// <summary>The content elements in this catalog.</summary>
         [Newtonsoft.Json.JsonProperty("Content", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public IList<ContentElement> Content
-        {
-            get { return _content; }
-            set 
-            {
-                if (_content != value)
-                {
-                    _content = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public IList<ContentElement> Content { get; set; } = new List<ContentElement>();
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

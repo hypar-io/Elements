@@ -22,11 +22,8 @@ namespace Elements.Properties
 
     /// <summary>A property with a numeric value.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class NumericProperty : System.ComponentModel.INotifyPropertyChanged
+    public partial class NumericProperty 
     {
-        private double _value;
-        private NumericPropertyUnitType _unitType;
-    
         [Newtonsoft.Json.JsonConstructor]
         public NumericProperty(double @value, NumericPropertyUnitType @unitType)
         {
@@ -47,44 +44,13 @@ namespace Elements.Properties
     
         /// <summary>The property's value</summary>
         [Newtonsoft.Json.JsonProperty("Value", Required = Newtonsoft.Json.Required.Always)]
-        public double Value
-        {
-            get { return _value; }
-            set 
-            {
-                if (_value != value)
-                {
-                    _value = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public double Value { get; set; }
     
         /// <summary>The property's unit type.</summary>
         [Newtonsoft.Json.JsonProperty("UnitType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public NumericPropertyUnitType UnitType
-        {
-            get { return _unitType; }
-            set 
-            {
-                if (_unitType != value)
-                {
-                    _unitType = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public NumericPropertyUnitType UnitType { get; set; }
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

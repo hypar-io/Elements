@@ -22,10 +22,8 @@ namespace Elements.Geometry
 
     /// <summary>A column-ordered 4x3 matrix.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Matrix : System.ComponentModel.INotifyPropertyChanged
+    public partial class Matrix 
     {
-        private IList<double> _components = new List<double>();
-    
         [Newtonsoft.Json.JsonConstructor]
         public Matrix(IList<double> @components)
         {
@@ -48,28 +46,8 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(12)]
         [System.ComponentModel.DataAnnotations.MaxLength(12)]
-        public IList<double> Components
-        {
-            get { return _components; }
-            set 
-            {
-                if (_components != value)
-                {
-                    _components = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public IList<double> Components { get; set; } = new List<double>();
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

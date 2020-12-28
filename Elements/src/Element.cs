@@ -20,16 +20,7 @@ namespace Elements
     [JsonInheritanceAttribute("Elements.Geometry.CurveRepresentation", typeof(Elements.Geometry.CurveRepresentation))]
     [JsonInheritanceAttribute("Elements.Geometry.PointsRepresentation", typeof(Elements.Geometry.PointsRepresentation))]
     [JsonInheritanceAttribute("Elements.Geometry.MeshRepresentation", typeof(Elements.Geometry.MeshRepresentation))]
-    public abstract partial class Element : INotifyPropertyChanged
+    public abstract partial class Element
     {
-
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     }
 }

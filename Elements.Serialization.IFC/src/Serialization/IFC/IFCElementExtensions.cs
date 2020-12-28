@@ -44,8 +44,6 @@ namespace Elements.Serialization.IFC
                 trans = geoElement.Transform;
             }
 
-            geoElement.UpdateRepresentations();
-
             var localPlacement = trans.ToIfcLocalPlacement(doc);
             doc.AddEntity(localPlacement);
 

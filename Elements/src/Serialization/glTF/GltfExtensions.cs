@@ -1069,8 +1069,6 @@ namespace Elements.Serialization.glTF
                                                            ref int meshId,
                                                            GeometricElement geometricElement)
         {
-            geometricElement.UpdateRepresentations();
-
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing 
             // is to ensure that openings have some geometry that will be used 

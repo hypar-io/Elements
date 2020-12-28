@@ -3,6 +3,7 @@ using System;
 using Xunit;
 using System.Linq;
 using Elements.Serialization.glTF;
+using Elements.Geometry.Solids;
 
 namespace Elements.Tests
 {
@@ -113,6 +114,10 @@ namespace Elements.Tests
             var newProfile = new Profile(new Circle(Vector3.Origin).ToPolygon());
             mass.Profile = newProfile;
             Assert.True(Model.Elements.ContainsKey(newProfile.Id));
+            Assert.Same(newProfile, ((Extrude)mass.FirstRepresentationOfType<SolidRepresentation>().SolidOperations[0]).Profile);
+
+            mass.Height = 5;
+            Assert.Equal(5, ((Extrude)mass.FirstRepresentationOfType<SolidRepresentation>().SolidOperations[0]).Height);
         }
     }
 }

@@ -22,13 +22,8 @@ namespace Elements.Geometry
 
     /// <summary>An arc defined by a CCW rotation around a center between a start angle and an end angle.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Arc : Curve, System.ComponentModel.INotifyPropertyChanged
+    public partial class Arc : Curve
     {
-        private Vector3 _center;
-        private double _radius;
-        private double _startAngle;
-        private double _endAngle;
-    
         [Newtonsoft.Json.JsonConstructor]
         public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle)
             : base()
@@ -52,76 +47,23 @@ namespace Elements.Geometry
     
         /// <summary>The center of the arc.</summary>
         [Newtonsoft.Json.JsonProperty("Center", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Center
-        {
-            get { return _center; }
-            set 
-            {
-                if (_center != value)
-                {
-                    _center = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public Vector3 Center { get; set; }
     
         /// <summary>The radius of the arc.</summary>
         [Newtonsoft.Json.JsonProperty("Radius", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
-        public double Radius
-        {
-            get { return _radius; }
-            set 
-            {
-                if (_radius != value)
-                {
-                    _radius = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public double Radius { get; set; }
     
         /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
         [Newtonsoft.Json.JsonProperty("StartAngle", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
-        public double StartAngle
-        {
-            get { return _startAngle; }
-            set 
-            {
-                if (_startAngle != value)
-                {
-                    _startAngle = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public double StartAngle { get; set; }
     
         /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
         [Newtonsoft.Json.JsonProperty("EndAngle", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
-        public double EndAngle
-        {
-            get { return _endAngle; }
-            set 
-            {
-                if (_endAngle != value)
-                {
-                    _endAngle = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public double EndAngle { get; set; }
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

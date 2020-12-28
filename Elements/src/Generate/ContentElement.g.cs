@@ -23,13 +23,8 @@ namespace Elements
     /// <summary>An element representing user content.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class ContentElement : GeometricElement, System.ComponentModel.INotifyPropertyChanged
+    public partial class ContentElement : GeometricElement
     {
-        private string _gltfLocation;
-        private BBox3 _boundingBox;
-        private double _gltfScaleToMeters;
-        private Vector3 _sourceDirection;
-    
         [Newtonsoft.Json.JsonConstructor]
         public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name)
             : base(transform, representations, isElementDefinition, id, name)
@@ -53,63 +48,19 @@ namespace Elements
     
         /// <summary>The URI of the gltf for this element.</summary>
         [Newtonsoft.Json.JsonProperty("gltfLocation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string GltfLocation
-        {
-            get { return _gltfLocation; }
-            set 
-            {
-                if (_gltfLocation != value)
-                {
-                    _gltfLocation = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public string GltfLocation { get; set; }
     
         /// <summary>The bounding box of the content.</summary>
         [Newtonsoft.Json.JsonProperty("Bounding Box", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public BBox3 BoundingBox
-        {
-            get { return _boundingBox; }
-            set 
-            {
-                if (_boundingBox != value)
-                {
-                    _boundingBox = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public BBox3 BoundingBox { get; set; }
     
         /// <summary>The scale needed to convert the gltf to meters.</summary>
         [Newtonsoft.Json.JsonProperty("Gltf Scale to Meters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double GltfScaleToMeters
-        {
-            get { return _gltfScaleToMeters; }
-            set 
-            {
-                if (_gltfScaleToMeters != value)
-                {
-                    _gltfScaleToMeters = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public double GltfScaleToMeters { get; set; }
     
         /// <summary>A vector indicating the direction the source object was originally facing.</summary>
         [Newtonsoft.Json.JsonProperty("SourceDirection", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Vector3 SourceDirection
-        {
-            get { return _sourceDirection; }
-            set 
-            {
-                if (_sourceDirection != value)
-                {
-                    _sourceDirection = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public Vector3 SourceDirection { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -120,15 +71,6 @@ namespace Elements
             set { _additionalProperties = value; }
         }
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

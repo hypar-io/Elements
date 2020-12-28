@@ -71,16 +71,6 @@ namespace Elements
                     if (!this.Elements.ContainsKey(e.Id))
                     {
                         this.Elements.Add(e.Id, e);
-
-                        element.PropertyChanged += (target, args) =>
-                        {
-                            var geom = element as GeometricElement;
-                            if (geom != null)
-                            {
-                                geom.UpdateRepresentations();
-                                AddElement(geom);
-                            }
-                        };
                     }
                 }
             }
@@ -89,18 +79,25 @@ namespace Elements
                 if (!this.Elements.ContainsKey(element.Id))
                 {
                     this.Elements.Add(element.Id, element);
-
-                    element.PropertyChanged += (target, args) =>
-                    {
-                        var geom = element as GeometricElement;
-                        if (geom != null)
-                        {
-                            geom.UpdateRepresentations();
-                            AddElement(geom);
-                        }
-                    };
                 }
             }
+
+            element.PropertyChanged += (target, args) =>
+            {
+                var geom = element as GeometricElement;
+                if (geom != null)
+                {
+                    geom.UpdateRepresentations();
+                }
+
+                // Because serialization is order-dependent,
+                // we remove the element, then add it back
+                // after a property change to ensure that 
+                // all sub-elements are available before the
+                // element itself.
+                this.Elements.Remove(element.Id);
+                this.AddElement(element);
+            };
         }
 
         /// <summary>

@@ -23,10 +23,8 @@ namespace Elements.Geometry
     /// <summary>The representation of an element.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Representation : Element, System.ComponentModel.INotifyPropertyChanged
+    public partial class Representation : Element
     {
-        private Material _material;
-    
         [Newtonsoft.Json.JsonConstructor]
         public Representation(Material @material, System.Guid @id, string @name)
             : base(id, name)
@@ -47,28 +45,8 @@ namespace Elements.Geometry
     
         /// <summary>The element's material.</summary>
         [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Material Material
-        {
-            get { return _material; }
-            set 
-            {
-                if (_material != value)
-                {
-                    _material = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public Material Material { get; set; }
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

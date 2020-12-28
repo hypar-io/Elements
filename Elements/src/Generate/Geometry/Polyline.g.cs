@@ -22,10 +22,8 @@ namespace Elements.Geometry
 
     /// <summary>A continuous set of lines.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Polyline : Curve, System.ComponentModel.INotifyPropertyChanged
+    public partial class Polyline : Curve
     {
-        private IList<Vector3> _vertices = new List<Vector3>();
-    
         [Newtonsoft.Json.JsonConstructor]
         public Polyline(IList<Vector3> @vertices)
             : base()
@@ -48,28 +46,8 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(2)]
-        public IList<Vector3> Vertices
-        {
-            get { return _vertices; }
-            set 
-            {
-                if (_vertices != value)
-                {
-                    _vertices = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public IList<Vector3> Vertices { get; set; } = new List<Vector3>();
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

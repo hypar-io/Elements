@@ -23,12 +23,8 @@ namespace Elements
     /// <summary>An element with a geometric representation.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class GeometricElement : Element, System.ComponentModel.INotifyPropertyChanged
+    public partial class GeometricElement : Element
     {
-        private Transform _transform;
-        private IList<Representation> _representations = new List<Representation>();
-        private bool _isElementDefinition = false;
-    
         [Newtonsoft.Json.JsonConstructor]
         public GeometricElement(Transform @transform, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name)
             : base(id, name)
@@ -51,59 +47,17 @@ namespace Elements
     
         /// <summary>The element's transform.</summary>
         [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Transform Transform
-        {
-            get { return _transform; }
-            set 
-            {
-                if (_transform != value)
-                {
-                    _transform = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public Transform Transform { get; set; }
     
         /// <summary>The element's representation.</summary>
         [Newtonsoft.Json.JsonProperty("Representations", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public IList<Representation> Representations
-        {
-            get { return _representations; }
-            set 
-            {
-                if (_representations != value)
-                {
-                    _representations = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public IList<Representation> Representations { get; set; } = new List<Representation>();
     
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
         [Newtonsoft.Json.JsonProperty("IsElementDefinition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool IsElementDefinition
-        {
-            get { return _isElementDefinition; }
-            set 
-            {
-                if (_isElementDefinition != value)
-                {
-                    _isElementDefinition = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public bool IsElementDefinition { get; set; } = false;
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

@@ -396,10 +396,15 @@ namespace Elements.Generate
             var templates = TemplatesPath;
 
             var isStruct = false;
-            if(schema.ExtensionData.ContainsKey(STRUCT_PROPERTY))
+            if (schema.ExtensionData.ContainsKey(STRUCT_PROPERTY))
             {
                 isStruct = (bool)schema.ExtensionData[STRUCT_PROPERTY];
             }
+
+            // A limited set of the solid operation types. This will be used
+            // to add INotifyPropertyChanged logic, so we don't add the
+            // base class SolidOperation, or the Import class.
+            var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina" };
 
             var settings = new CSharpGeneratorSettings()
             {
@@ -409,7 +414,7 @@ namespace Elements.Generate
                 ExcludedTypeNames = excludedTypes == null ? new string[] { } : excludedTypes,
                 TemplateDirectory = templates,
                 GenerateJsonMethods = false,
-                ClassStyle = !isStruct ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
+                ClassStyle = (typeName == "Element" || solidOpTypes.Contains(typeName)) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
                 TypeNameGenerator = new ElementsTypeNameGenerator(),
                 PropertyNameGenerator = new ElementsPropertyNameGenerator(),
             };

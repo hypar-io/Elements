@@ -22,11 +22,8 @@ namespace Elements.Geometry
 
     /// <summary>A profile comprised of an external boundary and one or several holes.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Profile : Element, System.ComponentModel.INotifyPropertyChanged
+    public partial class Profile : Element
     {
-        private Polygon _perimeter;
-        private IList<Polygon> _voids;
-    
         [Newtonsoft.Json.JsonConstructor]
         public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id, string @name)
             : base(id, name)
@@ -48,43 +45,12 @@ namespace Elements.Geometry
     
         /// <summary>The perimeter of the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Polygon Perimeter
-        {
-            get { return _perimeter; }
-            set 
-            {
-                if (_perimeter != value)
-                {
-                    _perimeter = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public Polygon Perimeter { get; set; }
     
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
         [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.AllowNull)]
-        public IList<Polygon> Voids
-        {
-            get { return _voids; }
-            set 
-            {
-                if (_voids != value)
-                {
-                    _voids = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public IList<Polygon> Voids { get; set; }
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }

@@ -22,10 +22,8 @@ namespace Elements.Geometry
 
     /// <summary>A representation containing a mesh.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class MeshRepresentation : Representation, System.ComponentModel.INotifyPropertyChanged
+    public partial class MeshRepresentation : Representation
     {
-        private Mesh _mesh = new Mesh();
-    
         [Newtonsoft.Json.JsonConstructor]
         public MeshRepresentation(Mesh @mesh, Material @material, System.Guid @id, string @name)
             : base(material, id, name)
@@ -47,28 +45,8 @@ namespace Elements.Geometry
         /// <summary>A mesh.</summary>
         [Newtonsoft.Json.JsonProperty("Mesh", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Mesh Mesh
-        {
-            get { return _mesh; }
-            set 
-            {
-                if (_mesh != value)
-                {
-                    _mesh = value; 
-                    RaisePropertyChanged();
-                }
-            }
-        }
+        public Mesh Mesh { get; set; } = new Mesh();
     
-    
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-        }
     
     }
 }
