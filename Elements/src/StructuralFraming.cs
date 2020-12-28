@@ -13,14 +13,7 @@ namespace Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        public Curve Curve
-        {
-            get
-            {
-                var rep = this.FirstRepresentationOfType<CurveRepresentation>();
-                return rep != null ? rep.Curve : null;
-            }
-        }
+        public Curve Curve { get; set; }
 
         /// <summary>
         /// The setback of the framing's extrusion at the start.
@@ -129,6 +122,7 @@ namespace Elements
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             var sweep = (Sweep)rep.SolidOperations[0];
+            sweep.Curve = this.Curve;
             sweep.StartSetback = this.StartSetback;
             sweep.EndSetback = this.EndSetback;
             sweep.ProfileRotation = this.Rotation;
