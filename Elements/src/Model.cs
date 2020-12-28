@@ -79,6 +79,20 @@ namespace Elements
                 if (!this.Elements.ContainsKey(element.Id))
                 {
                     this.Elements.Add(element.Id, element);
+
+                    // Whenever a property is changed on an element
+                    // we do an additional add here to ensure that 
+                    // any properties of element types were subsequently 
+                    // added to the model.
+                    // element.PropertyChanged += (target, args) =>
+                    // {
+                    //     var geom = element as GeometricElement;
+                    //     if (geom != null)
+                    //     {
+                    //         geom.UpdateRepresentations();
+                    //         AddElement(geom);
+                    //     }
+                    // };
                 }
             }
         }
@@ -155,25 +169,7 @@ namespace Elements
         /// </summary>
         public string ToJson(bool indent = false)
         {
-            // Recursively add elements and sub elements in the correct
-            // order for serialization. We do this here because element properties
-            // may have been null when originally added, and we need to ensure
-            // that they have a value if they've been set since.
-            var exportModel = new Model();
-            foreach (var kvp in this.Elements)
-            {
-                // Some elements compute profiles and transforms
-                // during UpdateRepresentation. Call UpdateRepresentation
-                // here to ensure these values are correct in the JSON.
-                if (kvp.Value is GeometricElement)
-                {
-                    ((GeometricElement)kvp.Value).UpdateRepresentations();
-                }
-                exportModel.AddElement(kvp.Value);
-            }
-            exportModel.Transform = this.Transform;
-
-            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, indent ? Formatting.Indented : Formatting.None);
         }
 
         /// <summary>

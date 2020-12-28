@@ -103,6 +103,7 @@ namespace Elements.Generate
         };
 
         private const string NAMESPACE_PROPERTY = "x-namespace";
+        private const string STRUCT_PROPERTY = "x-struct";
         private static string[] _coreTypeNames;
         private static string _templatesPath;
 
@@ -394,12 +395,11 @@ namespace Elements.Generate
         {
             var templates = TemplatesPath;
 
-            var structTypes = new[] { "Color", "Vector3", "BBox3", "UV" };
-
-            // A limited set of the solid operation types. This will be used
-            // to add INotifyPropertyChanged logic, so we don't add the
-            // base class SolidOperation, or the Import class.
-            var solidOpTypes = new[] { "Extrude", "Sweep", "Lamina" };
+            var isStruct = false;
+            if(schema.ExtensionData.ContainsKey(STRUCT_PROPERTY))
+            {
+                isStruct = (bool)schema.ExtensionData[STRUCT_PROPERTY];
+            }
 
             var settings = new CSharpGeneratorSettings()
             {
@@ -409,7 +409,7 @@ namespace Elements.Generate
                 ExcludedTypeNames = excludedTypes == null ? new string[] { } : excludedTypes,
                 TemplateDirectory = templates,
                 GenerateJsonMethods = false,
-                ClassStyle = solidOpTypes.Contains(typeName) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
+                ClassStyle = !isStruct ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
                 TypeNameGenerator = new ElementsTypeNameGenerator(),
                 PropertyNameGenerator = new ElementsPropertyNameGenerator(),
             };
@@ -437,20 +437,31 @@ namespace Elements.Generate
                 };
                 var template = settings.TemplateFactory.CreateTemplate("CSharp", "File", model);
                 var code = template.Render();
-                var fileContents = FileTweaksAndCleanup(typeName, isUserElement, structTypes, code);
+                var fileContents = FileTweaksAndCleanup(typeName, isUserElement, isStruct, code, schema);
                 typeFiles[fileArtifact.TypeName] = fileContents;
             }
 
             return typeFiles;
         }
 
-        private static string FileTweaksAndCleanup(string typeName, bool isUserElement, string[] structTypes, string file)
+        private static string FileTweaksAndCleanup(string typeName, bool isUserElement, bool isStruct, string file, JsonSchema schema)
         {
             // Convert some classes to structs.
-            if (structTypes.Contains(typeName))
+            if (isStruct)
             {
                 file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
             }
+
+            // If a property of the type is a struct,
+            // remove the equality checks before raising property
+            // change notifications. These are incompatible with
+            // structs.
+            foreach(var p in schema.Properties)
+            {
+                var property = p.Value;
+                var propertyIsStruct = (bool)property.ActualSchema.ExtensionData[STRUCT_PROPERTY];
+            }
+
             if (isUserElement)
             {
                 // remove unnecessary imports

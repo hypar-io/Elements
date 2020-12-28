@@ -30,9 +30,9 @@ namespace Elements.Tests
             foreach (var l in p.Segments())
             {
                 var w = new StandardWall(l, 0.1, 3.0, null);
-                w.AddOpening(1, 1, 1, 2, 1.0, 1.0);
-                w.AddOpening(1, 2, 3, 1, 1.0, 1.0);
-                w.AddOpening(Polygon.Ngon(3, 2.0), 8, 2, 1.0, 0.0);
+                w.AddOpening(1, 1, 1, 2, 1.0);
+                w.AddOpening(1, 2, 3, 1, 1.0);
+                w.AddOpening(Polygon.Ngon(3, 2.0), 8, 2, 1.0);
                 this.Model.AddElement(w);
             }
         }

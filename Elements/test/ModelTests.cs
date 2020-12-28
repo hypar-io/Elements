@@ -193,7 +193,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(3);
+            var c = (JObject)elements.Values().ElementAt(5);
 
             // Inject an unknown property.
             c.Property("Curve").AddAfterSelf(new JProperty("Foo", "Bar"));
@@ -214,7 +214,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(3); // the column
+            var c = (JObject)elements.Values().ElementAt(5); // the column
 
             // Remove the Location property
             c.Property("Location").Remove();
@@ -234,7 +234,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(3); // the column
+            var c = (JObject)elements.Values().ElementAt(5); // the column
 
             // Nullify a property.
             c.Property("Location").Value = null;
@@ -258,7 +258,6 @@ namespace Elements.Tests
             var model = new Model();
             model.AddElements(beam, column);
             var json = model.ToJson(true);
-            this._output.WriteLine(json);
 
             // We want to test that unknown element types will still deserialize 
             // to geometric elements.
@@ -266,10 +265,31 @@ namespace Elements.Tests
             json = json.Replace("Elements.Column", "Bar");
 
             var newModel = Model.FromJson(json);
-            Assert.Equal(2, newModel.AllElementsOfType<Material>().Count());
+            Assert.Equal(3, newModel.AllElementsOfType<Material>().Count());
             Assert.Equal(2, newModel.AllElementsOfType<GeometricElement>().Count());
             var modelPath = $"models/geometric_elements.glb";
             newModel.ToGlTF(modelPath, true);
+        }
+
+        [Fact]
+        public void DeserializesSolidOperations()
+        {
+            var profile = new Profile(Polygon.Rectangle(1, 1));
+            var green = new Material("Green", Colors.Green);
+            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), profile, green);
+            var model = new Model();
+            model.AddElements(beam);
+            var json = model.ToJson(true);
+            var newModel = Model.FromJson(json);
+            var newBeam = newModel.GetElementOfType<Beam>(beam.Id);
+            Assert.True(newBeam.FirstRepresentationOfType<SolidRepresentation>().SolidOperations.Count > 0);
+            Assert.NotNull(newBeam.FirstRepresentationOfType<SolidRepresentation>().SolidOperations[0]);
+        }
+
+        [Fact]
+        public void DeserializesOldTopLevelSolidOperations()
+        {
+            throw new NotImplementedException("Finish me!");
         }
 
         private Model QuadPanelModel()
