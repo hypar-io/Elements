@@ -22,8 +22,10 @@ namespace Elements.Geometry
 
     /// <summary>A right-handed coordinate system with +Z up.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Transform 
+    public partial class Transform : System.ComponentModel.INotifyPropertyChanged
     {
+        private Matrix _matrix = new Matrix();
+    
         [Newtonsoft.Json.JsonConstructor]
         public Transform(Matrix @matrix)
         {
@@ -44,8 +46,28 @@ namespace Elements.Geometry
         /// <summary>The transform's matrix.</summary>
         [Newtonsoft.Json.JsonProperty("Matrix", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Matrix Matrix { get; set; } = new Matrix();
+        public Matrix Matrix
+        {
+            get { return _matrix; }
+            set 
+            {
+                if (_matrix != value)
+                {
+                    _matrix = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

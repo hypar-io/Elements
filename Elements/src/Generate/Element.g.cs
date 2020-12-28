@@ -23,8 +23,11 @@ namespace Elements
     /// <summary>A uniquely identifiable element.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Element 
+    public partial class Element : System.ComponentModel.INotifyPropertyChanged
     {
+        private System.Guid _id;
+        private string _name;
+    
         [Newtonsoft.Json.JsonConstructor]
         public Element(System.Guid @id, string @name)
         {
@@ -46,12 +49,43 @@ namespace Elements
         /// <summary>A unique id.</summary>
         [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid Id { get; set; }
+        public System.Guid Id
+        {
+            get { return _id; }
+            set 
+            {
+                if (_id != value)
+                {
+                    _id = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>A name.</summary>
         [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            set 
+            {
+                if (_name != value)
+                {
+                    _name = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

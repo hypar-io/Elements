@@ -31,7 +31,6 @@ namespace Elements.Geometry
         /// <summary>
         /// Get the hash code for the vector.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.ToString().GetHashCode();
@@ -488,11 +487,11 @@ namespace Elements.Geometry
         /// <returns>The string representation of this vector.</returns>
         public override string ToString()
         {
-            return $"X:{this.X.ToString("F4")},Y:{this.Y.ToString("F4")},Z:{this.Z.ToString("F4")}";
+            return $"X:{this.X.ToString("F4")}, Y:{this.Y.ToString("F4")}, Z:{this.Z.ToString("F4")}";
         }
 
         /// <summary>
-        /// Determine whether this vector's components are equal to those of v, within tolerance.
+        /// Determine whether this vector's components are equal to those of v, within Epsilon.
         /// </summary>
         /// <param name="v">The vector to compare.</param>
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>

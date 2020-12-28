@@ -22,8 +22,10 @@ namespace Elements.Geometry
 
     /// <summary>A representation containing a collection of points.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class PointsRepresentation : Representation
+    public partial class PointsRepresentation : Representation, System.ComponentModel.INotifyPropertyChanged
     {
+        private IList<Vector3> _points = new List<Vector3>();
+    
         [Newtonsoft.Json.JsonConstructor]
         public PointsRepresentation(IList<Vector3> @points, Material @material, System.Guid @id, string @name)
             : base(material, id, name)
@@ -45,8 +47,28 @@ namespace Elements.Geometry
         /// <summary>A collection of Points.</summary>
         [Newtonsoft.Json.JsonProperty("Points", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public IList<Vector3> Points { get; set; } = new List<Vector3>();
+        public IList<Vector3> Points
+        {
+            get { return _points; }
+            set 
+            {
+                if (_points != value)
+                {
+                    _points = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

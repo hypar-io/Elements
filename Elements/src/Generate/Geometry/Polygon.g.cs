@@ -22,8 +22,9 @@ namespace Elements.Geometry
 
     /// <summary>A closed planar polygon.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Polygon : Polyline
+    public partial class Polygon : Polyline, System.ComponentModel.INotifyPropertyChanged
     {
+    
         [Newtonsoft.Json.JsonConstructor]
         public Polygon(IList<Vector3> @vertices)
             : base(vertices)
@@ -41,6 +42,15 @@ namespace Elements.Geometry
             }
         }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

@@ -23,8 +23,10 @@ namespace Elements.Geometry.Solids
     /// <summary>A solid operation.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class SolidOperation 
+    public partial class SolidOperation : System.ComponentModel.INotifyPropertyChanged
     {
+        private bool _isVoid = false;
+    
         [Newtonsoft.Json.JsonConstructor]
         public SolidOperation(bool @isVoid)
         {
@@ -44,8 +46,28 @@ namespace Elements.Geometry.Solids
     
         /// <summary>Is the solid operation a void operation?</summary>
         [Newtonsoft.Json.JsonProperty("IsVoid", Required = Newtonsoft.Json.Required.Always)]
-        public bool IsVoid { get; set; } = false;
+        public bool IsVoid
+        {
+            get { return _isVoid; }
+            set 
+            {
+                if (_isVoid != value)
+                {
+                    _isVoid = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

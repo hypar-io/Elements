@@ -22,8 +22,12 @@ namespace Elements
 
     /// <summary>A container of elements.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Model 
+    public partial class Model : System.ComponentModel.INotifyPropertyChanged
     {
+        private Position _origin;
+        private Transform _transform;
+        private System.Collections.Generic.IDictionary<Guid, Element> _elements = new System.Collections.Generic.Dictionary<Guid, Element>();
+    
         [Newtonsoft.Json.JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
@@ -45,18 +49,59 @@ namespace Elements
     
         /// <summary>The origin of the model.</summary>
         [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Obsolete("Use Transform instead.")]
-		public Position Origin { get; set; }
+        public Position Origin
+        {
+            get { return _origin; }
+            set 
+            {
+                if (_origin != value)
+                {
+                    _origin = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The transform of the model.</summary>
         [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Transform Transform { get; set; }
+        public Transform Transform
+        {
+            get { return _transform; }
+            set 
+            {
+                if (_transform != value)
+                {
+                    _transform = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
         [Newtonsoft.Json.JsonProperty("Elements", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
+        public System.Collections.Generic.IDictionary<Guid, Element> Elements
+        {
+            get { return _elements; }
+            set 
+            {
+                if (_elements != value)
+                {
+                    _elements = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

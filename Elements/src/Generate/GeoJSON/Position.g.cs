@@ -22,8 +22,11 @@ namespace Elements.GeoJSON
 
     /// <summary>A position.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Position 
+    public partial class Position : System.ComponentModel.INotifyPropertyChanged
     {
+        private double _latitude;
+        private double _longitude;
+    
         [Newtonsoft.Json.JsonConstructor]
         public Position(double @latitude, double @longitude)
         {
@@ -44,12 +47,43 @@ namespace Elements.GeoJSON
     
         /// <summary>The latitude in decimal degrees.</summary>
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
-        public double Latitude { get; set; }
+        public double Latitude
+        {
+            get { return _latitude; }
+            set 
+            {
+                if (_latitude != value)
+                {
+                    _latitude = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The longitude in decimal degrees.</summary>
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
-        public double Longitude { get; set; }
+        public double Longitude
+        {
+            get { return _longitude; }
+            set 
+            {
+                if (_longitude != value)
+                {
+                    _longitude = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

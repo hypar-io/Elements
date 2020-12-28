@@ -22,8 +22,10 @@ namespace Elements.Geometry
 
     /// <summary>A representation containing a collection of solid operations.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class CurveRepresentation : Representation
+    public partial class CurveRepresentation : Representation, System.ComponentModel.INotifyPropertyChanged
     {
+        private Curve _curve;
+    
         [Newtonsoft.Json.JsonConstructor]
         public CurveRepresentation(Curve @curve, Material @material, System.Guid @id, string @name)
             : base(material, id, name)
@@ -44,8 +46,28 @@ namespace Elements.Geometry
     
         /// <summary>A curve.</summary>
         [Newtonsoft.Json.JsonProperty("Curve", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Curve Curve { get; set; }
+        public Curve Curve
+        {
+            get { return _curve; }
+            set 
+            {
+                if (_curve != value)
+                {
+                    _curve = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

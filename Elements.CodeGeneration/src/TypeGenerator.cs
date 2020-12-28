@@ -452,16 +452,6 @@ namespace Elements.Generate
                 file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
             }
 
-            // If a property of the type is a struct,
-            // remove the equality checks before raising property
-            // change notifications. These are incompatible with
-            // structs.
-            foreach(var p in schema.Properties)
-            {
-                var property = p.Value;
-                var propertyIsStruct = (bool)property.ActualSchema.ExtensionData[STRUCT_PROPERTY];
-            }
-
             if (isUserElement)
             {
                 // remove unnecessary imports

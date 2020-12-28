@@ -22,8 +22,15 @@ namespace Elements.Geometry
 
     /// <summary>A mesh vertex.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Vertex 
+    public partial class Vertex : System.ComponentModel.INotifyPropertyChanged
     {
+        private Vector3 _position;
+        private Vector3 _normal;
+        private Color _color = new Color();
+        private int _index;
+        private UV _uV = new UV();
+        private IList<Triangle> _triangles = new List<Triangle>();
+    
         [Newtonsoft.Json.JsonConstructor]
         public Vertex(Vector3 @position, Vector3 @normal, Color @color, int @index, UV @uV, IList<Triangle> @triangles)
         {
@@ -48,31 +55,106 @@ namespace Elements.Geometry
     
         /// <summary>The vertex's position.</summary>
         [Newtonsoft.Json.JsonProperty("Position", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Position { get; set; }
+        public Vector3 Position
+        {
+            get { return _position; }
+            set 
+            {
+                if (_position != value)
+                {
+                    _position = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The vertex's normal.</summary>
         [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Normal { get; set; }
+        public Vector3 Normal
+        {
+            get { return _normal; }
+            set 
+            {
+                if (_normal != value)
+                {
+                    _normal = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The vertex's color.</summary>
         [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Color Color { get; set; } = new Color();
+        public Color Color
+        {
+            get { return _color; }
+            set 
+            {
+                if (_color != value)
+                {
+                    _color = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The index of the vertex within a mesh.</summary>
         [Newtonsoft.Json.JsonProperty("Index", Required = Newtonsoft.Json.Required.Always)]
-        public int Index { get; set; }
+        public int Index
+        {
+            get { return _index; }
+            set 
+            {
+                if (_index != value)
+                {
+                    _index = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The vertex's texture coordinate.</summary>
         [Newtonsoft.Json.JsonProperty("UV", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public UV UV { get; set; } = new UV();
+        public UV UV
+        {
+            get { return _uV; }
+            set 
+            {
+                if (_uV != value)
+                {
+                    _uV = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The triangles associated with this vertex.</summary>
         [Newtonsoft.Json.JsonProperty("Triangles", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public IList<Triangle> Triangles { get; set; } = new List<Triangle>();
+        public IList<Triangle> Triangles
+        {
+            get { return _triangles; }
+            set 
+            {
+                if (_triangles != value)
+                {
+                    _triangles = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

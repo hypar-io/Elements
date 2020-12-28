@@ -22,8 +22,15 @@ namespace Elements
 
     /// <summary>A material.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Material : Element
+    public partial class Material : Element, System.ComponentModel.INotifyPropertyChanged
     {
+        private Color _color = new Color();
+        private double _specularFactor = 0.1D;
+        private double _glossinessFactor = 0.1D;
+        private bool _unlit = false;
+        private string _texture;
+        private bool _doubleSided = false;
+    
         [Newtonsoft.Json.JsonConstructor]
         public Material(Color @color, double @specularFactor, double @glossinessFactor, bool @unlit, string @texture, bool @doubleSided, System.Guid @id, string @name)
             : base(id, name)
@@ -50,30 +57,105 @@ namespace Elements
         /// <summary>The material's color.</summary>
         [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Color Color { get; set; } = new Color();
+        public Color Color
+        {
+            get { return _color; }
+            set 
+            {
+                if (_color != value)
+                {
+                    _color = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The specular factor between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("SpecularFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double SpecularFactor { get; set; } = 0.1D;
+        public double SpecularFactor
+        {
+            get { return _specularFactor; }
+            set 
+            {
+                if (_specularFactor != value)
+                {
+                    _specularFactor = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The glossiness factor between 0.0 and 1.0.</summary>
         [Newtonsoft.Json.JsonProperty("GlossinessFactor", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
-        public double GlossinessFactor { get; set; } = 0.1D;
+        public double GlossinessFactor
+        {
+            get { return _glossinessFactor; }
+            set 
+            {
+                if (_glossinessFactor != value)
+                {
+                    _glossinessFactor = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>Is this material affected by lights?</summary>
         [Newtonsoft.Json.JsonProperty("Unlit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool Unlit { get; set; } = false;
+        public bool Unlit
+        {
+            get { return _unlit; }
+            set 
+            {
+                if (_unlit != value)
+                {
+                    _unlit = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>A relative file path to an image file to be used as a texture.</summary>
         [Newtonsoft.Json.JsonProperty("Texture", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Texture { get; set; }
+        public string Texture
+        {
+            get { return _texture; }
+            set 
+            {
+                if (_texture != value)
+                {
+                    _texture = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>Is this material to be rendered from both sides?</summary>
         [Newtonsoft.Json.JsonProperty("DoubleSided", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool DoubleSided { get; set; } = false;
+        public bool DoubleSided
+        {
+            get { return _doubleSided; }
+            set 
+            {
+                if (_doubleSided != value)
+                {
+                    _doubleSided = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

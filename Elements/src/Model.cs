@@ -84,15 +84,15 @@ namespace Elements
                     // we do an additional add here to ensure that 
                     // any properties of element types were subsequently 
                     // added to the model.
-                    // element.PropertyChanged += (target, args) =>
-                    // {
-                    //     var geom = element as GeometricElement;
-                    //     if (geom != null)
-                    //     {
-                    //         geom.UpdateRepresentations();
-                    //         AddElement(geom);
-                    //     }
-                    // };
+                    element.PropertyChanged += (target, args) =>
+                    {
+                        var geom = element as GeometricElement;
+                        if (geom != null)
+                        {
+                            geom.UpdateRepresentations();
+                            AddElement(geom);
+                        }
+                    };
                 }
             }
         }

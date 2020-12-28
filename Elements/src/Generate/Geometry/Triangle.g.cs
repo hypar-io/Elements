@@ -22,8 +22,11 @@ namespace Elements.Geometry
 
     /// <summary>A mesh triangle.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Triangle 
+    public partial class Triangle : System.ComponentModel.INotifyPropertyChanged
     {
+        private IList<Vertex> _vertices = new List<Vertex>();
+        private Vector3 _normal;
+    
         [Newtonsoft.Json.JsonConstructor]
         public Triangle(IList<Vertex> @vertices, Vector3 @normal)
         {
@@ -45,12 +48,43 @@ namespace Elements.Geometry
         /// <summary>The triangle's vertices.</summary>
         [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public IList<Vertex> Vertices { get; set; } = new List<Vertex>();
+        public IList<Vertex> Vertices
+        {
+            get { return _vertices; }
+            set 
+            {
+                if (_vertices != value)
+                {
+                    _vertices = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
         /// <summary>The triangle's normal.</summary>
         [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Normal { get; set; }
+        public Vector3 Normal
+        {
+            get { return _normal; }
+            set 
+            {
+                if (_normal != value)
+                {
+                    _normal = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }

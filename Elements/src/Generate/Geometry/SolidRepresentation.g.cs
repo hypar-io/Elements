@@ -22,8 +22,10 @@ namespace Elements.Geometry
 
     /// <summary>A representation containing a collection of solids.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class SolidRepresentation : Representation
+    public partial class SolidRepresentation : Representation, System.ComponentModel.INotifyPropertyChanged
     {
+        private IList<SolidOperation> _solidOperations = new List<SolidOperation>();
+    
         [Newtonsoft.Json.JsonConstructor]
         public SolidRepresentation(IList<SolidOperation> @solidOperations, Material @material, System.Guid @id, string @name)
             : base(material, id, name)
@@ -45,8 +47,28 @@ namespace Elements.Geometry
         /// <summary>A collection of solids.</summary>
         [Newtonsoft.Json.JsonProperty("SolidOperations", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
+        public IList<SolidOperation> SolidOperations
+        {
+            get { return _solidOperations; }
+            set 
+            {
+                if (_solidOperations != value)
+                {
+                    _solidOperations = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
     
+    
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
     
     }
 }
