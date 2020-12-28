@@ -89,11 +89,10 @@ namespace Elements
         /// <param name="x">The distance to the center of the opening along the center line of the wall.</param>
         /// <param name="y">The height to the center of the opening along the center line of the wall.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
-        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0)
         {
             var openingTransform = GetOpeningTransform(x, y);
-            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, openingTransform);
+            var o = new Opening(Polygon.Rectangle(width, height), depthFront, openingTransform);
             this.Openings.Add(o);
             return o;
         }
@@ -105,11 +104,10 @@ namespace Elements
         /// <param name="x">The distance to the origin of the perimeter opening along the center line of the wall.</param>
         /// <param name="y">The height to the origin of the perimeter along the center line of the wall.</param>
         /// <param name="depthFront">The depth of the opening along the opening's +Z axis.</param>
-        /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
-        public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
+        public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0)
         {
             var openingTransform = GetOpeningTransform(x, y);
-            var o = new Opening(perimeter, depthFront, depthBack, openingTransform);
+            var o = new Opening(perimeter, depthFront, openingTransform);
             this.Openings.Add(o);
             return o;
         }

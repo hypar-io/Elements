@@ -33,6 +33,7 @@ namespace Elements
         /// <summary>
         /// The depth of the opening along the opening's -Z axis.
         /// </summary>
+        [Obsolete("Describe the full depth of the opening using DepthFront.")]
         public double DepthBack { get; set; }
 
         /// <summary>
@@ -41,7 +42,6 @@ namespace Elements
         [JsonConstructor]
         public Opening(Polygon perimeter,
                        double depthFront = 1.0,
-                       double depthBack = 1.0,
                        Transform transform = null,
                        IList<Representation> representations = null,
                        bool isElementDefinition = false,
@@ -53,8 +53,10 @@ namespace Elements
                                                   name)
         {
             this.Perimeter = perimeter;
-            this.DepthBack = depthBack;
             this.DepthFront = depthFront;
+
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+            rep.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Vector3.ZAxis, true));
         }
 
         /// <summary>
@@ -63,15 +65,9 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-            rep.SolidOperations.Clear();
-            if (this.DepthFront > 0)
-            {
-                rep.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Vector3.ZAxis, true));
-            }
-            if (this.DepthBack > 0)
-            {
-                rep.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, Vector3.ZAxis.Negate(), true));
-            }
+            var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Profile = this.Perimeter;
+            extrude.Height = this.DepthFront;
         }
     }
 }
