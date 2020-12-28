@@ -10,30 +10,91 @@ namespace Elements
     /// </summary>
     public abstract class StructuralFraming : GeometricElement
     {
+        private Curve curve;
+        private double startSetback;
+        private double endSetback;
+        private Profile profile;
+        private double rotation;
+
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        public Curve Curve { get; set; }
+        public Curve Curve
+        {
+            get => curve;
+            set
+            {
+                if (curve != value)
+                {
+                    curve = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The setback of the framing's extrusion at the start.
         /// </summary>
-        public double StartSetback { get; set; }
+        public double StartSetback
+        {
+            get => startSetback;
+            set
+            {
+                if (startSetback != value)
+                {
+                    startSetback = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The setback of the framing's extrusion at the end.
         /// </summary>
-        public double EndSetback { get; set; }
+        public double EndSetback
+        {
+            get => endSetback;
+            set
+            {
+                if (endSetback != value)
+                {
+                    endSetback = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The structural framing's profile.
         /// </summary>
-        public Profile Profile { get; set; }
+        public Profile Profile
+        {
+            get => profile;
+            set
+            {
+                if (profile != value)
+                {
+                    profile = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The profile rotation around the center curve of the beam in degrees.
         /// </summary>
-        public double Rotation { get; set; }
+        public double Rotation
+        {
+            get => rotation;
+            set
+            {
+                if (rotation != value)
+                {
+                    rotation = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Construct a beam.
@@ -83,6 +144,7 @@ namespace Elements
                                    double endSetback,
                                    double rotation)
         {
+            this.Curve = curve;
             var l = this.Curve.Length();
             if (startSetback > l || endSetback > l)
             {

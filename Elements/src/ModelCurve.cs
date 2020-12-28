@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -14,16 +13,21 @@ namespace Elements
     [UserElement]
     public class ModelCurve : GeometricElement
     {
+        private Curve curve;
+
         /// <summary>
         /// The curve.
         /// </summary>
-        [JsonIgnore]
         public Curve Curve
         {
-            get
+            get => curve;
+            set
             {
-                var rep = this.FirstRepresentationOfType<CurveRepresentation>();
-                return rep != null ? rep.Curve : null;
+                if (curve != value)
+                {
+                    curve = value;
+                    RaisePropertyChanged();
+                }
             }
         }
 
@@ -49,7 +53,18 @@ namespace Elements
                                                      isElementDefinition,
                                                      id != default(Guid) ? id : Guid.NewGuid(),
                                                      name)
-        { }
+        {
+            this.Curve = curve;
+        }
+
+        /// <summary>
+        /// Update the model curve's representations.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            var rep = FirstRepresentationOfType<CurveRepresentation>();
+            rep.Curve = this.Curve;
+        }
     }
 
     /// <summary>

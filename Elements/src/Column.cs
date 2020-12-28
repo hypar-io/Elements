@@ -12,15 +12,40 @@ namespace Elements
     [UserElement]
     public class Column : StructuralFraming
     {
+        private Vector3 location;
+        private double height;
+
         /// <summary>
         /// The location of the base of the column.
         /// </summary>
-        public Vector3 Location { get; set; }
+        public Vector3 Location
+        {
+            get => location;
+            set
+            {
+                if (location != value)
+                {
+                    location = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The height of the column.
         /// </summary>
-        public double Height { get; set; }
+        public double Height
+        {
+            get => height;
+            set
+            {
+                if (height != value)
+                {
+                    height = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Construct a Column.

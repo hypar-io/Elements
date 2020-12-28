@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -15,15 +14,40 @@ namespace Elements
     [UserElement]
     public class StandardWall : Wall
     {
+        private Line centerLine;
+        private double thickness;
+
         /// <summary>
         /// The center line of the wall.
         /// </summary>
-        public Line CenterLine { get; set; }
+        public Line CenterLine
+        {
+            get => centerLine;
+            set
+            {
+                if (centerLine != value)
+                {
+                    centerLine = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The thickness of the wall.
         /// </summary>
-        public double Thickness { get; set; }
+        public double Thickness
+        {
+            get => thickness;
+            set
+            {
+                if (thickness != value)
+                {
+                    thickness = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Construct a wall along a line.

@@ -16,13 +16,24 @@ namespace Elements
         /// <summary>
         /// The mesh.
         /// </summary>
-        protected Mesh _mesh;
+        protected Mesh mesh;
 
         /// <summary>
         /// The element's mesh.
         /// </summary>
         [JsonIgnore]
-        public Mesh Mesh => this._mesh;
+        public Mesh Mesh
+        {
+            get => mesh;
+            set
+            {
+                if (mesh != value)
+                {
+                    mesh = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Construct an import mesh element.
@@ -45,7 +56,7 @@ namespace Elements
                                                        id == default(Guid) ? Guid.NewGuid() : id,
                                                        name)
         {
-            this._mesh = mesh;
+            this.mesh = mesh;
         }
 
         internal MeshElement(Material material = null,
@@ -58,7 +69,7 @@ namespace Elements
                                                        id == default(Guid) ? Guid.NewGuid() : id,
                                                        name)
         {
-            this._mesh = new Mesh();
+            this.mesh = new Mesh();
         }
 
         /// <summary>

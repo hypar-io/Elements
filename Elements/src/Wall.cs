@@ -14,15 +14,40 @@ namespace Elements
     [UserElement]
     public class Wall : GeometricElement, IHasOpenings
     {
+        private double height;
+        private Profile profile;
+
         /// <summary>
         /// The height of the wall.
         /// </summary>
-        public double Height { get; protected set; }
+        public double Height
+        {
+            get => height;
+            protected set
+            {
+                if (height != value)
+                {
+                    height = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The profile of the wall.
         /// </summary>
-        public Profile Profile { get; protected set; }
+        public Profile Profile
+        {
+            get => profile;
+            protected set
+            {
+                if (profile != value)
+                {
+                    profile = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// A collection of openings in the wall.

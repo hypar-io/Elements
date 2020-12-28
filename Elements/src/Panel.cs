@@ -14,10 +14,23 @@ namespace Elements
     [UserElement]
     public class Panel : GeometricElement
     {
+        private Polygon perimeter;
+
         /// <summary>
         /// The perimeter of the panel.
         /// </summary>
-        public Polygon Perimeter { get; }
+        public Polygon Perimeter
+        {
+            get => perimeter;
+            set
+            {
+                if (perimeter != value)
+                {
+                    perimeter = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Create a panel.

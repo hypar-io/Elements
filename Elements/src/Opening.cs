@@ -14,6 +14,9 @@ namespace Elements
     [UserElement]
     public class Opening : GeometricElement
     {
+        private Polygon perimeter;
+        private double depthFront;
+
         /// <summary>
         /// The profile of the opening.
         /// </summary>
@@ -23,12 +26,34 @@ namespace Elements
         /// <summary>
         /// The perimeter of the opening.
         /// </summary>
-        public Polygon Perimeter { get; set; }
+        public Polygon Perimeter
+        {
+            get => perimeter;
+            set
+            {
+                if (perimeter != value)
+                {
+                    perimeter = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The depth of the opening along the opening's +Z axis.
         /// </summary>
-        public double DepthFront { get; set; }
+        public double DepthFront
+        {
+            get => depthFront;
+            set
+            {
+                if (depthFront != value)
+                {
+                    depthFront = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The depth of the opening along the opening's -Z axis.

@@ -11,15 +11,40 @@ namespace Elements
     [UserElement]
     public class Frame : GeometricElement
     {
+        private Profile profile;
+        private Curve curve;
+
         /// <summary>
         /// The frame's profile.
         /// </summary>
-        public Profile Profile { get; set; }
+        public Profile Profile
+        {
+            get => profile;
+            set
+            {
+                if (profile != value)
+                {
+                    profile = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The perimeter of the frame.
         /// </summary>
-        public Curve Curve { get; set; }
+        public Curve Curve
+        {
+            get => curve;
+            set
+            {
+                if (curve != value)
+                {
+                    curve = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Create a frame.
@@ -56,6 +81,17 @@ namespace Elements
         {
             this.Curve = curve.Offset(-offset)[0];
             this.Profile = profile;
+        }
+
+        /// <summary>
+        /// Update the frame's representation.
+        /// </summary>
+        public override void UpdateRepresentations()
+        {
+            var rep = FirstRepresentationOfType<SolidRepresentation>();
+            var sweep = (Sweep)rep.SolidOperations[0];
+            sweep.Curve = this.Curve;
+            sweep.Profile = this.Profile;
         }
     }
 }

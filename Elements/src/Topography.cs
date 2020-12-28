@@ -82,7 +82,7 @@ namespace Elements
                                                      id == null ? Guid.NewGuid() : id,
                                                      name)
         {
-            this._mesh = new Mesh();
+            this.mesh = new Mesh();
 
             this.Origin = origin;
             this.Elevations = elevations;
@@ -90,7 +90,7 @@ namespace Elements
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
             var mesh = GenerateMesh(elevations, origin, this.RowWidth, this.CellWidth, this.CellWidth);
-            this._mesh = mesh.Mesh;
+            this.mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
         }
@@ -116,7 +116,7 @@ namespace Elements
             this.CellWidth = cellWidth;
             this.CellHeight = cellHeight;
             var mesh = GenerateMesh(elevations, origin, rowWidth, cellWidth, cellHeight);
-            this._mesh = mesh.Mesh;
+            this.mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
         }
@@ -266,18 +266,18 @@ namespace Elements
         private void Subtract(Solid solid, Transform transform = null)
         {
             var intersects = new List<Triangle>();
-            for (var i = this._mesh.Triangles.Count - 1; i >= 0; i--)
+            for (var i = this.mesh.Triangles.Count - 1; i >= 0; i--)
             {
-                var t = this._mesh.Triangles[i];
+                var t = this.mesh.Triangles[i];
                 var xsect = GetIntersectionType(t, solid, transform);
                 if (xsect == IntersectionType.Intersect)
                 {
                     intersects.Add(t);
-                    this._mesh.Triangles.RemoveAt(i);
+                    this.mesh.Triangles.RemoveAt(i);
                 }
                 else if (xsect == IntersectionType.Inside)
                 {
-                    this._mesh.Triangles.RemoveAt(i);
+                    this.mesh.Triangles.RemoveAt(i);
                 }
             }
 
@@ -316,7 +316,7 @@ namespace Elements
                         var a = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3]].Position.ToVector3());
                         var b = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3());
                         var c = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3());
-                        this._mesh.AddTriangle(a, b, c);
+                        this.mesh.AddTriangle(a, b, c);
                     }
                 }
                 catch (ArgumentOutOfRangeException ex)
@@ -325,16 +325,16 @@ namespace Elements
                 }
             }
 
-            for (var i = this._mesh.Triangles.Count - 1; i >= 0; i--)
+            for (var i = this.mesh.Triangles.Count - 1; i >= 0; i--)
             {
-                var t = this._mesh.Triangles[i];
+                var t = this.mesh.Triangles[i];
                 var area = t.Area();
                 if (area == 0.0 ||
                     double.IsNaN(area) ||
                     area < Vector3.EPSILON ||
                     t.Normal.IsNaN())
                 {
-                    this._mesh.Triangles.RemoveAt(i);
+                    this.mesh.Triangles.RemoveAt(i);
                 }
             }
         }
@@ -346,14 +346,14 @@ namespace Elements
 
         private Vertex MergeOrReturnNew(Vector3 v)
         {
-            foreach (var vx in this._mesh.Vertices)
+            foreach (var vx in this.mesh.Vertices)
             {
                 if (vx.Position.IsAlmostEqualTo(v))
                 {
                     return vx;
                 }
             }
-            var newVtx = this._mesh.AddVertex(v, new UV());
+            var newVtx = this.mesh.AddVertex(v, new UV());
             return newVtx;
         }
 

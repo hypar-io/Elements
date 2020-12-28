@@ -11,22 +11,59 @@ namespace Elements
     /// </summary>
     public partial class WallByProfile : GeometricElement
     {
+        private Profile profile;
+        private double thickness;
+        private Line centerline;
+
         /// <summary>
         /// The profile of the wall.
         /// </summary>
-        public Profile Profile { get; set; }
+        public Profile Profile
+        {
+            get => profile;
+            set
+            {
+                if (profile != value)
+                {
+                    profile = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The wall's thickness.
         /// </summary>
         /// <value></value>
-        public double Thickness { get; set; }
+        public double Thickness
+        {
+            get => thickness;
+            set
+            {
+                if (thickness != value)
+                {
+                    thickness = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The wall's center line.
         /// </summary>
         /// <value></value>
-        public Line Centerline { get; set; }
+        public Line Centerline
+        {
+            get => centerline;
+            set
+            {
+                if (centerline != value)
+                {
+                    centerline = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Create a wall requiring only the profile, thickness and centerline.

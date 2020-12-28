@@ -16,6 +16,9 @@ namespace Elements
     [UserElement]
     public class Floor : GeometricElement, IHasOpenings
     {
+        private double thickness;
+        private Profile profile;
+
         /// <summary>
         /// The elevation from which the floor is extruded.
         /// </summary>
@@ -25,12 +28,34 @@ namespace Elements
         /// <summary>
         /// The thickness of the floor.
         /// </summary>
-        public double Thickness { get; set; }
+        public double Thickness
+        {
+            get => thickness;
+            set
+            {
+                if (thickness != value)
+                {
+                    thickness = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The untransformed profile of the floor.
         /// </summary>
-        public Profile Profile { get; set; }
+        public Profile Profile
+        {
+            get => profile;
+            set
+            {
+                if (profile != value)
+                {
+                    profile = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// A collection of openings in the floor.
@@ -110,6 +135,7 @@ namespace Elements
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
             var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Profile = this.Profile;
             extrude.Height = this.Thickness;
         }
 

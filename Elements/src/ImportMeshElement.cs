@@ -47,7 +47,7 @@ namespace Elements
 
             // TODO: Currently we only support STL. In the future we should
             // support glTF as well, and possibly others.
-            this._mesh = Mesh.FromSTL(path, lengthUnit);
+            this.mesh = Mesh.FromSTL(path, lengthUnit);
         }
     }
 }

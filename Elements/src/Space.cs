@@ -16,15 +16,40 @@ namespace Elements
     [UserElement]
     public class Space : GeometricElement
     {
+        private Profile profile;
+        private double height;
+
         /// <summary>
         /// The profile of the space.
         /// </summary>
-        public Profile Profile { get; set; }
+        public Profile Profile
+        {
+            get => profile;
+            set
+            {
+                if (profile != value)
+                {
+                    profile = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The space's height.
         /// </summary>
-        public double Height { get; set; }
+        public double Height
+        {
+            get => height;
+            set
+            {
+                if (height != value)
+                {
+                    height = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Construct a space.
