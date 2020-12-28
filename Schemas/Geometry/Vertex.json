@@ -12,8 +12,7 @@
         "Normal",
         "Color",
         "Index",
-        "UV",
-        "Triangles"
+        "UV"
     ],
     "properties": {
         "Position": {
@@ -40,13 +39,6 @@
             "type": "object",
             "description": "The vertex's texture coordinate.",
             "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/UV.json"
-        },
-        "Triangles": {
-            "type": "array",
-            "description": "The triangles associated with this vertex.",
-            "items": {
-                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Triangle.json"
-            }
         }
     },
     "additionalProperties": false
