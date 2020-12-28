@@ -43,20 +43,33 @@ namespace Elements.Tests
             this.CenterLine = centerLine;
             this.Profile = profile;
             this.SubElements = new List<Element>();
-        }
 
-        public override void UpdateRepresentations()
-        {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-            rep.SolidOperations.Clear();
 
             var t = this.CenterLine.TransformAt(0);
             var x = new Line(t.Origin, t.Origin + t.XAxis * this.CenterLine.Length());
             var y = new Line(t.Origin, t.Origin + t.YAxis * this.CenterLine.Length());
 
-            rep.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine, 0.0, 0.0, false));
-            rep.SolidOperations.Add(new Sweep(this.Profile, x, 0.0, 0.0, false));
-            rep.SolidOperations.Add(new Sweep(this.Profile, y, 0.0, 0.0, false));
+            rep.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine, 0.0, 0.0, 0.0, false));
+            rep.SolidOperations.Add(new Sweep(this.Profile, x, 0.0, 0.0, 0.0, false));
+            rep.SolidOperations.Add(new Sweep(this.Profile, y, 0.0, 0.0, 0.0, false));
+        }
+
+        public override void UpdateRepresentations()
+        {
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+
+            var t = this.CenterLine.TransformAt(0);
+            var x = new Line(t.Origin, t.Origin + t.XAxis * this.CenterLine.Length());
+            var y = new Line(t.Origin, t.Origin + t.YAxis * this.CenterLine.Length());
+
+            var sweep1 = (Sweep)rep.SolidOperations[0];
+            var sweep2 = (Sweep)rep.SolidOperations[1];
+            var sweep3 = (Sweep)rep.SolidOperations[2];
+
+            sweep1.Curve = this.CenterLine;
+            sweep2.Curve = x;
+            sweep3.Curve = y;
         }
     }
 

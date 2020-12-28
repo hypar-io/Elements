@@ -15,6 +15,8 @@ namespace Elements
     [UserElement]
     public class Mass : GeometricElement
     {
+        private Profile profile;
+
         /// <summary>
         /// The profile of the mass.
         /// </summary>
@@ -64,6 +66,9 @@ namespace Elements
             }
             this.Profile = profile;
             this.Height = height;
+
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+            rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
 
         /// <summary>
@@ -88,8 +93,8 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-            rep.SolidOperations.Clear();
-            rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+            var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Height = this.Height;
         }
     }
 }

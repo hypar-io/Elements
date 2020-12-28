@@ -45,8 +45,11 @@ namespace Elements
 
             var height = BoundingBox.Max.Z - BoundingBox.Min.Z;
             var boxSolid = new Extrude(bottomProfile, height, Vector3.ZAxis, false);
-            this.Representations.Clear();
-            this.Representations.Add(new SolidRepresentation(new List<SolidOperation> { boxSolid }, BuiltInMaterials.Default));
+
+            var rep = FirstRepresentationOfType<SolidRepresentation>();
+            var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Profile = bottomProfile;
+            extrude.Height = height;
         }
     }
 }

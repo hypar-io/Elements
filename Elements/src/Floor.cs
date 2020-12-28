@@ -62,6 +62,8 @@ namespace Elements
                                                 name)
         {
             SetProperties(profile, thickness);
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+            rep.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
         }
 
         private void SetProperties(Profile profile, double thickness)
@@ -107,8 +109,8 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-            rep.SolidOperations.Clear();
-            rep.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
+            var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Height = this.Thickness;
         }
 
         /// <summary>

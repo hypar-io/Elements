@@ -48,14 +48,8 @@ namespace Elements
             this.Profile = @profile;
             this.Thickness = @thickness;
             this.Centerline = @centerline;
-        }
-
-        /// <summary>Update the geometric representation of this wall.</summary>
-        public override void UpdateRepresentations()
-        {
 
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-            rep.SolidOperations.Clear();
 
             // to ensure the correct direction, we find the direction form a point on the polygon to the vertical plane of the centerline
             var point = Profile.Perimeter.Vertices.First();
@@ -63,6 +57,19 @@ namespace Elements
             var direction = new Line(point, point.Project(centerPlane)).Direction();
 
             rep.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, direction, false));
+        }
+
+        /// <summary>Update the geometric representation of this wall.</summary>
+        public override void UpdateRepresentations()
+        {
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+            var extrude = (Extrude)rep.SolidOperations[0];
+
+            var point = Profile.Perimeter.Vertices.First();
+            var centerPlane = new Plane(Centerline.Start, Centerline.End, Centerline.End + Vector3.ZAxis);
+            var direction = new Line(point, point.Project(centerPlane)).Direction();
+            extrude.Direction = direction;
+            extrude.Height = this.Thickness;
         }
     }
 }

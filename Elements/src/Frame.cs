@@ -48,22 +48,14 @@ namespace Elements
                                                 name)
         {
             SetProperties(curve, profile, transform, offset);
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+            rep.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, 0.0, false));
         }
 
         private void SetProperties(Polygon curve, Profile profile, Transform transform, double offset)
         {
             this.Curve = curve.Offset(-offset)[0];
             this.Profile = profile;
-        }
-
-        /// <summary>
-        /// Update representations.
-        /// </summary>
-        public override void UpdateRepresentations()
-        {
-            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-            rep.SolidOperations.Clear();
-            rep.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, false));
         }
     }
 }

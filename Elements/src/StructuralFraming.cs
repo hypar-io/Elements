@@ -74,6 +74,14 @@ namespace Elements
                                      name)
         {
             SetProperties(curve, profile, startSetback, endSetback, rotation);
+
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+            rep.SolidOperations.Add(new Sweep(this.Profile,
+                                              this.Curve,
+                                              this.StartSetback,
+                                              this.EndSetback,
+                                              this.Rotation,
+                                              false));
         }
 
         private void SetProperties(Curve curve,
@@ -120,15 +128,10 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-
-            rep.SolidOperations.Clear();
-            var profileTrans = new Transform();
-            profileTrans.Rotate(profileTrans.ZAxis, this.Rotation);
-            rep.SolidOperations.Add(new Sweep(profileTrans.OfProfile(this.Profile),
-                                                            this.Curve,
-                                                            this.StartSetback,
-                                                            this.EndSetback,
-                                                            false));
+            var sweep = (Sweep)rep.SolidOperations[0];
+            sweep.StartSetback = this.StartSetback;
+            sweep.EndSetback = this.EndSetback;
+            sweep.ProfileRotation = this.Rotation;
         }
     }
 }

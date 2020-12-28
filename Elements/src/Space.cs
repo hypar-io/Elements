@@ -53,6 +53,8 @@ namespace Elements
                                                 name)
         {
             SetProperties(height, profile, transform);
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+            rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
         }
 
         private void SetProperties(double height, Profile profile, Transform transform)
@@ -137,8 +139,10 @@ namespace Elements
             {
                 return;
             }
-            rep.SolidOperations.Clear();
-            rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+
+            var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Height = this.Height;
+            extrude.Profile = this.Profile;
         }
     }
 }

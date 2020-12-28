@@ -4,6 +4,7 @@ using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements
 {
@@ -68,8 +69,15 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-            rep.SolidOperations.Clear();
-            rep.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+
+            // Don't override imported geometry.
+            if (rep.SolidOperations.Count > 0 && rep.SolidOperations.All(s => s.GetType() == typeof(Import)))
+            {
+                return;
+            }
+
+            var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Height = this.Height;
         }
 
         /// <summary>

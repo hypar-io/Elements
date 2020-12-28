@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -17,7 +18,7 @@ namespace Elements
         /// <summary>
         /// The center line of the wall.
         /// </summary>
-        public Line CenterLine { get; }
+        public Line CenterLine { get; set; }
 
         /// <summary>
         /// The thickness of the wall.
@@ -72,6 +73,12 @@ namespace Elements
             this.CenterLine = centerLine;
             this.Height = height;
             this.Thickness = thickness;
+
+            var rep = this.FirstRepresentationOfType<SolidRepresentation>();
+            var e1 = this.CenterLine.Offset(this.Thickness / 2, false);
+            var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
+            var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
+            rep.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
         }
 
         /// <summary>
@@ -124,11 +131,12 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             var rep = this.FirstRepresentationOfType<SolidRepresentation>();
-            rep.SolidOperations.Clear();
             var e1 = this.CenterLine.Offset(this.Thickness / 2, false);
             var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
             var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
-            rep.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
+            var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Profile = profile;
+            extrude.Height = this.Height;
         }
     }
 }
