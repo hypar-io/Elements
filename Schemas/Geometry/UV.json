@@ -4,6 +4,7 @@
     "description": "A UV coordinate.",
     "title": "UV",
     "x-namespace": "Elements.Geometry",
+    "x-struct": true,
     "type": [
         "object"
     ],

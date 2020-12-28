@@ -1,5 +1,6 @@
 {
     "x-namespace": "Elements.Geometry",
+    "x-struct": true,
     "required": [],
     "properties": {
         "Min": {
