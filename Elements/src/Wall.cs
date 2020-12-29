@@ -102,6 +102,7 @@ namespace Elements
             }
 
             var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Profile = this.Profile;
             extrude.Height = this.Height;
         }
 
