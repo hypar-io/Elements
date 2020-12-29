@@ -1,0 +1,26 @@
+{
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/UV.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A UV coordinate.",
+    "title": "UV",
+    "x-namespace": "Elements.Geometry",
+    "x-struct": true,
+    "type": [
+        "object"
+    ],
+    "required": [
+        "U",
+        "V"
+    ],
+    "properties": {
+        "U": {
+            "type": "number",
+            "description": "The U coordinate."
+        },
+        "V": {
+            "type": "number",
+            "description": "The V coordinate."
+        }
+    },
+    "additionalProperties": false
+}
