@@ -1,5 +1,5 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Triangle.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Triangle.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "A mesh triangle.",
     "title": "Triangle",
@@ -16,13 +16,13 @@
             "type": "array",
             "description": "The triangle's vertices.",
             "items": {
-                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vertex.json"
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Vertex.json"
             }
         },
         "Normal": {
             "type": "object",
             "description": "The triangle's normal.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Vector3.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Vector3.json"
         }
     },
     "additionalProperties": false
