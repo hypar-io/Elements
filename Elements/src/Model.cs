@@ -173,7 +173,9 @@ namespace Elements
             }
             exportModel.Transform = this.Transform;
 
-            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this,
+                                                               indent ? Formatting.Indented : Formatting.None,
+                                                               new JsonConverter[] { new Vector3Converter(), new ColorConverter(), new UVConverter(), new MeshConverter() });
         }
 
         /// <summary>
@@ -194,7 +196,8 @@ namespace Elements
                 {
                     errors.Add(args.ErrorContext.Error.Message);
                     args.ErrorContext.Handled = true;
-                }
+                },
+                Converters = new JsonConverter[] { new Vector3Converter(), new ColorConverter(), new UVConverter(), new MeshConverter() }
             });
             JsonInheritanceConverter.Elements.Clear();
             return model;
