@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 
 namespace Elements
@@ -6,10 +8,20 @@ namespace Elements
     public partial class GeometricElement
     {
         /// <summary>
+        /// Create a geometric element with a transform and a representations.
+        /// </summary>
+        /// <param name="transform">The element's transform.</param>
+        /// <param name="representation">The element's representation.</param>
+        /// <returns></returns>
+        // public GeometricElement(Representation representation, Transform transform = null) : base(Guid.NewGuid(), null)
+        // {
+        //     this.Transform = transform != null ? transform : new Transform();
+        //     this.Representations.Add(representation);
+        // }
+
+        /// <summary>
         /// This method provides an opportunity for geometric elements
-        /// to adjust their solid operations before tesselation. As an example,
-        /// a floor might want to clip its opening profiles out of 
-        /// the profile of the floor.
+        /// to update their representations.
         /// </summary>
         public virtual void UpdateRepresentations()
         {
@@ -31,5 +43,35 @@ namespace Elements
 
             return new ElementInstance(this, transform, name, Guid.NewGuid());
         }
+
+        /// <summary>
+        /// Get the first representation of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of the representation.</typeparam>
+        /// <returns>A representation or null if no representations of the specified type exist.</returns>
+        // public T FirstRepresentationOfType<T>()
+        // {
+        //     if (this.Representations == null)
+        //     {
+        //         return default(T);
+        //     }
+
+        //     var reps = this.Representations.OfType<T>();
+        //     return reps.Count() > 0 ? (T)reps.First() : default(T);
+        // }
+
+        /// <summary>
+        /// Get all representations of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of the representation.</typeparam>
+        /// <returns>A collection of representations</returns>
+        // public List<T> AllRepresentationsOfType<T>()
+        // {
+        //     if (this.Representations == null)
+        //     {
+        //         return null;
+        //     }
+        //     return this.Representations.OfType<T>().ToList();
+        // }
     }
 }
