@@ -15,7 +15,7 @@ using System.Linq;
 using Line = Elements.Geometry.Line;
 using Polygon = Elements.Geometry.Polygon;
 
-namespace Elements.Geometry.Solids
+namespace Elements.Geometry
 {
 #pragma warning disable // Disable all warnings
 
