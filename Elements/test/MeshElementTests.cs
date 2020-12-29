@@ -40,7 +40,7 @@ namespace Elements.Tests
                 }
             }
             mesh.ComputeNormals();
-            var meshElement = new MeshElement(mesh, new Material("Lime", Colors.Lime));
+            var meshElement = new GeometricElement(new MeshRepresentation(mesh, new Material("Lime", Colors.Lime)));
             //</example>
             this.Model.AddElement(meshElement);
         }
@@ -76,15 +76,17 @@ namespace Elements.Tests
                 }
             }
             mesh.ComputeNormals();
-            var meshElement = new MeshElement(mesh, new Material("Lime", Colors.Lime));
+            var meshElement = new GeometricElement(new MeshRepresentation(mesh, new Material("Lime", Colors.Lime)));
             this.Model.AddElement(meshElement);
             var json = this.Model.ToJson(true);
             Console.WriteLine(json);
 
             var newModel = Model.FromJson(json);
-            var newMeshElement = this.Model.GetElementOfType<MeshElement>(meshElement.Id);
-            Assert.Equal(meshElement.Mesh.Vertices.Count, newMeshElement.Mesh.Vertices.Count);
-            Assert.Equal(meshElement.Mesh.Triangles.Count, newMeshElement.Mesh.Triangles.Count);
+            var newMeshElement = this.Model.GetElementOfType<GeometricElement>(meshElement.Id);
+            var newRep = newMeshElement.FirstRepresentationOfType<MeshRepresentation>();
+            var rep = meshElement.FirstRepresentationOfType<MeshRepresentation>();
+            Assert.Equal(rep.Mesh.Vertices.Count, newRep.Mesh.Vertices.Count);
+            Assert.Equal(rep.Mesh.Triangles.Count, newRep.Mesh.Triangles.Count);
         }
     }
 }

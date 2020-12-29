@@ -29,7 +29,8 @@ namespace Elements.Tests
 
             var result = new Mesh();
             csg.Tessellate(ref result);
-            this.Model.AddElement(new MeshElement(result, new Material("Mod", Colors.Red, 0.5, 0.5)));
+            var rep = new MeshRepresentation(result, new Material("Mod", Colors.Red, 0.5, 0.5));
+            this.Model.AddElement(new GeometricElement(rep));
         }
 
         [Fact]
@@ -45,7 +46,8 @@ namespace Elements.Tests
             var result = new Mesh();
             csg.Tessellate(ref result);
 
-            var me = new MeshElement(result);
+            var rep = new MeshRepresentation(result);
+            var me = new GeometricElement(rep);
             this.Model.AddElement(me);
         }
 
@@ -74,7 +76,8 @@ namespace Elements.Tests
             var result = new Mesh();
             csg.Tessellate(ref result);
 
-            var me2 = new MeshElement(result);
+            var rep = new MeshRepresentation(result);
+            var me2 = new GeometricElement(rep);
             this.Model.AddElement(me2);
         }
     }

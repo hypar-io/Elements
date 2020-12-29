@@ -25,6 +25,18 @@ namespace Elements
         }
 
         /// <summary>
+        /// Create a geometric element with a transform and a representations.
+        /// </summary>
+        /// <param name="transform">The element's transform.</param>
+        /// <param name="representation">The element's representation.</param>
+        /// <returns></returns>
+        public GeometricElement(Representation representation, Transform transform = null) : base(Guid.NewGuid(), null)
+        {
+            this.Transform = transform != null ? transform : new Transform();
+            this.Representations.Add(representation);
+        }
+
+        /// <summary>
         /// This method provides an opportunity for geometric elements
         /// to update their representations.
         /// </summary>

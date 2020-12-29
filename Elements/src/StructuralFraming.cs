@@ -122,7 +122,7 @@ namespace Elements
                                  Guid id = default(Guid),
                                  string name = null) : base(
                                      transform != null ? transform : new Transform(),
-                                     representations != null ? representations : new Representation[] { new CurveRepresentation(curve, BuiltInMaterials.Edges), new SolidRepresentation(material != null ? material : BuiltInMaterials.Steel) },
+                                     representations != null ? representations : new Representation[] { new SolidRepresentation(material != null ? material : BuiltInMaterials.Steel), new CurveRepresentation(curve, BuiltInMaterials.Edges) },
                                      isElementDefinition,
                                      id != default(Guid) ? id : Guid.NewGuid(),
                                      name)

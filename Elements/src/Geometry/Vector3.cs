@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -584,6 +583,21 @@ namespace Elements.Geometry
         public bool Equals(Vector3 other)
         {
             return this.IsAlmostEqualTo(other);
+        }
+
+        /// <summary>
+        /// Is this vector equal to the provided vector?
+        /// </summary>
+        /// <param name="other">The vector to test.</param>
+        /// <returns>Returns true if all components of the two vectors are within Epsilon, otherwise false.</returns>
+        public override bool Equals(object other)
+        {
+            if (!(other is Vector3))
+            {
+                return false;
+            }
+            var v = (Vector3)other;
+            return this.IsAlmostEqualTo(v);
         }
 
         /// <summary>

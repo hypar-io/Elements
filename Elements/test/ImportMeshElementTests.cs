@@ -15,7 +15,9 @@ namespace Elements.Tests
             // <example>
             var path = "../../../models/STL/Hilti_2008782_Speed lock clevis hanger MH-SLC 2_ EG_2.stl";
             var shiny = new Material("shiny", Colors.Red, 1.0, 0.9);
-            var bracket = new ImportMeshElement(path, Units.LengthUnit.Millimeter, shiny);
+            var rep = new MeshRepresentation(path, Units.LengthUnit.Millimeter, shiny);
+            var bracket = new GeometricElement(rep);
+            bracket.IsElementDefinition = true;
             model.AddElement(bracket);
 
             var brackets = new List<ElementInstance>();

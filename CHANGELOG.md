@@ -1,5 +1,11 @@
 # Changelog
 
+### 0.8.1
+
+### Removed
+- `MeshElement`
+- `ImportMeshElement`
+
 ## 0.8.0
 ### Added
 - `Hypar.Elements.Serialization.IFC` - IFC serialization code has been moved to a new project.

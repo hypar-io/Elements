@@ -1107,6 +1107,82 @@ namespace Elements.Serialization.glTF
                 }
                 return meshId;
             }
+            else if (geometricElement.FirstRepresentationOfType<MeshRepresentation>() != null)
+            {
+                var rep = geometricElement.FirstRepresentationOfType<MeshRepresentation>();
+                if (rep.Mesh.Vertices.Count == 0)
+                {
+                    return -1;
+                }
+
+                byte[] vertexBuffer;
+                byte[] normalBuffer;
+                byte[] indexBuffer;
+                byte[] colorBuffer;
+                byte[] uvBuffer;
+
+                double[] vmin; double[] vmax;
+                double[] nmin; double[] nmax;
+                float[] cmin; float[] cmax;
+                ushort imin; ushort imax;
+                double[] uvmin; double[] uvmax;
+
+                rep.Mesh.GetBuffers(out vertexBuffer,
+                                out indexBuffer,
+                                out normalBuffer,
+                                out colorBuffer,
+                                out uvBuffer,
+                                out vmax,
+                                out vmin,
+                                out nmin,
+                                out nmax,
+                                out cmin,
+                                out cmax,
+                                out imin,
+                                out imax,
+                                out uvmax,
+                                out uvmin);
+
+                // TODO(Ian): Remove this cast to GeometricElement when we
+                // consolidate mesh under geometric representations.
+                meshId = gltf.AddTriangleMesh(e.Id + "_mesh",
+                                     buffers,
+                                     bufferViews,
+                                     accessors,
+                                     vertexBuffer,
+                                     normalBuffer,
+                                     indexBuffer,
+                                     colorBuffer,
+                                     uvBuffer,
+                                     vmin,
+                                     vmax,
+                                     nmin,
+                                     nmax,
+                                     imin,
+                                     imax,
+                                     uvmax,
+                                     uvmin,
+                                     materialIndexMap[materialName],
+                                     cmin,
+                                     cmax,
+                                     null,
+                                     meshes);
+
+                if (!meshElementMap.ContainsKey(e.Id))
+                {
+                    meshElementMap.Add(e.Id, new List<int>());
+                }
+                meshElementMap[e.Id].Add(meshId);
+
+                var geom = (GeometricElement)e;
+                if (!geom.IsElementDefinition)
+                {
+                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
+                }
+
+                return meshId;
+            }
+
             return -1;
         }
 

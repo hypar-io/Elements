@@ -86,7 +86,7 @@ namespace Elements.Tests
             sw.Start();
             this.Model.AddElement(BuiltInMaterials.Topography);
             topo.FirstRepresentationOfType<MeshRepresentation>().Material = BuiltInMaterials.Topography;
-            this.Model.AddElement(topo, false);
+            this.Model.AddElement(topo);
             sw.Stop();
             _output.WriteLine($"Serialization of topography w/out recursive gather: {sw.ElapsedMilliseconds.ToString()}ms");
         }
@@ -232,7 +232,8 @@ namespace Elements.Tests
             csg.Tessellate(ref result);
             result.ComputeNormals();
             var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg");
-            this.Model.AddElement(new MeshElement(result, material));
+            var newRep = new MeshRepresentation(result, material);
+            this.Model.AddElement(new GeometricElement(newRep));
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)

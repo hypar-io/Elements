@@ -49,9 +49,9 @@ namespace Elements.Serialization.IFC
 
             var geoms = new List<IfcRepresentationItem>();
 
-            if (geoElement is MeshElement)
+            if (geoElement.FirstRepresentationOfType<MeshRepresentation>() != null)
             {
-                var meshEl = (MeshElement)geoElement;
+                var meshEl = geoElement.FirstRepresentationOfType<MeshRepresentation>();
                 var lengths = meshEl.Mesh.Vertices.Select(v => v.Position.ToArray().Select(vi => new IfcLengthMeasure(vi)).ToList()).ToList();
                 var pts = new IfcCartesianPointList3D(lengths);
                 doc.AddEntity(pts);
@@ -63,7 +63,7 @@ namespace Elements.Serialization.IFC
                 geoms.Add(geom);
                 shape = ToIfcProductDefinitionShape(geoms, "Tessellation", context, doc);
             }
-            else
+            else if (geoElement.FirstRepresentationOfType<SolidRepresentation>() != null)
             {
                 foreach (var op in geoElement.FirstRepresentationOfType<SolidRepresentation>().SolidOperations)
                 {

@@ -16,7 +16,7 @@ namespace Elements
     /// [!code-csharp[Main](../../Elements/test/TopographyTests.cs?name=example)]
     /// </example>
     [UserElement]
-    public class Topography : MeshElement
+    public class Topography : GeometricElement
     {
         private double _minElevation = double.PositiveInfinity;
 
@@ -60,6 +60,15 @@ namespace Elements
         public double CellHeight { get; }
 
         /// <summary>
+        /// The topography's mesh.
+        /// </summary>
+        [JsonIgnore]
+        public Mesh Mesh
+        {
+            get { return this.FirstRepresentationOfType<MeshRepresentation>().Mesh; }
+        }
+
+        /// <summary>
         /// Create a topography.
         /// </summary>
         /// <param name="origin">The origin of the topography.</param>
@@ -76,8 +85,8 @@ namespace Elements
                           Material material = null,
                           Transform transform = null,
                           Guid id = default(Guid),
-                          string name = null) : base(material != null ? material : BuiltInMaterials.Topography,
-                                                     transform != null ? transform : new Transform(),
+                          string name = null) : base(transform != null ? transform : new Transform(),
+                                                     new List<Representation>() { new MeshRepresentation(material != null ? material : BuiltInMaterials.Topography) },
                                                      false,
                                                      id == null ? Guid.NewGuid() : id,
                                                      name)
@@ -88,12 +97,11 @@ namespace Elements
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
             var mesh = GenerateMesh(elevations, origin, this.RowWidth, this.CellWidth, this.CellWidth);
-            this.mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
 
             var rep = FirstRepresentationOfType<MeshRepresentation>();
-            rep.Mesh = this.Mesh;
+            rep.Mesh = mesh.Mesh;
         }
 
         [JsonConstructor]
@@ -102,11 +110,11 @@ namespace Elements
                             int rowWidth,
                             double cellWidth,
                             double cellHeight,
-                            Material material,
                             Transform transform,
+                            IList<Representation> representations,
                             Guid id,
-                            string name) : base(material,
-                                                transform,
+                            string name) : base(transform,
+                                                representations,
                                                 false,
                                                 id,
                                                 name)
@@ -117,12 +125,11 @@ namespace Elements
             this.CellWidth = cellWidth;
             this.CellHeight = cellHeight;
             var mesh = GenerateMesh(elevations, origin, rowWidth, cellWidth, cellHeight);
-            this.mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
 
             var rep = FirstRepresentationOfType<MeshRepresentation>();
-            rep.Mesh = this.Mesh;
+            rep.Mesh = mesh.Mesh;
         }
 
         private static (Mesh Mesh, double MaxElevation, double MinElevation) GenerateMesh(
@@ -270,18 +277,18 @@ namespace Elements
         private void Subtract(Solid solid, Transform transform = null)
         {
             var intersects = new List<Triangle>();
-            for (var i = this.mesh.Triangles.Count - 1; i >= 0; i--)
+            for (var i = this.Mesh.Triangles.Count - 1; i >= 0; i--)
             {
-                var t = this.mesh.Triangles[i];
+                var t = this.Mesh.Triangles[i];
                 var xsect = GetIntersectionType(t, solid, transform);
                 if (xsect == IntersectionType.Intersect)
                 {
                     intersects.Add(t);
-                    this.mesh.Triangles.RemoveAt(i);
+                    this.Mesh.Triangles.RemoveAt(i);
                 }
                 else if (xsect == IntersectionType.Inside)
                 {
-                    this.mesh.Triangles.RemoveAt(i);
+                    this.Mesh.Triangles.RemoveAt(i);
                 }
             }
 
@@ -320,7 +327,7 @@ namespace Elements
                         var a = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3]].Position.ToVector3());
                         var b = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3());
                         var c = MergeOrReturnNew(tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3());
-                        this.mesh.AddTriangle(a, b, c);
+                        this.Mesh.AddTriangle(a, b, c);
                     }
                 }
                 catch (ArgumentOutOfRangeException ex)
@@ -329,16 +336,16 @@ namespace Elements
                 }
             }
 
-            for (var i = this.mesh.Triangles.Count - 1; i >= 0; i--)
+            for (var i = this.Mesh.Triangles.Count - 1; i >= 0; i--)
             {
-                var t = this.mesh.Triangles[i];
+                var t = this.Mesh.Triangles[i];
                 var area = t.Area();
                 if (area == 0.0 ||
                     double.IsNaN(area) ||
                     area < Vector3.EPSILON ||
                     t.Normal.IsNaN())
                 {
-                    this.mesh.Triangles.RemoveAt(i);
+                    this.Mesh.Triangles.RemoveAt(i);
                 }
             }
         }
@@ -350,14 +357,14 @@ namespace Elements
 
         private Vertex MergeOrReturnNew(Vector3 v)
         {
-            foreach (var vx in this.mesh.Vertices)
+            foreach (var vx in this.Mesh.Vertices)
             {
                 if (vx.Position.IsAlmostEqualTo(v))
                 {
                     return vx;
                 }
             }
-            var newVtx = this.mesh.AddVertex(v, new UV());
+            var newVtx = this.Mesh.AddVertex(v, new UV());
             return newVtx;
         }
 
