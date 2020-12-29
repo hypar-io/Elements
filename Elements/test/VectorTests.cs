@@ -372,7 +372,6 @@ namespace Elements.Tests
             var model = new Model();
             model.AddElement(modelCurve);
             var json = model.ToJson(true);
-            Console.WriteLine(json);
 
             var newModel = Model.FromJson(json);
             var newModelCurve = model.GetElementOfType<ModelCurve>(modelCurve.Id);

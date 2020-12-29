@@ -89,7 +89,7 @@ namespace Elements.Tests
 
         private class NoMaterial : GeometricElement
         {
-            public NoMaterial() : base(new Transform(), null, false, Guid.NewGuid(), "NoMaterialElement") { }
+            public NoMaterial() : base(new Transform(), new List<Representation>(), false, Guid.NewGuid(), "NoMaterialElement") { }
         }
 
         [Fact]

@@ -19,8 +19,19 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var obj = JArray.Load(reader);
-            return Color.FromArray(obj.ToObject<double[]>());
+            try
+            {
+                // New color format Ex: [x,x,x,x]
+                var arr = JArray.Load(reader);
+                return Color.FromArray(arr.ToObject<double[]>());
+            }
+            catch
+            {
+
+                // Old color format Ex: Red:x, Green:x, Blue:x, Alpha:x
+                var obj = JObject.Load(reader);
+                return obj.ToObject<Color>();
+            }
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

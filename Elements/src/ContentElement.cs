@@ -16,14 +16,29 @@ namespace Elements
         /// <param name="gltfScaleToMeters">The number required to scale this contents dimensions to meters.  Used during gltf merging.</param>
         /// <param name="sourceDirection">The direction the element was facing when it was extracted from it's source.</param>
         /// <param name="transform">The transform of this ContentElement.</param>
-        /// <param name="material">The material, used for the BBox representation of this element.</param>
         /// <param name="representations">The representations of this content element.</param>
         /// <param name="isElementDefinition">Should the element be used to create instances, or should it be inserted into a 3D scene.</param>
         /// <param name="id">The guid of this element.</param>
         /// <param name="name">The name of this element.</param>
         /// <param name="additionalProperties">The string json serialization of a dictionary of additional parameters.</param>
-        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, Material @material, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
-        : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @transform, @representations, @isElementDefinition, @id, @name)
+        public ContentElement(string @gltfLocation,
+                              BBox3 @boundingBox,
+                              double @gltfScaleToMeters,
+                              Vector3 @sourceDirection,
+                              Transform @transform,
+                              IList<Representation> @representations,
+                              bool @isElementDefinition,
+                              System.Guid @id,
+                              string @name,
+                              string @additionalProperties) : this(@gltfLocation,
+                                                                  @boundingBox,
+                                                                  @gltfScaleToMeters,
+                                                                  @sourceDirection,
+                                                                  @transform,
+                                                                  @representations,
+                                                                  @isElementDefinition,
+                                                                  @id,
+                                                                  @name)
         {
             this.AdditionalProperties = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(@additionalProperties);
         }

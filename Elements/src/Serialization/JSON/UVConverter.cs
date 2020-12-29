@@ -19,8 +19,19 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var obj = JArray.Load(reader);
-            return UV.FromArray(obj.ToObject<double[]>());
+
+            try
+            {
+                // New UV format Ex: [x,x]
+                var arr = JArray.Load(reader);
+                return UV.FromArray(arr.ToObject<double[]>());
+            }
+            catch
+            {
+                // Old UV format Ex: U:x, V:x
+                var obj = JObject.Load(reader);
+                return obj.ToObject<UV>();
+            }
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

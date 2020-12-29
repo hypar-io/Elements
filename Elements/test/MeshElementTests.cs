@@ -79,7 +79,6 @@ namespace Elements.Tests
             var meshElement = new GeometricElement(new MeshRepresentation(mesh, new Material("Lime", Colors.Lime)));
             this.Model.AddElement(meshElement);
             var json = this.Model.ToJson(true);
-            Console.WriteLine(json);
 
             var newModel = Model.FromJson(json);
             var newMeshElement = this.Model.GetElementOfType<GeometricElement>(meshElement.Id);

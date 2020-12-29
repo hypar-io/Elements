@@ -1,15 +1,9 @@
 using Xunit;
 using Elements.Geometry;
 using Elements.Serialization.glTF;
-using glTFLoader;
-using System.Linq;
 using System.Collections.Generic;
-using glTFLoader.Schema;
 using System;
 using System.IO;
-using Newtonsoft.Json;
-using Elements.Serialization.JSON;
-using System.Diagnostics;
 
 namespace Elements.Tests
 {
@@ -17,7 +11,7 @@ namespace Elements.Tests
     {
         private class TestContentElem : ContentElement
         {
-            public TestContentElem(string @gltfLocation, BBox3 @bBox, Vector3 @toSource, Transform @transform, double scale, Material @material, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name)
+            public TestContentElem(string @gltfLocation, BBox3 @bBox, Vector3 @toSource, Transform @transform, double scale, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name)
                         : base(gltfLocation, bBox, scale, @toSource, transform, representations, isElementDefinition, id, name)
             { }
         }
@@ -46,7 +40,6 @@ namespace Elements.Tests
             var str = boxType2.ToString();
             boxType.AdditionalProperties["ImportantParameter"] = "The Value";
 
-
             var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, Guid.NewGuid(), "test");
 
             var savePath = "../../../models/ContentCatalog.json";
@@ -71,7 +64,6 @@ namespace Elements.Tests
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.XAxis),
                                       20,
-                                      BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
@@ -81,7 +73,6 @@ namespace Elements.Tests
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
                                       .005,
-                                      BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),

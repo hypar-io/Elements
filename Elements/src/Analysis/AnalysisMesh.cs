@@ -18,6 +18,10 @@ namespace Elements.Analysis
         private Func<Vector3, double> _analyze;
         private double _min = double.MaxValue;
         private double _max = double.MinValue;
+        private double uLength;
+        private double vLength;
+        private Polygon perimeter;
+        private ColorScale colorScale;
 
         /// <summary>
         /// The total number of analysis locations.
@@ -31,22 +35,67 @@ namespace Elements.Analysis
         /// <summary>
         /// The length of the cells in the u direction.
         /// </summary>
-        public double ULength { get; set; }
+        public double ULength
+        {
+            get => uLength;
+            set
+            {
+                if (uLength != value)
+                {
+                    uLength = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The length of the cells in the v direction.
         /// </summary>
-        public double VLength { get; set; }
+        public double VLength
+        {
+            get => vLength;
+            set
+            {
+                if (vLength != value)
+                {
+                    vLength = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// The perimeter of the analysis mesh.
         /// </summary>
-        public Polygon Perimeter { get; set; }
+        public Polygon Perimeter
+        {
+            get => perimeter;
+            set
+            {
+                if (perimeter != value)
+                {
+                    perimeter = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
 
         /// <summary>
         /// The color scale used to represent this analysis mesh.
         /// </summary>
-        public ColorScale ColorScale { get; set; }
+        public ColorScale ColorScale
+        {
+            get => colorScale;
+            set
+            {
+                if (colorScale != value)
+                {
+                    colorScale = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Construct an analysis mesh.
@@ -65,7 +114,7 @@ namespace Elements.Analysis
                             Func<Vector3, double> analyze,
                             Guid id = default(Guid),
                             string name = null) : base(new Transform(),
-                                                       null,
+                                                       new List<Representation>() { new MeshRepresentation(new Mesh(), BuiltInMaterials.Analysis) },
                                                        false,
                                                        id == default(Guid) ? Guid.NewGuid() : id,
                                                        name)
@@ -75,6 +124,9 @@ namespace Elements.Analysis
             this.VLength = vLength;
             this.ColorScale = colorScale;
             this._analyze = analyze;
+
+            Analyze();
+            UpdateRepresentations();
         }
 
         /// <summary>
@@ -82,24 +134,10 @@ namespace Elements.Analysis
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representations.Clear();
-            var material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
+            var mesh = this.FirstRepresentationOfType<MeshRepresentation>().Mesh;
+            mesh.Vertices.Clear();
+            mesh.Triangles.Clear();
 
-            var mesh = new Mesh();
-
-            // TODO: Move tesselate code into Update Representation.
-            Tessellate(ref mesh);
-            this.Representations.Add(new MeshRepresentation(mesh, material));
-        }
-
-        /// <summary>
-        /// Tessellate the analysis mesh.
-        /// </summary>
-        /// <param name="mesh"></param>
-        /// <param name="transform"></param>
-        /// <param name="color"></param>
-        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
-        {
             var span = this._max - this._min;
 
             foreach (var result in this._results)
@@ -124,6 +162,13 @@ namespace Elements.Analysis
         /// </summary>
         public void Analyze()
         {
+            if (this._analyze == null)
+            {
+                return;
+            }
+
+            this._results.Clear();
+
             var bounds = new BBox3(new[] { this.Perimeter });
             var w = bounds.Max.X - bounds.Min.X;
             var h = bounds.Max.Y - bounds.Min.Y;

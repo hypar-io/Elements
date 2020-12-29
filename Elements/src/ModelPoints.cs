@@ -14,22 +14,13 @@ namespace Elements
     [UserElement]
     public class ModelPoints : GeometricElement
     {
-        private IList<Vector3> locations;
-
         /// <summary>
         /// The locations of the points.
         /// </summary>
+        [JsonIgnore]
         public IList<Vector3> Locations
         {
-            get => locations;
-            set
-            {
-                if (locations != value)
-                {
-                    locations = value;
-                    RaisePropertyChanged();
-                }
-            }
+            get => FirstRepresentationOfType<PointsRepresentation>().Points;
         }
 
         /// <summary>
@@ -52,14 +43,6 @@ namespace Elements
                                                      isElementDefinition,
                                                      id != default(Guid) ? id : Guid.NewGuid(),
                                                      name)
-        {
-            this.Locations = locations;
-        }
-
-        /// <summary>
-        /// Update the 
-        /// </summary>
-        public override void UpdateRepresentations()
         {
             var rep = FirstRepresentationOfType<PointsRepresentation>();
             rep.Points = this.Locations;

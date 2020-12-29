@@ -18,6 +18,14 @@ namespace Elements.Validators
             // set default values for materials but it's not currently
             // supported through NJSON Schema.
             var geom = (GeometricElement)obj;
+
+            if (geom.Representations == null)
+            {
+                // Perhaps we received an outdated JSON that doesn't
+                // have the Material at the top level.
+                return;
+            }
+
             foreach (var r in geom.Representations)
             {
                 if (r.Material != null)

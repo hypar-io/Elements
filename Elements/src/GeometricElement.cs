@@ -68,6 +68,11 @@ namespace Elements
         /// <returns>A representation or null if no representations of the specified type exist.</returns>
         public T FirstRepresentationOfType<T>()
         {
+            if (this.Representations == null)
+            {
+                return default(T);
+            }
+
             var reps = this.Representations.OfType<T>();
             return reps.Count() > 0 ? (T)reps.First() : default(T);
         }
@@ -79,6 +84,10 @@ namespace Elements
         /// <returns>A collection of representations</returns>
         public List<T> AllRepresentationsOfType<T>()
         {
+            if (this.Representations == null)
+            {
+                return null;
+            }
             return this.Representations.OfType<T>().ToList();
         }
     }

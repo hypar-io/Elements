@@ -65,29 +65,29 @@ namespace Elements.Tests
                     this._model.ToGlTF(modelPath, true);
                 }
 
-                if (this.GenerateJson)
-                {
-                    var jsonPath = $"models/{this._name}.json";
-                    File.WriteAllText(jsonPath, this._model.ToJson());
+                // if (this.GenerateJson)
+                // {
+                //     var jsonPath = $"models/{this._name}.json";
+                //     File.WriteAllText(jsonPath, this._model.ToJson());
 
-                    var newModel = Model.FromJson(File.ReadAllText(jsonPath));
+                //     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
 
-                    var elements = this._model.AllElementsOfType<Element>();
-                    foreach (var e in elements)
-                    {
-                        var newEl = newModel.GetElementOfType<Element>(e.Id);
-                        if (newEl == null)
-                        {
-                            throw new Exception($"{this.Name}: An element with the id {e.Id}, could not be found in the new model.");
-                        }
-                    }
-                }
+                //     var elements = this._model.AllElementsOfType<Element>();
+                //     foreach (var e in elements)
+                //     {
+                //         var newEl = newModel.GetElementOfType<Element>(e.Id);
+                //         if (newEl == null)
+                //         {
+                //             throw new Exception($"{this.Name}: An element with the id {e.Id}, could not be found in the new model.");
+                //         }
+                //     }
+                // }
 
-                if (this.GenerateIfc)
-                {
-                    var ifcPath = $"models/{this._name}.ifc";
-                    this._model.ToIFC(ifcPath);
-                }
+                // if (this.GenerateIfc)
+                // {
+                //     var ifcPath = $"models/{this._name}.ifc";
+                //     this._model.ToIFC(ifcPath);
+                // }
             }
         }
     }
