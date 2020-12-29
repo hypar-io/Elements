@@ -5,6 +5,7 @@ using Elements.Geometry.Solids;
 
 namespace Elements
 {
+    [UserElement]
     public partial class ContentElement
     {
         /// <summary>
