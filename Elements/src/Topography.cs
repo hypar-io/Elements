@@ -6,6 +6,7 @@ using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
+using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements
 {
