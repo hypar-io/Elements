@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -31,7 +30,6 @@ namespace Elements.Geometry
         /// <summary>
         /// Get the hash code for the vector.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.ToString().GetHashCode();
@@ -164,8 +162,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The angle in degrees from this vector to the provided vector.
-        /// Note that for angles in the plane that can be greater than 180 degrees,
+        /// The angle in degrees from this vector to the provided vector. 
+        /// Note that for angles in the plane that can be greater than 180 degrees, 
         /// you should use Vector3.PlaneAngleTo.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
@@ -183,10 +181,6 @@ namespace Elements.Geometry
             if (r.ApproximatelyEquals(1.0))
             {
                 return 0.0;
-            }
-            if (r.ApproximatelyEquals(-1.0))
-            {
-                return 180.0;
             }
             var rad = Math.Acos(r);
             return rad * 180 / Math.PI;
@@ -269,7 +263,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Find the distance from this point to the line, and output the location
+        /// Find the distance from this point to the line, and output the location 
         /// of the closest point on that line.
         /// Using formula from https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd
         /// </summary>
@@ -487,16 +481,29 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a vector from an array of numbers.
+        /// </summary>
+        /// <param name="v">An array of numbers.</param>
+        public static Vector3 FromArray(double[] v)
+        {
+            if (v.Length != 3)
+            {
+                throw new Exception($"A vector cannot be created from an array of {v.Length} numbers.");
+            }
+            return new Vector3(v[0], v[1], v[2]);
+        }
+
+        /// <summary>
         /// A string representation of the vector.
         /// </summary>
         /// <returns>The string representation of this vector.</returns>
         public override string ToString()
         {
-            return $"X:{this.X.ToString("F4")},Y:{this.Y.ToString("F4")},Z:{this.Z.ToString("F4")}";
+            return $"X:{this.X.ToString("F4")}, Y:{this.Y.ToString("F4")}, Z:{this.Z.ToString("F4")}";
         }
 
         /// <summary>
-        /// Determine whether this vector's components are equal to those of v, within tolerance.
+        /// Determine whether this vector's components are equal to those of v, within Epsilon.
         /// </summary>
         /// <param name="v">The vector to compare.</param>
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
@@ -576,6 +583,21 @@ namespace Elements.Geometry
         public bool Equals(Vector3 other)
         {
             return this.IsAlmostEqualTo(other);
+        }
+
+        /// <summary>
+        /// Is this vector equal to the provided vector?
+        /// </summary>
+        /// <param name="other">The vector to test.</param>
+        /// <returns>Returns true if all components of the two vectors are within Epsilon, otherwise false.</returns>
+        public override bool Equals(object other)
+        {
+            if (!(other is Vector3))
+            {
+                return false;
+            }
+            var v = (Vector3)other;
+            return this.IsAlmostEqualTo(v);
         }
 
         /// <summary>
@@ -716,7 +738,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute a transform with the origin at points[0], with
         /// an X axis along points[1]->points[0], and a normal
-        /// computed using the vectors points[2]->points[1] and
+        /// computed using the vectors points[2]->points[1] and 
         /// points[1]->points[0].
         /// </summary>
         /// <param name="points"></param>
@@ -724,9 +746,9 @@ namespace Elements.Geometry
         public static Transform ToTransform(this IList<Vector3> points)
         {
             var a = (points[1] - points[0]).Unitized();
-            // We need to search for a second vector that is not colinear
+            // We need to search for a second vector that is not colinear 
             // with the first. If all the vectors are tried, and one isn't
-            // found that's not parallel to the first, you'll
+            // found that's not parallel to the first, you'll 
             // get a zero-length normal.
             Vector3 b = new Vector3();
             for (var i = 2; i < points.Count; i++)

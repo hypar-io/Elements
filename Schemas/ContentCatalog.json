@@ -1,0 +1,27 @@
+{
+    "x-namespace": "Elements",
+    "required": [
+        "Content"
+    ],
+    "properties": {
+        "Content": {
+            "description": "The content elements in this catalog.",
+            "type": "array",
+            "items": {
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/ContentElement.json"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "description": "A collection of ContentElements",
+    "allOf": [
+        {
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Element.json"
+        }
+    ],
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Element.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "discriminator": "discriminator",
+    "type": "object",
+    "title": "ContentCatalog"
+}

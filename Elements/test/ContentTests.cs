@@ -1,15 +1,9 @@
 using Xunit;
 using Elements.Geometry;
 using Elements.Serialization.glTF;
-using glTFLoader;
-using System.Linq;
 using System.Collections.Generic;
-using glTFLoader.Schema;
 using System;
 using System.IO;
-using Newtonsoft.Json;
-using Elements.Serialization.JSON;
-using System.Diagnostics;
 
 namespace Elements.Tests
 {

@@ -52,42 +52,58 @@ namespace Elements.Generate
     public static class TypeGenerator
     {
         /// <summary>
+        /// The base url for schemas.
+        /// </summary>
+        public static string SchemaBase = "https://prod-api.hypar.io";
+
+        /// <summary>
         /// These are all the 'base' schemas defined for Elements.
         /// </summary>
         private static readonly string[] _hyparSchemas = new string[]{
-                "https://hypar.io/Schemas/GeoJSON/Position.json",
-                "https://hypar.io/Schemas/Geometry/Solids/Extrude.json",
-                "https://hypar.io/Schemas/Geometry/Solids/Lamina.json",
-                "https://hypar.io/Schemas/Geometry/Solids/SolidOperation.json",
-                "https://hypar.io/Schemas/Geometry/Solids/Sweep.json",
-                "https://hypar.io/Schemas/Geometry/Arc.json",
-                "https://dev-api.hypar.io/schemas/BBox3",
-                "https://dev-api.hypar.io/schemas/ContentElement",
-                "https://dev-api.hypar.io/schemas/Geometry",
-                "https://prod-api.hypar.io/schemas/BBox3",
-                "https://prod-api.hypar.io/schemas/ContentElement",
-                "https://prod-api.hypar.io/schemas/Geometry",
-                "https://hypar.io/Schemas/Geometry/Color.json",
-                "https://hypar.io/Schemas/Geometry/Curve.json",
-                "https://hypar.io/Schemas/Geometry/Line.json",
-                "https://hypar.io/Schemas/Geometry/Plane.json",
-                "https://hypar.io/Schemas/Geometry/Polygon.json",
-                "https://hypar.io/Schemas/Geometry/Polyline.json",
-                "https://hypar.io/Schemas/Geometry/Profile.json",
-                "https://hypar.io/Schemas/Geometry/Representation.json",
-                "https://hypar.io/Schemas/Geometry/Transform.json",
-                "https://hypar.io/Schemas/Geometry/Vector3.json",
-                "https://hypar.io/Schemas/Properties/NumericProperty.json",
-                "https://hypar.io/Schemas/GeometricElement.json",
-                "https://hypar.io/Schemas/Element.json",
-                "https://hypar.io/Schemas/Material.json",
-                "https://hypar.io/Schemas/Model.json",
-                "https://hypar.io/Schemas/Geometry/Matrix.json",
-                "https://hypar.io/Schemas/InputData.json",
-                "https://geojson.org/schema/Point.json",
-            };
+            $"{SchemaBase}/ContentCatalog.json",
+            $"{SchemaBase}/ContentElement.json",
+            $"{SchemaBase}/Element.json",
+            $"{SchemaBase}/GeometricElement.json",
+            $"{SchemaBase}/Material.json",
+            $"{SchemaBase}/Model.json",
+
+            $"{SchemaBase}/GeoJSON/Position.json",
+
+            $"{SchemaBase}/Geometry/Solids/Extrude.json",
+            $"{SchemaBase}/Geometry/Solids/Lamina.json",
+            $"{SchemaBase}/Geometry/Solids/SolidOperation.json",
+            $"{SchemaBase}/Geometry/Solids/Sweep.json",
+
+            $"{SchemaBase}/Geometry/Arc.json",
+            $"{SchemaBase}/Geometry/BBox3.json",
+            $"{SchemaBase}/Geometry/Color.json",
+            $"{SchemaBase}/Geometry/Curve.json",
+            $"{SchemaBase}/Geometry/CurveRepresentation.json",
+            $"{SchemaBase}/Geometry/Line.json",
+            $"{SchemaBase}/Geometry/Matrix.json",
+            $"{SchemaBase}/Geometry/Mesh.json",
+            $"{SchemaBase}/Geometry/MeshRepresentation.json",
+            $"{SchemaBase}/Geometry/Plane.json",
+            $"{SchemaBase}/Geometry/PointsRepresentation.json",
+            $"{SchemaBase}/Geometry/Polygon.json",
+            $"{SchemaBase}/Geometry/Polyline.json",
+            $"{SchemaBase}/Geometry/Profile.json",
+            $"{SchemaBase}/Geometry/Representation.json",
+            $"{SchemaBase}/Geometry/SolidRepresentation.json",
+            $"{SchemaBase}/Geometry/Transform.json",
+            $"{SchemaBase}/Geometry/Triangle.json",
+            $"{SchemaBase}/Geometry/UV.json",
+            $"{SchemaBase}/Geometry/Vector3.json",
+            $"{SchemaBase}/Geometry/Vertex.json",
+
+            $"{SchemaBase}/Properties/NumericProperty.json",
+            $"{SchemaBase}/InputData.json",
+
+            "https://geojson.org/schema/Point.json",
+        };
 
         private const string NAMESPACE_PROPERTY = "x-namespace";
+        private const string STRUCT_PROPERTY = "x-struct";
         private static string[] _coreTypeNames;
         private static string _templatesPath;
 
@@ -324,31 +340,6 @@ namespace Elements.Generate
         }
 
         /// <summary>
-        /// Generate the core element types as .cs files to the specified output directory.
-        /// </summary>
-        /// <param name="outputBaseDir">The root directory into which generated files will be written.</param>
-        public static async Task<GenerationResult[]> GenerateElementTypesAsync(string outputBaseDir)
-        {
-            DotLiquid.Template.DefaultIsThreadSafe = true;
-            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
-            var typeNames = _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToList();
-            var tasks = new List<Task<GenerationResult>>();
-            foreach (var uri in _hyparSchemas)
-            {
-                var split = uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Skip(3);
-                var outDir = Path.Combine(outputBaseDir, string.Join("/", split.Take(split.Count() - 1)).TrimEnd('.'));
-                if (!Directory.Exists(outDir))
-                {
-                    Directory.CreateDirectory(outDir);
-                }
-
-                tasks.Add(GenerateUserElementTypeFromUriAsync(uri, outDir));
-            }
-            var allResults = await Task.WhenAll(tasks);
-            return allResults;
-        }
-
-        /// <summary>
         /// Get a list of the core Hypar types, which should be excluded from code generation.
         /// </summary>
         public static string[] GetCoreTypeNames()
@@ -379,10 +370,10 @@ namespace Elements.Generate
             }
             else
             {
-                var path = Path.GetFullPath(Path.Combine(Assembly.GetExecutingAssembly().Location, uri));
+                var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), uri));
                 if (!File.Exists(path))
                 {
-                    throw new Exception($"The specified schema, {uri}, can not be found as a relative file or a url.");
+                    throw new Exception($"The specified schema, {uri}, can not be found at the path {path}.");
                 }
                 return await JsonSchema.FromJsonAsync(File.ReadAllText(path));
             }
@@ -404,7 +395,11 @@ namespace Elements.Generate
         {
             var templates = TemplatesPath;
 
-            var structTypes = new[] { "Color", "Vector3", "BBox3", "UV" };
+            var isStruct = false;
+            if (schema.ExtensionData.ContainsKey(STRUCT_PROPERTY))
+            {
+                isStruct = (bool)schema.ExtensionData[STRUCT_PROPERTY];
+            }
 
             // A limited set of the solid operation types. This will be used
             // to add INotifyPropertyChanged logic, so we don't add the
@@ -419,7 +414,7 @@ namespace Elements.Generate
                 ExcludedTypeNames = excludedTypes == null ? new string[] { } : excludedTypes,
                 TemplateDirectory = templates,
                 GenerateJsonMethods = false,
-                ClassStyle = solidOpTypes.Contains(typeName) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
+                ClassStyle = (typeName == "Element" || solidOpTypes.Contains(typeName)) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
                 TypeNameGenerator = new ElementsTypeNameGenerator(),
                 PropertyNameGenerator = new ElementsPropertyNameGenerator(),
             };
@@ -447,20 +442,21 @@ namespace Elements.Generate
                 };
                 var template = settings.TemplateFactory.CreateTemplate("CSharp", "File", model);
                 var code = template.Render();
-                var fileContents = FileTweaksAndCleanup(typeName, isUserElement, structTypes, code);
+                var fileContents = FileTweaksAndCleanup(typeName, isUserElement, isStruct, code, schema);
                 typeFiles[fileArtifact.TypeName] = fileContents;
             }
 
             return typeFiles;
         }
 
-        private static string FileTweaksAndCleanup(string typeName, bool isUserElement, string[] structTypes, string file)
+        private static string FileTweaksAndCleanup(string typeName, bool isUserElement, bool isStruct, string file, JsonSchema schema)
         {
             // Convert some classes to structs.
-            if (structTypes.Contains(typeName))
+            if (isStruct)
             {
                 file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
             }
+
             if (isUserElement)
             {
                 // remove unnecessary imports
@@ -529,11 +525,14 @@ using Hypar.Functions.Execution.AWS;", "");
         private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outDirPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
         {
             var diagnosticMessages = new List<string>();
-            Console.WriteLine($"Generating type {@ns}.{typeName} in {outDirPath}...");
+
             var typeCodeDict = GetCodeForTypesFromSchema(schema, typeName, ns, isUserElement, excludedTypes);
             foreach (var kvp in typeCodeDict)
             {
                 var path = Path.Combine(outDirPath, $"{kvp.Key}.g.cs");
+
+                Console.WriteLine($"Generating type {@ns}.{typeName} in {path}...");
+
                 if (File.Exists(path))
                 {
                     // need to wait for file to be available because code gen is async
