@@ -18,34 +18,31 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Geometry
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>The representation of an element.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Representation 
+    public partial class Representation
     {
         [Newtonsoft.Json.JsonConstructor]
         public Representation(IList<SolidOperation> @solidOperations)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Representation>();
-            if(validator != null)
+            if (validator != null)
             {
-                validator.PreConstruct(new object[]{ @solidOperations});
+                validator.PreConstruct(new object[] { @solidOperations });
             }
-        
+
             this.SolidOperations = @solidOperations;
-            
-            if(validator != null)
+
+            if (validator != null)
             {
                 validator.PostConstruct(this);
             }
         }
-    
-        /// <summary>A collection of solid operations.</summary>
-        [Newtonsoft.Json.JsonProperty("SolidOperations", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
-    
-    
+
+
+
+
     }
 }
