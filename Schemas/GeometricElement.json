@@ -17,6 +17,7 @@
         "Transform",
         "Material",
         "Representation",
+        "Representations",
         "discriminator"
     ],
     "discriminator": "discriminator",
