@@ -20,22 +20,21 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>The representation of an element.</summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    /// <summary>A representation containing a collection of solid operations.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Representation : Element
+    public partial class CurveRepresentation : Representation
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Representation(Material @material, System.Guid @id, string @name)
-            : base(id, name)
+        public CurveRepresentation(Curve @curve, Material @material, System.Guid @id, string @name)
+            : base(material, id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Representation>();
+            var validator = Validator.Instance.GetFirstValidatorForType<CurveRepresentation>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @material, @id, @name});
+                validator.PreConstruct(new object[]{ @curve, @material, @id, @name});
             }
         
-            this.Material = @material;
+            this.Curve = @curve;
             
             if(validator != null)
             {
@@ -43,9 +42,9 @@ namespace Elements.Geometry
             }
         }
     
-        /// <summary>The element's material.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Material Material { get; set; }
+        /// <summary>A curve.</summary>
+        [Newtonsoft.Json.JsonProperty("Curve", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Curve Curve { get; set; }
     
     
     }

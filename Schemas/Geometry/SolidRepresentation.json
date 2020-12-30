@@ -1,0 +1,29 @@
+{
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/SolidRepresentation.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A representation containing a collection of solids.",
+    "title": "SolidRepresentation",
+    "x-namespace": "Elements.Geometry",
+    "type": [
+        "object",
+        "null"
+    ],
+    "required": [
+        "SolidOperations"
+    ],
+    "properties": {
+        "SolidOperations": {
+            "type": "array",
+            "description": "A collection of solids.",
+            "items": {
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Solids/SolidOperation.json"
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Representation.json"
+        }
+    ],
+    "additionalProperties": false
+}

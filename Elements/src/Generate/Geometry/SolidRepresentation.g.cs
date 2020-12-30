@@ -20,22 +20,21 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>The representation of an element.</summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    /// <summary>A representation containing a collection of solids.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Representation : Element
+    public partial class SolidRepresentation : Representation
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Representation(Material @material, System.Guid @id, string @name)
-            : base(id, name)
+        public SolidRepresentation(IList<SolidOperation> @solidOperations, Material @material, System.Guid @id, string @name)
+            : base(material, id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Representation>();
+            var validator = Validator.Instance.GetFirstValidatorForType<SolidRepresentation>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @material, @id, @name});
+                validator.PreConstruct(new object[]{ @solidOperations, @material, @id, @name});
             }
         
-            this.Material = @material;
+            this.SolidOperations = @solidOperations;
             
             if(validator != null)
             {
@@ -43,9 +42,10 @@ namespace Elements.Geometry
             }
         }
     
-        /// <summary>The element's material.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Material Material { get; set; }
+        /// <summary>A collection of solids.</summary>
+        [Newtonsoft.Json.JsonProperty("SolidOperations", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
     
     
     }

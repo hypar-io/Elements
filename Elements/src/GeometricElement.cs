@@ -30,6 +30,9 @@ namespace Elements
             this.Representations.Add(representation);
         }
 
+        /// This constructor is here to support deserialization
+        /// of geometric elements using the old format with a 
+        /// material and a representation.
         /// <summary>
         /// Construct a geometric element with a solid representation.
         /// </summary>

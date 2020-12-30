@@ -20,22 +20,21 @@ namespace Elements.Geometry
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>The representation of an element.</summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    /// <summary>A representation containing a mesh.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Representation : Element
+    public partial class MeshRepresentation : Representation
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Representation(Material @material, System.Guid @id, string @name)
-            : base(id, name)
+        public MeshRepresentation(Mesh @mesh, Material @material, System.Guid @id, string @name)
+            : base(material, id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Representation>();
+            var validator = Validator.Instance.GetFirstValidatorForType<MeshRepresentation>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @material, @id, @name});
+                validator.PreConstruct(new object[]{ @mesh, @material, @id, @name});
             }
         
-            this.Material = @material;
+            this.Mesh = @mesh;
             
             if(validator != null)
             {
@@ -43,9 +42,10 @@ namespace Elements.Geometry
             }
         }
     
-        /// <summary>The element's material.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Material Material { get; set; }
+        /// <summary>A mesh.</summary>
+        [Newtonsoft.Json.JsonProperty("Mesh", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public Mesh Mesh { get; set; } = new Mesh();
     
     
     }

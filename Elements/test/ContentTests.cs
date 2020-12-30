@@ -11,8 +11,8 @@ namespace Elements.Tests
     {
         private class TestContentElem : ContentElement
         {
-            public TestContentElem(string @gltfLocation, BBox3 @bBox, Vector3 @toSource, Transform @transform, double scale, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
-                        : base(gltfLocation, bBox, scale, @toSource, transform, material, representation, isElementDefinition, id, name)
+            public TestContentElem(string @gltfLocation, BBox3 @bBox, Vector3 @toSource, Transform @transform, double scale, IList<Representation> @representations, bool @isElementDefinition, System.Guid @id, string @name)
+                        : base(gltfLocation, bBox, scale, @toSource, transform, representations, isElementDefinition, id, name)
             { }
         }
 
@@ -24,7 +24,6 @@ namespace Elements.Tests
                                       1,
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.ZAxis),
-                                      BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
@@ -34,14 +33,12 @@ namespace Elements.Tests
                                       1,
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
-                                      BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
                                       "BoxyType");
             var str = boxType2.ToString();
             boxType.AdditionalProperties["ImportantParameter"] = "The Value";
-
 
             var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, Guid.NewGuid(), "test");
 
@@ -67,7 +64,6 @@ namespace Elements.Tests
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.XAxis),
                                       20,
-                                      BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),
@@ -77,7 +73,6 @@ namespace Elements.Tests
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
                                       .005,
-                                      BuiltInMaterials.Default,
                                       null,
                                       true,
                                       Guid.NewGuid(),

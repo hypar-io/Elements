@@ -1,0 +1,27 @@
+{
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/MeshRepresentation.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "A representation containing a mesh.",
+    "title": "MeshRepresentation",
+    "x-namespace": "Elements.Geometry",
+    "type": [
+        "object",
+        "null"
+    ],
+    "required": [
+        "Mesh"
+    ],
+    "properties": {
+        "Mesh": {
+            "type": "object",
+            "description": "A mesh.",
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Mesh.json"
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Representation.json"
+        }
+    ],
+    "additionalProperties": false
+}

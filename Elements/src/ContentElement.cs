@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.IO;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 
 namespace Elements
 {
-    [UserElement]
     public partial class ContentElement
     {
         /// <summary>
@@ -18,18 +16,32 @@ namespace Elements
         /// <param name="gltfScaleToMeters">The number required to scale this contents dimensions to meters.  Used during gltf merging.</param>
         /// <param name="sourceDirection">The direction the element was facing when it was extracted from it's source.</param>
         /// <param name="transform">The transform of this ContentElement.</param>
-        /// <param name="material">The material, used for the BBox representation of this element.</param>
-        /// <param name="representation">The representation which will be updated when needed.</param>
+        /// <param name="representations">The representations of this content element.</param>
         /// <param name="isElementDefinition">Should the element be used to create instances, or should it be inserted into a 3D scene.</param>
         /// <param name="id">The guid of this element.</param>
         /// <param name="name">The name of this element.</param>
         /// <param name="additionalProperties">The string json serialization of a dictionary of additional parameters.</param>
-        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
-        : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @transform, @material, @representation, @isElementDefinition, @id, @name)
+        public ContentElement(string @gltfLocation,
+                              BBox3 @boundingBox,
+                              double @gltfScaleToMeters,
+                              Vector3 @sourceDirection,
+                              Transform @transform,
+                              IList<Representation> @representations,
+                              bool @isElementDefinition,
+                              System.Guid @id,
+                              string @name,
+                              string @additionalProperties) : this(@gltfLocation,
+                                                                  @boundingBox,
+                                                                  @gltfScaleToMeters,
+                                                                  @sourceDirection,
+                                                                  @transform,
+                                                                  @representations,
+                                                                  @isElementDefinition,
+                                                                  @id,
+                                                                  @name)
         {
             this.AdditionalProperties = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(@additionalProperties);
         }
-
 
         /// <summary>
         /// Update the ContentElement representation with a solid of the
@@ -48,7 +60,11 @@ namespace Elements
 
             var height = BoundingBox.Max.Z - BoundingBox.Min.Z;
             var boxSolid = new Extrude(bottomProfile, height, Vector3.ZAxis, false);
-            this.Representation = new Representation(new List<SolidOperation> { boxSolid });
+
+            var rep = FirstRepresentationOfType<SolidRepresentation>();
+            var extrude = (Extrude)rep.SolidOperations[0];
+            extrude.Profile = bottomProfile;
+            extrude.Height = height;
         }
     }
 }
