@@ -15,8 +15,6 @@
     ],
     "required": [
         "Transform",
-        "Material",
-        "Representation",
         "Representations",
         "discriminator"
     ],
@@ -25,15 +23,6 @@
         "Transform": {
             "description": "The element's transform.",
             "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Transform.json"
-        },
-        "Material": {
-            "description": "The element's material.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Material.json"
-        },
-        "Representation": {
-            "type": "object",
-            "description": "The element's representation.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Representation.json"
         },
         "Representations": {
             "type": "array",
