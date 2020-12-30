@@ -1,24 +1,28 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Representation.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Geometry/Representation.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "The representation of an element.",
     "title": "Representation",
     "x-namespace": "Elements.Geometry",
+    "discriminator": "discriminator",
     "type": [
         "object",
         "null"
     ],
     "required": [
-        "SolidOperations"
+        "Material",
+        "discriminator"
     ],
     "properties": {
-        "SolidOperations": {
-            "type": "array",
-            "description": "A collection of solid operations.",
-            "items": {
-                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Solids/SolidOperation.json"
-            }
+        "Material": {
+            "description": "The element's material.",
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Material.json"
         }
     },
+    "allOf": [
+        {
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation/Schemas/Element.json"
+        }
+    ],
     "additionalProperties": false
 }
