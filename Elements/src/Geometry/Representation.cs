@@ -11,5 +11,13 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Required]
         [Obsolete("Use SolidRepresentation instead.")]
         public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
+
+        /// <summary>
+        /// Create a representation with a default id.
+        /// </summary>
+        // public Representation(Material material) : base(Guid.NewGuid(), null)
+        // {
+        //     this.Material = material;
+        // }
     }
 }
