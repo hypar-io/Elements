@@ -1,5 +1,5 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/GeometricElement.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/GeometricElement.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "description": "An element with a geometric representation.",
     "title": "GeometricElement",
@@ -10,7 +10,7 @@
     ],
     "allOf": [
         {
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Element.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Element.json"
         }
     ],
     "required": [
@@ -23,22 +23,22 @@
     "properties": {
         "Transform": {
             "description": "The element's transform.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Transform.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Transform.json"
         },
         "Material": {
             "description": "The element's material.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation-type-generation/Schemas/Material.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations-type-generation/Schemas/Material.json"
         },
         "Representation": {
             "type": "object",
             "description": "The element's representation.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Representation.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Representation.json"
         },
         "Representations": {
             "type": "array",
             "description": "The element's representation.",
             "items": {
-                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Representation.json"
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Representation.json"
             }
         },
         "IsElementDefinition": {

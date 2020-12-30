@@ -1,12 +1,12 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Solids/Extrude.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Solids/Extrude.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Extrude",
     "x-namespace": "Elements.Geometry.Solids",
     "type": "object",
     "allOf": [
         {
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Solids/SolidOperation.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Solids/SolidOperation.json"
         }
     ],
     "description": "An extrusion of a profile, in a direction, to a height.",
@@ -18,7 +18,7 @@
     "properties": {
         "Profile": {
             "description": "The id of the profile to extrude.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Profile.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Profile.json"
         },
         "Height": {
             "description": "The height of the extrusion.",
@@ -27,7 +27,7 @@
         },
         "Direction": {
             "description": "The direction in which to extrude.",
-            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Vector3.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Vector3.json"
         }
     },
     "additionalProperties": false
