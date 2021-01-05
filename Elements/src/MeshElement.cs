@@ -22,7 +22,6 @@ namespace Elements
         /// <summary>
         /// The element's mesh.
         /// </summary>
-        // [JsonIgnore]
         public Mesh Mesh => this._mesh;
 
         /// <summary>
