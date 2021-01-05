@@ -88,6 +88,10 @@ namespace Elements.Geometry
         /// <returns></returns>
         public bool Intersects(GeometricElement element, out List<Vector3> result)
         {
+            if (element.Representation == null || element.Representation.SolidOperations == null || element.Representation.SolidOperations.Count == 0)
+            {
+                element.UpdateRepresentations();
+            }
             List<Vector3> resultsOut = new List<Vector3>();
             var transformFromElement = new Transform(element.Transform);
             transformFromElement.Invert();
@@ -167,9 +171,9 @@ namespace Elements.Geometry
                 transformFromPolygon.Invert();
                 var transformedIntersection = transformFromPolygon.OfVector(intersection);
                 IEnumerable<Line> curveList = boundaryPolygon.Segments();
-                if(voids != null)
+                if (voids != null)
                 {
-                    curveList = curveList.Union(voids.SelectMany(v => v.Segments())); 
+                    curveList = curveList.Union(voids.SelectMany(v => v.Segments()));
                 }
                 curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
 

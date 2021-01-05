@@ -266,6 +266,15 @@ namespace Elements.Tests
             this.Model.AddElements(new Element[] { mass, analysisMesh });
         }
 
+        [Fact]
+        private static void RayIntersectsNewlyGeneratedElement()
+        {
+            var wall = new StandardWall(new Line(Vector3.Origin, new Vector3(10, 0, 0)), 0.3, 3);
+            var ray = new Ray(new Vector3(5, 5, 1), new Vector3(0, -1, 0));
+            var doesIntersect = ray.Intersects(wall, out var result);
+            Assert.True(doesIntersect);
+        }
+
         private static Vector3 Center(Triangle t)
         {
             return new Vector3[] { t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position }.Average();
