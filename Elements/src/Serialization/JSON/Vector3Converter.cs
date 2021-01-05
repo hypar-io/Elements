@@ -21,18 +21,20 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            try
+            var token = JToken.Load(reader);
+            if (token is JArray)
             {
                 // New vector format Ex: [1,2,3]
-                var arr = JArray.Load(reader);
+                var arr = (JArray)token;
                 return Vector3.FromArray(arr.ToObject<double[]>());
             }
-            catch
+            else if (token is JObject)
             {
                 // Old vector format Ex: X:1, Y:2, Z:3
-                var obj = JObject.Load(reader);
+                var obj = (JObject)token;
                 return obj.ToObject<Vector3>();
             }
+            throw new Exception("The token representing a Vector3 was not an object or an array. Check the JSON to ensure that vectors are encoded as X: Y: Z: or [X,Y,Z].");
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

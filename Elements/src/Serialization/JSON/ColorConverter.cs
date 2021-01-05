@@ -19,19 +19,20 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            try
+            var token = JToken.Load(reader);
+            if (token is JArray)
             {
                 // New color format Ex: [x,x,x,x]
-                var arr = JArray.Load(reader);
+                var arr = (JArray)token;
                 return Color.FromArray(arr.ToObject<double[]>());
             }
-            catch
+            else if (token is JObject)
             {
-
                 // Old color format Ex: Red:x, Green:x, Blue:x, Alpha:x
-                var obj = JObject.Load(reader);
+                var obj = (JObject)token;
                 return obj.ToObject<Color>();
             }
+            throw new Exception("The token representing a Color was not an object or an array. Check the JSON to ensure that colors are encoded as R: G: B: A: or [R,G,B,A].");
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

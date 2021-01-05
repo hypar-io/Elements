@@ -20,6 +20,10 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
+            // Triangle vertices are written to JSON as indices as their
+            // vertex references are already written in the Mesh.Vertices collection.
+            // The MeshConverter handles re-hydrating vertices in Mesh.Vertices
+            // then setting the references on triangles appropriately using the index.
             throw new NotSupportedException();
         }
 
