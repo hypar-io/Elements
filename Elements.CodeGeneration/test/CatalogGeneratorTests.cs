@@ -1,3 +1,4 @@
+using System.IO;
 using Elements.Generate;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace Elements.Test
         public void GenerateCatalogTest()
         {
             var testPath = "../../../TestData/CatalogFromRevit.json";
-            CatalogGenerator.FromUri(testPath, "../../../");
+            CatalogGenerator.FromUri(testPath, "../");
         }
     }
 }
