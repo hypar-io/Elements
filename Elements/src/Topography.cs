@@ -16,7 +16,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/TopographyTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class Topography : MeshElement, ITessellate
     {
         private double _minElevation = double.PositiveInfinity;

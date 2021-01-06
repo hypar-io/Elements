@@ -6,7 +6,6 @@ namespace Elements
     /// <summary>
     /// A Brace is a structural framing element which is often diagonal.
     /// </summary>
-    [UserElement]
     public class Brace : StructuralFraming
     {
         /// <summary>
@@ -31,7 +30,7 @@ namespace Elements
                      Transform transform = null,
                      bool isElementDefinition = false,
                      Guid id = default(Guid),
-                     string name = null) 
+                     string name = null)
             : base(curve,
                    profile,
                    material,
@@ -43,6 +42,6 @@ namespace Elements
                    isElementDefinition,
                    id,
                    name)
-        {}
+        { }
     }
 }

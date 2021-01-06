@@ -8,7 +8,6 @@ namespace Elements
     /// <summary>
     /// An element defined by a perimeter and a cross section swept along that perimeter.
     /// </summary>
-    [UserElement]
     public class Frame : GeometricElement
     {
         /// <summary>

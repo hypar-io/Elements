@@ -11,7 +11,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/WallTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class StandardWall : Wall
     {
         /// <summary>

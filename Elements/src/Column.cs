@@ -9,7 +9,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ColumnTest.cs?name=example)]
     /// </example>
-    [UserElement]
     public class Column : StructuralFraming
     {
         /// <summary>

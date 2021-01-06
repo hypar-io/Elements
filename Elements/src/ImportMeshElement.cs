@@ -11,7 +11,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ImportMeshElementTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public sealed class ImportMeshElement : MeshElement
     {
         /// <summary>
