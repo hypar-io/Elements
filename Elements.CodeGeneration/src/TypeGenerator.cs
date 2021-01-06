@@ -51,60 +51,50 @@ namespace Elements.Generate
     /// </summary>
     public static class TypeGenerator
     {
-        /// <summary>
-        /// The base url for schemas.
-        /// </summary>
-        public static string SchemaBase = "https://prod-api.hypar.io";
 
         /// <summary>
         /// These are all the 'base' schemas defined for Elements.
         /// </summary>
-        private static readonly string[] _hyparSchemas = new string[]{
-            $"{SchemaBase}/ContentCatalog.json",
-            $"{SchemaBase}/ContentElement.json",
-            $"{SchemaBase}/Element.json",
-            $"{SchemaBase}/GeometricElement.json",
-            $"{SchemaBase}/Material.json",
-            $"{SchemaBase}/Model.json",
-
-            $"{SchemaBase}/GeoJSON/Position.json",
-
-            $"{SchemaBase}/Geometry/Solids/Extrude.json",
-            $"{SchemaBase}/Geometry/Solids/Lamina.json",
-            $"{SchemaBase}/Geometry/Solids/SolidOperation.json",
-            $"{SchemaBase}/Geometry/Solids/Sweep.json",
-
-            $"{SchemaBase}/Geometry/Arc.json",
-            $"{SchemaBase}/Geometry/BBox3.json",
-            $"{SchemaBase}/Geometry/Color.json",
-            $"{SchemaBase}/Geometry/Curve.json",
-            $"{SchemaBase}/Geometry/CurveRepresentation.json",
-            $"{SchemaBase}/Geometry/Line.json",
-            $"{SchemaBase}/Geometry/Matrix.json",
-            $"{SchemaBase}/Geometry/Mesh.json",
-            $"{SchemaBase}/Geometry/MeshRepresentation.json",
-            $"{SchemaBase}/Geometry/Plane.json",
-            $"{SchemaBase}/Geometry/PointsRepresentation.json",
-            $"{SchemaBase}/Geometry/Polygon.json",
-            $"{SchemaBase}/Geometry/Polyline.json",
-            $"{SchemaBase}/Geometry/Profile.json",
-            $"{SchemaBase}/Geometry/Representation.json",
-            $"{SchemaBase}/Geometry/SolidRepresentation.json",
-            $"{SchemaBase}/Geometry/Transform.json",
-            $"{SchemaBase}/Geometry/Triangle.json",
-            $"{SchemaBase}/Geometry/UV.json",
-            $"{SchemaBase}/Geometry/Vector3.json",
-            $"{SchemaBase}/Geometry/Vertex.json",
-
-            $"{SchemaBase}/Properties/NumericProperty.json",
-            $"{SchemaBase}/InputData.json",
-
-            "https://geojson.org/schema/Point.json",
+        private static readonly string[] _coreTypeNames = new string[]{
+            "Catalog",
+            "ContentElement",
+            "Element",
+            "GeometricElement",
+            "Material",
+            "Model",
+            "Position",
+            "Extrude",
+            "Lamina",
+            "SolidOperation",
+            "Sweep",
+            "Arc",
+            "BBox3",
+            "Color",
+            "Curve",
+            "CurveRepresentation",
+            "Line",
+            "Matrix",
+            "Mesh",
+            "MeshRepresentation",
+            "Plane",
+            "PointsRepresentation",
+            "Polygon",
+            "Polyline",
+            "Profile",
+            "Representation",
+            "SolidRepresentation",
+            "Transform",
+            "Triangle",
+            "UV",
+            "Vector3",
+            "Vertex",
+            "NumericProperty",
+            "InputData",
+            "Point",
         };
 
         private const string NAMESPACE_PROPERTY = "x-namespace";
         private const string STRUCT_PROPERTY = "x-struct";
-        private static string[] _coreTypeNames;
         private static string _templatesPath;
 
         /// <summary>
@@ -160,10 +150,6 @@ namespace Elements.Generate
             }
 
             var typeName = schema.Title;
-            if (_coreTypeNames == null)
-            {
-                _coreTypeNames = GetCoreTypeNames();
-            }
             var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
             return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, isUserElement, excludedTypeNames);
         }
@@ -344,12 +330,7 @@ namespace Elements.Generate
         /// </summary>
         public static string[] GetCoreTypeNames()
         {
-            return _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToArray();
-        }
-
-        private static string GetTypeNameFromSchemaUri(string uri)
-        {
-            return Path.GetFileNameWithoutExtension(uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last());
+            return _coreTypeNames;
         }
 
         private static string GetFileNameFromTypeName(string typeName)
@@ -624,11 +605,6 @@ using Hypar.Functions.Execution.AWS;", "");
             }
 
             var typeName = schema.Title;
-            if (_coreTypeNames == null)
-            {
-                _coreTypeNames = GetCoreTypeNames();
-            }
-
             var loadedTypes = GetLoadedElementTypes(true).Select(t => t.Name);
             if (loadedTypes.Contains(typeName))
             {
