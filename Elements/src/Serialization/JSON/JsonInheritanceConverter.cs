@@ -106,7 +106,7 @@ namespace Elements.Serialization.JSON
         /// Call this method after assemblies have been loaded into the app
         /// domain to ensure that the converter's cache is up to date.
         /// </summary>
-        public static void RefreshAppDomainTypeCache()
+        internal static void RefreshAppDomainTypeCache()
         {
             _typeCache = BuildAppDomainTypeCache();
         }
