@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
@@ -21,6 +23,18 @@ namespace Elements.Serialization.JSON
         private static bool _isWriting;
 
         private static Dictionary<string, Type> _typeCache;
+        private static Dictionary<string, Type> TypeCache
+        {
+            get
+            {
+                if (_typeCache == null)
+                {
+                    _typeCache = BuildAppDomainTypeCache();
+
+                }
+                return _typeCache;
+            }
+        }
 
         [System.ThreadStatic]
         private static Dictionary<Guid, Element> _elements;
@@ -40,43 +54,61 @@ namespace Elements.Serialization.JSON
         public JsonInheritanceConverter()
         {
             _discriminator = DefaultDiscriminatorName;
-            _typeCache = BuildUserElementTypeCache();
         }
 
         public JsonInheritanceConverter(string discriminator)
         {
             _discriminator = discriminator;
-            _typeCache = BuildUserElementTypeCache();
         }
 
-        public static void RefreshUserElementTypeCache()
-        {
-            _typeCache = BuildUserElementTypeCache();
-        }
-
-        private static Dictionary<string, Type> BuildUserElementTypeCache()
+        private static Dictionary<string, Type> BuildAppDomainTypeCache()
         {
             var typeCache = new Dictionary<string, Type>();
 
-            // Build the user element type cache
+            // Get all the assemblies loaded in the currently directory.
+            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var asm in assemblies)
+            foreach (var file in Directory.EnumerateFiles(dir, "*.dll"))
             {
-                try
-                {
-                    var userTypes = asm.GetTypes().Where(t => t.GetCustomAttributes(typeof(UserElement), true).Length > 0);
-                    foreach (var ut in userTypes)
-                    {
-                        typeCache.Add(ut.FullName, ut);
-                    }
-                }
-                catch
+                var fileName = Path.GetFileNameWithoutExtension(file);
+                if (fileName.Contains("Hypar.IFC")
+                    || fileName.Contains("Microsoft")
+                    || fileName.Contains("System")
+                    || fileName.Contains("xunit")
+                    || fileName.Contains("NJsonSchema")
+                    || fileName.Contains("Newtonsoft")
+                    || fileName.Contains("SixLabors")
+                    || fileName.Contains("Csg")
+                    || fileName.Contains("LibTess")
+                    || fileName.Contains("DotLiquid")
+                    || fileName.Contains("glTFLoader")
+                    || fileName.Contains("Antlr4"))
                 {
                     continue;
+                }
+                var asm = assemblies.FirstOrDefault(a => a.GetName().Name == fileName);
+                if (asm != null)
+                {
+                    foreach (var t in asm.GetTypes().Where(ty => ty.IsPublic))
+                    {
+                        if (!typeCache.ContainsKey(t.FullName))
+                        {
+                            typeCache.Add(t.FullName, t);
+                        }
+                    }
                 }
             }
 
             return typeCache;
+        }
+
+        /// <summary>
+        /// Call this method after assemblies have been loaded into the app
+        /// domain to ensure that the converter's cache is up to date.
+        /// </summary>
+        public static void RefreshAppDomainTypeCache()
+        {
+            _typeCache = BuildAppDomainTypeCache();
         }
 
         public static bool ElementwiseSerialization { get; set; } = false;
@@ -97,7 +129,7 @@ namespace Elements.Serialization.JSON
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
-                    jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, GetSubtypeDiscriminator(value.GetType())));
+                    jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, value.GetType().FullName));
                     writer.WriteToken(jObject.CreateReader());
                 }
             }
@@ -221,23 +253,14 @@ namespace Elements.Serialization.JSON
 
         private System.Type GetObjectSubtype(System.Type objectType, string discriminator, JObject jObject)
         {
-            // Check the existing inheritance attributes.
-            // This block will be hit when a type contains
-            // an inheritance attribute specifying one of its subtypes.
-            foreach (var attribute in System.Reflection.CustomAttributeExtensions.GetCustomAttributes<JsonInheritanceAttribute>(System.Reflection.IntrospectionExtensions.GetTypeInfo(objectType), true))
+            // Check the type cache.
+            if (discriminator != null && TypeCache.ContainsKey(discriminator))
             {
-                if (attribute.Key == discriminator)
-                    return attribute.Type;
+                return TypeCache[discriminator];
             }
 
-            // If the inheritance attributes is not supplied, as in the case
-            // of a user-provided type, then we use the type cache of all
-            // types with the UserElementType attribute.
-            if (discriminator != null && _typeCache.ContainsKey(discriminator))
-            {
-                return _typeCache[discriminator];
-            }
-
+            // If it's not in the type cache see if it's got a representation.
+            // Import it as a GeometricElement.
             if (jObject.TryGetValue("Representation", out JToken representationToken))
             {
                 return typeof(GeometricElement);
@@ -246,17 +269,6 @@ namespace Elements.Serialization.JSON
             // The default behavior for this converter, as provided by nJSONSchema
             // is to return the base objectType if a derived type can't be found.
             return objectType;
-        }
-
-        private string GetSubtypeDiscriminator(System.Type objectType)
-        {
-            foreach (var attribute in System.Reflection.CustomAttributeExtensions.GetCustomAttributes<JsonInheritanceAttribute>(System.Reflection.IntrospectionExtensions.GetTypeInfo(objectType), true))
-            {
-                if (attribute.Type == objectType)
-                    return attribute.Key;
-            }
-
-            return objectType.FullName;
         }
     }
 }
