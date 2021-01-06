@@ -481,19 +481,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a vector from an array of numbers.
-        /// </summary>
-        /// <param name="v">An array of numbers.</param>
-        public static Vector3 FromArray(double[] v)
-        {
-            if (v.Length != 3)
-            {
-                throw new Exception($"A vector cannot be created from an array of {v.Length} numbers.");
-            }
-            return new Vector3(v[0], v[1], v[2]);
-        }
-
-        /// <summary>
         /// A string representation of the vector.
         /// </summary>
         /// <returns>The string representation of this vector.</returns>
