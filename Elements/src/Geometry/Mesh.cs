@@ -1,4 +1,6 @@
+using Elements.Serialization.JSON;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +8,7 @@ using static Elements.Units;
 
 namespace Elements.Geometry
 {
+    [JsonConverter(typeof(MeshConverter))]
     public partial class Mesh
     {
         /// <summary>
