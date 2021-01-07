@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +15,6 @@ namespace Elements.Tests
         public Profile Profile { get; set; }
 
         public List<Element> SubElements { get; set; }
-
-        /// <summary>
-        /// Something you want to measure.
-        /// </summary>
-        public NumericProperty Length => new NumericProperty(this.CenterLine.Length(), NumericPropertyUnitType.Length);
 
         internal TestUserElement() : base(null,
                                             BuiltInMaterials.Default,
