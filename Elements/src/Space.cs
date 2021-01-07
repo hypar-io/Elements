@@ -13,7 +13,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/SpaceTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class Space : GeometricElement
     {
         /// <summary>

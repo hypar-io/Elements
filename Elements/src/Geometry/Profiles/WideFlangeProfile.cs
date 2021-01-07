@@ -47,75 +47,75 @@ namespace Elements.Geometry.Profiles
     public class WideFlangeProfile : Profile
     {
         [JsonIgnore]
-        public double A {get; internal set;}
+        public double A { get; internal set; }
 
-        public double d {get; internal set;}
+        public double d { get; internal set; }
 
-        public double tw {get;internal set;}
+        public double tw { get; internal set; }
 
-        public double bf {get;internal set;}
+        public double bf { get; internal set; }
 
-        public double tf {get;internal set;}
-
-        [JsonIgnore]
-        public string T {get;internal set;}
+        public double tf { get; internal set; }
 
         [JsonIgnore]
-        public double k {get;internal set;}
+        public string T { get; internal set; }
 
         [JsonIgnore]
-        public double k1 {get;internal set;}
+        public double k { get; internal set; }
 
         [JsonIgnore]
-        public string gage {get;internal set;}
+        public double k1 { get; internal set; }
 
         [JsonIgnore]
-        public double rt {get;internal set;}
+        public string gage { get; internal set; }
 
         [JsonIgnore]
-        public double dAf {get;internal set;}
+        public double rt { get; internal set; }
 
         [JsonIgnore]
-        public double Ix {get;internal set;}
+        public double dAf { get; internal set; }
 
         [JsonIgnore]
-        public double Sx {get;internal set;}
+        public double Ix { get; internal set; }
 
         [JsonIgnore]
-        public double rx {get;internal set;}
+        public double Sx { get; internal set; }
 
         [JsonIgnore]
-        public double Iy {get;internal set;}
+        public double rx { get; internal set; }
 
         [JsonIgnore]
-        public double Sy {get;internal set;}
+        public double Iy { get; internal set; }
 
         [JsonIgnore]
-        public double ry {get;internal set;}
+        public double Sy { get; internal set; }
 
         [JsonIgnore]
-        public double Zx {get;internal set;}
+        public double ry { get; internal set; }
 
         [JsonIgnore]
-        public double Zy {get;internal set;}
+        public double Zx { get; internal set; }
 
         [JsonIgnore]
-        public double J {get;internal set;}
+        public double Zy { get; internal set; }
 
         [JsonIgnore]
-        public double Cw {get;internal set;}
+        public double J { get; internal set; }
 
         [JsonIgnore]
-        public double Wno {get;internal set;}
+        public double Cw { get; internal set; }
 
         [JsonIgnore]
-        public double Sw {get;internal set;}
+        public double Wno { get; internal set; }
 
         [JsonIgnore]
-        public double Qf {get;internal set;}
+        public double Sw { get; internal set; }
 
         [JsonIgnore]
-        public double Qw {get;internal set;}
+        public double Qf { get; internal set; }
+
+        [JsonIgnore]
+        public double Qw { get; internal set; }
 
         [JsonConstructor]
         public WideFlangeProfile(string name,
@@ -163,55 +163,55 @@ namespace Elements.Geometry.Profiles
             var thicknessWeb = tw;
             var thicknessFlange = tf;
 
-            if(verticalOffset == 0.0)
+            if (verticalOffset == 0.0)
             {
-                switch(verticalAlignment)
+                switch (verticalAlignment)
                 {
                     case VerticalAlignment.Top:
-                        verticalOffset = height/2;
+                        verticalOffset = height / 2;
                         break;
                     case VerticalAlignment.Center:
                         verticalOffset = 0.0;
                         break;
                     case VerticalAlignment.Bottom:
-                        verticalOffset = -height/2;
-                    break;
+                        verticalOffset = -height / 2;
+                        break;
                 }
             }
 
-            if(horizontalOffset == 0.0)
+            if (horizontalOffset == 0.0)
             {
-                switch(horizontalAlignment)
+                switch (horizontalAlignment)
                 {
                     case HorizontalAlignment.Left:
-                        horizontalOffset = -width/2;
+                        horizontalOffset = -width / 2;
                         break;
                     case HorizontalAlignment.Center:
                         horizontalOffset = 0.0;
                         break;
                     case HorizontalAlignment.Right:
-                        horizontalOffset = width/2;
+                        horizontalOffset = width / 2;
                         break;
                 }
             }
 
             // Left
-            var a = new Vector3(o.X - width/2 + horizontalOffset, o.Y + height/2 + verticalOffset);
-            var b = new Vector3(o.X - width/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
-            var c = new Vector3(o.X - thicknessWeb/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
-            var e = new Vector3(o.X - thicknessWeb/2 + horizontalOffset, o.Y - height/2 + thicknessFlange + verticalOffset);
-            var f = new Vector3(o.X - width/2 + horizontalOffset, o.Y - height/2 + thicknessFlange + verticalOffset);
-            var g = new Vector3(o.X - width/2 + horizontalOffset, o.Y - height/2 + verticalOffset);
+            var a = new Vector3(o.X - width / 2 + horizontalOffset, o.Y + height / 2 + verticalOffset);
+            var b = new Vector3(o.X - width / 2 + horizontalOffset, o.Y + height / 2 - thicknessFlange + verticalOffset);
+            var c = new Vector3(o.X - thicknessWeb / 2 + horizontalOffset, o.Y + height / 2 - thicknessFlange + verticalOffset);
+            var e = new Vector3(o.X - thicknessWeb / 2 + horizontalOffset, o.Y - height / 2 + thicknessFlange + verticalOffset);
+            var f = new Vector3(o.X - width / 2 + horizontalOffset, o.Y - height / 2 + thicknessFlange + verticalOffset);
+            var g = new Vector3(o.X - width / 2 + horizontalOffset, o.Y - height / 2 + verticalOffset);
 
             // Right
-            var h = new Vector3(o.X + width/2 + horizontalOffset, o.Y - height/2 + verticalOffset);
-            var i = new Vector3(o.X + width/2 + horizontalOffset, o.Y - height/2 + thicknessFlange + verticalOffset);
-            var j = new Vector3(o.X + thicknessWeb/2 + horizontalOffset, o.Y - height/2 + thicknessFlange + verticalOffset);
-            var k = new Vector3(o.X + thicknessWeb/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
-            var l = new Vector3(o.X + width/2 + horizontalOffset, o.Y + height/2 - thicknessFlange + verticalOffset);
-            var m = new Vector3(o.X + width/2 + horizontalOffset, o.Y + height/2 + verticalOffset);
+            var h = new Vector3(o.X + width / 2 + horizontalOffset, o.Y - height / 2 + verticalOffset);
+            var i = new Vector3(o.X + width / 2 + horizontalOffset, o.Y - height / 2 + thicknessFlange + verticalOffset);
+            var j = new Vector3(o.X + thicknessWeb / 2 + horizontalOffset, o.Y - height / 2 + thicknessFlange + verticalOffset);
+            var k = new Vector3(o.X + thicknessWeb / 2 + horizontalOffset, o.Y + height / 2 - thicknessFlange + verticalOffset);
+            var l = new Vector3(o.X + width / 2 + horizontalOffset, o.Y + height / 2 - thicknessFlange + verticalOffset);
+            var m = new Vector3(o.X + width / 2 + horizontalOffset, o.Y + height / 2 + verticalOffset);
 
-            return new Polygon(new []{a,b,c,e,f,g,h,i,j,k,l,m});
+            return new Polygon(new[] { a, b, c, e, f, g, h, i, j, k, l, m });
         }
     }
 }

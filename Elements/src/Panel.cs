@@ -11,7 +11,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PanelTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class Panel : GeometricElement
     {
         /// <summary>

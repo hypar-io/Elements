@@ -22,24 +22,21 @@ namespace CoreTypeGenerator
             Console.WriteLine($"Input dir: {inputDir}");
             Console.WriteLine($"Output dir: {outputDir}");
 
-            if (args.Length == 3)
-            {
-                TypeGenerator.SchemaBase = args[2];
-            }
-
             var tasks = new List<Task<GenerationResult>>();
 
             foreach (var dir in Directory.EnumerateDirectories(inputDir, "*.*", SearchOption.AllDirectories))
             {
-                ProcessFilesInDir(dir, inputDir, outputDir, ref tasks);
+                tasks.AddRange(ProcessFilesInDir(dir, inputDir, outputDir));
             }
-            ProcessFilesInDir(inputDir, inputDir, outputDir, ref tasks);
+            tasks.AddRange(ProcessFilesInDir(inputDir, inputDir, outputDir));
 
             await Task.WhenAll(tasks.ToArray());
         }
 
-        private static void ProcessFilesInDir(string dir, string inputDir, string outputDir, ref List<Task<GenerationResult>> tasks)
+        private static List<Task<GenerationResult>> ProcessFilesInDir(string dir, string inputDir, string outputDir)
         {
+            var tasks = new List<Task<GenerationResult>>();
+
             foreach (var fi in Directory.EnumerateFiles(dir, "*.json"))
             {
                 // ../Geometry/Vector3.json => Geometry/
@@ -61,6 +58,8 @@ namespace CoreTypeGenerator
                 var schema = File.ReadAllText(fi);
                 tasks.Add(TypeGenerator.GenerateUserElementTypeFromJsonAsync(schema, outDir));
             }
+
+            return tasks;
         }
     }
 }

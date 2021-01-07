@@ -51,60 +51,50 @@ namespace Elements.Generate
     /// </summary>
     public static class TypeGenerator
     {
-        /// <summary>
-        /// The base url for schemas.
-        /// </summary>
-        public static string SchemaBase = "https://prod-api.hypar.io";
 
         /// <summary>
         /// These are all the 'base' schemas defined for Elements.
         /// </summary>
-        private static readonly string[] _hyparSchemas = new string[]{
-            $"{SchemaBase}/ContentCatalog.json",
-            $"{SchemaBase}/ContentElement.json",
-            $"{SchemaBase}/Element.json",
-            $"{SchemaBase}/GeometricElement.json",
-            $"{SchemaBase}/Material.json",
-            $"{SchemaBase}/Model.json",
-
-            $"{SchemaBase}/GeoJSON/Position.json",
-
-            $"{SchemaBase}/Geometry/Solids/Extrude.json",
-            $"{SchemaBase}/Geometry/Solids/Lamina.json",
-            $"{SchemaBase}/Geometry/Solids/SolidOperation.json",
-            $"{SchemaBase}/Geometry/Solids/Sweep.json",
-
-            $"{SchemaBase}/Geometry/Arc.json",
-            $"{SchemaBase}/Geometry/BBox3.json",
-            $"{SchemaBase}/Geometry/Color.json",
-            $"{SchemaBase}/Geometry/Curve.json",
-            $"{SchemaBase}/Geometry/CurveRepresentation.json",
-            $"{SchemaBase}/Geometry/Line.json",
-            $"{SchemaBase}/Geometry/Matrix.json",
-            $"{SchemaBase}/Geometry/Mesh.json",
-            $"{SchemaBase}/Geometry/MeshRepresentation.json",
-            $"{SchemaBase}/Geometry/Plane.json",
-            $"{SchemaBase}/Geometry/PointsRepresentation.json",
-            $"{SchemaBase}/Geometry/Polygon.json",
-            $"{SchemaBase}/Geometry/Polyline.json",
-            $"{SchemaBase}/Geometry/Profile.json",
-            $"{SchemaBase}/Geometry/Representation.json",
-            $"{SchemaBase}/Geometry/SolidRepresentation.json",
-            $"{SchemaBase}/Geometry/Transform.json",
-            $"{SchemaBase}/Geometry/Triangle.json",
-            $"{SchemaBase}/Geometry/UV.json",
-            $"{SchemaBase}/Geometry/Vector3.json",
-            $"{SchemaBase}/Geometry/Vertex.json",
-
-            $"{SchemaBase}/Properties/NumericProperty.json",
-            $"{SchemaBase}/InputData.json",
-
-            "https://geojson.org/schema/Point.json",
+        private static readonly string[] _coreTypeNames = new string[]{
+            "Catalog",
+            "ContentElement",
+            "Element",
+            "GeometricElement",
+            "Material",
+            "Model",
+            "Position",
+            "Extrude",
+            "Lamina",
+            "SolidOperation",
+            "Sweep",
+            "Arc",
+            "BBox3",
+            "Color",
+            "Curve",
+            "CurveRepresentation",
+            "Line",
+            "Matrix",
+            "Mesh",
+            "MeshRepresentation",
+            "Plane",
+            "PointsRepresentation",
+            "Polygon",
+            "Polyline",
+            "Profile",
+            "Representation",
+            "SolidRepresentation",
+            "Transform",
+            "Triangle",
+            "UV",
+            "Vector3",
+            "Vertex",
+            "NumericProperty",
+            "InputData",
+            "Point",
         };
 
         private const string NAMESPACE_PROPERTY = "x-namespace";
         private const string STRUCT_PROPERTY = "x-struct";
-        private static string[] _coreTypeNames;
         private static string _templatesPath;
 
         /// <summary>
@@ -134,20 +124,19 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="schemaJson">The JSON of the schema.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
-        /// <param name="isUserElement">Is the type a user-defined element?</param>
         /// <returns></returns>
-        public static async Task<GenerationResult> GenerateUserElementTypeFromJsonAsync(string schemaJson, string outputBaseDir, bool isUserElement = false)
+        public static async Task<GenerationResult> GenerateUserElementTypeFromJsonAsync(string schemaJson, string outputBaseDir)
         {
             DotLiquid.Template.DefaultIsThreadSafe = true;
             DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
 
             var schema = await JsonSchema.FromJsonAsync(schemaJson);
 
-            return ValidateAndWriteTypeToDisk(schema, outputBaseDir, isUserElement);
+            return ValidateAndWriteTypeToDisk(schema, outputBaseDir);
 
         }
 
-        private static GenerationResult ValidateAndWriteTypeToDisk(JsonSchema schema, string outputBaseDir, bool isUserElement)
+        private static GenerationResult ValidateAndWriteTypeToDisk(JsonSchema schema, string outputBaseDir)
         {
             string ns;
             if (!GetNamespace(schema, out ns))
@@ -160,12 +149,8 @@ namespace Elements.Generate
             }
 
             var typeName = schema.Title;
-            if (_coreTypeNames == null)
-            {
-                _coreTypeNames = GetCoreTypeNames();
-            }
             var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
-            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, isUserElement, excludedTypeNames);
+            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, excludedTypeNames);
         }
 
         /// <summary>
@@ -173,19 +158,18 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uri">The uri to the schema which defines the type. This can be a url or a relative file path.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
-        /// <param name="isUserElement">Is the type a user-defined element?</param>
         /// <returns>
         /// A GenerationResult object containing info about the success or failure of generation,
         /// the file path of the generated code, and any errors that may have occurred during generation.
         /// </returns>
-        public static async Task<GenerationResult> GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, bool isUserElement = false)
+        public static async Task<GenerationResult> GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir)
         {
             DotLiquid.Template.DefaultIsThreadSafe = true;
             DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
 
             var schema = await GetSchemaAsync(uri);
 
-            return ValidateAndWriteTypeToDisk(schema, outputBaseDir, isUserElement);
+            return ValidateAndWriteTypeToDisk(schema, outputBaseDir);
         }
 
         /// <summary>
@@ -193,15 +177,14 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uris">An array of uris.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
-        /// <param name="isUserElement">Is the type a user-defined element?</param>
-        public static async Task<GenerationResult[]> GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)
+        public static async Task<GenerationResult[]> GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir)
         {
             DotLiquid.Template.DefaultIsThreadSafe = true;
             DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             var results = new List<Task<GenerationResult>>();
             foreach (var uri in uris)
             {
-                results.Add(GenerateUserElementTypeFromUriAsync(uri, outputBaseDir, isUserElement));
+                results.Add(GenerateUserElementTypeFromUriAsync(uri, outputBaseDir));
             }
             var allResults = await Task.WhenAll(results);
             return allResults;
@@ -344,12 +327,7 @@ namespace Elements.Generate
         /// </summary>
         public static string[] GetCoreTypeNames()
         {
-            return _hyparSchemas.Select(u => GetTypeNameFromSchemaUri(u)).ToArray();
-        }
-
-        private static string GetTypeNameFromSchemaUri(string uri)
-        {
-            return Path.GetFileNameWithoutExtension(uri.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last());
+            return _coreTypeNames;
         }
 
         private static string GetFileNameFromTypeName(string typeName)
@@ -391,7 +369,7 @@ namespace Elements.Generate
             return true;
         }
 
-        private static Dictionary<string, string> GetCodeForTypesFromSchema(JsonSchema schema, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
+        private static Dictionary<string, string> GetCodeForTypesFromSchema(JsonSchema schema, string typeName, string ns, string[] excludedTypes = null)
         {
             var templates = TemplatesPath;
 
@@ -442,46 +420,19 @@ namespace Elements.Generate
                 };
                 var template = settings.TemplateFactory.CreateTemplate("CSharp", "File", model);
                 var code = template.Render();
-                var fileContents = FileTweaksAndCleanup(typeName, isUserElement, isStruct, code, schema);
+                var fileContents = FileTweaksAndCleanup(typeName, isStruct, code, schema);
                 typeFiles[fileArtifact.TypeName] = fileContents;
             }
 
             return typeFiles;
         }
 
-        private static string FileTweaksAndCleanup(string typeName, bool isUserElement, bool isStruct, string file, JsonSchema schema)
+        private static string FileTweaksAndCleanup(string typeName, bool isStruct, string file, JsonSchema schema)
         {
             // Convert some classes to structs.
             if (isStruct)
             {
                 file = file.Replace($"public partial class {typeName}", $"public partial struct {typeName}");
-            }
-
-            if (isUserElement)
-            {
-                // remove unnecessary imports
-                // TODO: make this a conditional for the code generation using ExtensionData, instead of using string replacement.
-                // For whatever reason, this was not working with code in File.liquid — only Class.liquid.
-                file = file.Replace(@"
-using Hypar.Functions;
-using Hypar.Functions.Execution;
-using Hypar.Functions.Execution.AWS;", "");
-                // Insert the UserElement attribute directly before
-                // 'public partial class ' any time it occurs in the file
-                // because we may be generating code for multiple user types in
-                // the same file.
-                var start = 0;
-                while (true)
-                {
-                    start = file.IndexOf($"public partial class ", start);
-                    if (start == -1)
-                    {
-                        break;
-                    }
-                    var userElementAttribute = $"[UserElement]\n\t";
-                    file = file.Insert(start, userElementAttribute);
-                    start += userElementAttribute.Length + 1;  // increment chars to get past the recent insertion
-                }
             }
 
             if (typeName == "Model")
@@ -522,11 +473,11 @@ using Hypar.Functions.Execution.AWS;", "");
             return false;
         }
 
-        private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outDirPath, string typeName, string ns, bool isUserElement = false, string[] excludedTypes = null)
+        private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outDirPath, string typeName, string ns, string[] excludedTypes = null)
         {
             var diagnosticMessages = new List<string>();
 
-            var typeCodeDict = GetCodeForTypesFromSchema(schema, typeName, ns, isUserElement, excludedTypes);
+            var typeCodeDict = GetCodeForTypesFromSchema(schema, typeName, ns, excludedTypes);
             foreach (var kvp in typeCodeDict)
             {
                 var path = Path.Combine(outDirPath, $"{kvp.Key}.g.cs");
@@ -568,15 +519,13 @@ using Hypar.Functions.Execution.AWS;", "");
         /// <summary>
         /// Get the currently loaded UserElement types
         /// </summary>
-        /// <param name="userElementTypesOnly">If true, only return types with the UserElement attribute.</param>
         /// <returns>A list of the loaded types with the UserElement attribute.</returns>
-        public static List<Type> GetLoadedElementTypes(bool userElementTypesOnly = false)
+        public static List<Type> GetLoadedElementTypes()
         {
             var loadedTypes = new List<Type>();
             var asms = AppDomain.CurrentDomain.GetAssemblies();
-            Func<Type, bool> IsUserElement = t => t.GetCustomAttributes(typeof(UserElement), true).Length > 0;
             Func<Type, bool> IsElement = t => typeof(Element).IsAssignableFrom(t);
-            var typeFilter = userElementTypesOnly ? IsUserElement : IsElement;
+            var typeFilter = IsElement;
             foreach (var asm in asms)
             {
                 try
@@ -624,19 +573,14 @@ using Hypar.Functions.Execution.AWS;", "");
             }
 
             var typeName = schema.Title;
-            if (_coreTypeNames == null)
-            {
-                _coreTypeNames = GetCoreTypeNames();
-            }
-
-            var loadedTypes = GetLoadedElementTypes(true).Select(t => t.Name);
+            var loadedTypes = GetLoadedElementTypes().Select(t => t.Name);
             if (loadedTypes.Contains(typeName))
             {
                 return new Dictionary<string, string>();
             }
             var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
 
-            return GetCodeForTypesFromSchema(schema, typeName, ns, true, localExcludes);
+            return GetCodeForTypesFromSchema(schema, typeName, ns, localExcludes);
         }
 
         private static CSharpCompilation GenerateCompilation(List<string> code, string compilationName = "UserElements", bool frameworkBuild = false)

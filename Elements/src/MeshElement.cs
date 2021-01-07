@@ -11,7 +11,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/MeshElementTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class MeshElement : GeometricElement, ITessellate
     {
         /// <summary>

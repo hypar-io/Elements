@@ -11,7 +11,6 @@ namespace Elements
     /// An opening's placement is defined by the x and y coordinates.
     /// The direction of the opening corresponds to the +Z axis of the transform.
     /// </summary>
-    [UserElement]
     public class Opening : GeometricElement
     {
         /// <summary>
