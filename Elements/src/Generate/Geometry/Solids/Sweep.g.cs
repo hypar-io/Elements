@@ -27,21 +27,23 @@ namespace Elements.Geometry.Solids
         private Curve _curve;
         private double _startSetback;
         private double _endSetback;
+        private double _profileRotation;
     
         [Newtonsoft.Json.JsonConstructor]
-        public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, bool @isVoid)
+        public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @profileRotation, bool @isVoid)
             : base(isVoid)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Sweep>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @profile, @curve, @startSetback, @endSetback, @isVoid});
+                validator.PreConstruct(new object[]{ @profile, @curve, @startSetback, @endSetback, @profileRotation, @isVoid});
             }
         
             this.Profile = @profile;
             this.Curve = @curve;
             this.StartSetback = @startSetback;
             this.EndSetback = @endSetback;
+            this.ProfileRotation = @profileRotation;
             
             if(validator != null)
             {
@@ -104,6 +106,21 @@ namespace Elements.Geometry.Solids
                 if (_endSetback != value)
                 {
                     _endSetback = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>The rotation of the profile around the sweep's curve.</summary>
+        [Newtonsoft.Json.JsonProperty("ProfileRotation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double ProfileRotation
+        {
+            get { return _profileRotation; }
+            set 
+            {
+                if (_profileRotation != value)
+                {
+                    _profileRotation = value; 
                     RaisePropertyChanged();
                 }
             }

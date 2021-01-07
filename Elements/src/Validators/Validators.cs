@@ -288,7 +288,9 @@ namespace Elements.Validators
 
         private void UpdateGeometry(Sweep sweep)
         {
-            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile, sweep.Curve, sweep.StartSetback, sweep.EndSetback);
+            var profileTrans = new Transform();
+            profileTrans.Rotate(profileTrans.ZAxis, sweep.ProfileRotation);
+            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(profileTrans.OfProfile(sweep.Profile), sweep.Curve, sweep.StartSetback, sweep.EndSetback);
             sweep._csg = sweep._solid.ToCsg();
         }
 
