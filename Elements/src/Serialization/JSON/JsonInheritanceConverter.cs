@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
@@ -22,6 +22,7 @@ namespace Elements.Serialization.JSON
         [System.ThreadStatic]
         private static bool _isWriting;
 
+        [System.ThreadStatic]
         private static Dictionary<string, Type> _typeCache;
         private static Dictionary<string, Type> TypeCache
         {
@@ -30,7 +31,6 @@ namespace Elements.Serialization.JSON
                 if (_typeCache == null)
                 {
                     _typeCache = BuildAppDomainTypeCache();
-
                 }
                 return _typeCache;
             }
@@ -61,41 +61,40 @@ namespace Elements.Serialization.JSON
             _discriminator = discriminator;
         }
 
+        /// <summary>
+        /// The type cache needs to contains all types that will have a discriminator.
+        /// This includes base types, like elements, and all derived types like Wall.
+        /// We use reflection to find all public types available in the app domain
+        /// that have a JsonConverterAttribute whose first parameter is the 
+        /// </summary>
+        /// <returns>A dictionary containing all found types keyed by their full name.</returns>
         private static Dictionary<string, Type> BuildAppDomainTypeCache()
         {
             var typeCache = new Dictionary<string, Type>();
 
-            // Get all the assemblies loaded in the currently directory.
-            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var file in Directory.EnumerateFiles(dir, "*.dll"))
-            {
-                var fileName = Path.GetFileNameWithoutExtension(file);
-                if (fileName.Contains("Hypar.IFC")
-                    || fileName.Contains("Microsoft")
-                    || fileName.Contains("System")
-                    || fileName.Contains("xunit")
-                    || fileName.Contains("NJsonSchema")
-                    || fileName.Contains("Newtonsoft")
-                    || fileName.Contains("SixLabors")
-                    || fileName.Contains("Csg")
-                    || fileName.Contains("LibTess")
-                    || fileName.Contains("DotLiquid")
-                    || fileName.Contains("glTFLoader")
-                    || fileName.Contains("Antlr4"))
+            var exportedTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm=>asm.GetTypes().Where(t=>t.IsPublic && t.IsClass));
+            var typesWithConverterAttribute = exportedTypes.Where(et => {
+                var attrib = et.GetCustomAttribute<JsonConverterAttribute>();
+                if(attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
                 {
-                    continue;
+                    return true;
                 }
-                var asm = assemblies.FirstOrDefault(a => a.GetName().Name == fileName);
-                if (asm != null)
+                return false;
+            });
+            var derivedTypes = typesWithConverterAttribute.SelectMany(t=>exportedTypes.Where(et=>t.IsAssignableFrom(et)));
+
+            foreach(var t in typesWithConverterAttribute)
+            {
+                if(!typeCache.ContainsKey(t.FullName))
                 {
-                    foreach (var t in asm.GetTypes().Where(ty => ty.IsPublic))
-                    {
-                        if (!typeCache.ContainsKey(t.FullName))
-                        {
-                            typeCache.Add(t.FullName, t);
-                        }
-                    }
+                    typeCache.Add(t.FullName, t);
+                }
+            }
+            foreach(var t in derivedTypes)
+            {
+                if(!typeCache.ContainsKey(t.FullName))
+                {
+                    typeCache.Add(t.FullName, t);
                 }
             }
 

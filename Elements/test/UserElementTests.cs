@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Elements.Tests
 {
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class TestUserElement : GeometricElement
     {
         public Line CenterLine { get; set; }
