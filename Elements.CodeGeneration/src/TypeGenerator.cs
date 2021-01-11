@@ -322,14 +322,6 @@ namespace Elements.Generate
             }
         }
 
-        /// <summary>
-        /// Get a list of the core Hypar types, which should be excluded from code generation.
-        /// </summary>
-        public static string[] GetCoreTypeNames()
-        {
-            return _coreTypeNames;
-        }
-
         private static string GetFileNameFromTypeName(string typeName)
         {
             return $"{typeName}.g.cs";
