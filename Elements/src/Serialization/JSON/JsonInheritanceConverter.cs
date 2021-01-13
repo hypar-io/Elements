@@ -74,7 +74,7 @@ namespace Elements.Serialization.JSON
             var typeCache = new Dictionary<string, Type>();
 
             var exportedTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes().Where(t => t.IsPublic && t.IsClass));
-            var typesWithConverterAttribute = exportedTypes.Where(et =>
+            var typesUsingInheritanceConverter = exportedTypes.Where(et =>
             {
                 var attrib = et.GetCustomAttribute<JsonConverterAttribute>();
                 if (attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
@@ -84,7 +84,7 @@ namespace Elements.Serialization.JSON
                 return false;
             });
 
-            var derivedTypes = typesWithConverterAttribute.SelectMany(t => exportedTypes.Where(et => t.IsAssignableFrom(et)));
+            var derivedTypes = typesUsingInheritanceConverter.SelectMany(baseType => exportedTypes.Where(exportedType => baseType.IsAssignableFrom(exportedType)));
             foreach (var t in derivedTypes)
             {
                 if (!typeCache.ContainsKey(t.FullName))
