@@ -65,34 +65,29 @@ namespace Elements.Serialization.JSON
         /// The type cache needs to contains all types that will have a discriminator.
         /// This includes base types, like elements, and all derived types like Wall.
         /// We use reflection to find all public types available in the app domain
-        /// that have a JsonConverterAttribute whose first parameter is the 
+        /// that have a Newtonsoft.Json.JsonConverterAttribute whose converter type is the 
+        /// Elements.Serialization.JSON.JsonInheritanceConverter.
         /// </summary>
         /// <returns>A dictionary containing all found types keyed by their full name.</returns>
         private static Dictionary<string, Type> BuildAppDomainTypeCache()
         {
             var typeCache = new Dictionary<string, Type>();
 
-            var exportedTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm=>asm.GetTypes().Where(t=>t.IsPublic && t.IsClass));
-            var typesWithConverterAttribute = exportedTypes.Where(et => {
+            var exportedTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes().Where(t => t.IsPublic && t.IsClass));
+            var typesWithConverterAttribute = exportedTypes.Where(et =>
+            {
                 var attrib = et.GetCustomAttribute<JsonConverterAttribute>();
-                if(attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
+                if (attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
                 {
                     return true;
                 }
                 return false;
             });
-            var derivedTypes = typesWithConverterAttribute.SelectMany(t=>exportedTypes.Where(et=>t.IsAssignableFrom(et)));
 
-            foreach(var t in typesWithConverterAttribute)
+            var derivedTypes = typesWithConverterAttribute.SelectMany(t => exportedTypes.Where(et => t.IsAssignableFrom(et)));
+            foreach (var t in derivedTypes)
             {
-                if(!typeCache.ContainsKey(t.FullName))
-                {
-                    typeCache.Add(t.FullName, t);
-                }
-            }
-            foreach(var t in derivedTypes)
-            {
-                if(!typeCache.ContainsKey(t.FullName))
+                if (!typeCache.ContainsKey(t.FullName))
                 {
                     typeCache.Add(t.FullName, t);
                 }
