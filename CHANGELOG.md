@@ -1,7 +1,12 @@
 # Changelog
 
 ## 0.8.1
+
+### Added
+- `TypeGenerator.CoreTypeNames`
+
 ## Removed
+- `TypeGenerator.GetCoreTypeNames()`
 - `UserElementAttribute`
 
 ## 0.8.0
