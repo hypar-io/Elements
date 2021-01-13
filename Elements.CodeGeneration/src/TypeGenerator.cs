@@ -93,6 +93,11 @@ namespace Elements.Generate
             "Point",
         };
 
+        /// <summary>
+        /// All core type names.
+        /// </summary>
+        public static string[] CoreTypeNames => _coreTypeNames;
+
         private const string NAMESPACE_PROPERTY = "x-namespace";
         private const string STRUCT_PROPERTY = "x-struct";
         private static string _templatesPath;
