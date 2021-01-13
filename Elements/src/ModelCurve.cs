@@ -10,7 +10,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ModelCurveTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class ModelCurve : GeometricElement
     {
         /// <summary>

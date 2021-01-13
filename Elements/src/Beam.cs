@@ -9,7 +9,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/StructuralFramingTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class Beam : StructuralFraming
     {
         /// <summary>

@@ -11,7 +11,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/MeshElementTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class MeshElement : GeometricElement, ITessellate
     {
         /// <summary>
@@ -22,7 +21,6 @@ namespace Elements
         /// <summary>
         /// The element's mesh.
         /// </summary>
-        [JsonIgnore]
         public Mesh Mesh => this._mesh;
 
         /// <summary>

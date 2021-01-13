@@ -10,7 +10,6 @@ namespace Elements
     /// <summary>
     /// A wall defined by a planar profile extruded to a height.
     /// </summary>
-    [UserElement]
     public class Wall : GeometricElement, IHasOpenings
     {
         /// <summary>

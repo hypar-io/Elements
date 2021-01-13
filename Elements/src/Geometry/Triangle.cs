@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 
 namespace Elements.Geometry

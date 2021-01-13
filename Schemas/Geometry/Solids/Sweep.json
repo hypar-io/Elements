@@ -1,20 +1,29 @@
 {
-    "$id": "https://hypar.io/Schemas/Geometry/Solids/Sweep.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Solids/Sweep.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Sweep",
     "x-namespace": "Elements.Geometry.Solids",
     "type": "object",
     "description": "A sweep of a profile along a curve.",
-    "required": ["Profile", "Curve","StartSetback","EndSetback"],
-    "allOf": [{"$ref": "https://hypar.io/Schemas/Geometry/Solids/SolidOperation.json"}],
+    "required": [
+        "Profile",
+        "Curve",
+        "StartSetback",
+        "EndSetback"
+    ],
+    "allOf": [
+        {
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Solids/SolidOperation.json"
+        }
+    ],
     "properties": {
         "Profile": {
             "description": "The id of the profile to be swept along the curve.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Profile.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Profile.json"
         },
         "Curve": {
             "description": "The curve along which the profile will be swept.",
-            "$ref": "https://hypar.io/Schemas/Geometry/Curve.json"
+            "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/representation-type-generation/Schemas/Geometry/Curve.json"
         },
         "StartSetback": {
             "description": "The amount to set back the resulting solid from the start of the curve.",
@@ -22,6 +31,10 @@
         },
         "EndSetback": {
             "description": "The amount to set back the resulting solid from the end of the curve.",
+            "type": "number"
+        },
+        "ProfileRotation": {
+            "description": "The rotation of the profile around the sweep's curve.",
             "type": "number"
         }
     },

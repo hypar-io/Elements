@@ -1,24 +1,24 @@
-using Elements.Geometry.Solids;
+using Elements.Serialization.JSON;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using static Elements.Units;
 
 namespace Elements.Geometry
 {
+    [JsonConverter(typeof(MeshConverter))]
     public partial class Mesh
     {
         /// <summary>
         /// Construct an empty mesh.
         /// </summary>
-        public Mesh() : base(BuiltInMaterials.Default)
+        public Mesh()
         {
+            // An empty mesh.
             this.Vertices = new List<Vertex>();
             this.Triangles = new List<Triangle>();
-            // An empty mesh.
         }
 
         /// <summary>

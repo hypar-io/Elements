@@ -15,8 +15,7 @@
     : base({% for property in parentProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}{{ property.Name | safeidentifierlower }}{% endfor -%})
 {% endif -%}
 {
-    var validator = Validator.Instance.GetFirstValidatorForType<{{ClassName}}>
-    ();
+    var validator = Validator.Instance.GetFirstValidatorForType<{{ClassName}}>();
     if(validator != null)
     {
     {% assign skipComma = true -%}
@@ -24,11 +23,11 @@
     }
 
     {% for property in Properties -%}
-    this.{{property.PropertyName}} = @{{property.Name | safeidentifierlower}};
+this.{{property.PropertyName}} = @{{property.Name | safeidentifierlower}};
     {% endfor -%}
 
     if(validator != null)
     {
-    validator.PostConstruct(this);
+        validator.PostConstruct(this);
     }
-    }
+}

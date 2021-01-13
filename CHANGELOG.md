@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1
+## Removed
+- `UserElementAttribute`
+
 ## 0.8.0
 ### Added
 - `Hypar.Elements.Serialization.IFC` - IFC serialization code has been moved to a new project.

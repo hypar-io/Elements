@@ -93,5 +93,59 @@ namespace Elements.Geometry
         {
             return this.Max.Average(this.Min);
         }
+
+        /// <summary>
+        /// Is the provided object a bounding box? If so, is it
+        /// equal to this bounding box within Epsilon?
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (!(obj is BBox3))
+            {
+                return false;
+            }
+            var a = (BBox3)obj;
+            return this.Min.IsAlmostEqualTo(a.Min) && this.Max.IsAlmostEqualTo(a.Max);
+        }
+
+        /// <summary>
+        /// Get the hash code for the bounding box.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.ToString().GetHashCode();
+        }
+
+        /// <summary>
+        /// The string representation of the bounding box.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"Min:{this.Min.ToString()}, Max:{this.Max.ToString()}";
+        }
+
+        /// <summary>
+        /// Are the two bounding boxes equal within Epsilon?
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static bool operator ==(BBox3 a, BBox3 b)
+        {
+            return a.Equals(b);
+        }
+
+        /// <summary>
+        /// Are the two bounding boxes not equal within Epsilon?
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static bool operator !=(BBox3 a, BBox3 b)
+        {
+            return !a.Equals(b);
+        }
     }
 }

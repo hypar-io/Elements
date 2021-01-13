@@ -193,7 +193,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(3);
+            var c = (JObject)elements.Values().ElementAt(2);
 
             // Inject an unknown property.
             c.Property("Curve").AddAfterSelf(new JProperty("Foo", "Bar"));
@@ -214,7 +214,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(3); // the column
+            var c = (JObject)elements.Values().ElementAt(2); // the column
 
             // Remove the Location property
             c.Property("Location").Remove();
@@ -234,7 +234,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(3); // the column
+            var c = (JObject)elements.Values().ElementAt(2); // the column
 
             // Nullify a property.
             c.Property("Location").Value = null;
@@ -258,7 +258,6 @@ namespace Elements.Tests
             var model = new Model();
             model.AddElements(beam, column);
             var json = model.ToJson(true);
-            this._output.WriteLine(json);
 
             // We want to test that unknown element types will still deserialize 
             // to geometric elements.

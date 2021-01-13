@@ -11,7 +11,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ModelPointsTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class ModelPoints : GeometricElement
     {
         /// <summary>

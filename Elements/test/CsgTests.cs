@@ -18,13 +18,13 @@ namespace Elements.Tests
             var s2 = new Extrude(Polygon.Rectangle(30, 30), 30, Vector3.ZAxis, false);
             csg = csg.Substract(s2.Solid.ToCsg());
 
-            var s3 = new Sweep(Polygon.Rectangle(Vector3.Origin, new Vector3(5, 5)), new Line(new Vector3(0, 0, 45), new Vector3(30, 0, 45)), 0, 0, false);
+            var s3 = new Sweep(Polygon.Rectangle(Vector3.Origin, new Vector3(5, 5)), new Line(new Vector3(0, 0, 45), new Vector3(30, 0, 45)), 0, 0, 0, false);
             csg = csg.Union(s3.Solid.ToCsg());
 
             var poly = new Polygon(new List<Vector3>(){
                 new Vector3(0,0,0), new Vector3(20,50,0), new Vector3(0,50,0)
             });
-            var s4 = new Sweep(poly, new Line(new Vector3(0, 30, 0), new Vector3(30, 30, 0)), 0, 0, false);
+            var s4 = new Sweep(poly, new Line(new Vector3(0, 30, 0), new Vector3(30, 30, 0)), 0, 0, 0, false);
             csg = csg.Substract(s4.Solid.ToCsg());
 
             var result = new Mesh();
@@ -58,7 +58,7 @@ namespace Elements.Tests
             var profile = HSSPipeProfileServer.Instance.GetProfileByType(HSSPipeProfileType.HSS10_000x0_188);
 
             var path = new Arc(Vector3.Origin, 5, 0, 270);
-            var s1 = new Sweep(profile, path, 0, 0, true);
+            var s1 = new Sweep(profile, path, 0, 0, 0, true);
             var csg = s1.Solid.ToCsg();
 
             var s2 = new Extrude(new Circle(Vector3.Origin, 6).ToPolygon(20), 1, Vector3.ZAxis, false);
