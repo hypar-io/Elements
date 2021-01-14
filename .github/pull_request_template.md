@@ -10,5 +10,8 @@ TESTING:
 FUTURE WORK:
 - Is there any future work needed or anticipated?  Does this PR create any obvious technical debt?
 
+CHANGELOG:
+- [ ] `CHANGELOG.md` is updated as necessary. 
+
 COMMENTS:
 - Any other notes.
