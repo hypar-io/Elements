@@ -48,9 +48,12 @@ namespace Elements.Tests
             var x = new Line(t.Origin, t.Origin + t.XAxis * this.CenterLine.Length());
             var y = new Line(t.Origin, t.Origin + t.YAxis * this.CenterLine.Length());
 
+            var profileInsideUpdate = new Profile(Polygon.Rectangle(1, 1), new List<Polygon>(), Guid.NewGuid(), "");
+
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.CenterLine, 0.0, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, x, 0.0, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, y, 0.0, 0.0, 0.0, false));
+            this.Representation.SolidOperations.Add(new Extrude(profileInsideUpdate, 8, Vector3.ZAxis, false));
         }
     }
 
@@ -72,17 +75,24 @@ namespace Elements.Tests
             this.Model.AddElement(ue);
 
             var json = this.Model.ToJson();
-            var newModel = Model.FromJson(json);
+            var errors = new List<string>();
+            var newModel = Model.FromJson(json, errors);
+            Assert.Empty(errors);
             var newUe = newModel.AllElementsOfType<TestUserElement>().First();
 
-            Assert.Equal(6, newModel.Elements.Count);
+            // plus one because of hte profile that will be added from
+            // UpdateRepresentation call during serialization
+            Assert.Equal(this.Model.Elements.Count + 1, newModel.Elements.Count);
+
             Assert.Equal(ue.Representation.SolidOperations.Count, newUe.Representation.SolidOperations.Count);
             Assert.Equal(ue.Id, newUe.Id);
             Assert.Equal(ue.Transform, newUe.Transform);
 
-            // Two profiles. The one for the user element
-            // and the one for the sub-element masses.
-            Assert.Equal(2, newModel.AllElementsOfType<Profile>().Count());
+            // Three profiles.
+            // 1. The user element
+            // 2. The one for the sub-element masses.
+            // 3. The one created during UpdateRepresentation
+            Assert.Equal(3, newModel.AllElementsOfType<Profile>().Count());
         }
     }
 }
