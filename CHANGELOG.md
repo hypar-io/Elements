@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.2
+### Fixed
+- `Deserialization of profiles created in UpdateRepresentation`
+
 ## 0.8.1
 
 ### Added
@@ -38,7 +42,7 @@
   - The ContentElement is also added to the model by first checking for an available gltf, and then using a bounding box representation as a fallback.
 - `Transform.Scaled()` - This new method returns a scaled copy of the transform, allowing for a fluent like api.
 - `Transform.Moved(...)` - Return a copy of a transform moved by the specified amount.
-- `Transform.Concatenated(...)` - Return a copy of a transform with the specified transform concatenated with it. 
+- `Transform.Concatenated(...)` - Return a copy of a transform with the specified transform concatenated with it.
 - `IHasOpenings.AddOpening(...)` - `AddOpening` provides an API which hides the internals of creating openings.
 - `Opening.DepthFront` & `Opening.DepthBack` enable the creation of openings which extrude different amounts above and below their XY plane.
 - Solid operations which have `IsVoid=true` now use csg operations.
@@ -92,7 +96,7 @@
   - `Grid1d(Grid1d other)` constructor
   - Adds `IgnoreOutsideDomain` flag to `SplitAtOffset`
   - Adds `SplitAtPoint(point)` and `SplitAtPoints(points)` methods
-  - Adds internal `Evaluate(t)` method 
+  - Adds internal `Evaluate(t)` method
   - Adds internal `SpawnSubGrid(domain)` method
 - **Grid2d**
   - Adds `Grid2d(Grid2d other)` constructor
@@ -110,20 +114,20 @@
 - `Line.Intersects(Line l)` now has an optional flag indicating whether to include the line ends as intersections.
 - `Line.PointOnLine(Point)` now has an optional flag indicating whether to include points at the ends as "on" the line.
 - **Grid1d / Grid2d**
-    - Removes "Parent/child" updating from 1d grids / 2d grids in favor of always recalculating the 2d grid every time its `Cells` are accessed. This may have a bit of a performance hit, but it's worth it to make 2d grid behavior easier to reason about. 
+    - Removes "Parent/child" updating from 1d grids / 2d grids in favor of always recalculating the 2d grid every time its `Cells` are accessed. This may have a bit of a performance hit, but it's worth it to make 2d grid behavior easier to reason about.
     - Allows Grid2ds to support construction from Grid1ds that are not straight lines. Previously Grid1ds could support any sort of curve and Grid2ds were stuck as dumb rectangles.
 - **JsonInheritanceConverter**
   - Makes the Type Cache on the JsonInheritanceConverter static, and exposes a public method to refresh it. In the grasshopper context, new types may have been dynamically loaded since the JsonInheritanceConverter was initialized, so it needs to be refreshed before deserializing a model.
 - **TypeGenerator**
-  - Enables external overriding of the Templates path, as in GH's case the `Templates` folder is not in the same place as the executing assembly. 
+  - Enables external overriding of the Templates path, as in GH's case the `Templates` folder is not in the same place as the executing assembly.
   - Exposes a public, synchronous method `GetSchema` to get a `JsonSchema` from uri (wrapping `GetSchemaAsync`)
   - Refactors some of the internal processes of `GenerateInMemoryAssemblyFromUrisAndLoadAsync`:
       - `GenerateCodeFromSchema()` produces csharp from a schema, including generating the namespace, typename, and local excludes
-      - `GenerateCompilation()` takes the csharp and compiles it, using a new optional flag `frameworkBuild` to designate whether it should load netstandard or net framework reference assemblies.  
+      - `GenerateCompilation()` takes the csharp and compiles it, using a new optional flag `frameworkBuild` to designate whether it should load netstandard or net framework reference assemblies.
       - `EmitAndLoad()` generates the assembly in memory and loads it into the app domain.
   - Adds an `EmitAndSave()` method that generates the assembly and writes it to a .dll on disk
   -  Adds a public `GenerateAndSaveDllForSchema()` method used by grasshopper that generates code from a schema, generates a compilation, and saves it to disk as a DLL.
-  -  Adds a public `GetLoadedElementTypes()` method used by grasshopper to list all the currently loaded element types. 
+  -  Adds a public `GetLoadedElementTypes()` method used by grasshopper to list all the currently loaded element types.
 
 ### Deprecated
 - `Transform.OfXXX(xxx)` curve methods have been deprecated in favor of `XXX.Transformed(Transform)` and `XXX.TransformedXXX(Transform)`.
@@ -167,7 +171,7 @@
 
 ### Fixed
 - #262
-- Fixed an error where `Transform.OfPlane(...)` would not solve correctly if the plane was not at the world origin. 
+- Fixed an error where `Transform.OfPlane(...)` would not solve correctly if the plane was not at the world origin.
 
 ### Changed
 - `Grid2d` now supports grids that are not parallel to the XY plane
@@ -189,14 +193,14 @@
 ### Added
 - `Grid1d`
 - `Grid2d`
-- `Domain1d` 
+- `Domain1d`
 - `GeometricElement.IsElementDefinition`
 - A `drawEdges` optional parameter to `Model.ToGlTF(...)` to enable edge rendering.
 - `Polyline` and `Profile` now implement `IEquatable`.
-- `Polygon.Union(IList<Polygon> firstSet, IList<Polygon> secondSet)` 
-- `Polygon.Difference(IList<Polygon> firstSet, IList<Polygon> secondSet)` 
-- `Polygon.XOR(IList<Polygon> firstSet, IList<Polygon> secondSet)` 
-- `Polygon.Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet)` 
+- `Polygon.Union(IList<Polygon> firstSet, IList<Polygon> secondSet)`
+- `Polygon.Difference(IList<Polygon> firstSet, IList<Polygon> secondSet)`
+- `Polygon.XOR(IList<Polygon> firstSet, IList<Polygon> secondSet)`
+- `Polygon.Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet)`
 
 ### Changed
 - `Vector.Normalized()` is now `Vector.Unitized()`
@@ -318,7 +322,7 @@ Added positive area calculation to:
 ## 0.3.6
 ### Changed
 - Edges are no longer written to the glTF file.
-- Large performance improvements made to glTF writing using `Buffer.BlockCopy` and writing buffers directly from tesselation to glTF buffer. 
+- Large performance improvements made to glTF writing using `Buffer.BlockCopy` and writing buffers directly from tesselation to glTF buffer.
 
 ### Fixed
 - Fix #177.
@@ -352,7 +356,7 @@ Added positive area calculation to:
 - The `Kernel` singleton has been added to contain all geometry methods for creating solids.
 
 ### Fixed
-- Fixed an error where, when writing edges to gltf, ushort would be overflowed and wrap back to 0 causing a loop not to terminate. 
+- Fixed an error where, when writing edges to gltf, ushort would be overflowed and wrap back to 0 causing a loop not to terminate.
 
 ## 0.2.16
 ### Added
@@ -467,5 +471,5 @@ Added positive area calculation to:
 ### Removed
 - The `IProfile` interface has been removed.
 - The `Extrusion` class and `IBrep` have been replaced with the `Solid` class. The IGeometry interface now returns a `Solid[]`.
-- Many uses of `System.Linq` have been removed. 
+- Many uses of `System.Linq` have been removed.
 - Many uses of `IEnumerable<T>` have been replaced with `T[]`.
