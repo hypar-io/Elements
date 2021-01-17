@@ -75,7 +75,7 @@ namespace Elements.Tests
             var newModel = Model.FromJson(json);
             var newUe = newModel.AllElementsOfType<TestUserElement>().First();
 
-            Assert.Equal(6, newModel.Elements.Count);
+            Assert.Equal(8, newModel.Elements.Count);
             Assert.Equal(ue.Representation.SolidOperations.Count, newUe.Representation.SolidOperations.Count);
             Assert.Equal(ue.Id, newUe.Id);
             Assert.Equal(ue.Transform, newUe.Transform);
