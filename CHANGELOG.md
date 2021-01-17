@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.8.1
+
+### Added
+- `TypeGenerator.CoreTypeNames`
+- `MeshConverter`
+- Implicit conversion of `Curve` types to `ModelCurve`.
+- `byte[] Model.ToGlb(...)`
+- `Grid1d.ClosestPosition()`
+- `Grid1d.DivideByFixedLengthFromPoint()`
+- `Grid2d.GetCellNodes()`
+
+### Changed
+- Removed `JsonInheritanceAttribute` from `Element` base types.
+- `Sweep` contstructor now takes a rotation. Transformation of the profile based on rotation happens internal to the sweep's construction.
+- `Polyline` are no longer required to be planar.
+- Modifies Grid1d.DivideByFixedLengthFromPosition() to be more flexible — supporting a "position" outside the grids domain.
+- Modifies Grid2d.GetCellSeparators() to support returning trimmed separators
+
+### Removed
+- `TypeGenerator.GetCoreTypeNames()`
+- `UserElementAttribute`
+- `NumericProperty`
+
+### Fixed
+- `Ray.Intersects` now calls `UpdateRepresentations` internally for accurate intersections.
+- Fixed #470
+- Fixes a bug in `Line.Trim(Polygon p)` where lines that started on the polygon would not be treated as outside the polygon.
+- Fixes a bug in `Grid2d.IsTrimmed()` that would ignore cases where a cell was trimmed by an inner hole.
+
 ## 0.8.0
 ### Added
 - `Hypar.Elements.Serialization.IFC` - IFC serialization code has been moved to a new project.

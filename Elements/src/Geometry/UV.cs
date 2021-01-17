@@ -54,26 +54,5 @@ namespace Elements.Geometry
         {
             return $"U:{this.U}, V:{this.V}";
         }
-
-        /// <summary>
-        /// Convert this UV to an array.
-        /// </summary>
-        public double[] ToArray()
-        {
-            return new[] { this.U, this.V };
-        }
-
-        /// <summary>
-        /// Construct a UV from an array of numbers.
-        /// </summary>
-        /// <param name="uv"></param>
-        public static UV FromArray(double[] uv)
-        {
-            if (uv.Length != 2)
-            {
-                throw new Exception($"A uv cannot be created from an array of {uv.Length} numbers.");
-            }
-            return new UV(uv[0], uv[1]);
-        }
     }
 }

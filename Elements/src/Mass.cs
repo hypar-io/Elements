@@ -12,7 +12,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/MassTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class Mass : GeometricElement
     {
         /// <summary>

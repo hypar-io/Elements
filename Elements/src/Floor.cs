@@ -13,7 +13,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/FloorTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class Floor : GeometricElement, IHasOpenings
     {
         /// <summary>

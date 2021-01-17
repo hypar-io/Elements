@@ -1,5 +1,5 @@
 {
-    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/representation-add-representations/Schemas/Geometry/Matrix.json",
+    "$id": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Matrix.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Matrix",
     "x-namespace": "Elements.Geometry",
