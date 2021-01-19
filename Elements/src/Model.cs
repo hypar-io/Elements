@@ -19,6 +19,11 @@ namespace Elements
     public partial class Model
     {
         /// <summary>
+        /// The version of the Elements library used to create this model.
+        /// </summary>
+        public string ElementsVersion => this.GetType().Assembly.GetName().Version.ToString();
+
+        /// <summary>
         /// Construct an empty model.
         /// </summary>
         public Model()
@@ -182,38 +187,40 @@ namespace Elements
         /// Deserialize a model from JSON.
         /// </summary>
         /// <param name="json">The JSON representing the model.</param>
-        /// <param name="errors">A collection of deserialization errors.</param>
-        public static Model FromJson(string json, List<string> errors = null)
+        /// <param name="serializationErrors">A collection of deserialization errors.</param>
+        /// <param name="migrationErrors">A collection of migration errors.</param>
+        public static Model FromJson(string json,
+                                     List<string> serializationErrors = null,
+                                     List<string> migrationErrors = null)
         {
-            // When user elements have been loaded into the app domain, they haven't always been
-            // loaded into the InheritanceConverter's Cache.  This does have some overhead,
-            // but is useful here, at the Model level, to ensure user types are available.
-            JsonInheritanceConverter.RefreshAppDomainTypeCache();
-            errors = errors ?? new List<string>();
-            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
-            {
-                Error = (sender, args) =>
-                {
-                    errors.Add(args.ErrorContext.Error.Message);
-                    args.ErrorContext.Handled = true;
-                }
-            });
-            JsonInheritanceConverter.Elements.Clear();
-            return model;
+            var obj = JObject.Parse(json);
+            migrationErrors = migrationErrors ?? new List<string>();
+            Migrator.Instance.Migrate(obj, migrationErrors);
+
+            return DeserializeModel(obj, serializationErrors);
         }
 
         /// <summary>
         /// Deserialize a model from JSON applying migrations.
         /// </summary>
         /// <param name="json">The JSON representing the model.</param>
-        /// <param name="migrator">A migrator instance.</param>
-        /// <param name="migrationErrors">A collection of deserialization and migration errors.</param>
+        /// <param name="migrator">A migrator instance. Use this parameter to supply a custom migrator.</param>
+        /// <param name="migrationErrors">A collection of deserialization errors.</param>
         /// <param name="serializationErrors">A collection of deserialization and migration errors.</param>
-        public static Model FromJson(string json, Migrator migrator, List<string> serializationErrors = null, List<string> migrationErrors = null)
+        public static Model FromJson(string json,
+                                     Migrator migrator,
+                                     List<string> serializationErrors = null,
+                                     List<string> migrationErrors = null)
         {
             var obj = JObject.Parse(json);
+            migrationErrors = migrationErrors ?? new List<string>();
             migrator.Migrate(obj, migrationErrors);
 
+            return DeserializeModel(obj, serializationErrors);
+        }
+
+        private static Model DeserializeModel(JObject obj, List<string> serializationErrors)
+        {
             JsonInheritanceConverter.RefreshAppDomainTypeCache();
             serializationErrors = serializationErrors ?? new List<string>();
             var serializer = JsonSerializer.Create(new JsonSerializerSettings()
