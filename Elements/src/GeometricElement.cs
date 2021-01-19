@@ -23,7 +23,6 @@ namespace Elements
         /// </summary>
         /// <param name="transform">The element's transform.</param>
         /// <param name="representation">The element's representation.</param>
-        /// <returns></returns>
         public GeometricElement(Representation representation, Transform transform = null) : base(Guid.NewGuid(), null)
         {
             this.Transform = transform != null ? transform : new Transform();
