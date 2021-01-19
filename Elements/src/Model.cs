@@ -187,8 +187,9 @@ namespace Elements
             // When user elements have been loaded into the app domain, they haven't always been
             // loaded into the InheritanceConverter's Cache.  This does have some overhead,
             // but is useful here, at the Model level, to ensure user types are available.
-            JsonInheritanceConverter.RefreshAppDomainTypeCache();
             errors = errors ?? new List<string>();
+            JsonInheritanceConverter.RefreshAppDomainTypeCache(out var typeLoadErrors);
+            errors.AddRange(typeLoadErrors);
             var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
             {
                 Error = (sender, args) =>
