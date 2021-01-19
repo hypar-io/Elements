@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.8.2
+### Added
+- `MeshRepresentation`
+- `SolidRepresentation`
+- `CurveRepresentation`
+- `PointsRepresentation`
+- `Representation.Material`
+- `IMigration`
+- `Migrator`
+- `Model.ElementsVersion`
+- `Model.FromJson(string json,Migrator migrator, List<string> serializationErrors = null, List<string> migrationErrors = null)`
+
+### Changed
+- `Representation` now inherits from `Element`.
+- `GeometricElement.Material` has been deprecated.
+- `Representation.SolidOperations` has been deprecated.
+
 ## 0.8.1
 
 ### Added
