@@ -11,6 +11,7 @@ using System.Linq;
 using Xunit.Abstractions;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
@@ -72,7 +73,8 @@ namespace Elements.Tests
             // We've changed an Elements.Beam to Elements.Foo
             var modelStr = "{'Transform':{'Matrix':{'Components':[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0]}},'Elements':{'c6d1dc68-f800-47c1-9190-745b525ad569':{'discriminator':'Elements.Baz'}, '37f161d6-a892-4588-ad65-457b04b97236':{'discriminator':'Elements.Geometry.Profiles.WideFlangeProfile','d':1.1176,'tw':0.025908,'bf':0.4064,'tf':0.044958,'Perimeter':{'discriminator':'Elements.Geometry.Polygon','Vertices':[{'X':-0.2032,'Y':0.5588,'Z':0.0},{'X':-0.2032,'Y':0.51384199999999991,'Z':0.0},{'X':-0.012954,'Y':0.51384199999999991,'Z':0.0},{'X':-0.012954,'Y':-0.51384199999999991,'Z':0.0},{'X':-0.2032,'Y':-0.51384199999999991,'Z':0.0},{'X':-0.2032,'Y':-0.5588,'Z':0.0},{'X':0.2032,'Y':-0.5588,'Z':0.0},{'X':0.2032,'Y':-0.51384199999999991,'Z':0.0},{'X':0.012954,'Y':-0.51384199999999991,'Z':0.0},{'X':0.012954,'Y':0.51384199999999991,'Z':0.0},{'X':0.2032,'Y':0.51384199999999991,'Z':0.0},{'X':0.2032,'Y':0.5588,'Z':0.0}]},'Voids':null,'Id':'37f161d6-a892-4588-ad65-457b04b97236','Name':'W44x335'},'6b77d69a-204e-40f9-bc1f-ed84683e64c6':{'discriminator':'Elements.Material','Color':{'Red':0.60000002384185791,'Green':0.5,'Blue':0.5,'Alpha':1.0},'SpecularFactor':0.0,'GlossinessFactor':0.0,'Id':'6b77d69a-204e-40f9-bc1f-ed84683e64c6','Name':'steel'},'fd35bd2c-0108-47df-8e6d-42cc43e4eed0':{'discriminator':'Elements.Foo','Curve':{'discriminator':'Elements.Geometry.Arc','Center':{'X':0.0,'Y':0.0,'Z':0.0},'Radius':2.0,'StartAngle':0.0,'EndAngle':90.0},'StartSetback':0.25,'EndSetback':0.25,'Profile':'37f161d6-a892-4588-ad65-457b04b97236','Transform':{'Matrix':{'Components':[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0]}},'Material':'6b77d69a-204e-40f9-bc1f-ed84683e64c6','Representation':{'SolidOperations':[{'discriminator':'Elements.Geometry.Solids.Sweep','Profile':'37f161d6-a892-4588-ad65-457b04b97236','Curve':{'discriminator':'Elements.Geometry.Arc','Center':{'X':0.0,'Y':0.0,'Z':0.0},'Radius':2.0,'StartAngle':0.0,'EndAngle':90.0},'StartSetback':0.25,'EndSetback':0.25,'Rotation':0.0,'IsVoid':false}]},'Id':'fd35bd2c-0108-47df-8e6d-42cc43e4eed0','Name':null}}}";
             var errors = new List<string>();
-            var model = Model.FromJson(modelStr, errors);
+            var migrationErrors = new List<string>();
+            var model = Model.FromJson(modelStr, Migrator.Instance, errors, migrationErrors);
             foreach (var e in errors)
             {
                 this._output.WriteLine(e);
@@ -80,7 +82,7 @@ namespace Elements.Tests
 
             // We expect three geometric elements, 
             // but the baz will not deserialize.
-            Assert.Equal(3, model.Elements.Count);
+            Assert.Equal(4, model.Elements.Count);
             Assert.Equal(2, errors.Count);
         }
 
@@ -193,7 +195,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(2);
+            var c = (JObject)elements[column.Id.ToString()];
 
             // Inject an unknown property.
             c.Property("Curve").AddAfterSelf(new JProperty("Foo", "Bar"));
@@ -214,7 +216,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(2); // the column
+            var c = (JObject)elements[column.Id.ToString()]; // the column
 
             // Remove the Location property
             c.Property("Location").Remove();
@@ -234,7 +236,7 @@ namespace Elements.Tests
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(2); // the column
+            var c = (JObject)elements[column.Id.ToString()]; // the column
 
             // Nullify a property.
             c.Property("Location").Value = null;

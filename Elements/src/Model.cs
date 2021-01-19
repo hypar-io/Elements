@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Validators;
+using Newtonsoft.Json.Linq;
 
 namespace Elements
 {
@@ -197,6 +198,33 @@ namespace Elements
                     args.ErrorContext.Handled = true;
                 }
             });
+            JsonInheritanceConverter.Elements.Clear();
+            return model;
+        }
+
+        /// <summary>
+        /// Deserialize a model from JSON applying migrations.
+        /// </summary>
+        /// <param name="json">The JSON representing the model.</param>
+        /// <param name="migrator">A migrator instance.</param>
+        /// <param name="migrationErrors">A collection of deserialization and migration errors.</param>
+        /// <param name="serializationErrors">A collection of deserialization and migration errors.</param>
+        public static Model FromJson(string json, Migrator migrator, List<string> serializationErrors = null, List<string> migrationErrors = null)
+        {
+            var obj = JObject.Parse(json);
+            migrator.Migrate(obj, migrationErrors);
+
+            JsonInheritanceConverter.RefreshAppDomainTypeCache();
+            serializationErrors = serializationErrors ?? new List<string>();
+            var serializer = JsonSerializer.Create(new JsonSerializerSettings()
+            {
+                Error = (sender, args) =>
+                {
+                    serializationErrors.Add(args.ErrorContext.Error.Message);
+                    args.ErrorContext.Handled = true;
+                }
+            });
+            var model = obj.ToObject<Model>(serializer);
             JsonInheritanceConverter.Elements.Clear();
             return model;
         }
