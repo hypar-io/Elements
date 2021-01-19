@@ -13,6 +13,9 @@ namespace Elements.Serialization.JSON
 
         public Version To => Version.Parse("0.8.2");
 
+        /// <summary>
+        /// A JSON path expression for all elements which have a representation.
+        /// </summary>
         public string Path => "$.Elements.*.Representation";
 
         public void Migrate(JToken token)
