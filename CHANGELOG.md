@@ -2,7 +2,8 @@
 
 ## 0.8.2
 ### Fixed
-- `Deserialization of profiles created in UpdateRepresentation`
+- Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
+
 
 ## 0.8.1
 

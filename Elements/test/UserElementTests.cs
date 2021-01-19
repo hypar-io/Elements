@@ -80,8 +80,8 @@ namespace Elements.Tests
             Assert.Empty(errors);
             var newUe = newModel.AllElementsOfType<TestUserElement>().First();
 
-            // plus one because of hte profile that will be added from
-            // UpdateRepresentation call during serialization
+            // Plus one because of the profile that will be added from
+            // UpdateRepresentation() call during serialization.
             Assert.Equal(this.Model.Elements.Count + 1, newModel.Elements.Count);
 
             Assert.Equal(ue.Representation.SolidOperations.Count, newUe.Representation.SolidOperations.Count);
