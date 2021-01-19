@@ -24,7 +24,7 @@ namespace Elements.Tests
                                       1,
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.ZAxis),
-                                      null,
+                                      new List<Representation>() { new SolidRepresentation() },
                                       true,
                                       Guid.NewGuid(),
                                       "BoxyType");
@@ -33,7 +33,7 @@ namespace Elements.Tests
                                       1,
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
-                                      null,
+                                      new List<Representation>() { new SolidRepresentation() },
                                       true,
                                       Guid.NewGuid(),
                                       "BoxyType");
@@ -64,7 +64,7 @@ namespace Elements.Tests
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.XAxis),
                                       20,
-                                      null,
+                                      new List<Representation>() { new SolidRepresentation() },
                                       true,
                                       Guid.NewGuid(),
                                       "Avocado Type");
@@ -73,7 +73,7 @@ namespace Elements.Tests
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.YAxis),
                                       .005,
-                                      null,
+                                      new List<Representation>() { new SolidRepresentation() },
                                       true,
                                       Guid.NewGuid(),
                                       "Duck Type");

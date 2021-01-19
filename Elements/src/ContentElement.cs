@@ -62,9 +62,16 @@ namespace Elements
             var boxSolid = new Extrude(bottomProfile, height, Vector3.ZAxis, false);
 
             var rep = FirstRepresentationOfType<SolidRepresentation>();
-            var extrude = (Extrude)rep.SolidOperations[0];
-            extrude.Profile = bottomProfile;
-            extrude.Height = height;
+            if (rep.SolidOperations.Count == 0)
+            {
+                rep.SolidOperations.Add(new Extrude(bottomProfile, height, Vector3.ZAxis, false));
+            }
+            else
+            {
+                var extrude = (Extrude)rep.SolidOperations[0];
+                extrude.Profile = bottomProfile;
+                extrude.Height = height;
+            }
         }
     }
 }
