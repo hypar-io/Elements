@@ -173,7 +173,7 @@ namespace Elements
             }
             exportModel.Transform = this.Transform;
 
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this,
+            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
                                                                indent ? Formatting.Indented : Formatting.None);
         }
 
