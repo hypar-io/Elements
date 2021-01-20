@@ -71,27 +71,45 @@ namespace Elements.Serialization.JSON
         /// <returns>A dictionary containing all found types keyed by their full name.</returns>
         private static Dictionary<string, Type> BuildAppDomainTypeCache(out List<string> failedAssemblyErrors)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             var typeCache = new Dictionary<string, Type>();
 
+            var numAssemblies = 0;
+            var numTypesChecked = 0;
             failedAssemblyErrors = new List<string>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
+                numAssemblies++;
+                var types = Array.Empty<Type>();
                 try
                 {
-                    foreach (var t in assembly.GetTypes())
+                    types = assembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException)
+                {
+                    failedAssemblyErrors.Add($"Failed to load assembly: {assembly.FullName}");
+                    continue;
+                }
+                foreach (var t in types)
+                {
+                    numTypesChecked++;
+                    try
                     {
                         if (!typeCache.ContainsKey(t.FullName) && IsValidTypeForElements(t))
                         {
                             typeCache.Add(t.FullName, t);
                         }
                     }
-                }
-                catch (Exception e) when (e is TypeLoadException || e is ReflectionTypeLoadException)
-                {
-                    failedAssemblyErrors.Add($"Failed to load assembly: {assembly.FullName}");
+                    catch (TypeLoadException)
+                    {
+                        failedAssemblyErrors.Add($"Failed to load type: {t.FullName}");
+                        continue;
+                    }
                 }
             }
 
+            sw.Stop();
+            var elapsed = sw.Elapsed.TotalSeconds;
             return typeCache;
         }
 
