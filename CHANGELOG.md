@@ -1,10 +1,14 @@
 # Changelog
 
 ## 0.8.2
+
+### Changed
+- The errors parameter for Model.FromJson now has the out modifier. It no longer takes a default value.
+- Model deserialization only refreshes type cache if the `forceTypeReload` parameter is set to true.
+
 ### Fixed
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
 - Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
-
 
 ## 0.8.1
 
