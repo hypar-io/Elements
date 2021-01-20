@@ -182,24 +182,35 @@ namespace Elements
         /// </summary>
         /// <param name="json">The JSON representing the model.</param>
         /// <param name="errors">A collection of deserialization errors.</param>
-        public static Model FromJson(string json, List<string> errors = null)
+        /// <param name="forceTypeReload">Option to force reloading the inernal type cache. Use if you add types dynamically in your code.</param>
+        public static Model FromJson(string json, out List<string> errors, bool forceTypeReload = false)
         {
             // When user elements have been loaded into the app domain, they haven't always been
             // loaded into the InheritanceConverter's Cache.  This does have some overhead,
             // but is useful here, at the Model level, to ensure user types are available.
-            errors = errors ?? new List<string>();
-            JsonInheritanceConverter.RefreshAppDomainTypeCache(out var typeLoadErrors);
-            errors.AddRange(typeLoadErrors);
+            var deserializationErrors = new List<string>();
+            if (forceTypeReload)
+            {
+                JsonInheritanceConverter.RefreshAppDomainTypeCache(out var typeLoadErrors);
+                deserializationErrors.AddRange(typeLoadErrors);
+            }
+
             var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
             {
                 Error = (sender, args) =>
                 {
-                    errors.Add(args.ErrorContext.Error.Message);
+                    deserializationErrors.Add(args.ErrorContext.Error.Message);
                     args.ErrorContext.Handled = true;
                 }
             });
+            errors = deserializationErrors;
             JsonInheritanceConverter.Elements.Clear();
             return model;
+        }
+
+        public static Model FromJson(string json, bool forceTypeReload = false)
+        {
+            return FromJson(json, out _, forceTypeReload);
         }
 
         private List<Element> RecursiveGatherSubElements(object obj)
