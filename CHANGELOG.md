@@ -1,9 +1,13 @@
 # Changelog
 
 ## 0.8.2
+### Changed
+- Model deserialization errors are now and `out` variable not a list you pass in.
+- Model deserialization only refreshes type cache if forceTypeReload is set to true.
 ### Fixed
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
 - Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
+
 
 
 ## 0.8.1
