@@ -30,7 +30,7 @@ namespace Elements.Serialization.JSON
             {
                 if (_typeCache == null)
                 {
-                    _typeCache = BuildAppDomainTypeCache();
+                    _typeCache = BuildAppDomainTypeCache(out _);
                 }
                 return _typeCache;
             }
@@ -65,44 +65,68 @@ namespace Elements.Serialization.JSON
         /// The type cache needs to contains all types that will have a discriminator.
         /// This includes base types, like elements, and all derived types like Wall.
         /// We use reflection to find all public types available in the app domain
-        /// that have a Newtonsoft.Json.JsonConverterAttribute whose converter type is the 
+        /// that have a Newtonsoft.Json.JsonConverterAttribute whose converter type is the
         /// Elements.Serialization.JSON.JsonInheritanceConverter.
         /// </summary>
         /// <returns>A dictionary containing all found types keyed by their full name.</returns>
-        private static Dictionary<string, Type> BuildAppDomainTypeCache()
+        private static Dictionary<string, Type> BuildAppDomainTypeCache(out List<string> failedAssemblyErrors)
         {
             var typeCache = new Dictionary<string, Type>();
 
-            var exportedTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes().Where(t => t.IsPublic && t.IsClass));
-            var typesUsingInheritanceConverter = exportedTypes.Where(et =>
+            failedAssemblyErrors = new List<string>();
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var attrib = et.GetCustomAttribute<JsonConverterAttribute>();
-                if (attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
+                var types = Array.Empty<Type>();
+                try
                 {
-                    return true;
+                    types = assembly.GetTypes();
                 }
-                return false;
-            });
-
-            var derivedTypes = typesUsingInheritanceConverter.SelectMany(baseType => exportedTypes.Where(exportedType => baseType.IsAssignableFrom(exportedType)));
-            foreach (var t in derivedTypes)
-            {
-                if (!typeCache.ContainsKey(t.FullName))
+                catch (ReflectionTypeLoadException)
                 {
-                    typeCache.Add(t.FullName, t);
+                    failedAssemblyErrors.Add($"Failed to load assembly: {assembly.FullName}");
+                    continue;
+                }
+                foreach (var t in types)
+                {
+                    try
+                    {
+                        if (IsValidTypeForElements(t) && !typeCache.ContainsKey(t.FullName))
+                        {
+                            typeCache.Add(t.FullName, t);
+                        }
+                    }
+                    catch (TypeLoadException)
+                    {
+                        failedAssemblyErrors.Add($"Failed to load type: {t.FullName}");
+                        continue;
+                    }
                 }
             }
 
             return typeCache;
         }
 
+        private static bool IsValidTypeForElements(Type t)
+        {
+            if (t.IsPublic && t.IsClass)
+            {
+                var attrib = t.GetCustomAttribute<JsonConverterAttribute>();
+                if (attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Call this method after assemblies have been loaded into the app
         /// domain to ensure that the converter's cache is up to date.
         /// </summary>
-        internal static void RefreshAppDomainTypeCache()
+        internal static void RefreshAppDomainTypeCache(out List<string> errors)
         {
-            _typeCache = BuildAppDomainTypeCache();
+            _typeCache = BuildAppDomainTypeCache(out errors);
         }
 
         public static bool ElementwiseSerialization { get; set; } = false;
@@ -166,7 +190,7 @@ namespace Elements.Serialization.JSON
 
         public override object ReadJson(Newtonsoft.Json.JsonReader reader, System.Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
-            // The serialized value is an identifier, so the expectation is 
+            // The serialized value is an identifier, so the expectation is
             // that the element with that id has already been deserialized.
             if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1 && reader.Value != null)
             {
@@ -202,7 +226,7 @@ namespace Elements.Serialization.JSON
             else
             {
                 // Without a discriminator the call to GetObjectSubtype will
-                // fall through to returning either a [UserElement] type or 
+                // fall through to returning either a [UserElement] type or
                 // the object type.
                 subtype = GetObjectSubtype(objectType, null, jObject);
             }

@@ -3,6 +3,7 @@
 ## 0.8.2
 ### Fixed
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
+- Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
 
 
 ## 0.8.1
