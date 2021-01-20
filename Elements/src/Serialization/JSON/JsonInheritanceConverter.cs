@@ -71,15 +71,11 @@ namespace Elements.Serialization.JSON
         /// <returns>A dictionary containing all found types keyed by their full name.</returns>
         private static Dictionary<string, Type> BuildAppDomainTypeCache(out List<string> failedAssemblyErrors)
         {
-            var sw = System.Diagnostics.Stopwatch.StartNew();
             var typeCache = new Dictionary<string, Type>();
 
-            var numAssemblies = 0;
-            var numTypesChecked = 0;
             failedAssemblyErrors = new List<string>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                numAssemblies++;
                 var types = Array.Empty<Type>();
                 try
                 {
@@ -92,10 +88,9 @@ namespace Elements.Serialization.JSON
                 }
                 foreach (var t in types)
                 {
-                    numTypesChecked++;
                     try
                     {
-                        if (!typeCache.ContainsKey(t.FullName) && IsValidTypeForElements(t))
+                        if (IsValidTypeForElements(t) && !typeCache.ContainsKey(t.FullName))
                         {
                             typeCache.Add(t.FullName, t);
                         }
@@ -108,8 +103,6 @@ namespace Elements.Serialization.JSON
                 }
             }
 
-            sw.Stop();
-            var elapsed = sw.Elapsed.TotalSeconds;
             return typeCache;
         }
 
