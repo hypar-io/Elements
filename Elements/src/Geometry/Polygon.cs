@@ -896,28 +896,7 @@ namespace Elements.Geometry
         /// <param name="i">The segment to transform. If it does not exist, then no work will be done.</param>
         public void TransformSegment(Transform t, int i)
         {
-            var v = this.Vertices;
-
-            if (i < 0 || i > v.Count)
-            {
-                // Segment index is out of range, do no work.
-                return;
-            }
-
-            var candidates = new List<Vector3>(this.Vertices);
-
-            var endIndex = (i + 1) % v.Count;
-
-            candidates[i] = t.OfPoint(v[i]);
-            candidates[endIndex] = t.OfPoint(v[endIndex]);
-
-            if (v.Count != 3 && !candidates.AreCoplanar())
-            {
-                // All motion is valid for a triangle, so we can skip this check in that case.
-                throw new Exception("Segment transformation must be within the polygon's plane.");
-            }
-
-            this.Vertices = candidates;
+            this.TransformSegment(t, i, true, true);
         }
 
         /// <summary>
