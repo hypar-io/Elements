@@ -671,7 +671,7 @@ namespace Elements.Geometry.Tests
         public void DeserializesWithoutDiscriminator()
         {
             // We've received a Polygon and we know that we're receiving
-            // a Polygon. The Polygon should deserialize without a 
+            // a Polygon. The Polygon should deserialize without a
             // discriminator.
             string json = @"
             {
@@ -800,6 +800,97 @@ namespace Elements.Geometry.Tests
                 var pt = polyCircle.PointAt(u);
                 this.Model.AddElement(new ModelCurve(circle.Transformed(new Transform(pt)), BuiltInMaterials.XAxis));
             }
+        }
+
+        [Fact]
+        public void SharedSegments_ConcentricCircles_NoResults()
+        {
+            var a = new Circle(new Vector3(), 1).ToPolygon();
+            var b = new Circle(new Vector3(), 2).ToPolygon();
+
+            var results = Polygon.SharedSegments(a, b);
+
+            Assert.Equal(0, results.Count);
+        }
+
+        [Fact]
+        public void SharedSegments_IntersectingCircles_NoResults()
+        {
+            var a = new Circle(new Vector3(1, 0, 0), 2).ToPolygon();
+            var b = new Circle(new Vector3(-1, 0, 0), 2).ToPolygon();
+
+            var results = Polygon.SharedSegments(a, b);
+
+            Assert.Equal(0, results.Count);
+        }
+
+        [Fact]
+        public void SharedSegments_DuplicateCircles_TenResults()
+        {
+            var a = new Circle(new Vector3(), 1).ToPolygon();
+            var b = new Circle(new Vector3(), 1).ToPolygon();
+
+            var results = Polygon.SharedSegments(a, b);
+
+            Assert.Equal(10, results.Count);
+        }
+
+        [Fact]
+        public void SharedSegments_DuplicateCircles_AccurateResults()
+        {
+            var a = new Circle(new Vector3(), 1).ToPolygon();
+            var b = new Circle(new Vector3(), 1).ToPolygon();
+
+            var matches = Polygon.SharedSegments(a, b);
+
+            var result = matches.Select(match =>
+            {
+                var (t, u) = match;
+
+                var segmentA = a.Segments()[t];
+                var segmentB = b.Segments()[u];
+
+                // Reverse segment b if necessary
+                if (!segmentA.Start.IsAlmostEqualTo(segmentB.Start))
+                {
+                    segmentB = segmentB.Reversed();
+                }
+
+                var sa = segmentA.Start;
+                var sb = segmentB.Start;
+                var ea = segmentA.End;
+                var eb = segmentB.End;
+
+                var startMatches = sa.IsAlmostEqualTo(sb);
+                var endMatches = ea.IsAlmostEqualTo(eb);
+
+                return startMatches && endMatches;
+            });
+
+            Assert.DoesNotContain(false, result);
+        }
+
+        [Fact]
+        public void SharedSegments_MirroredSquares_OneResult()
+        {
+            var s = 1;
+
+            var a = new Polygon(new List<Vector3>(){
+                new Vector3(0, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, 0, 0),
+                new Vector3(0, 0, 0),
+            });
+            var b = new Polygon(new List<Vector3>(){
+                new Vector3(0, s, 0),
+                new Vector3(s, s, 0),
+                new Vector3(s, 0, 0),
+                new Vector3(0, 0, 0),
+            });
+
+            var matches = Polygon.SharedSegments(a, b);
+
+            Assert.Equal(1, matches.Count);
         }
     }
 }
