@@ -808,7 +808,7 @@ namespace Elements.Geometry.Tests
             var a = new Circle(new Vector3(), 1).ToPolygon();
             var b = new Circle(new Vector3(), 2).ToPolygon();
 
-            var results = Polygon.SharedSegments(a, b);
+            var results = Polygon.SharedSegments(a, b, true);
 
             Assert.Equal(0, results.Count);
         }
@@ -819,7 +819,7 @@ namespace Elements.Geometry.Tests
             var a = new Circle(new Vector3(1, 0, 0), 2).ToPolygon();
             var b = new Circle(new Vector3(-1, 0, 0), 2).ToPolygon();
 
-            var results = Polygon.SharedSegments(a, b);
+            var results = Polygon.SharedSegments(a, b, true);
 
             Assert.Equal(0, results.Count);
         }
@@ -830,7 +830,7 @@ namespace Elements.Geometry.Tests
             var a = new Circle(new Vector3(), 1).ToPolygon();
             var b = new Circle(new Vector3(), 1).ToPolygon();
 
-            var results = Polygon.SharedSegments(a, b);
+            var results = Polygon.SharedSegments(a, b, true);
 
             Assert.Equal(10, results.Count);
         }
@@ -841,7 +841,7 @@ namespace Elements.Geometry.Tests
             var a = new Circle(new Vector3(), 1).ToPolygon();
             var b = new Circle(new Vector3(), 1).ToPolygon();
 
-            var matches = Polygon.SharedSegments(a, b);
+            var matches = Polygon.SharedSegments(a, b, true);
 
             var result = matches.Select(match =>
             {
@@ -876,7 +876,7 @@ namespace Elements.Geometry.Tests
             var a = new Circle(new Vector3(), 1).ToPolygon();
             var b = new Circle(new Vector3(), 1).ToPolygon().Reversed();
 
-            var matches = Polygon.SharedSegments(a, b);
+            var matches = Polygon.SharedSegments(a, b, true);
 
             var result = matches.Select(match =>
             {
@@ -923,7 +923,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(0, 0, 0),
             });
 
-            var matches = Polygon.SharedSegments(a, b);
+            var matches = Polygon.SharedSegments(a, b, true);
 
             Assert.Equal(1, matches.Count);
         }
@@ -946,7 +946,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(0, 0.5, 0),
             });
 
-            var matches = Polygon.SharedSegments(a, b);
+            var matches = Polygon.SharedSegments(a, b, true);
 
             Assert.Equal(0, matches.Count);
         }

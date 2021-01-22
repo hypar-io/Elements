@@ -1003,56 +1003,6 @@ namespace Elements.Geometry
             verts.Add(this.Start);
             return verts;
         }
-
-        /// <summary>
-        /// Identify any shared segments between two polygons.
-        /// </summary>
-        /// <param name="a">The first polygon to compare.</param>
-        /// <param name="b">The second polygon to compare.</param>
-        /// <returns>Returns a list of tuples of indices for the segments that match in each polygon.</returns>
-        public static List<(int, int)> SharedSegments(Polygon a, Polygon b)
-        {
-            var result = new List<(int, int)>();
-
-            // Abbreviate lists to compare
-            var va = a.Vertices;
-            var vb = b.Vertices;
-
-            for (var i = 0; i < va.Count; i++)
-            {
-                var ia = va[i];
-                var ib = va[(i + 1) % va.Count];
-
-                for (var j = 0; j < vb.Count; j++)
-                {
-                    var ja = vb[j];
-
-                    if (ia.IsAlmostEqualTo(ja))
-                    {
-                        // Current vertices match, compare next vertices
-                        var jNext = (j + 1) % vb.Count;
-                        var jPrev = j == 0 ? vb.Count - 1 : j - 1;
-
-                        var jb = vb[jNext];
-                        var jc = vb[jPrev];
-
-                        if (ib.IsAlmostEqualTo(jb))
-                        {
-                            // Match is current segment a and current segment b
-                            result.Add((i, j));
-                        }
-
-                        if (ib.IsAlmostEqualTo(jc))
-                        {
-                            // Match is current segment a and previous segment b
-                            result.Add((i, jPrev));
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
     }
 
     /// <summary>

@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using Elements.Tests;
 using Xunit;
 
 namespace Elements.Geometry.Tests
 {
-    public class PolylineTests: ModelTest
+    public class PolylineTests : ModelTest
     {
         public PolylineTests()
         {
@@ -45,10 +46,33 @@ namespace Elements.Geometry.Tests
             var offsetResult = offsetResults[0];
             Assert.Equal(4, offsetResult.Vertices.Count);
             // offsets to a rectangle that's offsetAmt longer than the segment in
-            // each direction, and 2x offsetAmt in width, so the long sides are 
+            // each direction, and 2x offsetAmt in width, so the long sides are
             // each length + 2x offsetAmt, and the short sides are each 2x offsetAmt.
             var targetLength = 2 * length + 8 * offsetAmt;
             Assert.Equal(targetLength, offsetResult.Length(), 2);
+        }
+
+        [Fact]
+        public void SharedSegments_OpenMirroredSquares_OneResult()
+        {
+            var s = 1;
+
+            var a = new Polygon(new List<Vector3>(){
+                new Vector3(0, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, 0, 0),
+                new Vector3(0, 0, 0),
+            });
+            var b = new Polygon(new List<Vector3>(){
+                new Vector3(0, s, 0),
+                new Vector3(s, s, 0),
+                new Vector3(s, 0, 0),
+                new Vector3(0, 0, 0),
+            });
+
+            var matches = Polygon.SharedSegments(a, b);
+
+            Assert.Equal(0, matches.Count);
         }
     }
 }
