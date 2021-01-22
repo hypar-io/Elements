@@ -898,45 +898,26 @@ namespace Elements.Geometry
         {
             var v = this.Vertices;
 
-            if (v.Count != 3 && !TransformIsPlanar(t))
-            {
-                // All motion is valid for a triangle, so we can skip this check in that case.
-                throw new Exception("Segment transformation must be within the polygon's plane.");
-            }
-
-
             if (i < 0 || i > v.Count)
             {
                 // Segment index is out of range, do no work.
                 return;
             }
 
+            var candidates = new List<Vector3>(this.Vertices);
+
             var endIndex = (i + 1) % v.Count;
 
-            v[i] = t.OfPoint(v[i]);
-            v[endIndex] = t.OfPoint(v[endIndex]);
-        }
+            candidates[i] = t.OfPoint(v[i]);
+            candidates[endIndex] = t.OfPoint(v[endIndex]);
 
-        internal bool TransformIsPlanar(Transform t)
-        {
-            // Get polygon normal and center
-            var n = this.Plane().Normal.Unitized();
-            var a = this.Centroid();
+            if (v.Count != 3 && !candidates.AreCoplanar())
+            {
+                // All motion is valid for a triangle, so we can skip this check in that case.
+                throw new Exception("Segment transformation must be within the polygon's plane.");
+            }
 
-            // Get the transform normal and center
-            var v = t.ZAxis.Unitized();
-            var b = t.Origin;
-
-            // Confirm planes have the same orientation
-            var cross = a.Cross(v);
-            var isSameOrientation = cross.X == 0 && cross.Y == 0 && cross.Z == 0;
-
-            // Confirm translation is planar
-            var translation = b - a;
-            var dot = n.Dot(translation);
-            var isPlanarTranslation = dot.ApproximatelyEquals(0);
-
-            return isSameOrientation && isPlanarTranslation;
+            this.Vertices = candidates;
         }
 
         /// <summary>

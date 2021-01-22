@@ -914,7 +914,7 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void TransformSegment_UnitSquare_ThrowsOnNonPlanar()
+        public void TransformSegment_UnitSquare_AllowsValidNonPlanar()
         {
             var s = 0.5;
 
@@ -928,7 +928,7 @@ namespace Elements.Geometry.Tests
 
             var t = new Transform(1, 1, 1);
 
-            Assert.Throws<Exception>(() => square.TransformSegment(t, 0));
+            square.TransformSegment(t, 0);
         }
 
         [Fact]
@@ -958,6 +958,16 @@ namespace Elements.Geometry.Tests
             Assert.Equal(s + 2, segment.Start.Z);
             Assert.Equal(s + 2, segment.End.Y);
             Assert.Equal(s + 2, segment.End.Z);
+        }
+
+        [Fact]
+        public void TransformSegment_Circle_ThrowsOnNonPlanar()
+        {
+            var circle = new Circle(new Vector3(), 1).ToPolygon();
+
+            var t = new Transform(2, 2, 2);
+
+            Assert.Throws<Exception>(() => circle.TransformSegment(t, 0));
         }
     }
 }
