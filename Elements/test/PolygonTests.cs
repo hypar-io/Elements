@@ -819,14 +819,16 @@ namespace Elements.Geometry.Tests
 
             square.TransformSegment(t, 0);
 
+            var segment = square.Segments()[0];
+
             var start = square.Vertices[0];
             var end = square.Vertices[1];
 
             // Confirm vertices are correctly moved
-            Assert.Equal(s, start.X);
-            Assert.Equal(s + 1, start.Y);
-            Assert.Equal(-s, end.X);
-            Assert.Equal(s + 1, end.Y);
+            Assert.Equal(s, segment.Start.X);
+            Assert.Equal(s + 1, segment.Start.Y);
+            Assert.Equal(-s, segment.End.X);
+            Assert.Equal(s + 1, segment.End.Y);
 
             // Confirm area has been correctly modified
             Assert.True(square.Area().ApproximatelyEquals(2));
@@ -849,17 +851,45 @@ namespace Elements.Geometry.Tests
 
             square.TransformSegment(t, 0);
 
-            var start = square.Vertices[0];
-            var end = square.Vertices[1];
+            var segment = square.Segments()[0];
 
             // Confirm vertices are correctly moved
-            Assert.Equal(s, start.X);
-            Assert.Equal(s - 0.5, start.Y);
-            Assert.Equal(-s, end.X);
-            Assert.Equal(s - 0.5, end.Y);
+            Assert.Equal(s, segment.Start.X);
+            Assert.Equal(s - 0.5, segment.Start.Y);
+            Assert.Equal(-s, segment.End.X);
+            Assert.Equal(s - 0.5, segment.End.Y);
 
             // Confirm area has been correctly modified
             Assert.True(square.Area().ApproximatelyEquals(0.5));
+        }
+
+        [Fact]
+        public void TransformSegment_UnitSquare_LastSegment()
+        {
+            var s = 0.5;
+
+            var square = new Polygon(new List<Vector3>()
+            {
+                new Vector3(s, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, -s, 0),
+                new Vector3(s, -s, 0)
+            });
+
+            var t = new Transform(1, 0, 0);
+
+            square.TransformSegment(t, 3);
+
+            var segment = square.Segments()[3];
+
+            // Confirm vertices are correctly moved
+            Assert.Equal(s + 1, segment.Start.X);
+            Assert.Equal(-s, segment.Start.Y);
+            Assert.Equal(s + 1, segment.End.X);
+            Assert.Equal(s, segment.End.Y);
+
+            // Confirm area has been correctly modified
+            Assert.True(square.Area().ApproximatelyEquals(2));
         }
 
         [Fact]
@@ -918,14 +948,16 @@ namespace Elements.Geometry.Tests
 
             square.TransformSegment(t, 0);
 
+            var segment = square.Segments()[0];
+
             var start = square.Vertices[0];
             var end = square.Vertices[1];
 
             // Confirm vertices are correctly moved
-            Assert.Equal(s + 2, start.Y);
-            Assert.Equal(s + 2, start.Z);
-            Assert.Equal(s + 2, end.Y);
-            Assert.Equal(s + 2, end.Z);
+            Assert.Equal(s + 2, segment.Start.Y);
+            Assert.Equal(s + 2, segment.Start.Z);
+            Assert.Equal(s + 2, segment.End.Y);
+            Assert.Equal(s + 2, segment.End.Z);
         }
     }
 }
