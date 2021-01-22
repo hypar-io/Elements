@@ -21,9 +21,9 @@ namespace Elements.Geometry
         /// <param name="p">The polygon to convert.</param>
         public static implicit operator Profile(Polygon p) => new Profile(p);
 
-        // Though this conversion may seem redundant to the Curve => ModelCurve converter, it is needed to 
-        // make this the default implicit conversion from a polygon to an element (rather than the 
-        // polygon => profile conversion above.)  
+        // Though this conversion may seem redundant to the Curve => ModelCurve converter, it is needed to
+        // make this the default implicit conversion from a polygon to an element (rather than the
+        // polygon => profile conversion above.)
         /// <summary>
         /// Implicitly convert a Polygon to a ModelCurve Element.
         /// </summary>
@@ -68,7 +68,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon, using a 2D method. 
+        /// Tests if the supplied Vector3 is within this Polygon, using a 2D method.
         /// </summary>
         /// <param name="vector">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
@@ -1003,6 +1003,56 @@ namespace Elements.Geometry
             verts.Add(this.Start);
             return verts;
         }
+
+        /// <summary>
+        /// Identify any shared segments between two polygons.
+        /// </summary>
+        /// <param name="a">The first polygon to compare.</param>
+        /// <param name="b">The second polygon to compare.</param>
+        /// <returns>Returns a list of tuples of indices for the segments that match in each polygon.</returns>
+        public static List<(int, int)> SharedSegments(Polygon a, Polygon b)
+        {
+            var result = new List<(int, int)>();
+
+            // Abbreviate lists to compare
+            var va = a.Vertices;
+            var vb = b.Vertices;
+
+            for (var i = 0; i < va.Count; i++)
+            {
+                var ia = va[i];
+                var ib = va[(i + 1) % va.Count];
+
+                for (var j = 0; j < vb.Count; j++)
+                {
+                    var ja = vb[j];
+
+                    if (ia.IsAlmostEqualTo(ja))
+                    {
+                        // Current vertices match, compare next vertices
+                        var jNext = (j + 1) % vb.Count;
+                        var jPrev = j == 0 ? vb.Count - 1 : j - 1;
+
+                        var jb = vb[jNext];
+                        var jc = vb[jPrev];
+
+                        if (ib.IsAlmostEqualTo(jb))
+                        {
+                            // Match is current segment a and current segment b
+                            result.Add((i, j));
+                        }
+
+                        if (ib.IsAlmostEqualTo(jc))
+                        {
+                            // Match is current segment a and previous segment b
+                            result.Add((i, jPrev));
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 
     /// <summary>
@@ -1023,7 +1073,7 @@ namespace Elements.Geometry
         /// </summary>
         Intersection,
         /// <summary>
-        /// Exclusive or — either A or B but not both. 
+        /// Exclusive or — either A or B but not both.
         /// </summary>
         XOr
     }
@@ -1036,12 +1086,12 @@ namespace Elements.Geometry
     {
         /// <summary>
         /// Use an Even/Odd fill pattern to decide whether internal polygons are solid or void.
-        /// This corresponds to Clipper's "EvenOdd" PolyFillType. 
+        /// This corresponds to Clipper's "EvenOdd" PolyFillType.
         /// </summary>
         PreserveInternalVoids = 0,
         /// <summary>
         /// Treat all contained or overlapping polygons as solid.
-        /// This corresponds to Clipper's "Positive" PolyFillType. 
+        /// This corresponds to Clipper's "Positive" PolyFillType.
         /// </summary>
         IgnoreInternalVoids = 1
     }
@@ -1069,7 +1119,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Polygon from a clipper path 
+        /// Construct a Polygon from a clipper path
         /// </summary>
         /// <param name="p"></param>
         /// <param name="tolerance">Optional tolerance value. Be sure to use the same tolerance value as you used when converting to Clipper path.</param>
