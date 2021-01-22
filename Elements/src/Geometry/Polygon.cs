@@ -896,12 +896,14 @@ namespace Elements.Geometry
         /// <param name="i">The segment to transform. If it does not exist, then no work will be done.</param>
         public void TransformSegment(Transform t, int i)
         {
-            if (!TransformIsPlanar(t))
+            var v = this.Vertices;
+
+            if (v.Count != 3 && !TransformIsPlanar(t))
             {
+                // All motion is valid for a triangle, so we can skip this check in that case.
                 throw new Exception("Segment transformation must be within the polygon's plane.");
             }
 
-            var v = this.Vertices;
 
             if (i < 0 || i > v.Count)
             {
