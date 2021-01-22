@@ -671,7 +671,7 @@ namespace Elements.Geometry.Tests
         public void DeserializesWithoutDiscriminator()
         {
             // We've received a Polygon and we know that we're receiving
-            // a Polygon. The Polygon should deserialize without a 
+            // a Polygon. The Polygon should deserialize without a
             // discriminator.
             string json = @"
             {
@@ -800,6 +800,132 @@ namespace Elements.Geometry.Tests
                 var pt = polyCircle.PointAt(u);
                 this.Model.AddElement(new ModelCurve(circle.Transformed(new Transform(pt)), BuiltInMaterials.XAxis));
             }
+        }
+
+        [Fact]
+        public void TransformSegment_UnitSquare_Outwards()
+        {
+            var s = 0.5;
+
+            var square = new Polygon(new List<Vector3>()
+            {
+                new Vector3(s, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, -s, 0),
+                new Vector3(s, -s, 0)
+            });
+
+            var t = new Transform(0, 1, 0);
+
+            square.TransformSegment(t, 0);
+
+            var start = square.Vertices[0];
+            var end = square.Vertices[1];
+
+            // Confirm vertices are correctly moved
+            Assert.Equal(s, start.X);
+            Assert.Equal(s + 1, start.Y);
+            Assert.Equal(-s, end.X);
+            Assert.Equal(s + 1, end.Y);
+
+            // Confirm area has been correctly modified
+            Assert.True(square.Area().ApproximatelyEquals(2));
+        }
+
+        [Fact]
+        public void TransformSegment_UnitSquare_Inwards()
+        {
+            var s = 0.5;
+
+            var square = new Polygon(new List<Vector3>()
+            {
+                new Vector3(s, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, -s, 0),
+                new Vector3(s, -s, 0)
+            });
+
+            var t = new Transform(0, -0.5, 0);
+
+            square.TransformSegment(t, 0);
+
+            var start = square.Vertices[0];
+            var end = square.Vertices[1];
+
+            // Confirm vertices are correctly moved
+            Assert.Equal(s, start.X);
+            Assert.Equal(s - 0.5, start.Y);
+            Assert.Equal(-s, end.X);
+            Assert.Equal(s - 0.5, end.Y);
+
+            // Confirm area has been correctly modified
+            Assert.True(square.Area().ApproximatelyEquals(0.5));
+        }
+
+        [Fact]
+        public void TransformSegment_UnitSquare_OutOfRange()
+        {
+            var s = 0.5;
+
+            var square = new Polygon(new List<Vector3>()
+            {
+                new Vector3(s, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, -s, 0),
+                new Vector3(s, -s, 0)
+            });
+
+            var t = new Transform(1, 1, 0);
+
+            square.TransformSegment(t, 100);
+
+            // Confirm area has remained the same
+            Assert.True(square.Area().ApproximatelyEquals(1));
+        }
+
+        [Fact]
+        public void TransformSegment_UnitSquare_ThrowsOnNonPlanar()
+        {
+            var s = 0.5;
+
+            var square = new Polygon(new List<Vector3>()
+            {
+                new Vector3(s, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, -s, 0),
+                new Vector3(s, -s, 0)
+            });
+
+            var t = new Transform(1, 1, 1);
+
+            Assert.Throws<Exception>(() => square.TransformSegment(t, 0));
+        }
+
+        [Fact]
+        public void TransformSegment_RotatedSquare_AllowsPlanarMotion()
+        {
+            var s = 0.5;
+
+            var square = new Polygon(new List<Vector3>()
+            {
+                new Vector3(s, s, s),
+                new Vector3(-s, s, s),
+                new Vector3(-s, -s, -s),
+                new Vector3(s, -s, -s)
+            });
+
+            var t = new Transform(0, 2, 2);
+
+            square.TransformSegment(t, 0);
+
+            var start = square.Vertices[0];
+            var end = square.Vertices[1];
+
+            // Confirm vertices are correctly moved
+            Assert.Equal(s + 2, start.Y);
+            Assert.Equal(s + 2, start.Z);
+            Assert.Equal(s + 2, end.Y);
+            Assert.Equal(s + 2, end.Z);
         }
     }
 }

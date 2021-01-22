@@ -21,9 +21,9 @@ namespace Elements.Geometry
         /// <param name="p">The polygon to convert.</param>
         public static implicit operator Profile(Polygon p) => new Profile(p);
 
-        // Though this conversion may seem redundant to the Curve => ModelCurve converter, it is needed to 
-        // make this the default implicit conversion from a polygon to an element (rather than the 
-        // polygon => profile conversion above.)  
+        // Though this conversion may seem redundant to the Curve => ModelCurve converter, it is needed to
+        // make this the default implicit conversion from a polygon to an element (rather than the
+        // polygon => profile conversion above.)
         /// <summary>
         /// Implicitly convert a Polygon to a ModelCurve Element.
         /// </summary>
@@ -68,7 +68,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon, using a 2D method. 
+        /// Tests if the supplied Vector3 is within this Polygon, using a 2D method.
         /// </summary>
         /// <param name="vector">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
@@ -890,6 +890,54 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Transform a specified segment of this polygon in place.
+        /// </summary>
+        /// <param name="t">The transform. If it is not within the polygon plane, then an exception will be thrown.</param>
+        /// <param name="i">The segment to transform. If it does not exist, then no work will be done.</param>
+        public void TransformSegment(Transform t, int i)
+        {
+            if (!TransformIsPlanar(t))
+            {
+                throw new Exception("Segment transformation must be within the polygon's plane.");
+            }
+
+            var v = this.Vertices;
+
+            if (i < 0 || i > v.Count)
+            {
+                // Segment index is out of range, do no work.
+                return;
+            }
+
+            var endIndex = (i + 1) % v.Count;
+
+            v[i] = t.OfPoint(v[i]);
+            v[endIndex] = t.OfPoint(v[endIndex]);
+        }
+
+        internal bool TransformIsPlanar(Transform t)
+        {
+            // Get polygon normal and center
+            var n = this.Plane().Normal.Unitized();
+            var a = this.Centroid();
+
+            // Get the transform normal and center
+            var v = t.ZAxis.Unitized();
+            var b = t.Origin;
+
+            // Confirm planes have the same orientation
+            var cross = a.Cross(v);
+            var isSameOrientation = cross.X == 0 && cross.Y == 0 && cross.Z == 0;
+
+            // Confirm translation is planar
+            var translation = b - a;
+            var dot = n.Dot(translation);
+            var isPlanarTranslation = dot.ApproximatelyEquals(0);
+
+            return isSameOrientation && isPlanarTranslation;
+        }
+
+        /// <summary>
         /// Fillet all corners on this polygon.
         /// </summary>
         /// <param name="radius">The fillet radius.</param>
@@ -1023,7 +1071,7 @@ namespace Elements.Geometry
         /// </summary>
         Intersection,
         /// <summary>
-        /// Exclusive or — either A or B but not both. 
+        /// Exclusive or — either A or B but not both.
         /// </summary>
         XOr
     }
@@ -1036,12 +1084,12 @@ namespace Elements.Geometry
     {
         /// <summary>
         /// Use an Even/Odd fill pattern to decide whether internal polygons are solid or void.
-        /// This corresponds to Clipper's "EvenOdd" PolyFillType. 
+        /// This corresponds to Clipper's "EvenOdd" PolyFillType.
         /// </summary>
         PreserveInternalVoids = 0,
         /// <summary>
         /// Treat all contained or overlapping polygons as solid.
-        /// This corresponds to Clipper's "Positive" PolyFillType. 
+        /// This corresponds to Clipper's "Positive" PolyFillType.
         /// </summary>
         IgnoreInternalVoids = 1
     }
@@ -1069,7 +1117,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Polygon from a clipper path 
+        /// Construct a Polygon from a clipper path
         /// </summary>
         /// <param name="p"></param>
         /// <param name="tolerance">Optional tolerance value. Be sure to use the same tolerance value as you used when converting to Clipper path.</param>
