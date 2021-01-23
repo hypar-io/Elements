@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Validators;
+using Newtonsoft.Json.Linq;
 
 namespace Elements
 {
@@ -17,6 +18,11 @@ namespace Elements
     /// </summary>
     public partial class Model
     {
+        /// <summary>
+        /// The version of the Elements library used to create this model.
+        /// </summary>
+        public string ElementsVersion => this.GetType().Assembly.GetName().Version.ToString();
+
         /// <summary>
         /// Construct an empty model.
         /// </summary>
@@ -181,30 +187,72 @@ namespace Elements
         /// Deserialize a model from JSON.
         /// </summary>
         /// <param name="json">The JSON representing the model.</param>
-        /// <param name="errors">A collection of deserialization errors.</param>
+        /// <param name="serializationErrors">A collection of deserialization errors.</param>
         /// <param name="forceTypeReload">Option to force reloading the inernal type cache. Use if you add types dynamically in your code.</param>
-        public static Model FromJson(string json, out List<string> errors, bool forceTypeReload = false)
+        public static Model FromJson(string json,
+                                     out List<string> serializationErrors,
+                                     bool forceTypeReload = false)
         {
-            // When user elements have been loaded into the app domain, they haven't always been
-            // loaded into the InheritanceConverter's Cache.  This does have some overhead,
-            // but is useful here, at the Model level, to ensure user types are available.
-            var deserializationErrors = new List<string>();
+            serializationErrors = new List<string>();
+
+            var obj = JObject.Parse(json);
+            Migrator.Instance.Migrate(obj, out var migrationErrors);
+
+            var model = DeserializeModel(obj, out var deserializationErrors, forceTypeReload);
+
+            serializationErrors.AddRange(migrationErrors);
+            serializationErrors.AddRange(deserializationErrors);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Deserialize a model from JSON using custom migrations.
+        /// </summary>
+        /// <param name="json">The JSON representing the model.</param>
+        /// <param name="migrator">A migrator instance. Use this parameter to supply a custom migrator.</param>
+        /// <param name="serializationErrors">A collection of deserialization and migration errors.</param>
+        /// <param name="forceTypeReload">Option to force reloading the inernal type cache. Use if you add types dynamically in your code.</param>
+        public static Model FromJson(string json,
+                                     Migrator migrator,
+                                     out List<string> serializationErrors,
+                                     bool forceTypeReload = false)
+        {
+            serializationErrors = new List<string>();
+
+            var obj = JObject.Parse(json);
+            migrator.Migrate(obj, out var migrationErrors);
+
+            var model = DeserializeModel(obj, out var deserialiationErrors, forceTypeReload);
+
+            serializationErrors.AddRange(migrationErrors);
+            serializationErrors.AddRange(deserialiationErrors);
+
+            return model;
+        }
+
+        private static Model DeserializeModel(JObject obj, out List<string> serializationErrors, bool forceTypeReload)
+        {
+            serializationErrors = new List<string>();
+
             if (forceTypeReload)
             {
                 JsonInheritanceConverter.RefreshAppDomainTypeCache(out var typeLoadErrors);
-                deserializationErrors.AddRange(typeLoadErrors);
+                serializationErrors.AddRange(typeLoadErrors);
             }
 
-            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
+            var errors = new List<string>();
+            var serializer = JsonSerializer.Create(new JsonSerializerSettings()
             {
                 Error = (sender, args) =>
                 {
-                    deserializationErrors.Add(args.ErrorContext.Error.Message);
+                    errors.Add(args.ErrorContext.Error.Message);
                     args.ErrorContext.Handled = true;
                 }
             });
-            errors = deserializationErrors;
-            JsonInheritanceConverter.Elements.Clear();
+            var model = obj.ToObject<Model>(serializer);
+            serializationErrors.AddRange(errors);
+
             return model;
         }
 

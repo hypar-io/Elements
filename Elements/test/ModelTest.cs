@@ -45,7 +45,7 @@ namespace Elements.Tests
         {
             this._model = new Model();
             this.GenerateGlb = true;
-            this.GenerateIfc = true;
+            this.GenerateIfc = false;
             this.GenerateJson = true;
 
             var modelsDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "models");
