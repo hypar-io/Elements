@@ -89,8 +89,6 @@ namespace Elements
         {
             this.Representation.SolidOperations.Clear();
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
-
-            RaiseRepresentationUpdated();
         }
     }
 }

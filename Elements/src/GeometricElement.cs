@@ -8,26 +8,6 @@ namespace Elements
         internal override int SortPriority => 1;
 
         /// <summary>
-        /// Handler for the RepresentationUpdated event.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        public delegate void RepresentationUpdatedHandler(object sender, EventArgs args);
-
-        /// <summary>
-        /// Event raised when the element's representation has been updated.
-        /// </summary>
-        public event EventHandler RepresentationUpdated;
-
-        /// <summary>
-        /// Raise the RepresentationUpdated event.
-        /// </summary>
-        protected virtual void RaiseRepresentationUpdated()
-        {
-            RepresentationUpdated?.Invoke(this, new EventArgs());
-        }
-
-        /// <summary>
         /// This method provides an opportunity for geometric elements
         /// to adjust their solid operations before tesselation. As an example,
         /// a floor might want to clip its opening profiles out of 

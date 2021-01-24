@@ -20,11 +20,6 @@ namespace Elements.Validators
                 geom.Material = BuiltInMaterials.Default;
             }
 
-            geom.RepresentationUpdated += (sender, args) =>
-            {
-                geom.UpdateChildren();
-            };
-
             geom.PropertyChanged += (sender, args) =>
             {
                 geom.UpdateRepresentations();
