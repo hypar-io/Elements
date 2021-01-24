@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry;
 
 namespace Elements
 {
     public partial class GeometricElement
     {
+        internal override int SortPriority => 1;
+
         /// <summary>
         /// This method provides an opportunity for geometric elements
         /// to adjust their solid operations before tesselation. As an example,
@@ -30,6 +33,23 @@ namespace Elements
             }
 
             return new ElementInstance(this, transform, name, Guid.NewGuid());
+        }
+
+        internal override void GatherSubElements(Dictionary<Guid, Element> elements)
+        {
+            if (!elements.ContainsKey(this.Material.Id))
+            {
+                elements.Add(this.Material.Id, this.Material);
+            }
+
+            if (this.Representation != null)
+            {
+                this.Representation.GatherSubElements(elements);
+                if (!elements.ContainsKey(this.Representation.Id))
+                {
+                    elements.Add(this.Representation.Id, this.Representation);
+                }
+            }
         }
     }
 }
