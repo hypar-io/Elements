@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.3
+### Changed
+- `Representation` now inherits from `Element`.
+
 ## 0.8.2
 
 ### Changed
