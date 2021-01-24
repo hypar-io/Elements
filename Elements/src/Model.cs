@@ -54,15 +54,16 @@ namespace Elements
         /// </summary>
         /// <param name="element">The element to add to the model.
         /// added to the model's elements collection?</param>
-        public void AddElement(Element element)
+        /// <param name="updateElementChildren">A flag indicating whether the element's children should be parsed during addition.</param>
+        public void AddElement(Element element, bool updateElementChildren = true)
         {
             if (element == null)
             {
                 return;
             }
 
-            var subElements = new Dictionary<Guid, Element>();
-            element.GatherSubElements(subElements);
+            element.UpdateChildren();
+            var subElements = element.AllChildren();
             foreach (var subElement in subElements)
             {
                 if (!this.Elements.ContainsKey(subElement.Key))
@@ -160,13 +161,16 @@ namespace Elements
                 {
                     ((GeometricElement)kvp.Value).UpdateRepresentations();
                 }
-                exportModel.AddElement(kvp.Value);
+                // Don't parse the children during this addition because
+                // the previous call to UpdateRepresentation will already
+                // have forced this.
+                exportModel.AddElement(kvp.Value, false);
             }
 
             // Sort the elements in priority order.
             // So that they are deserialized with dependent
             // elements first.
-            var elements = this.Elements.Values.ToList();
+            var elements = exportModel.Elements.Values.ToList();
             elements.Sort((a, b) =>
             {
                 if (a.SortPriority < b.SortPriority) return 1;

@@ -54,31 +54,8 @@ namespace Elements.Tests
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, x, 0.0, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, y, 0.0, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Extrude(profileInsideUpdate, 8, Vector3.ZAxis, false));
-        }
 
-        internal override void GatherSubElements(Dictionary<Guid, Element> elements)
-        {
-            // Get the elements for Geometric Element
-            base.GatherSubElements(elements);
-
-            if (!elements.ContainsKey(this.Material.Id))
-            {
-                elements.Add(this.Material.Id, this.Material);
-            }
-
-            if (!elements.ContainsKey(this.Profile.Id))
-            {
-                elements.Add(this.Profile.Id, this.Profile);
-            }
-
-            foreach (var e in this.SubElements)
-            {
-                e.GatherSubElements(elements);
-                if (!elements.ContainsKey(e.Id))
-                {
-                    elements.Add(e.Id, e);
-                }
-            }
+            RaiseRepresentationUpdated();
         }
     }
 

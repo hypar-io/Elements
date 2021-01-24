@@ -18,26 +18,54 @@ namespace Elements
     {
         // This partial definition exists only to mark the class as abstract.
 
+        /// <summary>
+        /// Control the order of serialization by setting the sort priority >1.
+        /// Elements are serialized in descending sort priorty order.
+        /// Ex: An Element with sort priority 1 will be serialized before an element
+        /// with sort priority 0.
+        /// </summary>
         internal virtual int SortPriority => 0;
 
+        protected Dictionary<Guid, Element> _children = new Dictionary<Guid, Element>();
+
         /// <summary>
-        /// The default implementation of GatherSubElements does a recursive 
-        /// search for sub elements to be stored in the model. Override this
-        /// method to provide a more precise search.
+        /// Get all children of this element including those
+        /// that are not direct descendants.
         /// </summary>
-        /// <param name="elements">The dictionary to contain all sub elements</param>
-        internal virtual void GatherSubElements(Dictionary<Guid, Element> elements)
+        /// <returns>A dictionary of elements which have this element as an ancestor.</returns>
+        public Dictionary<Guid, Element> AllChildren()
         {
-            // Look at all public properties of the element.
-            // For all properties which inherit from element, add those
-            // to the elements dictionary first. This will ensure that
-            // those elements will be read out and be available before
-            // an attempt is made to deserialize the element itself.
-            RecursiveGatherSubElements(this, elements);
+            var allChildren = new Dictionary<Guid, Element>();
+            foreach (var child in _children)
+            {
+                var subElements = child.Value.AllChildren();
+                foreach (var subElement in subElements)
+                {
+                    if (!allChildren.ContainsKey(subElement.Key))
+                    {
+                        allChildren.Add(subElement.Key, subElement.Value);
+                    }
+                }
+                if (!allChildren.ContainsKey(child.Value.Id))
+                {
+                    allChildren.Add(child.Value.Id, child.Value);
+                }
+            }
+            return allChildren;
+        }
+
+        /// <summary>
+        /// Update the element's children collection.
+        /// </summary>
+        internal void UpdateChildren()
+        {
+            _children.Clear();
+            GatherSubElements(this, _children);
         }
 
         private static HashSet<Type> SkipTypes = new HashSet<Type>
         {
+            typeof(Guid),
             typeof(string),
             typeof(int),
             typeof(uint),
@@ -49,8 +77,9 @@ namespace Elements
             typeof(ulong)
         };
 
-
-        private void RecursiveGatherSubElements(object obj, Dictionary<Guid, Element> elements)
+        private void GatherSubElements(object obj,
+                                       Dictionary<Guid, Element> elements,
+                                       bool notify = true)
         {
             if (obj == null)
             {
@@ -71,7 +100,7 @@ namespace Elements
 
             t.GetCustomAttribute(typeof(JsonIgnoreAttribute));
             var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                         .Where(p => p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null);
+                         .Where(p => p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null && !SkipTypes.Contains(p.PropertyType));
             foreach (var p in props)
             {
                 var pValue = p.GetValue(obj, null);
@@ -80,12 +109,30 @@ namespace Elements
                     continue;
                 }
 
+                // TODO: This is not as precise as it could be.
+                // List of things that are not supported will be
+                // iterated.
                 var elems = pValue as IList;
                 if (elems != null)
                 {
                     foreach (var item in elems)
                     {
-                        RecursiveGatherSubElements(item, elements);
+                        if (typeof(Element).IsAssignableFrom(item.GetType()))
+                        {
+                            var subElement = (Element)item;
+                            if (!elements.ContainsKey(subElement.Id))
+                            {
+                                elements.Add(subElement.Id, subElement);
+                                if (notify)
+                                {
+                                    subElement.UpdateChildren();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            GatherSubElements(item, elements);
+                        }
                     }
                     continue;
                 }
@@ -95,19 +142,37 @@ namespace Elements
                 {
                     foreach (var value in dict.Values)
                     {
-                        RecursiveGatherSubElements(value, elements);
+                        if (typeof(Element).IsAssignableFrom(value.GetType()))
+                        {
+                            var subElement = (Element)value;
+                            if (!elements.ContainsKey(subElement.Id))
+                            {
+                                elements.Add(subElement.Id, subElement);
+                                if (notify)
+                                {
+                                    subElement.UpdateChildren();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            GatherSubElements(value, elements);
+                        }
                     }
                     continue;
                 }
 
-                RecursiveGatherSubElements(pValue, elements);
-            }
-
-            if (e != null)
-            {
-                if (!elements.ContainsKey(e.Id))
+                if (typeof(Element).IsAssignableFrom(pValue.GetType()))
                 {
-                    elements.Add(e.Id, e);
+                    var subElement = (Element)pValue;
+                    if (!elements.ContainsKey(subElement.Id))
+                    {
+                        elements.Add(subElement.Id, subElement);
+                        if (notify)
+                        {
+                            subElement.UpdateChildren();
+                        }
+                    }
                 }
             }
         }

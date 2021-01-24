@@ -29,28 +29,5 @@ namespace Elements.Geometry
                 validator.PostConstruct(this);
             }
         }
-
-        internal override void GatherSubElements(Dictionary<Guid, Element> elements)
-        {
-            foreach (var op in this.SolidOperations)
-            {
-                if (op is Extrude)
-                {
-                    var extrude = (Extrude)op;
-                    if (!elements.ContainsKey(extrude.Profile.Id))
-                    {
-                        elements.Add(extrude.Profile.Id, extrude.Profile);
-                    }
-                }
-                else if (op is Sweep)
-                {
-                    var sweep = (Sweep)op;
-                    if (!elements.ContainsKey(sweep.Profile.Id))
-                    {
-                        elements.Add(sweep.Profile.Id, sweep.Profile);
-                    }
-                }
-            }
-        }
     }
 }

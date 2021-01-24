@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Elements.Geometry;
 
 namespace Elements
@@ -7,6 +6,26 @@ namespace Elements
     public partial class GeometricElement
     {
         internal override int SortPriority => 1;
+
+        /// <summary>
+        /// Handler for the RepresentationUpdated event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public delegate void RepresentationUpdatedHandler(object sender, EventArgs args);
+
+        /// <summary>
+        /// Event raised when the element's representation has been updated.
+        /// </summary>
+        public event EventHandler RepresentationUpdated;
+
+        /// <summary>
+        /// Raise the RepresentationUpdated event.
+        /// </summary>
+        protected virtual void RaiseRepresentationUpdated()
+        {
+            RepresentationUpdated?.Invoke(this, new EventArgs());
+        }
 
         /// <summary>
         /// This method provides an opportunity for geometric elements
@@ -35,21 +54,5 @@ namespace Elements
             return new ElementInstance(this, transform, name, Guid.NewGuid());
         }
 
-        internal override void GatherSubElements(Dictionary<Guid, Element> elements)
-        {
-            if (!elements.ContainsKey(this.Material.Id))
-            {
-                elements.Add(this.Material.Id, this.Material);
-            }
-
-            if (this.Representation != null)
-            {
-                this.Representation.GatherSubElements(elements);
-                if (!elements.ContainsKey(this.Representation.Id))
-                {
-                    elements.Add(this.Representation.Id, this.Representation);
-                }
-            }
-        }
     }
 }

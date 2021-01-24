@@ -89,16 +89,8 @@ namespace Elements
         {
             this.Representation.SolidOperations.Clear();
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
-        }
 
-        internal override void GatherSubElements(Dictionary<Guid, Element> elements)
-        {
-            base.GatherSubElements(elements);
-
-            if (!elements.ContainsKey(this.Profile.Id))
-            {
-                elements.Add(this.Profile.Id, this.Profile);
-            }
+            RaiseRepresentationUpdated();
         }
     }
 }
