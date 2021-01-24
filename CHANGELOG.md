@@ -1,6 +1,9 @@
 # Changelog
 
 ## 0.8.3
+### Added
+- `Model.ElementsVersion`
+
 ### Changed
 - `Representation` now inherits from `Element`.
 
