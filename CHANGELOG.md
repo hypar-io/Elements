@@ -10,6 +10,9 @@
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
 - Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
 
+### Added
+- `Polyline.TransformSegment(...)` - Allows transforms for individual polyline segments. May be optionally flagged as polygon and/or planar motion.
+
 ## 0.8.1
 
 ### Added
