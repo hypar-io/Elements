@@ -10,6 +10,9 @@
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
 - Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
 
+### Added
+- `Polyline.SharedSegments()` - Enables search for segments shared between two polylines.
+
 ## 0.8.1
 
 ### Added
