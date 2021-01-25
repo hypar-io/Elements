@@ -890,6 +890,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Transform a specified segment of this polygon in place.
+        /// </summary>
+        /// <param name="t">The transform. If it is not within the polygon plane, then an exception will be thrown.</param>
+        /// <param name="i">The segment to transform. If it does not exist, then no work will be done.</param>
+        public void TransformSegment(Transform t, int i)
+        {
+            this.TransformSegment(t, i, true, true);
+        }
+
+        /// <summary>
         /// Fillet all corners on this polygon.
         /// </summary>
         /// <param name="radius">The fillet radius.</param>

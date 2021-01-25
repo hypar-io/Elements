@@ -179,6 +179,41 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Transform a specified segment of this polyline in place.
+        /// </summary>
+        /// <param name="t">The transform. If it is not within the polygon plane, then an exception will be thrown.</param>
+        /// <param name="i">The segment to transform. If it does not exist, then no work will be done.</param>
+        /// <param name="isClosed">If set to true, the segment between the start end end point will be considered a valid target.</param>
+        /// <param name="isPlanar">If set to true, an exception will be thrown if the resultant shape is no longer planar.</param>
+        public void TransformSegment(Transform t, int i, bool isClosed = false, bool isPlanar = false)
+        {
+            var v = this.Vertices;
+
+            if (i < 0 || i > v.Count)
+            {
+                // Segment index is out of range, do no work.
+                return;
+            }
+
+            var candidates = new List<Vector3>(this.Vertices);
+
+            var endIndex = (i + 1) % v.Count;
+
+            candidates[i] = t.OfPoint(v[i]);
+            candidates[endIndex] = t.OfPoint(v[endIndex]);
+
+            // All motion for a triangle results in a planar shape, skip this case.
+            var enforcePlanar = v.Count != 3 && isPlanar;
+
+            if (enforcePlanar && !candidates.AreCoplanar())
+            {
+                throw new Exception("Segment transformation must be within the polygon's plane.");
+            }
+
+            this.Vertices = candidates;
+        }
+
+        /// <summary>
         /// Get the normal of each vertex on the polyline.
         /// </summary>
         /// <returns>A collection of unit vectors, each corresponding to a single vertex.</returns>
