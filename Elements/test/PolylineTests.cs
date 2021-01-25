@@ -72,7 +72,7 @@ namespace Elements.Geometry.Tests
 
             var matches = Polygon.SharedSegments(a, b);
 
-            Assert.Equal(0, matches.Count);
+            Assert.Empty(matches);
         }
     }
 }

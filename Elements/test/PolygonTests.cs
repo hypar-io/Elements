@@ -810,7 +810,7 @@ namespace Elements.Geometry.Tests
 
             var results = Polygon.SharedSegments(a, b, true);
 
-            Assert.Equal(0, results.Count);
+            Assert.Empty(results);
         }
 
         [Fact]
@@ -821,7 +821,7 @@ namespace Elements.Geometry.Tests
 
             var results = Polygon.SharedSegments(a, b, true);
 
-            Assert.Equal(0, results.Count);
+            Assert.Empty(results);
         }
 
         [Fact]
@@ -925,7 +925,7 @@ namespace Elements.Geometry.Tests
 
             var matches = Polygon.SharedSegments(a, b, true);
 
-            Assert.Equal(1, matches.Count);
+            Assert.Single(matches);
         }
 
         [Fact]
@@ -948,8 +948,10 @@ namespace Elements.Geometry.Tests
 
             var matches = Polygon.SharedSegments(a, b, true);
 
-            Assert.Equal(0, matches.Count);
+            Assert.Empty(matches);
         }
+
+        [Fact]
         public void TransformSegment_UnitSquare_Outwards()
         {
             var s = 0.5;
