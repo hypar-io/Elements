@@ -53,7 +53,7 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void SharedSegments_OpenMirroredSquares_OneResult()
+        public void SharedSegments_OpenMirroredSquares_NoResults()
         {
             var s = 1;
 
