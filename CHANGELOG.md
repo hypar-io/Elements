@@ -3,19 +3,24 @@
 ## 0.8.2
 
 ### Changed
+
 - The errors parameter for Model.FromJson now has the out modifier. It no longer takes a default value.
 - Model deserialization only refreshes type cache if the `forceTypeReload` parameter is set to true.
 
 ### Fixed
+
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
 - Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
 
 ### Added
+
+- `Polyline.SharedSegments()` - Enables search for segments shared between two polylines.
 - `Polyline.TransformSegment(...)` - Allows transforms for individual polyline segments. May be optionally flagged as polygon and/or planar motion.
 
 ## 0.8.1
 
 ### Added
+
 - `TypeGenerator.CoreTypeNames`
 - `MeshConverter`
 - Implicit conversion of `Curve` types to `ModelCurve`.
@@ -25,6 +30,7 @@
 - `Grid2d.GetCellNodes()`
 
 ### Changed
+
 - Removed `JsonInheritanceAttribute` from `Element` base types.
 - `Sweep` contstructor now takes a rotation. Transformation of the profile based on rotation happens internal to the sweep's construction.
 - `Polyline` are no longer required to be planar.
@@ -32,18 +38,22 @@
 - Modifies Grid2d.GetCellSeparators() to support returning trimmed separators
 
 ### Removed
+
 - `TypeGenerator.GetCoreTypeNames()`
 - `UserElementAttribute`
 - `NumericProperty`
 
 ### Fixed
+
 - `Ray.Intersects` now calls `UpdateRepresentations` internally for accurate intersections.
 - Fixed #470
 - Fixes a bug in `Line.Trim(Polygon p)` where lines that started on the polygon would not be treated as outside the polygon.
 - Fixes a bug in `Grid2d.IsTrimmed()` that would ignore cases where a cell was trimmed by an inner hole.
 
 ## 0.8.0
+
 ### Added
+
 - `Hypar.Elements.Serialization.IFC` - IFC serialization code has been moved to a new project.
 - `Hypar.Elements.CodeGeneration` - Code generation has been moved to a new project.
 - `Elements.DirectionalLight` - You can now create a directional light in the model which will be written to glTF using the `KHR_lights_punctual` extension.
@@ -57,6 +67,7 @@
 - Solid operations which have `IsVoid=true` now use csg operations.
 
 ### Changed
+
 - Updated ImageSharp to 1.0.0.
 - The source code is now structured with the typical .NET project layout of `/src` and `/test` per folder.
 - `Opening` now has two primary constructors. The ability to create an opening with a profile has been removed. All profiles are now defined with a polygon as the perimeter.
@@ -64,6 +75,7 @@
 - `Polygon.Normal()` has been moved to the base class `Polyline.Normal()`.
 
 ### Fixed
+
 - Fixed #313.
 - Fixed #322.
 - Fixed #342.
@@ -75,20 +87,28 @@
 - Fixed #441
 
 ## 0.7.3
+
 ### Fixed
+
 - CodeGen was failing intermittently
 - Elements schemas with Dictionary types were failing to serialize
 - [#355](https://github.com/hypar-io/Elements/issues/355)
+
 ### Added
+
 - Elements supports the [Hub beta](https://hypar-io.github.io/Elements/Hub.html)
 - CodeGen supports `input_schema`
 - Hypar.Revit is completely rewritten as an external application, two external commands, and an IDirectContext3D server.
+
 ### Changed
+
 - some Tessellate method signatures are updated to allow assigning colors at the time of tessellation as Revit requires vertex colors.
 - Updates are made to the type generator to support compiling multiple types into an assembly on disk.
 
 ## 0.7.2
+
 ### Fixed
+
 - [#307](https://github.com/hypar-io/Elements/issues/307)
 - `Mesh.ComputeNormals()` would fail if there were any unconnected vertices.
 - `new Vertex()` would ignore supplied Normals.
@@ -97,6 +117,7 @@
 - `Vector3.AreCollinear()` would return the wrong result if the first two vertices were coincident.
 
 ### Added
+
 - Added `Plane.ClosestPoint(Vector3 p)`
 - New methods for dynamic type generation in `TypeGeneration`, utilized by the Grasshopper plugin.
 - `Line.Trim(Polygon)`
@@ -117,32 +138,36 @@
 - `Curve.Transformed(transform)` (and related `XXX.TransformedXXX()` methods for child types Arc, Bezier, Line, Polyline, Polygon)
 
 ### Changed
+
 - Updates to Elements Docs including Grasshopper + Excel.
 - `Line.Intersects(Plane p)` supports infinite lines
 - `Line.Intersects(Line l)` supports 3d line intersections
 - `Line.Intersects(Line l)` now has an optional flag indicating whether to include the line ends as intersections.
 - `Line.PointOnLine(Point)` now has an optional flag indicating whether to include points at the ends as "on" the line.
 - **Grid1d / Grid2d**
-    - Removes "Parent/child" updating from 1d grids / 2d grids in favor of always recalculating the 2d grid every time its `Cells` are accessed. This may have a bit of a performance hit, but it's worth it to make 2d grid behavior easier to reason about.
-    - Allows Grid2ds to support construction from Grid1ds that are not straight lines. Previously Grid1ds could support any sort of curve and Grid2ds were stuck as dumb rectangles.
+  - Removes "Parent/child" updating from 1d grids / 2d grids in favor of always recalculating the 2d grid every time its `Cells` are accessed. This may have a bit of a performance hit, but it's worth it to make 2d grid behavior easier to reason about.
+  - Allows Grid2ds to support construction from Grid1ds that are not straight lines. Previously Grid1ds could support any sort of curve and Grid2ds were stuck as dumb rectangles.
 - **JsonInheritanceConverter**
   - Makes the Type Cache on the JsonInheritanceConverter static, and exposes a public method to refresh it. In the grasshopper context, new types may have been dynamically loaded since the JsonInheritanceConverter was initialized, so it needs to be refreshed before deserializing a model.
 - **TypeGenerator**
   - Enables external overriding of the Templates path, as in GH's case the `Templates` folder is not in the same place as the executing assembly.
   - Exposes a public, synchronous method `GetSchema` to get a `JsonSchema` from uri (wrapping `GetSchemaAsync`)
   - Refactors some of the internal processes of `GenerateInMemoryAssemblyFromUrisAndLoadAsync`:
-      - `GenerateCodeFromSchema()` produces csharp from a schema, including generating the namespace, typename, and local excludes
-      - `GenerateCompilation()` takes the csharp and compiles it, using a new optional flag `frameworkBuild` to designate whether it should load netstandard or net framework reference assemblies.
-      - `EmitAndLoad()` generates the assembly in memory and loads it into the app domain.
+    - `GenerateCodeFromSchema()` produces csharp from a schema, including generating the namespace, typename, and local excludes
+    - `GenerateCompilation()` takes the csharp and compiles it, using a new optional flag `frameworkBuild` to designate whether it should load netstandard or net framework reference assemblies.
+    - `EmitAndLoad()` generates the assembly in memory and loads it into the app domain.
   - Adds an `EmitAndSave()` method that generates the assembly and writes it to a .dll on disk
-  -  Adds a public `GenerateAndSaveDllForSchema()` method used by grasshopper that generates code from a schema, generates a compilation, and saves it to disk as a DLL.
-  -  Adds a public `GetLoadedElementTypes()` method used by grasshopper to list all the currently loaded element types.
+  - Adds a public `GenerateAndSaveDllForSchema()` method used by grasshopper that generates code from a schema, generates a compilation, and saves it to disk as a DLL.
+  - Adds a public `GetLoadedElementTypes()` method used by grasshopper to list all the currently loaded element types.
 
 ### Deprecated
+
 - `Transform.OfXXX(xxx)` curve methods have been deprecated in favor of `XXX.Transformed(Transform)` and `XXX.TransformedXXX(Transform)`.
 
 ## 0.7.0
+
 ### Fixed
+
 - [#271](https://github.com/hypar-io/Elements/issues/271)
 - [#284](https://github.com/hypar-io/Elements/issues/284)
 - [#285](https://github.com/hypar-io/Elements/issues/285)
@@ -152,6 +177,7 @@
 - [#189](https://github.com/hypar-io/Elements/issues/189)
 
 ### Added
+
 - `Curve.ToPolyline(int divisions = 10)`
 - `Circle.ToPolygon(int divisions = 10)`
 - `Transform.Move(double x, double y, double z)`
@@ -159,47 +185,62 @@
 - `TypeGenerator.GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, bool isUserElement = false)`
 
 ### Changed
+
 - Updated documentation to reflect the use of .NET Core 3.1.
 
 ### Deprecated
+
 - `Polygon.Circle(...)`
 
 ## 0.6.2
+
 ### Added
+
 - `Material.Unlit`
 - `Material.DoubleSided`
 - `Units.LengthUnit`
 - `Elements.MeshImportElement`
 
 ## Changed
+
 - `Mesh.AddVertex(...)` is now public.
 - `Mesh.AddTriangle(...)` is now public.
 
 ### Removed
+
 - `SolidOperation.GetSolid()`.
 
 ### Fixed
+
 - #262
 - Fixed an error where `Transform.OfPlane(...)` would not solve correctly if the plane was not at the world origin.
 
 ### Changed
+
 - `Grid2d` now supports grids that are not parallel to the XY plane
 
 ## 0.6.0
+
 ### Added
+
 - `ColorScale`
 - `AnalysisMesh`
 - `Ray.Intersects(...)` for `Plane`, `Face`, `Solid`, and `SolidOperation`
 
 ### Fixed
+
 - Fix #253
 
 ## 0.5.2
+
 ### Fixed
+
 - `Grid2d` constructors accepting a Transform interpreted the transform incorrectly.
 
 ## 0.5.1
+
 ### Added
+
 - `Grid1d`
 - `Grid2d`
 - `Domain1d`
@@ -212,16 +253,20 @@
 - `Polygon.Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet)`
 
 ### Changed
+
 - `Vector.Normalized()` is now `Vector.Unitized()`
 - `Color.ToString()` now returns a useful description
 
 ### Fixed
+
 - Fixed an error with `Transform.OfVector(...)` where the translation of the transform was not applied.
 - Fixed an error where `Mesh.ComputeNormals(...)` was not set to a unitized vector.
 - Fixed an error with `BBox3`'s solver for Polygons
 
 ## 0.4.4
+
 ### Added
+
 - `Contour`
 - `Transform.Reflect(Vector3 n)`
 - `ElementInstance`
@@ -241,17 +286,21 @@
 - `WebMercatorProjection`
 
 ### Fixed
+
 - Fixed [#125](https://github.com/hypar-io/Hypar/issues/125).
 - Fixed one Transform constructor whose computed axes were not unit length, causing the transform to scale.
 - Topography is now written to IFC.
 
 ## 0.4.2
+
 ### Changed
+
 - `Vector3` is now a struct.
 - `Color` is now a struct.
 - `ProfileServer.GetProfileByName(...)` is now deprecated in favor of `ProfileServer.GetProfileByType(...)`
 
 ### Added
+
 - `Bezier`
 - `WideFlangeProfileType`
 - `HSSPipeProfileType`
@@ -260,7 +309,9 @@
 - `FrameType` Bezier curves can have their frames calculated using Frenet frames or "road like" frames.
 
 ## 0.4.0
+
 ### Changed
+
 - All element types are partial classes with one part of the class generated from its JSON schema.
 - `Polygon.Rectangle` constructor no longer takes an origin.
 - `Polygon.Clip` now takes an optional additional set of holes.
@@ -279,6 +330,7 @@
 - The `elevation` parameter has been removed from `Floor`. Floor elevation is now set by passing a `Transform` with a Z coordinate.
 
 ### Added
+
 - `ModelCurve` - Draw curves in 3D.
 - `ModelPoints` - Draw collections of points in 3D.
 - `Elements.Generate.TypeGenerator` class.
@@ -294,12 +346,14 @@
 - `Vector3.IsZero()`
 
 ### Removed
+
 - The empty Dynamo project.
 - `ElementType`, `WallType`, `FloorType`, `StructuralFramingType`
 - `MaterialLayer`
 - `Transform` constructor taking `start` and `end` parameters. The `Transform` constructor which takes an X and a Z axis should now be used.
 
 ### Fixed
+
 - Transforms are now consistently right-handed.
 - Transforms on curves are now consistently oriented with the +X axis oriented to the "right" and the +Z axis oriented along the inverse of the tangent of the curve.
 - Built in materials for displaying transforms are now red, green, and blue. Previously they were all red.
@@ -312,15 +366,17 @@
 - Built in materials now have an assigned Id.
 
 ## 0.3.8
+
 ### Changed
+
 - Elements representing building components now return positive areas.
 - Added Area property to:
-Panel
-Space
-Added Volume property to:
+  Panel
+  Space
+  Added Volume property to:
 - Floor
 - Space
-Added positive area calculation to:
+  Added positive area calculation to:
 - Floor
 - Mass
 - Added positive Volume calculation to:
@@ -329,31 +385,42 @@ Added positive area calculation to:
 - Added TODO to support Volume() for all beam curves.
 
 ## 0.3.6
+
 ### Changed
+
 - Edges are no longer written to the glTF file.
 - Large performance improvements made to glTF writing using `Buffer.BlockCopy` and writing buffers directly from tesselation to glTF buffer.
 
 ### Fixed
+
 - Fix #177.
 
 ## 0.3.4
+
 ### Changed
+
 - Numerous comments were updated for clarity.
 - Numerous styling changes were made to the documentation to align with the Hypar brand.
 
 ### Fixed
+
 - Fixed an error where vertex colors were not correctly encoded in the glTF.
 
 ## 0.3.3
+
 ### Fixed
+
 - Fix #173.
 - Fix #7.
 
 ## 0.3.0
+
 ### Changed
+
 - `Element.Id` is now a `Guid`.
 
 ### Fixed
+
 - Fix #107.
 - Fix #132.
 - Fix #137.
@@ -361,70 +428,98 @@ Added positive area calculation to:
 - Fix #142.
 
 ## 0.2.17
+
 ### Added
+
 - The `Kernel` singleton has been added to contain all geometry methods for creating solids.
 
 ### Fixed
+
 - Fixed an error where, when writing edges to gltf, ushort would be overflowed and wrap back to 0 causing a loop not to terminate.
 
 ## 0.2.16
+
 ### Added
+
 - Materials are now serialized to IFC using `IfcStyledItem`.
 
 ### Fixed
+
 - Fixed an error where we returned directly after processing child Elements of an `IAggregateElements`, before we could process the parent element.
 - Fixed writing of gltf files so that the `.bin` file is located adjacent to the `.gltf`.
 
 ## 0.2.15
+
 ### Added
+
 - `Space` elements are now serialized to IFC as `IfcSpace`.
 
 ## 0.2.5
+
 ### Changed
+
 - `IHasOpenings.Openings[]` is now `IHasOpenings.List<Opening>[]`.
 
 ### Fixed
+
 - `Opening` elements are now serialized to IFC as `IfcOpeningElement`.
 
 ## 0.2.4.4
+
 ### Changed
+
 - `Solid.Slice()` has been made internal. It's not yet ready for consumers. See [#103](https://github.com/hypar-io/elements/issues/103)
 
 ## 0.2.4.3
+
 ### Fixed
+
 - Spaces are now correctly colored. See [#134](https://github.com/hypar-io/elements/issues/134).
 
 ## 0.2.4.2
+
 ### Added
+
 - Added `ToIfcWall()` extension method to save a `Wall` to an `IfcWall`.
+
 ### Fixed
+
 - `Space.Profile` is set in the constructor when a `Space` is constructed with a profile. [#132](https://github.com/hypar-io/elements/pull/132)
 - Sub-elements of `IAggregateElements` are now added to the `Model`. [#137](https://github.com/hypar-io/elements/pull/137)
 
 ## 0.2.4.1
+
 ### Added
+
 - Added `StandardWall`, for walls defined along a curve. `Wall` continues to be for walls defined by a planar profile extruded to a height.
 - Added `Polygon.L`.
 
 ### Changed
+
 - `Floor` constructors no longer have `material` parameter. Materials are now specified through the `FloorType`.
 - `IAggregateElement` is now `IAggregateElements`.
 - `Panel` now takes `Polygon` instead of `Vector3[]`.
 
 ## 0.2.4
+
 ### Changed
+
 - `IGeometry3D` is now `ISolid`.
 - `ISolid` (formerly `IGeometry3D`) now contains one solid, not an array of solids.
 
 ### Removed
+
 - `Solid.Material`. Elements are now expected to implement the `IMaterial` interface or have an `IElementType<T>` which specifies a material.
 
 ## 0.2.3
+
 ### Added
+
 - `MaterialLayer`
 - `StructuralFramingType` - `StructuralFramingType` combines a `Profile` and a `Material` to define a type for framing elements.
 
 ### Changed
+
 - `IProfileProvider` is now `IProfile`
 - `IElementTypeProvider` is now `IElementType`
 - All structural framing type constructors now take a `StructuralFramingType` in place of a `Profile` and a `Material`.
@@ -433,7 +528,9 @@ Added positive area calculation to:
 - A constructor has been added to `WallType` that takes a collection of `MaterialLayer`.
 
 ## 0.2.2
+
 ### Added
+
 - `Matrix.Determinant()`
 - `Matrix.Inverse()`
 - `Transform.Invert()`
@@ -443,6 +540,7 @@ Added positive area calculation to:
 - `Elements.Serialization.glTF` namespace.
 
 ### Changed
+
 - Wall constructor which uses a center line can now have a Transform specified.
 - `Profile.ComputeTransform()` now finds the first 3 non-collinear points for calculating its plane. Previously, this function would break when two of the first three vertices were co-linear.
 - Using Hypar.IFC2X3 for interaction with IFC.
@@ -450,34 +548,43 @@ Added positive area calculation to:
 - `Model.SaveGlb()` is now `Model.ToGlTF()`.
 
 ## 0.2.1
+
 ### Added
+
 - The `Topography` class has been added.
 - `Transform.OfPoint(Vector3 vector)` has been added to transform a vector as a point with translation. This was previously `Transform.OfVector(Vector3 vector)`. All sites previously using `OfVector(...)` are now using `OfPoint(...)`.
 - `Material.DoubleSided`
 - `Loop.InsertEdgeAfter()`
 - `Solid.Slice()`
 - `Model.Extensions`
+
 ### Changed
+
 - `Transform.OfVector(Vector3 vector)` now does proper vector transformation without translation.
 - Attempting to construct a `Vector3` with NaN or Infinite arguments will throw an `ArgumentOutOfRangeException`.
 
-
 ## 0.2.0
+
 ### Added
+
 - IFC implementation has begun with `Model.FromIFC(...)`. Support includes reading of Walls, Slabs, Spaces, Beams, and Columns. Brep booleans required for Wall and Slab openings are not yet supported and are instead converted to Polygon openings in Wall and Floor profiles.
 - The `Elements.Geometry.Profiles` namespace has been added. All profile servers can now be found here.
 - The `Elements.Geometry.Solids` namespace has been added.
 - The Frame type has been added to represent a continuous extrusion of a profile around a polygonal perimeter.
 - The `ModelTest` base class has been added. Inheriting from this test class enables a test to automatically write its `Model` to a `.glb` file and to serialize and deserialize to/from JSON to ensure the stability of serialization.
 - The `Solid.ToGlb` extension method has been added to enable serializing one `Solid` to glTF for testing.
+
 ### Changed
+
 - Element identifiers are now of type `long`.
 - Breps have been re-implemented in the `Solid` class. Currently only planar trimmed faces are supported.
 - Many improvements to JSON serialization have been added, including the ability to serialize breps.
 - '{element}.AddParameter' has been renamed to '{element}.AddProperty'.
 - The `Hypar.Geometry` namespace is now `Elements.Geometry`.
 - The `Hypar.Elements` namespace is now `Elements`.
+
 ### Removed
+
 - The `IProfile` interface has been removed.
 - The `Extrusion` class and `IBrep` have been replaced with the `Solid` class. The IGeometry interface now returns a `Solid[]`.
 - Many uses of `System.Linq` have been removed.

@@ -803,6 +803,155 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void SharedSegments_ConcentricCircles_NoResults()
+        {
+            var a = new Circle(new Vector3(), 1).ToPolygon();
+            var b = new Circle(new Vector3(), 2).ToPolygon();
+
+            var results = Polygon.SharedSegments(a, b, true);
+
+            Assert.Empty(results);
+        }
+
+        [Fact]
+        public void SharedSegments_IntersectingCircles_NoResults()
+        {
+            var a = new Circle(new Vector3(1, 0, 0), 2).ToPolygon();
+            var b = new Circle(new Vector3(-1, 0, 0), 2).ToPolygon();
+
+            var results = Polygon.SharedSegments(a, b, true);
+
+            Assert.Empty(results);
+        }
+
+        [Fact]
+        public void SharedSegments_DuplicateCircles_TenResults()
+        {
+            var a = new Circle(new Vector3(), 1).ToPolygon();
+            var b = new Circle(new Vector3(), 1).ToPolygon();
+
+            var results = Polygon.SharedSegments(a, b, true);
+
+            Assert.Equal(10, results.Count);
+        }
+
+        [Fact]
+        public void SharedSegments_DuplicateCircles_AccurateResults()
+        {
+            var a = new Circle(new Vector3(), 1).ToPolygon();
+            var b = new Circle(new Vector3(), 1).ToPolygon();
+
+            var matches = Polygon.SharedSegments(a, b, true);
+
+            var result = matches.Select(match =>
+            {
+                var (t, u) = match;
+
+                var segmentA = a.Segments()[t];
+                var segmentB = b.Segments()[u];
+
+                // Reverse segment b if necessary
+                if (!segmentA.Start.IsAlmostEqualTo(segmentB.Start))
+                {
+                    segmentB = segmentB.Reversed();
+                }
+
+                var sa = segmentA.Start;
+                var sb = segmentB.Start;
+                var ea = segmentA.End;
+                var eb = segmentB.End;
+
+                var startMatches = sa.IsAlmostEqualTo(sb);
+                var endMatches = ea.IsAlmostEqualTo(eb);
+
+                return startMatches && endMatches;
+            });
+
+            Assert.DoesNotContain(false, result);
+        }
+
+        [Fact]
+        public void SharedSegments_DuplicateReversedCircles_AccurateResults()
+        {
+            var a = new Circle(new Vector3(), 1).ToPolygon();
+            var b = new Circle(new Vector3(), 1).ToPolygon().Reversed();
+
+            var matches = Polygon.SharedSegments(a, b, true);
+
+            var result = matches.Select(match =>
+            {
+                var (t, u) = match;
+
+                var segmentA = a.Segments()[t];
+                var segmentB = b.Segments()[u];
+
+                // Reverse segment b if necessary
+                if (!segmentA.Start.IsAlmostEqualTo(segmentB.Start))
+                {
+                    segmentB = segmentB.Reversed();
+                }
+
+                var sa = segmentA.Start;
+                var sb = segmentB.Start;
+                var ea = segmentA.End;
+                var eb = segmentB.End;
+
+                var startMatches = sa.IsAlmostEqualTo(sb);
+                var endMatches = ea.IsAlmostEqualTo(eb);
+
+                return startMatches && endMatches;
+            });
+
+            Assert.DoesNotContain(false, result);
+        }
+
+        [Fact]
+        public void SharedSegments_MirroredSquares_OneResult()
+        {
+            var s = 1;
+
+            var a = new Polygon(new List<Vector3>(){
+                new Vector3(0, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, 0, 0),
+                new Vector3(0, 0, 0),
+            });
+            var b = new Polygon(new List<Vector3>(){
+                new Vector3(0, s, 0),
+                new Vector3(s, s, 0),
+                new Vector3(s, 0, 0),
+                new Vector3(0, 0, 0),
+            });
+
+            var matches = Polygon.SharedSegments(a, b, true);
+
+            Assert.Single(matches);
+        }
+
+        [Fact]
+        public void SharedSegments_TouchingShiftedSquares_NoResults()
+        {
+            var s = 1;
+
+            var a = new Polygon(new List<Vector3>(){
+                new Vector3(0, s, 0),
+                new Vector3(-s, s, 0),
+                new Vector3(-s, 0, 0),
+                new Vector3(0, 0, 0),
+            });
+            var b = new Polygon(new List<Vector3>(){
+                new Vector3(0, s + 0.5, 0),
+                new Vector3(s, s + 0.5, 0),
+                new Vector3(s, 0.5, 0),
+                new Vector3(0, 0.5, 0),
+            });
+
+            var matches = Polygon.SharedSegments(a, b, true);
+
+            Assert.Empty(matches);
+        }
+
+        [Fact]
         public void TransformSegment_UnitSquare_Outwards()
         {
             var s = 0.5;
