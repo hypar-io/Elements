@@ -14,6 +14,7 @@
 
 ### Added
 
+- `Profile.UnionAll(...)` - Create a new set of profiles, merging any overlapping profiles and preserving internal voids.
 - `Polyline.SharedSegments()` - Enables search for segments shared between two polylines.
 - `Polyline.TransformSegment(...)` - Allows transforms for individual polyline segments. May be optionally flagged as polygon and/or planar motion.
 
