@@ -19,39 +19,82 @@ namespace Elements.Serialization.JSON
             return objectType == typeof(Mesh);
         }
 
+
+        // There are currently two version of the Mesh schema used on our platform.  
+        // One used in explore and one used in the Elements Library.
+        // Explore - https://hypar.io/Schemas/Mesh.json - used in input_schema
+        // Elements - https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Mesh.json
+        // TODO These schemas should converge to one. They both should change to match the serialized format of the 
+        // data that is being transmitted on the platform.  Neither schema matches the desired serialization format currently.
+        // The desired schema format is the one this converter reads/writes, it is very compact.
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
             var mesh = new Mesh();
-            var positions = obj["Positions"].ToObject<List<double>>();
-            var colors = obj["Colors"].ToObject<List<double>>();
-            var normals = obj["Normals"].ToObject<List<double>>();
-            var uvs = obj["UVs"].ToObject<List<double>>();
 
-            for (var i = 0; i < positions.Count / 3; i++)
+            if (obj.TryGetValue("vertices", out var vertices))
             {
-                var pi = i * 3;
-                var ui = i * 2;
-                var ci = i * 4;
-                var v = mesh.AddVertex(new Vector3(positions[pi],
-                                               positions[pi + 1],
-                                               positions[pi + 2]), new UV(uvs[ui],
-                                                                          uvs[ui + 1]), new Vector3(normals[pi],
-                                                                                                    normals[pi + 1],
-                                                                                                    normals[pi + 2]), new Color(colors[ci],
-                                                                                                                                colors[ci + 1],
-                                                                                                                                colors[ci + 2],
-                                                                                                                                colors[ci + 3]));
+                //input_schema Mesh path
+                var allVertices = new List<Vertex>(vertices.Count());
+                foreach (var v in vertices)
+                {
+                    var i = v["index"].ToObject<int>();
+                    var p = v["position"];
+                    var x2 = p["X"].ToObject<double>();
+
+                    allVertices.Insert(i, new Vertex(new Vector3(
+                                                            v["position"]["X"].ToObject<double>(),
+                                                            v["position"]["Y"].ToObject<double>(),
+                                                            v["position"]["Z"].ToObject<double>()
+                                                                )
+                                                    ));
+                }
+                foreach (var v in allVertices)
+                {
+                    mesh.AddVertex(v);
+                }
+
+                foreach (var t in obj["triangles"])
+                {
+                    var indices = t["vertexIndices"];
+                    mesh.AddTriangle(allVertices[indices[0].ToObject<int>()],
+                                      allVertices[indices[1].ToObject<int>()],
+                                      allVertices[indices[2].ToObject<int>()]);
+                }
             }
-
-            var triangles = obj["Triangles"].ToObject<List<int>>();
-            for (var i = 0; i < triangles.Count; i += 3)
+            else
             {
-                var a = mesh.Vertices[triangles[i]];
-                var b = mesh.Vertices[triangles[i + 1]];
-                var c = mesh.Vertices[triangles[i + 2]];
-                var tri = new Triangle(a, b, c);
-                mesh.AddTriangle(tri);
+                //Elements Mesh path
+                var positions = obj["Positions"].ToObject<List<double>>();
+                var colors = obj["Colors"].ToObject<List<double>>();
+                var normals = obj["Normals"].ToObject<List<double>>();
+                var uvs = obj["UVs"].ToObject<List<double>>();
+
+                for (var i = 0; i < positions.Count / 3; i++)
+                {
+                    var pi = i * 3;
+                    var ui = i * 2;
+                    var ci = i * 4;
+                    mesh.AddVertex(new Vector3(positions[pi],
+                                                   positions[pi + 1],
+                                                   positions[pi + 2]), new UV(uvs[ui],
+                                                                              uvs[ui + 1]), new Vector3(normals[pi],
+                                                                                                        normals[pi + 1],
+                                                                                                        normals[pi + 2]), new Color(colors[ci],
+                                                                                                                                    colors[ci + 1],
+                                                                                                                                    colors[ci + 2],
+                                                                                                                                    colors[ci + 3]));
+                }
+
+                var triangles = obj["Triangles"].ToObject<List<int>>();
+                for (var i = 0; i < triangles.Count; i += 3)
+                {
+                    var a = mesh.Vertices[triangles[i]];
+                    var b = mesh.Vertices[triangles[i + 1]];
+                    var c = mesh.Vertices[triangles[i + 2]];
+                    var tri = new Triangle(a, b, c);
+                    mesh.AddTriangle(tri);
+                }
             }
 
             return mesh;
