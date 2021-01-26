@@ -42,7 +42,14 @@ jobs:
         run: echo "NUGET_VERSION=${{steps.bump-beta.outputs.next-version}}" >> $GITHUB_ENV
       - name: Set NuGet version as first alpha if previous tag is a main release
         if: ${{!contains(steps.version.outputs.tag, 'beta') && !contains(steps.version.outputs.tag, 'alpha')}}
-        run: echo "NUGET_VERSION=${{steps.version.outputs.tag}}-alpha1" >> $GITHUB_ENV
+        id: bump-first-alpha
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{steps.version.outputs.tag}}
+          version-fragment: "bug"
+      - name: Set NuGet version from first alpha
+        if: ${{!contains(steps.version.outputs.tag, 'beta') && !contains(steps.version.outputs.tag, 'alpha')}}
+        run: echo "NUGET_VERSION=${{steps.bump-first-alpha.outputs.next-version}}-alpha1" >> $GITHUB_ENV
       - run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Publish NuGet package.
         run: |
