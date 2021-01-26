@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.3
+
+### Changed
+- Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
+
 ## 0.8.2
 
 ### Changed
