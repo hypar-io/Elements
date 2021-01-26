@@ -21,14 +21,14 @@ jobs:
         id: version
         uses: "WyriHaximus/github-action-get-previous-tag@master"
       - name: Bump if alpha.
-        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
+        if: ${{contains(steps.version.outputs.tag, 'alpha') || !contains(steps.version.outputs.tag, 'beta')}}
         id: bump-alpha
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{steps.version.outputs.tag}}
           version-fragment: "alpha"
       - name: Set NuGet version from alpha.
-        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
+        if: ${{contains(steps.bump-alpha.outputs.next-version, 'alpha')}}
         run: echo "NUGET_VERSION=${{steps.bump-alpha.outputs.next-version}}" >> $GITHUB_ENV
       - name: Bump if beta.
         if: ${{contains(steps.version.outputs.tag, 'beta')}}
