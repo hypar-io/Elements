@@ -314,5 +314,49 @@ namespace Elements.Geometry
             }
             return Polygon.Contains(allLines, point, out containment);
         }
+
+        /// <summary>
+        /// Perform a union operation on a set of multiple profiles.
+        /// </summary>
+        /// <param name="profiles">The profiles with which to create a union.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A new list of profiles comprising the union of all input profiles.</returns>
+        public static List<Profile> UnionAll(IEnumerable<Profile> profiles, double tolerance = Vector3.EPSILON)
+        {
+            Clipper clipper = new Clipper();
+            foreach (var profile in profiles)
+            {
+                var subjectPolygons = new List<Polygon> { profile.Perimeter };
+                if (profile.Voids != null && profile.Voids.Count > 0)
+                {
+                    subjectPolygons.AddRange(profile.Voids);
+                }
+                var clipperPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
+                clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive);
+            if (solution.ChildCount == 0)
+            {
+                return null;
+            }
+            var joinedProfiles = new List<Profile>();
+            foreach (var result in solution.Childs)
+            {
+                var perimeter = PolygonExtensions.ToPolygon(result.Contour, tolerance);
+                List<Polygon> voidCrvs = new List<Polygon>();
+                if (result.ChildCount > 0)
+                {
+                    foreach (var child in result.Childs)
+                    {
+                        var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
+                        voidCrvs.Add(voidCrv);
+                    }
+
+                }
+                joinedProfiles.Add(new Profile(perimeter, voidCrvs, Guid.NewGuid(), null));
+            }
+            return joinedProfiles;
+        }
     }
 }

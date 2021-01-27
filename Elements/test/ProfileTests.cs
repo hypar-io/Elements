@@ -50,6 +50,29 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ProfileUnionAll()
+        {
+            this.Name = "ProfileUnionAll";
+            var outer1 = new Circle(Vector3.Origin, 5).ToPolygon(10);
+            var inner1 = new Circle(Vector3.Origin, 4).ToPolygon(10);
+            var outer2 = new Circle(new Vector3(9, 0, 0), 5).ToPolygon(10);
+            var inner2 = new Circle(new Vector3(9, 0, 0), 4).ToPolygon(10);
+            var outer3 = new Circle(new Vector3(4.5, 12, 0), 5).ToPolygon(10);
+            var inner3 = new Circle(new Vector3(4.5, 12, 0), 4).ToPolygon(10);
+            var p1 = new Profile(outer1, inner1);
+            var p2 = new Profile(outer2, inner2);
+            var p3 = new Profile(outer3, inner3);
+            var union = Elements.Geometry.Profile.UnionAll(new[] { p1, p2, p3 });
+            foreach (var profile in union)
+            {
+                var floor = new Floor(profile, 1);
+                this.Model.AddElement(floor);
+            }
+            Assert.Equal(2, union.Count);
+            
+        }
+
+        [Fact]
         public void VoidsOrientedCorrectly()
         {
             this.Name = "VoidsOrientedCorrectly";
