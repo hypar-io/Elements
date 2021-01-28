@@ -10,7 +10,7 @@ TESTING:
 FUTURE WORK:
 - Is there any future work needed or anticipated?  Does this PR create any obvious technical debt?
 
-CHANGELOG:
+REQUIRED:
 - [ ] All changes are up to date in `CHANGELOG.md`.
 - [ ] The docs are up to date. To update the docs run `build_docs.sh` locally, and commit the results.
 
