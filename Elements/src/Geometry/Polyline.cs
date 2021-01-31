@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using ClipperLib;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -589,6 +590,23 @@ namespace Elements.Geometry
 
             return result;
         }
+
+        /// <summary>
+        /// Close the polyline to create a polygon.
+        /// </summary>
+        /// <returns>A polygon.</returns>
+        public Polygon Closed()
+        {
+            var vertices = new List<Vector3>(this.Vertices);
+            if (vertices[vertices.Count - 1].IsAlmostEqualTo(vertices[0]))
+            {
+                return new Polygon(vertices.Skip(1).ToList());
+            }
+            else
+            {
+                return new Polygon(vertices);
+            }
+        }
     }
 
     /// <summary>
@@ -619,6 +637,67 @@ namespace Elements.Geometry
         /// <param name="l">The line to convert.</param>
         public static Polyline ToPolyline(this Line l) => new Polyline(new[] { l.Start, l.End });
 
+        /// <summary>
+        /// Create polylines from a collection of line segments.
+        /// </summary>
+        /// <param name="lines">A collection of lines.</param>
+        /// <returns>A collection of polylines.</returns>
+        public static List<Polyline> ToPolylines(this List<Line> lines)
+        {
+            var polylines = new List<Polyline>();
+            foreach (var line in lines)
+            {
+                if (polylines.Count == 0)
+                {
+                    polylines.Add(new Polyline(new List<Vector3>() { line.Start, line.End }));
+                    continue;
+                }
+
+                var xsectFound = false;
+                foreach (var p in polylines)
+                {
+                    if (p.Vertices.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    // If line's start is the polyline's end.
+                    if (p.End.IsAlmostEqualTo(line.Start))
+                    {
+                        p.Vertices.Add(line.End);
+                        xsectFound = true;
+                    }
+
+                    // If the line's end is the polyline's end.
+                    else if (p.End.IsAlmostEqualTo(line.End))
+                    {
+                        p.Vertices.Add(line.Start);
+                        xsectFound = true;
+                    }
+
+                    // If the line's end is the polyline's start.
+                    else if (p.Start.IsAlmostEqualTo(line.End))
+                    {
+                        p.Vertices.Insert(0, line.Start);
+                        xsectFound = true;
+                    }
+
+                    // If the line's start is the polyline's start.
+                    else if (p.Start.IsAlmostEqualTo(line.Start))
+                    {
+                        p.Vertices.Insert(0, line.End);
+                        xsectFound = true;
+                    }
+                }
+
+                if (!xsectFound)
+                {
+                    polylines.Add(new Polyline(new List<Vector3>() { line.Start, line.End }));
+                }
+            }
+
+            return polylines;
+        }
     }
 
     /// <summary>
