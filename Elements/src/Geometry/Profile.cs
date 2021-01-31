@@ -127,6 +127,23 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Return a transformed copy of this profile.
+        /// </summary>
+        /// <param name="t">The transform.</param>
+        /// <returns>A new profile, transformed by t.</returns>
+        public Profile Transformed(Transform t)
+        {
+            if (this.Voids != null)
+            {
+                return new Profile((Polygon)this.Perimeter.Transformed(t), this.Voids.Select(v => v.Transformed(t)).Cast<Polygon>().ToList(), Guid.NewGuid(), this.Name);
+            }
+            else
+            {
+                return new Profile((Polygon)this.Perimeter.Transformed(t), null, Guid.NewGuid(), this.Name);
+            }
+        }
+
+        /// <summary>
         /// Return a new profile that is this profile scaled about the origin by the desired amount.
         /// </summary>
         public Elements.Geometry.Profile Scale(double amount)
