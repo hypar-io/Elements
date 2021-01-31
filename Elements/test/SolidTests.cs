@@ -12,7 +12,7 @@ using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
-    public class SolidTests
+    public class SolidTests : ModelTest
     {
         private readonly ITestOutputHelper output;
 
@@ -51,7 +51,7 @@ namespace Elements.Tests
         {
             var n = 3;
             var outer = Polygon.Ngon(n, 2);
-            var solid = Solid.SweepFace(outer, new Polygon[] { }, 5);
+            var solid = Solid.SweepFace(outer, new Polygon[] { Polygon.Ngon(n, 0.5).Reversed() }, 5);
             var slicePlane = new Plane(new Vector3(0, 0, 2.5), new Vector3(0.5, 0.5, 0));
             solid.Slice(slicePlane);
 
@@ -67,6 +67,117 @@ namespace Elements.Tests
             // Assert.Equal(n * 6, solid.Edges.Count);
             // Assert.Equal(n * 4, solid.Vertices.Count);
             solid.ToGlb("models/SliceSolid.glb");
+        }
+
+        [Fact]
+        public void SolidPlaneIntersection()
+        {
+            this.Name = "SolidPlaneIntersection";
+
+            var n = 3;
+            var outer = Polygon.Ngon(n, 2);
+            var solid = Solid.SweepFace(outer, new Polygon[] { Polygon.Ngon(n, 0.5).Reversed() }, 5);
+            var mesh = new Mesh();
+            solid.Tessellate(ref mesh);
+            mesh.ComputeNormals();
+            var meshElement = new MeshElement(mesh, BuiltInMaterials.Mass);
+            this.Model.AddElement(meshElement);
+
+            var rand = new Random();
+
+            var slicePlane1 = new Plane(new Vector3(0, 0, 2.5), new Vector3(0.5, 0.5, 0));
+            if (solid.TryIntersect(slicePlane1, out var pgons))
+            {
+                foreach (var p in pgons)
+                {
+                    this.Model.AddElement(new Panel(p, new Material(Guid.NewGuid().ToString(), new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1.0))));
+                }
+            }
+
+            var slicePlane2 = new Plane(new Vector3(0, 0, 1), new Vector3(0.3, 0.0, 1.0).Unitized());
+            if (solid.TryIntersect(slicePlane2, out var pgons2))
+            {
+                foreach (var p in pgons2)
+                {
+                    this.Model.AddElement(new Panel(p, new Material(Guid.NewGuid().ToString(), new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1.0))));
+                }
+            }
+
+            Assert.Equal(2, pgons.Count);
+            Assert.Equal(2, pgons2.Count);
+        }
+
+        [Fact]
+        public void SolidOperationsPlaneIntersection()
+        {
+            this.Name = "SolidOperationsPlaneIntersection";
+
+            var leg1 = new Extrude(Polygon.Rectangle(10, 10), 30, Vector3.ZAxis, false);
+            var t = new Transform(0, 0, 0);
+            t.Rotate(Vector3.ZAxis, 45);
+            t.Move(30, 0, 0);
+            var leg2 = new Extrude((Polygon)Polygon.Rectangle(10, 10).Transformed(t), 50, new Vector3(0.1, 0.1, 1.0).Unitized(), false);
+            var t1 = new Transform(15, 0, 0);
+            var podium = new Extrude((Polygon)Polygon.Star(30, 25, 5).Transformed(t1), 10, Vector3.ZAxis, false);
+            var atrium = new Extrude((Polygon)Polygon.Rectangle(20, 20).Transformed(t1), 30, Vector3.ZAxis, true);
+
+            var skyBridge = new Sweep(Polygon.Rectangle(10, 10), new Line(new Vector3(0, 0, 30), new Vector3(30, 0, 40)), 0, 0, 0.0, false);
+            var geom = new GeometricElement(new Transform(), BuiltInMaterials.Trans, new Representation(new List<SolidOperation> { leg1, leg2, podium, atrium, skyBridge }), false, Guid.NewGuid(), "Building Mass");
+
+            this.Model.AddElement(geom);
+
+            for (var i = 0.0; i < 100; i += 1.0)
+            {
+                var slicePlane = new Plane(new Vector3(0, 0, i), new Vector3(0, 0, 1));
+                if (geom.Representation.SolidOperations.TryIntersect(slicePlane, out var result))
+                {
+                    foreach (var profile in result)
+                    {
+                        this.Model.AddElement(new Floor(profile, 0.01));
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void SolidPlaneIntersectionReturnsFalseWhenNotIntersecting()
+        {
+            var box = new Extrude(Polygon.Rectangle(10, 10), 30, Vector3.ZAxis, false);
+            var plane = new Plane(new Vector3(0, 0, 31), Vector3.ZAxis);
+            var intersect = new[] { box }.TryIntersect(plane, out _);
+            Assert.False(intersect);
+        }
+
+        [Fact]
+        public void SolidPlaneIntersectionThrowsExceptionWhenPlaneNotHoriztonal()
+        {
+            var box = new Extrude(Polygon.Rectangle(10, 10), 30, Vector3.ZAxis, false);
+            var plane = new Plane(new Vector3(0, 0, 0), Vector3.XAxis);
+            Assert.Throws<Exception>(() => new[] { box }.TryIntersect(plane, out _));
+        }
+
+        [Fact]
+        public void SolidPlaneIntersectionReturnsDisjointProfiles()
+        {
+            var leg1 = new Extrude(Polygon.Rectangle(10, 10), 30, Vector3.ZAxis, false);
+            var t = new Transform(0, 0, 0);
+            t.Move(30, 0, 0);
+            var leg2 = new Extrude((Polygon)Polygon.Rectangle(10, 10).Transformed(t), 50, Vector3.ZAxis, false);
+            var plane = new Plane(new Vector3(0, 0, 15), Vector3.ZAxis);
+            var intersect = new[] { leg1, leg2 }.TryIntersect(plane, out var result);
+            Assert.Equal(2, result.Count);
+        }
+
+        [Fact]
+        public void SolidPlaneIntersectionReturnsProfileWithOneHole()
+        {
+            var outer = new Extrude(Polygon.Rectangle(10, 10), 30, Vector3.ZAxis, false);
+            var inner = new Extrude((Polygon)Polygon.Rectangle(5, 5), 30, Vector3.ZAxis, true);
+            var plane = new Plane(new Vector3(0, 0, 15), Vector3.ZAxis);
+            var intersect = new[] { outer, inner }.TryIntersect(plane, out var result);
+            Assert.True(intersect);
+            Assert.Equal(1, result.Count);
+            Assert.Equal(1, result[0].Voids.Count);
         }
 
         [Fact]

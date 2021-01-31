@@ -347,7 +347,10 @@ namespace Elements.Geometry.Solids
             foreach (var key in keys)
             {
                 var e = this.Edges[key];
-                SplitEdge(p, e);
+                if (!TrySplitEdge(p, e, out var v))
+                {
+                    continue;
+                }
             }
         }
 
@@ -546,6 +549,28 @@ namespace Elements.Geometry.Solids
             }
         }
 
+        public bool TryIntersect(Plane p, out List<Polygon> intersects)
+        {
+            intersects = null;
+            var allSegments = new List<Line>();
+            foreach (var f in this.Faces.Values)
+            {
+                if (f.TryIntersect(p, out var segments))
+                {
+                    allSegments.AddRange(segments);
+                }
+            }
+
+            if (allSegments.Count == 0)
+            {
+                return false;
+            }
+
+            intersects = allSegments.ToPolylines().Select(pl => pl.Closed()).ToList();
+
+            return true;
+        }
+
         /// <summary>
         /// Create a face from edges.
         /// The first edge array is treated as the outer edge.
@@ -742,23 +767,25 @@ namespace Elements.Geometry.Solids
             return openEdge;
         }
 
-        private void SplitEdge(Plane p, Edge e)
+        private bool TrySplitEdge(Plane p, Edge e, out Vertex vertex)
         {
+            vertex = null;
+
             var start = e.Left.Vertex;
             var end = e.Right.Vertex;
             if (!new Line(start.Point, end.Point).Intersects(p, out Vector3 result))
             {
-                return;
+                return false;
             }
 
             // Add vertex at intersection.
             // Create new edge from vertex to end.
-            var mid = AddVertex(result);
-            var e1 = AddEdge(mid, end);
+            vertex = AddVertex(result);
+            var e1 = AddEdge(vertex, end);
 
             // Adjust end of existing edge to
             // new vertex
-            e.Right.Vertex = mid;
+            e.Right.Vertex = vertex;
             if (e.Left.Loop != null)
             {
                 e.Left.Loop.InsertEdgeAfter(e.Left, e1.Left);
@@ -767,6 +794,8 @@ namespace Elements.Geometry.Solids
             {
                 e.Right.Loop.InsertEdgeBefore(e.Right, e1.Right);
             }
+
+            return true;
         }
     }
 }
