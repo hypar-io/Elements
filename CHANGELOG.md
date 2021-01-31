@@ -2,6 +2,10 @@
 
 ## 0.8.3
 
+### Added
+- `Solid.TryIntersect(Plane plane, out List<Line>lines)`
+- `SolidOperationExtensions.TryIntersect(this IList<SolidOperation> ops, Plane plane, out List<Profile> profiles)`
+
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 

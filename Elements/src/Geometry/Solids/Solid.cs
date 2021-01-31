@@ -549,6 +549,12 @@ namespace Elements.Geometry.Solids
             }
         }
 
+        /// <summary>
+        /// Intersect this solid with the provided plane.
+        /// </summary>
+        /// <param name="p">A plane.</param>
+        /// <param name="intersects">A collection of polygons representing the intersections.</param>
+        /// <returns>True if at least one intersection is found, otherwise false.</returns>
         public bool TryIntersect(Plane p, out List<Polygon> intersects)
         {
             intersects = null;

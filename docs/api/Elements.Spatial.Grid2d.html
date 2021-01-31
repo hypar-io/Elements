@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Grid2d
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -790,6 +790,31 @@ used as the grid extents.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Spatial_Grid2d_GetCellNodes_" data-uid="Elements.Spatial.Grid2d.GetCellNodes*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetCellNodes" data-uid="Elements.Spatial.Grid2d.GetCellNodes">GetCellNodes()</h4>
+  <div class="markdown level1 summary"><p>Get the points at the corners of all grid cells.
+///</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Vector3&gt; GetCellNodes()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_Grid2d_GetCells_" data-uid="Elements.Spatial.Grid2d.GetCells*"></a>
   <h4 id="Elements_Spatial_Grid2d_GetCells" data-uid="Elements.Spatial.Grid2d.GetCells">GetCells()</h4>
   <div class="markdown level1 summary"><p>Recursively retrieve all bottom-level cells from this grid.</p>
@@ -816,13 +841,13 @@ used as the grid extents.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid2d_GetCellSeparators_" data-uid="Elements.Spatial.Grid2d.GetCellSeparators*"></a>
-  <h4 id="Elements_Spatial_Grid2d_GetCellSeparators_Elements_Spatial_GridDirection_" data-uid="Elements.Spatial.Grid2d.GetCellSeparators(Elements.Spatial.GridDirection)">GetCellSeparators(GridDirection)</h4>
+  <h4 id="Elements_Spatial_Grid2d_GetCellSeparators_Elements_Spatial_GridDirection_System_Boolean_" data-uid="Elements.Spatial.Grid2d.GetCellSeparators(Elements.Spatial.GridDirection,System.Boolean)">GetCellSeparators(GridDirection, Boolean)</h4>
   <div class="markdown level1 summary"><p>Get the top-level lines separating cells from one another.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;ICurve&gt; GetCellSeparators(GridDirection direction)</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;ICurve&gt; GetCellSeparators(GridDirection direction, bool trim = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -838,6 +863,12 @@ used as the grid extents.</p>
         <td><a class="xref" href="Elements.Spatial.GridDirection.html">GridDirection</a></td>
         <td><span class="parametername">direction</span></td>
         <td><p>The grid direction in which you want to get separators.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">trim</span></td>
+        <td><p>Whether or not to trim cell separators with the trimmed cell boundary</p>
 </td>
       </tr>
     </tbody>

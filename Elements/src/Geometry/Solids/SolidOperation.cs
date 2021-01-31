@@ -36,7 +36,7 @@ namespace Elements.Geometry.Solids
     public static class SolidOperationExtensions
     {
         /// <summary>
-        /// Intersect a collection of solid operations with a plane.
+        /// Intersect a collection of solid operations with the provided plane.
         /// </summary>
         /// <param name="solidOperations">A collection of solid operations.</param>
         /// <param name="p">A plane.</param>
