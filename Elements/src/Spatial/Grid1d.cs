@@ -24,7 +24,19 @@ namespace Elements.Spatial
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
-        public List<Grid1d> Cells { get; private set; }
+        public List<Grid1d> Cells
+        {
+            get => cells;
+            private set
+            {
+                if (this.parent != null)
+                {
+                    //invalidate previously generated 2d grid
+                    parent.TryInvalidateGrid();
+                }
+                cells = value;
+            }
+        }
 
         /// <summary>
         /// Numerical domain of this Grid
@@ -53,6 +65,7 @@ namespace Elements.Spatial
 
         // if this 1d grid is the axis of a 2d grid, this is where we store that reference. If not, it will be null
         private Grid2d parent;
+        private List<Grid1d> cells;
 
         #endregion
 

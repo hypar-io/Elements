@@ -94,6 +94,27 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ChildGridUpdatesParent()
+        {
+            var u = new Grid1d(10);
+            var v = new Grid1d(5);
+            var grid2d = new Grid2d(u, v);
+            Assert.Equal(1, grid2d.CellsFlat.Count);
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByCount(5);
+            Assert.Equal(50, grid2d.CellsFlat.Count);
+        }
+
+        [Fact]
+        public void DisallowedGridEditingThrowsException()
+        {
+            var grid2d = new Grid2d(5, 5);
+            grid2d.V.DivideByCount(5);
+            grid2d.CellsFlat[2].U.DivideByCount(5);
+            Assert.Throws<NotSupportedException>(() => grid2d.U.DivideByCount(2));
+        }
+
+        [Fact]
         public void CellSeparatorsTrimmed()
         {
             Name = "CellSeparatorsTrimmed";
