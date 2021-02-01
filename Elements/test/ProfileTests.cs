@@ -69,8 +69,40 @@ namespace Elements.Tests
                 this.Model.AddElement(floor);
             }
             Assert.Equal(2, union.Count);
-            
+
         }
+
+        [Fact]
+        public void ProfileDifference()
+        {
+            Name = "Profile Difference";
+            var rect = Polygon.Rectangle(10, 10);
+            var rect2 = rect.TransformedPolygon(new Transform(11, 0, 0));
+            var difference = Elements.Geometry.Profile.Difference(new[] { new Profile(rect) }, new[] { new Profile(rect2) });
+
+            var innerRect = Polygon.Rectangle(3, 3);
+            var grid2d = new Elements.Spatial.Grid2d(new[] { rect, innerRect });
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByCount(10);
+            var secondSet = new[] {
+                new Profile(new Circle(new Vector3(4,4), 4).ToPolygon(), new Circle(new Vector3(4,4), 2).ToPolygon()),
+                new Profile(new Circle(new Vector3(-4,-4), 4).ToPolygon(), new Circle(new Vector3(-4,-4), 2).ToPolygon())
+            };
+
+            foreach (var cell in grid2d.GetCells())
+            {
+                var crvs = cell.GetTrimmedCellGeometry().OfType<Polygon>().ToList();
+                var profiles = crvs.Select(p => new Profile(p));
+                var differenceResult = Elements.Geometry.Profile.Difference(profiles, secondSet);
+                var floors = differenceResult.Select(p => new Floor(p, 1));
+                var mcs = differenceResult.Select(p => new ModelCurve(p.Perimeter, transform: new Transform(0, 0, 1.1)));
+                Model.AddElements(floors);
+                Model.AddElements(mcs);
+            }
+
+            // Visual test only
+        }
+
 
         [Fact]
         public void VoidsOrientedCorrectly()
