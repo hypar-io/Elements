@@ -2,6 +2,9 @@
 
 ## 0.8.3
 
+### Added
+- `Profile.Difference(...)` - Subtract one set of profiles from another, respecting internal voids
+- `Profile.Intersection(...)` - Calculate the overlap between two sets of profiles, respecting internal voids
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 

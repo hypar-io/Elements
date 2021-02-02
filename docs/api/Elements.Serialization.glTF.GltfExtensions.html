@@ -119,7 +119,7 @@
   </h3>
   <a id="Elements_Serialization_glTF_GltfExtensions_ToBase64String_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToBase64String*"></a>
   <h4 id="Elements_Serialization_glTF_GltfExtensions_ToBase64String_Elements_Model_System_Boolean_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model,System.Boolean)">ToBase64String(Model, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Convert the Model to a base64 encoded string.</p>
+  <div class="markdown level1 summary"><p>Serialize the model to a base64 encoded string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -159,14 +159,57 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><p>A Base64 string representing the Model.</p>
+        <td><p>A Base64 string representing the model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF*"></a>
+  <h4 id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model)">ToGlTF(Model)</h4>
+  <div class="markdown level1 summary"><p>Serialize the model to a byte array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] ToGlTF(this Model model)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Model.html">Model</a></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model to serialize.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span>[]</td>
+        <td><p>A byte array representing the model.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF*"></a>
   <h4 id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_String_System_Boolean_System_Boolean_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Boolean,System.Boolean)">ToGlTF(Model, String, Boolean, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Save a model to gltf.
+  <div class="markdown level1 summary"><p>Serialize the model to a gltf file on disk.
 If there is no geometry, an empty GLTF will still be produced.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
