@@ -402,10 +402,10 @@ namespace Elements.Geometry
                 clipper.AddPaths(clipperPaths, PolyType.ptClip, true);
             }
             PolyTree solution = new PolyTree();
-            clipper.Execute(ClipType.ctIntersection, solution, PolyFillType.pftPositive);
+            clipper.Execute(ClipType.ctIntersection, solution, PolyFillType.pftNonZero);
             if (solution.ChildCount == 0)
             {
-                return null;
+                return new List<Profile>();
             }
             var joinedProfiles = new List<Profile>();
             foreach (var result in solution.Childs)

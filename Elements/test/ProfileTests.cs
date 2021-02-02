@@ -99,8 +99,33 @@ namespace Elements.Tests
                 Model.AddElements(floors);
                 Model.AddElements(mcs);
             }
+            Assert.Equal(84, Model.AllElementsOfType<Floor>().Count());
+        }
 
-            // Visual test only
+        [Fact]
+        public void ProfileIntersection()
+        {
+            Name = "Profile Intersection";
+            var firstSet = new List<Profile>();
+            for (int i = 0; i < 10; i++)
+            {
+                var angle = (i / 10.0) * Math.PI * 2;
+                var center = new Vector3(4*Math.Cos(angle), 4*Math.Sin(angle));
+                var outerCircle = new Circle(center,5).ToPolygon(20);
+                var innerCircle = new Circle(center,4).ToPolygon(20);
+                var location = new Transform(1, 0, 0);
+                var profile = new Profile(outerCircle, innerCircle);
+                firstSet.Add(profile);
+                Model.AddElement(new Floor(profile, 0.04));
+            }
+            var clipProfile = new Profile(Polygon.Rectangle(20, 10), Polygon.Rectangle(5, 5));
+            Model.AddElement(new Floor(clipProfile, 0.1));
+            var secondSet = new List<Profile> {
+                clipProfile,
+            };
+            var intersection = Elements.Geometry.Profile.Intersection(firstSet, secondSet);
+            var floors = intersection.Select(p => new Floor(p, 0.4, material: BuiltInMaterials.XAxis));
+            Model.AddElements(floors);
         }
 
 
