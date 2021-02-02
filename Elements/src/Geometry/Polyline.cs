@@ -642,8 +642,13 @@ namespace Elements.Geometry
                         (previousOffsetSegment.End.DistanceTo(offsetIntersection) > offset ||
                         nextOffsetSegment.Start.DistanceTo(offsetIntersection) > offset))
                     {
-                        joinPoints.Add(previousOffsetSegment.Direction() * offset + previousOffsetSegment.End);
-                        joinPoints.Add(nextOffsetSegment.Direction() * (offset * -1) + nextOffsetSegment.Start);
+                        var offsetPoint1 = previousOffsetSegment.Direction() * offset + previousOffsetSegment.End;
+                        var offsetPoint2 = nextOffsetSegment.Direction() * (offset * -1) + nextOffsetSegment.Start;
+                        joinPoints.Add(offsetPoint1);
+                        if (offsetPoint1.DistanceTo(offsetPoint2) != 0)
+                        {
+                            joinPoints.Add(offsetPoint2);
+                        }
                     }
                     else
                     {
