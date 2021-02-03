@@ -444,12 +444,12 @@ namespace Elements.Spatial
             {
                 case GridDirection.U:
                     points = V.GetCellSeparators(true);
-                    otherDirection = U.curve;
+                    otherDirection = U.Curve;
                     toOrigin = GetTransformedOrigin() - V.StartPoint();
                     break;
                 case GridDirection.V:
                     points = U.GetCellSeparators(true);
-                    otherDirection = V.curve;
+                    otherDirection = V.Curve;
                     toOrigin = GetTransformedOrigin() - U.StartPoint();
                     break;
             }
