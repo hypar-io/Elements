@@ -107,11 +107,18 @@ namespace Elements.Spatial
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public class IndexedCell
         {
-            internal IndexedCell(int i, int j, Grid2d cell)
+            /// <summary>
+            /// Make a new indexed cell
+            /// </summary>
+            /// <param name="i"></param>
+            /// <param name="j"></param>
+            /// <param name="grid"></param>
+            [JsonConstructor]
+            public IndexedCell(int i, int j, Grid2d grid)
             {
                 this.I = i;
                 this.J = j;
-                this.Grid = cell;
+                this.Grid = grid;
             }
             /// <summary>
             /// The i Index
