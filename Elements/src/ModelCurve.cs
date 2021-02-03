@@ -85,20 +85,28 @@ namespace Elements
             var f = new Vector3(max.X, min.Y, max.Z);
             var g = new Vector3(max.X, max.Y, max.Z);
             var h = new Vector3(min.X, max.Y, max.Z);
-            var mc = new List<ModelCurve> {
-                new ModelCurve(new Line(a,b), mat, context),
-                new ModelCurve(new Line(b,c), mat, context),
-                new ModelCurve(new Line(c,d), mat, context),
-                new ModelCurve(new Line(d,a), mat, context),
-                new ModelCurve(new Line(e,f), mat, context),
-                new ModelCurve(new Line(f,g), mat, context),
-                new ModelCurve(new Line(g,h), mat, context),
-                new ModelCurve(new Line(h,e), mat, context),
-                new ModelCurve(new Line(a,e), mat, context),
-                new ModelCurve(new Line(b,f), mat, context),
-                new ModelCurve(new Line(c,g), mat, context),
-                new ModelCurve(new Line(d,h), mat, context),
+            var mc = new List<ModelCurve>();
+            Action<Vector3, Vector3> tryAddLine = (Vector3 from, Vector3 to) =>
+            {
+                if (from.DistanceTo(to) > Vector3.EPSILON)
+                {
+                    mc.Add(new ModelCurve(new Line(from, to), mat, context));
+                }
             };
+            
+            tryAddLine(a,b);
+            tryAddLine(b,c); 
+            tryAddLine(c,d); 
+            tryAddLine(d,a); 
+            tryAddLine(e,f); 
+            tryAddLine(f,g); 
+            tryAddLine(g,h); 
+            tryAddLine(h,e); 
+            tryAddLine(a,e); 
+            tryAddLine(b,f); 
+            tryAddLine(c,g); 
+            tryAddLine(d,h); 
+             
             return mc;
         }
 
