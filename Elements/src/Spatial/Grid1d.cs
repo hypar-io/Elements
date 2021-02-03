@@ -26,6 +26,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
+        [JsonProperty("Cells", NullValueHandling=NullValueHandling.Ignore)]
         public List<Grid1d> Cells
         {
             get => cells;
@@ -98,7 +99,7 @@ namespace Elements.Spatial
         // is useful in serialization so we only store the base curve once. 
         private Grid1d topLevelParentGrid;
 
-        [JsonProperty("TopLevelParentCurve")]
+        [JsonProperty("TopLevelParentCurve", NullValueHandling=NullValueHandling.Ignore)]
         private Curve toplevelParentCurve
         {
             get
@@ -115,14 +116,19 @@ namespace Elements.Spatial
             }
         }
 
-        // used during serialization to keep track of the top level grid
-        private static Grid1d LastUsedTopLevelGrid = null;
-
         private List<Grid1d> cells;
 
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Do not use this constructor — it is only for serialization purposes.
+        /// </summary>
+        /// <param name="cells"></param>
+        /// <param name="type"></param>
+        /// <param name="domain"></param>
+        /// <param name="topLevelParentCurve"></param>
+        /// <param name="curveDomain"></param>
         [JsonConstructor]
         public Grid1d(List<Grid1d> cells, string type, Domain1d domain, Curve topLevelParentCurve, Domain1d curveDomain)
         {

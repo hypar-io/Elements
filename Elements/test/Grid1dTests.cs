@@ -144,7 +144,6 @@ namespace Elements.Tests
             grid.DivideByCount(4);
             grid[3].DivideByFixedLength(0.4);
             var json = JsonConvert.SerializeObject(grid);
-            System.IO.File.WriteAllText("serializedGrid.json", json);
             var deserialized = JsonConvert.DeserializeObject<Grid1d>(json);
             Assert.Equal(grid.GetCells().Count, deserialized.GetCells().Count);
         }

@@ -13,6 +13,7 @@ namespace Elements.Spatial
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid2dTests.cs?name=example)]
     /// </example>
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class Grid2d
     {
         #region Properties
@@ -20,6 +21,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Returns true if this 2D Grid has no subdivisions / sub-grids. 
         /// </summary>
+        [JsonIgnore]
         public bool IsSingleCell => U.IsSingleCell && V.IsSingleCell;
 
         /// <summary>
@@ -47,21 +49,58 @@ namespace Elements.Spatial
         /// <summary>
         /// A transform from grid space to world space
         /// </summary>
+        [JsonProperty("FromGrid")]
         internal Transform fromGrid = new Transform();
 
         /// <summary>
         /// A transform from world space to grid space
         /// </summary>
+        [JsonProperty("ToGrid")]
         internal Transform toGrid = new Transform();
 
+        [JsonProperty("UDomainInternal")]
         private Domain1d UDomainInternal = new Domain1d(0, 0);
+
+        [JsonProperty("VDomainInternal")]
         private Domain1d VDomainInternal = new Domain1d(0, 0);
 
         /// <summary>
         /// Any boundary curves, transformed to grid space. 
         /// </summary>
+        [JsonProperty("BoundariesInGridSpace", NullValueHandling = NullValueHandling.Ignore)]
         private IList<Polygon> boundariesInGridSpace;
         private List<List<Grid2d>> cells;
+
+        [JsonProperty("ModifiedChildCells", NullValueHandling = NullValueHandling.Ignore)]
+        internal List<(int, int, Grid2d)> ModifiedChildCells => GetModifiedChildCells();
+
+        // for serialization purposes, we store only those cells that are not a natural consequence of the U and V 1d grids composing this grid.
+        private List<(int, int, Grid2d)> GetModifiedChildCells()
+        {
+            var dict = new List<(int, int, Grid2d)>();
+            if (this.cells == null)
+            {
+                return null;
+            }
+            for (int i = 0; i < cells.Count; i++)
+            {
+                List<Grid2d> row = (List<Grid2d>)cells[i];
+                for (int j = 0; j < row.Count; j++)
+                {
+                    Grid2d cell = row[j];
+                    if (cell.IsSingleCell)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        dict.Add((i, j, cell));
+                    }
+                }
+            }
+            return dict;
+        }
+
 
         #endregion
 
@@ -73,6 +112,42 @@ namespace Elements.Spatial
         public Grid2d()
         {
             InitializeUV(new Domain1d(), new Domain1d());
+        }
+
+        /// <summary>
+        /// Do not use this constructor — it is only for serialization purposes.
+        /// </summary>
+        /// <param name="fromGrid"></param>
+        /// <param name="toGrid"></param>
+        /// <param name="uDomainInternal"></param>
+        /// <param name="vDomainInternal"></param>
+        /// <param name="boundariesInGridSpace"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <param name="type"></param>
+        /// <param name="modifiedChildCells"></param>
+        /// <returns></returns>
+        [JsonConstructor]
+        public Grid2d(Transform fromGrid, Transform toGrid, Domain1d uDomainInternal, Domain1d vDomainInternal, List<Polygon> boundariesInGridSpace, Grid1d u, Grid1d v, string type, List<(int i, int j, Grid2d grid)> modifiedChildCells)
+        {
+            this.fromGrid = fromGrid;
+            this.toGrid = toGrid;
+            this.UDomainInternal = uDomainInternal;
+            this.VDomainInternal = uDomainInternal;
+            this.boundariesInGridSpace = boundariesInGridSpace;
+            this.U = u;
+            this.V = v;
+            this.Type = type;
+            this.U.SetParent(this);
+            this.V.SetParent(this);
+            if (modifiedChildCells != null)
+            {
+                this.cells = GetTopLevelCells();
+                foreach (var c in modifiedChildCells)
+                {
+                    this.Cells[c.i][c.j] = c.grid;
+                }
+            }
         }
 
         /// <summary>
@@ -380,6 +455,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
+        [JsonIgnore]
         public List<List<Grid2d>> Cells
         {
             get
@@ -396,7 +472,7 @@ namespace Elements.Spatial
         /// <summary>
         /// A flat list of all the top-level cells in this grid. To get child cells as well, use Grid2d.GetCells() instead.
         /// </summary>
-        [JsonIgnoreAttribute]
+        [JsonIgnore]
         public List<Grid2d> CellsFlat
         {
             get
