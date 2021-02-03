@@ -130,6 +130,7 @@ namespace Elements.Tests
             grid2d.V.DivideByCount(3);
             grid2d[2, 2].U.DivideByCount(4);
             var json = JsonConvert.SerializeObject(grid2d);
+            File.WriteAllText("serializedGrid2d.json", json);
             var deserialized = JsonConvert.DeserializeObject<Grid2d>(json);
             Assert.Equal(grid2d.GetCells().Count, deserialized.GetCells().Count);
         }

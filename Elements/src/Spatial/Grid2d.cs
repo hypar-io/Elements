@@ -72,12 +72,12 @@ namespace Elements.Spatial
         private List<List<Grid2d>> cells;
 
         [JsonProperty("ModifiedChildCells", NullValueHandling = NullValueHandling.Ignore)]
-        internal List<(int, int, Grid2d)> ModifiedChildCells => GetModifiedChildCells();
+        internal List<IndexedCell> ModifiedChildCells => GetModifiedChildCells();
 
         // for serialization purposes, we store only those cells that are not a natural consequence of the U and V 1d grids composing this grid.
-        private List<(int, int, Grid2d)> GetModifiedChildCells()
+        private List<IndexedCell> GetModifiedChildCells()
         {
-            var dict = new List<(int, int, Grid2d)>();
+            var indexedCellList = new List<IndexedCell>();
             if (this.cells == null)
             {
                 return null;
@@ -94,14 +94,39 @@ namespace Elements.Spatial
                     }
                     else
                     {
-                        dict.Add((i, j, cell));
+                        indexedCellList.Add(new IndexedCell(i, j, cell));
                     }
                 }
             }
-            return dict;
+            return indexedCellList;
         }
 
+        /// <summary>
+        /// Represents a subcell at a position in a parent grid
+        /// </summary>
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public class IndexedCell
+        {
+            internal IndexedCell(int i, int j, Grid2d cell)
+            {
+                this.I = i;
+                this.J = j;
+                this.Grid = cell;
+            }
+            /// <summary>
+            /// The i Index
+            /// </summary>
+            public int I { get; set; }
 
+            /// <summary>
+            /// The j Index
+            /// </summary>
+            public int J { get; set; }
+            /// <summary>
+            /// The grid cell
+            /// </summary>
+            public Grid2d Grid { get; set; }
+        }
         #endregion
 
         #region Constructors
@@ -129,7 +154,7 @@ namespace Elements.Spatial
         /// <returns></returns>
         [JsonConstructor]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public Grid2d(Transform fromGrid, Transform toGrid, Domain1d uDomainInternal, Domain1d vDomainInternal, List<Polygon> boundariesInGridSpace, Grid1d u, Grid1d v, string type, List<(int i, int j, Grid2d grid)> modifiedChildCells)
+        public Grid2d(Transform fromGrid, Transform toGrid, Domain1d uDomainInternal, Domain1d vDomainInternal, List<Polygon> boundariesInGridSpace, Grid1d u, Grid1d v, string type, List<IndexedCell> modifiedChildCells)
         {
             this.fromGrid = fromGrid;
             this.toGrid = toGrid;
@@ -146,7 +171,7 @@ namespace Elements.Spatial
                 this.cells = GetTopLevelCells();
                 foreach (var c in modifiedChildCells)
                 {
-                    this.Cells[c.i][c.j] = c.grid;
+                    this.Cells[c.I][c.J] = c.Grid;
                 }
             }
         }
