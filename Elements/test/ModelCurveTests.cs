@@ -121,5 +121,13 @@ namespace Elements.Tests
             this.Model.AddElement(bezier);
             Assert.Equal(3, this.Model.AllElementsOfType<ModelCurve>().Count());
         }
+
+        [Fact]
+        public void BBoxToCurves() {
+            Name = "BBoxToCurves";
+            var bbox = new BBox3(new Vector3(4,2,5), new Vector3(10, 8, 14));
+            var crvs = bbox.ToModelCurves();
+            Model.AddElements(crvs);
+        }
     }
 }
