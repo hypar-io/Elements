@@ -2,6 +2,9 @@
 
 ## 0.8.3
 
+### Added
+- Profile.ToModelCurves()
+- Bbox3.ToModelCurves()
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 
