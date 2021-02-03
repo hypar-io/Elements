@@ -130,6 +130,7 @@ namespace Elements.Spatial
         /// <param name="topLevelParentCurve"></param>
         /// <param name="curveDomain"></param>
         [JsonConstructor]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public Grid1d(List<Grid1d> cells, string type, Domain1d domain, Curve topLevelParentCurve, Domain1d curveDomain)
         {
             if (this.toplevelParentCurve != null)

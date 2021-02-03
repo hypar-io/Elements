@@ -128,6 +128,7 @@ namespace Elements.Spatial
         /// <param name="modifiedChildCells"></param>
         /// <returns></returns>
         [JsonConstructor]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public Grid2d(Transform fromGrid, Transform toGrid, Domain1d uDomainInternal, Domain1d vDomainInternal, List<Polygon> boundariesInGridSpace, Grid1d u, Grid1d v, string type, List<(int i, int j, Grid2d grid)> modifiedChildCells)
         {
             this.fromGrid = fromGrid;

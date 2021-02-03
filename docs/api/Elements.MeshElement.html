@@ -240,6 +240,7 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a></div>
   </div>
   <div class="inheritedMembers">
@@ -269,6 +270,12 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
@@ -294,7 +301,7 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_MeshElement_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MeshElement : GeometricElement, ITessellate</code></pre>
+    <pre><code class="lang-csharp hljs">public class MeshElement : GeometricElement, INotifyPropertyChanged, ITessellate</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -445,6 +452,9 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
     </tbody>
   </table>
   <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a>
   </div>
