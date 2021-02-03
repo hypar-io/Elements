@@ -4,6 +4,7 @@
 
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
+- Make Grid1d and Grid2d serializable
 
 ## 0.8.2
 
