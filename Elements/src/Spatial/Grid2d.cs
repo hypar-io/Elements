@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Elements.Spatial
 {
     /// <summary>
-    /// Represents a 2-dimensional grid which can be subdivided 
+    /// Represents a 2-dimensional grid which can be subdivided
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid2dTests.cs?name=example)]
@@ -18,7 +18,7 @@ namespace Elements.Spatial
         #region Properties
 
         /// <summary>
-        /// Returns true if this 2D Grid has no subdivisions / sub-grids. 
+        /// Returns true if this 2D Grid has no subdivisions / sub-grids.
         /// </summary>
         public bool IsSingleCell => U.IsSingleCell && V.IsSingleCell;
 
@@ -33,7 +33,7 @@ namespace Elements.Spatial
         public Grid1d V { get; private set; }
 
         /// <summary>
-        /// An optional type designation for this cell.  
+        /// An optional type designation for this cell.
         /// </summary>
         public string Type
         {
@@ -58,7 +58,7 @@ namespace Elements.Spatial
         private Domain1d VDomainInternal = new Domain1d(0, 0);
 
         /// <summary>
-        /// Any boundary curves, transformed to grid space. 
+        /// Any boundary curves, transformed to grid space.
         /// </summary>
         private IList<Polygon> boundariesInGridSpace;
         private List<List<Grid2d>> cells;
@@ -102,7 +102,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Construct a Grid2d using another Grid2d as the base, but with different Grid1ds as its axes. 
+        /// Construct a Grid2d using another Grid2d as the base, but with different Grid1ds as its axes.
         /// </summary>
         /// <param name="other">The Grid2d to base this one on.</param>
         /// <param name="u">The Grid1d representing the U Axis.</param>
@@ -160,7 +160,7 @@ namespace Elements.Spatial
         /// If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
         /// Currently only transforms parallel to the supplied polygons are supported.
         /// The polygon's bounding box parallel to the supplied transform will be
-        /// used as the grid extents. 
+        /// used as the grid extents.
         /// </summary>
         /// <param name="boundary">The external boundary of this grid system.</param>
         /// <param name="transform">A transform representing the alignment of the grid.</param>
@@ -182,12 +182,12 @@ namespace Elements.Spatial
         {
             if (transform == null)
             {
-                //if no transform is supplied, calculate one from the normal. 
+                //if no transform is supplied, calculate one from the normal.
                 var planeTransform = boundaries.First().Vertices.ToTransform();
                 // If we are calculating the transform automatically, then the user has not
                 // supplied any rotational orientation information; we only care about
                 // direction. So if the polygon is nearly XY-parallel, let's just use
-                // the XY plane at the boundary's location to be consistent with default behavior. 
+                // the XY plane at the boundary's location to be consistent with default behavior.
                 transform = Math.Abs(planeTransform.ZAxis.Dot(Vector3.ZAxis)).ApproximatelyEquals(1) ?
                     new Transform(planeTransform.Origin) :
                     planeTransform;
@@ -199,22 +199,43 @@ namespace Elements.Spatial
 
             var transformedBoundaries = toGrid.OfPolygons(boundaries);
 
-            // verify that all boundaries are in XY plane after transform
-            foreach (var boundary in transformedBoundaries)
-            {
-                foreach (var vertex in boundary.Vertices)
-                {
-                    if (!vertex.Z.ApproximatelyEquals(0))
-                    {
-                        throw new Exception("The Grid2d could not be constructed. After transform, this polygon was not in the XY Plane. Please ensure that all your geometry as well as any provided transform all lie in the same plane.");
-                    }
-                }
-            }
-            var bbox = new BBox3(transformedBoundaries);
-
-            boundariesInGridSpace = transformedBoundaries;
+            var bbox = this.SetBoundaries(transformedBoundaries);
 
             InitializeUV(new Domain1d(bbox.Min.X, bbox.Max.X), new Domain1d(bbox.Min.Y, bbox.Max.Y));
+        }
+
+        /// <summary>
+        /// Create a grid from a single boundary, an origin, and its U and V directions
+        /// </summary>
+        /// <param name="boundary"></param>
+        /// <param name="origin"></param>
+        /// <param name="uDirection"></param>
+        /// <param name="vDirection"></param>
+        /// <returns></returns>
+        public Grid2d(Polygon boundary, Vector3 origin, Vector3 uDirection, Vector3 vDirection) : this(new Polygon[] { boundary }, origin, uDirection, vDirection)
+        {
+
+        }
+
+        /// <summary>
+        /// Create a grid from a list of boundaries, an origin, and its U and V directions
+        /// </summary>
+        /// <param name="boundaries"></param>
+        /// <param name="origin"></param>
+        /// <param name="uDirection"></param>
+        /// <param name="vDirection"></param>
+        public Grid2d(IList<Polygon> boundaries, Vector3 origin, Vector3 uDirection, Vector3 vDirection)
+        {
+            var bbox = this.SetBoundaries(boundaries);
+            var lines = new List<Line>() {
+                 new Line(origin, origin + uDirection),
+                 new Line(origin, origin + vDirection)
+            };
+            ExpandLinesToBounds(bbox, lines);
+            this.U = new Grid1d(lines[0]);
+            this.V = new Grid1d(lines[1]);
+            this.U.SetParent(this);
+            this.V.SetParent(this);
         }
 
         #endregion
@@ -288,7 +309,7 @@ namespace Elements.Spatial
         #region Cell Retrieval
 
         /// <summary>
-        /// Retrieve the grid cell (as a Grid1d) at a length along the U and V domains. 
+        /// Retrieve the grid cell (as a Grid1d) at a length along the U and V domains.
         /// </summary>
         /// <param name="uPosition">U Position</param>
         /// <param name="vPosition">V Position</param>
@@ -477,8 +498,8 @@ namespace Elements.Spatial
                 else
                 {
                     // If we potentially have nested polygons, assume clockwise winding indicates a hole — trim with all the outer polygons first,
-                    // and then trim out anything inside the holes. 
-                    // TODO: get smarter about complex nesting scenarios taking advantage of clipper's PolyTree structure. 
+                    // and then trim out anything inside the holes.
+                    // TODO: get smarter about complex nesting scenarios taking advantage of clipper's PolyTree structure.
                     var outerPolygons = trimmedCellGeometry.Where(p => !p.IsClockWise());
                     var innerPolygons = trimmedCellGeometry.Where(p => p.IsClockWise());
                     foreach (var outerPoly in outerPolygons)
@@ -625,7 +646,7 @@ namespace Elements.Spatial
         /// <summary>
         /// This method returns the "rectangle" of the cell transformed into the grid's
         /// distorted coordinate space. The result may be a parallelogram rather than a rectangle
-        /// depending on the shape of the axis curves. 
+        /// depending on the shape of the axis curves.
         /// </summary>
         /// <returns></returns>
         private Polygon GetBaseRectangleTransformed()
@@ -730,6 +751,93 @@ namespace Elements.Spatial
             newCell.boundariesInGridSpace = boundariesInGridSpace;
 
             return newCell;
+        }
+
+        /// <summary>
+        /// Sets the clipping boundaries of this grid2d
+        /// </summary>
+        /// <param name="boundaries"></param>
+        /// <returns></returns>
+        private BBox3 SetBoundaries(IList<Polygon> boundaries)
+        {
+            // verify that all boundaries are in XY plane after transform
+            foreach (var boundary in boundaries)
+            {
+                foreach (var vertex in boundary.Vertices)
+                {
+                    if (!vertex.Z.ApproximatelyEquals(0))
+                    {
+                        throw new Exception("The Grid2d could not be constructed. After transform, this polygon was not in the XY Plane. Please ensure that all your geometry as well as any provided transform all lie in the same plane.");
+                    }
+                }
+            }
+
+            this.boundariesInGridSpace = boundaries;
+
+            return new BBox3(boundaries);
+        }
+
+        /// <summary>
+        /// Modifies a list of lines intended to represent uv guides in place to hit the bounds.
+        /// Accounts for skewed, parallel lists of 2. If list contains more lines, those will be ignored.
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        private static List<Line> ExpandLinesToBounds(BBox3 bounds, List<Line> lines)
+        {
+            var boundary = Polygon.Rectangle(bounds.Min, bounds.Max);
+
+            for (var i = 0; i < lines.Count(); i++)
+            {
+                lines[i] = lines[i].ExtendTo(boundary);
+            }
+
+            var new1 = ExtendLineSkewed(bounds, lines[0], lines[1]);
+            var new2 = ExtendLineSkewed(bounds, lines[1], new1);
+
+            new1 = ExtendLineSkewed(bounds, new1, new2);
+            new2 = ExtendLineSkewed(bounds, new2, new1);
+
+            lines[0] = new1;
+            lines[1] = new2;
+
+            return lines;
+        }
+
+        /// <summary>
+        /// Extend a line to a bounding box along a second line,
+        /// making sure this line extends to the boundary at the endpoints of second line to account for its skew.
+        /// Used to make sure U and V guide lines extend out far enough to encompass a boundary.
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <param name="line"></param>
+        /// <param name="possiblySkewedLine"></param>
+        /// <returns></returns>
+        private static Line ExtendLineSkewed(BBox3 bounds, Line line, Line possiblySkewedLine)
+        {
+            var boundary = Polygon.Rectangle(bounds.Min, bounds.Max);
+
+            var newLine = new Line(line.Start, line.End);
+
+            if (newLine.Intersects(possiblySkewedLine, out var intersection))
+            {
+                // move to start and extend
+                var toStart = possiblySkewedLine.Start - intersection;
+                newLine = newLine.TransformedLine(new Transform(toStart));
+                newLine = newLine.ExtendTo(boundary);
+
+                // move to end and extend
+                var toEnd = possiblySkewedLine.End - possiblySkewedLine.Start;
+                newLine = newLine.TransformedLine(new Transform(toEnd));
+                newLine = newLine.ExtendTo(boundary);
+
+                // move back to original
+                var toBeginning = intersection - possiblySkewedLine.End;
+                newLine = newLine.TransformedLine(new Transform(toBeginning));
+            }
+
+            return newLine;
         }
 
         #endregion

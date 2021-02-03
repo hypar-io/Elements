@@ -146,7 +146,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Intersect this line with the specified plane 
+        /// Intersect this line with the specified plane
         /// </summary>
         /// <param name="p">The plane.</param>
         /// <param name="result">The location of intersection.</param>
@@ -180,7 +180,7 @@ namespace Elements.Geometry
         /// Does this line intersect the provided line in 2D?
         /// </summary>
         /// <param name="l"></param>
-        /// <returns>Return true if the lines intersect, 
+        /// <returns>Return true if the lines intersect,
         /// false if the lines have coincident vertices or do not intersect.</returns>
         public bool Intersects2D(Line l)
         {
@@ -235,10 +235,10 @@ namespace Elements.Geometry
             }
 
             // at this point they're not parallel, and they lie in the same plane, so we know they intersect, we just don't know where.
-            // construct a plane 
+            // construct a plane
             var normal = l.Direction().Cross(plane.Normal);
             Plane intersectionPlane = new Plane(l.Start, normal);
-            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane? 
+            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane?
             {
                 if (infinite || (l.PointOnLine(planeIntersectionResult, includeEnds) && PointOnLine(planeIntersectionResult, includeEnds)))
                 {
@@ -393,7 +393,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Offset the line. The offset direction will be defined by 
+        /// Offset the line. The offset direction will be defined by
         /// Direction X Vector3.ZAxis.
         /// </summary>
         /// <param name="distance">The distance to offset.</param>
@@ -456,7 +456,35 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Trim a line with a polygon. 
+        /// Extends a line in both directions, attempting to hit polygon edges.
+        /// Returns the longest version of the line: does not trim a line back if it hits the polygon edge.
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns>New extended line. If no extension points were found, it will have the same start and end points as the original line.</returns>
+        public Line ExtendTo(Polygon polygon)
+        {
+            var ray = new Ray(this.Start, this.End - this.Start);
+            var reverseRay = new Ray(ray.Origin, ray.Direction * -1);
+
+            var line = new Line(this.Start, this.End);
+
+            foreach (var segment in polygon.Segments())
+            {
+                if (ray.Intersects(segment, out var intersect) && intersect.DistanceTo(line.Start) >= line.Length())
+                {
+                    line.End = intersect;
+                }
+                if (reverseRay.Intersects(segment, out var reverseIntersect) && intersect.DistanceTo(line.End) >= line.Length())
+                {
+                    line.Start = reverseIntersect;
+                }
+            }
+
+            return line;
+        }
+
+        /// <summary>
+        /// Trim a line with a polygon.
         /// </summary>
         /// <param name="polygon">The polygon to trim with.</param>
         /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
@@ -484,7 +512,7 @@ namespace Elements.Geometry
                 var segment = new Line(polygon.Vertices[i1], polygon.Vertices[i2]);
                 var segmentsIntersect = Intersects(segment, out Vector3 intersection); // This will return false for intersections exactly at an end
 
-                // See if the segment intersects the edge. 
+                // See if the segment intersects the edge.
                 if (segmentsIntersect)
                 {
                     // Record this intersection.
@@ -533,7 +561,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a fillet arc between this line and the target. 
+        /// Create a fillet arc between this line and the target.
         /// </summary>
         /// <param name="target">The line with which to fillet.</param>
         /// <param name="radius">The radius of the fillet.</param>
@@ -582,7 +610,7 @@ namespace Elements.Geometry
             angle2 = (angle2 + 360) % 360;
             angle2 = angle2 == 0.0 ? 360.0 : angle2;
 
-            // We only support CCW wound arcs. 
+            // We only support CCW wound arcs.
             // For arcs that with start angles <1d, convert
             // the arc back to a negative value.
             var arc = new Arc(arcCenter,
