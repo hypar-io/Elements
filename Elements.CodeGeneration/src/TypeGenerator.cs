@@ -92,7 +92,9 @@ namespace Elements.Generate
             "InputData",
             "Point",
             "Grid1d",
-            "Grid2d"
+            "Grid2d",
+            "Domain1d",
+            "IndexedCell"
         };
 
         /// <summary>
