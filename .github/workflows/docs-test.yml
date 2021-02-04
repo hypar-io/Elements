@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-bump-publish:
-    runs-on: ubuntu-20.04
+    runs-on: windows-2019
     steps:
       - name: Checkout repo.
         uses: actions/checkout@v2
@@ -18,9 +18,7 @@ jobs:
         with:
           dotnet-version: 3.1.x
       - name: Setup docfx
-        run: |
-          sudo apt-get install -y wget apt-transport-https software-properties-common
-          brew install docfx
+        run: choco install docfx -y
       - name: Get previous tag.
         id: version
         uses: "WyriHaximus/github-action-get-previous-tag@master"
@@ -47,7 +45,7 @@ jobs:
       - name: Build Elements
         run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Build docs
-        run: sh ./build_docs.sh
+        run: ./build_docs.sh
       - name: Commit docs
         uses: EndBug/add-and-commit@v7
         with:
