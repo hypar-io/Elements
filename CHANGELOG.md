@@ -7,6 +7,7 @@
 - Bbox3.ToModelCurves()
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
+- Make Grid1d and Grid2d serializable
 
 ### Fixed
 - Fixed a bug where Polygon.UnionAll was sometimes returning null when it shouldn't (Thanks @M-Juliani !)

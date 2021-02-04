@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
+
 namespace Elements
 {
     /// <summary>
@@ -42,6 +44,8 @@ namespace Elements
         /// The length of the domain — Max-Min. Note that for non-increasing
         /// domains this value can be negative.
         /// </summary>
+
+        [JsonIgnore]
         public double Length => Max - Min;
 
         /// <summary>
@@ -72,10 +76,10 @@ namespace Elements
         /// <returns>An array of 2 1d domains split at the designated position.</returns>
         public Domain1d[] SplitAt(double position)
         {
-            if(IsCloseToBoundary(position))
+            if (IsCloseToBoundary(position))
             {
                 throw new ArgumentException($"The position {position} was too close to the domain boundary.");
-            } 
+            }
             if (!Includes(position))
             {
                 throw new ArgumentException($"The position {position} was not within the Grid's domain: {ToString()}");
@@ -102,7 +106,7 @@ namespace Elements
         /// <returns>An array of N equally-sized subdomains.</returns>
         public Domain1d[] DivideByCount(int n)
         {
-            if(n <= 0)
+            if (n <= 0)
             {
                 throw new ArgumentException($"Unable to divide domain into {n} divisions.");
             }
