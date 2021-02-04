@@ -6,6 +6,7 @@ using Xunit.Abstractions;
 using Newtonsoft.Json;
 using Elements.Tests;
 using Elements.Serialization.glTF;
+using System.IO;
 
 namespace Elements.Geometry.Tests
 {
@@ -632,6 +633,19 @@ namespace Elements.Geometry.Tests
         {
             var a = new Vector3();
             Assert.Throws<ArgumentException>(() => new Polygon(new[] { a, a, a }));
+        }
+
+        [Fact]
+        public void UnionAllSequential() {
+            Name = "UnionAllSequential";
+            // sample data contributed by Marco Juliani
+            var polygonsA = JsonConvert.DeserializeObject<List<Polygon>>(File.ReadAllText("../../../models/Geometry/testUnionAll.json"));
+            var polygonsB = JsonConvert.DeserializeObject<List<Polygon>>(File.ReadAllText("../../../models/Geometry/testUnionAll_2.json"));
+            var unionA = Polygon.UnionAll(polygonsA);
+            var unionB = Polygon.UnionAll(polygonsB);
+            Model.AddElements(unionA.Select(u => new ModelCurve(u)));
+            Model.AddElements(unionB.Select(u => new ModelCurve(u)));
+            
         }
 
         [Fact]
