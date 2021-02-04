@@ -19,29 +19,26 @@ jobs:
           dotnet-version: 3.1.x
       - name: Setup docfx
         run: choco install docfx -y
-      - name: Get previous tag.
-        id: version
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
-      - name: Bump if alpha.
+      - name: Bump if alpha
         if: ${{contains(steps.version.outputs.tag, 'alpha')}}
         id: bump-alpha
-        uses: christian-draeger/increment-semantic-version@1.0.2
+        uses: paulhatch/semantic-version@v3.3
         with:
-          current-version: ${{steps.version.outputs.tag}}
-          version-fragment: "alpha"
-      - name: Set NuGet version from alpha.
+          branch: master
+          format: "${major}.${minor}.${patch}-alpha${increment}"
+      - name: Set NuGet version from alpha
         if: ${{contains(steps.version.outputs.tag, 'alpha')}}
-        run: echo "NUGET_VERSION=${{steps.bump-alpha.outputs.next-version}}" >> $GITHUB_ENV
-      - name: Bump if beta.
+        run: echo "NUGET_VERSION=${{steps.bump-alpha.outputs.version}}" >> $GITHUB_ENV
+      - name: Bump if beta
         if: ${{contains(steps.version.outputs.tag, 'beta')}}
         id: bump-beta
-        uses: christian-draeger/increment-semantic-version@1.0.2
+        uses: paulhatch/semantic-version@v3.3
         with:
-          current-version: ${{steps.version.outputs.tag}}
-          version-fragment: "beta"
-      - name: Set NuGet version from beta.
+          branch: master
+          format: "${major}.${minor}.${patch}-beta${increment}"
+      - name: Set NuGet version from beta
         if: ${{contains(steps.version.outputs.tag, 'beta')}}
-        run: echo "NUGET_VERSION=${{steps.bump-beta.outputs.next-version}}" >> $GITHUB_ENV
+        run: echo "NUGET_VERSION=${{steps.bump-beta.outputs.version}}" >> $GITHUB_ENV
       - name: Build Elements
         run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Build docs
