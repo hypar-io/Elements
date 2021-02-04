@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-bump-publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo.
         uses: actions/checkout@v2
@@ -17,6 +17,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
+      - name: Setup mono
+        run: sudo apt install mono-complete
       - name: Setup docfx
         run: brew install docfx
       - name: Get previous tag.
