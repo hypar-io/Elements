@@ -21,7 +21,7 @@ jobs:
         run: choco install docfx -y
       - name: Build docs
         run: |
-          rmdir /s /q ./docs
+          rm -r docs
           dotnet test --filter Category=Examples
           docfx ./doc/docfx.json -f --serve
       - name: Commit docs
