@@ -497,6 +497,7 @@ namespace Elements.Spatial
         /// <param name="u">The U index</param>
         /// <param name="v">The V index</param>
         /// <returns>The cell at these indices</returns>
+        [JsonIgnore]
         public Grid2d this[int u, int v]
         {
             get

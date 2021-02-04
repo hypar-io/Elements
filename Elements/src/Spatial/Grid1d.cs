@@ -764,6 +764,7 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="i">The index</param>
         /// <returns>A Grid1d representing the selected cell/segment.</returns>
+        [JsonIgnore]
         public Grid1d this[int i]
         {
             get
