@@ -132,12 +132,12 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Solids_Sweep__ctor_" data-uid="Elements.Geometry.Solids.Sweep.#ctor*"></a>
-  <h4 id="Elements_Geometry_Solids_Sweep__ctor_Elements_Geometry_Profile_Elements_Geometry_Curve_System_Double_System_Double_System_Boolean_" data-uid="Elements.Geometry.Solids.Sweep.#ctor(Elements.Geometry.Profile,Elements.Geometry.Curve,System.Double,System.Double,System.Boolean)">Sweep(Profile, Curve, Double, Double, Boolean)</h4>
+  <h4 id="Elements_Geometry_Solids_Sweep__ctor_Elements_Geometry_Profile_Elements_Geometry_Curve_System_Double_System_Double_System_Double_System_Boolean_" data-uid="Elements.Geometry.Solids.Sweep.#ctor(Elements.Geometry.Profile,Elements.Geometry.Curve,System.Double,System.Double,System.Double,System.Boolean)">Sweep(Profile, Curve, Double, Double, Double, Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Sweep(Profile profile, Curve curve, double startSetback, double endSetback, bool isVoid)</code></pre>
+    <pre><code class="lang-csharp hljs">public Sweep(Profile profile, Curve curve, double startSetback, double endSetback, double profileRotation, bool isVoid)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -167,6 +167,11 @@
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">endSetback</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">profileRotation</span></td>
         <td></td>
       </tr>
       <tr>
@@ -246,6 +251,30 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Solids_Sweep_ProfileRotation_" data-uid="Elements.Geometry.Solids.Sweep.ProfileRotation*"></a>
+  <h4 id="Elements_Geometry_Solids_Sweep_ProfileRotation" data-uid="Elements.Geometry.Solids.Sweep.ProfileRotation">ProfileRotation</h4>
+  <div class="markdown level1 summary"><p>The rotation of the profile around the sweep's curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double ProfileRotation { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
