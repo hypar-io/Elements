@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polyline
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -77,7 +77,7 @@
   
   <h1 id="Elements_Geometry_Polyline" data-uid="Elements.Geometry.Polyline" class="text-break">Class Polyline
   </h1>
-  <div class="markdown level0 summary"><p>A planar continuous set of lines.</p>
+  <div class="markdown level0 summary"><p>A continuous set of lines.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
@@ -261,7 +261,8 @@ var offset = pline.Offset(1, EndType.Square);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -289,7 +290,8 @@ var offset = pline.Offset(1, EndType.Square);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -313,7 +315,8 @@ var offset = pline.Offset(1, EndType.Square);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -337,7 +340,10 @@ var offset = pline.Offset(1, EndType.Square);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.Always)]
+[Required]
+[MinLength(2)]
+public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -404,6 +410,57 @@ var offset = pline.Offset(1, EndType.Square);
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_CreateMiterTransform_" data-uid="Elements.Geometry.Polyline.CreateMiterTransform*"></a>
+  <h4 id="Elements_Geometry_Polyline_CreateMiterTransform_System_Int32_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Polyline.CreateMiterTransform(System.Int32,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">CreateMiterTransform(Int32, Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Generates a transform that expresses the plane of a miter join at a point on the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Transform CreateMiterTransform(int i, Vector3 a, Vector3 up)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">i</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">up</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -523,14 +580,14 @@ var offset = pline.Offset(1, EndType.Square);
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
-  <a id="Elements_Geometry_Polyline_Normal_" data-uid="Elements.Geometry.Polyline.Normal*"></a>
-  <h4 id="Elements_Geometry_Polyline_Normal" data-uid="Elements.Geometry.Polyline.Normal">Normal()</h4>
-  <div class="markdown level1 summary"><p>The normal of this polyline, according to Newell's Method.</p>
+  <a id="Elements_Geometry_Polyline_NormalsAtVertices_" data-uid="Elements.Geometry.Polyline.NormalsAtVertices*"></a>
+  <h4 id="Elements_Geometry_Polyline_NormalsAtVertices" data-uid="Elements.Geometry.Polyline.NormalsAtVertices">NormalsAtVertices()</h4>
+  <div class="markdown level1 summary"><p>Get the normal of each vertex on the polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual Vector3 Normal()</code></pre>
+    <pre><code class="lang-csharp hljs">protected virtual Vector3[] NormalsAtVertices()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -542,8 +599,8 @@ var offset = pline.Offset(1, EndType.Square);
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><p>The unitized sum of the cross products of each pair of edges.</p>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
+        <td><p>A collection of unit vectors, each corresponding to a single vertex.</p>
 </td>
       </tr>
     </tbody>
@@ -772,6 +829,61 @@ var offset = pline.Offset(1, EndType.Square);
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polyline_SharedSegments_" data-uid="Elements.Geometry.Polyline.SharedSegments*"></a>
+  <h4 id="Elements_Geometry_Polyline_SharedSegments_Elements_Geometry_Polyline_Elements_Geometry_Polyline_System_Boolean_" data-uid="Elements.Geometry.Polyline.SharedSegments(Elements.Geometry.Polyline,Elements.Geometry.Polyline,System.Boolean)">SharedSegments(Polyline, Polyline, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Identify any shared segments between two polylines. Fake text change.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;(int indexOnA, int indexOnB)&gt; SharedSegments(Polyline a, Polyline b, bool isClosed = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first polyline to compare.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second polyline to compare.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isClosed</span></td>
+        <td><p>Flag as closed to include segment between first and last vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;&gt;</td>
+        <td><p>Returns a list of tuples of indices for the segments that match in each polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_ToString_" data-uid="Elements.Geometry.Polyline.ToString*"></a>
   <h4 id="Elements_Geometry_Polyline_ToString" data-uid="Elements.Geometry.Polyline.ToString">ToString()</h4>
   <div class="markdown level1 summary"><p>Get a string representation of this polyline.</p>
@@ -926,6 +1038,51 @@ var offset = pline.Offset(1, EndType.Square);
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_TransformSegment_" data-uid="Elements.Geometry.Polyline.TransformSegment*"></a>
+  <h4 id="Elements_Geometry_Polyline_TransformSegment_Elements_Geometry_Transform_System_Int32_System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Polyline.TransformSegment(Elements.Geometry.Transform,System.Int32,System.Boolean,System.Boolean)">TransformSegment(Transform, Int32, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Transform a specified segment of this polyline in place.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void TransformSegment(Transform t, int i, bool isClosed = false, bool isPlanar = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">t</span></td>
+        <td><p>The transform. If it is not within the polygon plane, then an exception will be thrown.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">i</span></td>
+        <td><p>The segment to transform. If it does not exist, then no work will be done.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isClosed</span></td>
+        <td><p>If set to true, the segment between the start end end point will be considered a valid target.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isPlanar</span></td>
+        <td><p>If set to true, an exception will be thrown if the resultant shape is no longer planar.</p>
+</td>
       </tr>
     </tbody>
   </table>

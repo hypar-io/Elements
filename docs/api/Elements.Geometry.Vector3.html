@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct Vector3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -87,9 +87,6 @@
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.ValueType.Equals(System.Object)</span>
-    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
     </div>
@@ -174,7 +171,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Vector3(double x, double y, double z)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -261,7 +259,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double X { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;X&quot;, Required = Required.Always)]
+public double X { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -309,7 +308,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Y { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Y&quot;, Required = Required.Always)]
+public double Y { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -357,7 +357,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Z { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Z&quot;, Required = Required.Always)]
+public double Z { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1079,6 +1080,51 @@ polyline, and output the location of the closest point on that polyline.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Vector3_Equals_" data-uid="Elements.Geometry.Vector3.Equals*"></a>
+  <h4 id="Elements_Geometry_Vector3_Equals_System_Object_" data-uid="Elements.Geometry.Vector3.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"><p>Is this vector equal to the provided vector?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The vector to test.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Returns true if all components of the two vectors are within Epsilon, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
   <a id="Elements_Geometry_Vector3_GetHashCode_" data-uid="Elements.Geometry.Vector3.GetHashCode*"></a>
   <h4 id="Elements_Geometry_Vector3_GetHashCode" data-uid="Elements.Geometry.Vector3.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the vector.</p>
@@ -1107,7 +1153,7 @@ polyline, and output the location of the closest point on that polyline.</p>
   <div><span class="xref">System.ValueType.GetHashCode()</span></div>
   <a id="Elements_Geometry_Vector3_IsAlmostEqualTo_" data-uid="Elements.Geometry.Vector3.IsAlmostEqualTo*"></a>
   <h4 id="Elements_Geometry_Vector3_IsAlmostEqualTo_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)">IsAlmostEqualTo(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Determine whether this vector's components are equal to those of v, within tolerance.</p>
+  <div class="markdown level1 summary"><p>Determine whether this vector's components are equal to those of v, within Epsilon.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

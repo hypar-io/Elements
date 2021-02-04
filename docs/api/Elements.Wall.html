@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Wall
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -90,6 +90,7 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
     <div><a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
   </div>
   <div class="inheritedMembers">
@@ -114,6 +115,12 @@
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -141,7 +148,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Wall_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Wall : GeometricElement, IHasOpenings</code></pre>
+    <pre><code class="lang-csharp hljs">public class Wall : GeometricElement, INotifyPropertyChanged, IHasOpenings</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -152,7 +159,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Wall(Profile profile, double height, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Wall(Profile profile, double height, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -354,6 +362,9 @@
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
   <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
   <div>
       <a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
   </div>
