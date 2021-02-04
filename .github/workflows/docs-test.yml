@@ -9,7 +9,7 @@ jobs:
   build-bump-publish:
     runs-on: windows-2019
     steps:
-      - name: Checkout repo.
+      - name: Checkout repo
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -20,7 +20,10 @@ jobs:
       - name: Setup docfx
         run: choco install docfx -y
       - name: Build docs
-        run: ./build_docs.sh
+        run: |
+          rm -rf ./docs
+          dotnet test --filter Category=Examples
+          docfx ./doc/docfx.json -f --serve
       - name: Commit docs
         uses: EndBug/add-and-commit@v7
         with:
