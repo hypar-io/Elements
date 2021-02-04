@@ -117,6 +117,7 @@ namespace Elements.Tests
         [Fact]
         public void Grid2dSerializes()
         {
+            Name = "grid2d serializes";
             var polyline = new Polyline(new[] {
                 new Vector3(0,0,0),
                 new Vector3(10,2,0),
@@ -132,6 +133,9 @@ namespace Elements.Tests
             var json = JsonConvert.SerializeObject(grid2d);
             var deserialized = JsonConvert.DeserializeObject<Grid2d>(json);
             Assert.Equal(grid2d.GetCells().Count, deserialized.GetCells().Count);
+
+            var grid2dElem = new Grid2dElement(grid2d, Guid.NewGuid(), "Grid");
+            Model.AddElement(grid2dElem);
         }
 
         [Fact]
