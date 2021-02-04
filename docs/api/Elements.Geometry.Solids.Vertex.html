@@ -77,7 +77,7 @@
   
   <h1 id="Elements_Geometry_Solids_Vertex" data-uid="Elements.Geometry.Solids.Vertex" class="text-break">Class Vertex
   </h1>
-  <div class="markdown level0 summary"><p>A mesh vertex.</p>
+  <div class="markdown level0 summary"><p>A Solid Vertex.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -112,118 +112,8 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class Vertex</code></pre>
   </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  <a id="Elements_Geometry_Solids_Vertex__ctor_" data-uid="Elements.Geometry.Solids.Vertex.#ctor*"></a>
-  <h4 id="Elements_Geometry_Solids_Vertex__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Color_System_Int32_Elements_Geometry_UV_" data-uid="Elements.Geometry.Solids.Vertex.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Color,System.Int32,Elements.Geometry.UV)">Vertex(Vector3, Vector3, Color, Int32, UV)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vertex(Vector3 position, Vector3 normal, Color color, int index, UV uV)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">position</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">normal</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
-        <td><span class="parametername">color</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">index</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.UV.html">UV</a></td>
-        <td><span class="parametername">uV</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Solids_Vertex__ctor_" data-uid="Elements.Geometry.Solids.Vertex.#ctor*"></a>
-  <h4 id="Elements_Geometry_Solids_Vertex__ctor_Elements_Geometry_Vector3_System_Nullable_Elements_Geometry_Vector3__Elements_Geometry_Color_" data-uid="Elements.Geometry.Solids.Vertex.#ctor(Elements.Geometry.Vector3,System.Nullable{Elements.Geometry.Vector3},Elements.Geometry.Color)">Vertex(Vector3, Nullable&lt;Vector3&gt;, Color)</h4>
-  <div class="markdown level1 summary"><p>Create a vertex.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vertex(Vector3 position, Vector3? normal = default(Vector3? ), Color color = default(Color))</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">position</span></td>
-        <td><p>The position of the vertex.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">normal</span></td>
-        <td><p>The vertex's normal.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
-        <td><span class="parametername">color</span></td>
-        <td><p>The vertex's color.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Geometry_Solids_Vertex_Color_" data-uid="Elements.Geometry.Solids.Vertex.Color*"></a>
-  <h4 id="Elements_Geometry_Solids_Vertex_Color" data-uid="Elements.Geometry.Solids.Vertex.Color">Color</h4>
-  <div class="markdown level1 summary"><p>The vertex's color.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Color Color { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Solids_Vertex_HalfEdge_" data-uid="Elements.Geometry.Solids.Vertex.HalfEdge*"></a>
   <h4 id="Elements_Geometry_Solids_Vertex_HalfEdge" data-uid="Elements.Geometry.Solids.Vertex.HalfEdge">HalfEdge</h4>
   <div class="markdown level1 summary"><p>The HalfEdge which has this Vertex as its start.</p>
@@ -272,54 +162,6 @@
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Solids_Vertex_Index_" data-uid="Elements.Geometry.Solids.Vertex.Index*"></a>
-  <h4 id="Elements_Geometry_Solids_Vertex_Index" data-uid="Elements.Geometry.Solids.Vertex.Index">Index</h4>
-  <div class="markdown level1 summary"><p>The index of the vertex within a mesh.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Index { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Solids_Vertex_Normal_" data-uid="Elements.Geometry.Solids.Vertex.Normal*"></a>
-  <h4 id="Elements_Geometry_Solids_Vertex_Normal" data-uid="Elements.Geometry.Solids.Vertex.Normal">Normal</h4>
-  <div class="markdown level1 summary"><p>The vertex's normal.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Normal { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Solids_Vertex_Point_" data-uid="Elements.Geometry.Solids.Vertex.Point*"></a>
   <h4 id="Elements_Geometry_Solids_Vertex_Point" data-uid="Elements.Geometry.Solids.Vertex.Point">Point</h4>
   <div class="markdown level1 summary"><p>The location of the Vertex.</p>
@@ -340,78 +182,6 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Solids_Vertex_Position_" data-uid="Elements.Geometry.Solids.Vertex.Position*"></a>
-  <h4 id="Elements_Geometry_Solids_Vertex_Position" data-uid="Elements.Geometry.Solids.Vertex.Position">Position</h4>
-  <div class="markdown level1 summary"><p>The position of the vertex.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Position { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Solids_Vertex_Triangles_" data-uid="Elements.Geometry.Solids.Vertex.Triangles*"></a>
-  <h4 id="Elements_Geometry_Solids_Vertex_Triangles" data-uid="Elements.Geometry.Solids.Vertex.Triangles">Triangles</h4>
-  <div class="markdown level1 summary"><p>The triangles which contain this vertex.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;Triangle&gt; Triangles { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Solids_Vertex_UV_" data-uid="Elements.Geometry.Solids.Vertex.UV*"></a>
-  <h4 id="Elements_Geometry_Solids_Vertex_UV" data-uid="Elements.Geometry.Solids.Vertex.UV">UV</h4>
-  <div class="markdown level1 summary"><p>The texture coordinate of the vertex</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public UV UV { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.UV.html">UV</a></td>
         <td></td>
       </tr>
     </tbody>
