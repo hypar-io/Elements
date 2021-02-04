@@ -146,6 +146,7 @@ namespace Elements.Tests
             var json = JsonConvert.SerializeObject(grid);
             var deserialized = JsonConvert.DeserializeObject<Grid1d>(json);
             Assert.Equal(grid.GetCells().Count, deserialized.GetCells().Count);
+            Assert.Equal(0, (grid.Curve as Polyline).Start.DistanceTo((deserialized.Curve as Polyline).Start));
         }
 
         [Fact]

@@ -63,8 +63,8 @@ namespace Elements.Spatial
                 {
                     if (this.topLevelParentGrid != null)
                     {
-                        this.curve = this.toplevelParentCurve;
-                        return this.topLevelParentGrid.curve;
+                        this.curve = this.topLevelParentGrid.curve;
+                        return this.curve;
                     }
                     return null;
                 }
@@ -100,7 +100,7 @@ namespace Elements.Spatial
         private Grid1d topLevelParentGrid;
 
         [JsonProperty("TopLevelParentCurve", NullValueHandling=NullValueHandling.Ignore)]
-        private Curve toplevelParentCurve
+        private Curve topLevelParentCurve
         {
             get
             {
@@ -133,7 +133,7 @@ namespace Elements.Spatial
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public Grid1d(List<Grid1d> cells, string type, Domain1d domain, Curve topLevelParentCurve, Domain1d curveDomain)
         {
-            if (this.toplevelParentCurve != null)
+            if (topLevelParentCurve != null)
             {
                 // we're deserializing the toplevel grid
                 this.curve = topLevelParentCurve;
