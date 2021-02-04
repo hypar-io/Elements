@@ -538,7 +538,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Identify any shared segments between two polylines. Fake text change.
+        /// Identify any shared segments between two polylines.
         /// </summary>
         /// <param name="a">The first polyline to compare.</param>
         /// <param name="b">The second polyline to compare.</param>
