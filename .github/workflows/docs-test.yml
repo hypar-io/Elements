@@ -17,21 +17,10 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
-      - name: Setup mono
-        run: sudo apt install mono-complete
-      - name: Setup powershell
-        run: |
-          sudo apt update
-          sudo apt-get install -y wget apt-transport-https software-properties-common
-          wget https://github.com/PowerShell/PowerShell/releases/download/v7.1.1/powershell_7.1.1-1.ubuntu.20.04_amd64.deb
-          sudo dpkg -i powershell_7.1.1-1.ubuntu.20.04_amd64.deb
-          sudo apt-get install -f
       - name: Setup docfx
         run: |
-          wget https://github.com/dotnet/docfx/archive/v2.56.6.tar.gz -O docfx.tar.gz
-          sudo mkdir docfx
-          sudo tar -xf docfx.tar.gz -C docfx
-          sudo ./docfx/docfx-2.56.6/build.sh
+          sudo apt-get install -y wget apt-transport-https software-properties-common
+          brew install docfx
       - name: Get previous tag.
         id: version
         uses: "WyriHaximus/github-action-get-previous-tag@master"
