@@ -138,7 +138,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a transform by origin, X, Y, and Z axes.
+        /// Create a transform by origin, X, Y, and Z axes. Axes are automatically unitized — to create non-uniform transforms, use Transform.Scale.
         /// </summary>
         /// <param name="origin">The origin of the transform.</param>
         /// <param name="xAxis">The X axis of the transform.</param>
@@ -149,7 +149,7 @@ namespace Elements.Geometry
                          Vector3 yAxis,
                          Vector3 zAxis)
         {
-            this.Matrix = new Matrix(xAxis, yAxis, zAxis, origin);
+            this.Matrix = new Matrix(xAxis.Unitized(), yAxis.Unitized(), zAxis.Unitized(), origin);
         }
 
         /// <summary>
