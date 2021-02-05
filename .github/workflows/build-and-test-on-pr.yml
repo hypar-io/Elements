@@ -14,3 +14,36 @@ jobs:
           dotnet-version: 3.1.x
       - run: dotnet build -c release
       - run: dotnet test -c release
+
+  build-docs:
+    runs-on: windows-2019
+    needs: build-and-test
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Confirm ci should run
+        uses: atlwendy/retrieve-commit-messages-from-pr@v3
+        id: ci
+        with:
+          token: ${{ secrets.COMMIT_PAT }}
+      - name: Setup dotnet
+        if: steps.ci.outputs.shouldRun
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Setup docfx
+        if: steps.ci.outputs.shouldRun
+        run: choco install docfx -y
+      - name: Build docs
+        if: steps.ci.outputs.shouldRun
+        run: |
+          rm -r docs
+          dotnet test --filter Category=Examples
+          docfx ./doc/docfx.json -f --serve
+      - name: Commit docs
+        if: steps.ci.outputs.shouldRun
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: github-actions[bot]
+          author_email: github-actions[bot]@users.noreply.github.com
+          message: "update docs [skip ci]"

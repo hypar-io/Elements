@@ -52,30 +52,3 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.bump-alpha.outputs.next-version }}
-
-  build-docs:
-    runs-on: windows-2019
-    needs: build-bump-publish
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Get previous tag
-        id: version
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.x
-      - name: Setup docfx
-        run: choco install docfx -y
-      - name: Build docs
-        run: |
-          rm -r docs
-          dotnet test --filter Category=Examples
-          docfx ./doc/docfx.json -f --serve
-      - name: Commit docs
-        uses: EndBug/add-and-commit@v7
-        with:
-          message: "Update docs for Elements ${{ steps.version.outputs.tag }}"
