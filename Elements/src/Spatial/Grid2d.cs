@@ -390,7 +390,7 @@ namespace Elements.Spatial
                 }
                 return cells;
             }
-            private set => cells = value;
+            internal set => cells = value;
         }
 
         /// <summary>
@@ -586,7 +586,21 @@ namespace Elements.Spatial
 
         #endregion
 
-        #region Private Methods
+        #region Private/Internal Methods
+        /// <summary>
+        /// Invalidate the `Cells` property, used by child (axis) 1d grids to tell the parent that they've been updated.
+        /// This sort of change is not allowed if the sub-cells already have been further subdivided, as regenerating them
+        /// would wipe out these subcells, so in this case an error is thrown.
+        /// </summary>
+        internal void TryInvalidateGrid()
+        {
+            if (this.cells != null && this.CellsFlat.Any(c => !c.IsSingleCell))
+            {
+                throw new NotSupportedException("An attempt was made to modify the underlying U or V grid of a 2D Grid, after some of its cells had already been further subdivided.");
+            }
+            this.cells = null;
+        }
+
         private void InitializeUV(Domain1d uDomain, Domain1d vDomain)
         {
             var uCrv = new Line(new Vector3(uDomain.Min, 0, 0), new Vector3(uDomain.Max, 0, 0));
