@@ -21,6 +21,20 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Get latest commit message
+        if: github.event_name == 'push'
+        run: |
+          echo "$(git log --format=%B -n 1 HEAD)"
+          set MESSAGE="$(git log --format=%B -n 1 HEAD)"
+          echo %MESSAGE%
+      - name: Get latest commit message
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "$(git log --format=%B -n 1 HEAD^2)"
+          set MESSAGE="$(git log --format=%B -n 1 HEAD)"
+          echo %MESSAGE%
       - name: Confirm ci should run
         uses: atlwendy/retrieve-commit-messages-from-pr@v3
         id: ci
