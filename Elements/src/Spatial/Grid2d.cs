@@ -346,6 +346,33 @@ namespace Elements.Spatial
             this.V.SetParent(this);
         }
 
+        /// <summary>
+        /// Create a grid from a boundary and custom U and V grids
+        /// </summary>
+        /// <param name="boundary"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public Grid2d(Polygon boundary, Grid1d u, Grid1d v) : this(new Polygon[] { boundary }, u, v)
+        {
+
+        }
+
+        /// <summary>
+        /// Create a grid from a list of boundaries and custom U and V grids
+        /// </summary>
+        /// <param name="boundaries"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        public Grid2d(IList<Polygon> boundaries, Grid1d u, Grid1d v)
+        {
+            this.SetBoundaries(boundaries);
+            this.U = u;
+            this.V = v;
+            this.U.SetParent(this);
+            this.V.SetParent(this);
+        }
+
         #endregion
 
         #region Split Methods
