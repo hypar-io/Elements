@@ -122,7 +122,10 @@ namespace Elements.Serialization.glTF
             return b64;
         }
 
-        internal static Dictionary<string, int> AddMaterials(this Gltf gltf, IList<Material> materials, List<byte> buffer, List<BufferView> bufferViews)
+        internal static Dictionary<string, int> AddMaterials(this Gltf gltf,
+                                                             IList<Material> materials,
+                                                             List<byte> buffer,
+                                                             List<BufferView> bufferViews)
         {
             var materialDict = new Dictionary<string, int>();
             var newMaterials = new List<glTFLoader.Schema.Material>();
@@ -152,12 +155,13 @@ namespace Elements.Serialization.glTF
                 m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
                 m.DoubleSided = material.DoubleSided;
+                
                 m.Name = material.Name;
 
                 if (material.Unlit)
                 {
                     m.Extensions = new Dictionary<string, object>{
-                        {"KHR_materials_unlit", new Dictionary<string, object>{}}
+                        {"KHR_materials_unlit", new Dictionary<string, object>{}},
                     };
                 }
                 else
@@ -178,7 +182,10 @@ namespace Elements.Serialization.glTF
                     m.PbrMetallicRoughness.BaseColorTexture = ti;
                     ti.Index = texId;
                     ti.TexCoord = 0;
-                    ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+                    if(!material.Unlit)
+                    {
+                        ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+                    }
 
                     if (textureDict.ContainsKey(material.Texture))
                     {

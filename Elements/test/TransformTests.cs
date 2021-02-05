@@ -119,6 +119,7 @@ namespace Elements.Tests
         {
             this.Name = "AllTransformsRunInTheSameDirection";
 
+            var m = new Material("test", Colors.White, 0.5f, 0.0f, "./Textures/Concrete.jpg", true);
             var curves = new List<Curve>();
 
             var line = new Line(Vector3.Origin, new Vector3(1, 2, 5));
@@ -142,7 +143,7 @@ namespace Elements.Tests
             var lp = Polygon.L(1, 1.5, 0.1);
             foreach (var curve in curves)
             {
-                this.Model.AddElement(new Beam(curve, lp));
+                this.Model.AddElement(new Beam(curve, lp, m));
                 this.Model.AddElement(new ModelCurve(curve));
                 Transform last = null;
                 for (var i = 0.0; i <= 1.0; i += 0.1)
@@ -166,14 +167,14 @@ namespace Elements.Tests
             var upT = centerLine.TransformAt(0);
             this.Model.AddElements(upT.ToModelCurves());
 
-            var beam = new Beam(centerLine, Polygon.Rectangle(0.1, 0.1));
+            var beam = new Beam(centerLine, Polygon.Rectangle(0.1, 0.1), m);
             this.Model.AddElement(beam);
 
             var centerLineRev = centerLine.Reversed().Transformed(new Transform(new Vector3(2, 0, 0)));
             var downT = centerLineRev.TransformAt(0);
             this.Model.AddElements(downT.ToModelCurves());
 
-            var beamDown = new Beam(centerLineRev, Polygon.Rectangle(0.1, 0.1));
+            var beamDown = new Beam(centerLineRev, Polygon.Rectangle(0.1, 0.1), m);
             this.Model.AddElement(beamDown);
 
             Assert.Equal(upT.YAxis, downT.YAxis.Negate());

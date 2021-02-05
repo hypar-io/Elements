@@ -29,7 +29,6 @@ namespace Elements.Geometry
             out double[] vmax, out double[] vmin, out double[] nmin, out double[] nmax,
             out float[] cmin, out float[] cmax, out ushort imin, out ushort imax, out double[] uvmin, out double[] uvmax)
         {
-
             var tessellations = new Tess[csg.Polygons.Count];
 
             var fi = 0;
@@ -65,9 +64,8 @@ namespace Elements.Geometry
             nmin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             nmax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
 
-            // TODO: Set this properly when solids get UV coordinates.
-            uvmin = new double[2] { 0, 0 };
-            uvmax = new double[2] { 0, 0 };
+            uvmin = new double[2] { double.MaxValue, double.MaxValue };
+            uvmax = new double[2] { double.MinValue, double.MinValue };
 
             imax = ushort.MinValue;
             imin = ushort.MaxValue;
@@ -88,23 +86,56 @@ namespace Elements.Geometry
                 var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
                 var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
                 var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
-                var n = (b - a).Cross(c - a).Unitized();
+                var tmp = (b - a).Unitized();
+                var n = tmp.Cross(c - a).Unitized();
+
+                // Calculate the texture space basis vectors
+                // by using the longest edge as U and its perpendicular V 
+                // calculated from the normal.
+                // TODO: This parameterization strategy is weak and will lead to 
+                // unpleasant results in some scenarios. Ex: a brick pattern which
+                // should be horizontal to the ground, but turns sideways on skinny
+                // wall segments. Update this to support natural parameterization.
+                var e1 = (b - a);
+                var maxLength = e1.Length();
+                var uvOriginP = a;
+                for (var j = 0; j <= tess.Vertices.Count() - 1; j++)
+                {
+                    var start = tess.Vertices[j].Position.ToVector3();
+                    var end = j == tess.Vertices.Count() - 1 ? tess.Vertices[0].Position.ToVector3() : tess.Vertices[j + 1].Position.ToVector3();
+                    var test = start - end;
+                    var l = test.Length();
+                    if (l > maxLength)
+                    {
+                        e1 = test;
+                        maxLength = l;
+                        uvOriginP = start;
+                    }
+                }
+                e1 = e1.Unitized();
+                var e2 = e1.Cross(n).Negate();
 
                 for (var j = 0; j < tess.Vertices.Length; j++)
                 {
                     var v = tess.Vertices[j];
+                    var p = v.Position.ToVector3();
 
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.X), 0, vertexBuffer, vi, floatSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Y), 0, vertexBuffer, vi + floatSize, floatSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)v.Position.Z), 0, vertexBuffer, vi + 2 * floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)p.X), 0, vertexBuffer, vi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)p.Y), 0, vertexBuffer, vi + floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)p.Z), 0, vertexBuffer, vi + 2 * floatSize, floatSize);
 
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.X), 0, normalBuffer, vi, floatSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Y), 0, normalBuffer, vi + floatSize, floatSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
 
-                    // TODO: Update Solids to use something other than UV = {0,0}.
-                    System.Buffer.BlockCopy(BitConverter.GetBytes(0f), 0, uvBuffer, uvi, floatSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes(0f), 0, uvBuffer, uvi + floatSize, floatSize);
+                    // Texture coordinates are normalized
+                    // based on the length of the longest edge. Removing
+                    // this will cause textures to appear as unit length.
+                    var pRel = (p - uvOriginP).Unitized();
+                    var uu = e1.Dot(pRel); // / maxLength;
+                    var vv = e2.Dot(pRel); // / maxLength;
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)uu), 0, uvBuffer, uvi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)vv), 0, uvBuffer, uvi + floatSize, floatSize);
 
                     uvi += 2 * floatSize;
                     vi += 3 * floatSize;
@@ -123,10 +154,10 @@ namespace Elements.Geometry
                     nmin[1] = Math.Min(nmin[1], n.Y);
                     nmin[2] = Math.Min(nmin[2], n.Z);
 
-                    // uvmax[0] = Math.Max(uvmax[0], 0);
-                    // uvmax[1] = Math.Max(uvmax[1], 0);
-                    // uvmin[0] = Math.Min(uvmin[0], 0);
-                    // uvmin[1] = Math.Min(uvmin[1], 0);
+                    uvmax[0] = Math.Max(uvmax[0], uu);
+                    uvmax[1] = Math.Max(uvmax[1], vv);
+                    uvmin[0] = Math.Min(uvmin[0], uu);
+                    uvmin[1] = Math.Min(uvmin[1], vv);
                 }
 
                 for (var k = 0; k < tess.Elements.Length; k++)

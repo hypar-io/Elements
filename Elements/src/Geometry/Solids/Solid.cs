@@ -395,6 +395,9 @@ namespace Elements.Geometry.Solids
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
                 var faceMesh = new Mesh();
+                Vector3 e1 = Vector3.XAxis;
+                Vector3 e2 = Vector3.YAxis;
+
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
                     var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
@@ -408,9 +411,20 @@ namespace Elements.Geometry.Solids
                         c = transform.OfPoint(c);
                     }
 
-                    var v1 = faceMesh.AddVertex(a, new UV(), color: color);
-                    var v2 = faceMesh.AddVertex(b, new UV(), color: color);
-                    var v3 = faceMesh.AddVertex(c, new UV(), color: color);
+                    if (i == 0)
+                    {
+                        // Calculate the texture space basis vectors
+                        // from the first triangle. This is acceptable
+                        // for planar faces.
+                        // TODO: Update this when we support non-planar faces.
+                        e1 = (b - a).Unitized();
+                        e2 = e1.Cross((c - a).Unitized()).Cross(e1);
+                    }
+
+                    var v1 = faceMesh.AddVertex(a, new UV(e1.Dot(a), e2.Dot(a)), color: color);
+                    var v2 = faceMesh.AddVertex(b, new UV(e1.Dot(b), e2.Dot(b)), color: color);
+                    var v3 = faceMesh.AddVertex(c, new UV(e1.Dot(c), e2.Dot(c)), color: color);
+
                     faceMesh.AddTriangle(v1, v2, v3);
                 }
                 mesh.AddMesh(faceMesh);
