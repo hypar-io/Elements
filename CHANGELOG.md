@@ -7,6 +7,7 @@
 - `SolidOperationExtensions.TryIntersect(this IList<SolidOperation> ops, Plane plane, out List<Profile> profiles)`
 - `Profile.ToModelCurves()`
 - `Bbox3.ToModelCurves()`
+- `PolylineExtensions.ToPolylines(...)`
 
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
