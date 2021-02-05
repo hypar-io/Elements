@@ -23,33 +23,13 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 10
-      - name: Get latest commit message
-        if: github.event_name == 'push'
-        run: |
-          echo "$(git log --format=%B -n 1 HEAD)"
-          set MESSAGE="$(git log --format=%B -n 1 HEAD)"
-          echo %MESSAGE%
-      - name: Get latest commit message
-        if: github.event_name == 'pull_request'
-        run: |
-          echo "$(git log --format=%B -n 1 HEAD^2)"
-          set MESSAGE="$(git log --format=%B -n 1 HEAD)"
-          echo %MESSAGE%
-      - name: Confirm ci should run
-        uses: atlwendy/retrieve-commit-messages-from-pr@v3
-        id: ci
-        with:
-          token: ${{ secrets.COMMIT_PAT }}
       - name: Setup dotnet
-        if: steps.ci.outputs.shouldRun
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
       - name: Setup docfx
-        if: steps.ci.outputs.shouldRun
         run: choco install docfx -y
       - name: Build docs
-        if: steps.ci.outputs.shouldRun
         run: |
           rm -r docs
           dotnet test --filter Category=Examples
