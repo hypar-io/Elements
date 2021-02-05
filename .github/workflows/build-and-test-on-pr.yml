@@ -35,7 +35,6 @@ jobs:
           dotnet test --filter Category=Examples
           docfx ./doc/docfx.json -f --serve
       - name: Commit docs
-        if: steps.ci.outputs.shouldRun
         uses: EndBug/add-and-commit@v7
         with:
           author_name: github-actions[bot]
