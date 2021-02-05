@@ -42,12 +42,6 @@ jobs:
         run: echo "NUGET_VERSION=${{steps.bump-beta.outputs.next-version}}" >> $GITHUB_ENV
       - name: Build Elements
         run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
-      - name: Build docs
-        run: sh ./build_docs.sh
-      - name: Commit docs
-        uses: EndBug/add-and-commit@v7
-        with:
-          message: "Updated docs for Elements ${{ env.NUGET_VERISION }}"
       - name: Publish NuGet package.
         run: |
           dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
