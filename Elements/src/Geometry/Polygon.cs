@@ -426,7 +426,7 @@ namespace Elements.Geometry
             var polyFillType = PolyFillType.pftEvenOdd;
             if (voidTreatment == VoidTreatment.IgnoreInternalVoids)
             {
-                polyFillType = PolyFillType.pftPositive;
+                polyFillType = PolyFillType.pftNonZero;
             }
             switch (booleanMode)
             {

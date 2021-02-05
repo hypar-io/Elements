@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Profile
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -203,7 +203,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -302,7 +303,8 @@ be used as voids.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon Perimeter { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Perimeter&quot;, Required = Required.AllowNull)]
+public Polygon Perimeter { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -326,7 +328,8 @@ be used as voids.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Voids&quot;, Required = Required.AllowNull)]
+public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -706,6 +709,10 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_Profile_Elements_Geometry_Transform_Elements_Material_">ModelCurveExtensions.ToModelCurves(Profile, Transform, Material)</a>
   </div>
 </article>
           </div>

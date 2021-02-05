@@ -12204,6 +12204,18 @@ references:
   commentId: T:Elements.ModelCurveExtensions
   fullName: Elements.ModelCurveExtensions
   nameWithType: ModelCurveExtensions
+- uid: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.BBox3,Elements.Geometry.Transform,Elements.Material)
+  name: ToModelCurves(BBox3, Transform, Material)
+  href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_BBox3_Elements_Geometry_Transform_Elements_Material_
+  commentId: M:Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.BBox3,Elements.Geometry.Transform,Elements.Material)
+  fullName: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.BBox3, Elements.Geometry.Transform, Elements.Material)
+  nameWithType: ModelCurveExtensions.ToModelCurves(BBox3, Transform, Material)
+- uid: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Profile,Elements.Geometry.Transform,Elements.Material)
+  name: ToModelCurves(Profile, Transform, Material)
+  href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_Profile_Elements_Geometry_Transform_Elements_Material_
+  commentId: M:Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Profile,Elements.Geometry.Transform,Elements.Material)
+  fullName: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Profile, Elements.Geometry.Transform, Elements.Material)
+  nameWithType: ModelCurveExtensions.ToModelCurves(Profile, Transform, Material)
 - uid: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Transform,Elements.Geometry.Transform)
   name: ToModelCurves(Transform, Transform)
   href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_Transform_Elements_Geometry_Transform_
