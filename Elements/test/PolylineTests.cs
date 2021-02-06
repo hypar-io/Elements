@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Elements.Tests;
 using Xunit;
@@ -74,5 +75,42 @@ namespace Elements.Geometry.Tests
 
             Assert.Empty(matches);
         }
+
+        [Fact]
+        public void LinesCanBeJoinedIntoPolylines()
+        {
+            var segments = new List<Line>();
+            for (var x = 0; x < 3; x++)
+            {
+                for (var y = 0; y < 3; y++)
+                {
+                    var p = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(x * 3, y * 3)));
+                    segments.AddRange(p.Segments());
+                }
+            }
+
+            segments.Shuffle();
+
+            var plines = segments.ToPolylines();
+            Assert.Equal(9, plines.Count);
+        }
     }
+
+    internal static class ListExtensions
+    {
+        private static Random rng = new Random();
+        internal static void Shuffle<T>(this IList<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
+    }
+
 }
