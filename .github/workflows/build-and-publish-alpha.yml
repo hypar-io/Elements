@@ -17,10 +17,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.x
-      - name: Setup mono
-        run: sudo apt install mono-complete
-      - name: Setup docfx
-        run: brew install docfx
       - name: Get previous tag.
         id: version
         uses: "WyriHaximus/github-action-get-previous-tag@master"
@@ -46,12 +42,6 @@ jobs:
         run: echo "NUGET_VERSION=${{steps.bump-beta.outputs.next-version}}" >> $GITHUB_ENV
       - name: Build Elements
         run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
-      - name: Build docs
-        run: sh ./build_docs.sh
-      - name: Commit docs
-        uses: EndBug/add-and-commit@v7
-        with:
-          message: "Updated docs for Elements ${{ env.NUGET_VERISION }}"
       - name: Publish NuGet package.
         run: |
           dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
@@ -62,30 +52,3 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.bump-alpha.outputs.next-version }}
-
-  build-docs:
-    runs-on: windows-2019
-    needs: build-bump-publish
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Get previous tag
-        id: version
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.x
-      - name: Setup docfx
-        run: choco install docfx -y
-      - name: Build docs
-        run: |
-          rm -r docs
-          dotnet test --filter Category=Examples
-          docfx ./doc/docfx.json -f --serve
-      - name: Commit docs
-        uses: EndBug/add-and-commit@v7
-        with:
-          message: "Update docs for Elements ${{ steps.version.outputs.tag }}"
