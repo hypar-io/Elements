@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Elements.Geometry;
+using Newtonsoft.Json;
 
 namespace Elements.Spatial
 {
@@ -12,6 +13,7 @@ namespace Elements.Spatial
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid1dTests.cs?name=example)]
     /// </example>
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class Grid1d
     {
         #region Properties
@@ -24,6 +26,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
+        [JsonProperty("Cells", NullValueHandling=NullValueHandling.Ignore)]
         public List<Grid1d> Cells
         {
             get => cells;
@@ -43,6 +46,31 @@ namespace Elements.Spatial
         /// </summary>
         public Domain1d Domain { get; }
 
+        /// <summary>
+        /// The base curve at the top level of this grid.
+        /// </summary>
+        /// <value></value>
+        [JsonIgnore]
+        public Curve Curve
+        {
+            get
+            {
+                if (this.curve != null)
+                {
+                    return this.curve;
+                }
+                else
+                {
+                    if (this.topLevelParentGrid != null)
+                    {
+                        this.curve = this.topLevelParentGrid.curve;
+                        return this.curve;
+                    }
+                    return null;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Returns true if this 1D Grid has no subdivisions / sub-grids. 
@@ -56,20 +84,66 @@ namespace Elements.Spatial
         // The curve this was generated from, often a line.
         // subdivided cells maintain the complete original curve,
         // rather than a subcurve. 
-        internal readonly Curve curve;
+        internal Curve curve;
 
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
         // domain back to the original curve.
-        private readonly Domain1d curveDomain;
+        [JsonProperty("CurveDomain")]
+        internal readonly Domain1d curveDomain;
 
         // if this 1d grid is the axis of a 2d grid, this is where we store that reference. If not, it will be null
         private Grid2d parent;
+
+        // if this is a cell belonging to a parent grid, this is where we store the very topmost grid. This
+        // is useful in serialization so we only store the base curve once. 
+        private Grid1d topLevelParentGrid;
+
+        [JsonProperty("TopLevelParentCurve", NullValueHandling=NullValueHandling.Ignore)]
+        private Curve topLevelParentCurve
+        {
+            get
+            {
+                // if we ARE the top level grid, we have no top-level grid, so we return the curve
+                if (this.topLevelParentGrid == null)
+                {
+                    return this.curve;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
         private List<Grid1d> cells;
 
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Do not use this constructor — it is only for serialization purposes.
+        /// </summary>
+        /// <param name="cells"></param>
+        /// <param name="type"></param>
+        /// <param name="domain"></param>
+        /// <param name="topLevelParentCurve"></param>
+        /// <param name="curveDomain"></param>
+        [JsonConstructor]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public Grid1d(List<Grid1d> cells, string type, Domain1d domain, Curve topLevelParentCurve, Domain1d curveDomain)
+        {
+            if (topLevelParentCurve != null)
+            {
+                // we're deserializing the toplevel grid
+                this.curve = topLevelParentCurve;
+            }
+
+            this.curveDomain = curveDomain;
+            this.Type = type;
+            this.Domain = domain;
+            this.Cells = cells;
+        }
 
         /// <summary>
         /// Default constructor with optional length parameter
@@ -121,12 +195,13 @@ namespace Elements.Spatial
         /// <summary>
         /// This constructor is only for internal use by subdivision / split methods. 
         /// </summary>
-        /// <param name="curve">The entire curve of the parent grid</param>
+        /// <param name="topLevelParent">The top level grid1d, containing the base curve</param>
         /// <param name="domain">The domain of the new subdivided segment</param>
         /// <param name="curveDomain">The entire domain of the parent grid's curve</param>
-        private Grid1d(Curve curve, Domain1d domain, Domain1d curveDomain)
+        private Grid1d(Grid1d topLevelParent, Domain1d domain, Domain1d curveDomain)
         {
-            this.curve = curve;
+            this.topLevelParentGrid = topLevelParent;
+            this.curve = topLevelParent.curve;
             this.curveDomain = curveDomain;
             Domain = domain;
         }
@@ -178,8 +253,8 @@ namespace Elements.Spatial
                 var newDomains = Domain.SplitAt(position);
                 Cells = new List<Grid1d>
                 {
-                    new Grid1d(curve, newDomains[0], curveDomain),
-                    new Grid1d(curve, newDomains[1], curveDomain)
+                    new Grid1d(this, newDomains[0], curveDomain),
+                    new Grid1d(this, newDomains[1], curveDomain)
                 };
             }
             else
@@ -206,8 +281,8 @@ namespace Elements.Spatial
                     var newDomains = cellToSplit.Domain.SplitAt(position);
                     var cellsToInsert = new List<Grid1d>
                     {
-                        new Grid1d(curve, newDomains[0], curveDomain),
-                        new Grid1d(curve, newDomains[1], curveDomain)
+                        new Grid1d(this, newDomains[0], curveDomain),
+                        new Grid1d(this, newDomains[1], curveDomain)
                     };
                     Cells.RemoveAt(index);
                     cellsToInsert.ForEach(c => c.Cells = new List<Grid1d>());
@@ -305,8 +380,8 @@ namespace Elements.Spatial
             {
                 point = parent.toGrid.OfPoint(point);
             }
-            var A = curve.PointAt(0);
-            var B = curve.PointAt(1);
+            var A = Curve.PointAt(0);
+            var B = Curve.PointAt(1);
             var C = point;
             var AB = B - A;
             AB = AB.Unitized();
@@ -349,7 +424,7 @@ namespace Elements.Spatial
             }
 
             var newDomains = Domain.DivideByCount(n);
-            Cells = new List<Grid1d>(newDomains.Select(d => new Grid1d(curve, d, curveDomain)));
+            Cells = new List<Grid1d>(newDomains.Select(d => new Grid1d(this, d, curveDomain)));
         }
 
         /// <summary>
@@ -590,14 +665,14 @@ namespace Elements.Spatial
 
         internal Vector3 Evaluate(double t)
         {
-            if (curve != null)
+            if (Curve != null)
             {
                 var tNormalized = t.MapFromDomain(curveDomain);
                 if (tNormalized > 1 || tNormalized < 0)
                 {
                     throw new Exception("t must be in the curve domain.");
                 }
-                return curve.PointAt(tNormalized);
+                return Curve.PointAt(tNormalized);
             }
             else
             {
@@ -665,9 +740,9 @@ namespace Elements.Spatial
 
         internal Vector3 Direction()
         {
-            if (curve != null)
+            if (Curve != null)
             {
-                return (curve.PointAt(1) - curve.PointAt(0)).Unitized();
+                return (Curve.PointAt(1) - Curve.PointAt(0)).Unitized();
             }
             else
             {
@@ -677,7 +752,7 @@ namespace Elements.Spatial
 
         internal Vector3 StartPoint()
         {
-            return curve.PointAt(curveDomain.Min);
+            return Curve.PointAt(curveDomain.Min);
         }
 
         #endregion
@@ -689,6 +764,7 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="i">The index</param>
         /// <returns>A Grid1d representing the selected cell/segment.</returns>
+        [JsonIgnore]
         public Grid1d this[int i]
         {
             get
@@ -770,7 +846,7 @@ namespace Elements.Spatial
         {
             var values = DomainsToSequence(recursive);
             var t = values.Select(v => v.MapFromDomain(curveDomain));
-            var pts = t.Select(t0 => curve.TransformAt(t0).Origin).ToList();
+            var pts = t.Select(t0 => Curve.TransformAt(t0).Origin).ToList();
             return pts;
         }
 
@@ -807,7 +883,7 @@ namespace Elements.Spatial
         /// <returns>A curve representing the extents of this grid / cell.</returns>
         public Curve GetCellGeometry()
         {
-            if (curve == null)
+            if (Curve == null)
             {
                 //I don't think this should ever happen
                 return new Line(new Vector3(Domain.Min, 0, 0), new Vector3(Domain.Max, 0, 0));
@@ -818,8 +894,8 @@ namespace Elements.Spatial
             var t1 = Domain.Min.MapFromDomain(curveDomain);
             var t2 = Domain.Max.MapFromDomain(curveDomain);
 
-            var x1 = curve.TransformAt(t1);
-            var x2 = curve.TransformAt(t2);
+            var x1 = Curve.TransformAt(t1);
+            var x2 = Curve.TransformAt(t2);
 
             return new Line(x1.Origin, x2.Origin);
 
@@ -841,7 +917,7 @@ namespace Elements.Spatial
 
         internal Grid1d SpawnSubGrid(Domain1d domain)
         {
-            return new Grid1d(curve, domain, curveDomain);
+            return new Grid1d(this, domain, curveDomain);
         }
 
         #endregion

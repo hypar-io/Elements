@@ -12900,6 +12900,19 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.ClosestPosition
   nameWithType: Grid1d.ClosestPosition
+- uid: Elements.Spatial.Grid1d.Curve
+  name: Curve
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Curve
+  commentId: P:Elements.Spatial.Grid1d.Curve
+  fullName: Elements.Spatial.Grid1d.Curve
+  nameWithType: Grid1d.Curve
+- uid: Elements.Spatial.Grid1d.Curve*
+  name: Curve
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Curve_
+  commentId: Overload:Elements.Spatial.Grid1d.Curve
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.Curve
+  nameWithType: Grid1d.Curve
 - uid: Elements.Spatial.Grid1d.DivideByApproximateLength(System.Double,Elements.Spatial.EvenDivisionMode)
   name: DivideByApproximateLength(Double, EvenDivisionMode)
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByApproximateLength_System_Double_Elements_Spatial_EvenDivisionMode_

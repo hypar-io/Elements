@@ -7,6 +7,7 @@
 - Bbox3.ToModelCurves()
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
+- Make Grid1d and Grid2d serializable
 - new Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis) did not unitize its axes, this is fixed.
 
 ### Fixed
