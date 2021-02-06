@@ -652,7 +652,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Modify in place a list of vertices, removing its sequential duplicates. 
+        /// Remove sequential duplicates from a list of points. 
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="wrap">Whether or not to assume a closed shape like a polygon. If true, the last vertex will be compared to the first, and deleted if identical.</param>
