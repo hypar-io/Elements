@@ -7,6 +7,7 @@
 - Bbox3.ToModelCurves()
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
+- Prevent the Polygon / Polyline constructors from throwing an exception on duplicate vertices, by removing duplicates automatically.
 
 ### Fixed
 - Fixed a bug where Polygon.UnionAll was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
