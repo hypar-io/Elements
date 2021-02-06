@@ -328,7 +328,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "3pYN4CO68rpqP+s/62WMlQ=="
+          "hash": "z3kx3QfRozQyRv47JypzAQ=="
         }
       },
       "is_incremental": false,
@@ -4044,7 +4044,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 141,
+          "total_file_count": 142,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

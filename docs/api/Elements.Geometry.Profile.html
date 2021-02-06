@@ -459,6 +459,61 @@ be used as voids.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Profile_Difference_" data-uid="Elements.Geometry.Profile.Difference*"></a>
+  <h4 id="Elements_Geometry_Profile_Difference_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_" data-uid="Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)">Difference(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Profile&gt;, Double)</h4>
+  <div class="markdown level1 summary"><p>Perform a difference operation on two sets of profiles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Difference(IEnumerable&lt;Profile&gt; firstSet, IEnumerable&lt;Profile&gt; secondSet, double tolerance = 1E-05)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="parametername">firstSet</span></td>
+        <td><p>The profiles to subtract from.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="parametername">secondSet</span></td>
+        <td><p>The profiles to subtract with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional tolerance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><p>A new list of profiles comprising the first set minus the second set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Profile_Equals_" data-uid="Elements.Geometry.Profile.Equals*"></a>
   <h4 id="Elements_Geometry_Profile_Equals_Elements_Geometry_Profile_" data-uid="Elements.Geometry.Profile.Equals(Elements.Geometry.Profile)">Equals(Profile)</h4>
   <div class="markdown level1 summary"><p>Is this profile equal to the provided profile?</p>
@@ -498,6 +553,61 @@ be used as voids.</p>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Profile_Intersection_" data-uid="Elements.Geometry.Profile.Intersection*"></a>
+  <h4 id="Elements_Geometry_Profile_Intersection_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_" data-uid="Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)">Intersection(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Profile&gt;, Double)</h4>
+  <div class="markdown level1 summary"><p>Constructs the intersections between two sets of profiles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Intersection(IEnumerable&lt;Profile&gt; firstSet, IEnumerable&lt;Profile&gt; secondSet, double tolerance = 1E-05)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="parametername">firstSet</span></td>
+        <td><p>The first set of profiles to intersect with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="parametername">secondSet</span></td>
+        <td><p>The second set of profiles to intersect with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional tolerance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><p>A new list of profiles comprising the overlap between the first set and the second set.</p>
+</td>
       </tr>
     </tbody>
   </table>

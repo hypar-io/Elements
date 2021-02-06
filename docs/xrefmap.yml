@@ -5518,6 +5518,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Contains
   nameWithType: Profile.Contains
+- uid: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
+  name: Difference(IEnumerable<Profile>, IEnumerable<Profile>, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Difference_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_
+  commentId: M:Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
+  name.vb: Difference(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
+  fullName: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Double)
+  nameWithType: Profile.Difference(IEnumerable<Profile>, IEnumerable<Profile>, Double)
+  nameWithType.vb: Profile.Difference(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
+- uid: Elements.Geometry.Profile.Difference*
+  name: Difference
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Difference_
+  commentId: Overload:Elements.Geometry.Profile.Difference
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Difference
+  nameWithType: Profile.Difference
 - uid: Elements.Geometry.Profile.Equals(Elements.Geometry.Profile)
   name: Equals(Profile)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Equals_Elements_Geometry_Profile_
@@ -5531,6 +5547,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Equals
   nameWithType: Profile.Equals
+- uid: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
+  name: Intersection(IEnumerable<Profile>, IEnumerable<Profile>, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Intersection_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_
+  commentId: M:Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
+  name.vb: Intersection(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
+  fullName: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Double)
+  nameWithType: Profile.Intersection(IEnumerable<Profile>, IEnumerable<Profile>, Double)
+  nameWithType.vb: Profile.Intersection(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
+- uid: Elements.Geometry.Profile.Intersection*
+  name: Intersection
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Intersection_
+  commentId: Overload:Elements.Geometry.Profile.Intersection
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Intersection
+  nameWithType: Profile.Intersection
 - uid: Elements.Geometry.Profile.OrientVoids
   name: OrientVoids()
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_OrientVoids
@@ -5638,6 +5670,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Voids
   nameWithType: Profile.Voids
+- uid: Elements.Geometry.ProfileExtensions
+  name: ProfileExtensions
+  href: api/Elements.Geometry.ProfileExtensions.html
+  commentId: T:Elements.Geometry.ProfileExtensions
+  fullName: Elements.Geometry.ProfileExtensions
+  nameWithType: ProfileExtensions
 - uid: Elements.Geometry.Profiles
   name: Elements.Geometry.Profiles
   href: api/Elements.Geometry.Profiles.html
