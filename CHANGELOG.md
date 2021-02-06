@@ -2,9 +2,14 @@
 
 ## 0.8.3
 
+### Added
+- Profile.ToModelCurves()
+- Bbox3.ToModelCurves()
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 
+### Fixed
+- Fixed a bug where Polygon.UnionAll was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
 ## 0.8.2
 
 ### Changed
@@ -16,6 +21,7 @@
 
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
 - Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
+- Fixed an issue where updates to a `Grid2d`'s component `Grid1d` axes would not propagate to the `Grid2d`.  
 
 ### Added
 

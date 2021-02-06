@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "/Users/andrewheumann/Dev/elements/doc",
+  "source_base_path": "D:/a/Elements/Elements/doc",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -124,17 +124,6 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Csg.glb",
-      "output": {
-        "resource": {
-          "relative_path": "models/Elements_Geometry_Csg.glb"
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
       "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Geometry_Line.glb",
       "output": {
         "resource": {
@@ -223,17 +212,6 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_ModelPoints.glb",
-      "output": {
-        "resource": {
-          "relative_path": "models/Elements_ModelPoints.glb"
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
       "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Panel.glb",
       "output": {
         "resource": {
@@ -304,7 +282,7 @@
       "output": {
         ".html": {
           "relative_path": "C-Sharp.html",
-          "hash": "TFwWwiZmRi8V5liZ9SgSdQ=="
+          "hash": "omsJ3sTwUMRB6V2DkVdyQA=="
         }
       },
       "is_incremental": false,
@@ -316,7 +294,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/WhatIsElements.html",
-          "hash": "SR8+gUvdmZHwxU7XTfq3QQ=="
+          "hash": "2bqFWJgt1QijYYJ5bCHg/Q=="
         }
       },
       "is_incremental": false,
@@ -328,7 +306,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "a8ebwYUm7ROhjjFgx14Haw=="
+          "hash": "3pYN4CO68rpqP+s/62WMlQ=="
         }
       },
       "is_incremental": false,
@@ -340,7 +318,7 @@
       "output": {
         ".html": {
           "relative_path": "Excel.html",
-          "hash": "01Xeo6ZGqlsXHB+rsxER0A=="
+          "hash": "f5M5I5WOm+rC+UPEagz6xQ=="
         }
       },
       "is_incremental": false,
@@ -352,7 +330,7 @@
       "output": {
         ".html": {
           "relative_path": "Functions.html",
-          "hash": "P23CWakDLoj/g/q2yJxP+g=="
+          "hash": "uFw/8uWAZAGeZIAIsUNktA=="
         }
       },
       "is_incremental": false,
@@ -367,7 +345,7 @@
       "output": {
         ".html": {
           "relative_path": "Grasshopper.html",
-          "hash": "eO2eRHuhe7t6e+59ajuF3A=="
+          "hash": "Gqi2d6Q9x46i3LzzFcLLtg=="
         }
       },
       "is_incremental": false,
@@ -379,7 +357,7 @@
       "output": {
         ".html": {
           "relative_path": "Hub.html",
-          "hash": "wwr9v7uTn9HoReOVsVzL0w=="
+          "hash": "xz3IB/V67sREmbTEq+Xdcg=="
         }
       },
       "is_incremental": false,
@@ -394,7 +372,7 @@
       "output": {
         ".html": {
           "relative_path": "Hypar-CLI-Reference.html",
-          "hash": "2DnjcgeHpASkeV5xxTFwNw=="
+          "hash": "lLuAmVJMi7oO1XL867nnXw=="
         }
       },
       "is_incremental": false,
@@ -406,7 +384,7 @@
       "output": {
         ".html": {
           "relative_path": "InputSchema.html",
-          "hash": "MEbOJbp9U2INPaqoouOcGA=="
+          "hash": "Q7SvmzGeb7ZXu8LTahHADQ=="
         }
       },
       "is_incremental": false,
@@ -418,7 +396,7 @@
       "output": {
         ".html": {
           "relative_path": "Revit.html",
-          "hash": "9dWaf+WJ4/TgO78oeVawew=="
+          "hash": "HGrf190u2bKD63hq0yzk1w=="
         }
       },
       "is_incremental": false,
@@ -430,7 +408,7 @@
       "output": {
         ".html": {
           "relative_path": "Types.html",
-          "hash": "/ArpTAFta8bMF8Fg81TUXA=="
+          "hash": "boe5J4V9Sb2Emctyeu02ww=="
         }
       },
       "is_incremental": false,
@@ -442,7 +420,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Analysis.AnalysisMesh.html",
-          "hash": "rmA6PTWyCyCDk7f6V/aPVg=="
+          "hash": "yX8WXj8DlBNp9JX2ivnTlQ=="
         }
       },
       "is_incremental": false,
@@ -454,7 +432,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Analysis.ColorScale.html",
-          "hash": "By0ieg/uOxAXEfvpeaEP/g=="
+          "hash": "HP7HquoImaoAiuxHD4UDJQ=="
         }
       },
       "is_incremental": false,
@@ -466,7 +444,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Analysis.html",
-          "hash": "1oFW+ynoIrmaowEM8fngYQ=="
+          "hash": "YA8WEpfzfEiAPA5cL+49IA=="
         }
       },
       "is_incremental": false,
@@ -478,7 +456,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Beam.html",
-          "hash": "RjNQfQQPIFdIR6fQN4KdPw=="
+          "hash": "2yUwWBkBab169Jv4G/m1eg=="
         }
       },
       "is_incremental": false,
@@ -490,7 +468,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Brace.html",
-          "hash": "QR9v1NKR5hOP63Kkgxcwzw=="
+          "hash": "/HgR7kz0MFsujCy5AJII0g=="
         }
       },
       "is_incremental": false,
@@ -502,7 +480,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.BuiltInMaterials.html",
-          "hash": "7cRyGiY9i+xXQaHAEgEmtQ=="
+          "hash": "bT7gFeeRBgO54hI6zH4g3w=="
         }
       },
       "is_incremental": false,
@@ -514,7 +492,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Column.html",
-          "hash": "EFqr6Hh8fgX3TmfrW1Yp3Q=="
+          "hash": "0sMVa1lkXFqQaLCdP3AXig=="
         }
       },
       "is_incremental": false,
@@ -526,7 +504,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ContentCatalog.html",
-          "hash": "79YT9QpG4fBZmFXwaPGnJA=="
+          "hash": "vEin6K0agHdG91B4VumwYw=="
         }
       },
       "is_incremental": false,
@@ -538,7 +516,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ContentElement.html",
-          "hash": "cZPQZxs+UusnzBg9pupFeA=="
+          "hash": "6Yx6UbwMIPZOkpAHRsg1Pg=="
         }
       },
       "is_incremental": false,
@@ -550,7 +528,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.DirectionalLight.html",
-          "hash": "GCtZKW7x3xiPfwCeh4ZmOg=="
+          "hash": "pIFcKQL1v65bWUt4RjfL0Q=="
         }
       },
       "is_incremental": false,
@@ -562,7 +540,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Domain1d.html",
-          "hash": "sG984jocTZFkt2Y89/kS1Q=="
+          "hash": "U8g/MTUskdAwpnK5M3rWxg=="
         }
       },
       "is_incremental": false,
@@ -574,7 +552,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.DomainExtensions.html",
-          "hash": "b+iTaoFpb3o3+BsvMNZ9HA=="
+          "hash": "wRfC3qyAf6zLqbkJ5n3bng=="
         }
       },
       "is_incremental": false,
@@ -586,7 +564,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Element.html",
-          "hash": "ChoCuT1uLvMm6cDwOZ7j3g=="
+          "hash": "aiNxrOU8XSlFuBETfNbFng=="
         }
       },
       "is_incremental": false,
@@ -598,7 +576,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ElementInstance.html",
-          "hash": "CbJIBmtqNHoIq8NgW4cXjw=="
+          "hash": "2S/FiuPCaWqfA/ZmR9Hknw=="
         }
       },
       "is_incremental": false,
@@ -610,7 +588,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Floor.html",
-          "hash": "KcCQuM206Qi3xkmJxT8/LA=="
+          "hash": "AR5IhAnbnIegfQ9nuQeaVQ=="
         }
       },
       "is_incremental": false,
@@ -622,7 +600,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Frame.html",
-          "hash": "izb/iBrgNCkPYNWuDdTQqA=="
+          "hash": "Ohvrg6IkMjTpvn21Y251Lg=="
         }
       },
       "is_incremental": false,
@@ -634,7 +612,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.Feature.html",
-          "hash": "YeqxkhO24EqSIlJ/EqdQzA=="
+          "hash": "pNVUnH5s3JyV76h8zGKNFA=="
         }
       },
       "is_incremental": false,
@@ -646,7 +624,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.FeatureCollection.html",
-          "hash": "GgssFxdQQUeyBTD/iUxJTw=="
+          "hash": "xrFivwhPGUJFKzkNF75WUg=="
         }
       },
       "is_incremental": false,
@@ -658,7 +636,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.Geometry.html",
-          "hash": "S53Bn8dqKMfOrouIEtyZeg=="
+          "hash": "CYiQcd076Y49NZjeFXF1GA=="
         }
       },
       "is_incremental": false,
@@ -670,7 +648,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.GeometryCollection.html",
-          "hash": "9s3U3p9s4xffogwqTRX31A=="
+          "hash": "ste0TmMWV2WrnCa5nJDsXw=="
         }
       },
       "is_incremental": false,
@@ -682,7 +660,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.Line.html",
-          "hash": "/hLuMUK7ubZIN/yEhG5bLQ=="
+          "hash": "U6LLd1zqMN6A3FjVPww35w=="
         }
       },
       "is_incremental": false,
@@ -694,7 +672,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.LineString.html",
-          "hash": "2rATf02CFtAvICtDa28A5g=="
+          "hash": "hkCjpEaFUPtPx6e6m+3LxA=="
         }
       },
       "is_incremental": false,
@@ -706,7 +684,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.MultiLineString.html",
-          "hash": "lJTfRgPHLV6QB34H1YAEmA=="
+          "hash": "D0dw78Pvttpu+fMialRxrw=="
         }
       },
       "is_incremental": false,
@@ -718,7 +696,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.MultiPoint.html",
-          "hash": "iTWGHnQ/MsCoaEL0aXedBg=="
+          "hash": "5/jklKQImT3eotnosAKssw=="
         }
       },
       "is_incremental": false,
@@ -730,7 +708,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.MultiPolygon.html",
-          "hash": "5vh9ypGI0ZBLNi5UE139vA=="
+          "hash": "dT88SujoL5vmurwkLCN0sg=="
         }
       },
       "is_incremental": false,
@@ -742,7 +720,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.Point.html",
-          "hash": "ODu1D2ff/UV8mn/1es81bg=="
+          "hash": "jvz2MbrjFb6L4Jf43PIW1g=="
         }
       },
       "is_incremental": false,
@@ -754,7 +732,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.Polygon.html",
-          "hash": "GPKORr3/uk0EALPEjNUX6Q=="
+          "hash": "mTl9qe9hDNawwc3iY1BNQQ=="
         }
       },
       "is_incremental": false,
@@ -766,7 +744,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.Position.html",
-          "hash": "6yId00s1dLhzRYbnPaWnSQ=="
+          "hash": "zBuijGzz7heN4Xxg2gLoNw=="
         }
       },
       "is_incremental": false,
@@ -778,7 +756,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeoJSON.html",
-          "hash": "HZ78qO2F9epIVzNimBS9SQ=="
+          "hash": "xskgVZWvvv3zDenr/MYrOw=="
         }
       },
       "is_incremental": false,
@@ -790,7 +768,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.GeometricElement.html",
-          "hash": "kSXR54mn1jxPrZcfbeBaOA=="
+          "hash": "RRzA+LfoC1M4aFIePlEbHQ=="
         }
       },
       "is_incremental": false,
@@ -802,7 +780,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Arc.html",
-          "hash": "RXW+UL7Vo2Ei0sO0Gw9DIA=="
+          "hash": "/ixxZj65E9LDEH3GUPi0yg=="
         }
       },
       "is_incremental": false,
@@ -814,7 +792,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.BBox3.html",
-          "hash": "YnD535K6PR3r8m6cMuwvpA=="
+          "hash": "jMS72XMhBdH2GZ2ni22kDA=="
         }
       },
       "is_incremental": false,
@@ -826,7 +804,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Bezier.html",
-          "hash": "hG62KzU7oJBFJKNz1PJ0kg=="
+          "hash": "SAp3K94Gz/jfXwiyFGQRPA=="
         }
       },
       "is_incremental": false,
@@ -838,7 +816,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.BooleanMode.html",
-          "hash": "G23xCQb8s8nQFu4AGwZuew=="
+          "hash": "SP8JrhqUQ21dVYYEyJ0ycA=="
         }
       },
       "is_incremental": false,
@@ -850,7 +828,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Circle.html",
-          "hash": "C9vg8QXf3W1hG+HY/VuS9w=="
+          "hash": "wjqZSPNs9LoJpqB7L3bcWQ=="
         }
       },
       "is_incremental": false,
@@ -862,7 +840,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Color.html",
-          "hash": "jRzrklrzkWzBwTxDnGUwyg=="
+          "hash": "2M/UYi9R6+e/bN0uFz5wdA=="
         }
       },
       "is_incremental": false,
@@ -874,7 +852,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Colors.html",
-          "hash": "eB2pNS4dNf+htfSWYeaqaw=="
+          "hash": "/e191gLA9gvyTZjHjSChTQ=="
         }
       },
       "is_incremental": false,
@@ -886,7 +864,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Containment.html",
-          "hash": "2a4+WjSDM3Ku7wIXFr7z1g=="
+          "hash": "RZd/7KtTuLcgC9epzyIyOA=="
         }
       },
       "is_incremental": false,
@@ -898,7 +876,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Contour.html",
-          "hash": "RqWiSop5bVnwMndfmNlKuQ=="
+          "hash": "j/YIuk0sPEDhs1wPRgwVzg=="
         }
       },
       "is_incremental": false,
@@ -910,7 +888,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Curve.html",
-          "hash": "Eb0gzcNY5rl8C3tRe3oIMA=="
+          "hash": "4a/ZW6c273Pas3ytQNITyw=="
         }
       },
       "is_incremental": false,
@@ -922,7 +900,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.EndType.html",
-          "hash": "m5Z+jBWjTuR3upDsTftrqQ=="
+          "hash": "RMJ7Ctb4UMBR13mpDuCsEw=="
         }
       },
       "is_incremental": false,
@@ -942,23 +920,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Geometry.Geometry.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Geometry.Geometry.html",
-          "hash": "EqA0EoaLu+HK+Ut5yTUACw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Geometry.Interfaces.ICurve.yml",
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Interfaces.ICurve.html",
-          "hash": "As+H30JhADSKWGkt45uuGw=="
+          "hash": "tyWNdLRR1j1wWkDZkkDNRA=="
         }
       },
       "is_incremental": false,
@@ -970,7 +936,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Interfaces.ITessellate.html",
-          "hash": "Z94MoZsNv3fbbo1iN9VGOw=="
+          "hash": "mYJgTi30pT76qYoMZs93QQ=="
         }
       },
       "is_incremental": false,
@@ -982,7 +948,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Interfaces.ITransformable-1.html",
-          "hash": "Ffxuic+JGJHimwF5XorFaw=="
+          "hash": "E08VZr4uzP97MViyj8uIhQ=="
         }
       },
       "is_incremental": false,
@@ -994,7 +960,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Interfaces.html",
-          "hash": "DygWtzjlg/Up4llF9ypdfg=="
+          "hash": "/EVoDm8gJSkVnYRIYb5+jA=="
         }
       },
       "is_incremental": false,
@@ -1006,7 +972,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Line.html",
-          "hash": "ZeHx+td4E4JlkIw8WXYsFg=="
+          "hash": "TqTTBf/j9hDXbfYhLjJx5w=="
         }
       },
       "is_incremental": false,
@@ -1018,7 +984,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Matrix.html",
-          "hash": "K++H4lhZgE8pARXQdilToQ=="
+          "hash": "xHrKukQg48EcchTxUiGEfA=="
         }
       },
       "is_incremental": false,
@@ -1030,7 +996,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Mesh.html",
-          "hash": "k4NaPx9EucULJuHqiJkGGw=="
+          "hash": "GQtMX6B2TZi75YQnTg183A=="
         }
       },
       "is_incremental": false,
@@ -1042,7 +1008,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Plane.html",
-          "hash": "Ylq53s5dsdpCGzZ4D5tCbw=="
+          "hash": "fUDYYg42k+VOI+5AhZ5kgA=="
         }
       },
       "is_incremental": false,
@@ -1054,7 +1020,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "Yzeo6lNwFZ/jMcmOGgNKzQ=="
+          "hash": "RpvG2t8o8runrUmQiQAJWQ=="
         }
       },
       "is_incremental": false,
@@ -1066,7 +1032,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polyline.html",
-          "hash": "+CJorUHbSaBSbK6kH+0sZw=="
+          "hash": "XfdDKYzumzyKaTsAQfPcUA=="
         }
       },
       "is_incremental": false,
@@ -1078,7 +1044,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profile.html",
-          "hash": "xAlVRZEkMNHUhjWwfWI1hg=="
+          "hash": "PMPf/NFpXwsW9+/NJE4GsA=="
         }
       },
       "is_incremental": false,
@@ -1090,7 +1056,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.HSSPipeProfile.html",
-          "hash": "CskhpEPW35hhKwULvVSAjw=="
+          "hash": "C1RPCJGFDXCwlsTOXK5pQQ=="
         }
       },
       "is_incremental": false,
@@ -1102,7 +1068,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.HSSPipeProfileServer.html",
-          "hash": "st3F+L+whPjJ1tf/xfr7fg=="
+          "hash": "x9VXwEULckJPfb+vHkY6hw=="
         }
       },
       "is_incremental": false,
@@ -1114,7 +1080,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.HSSPipeProfileType.html",
-          "hash": "lYgRcBy2yoWJKyOQHXGUlA=="
+          "hash": "fYlqafqcvc0B66ZT0lDpvw=="
         }
       },
       "is_incremental": false,
@@ -1126,7 +1092,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.HorizontalAlignment.html",
-          "hash": "mDGLNXnPNRcYLq5jMicSsw=="
+          "hash": "LCzPdZhwE7yjvYvsd3jVsw=="
         }
       },
       "is_incremental": false,
@@ -1138,7 +1104,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.ProfileServer-1.html",
-          "hash": "ZraKgHuuD1+XCEzx8A/Ukw=="
+          "hash": "5ft4TUSq528VZt2d9umcwQ=="
         }
       },
       "is_incremental": false,
@@ -1150,7 +1116,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.VerticalAlignment.html",
-          "hash": "s1qZ2GlukEq1+iEHagqncA=="
+          "hash": "6/ao+snP1KJffhzjvndSkw=="
         }
       },
       "is_incremental": false,
@@ -1162,7 +1128,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.WideFlangeProfile.html",
-          "hash": "OmOZGshLdx+l70f1YoObXw=="
+          "hash": "TKDXo0pfh0MQ24+dNT4iww=="
         }
       },
       "is_incremental": false,
@@ -1174,7 +1140,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.WideFlangeProfileServer.html",
-          "hash": "G/GSA/74meEVh6sFH9QJeg=="
+          "hash": "rDmQegIdVBOdstTbaF1e8A=="
         }
       },
       "is_incremental": false,
@@ -1186,7 +1152,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.WideFlangeProfileType.html",
-          "hash": "KvL1S7kou1XcQcCtmFTJ3Q=="
+          "hash": "w7Nvr4D4zM1OrAKnoArKuw=="
         }
       },
       "is_incremental": false,
@@ -1198,7 +1164,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Profiles.html",
-          "hash": "I17c+dNXDbWwur+gYFu1Sw=="
+          "hash": "Ww86Es+oZEfkviONhOfF4w=="
         }
       },
       "is_incremental": false,
@@ -1210,7 +1176,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Ray.html",
-          "hash": "feMQ6dMfX20ccQv4rfHHNw=="
+          "hash": "8yrGsaiXDIsJCiM7g5tpeA=="
         }
       },
       "is_incremental": false,
@@ -1222,7 +1188,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Representation.html",
-          "hash": "2ZMDJVvHo/brVJwHATuQcw=="
+          "hash": "GxZ4gGruLvCYd8H92LssCA=="
         }
       },
       "is_incremental": false,
@@ -1234,7 +1200,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Edge.html",
-          "hash": "9B5ALXkaP+lwXe22iMI88Q=="
+          "hash": "sQy5N9hWY2iNg/W0H3EstA=="
         }
       },
       "is_incremental": false,
@@ -1246,7 +1212,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Extrude.html",
-          "hash": "/V2B0gsUQo7WIPChFRR+EQ=="
+          "hash": "fh6eIJ0BZCMVRpTLo1FrXg=="
         }
       },
       "is_incremental": false,
@@ -1258,7 +1224,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Face.html",
-          "hash": "KfWeOE9jHGLh1IkO9JJLiQ=="
+          "hash": "IpV9oH5Ae8LgeoRKnLhmWA=="
         }
       },
       "is_incremental": false,
@@ -1270,7 +1236,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.HalfEdge.html",
-          "hash": "4Q9JH5gkrtJhsfV1JTyE4Q=="
+          "hash": "4uiJWc49vd3TC9EV550M+A=="
         }
       },
       "is_incremental": false,
@@ -1282,7 +1248,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Lamina.html",
-          "hash": "x1uudIBLdSD8V5Mi/IS0xQ=="
+          "hash": "qWHXXh7bl5iOPTVLl4todw=="
         }
       },
       "is_incremental": false,
@@ -1294,7 +1260,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Loop.html",
-          "hash": "14c+QcpM3dWsDS8TZBIIvQ=="
+          "hash": "vAFQD/Yhe4ngLA05QAs8NA=="
         }
       },
       "is_incremental": false,
@@ -1306,7 +1272,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Solid.html",
-          "hash": "SMvU5sSNIAZUry47IG1u+w=="
+          "hash": "OBzxDXytOm2KVIrUHyUQjQ=="
         }
       },
       "is_incremental": false,
@@ -1318,7 +1284,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.SolidOperation.html",
-          "hash": "D0l+38CiuOfoZqdvVb3OQg=="
+          "hash": "CLDimvolUw1HF9YqlBA4Lg=="
         }
       },
       "is_incremental": false,
@@ -1330,7 +1296,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Sweep.html",
-          "hash": "/aA7cz+JxV24YGdEpG0mJA=="
+          "hash": "Kv/LURZWRJk4GR4gRh+nKA=="
         }
       },
       "is_incremental": false,
@@ -1342,7 +1308,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.Vertex.html",
-          "hash": "4Z/Dt6ghp+aTb/TEzqQEvQ=="
+          "hash": "A/JLiAL38/m/Lsiob4PamA=="
         }
       },
       "is_incremental": false,
@@ -1354,7 +1320,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Solids.html",
-          "hash": "J5+7Hk6UF8LMBMb8AZBaGw=="
+          "hash": "zdjiCHK++rYZMdHkELLLdg=="
         }
       },
       "is_incremental": false,
@@ -1366,7 +1332,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Transform.html",
-          "hash": "70Ad/y6UhzVVyWNIN9QzXw=="
+          "hash": "+WrDjlkHQUCdq9w3O95xFw=="
         }
       },
       "is_incremental": false,
@@ -1378,7 +1344,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Triangle.html",
-          "hash": "g3kZDc7XSzA8UR/OAzEHkw=="
+          "hash": "i1rb8EUHNW4AjpoEaV5Cig=="
         }
       },
       "is_incremental": false,
@@ -1390,7 +1356,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.UV.html",
-          "hash": "FTtMFqI835j6NEYa+U/ylA=="
+          "hash": "L4EHixcXPpdb+A0PNgVHdw=="
         }
       },
       "is_incremental": false,
@@ -1402,7 +1368,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Vector3.html",
-          "hash": "/NLXDl09sdOEtmtg7d9taQ=="
+          "hash": "KOiyfuPTwkok3BaJ8a0/DA=="
         }
       },
       "is_incremental": false,
@@ -1414,7 +1380,55 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Vector3Extensions.html",
-          "hash": "RR9IjsCzxCIyyd9Q3jt1xw=="
+          "hash": "mYFlqnwUeZHWxNTbG+MQdw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Vertex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Vertex.html",
+          "hash": "KjViHlu1Zom+73juEyOfWw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.VoidTreatment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.VoidTreatment.html",
+          "hash": "TK2rLmWsoNt9fyA9D6rgUg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.Vertex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.Vertex.html",
+          "hash": "pWdeOR5ljDn9VEO2Se9s/Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.VoidTreatment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.VoidTreatment.html",
+          "hash": "Und0m8kEAUc65l76yJktIQ=="
         }
       },
       "is_incremental": false,
@@ -1426,7 +1440,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.html",
-          "hash": "8GHbAWkLv6R2NoNXdIUKTw=="
+          "hash": "/dWhLkoygi9W2zX4ntObKw=="
         }
       },
       "is_incremental": false,
@@ -1438,7 +1452,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ImportMeshElement.html",
-          "hash": "ronIIcgveOx4zkzemqprhw=="
+          "hash": "EtE9ckJe+euFYgGpCnZ7DQ=="
         }
       },
       "is_incremental": false,
@@ -1450,7 +1464,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Interfaces.IHasOpenings.html",
-          "hash": "9Ig4f8B4o3rivcrcdwIfWg=="
+          "hash": "YgQiuEnbxd2OcXpkJVEn9g=="
         }
       },
       "is_incremental": false,
@@ -1462,7 +1476,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Interfaces.html",
-          "hash": "/yuN5iwqhKOqveve/xMPCg=="
+          "hash": "8H77Jiq7ZMsFKALIm9e0EA=="
         }
       },
       "is_incremental": false,
@@ -1474,7 +1488,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Mass.html",
-          "hash": "LEEnPxPbzv3+qdpvB9TW3Q=="
+          "hash": "d3BqDXuXTmYQZ5C7n6vOEQ=="
         }
       },
       "is_incremental": false,
@@ -1486,7 +1500,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Material.html",
-          "hash": "tcImAag3v1PrOToKPR4wsw=="
+          "hash": "LBBrQd/IIMxBsjKc1LzFBg=="
         }
       },
       "is_incremental": false,
@@ -1498,7 +1512,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.MeshElement.html",
-          "hash": "smom8ezGXuP5KTs8P13rxg=="
+          "hash": "Gkbkyi3Uxe8jz2RQQ2kqEg=="
         }
       },
       "is_incremental": false,
@@ -1510,7 +1524,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Model.html",
-          "hash": "fmrkDhNfWZC+yq0s1kIMVg=="
+          "hash": "M1APgReucyvUerHTg5nJVw=="
         }
       },
       "is_incremental": false,
@@ -1522,7 +1536,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ModelCurve.html",
-          "hash": "VC7wmBhAr5qZD4FPzUPxQQ=="
+          "hash": "L84nhmzJenpmLXQN1dBZBg=="
         }
       },
       "is_incremental": false,
@@ -1534,7 +1548,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ModelCurveExtensions.html",
-          "hash": "SrSLUIlLJM6cOVR9da2UfQ=="
+          "hash": "3K/hgXaya820dTaVG97AQg=="
         }
       },
       "is_incremental": false,
@@ -1546,7 +1560,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ModelPoints.html",
-          "hash": "O3DafczoTMyRw3gtpyVanQ=="
+          "hash": "OSniw+TfOMojGbsE+iawoA=="
         }
       },
       "is_incremental": false,
@@ -1558,7 +1572,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Opening.html",
-          "hash": "VXKFdLZK6jKmB3NtFFW8jA=="
+          "hash": "fgNKi6lTjgPtdNhkV5LXNg=="
         }
       },
       "is_incremental": false,
@@ -1570,55 +1584,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Panel.html",
-          "hash": "G1juQ0+Y6wmFI0/WGYNZ/g=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Properties.NumericProperty.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Properties.NumericProperty.html",
-          "hash": "Tyid1z90rkulzceFvxhnpg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Properties.NumericPropertyUnitType.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Properties.NumericPropertyUnitType.html",
-          "hash": "X+3cDYMdsZVJKZElIqehOg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Properties.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Properties.html",
-          "hash": "uDX84a1gYxWwFEFn4ekm6Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Serialization.JSON.JsonInheritanceAttribute.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Serialization.JSON.JsonInheritanceAttribute.html",
-          "hash": "7Ta98zZceUYrCR48HRA5wQ=="
+          "hash": "tcu4xnQbFhV1VgbNoARnHA=="
         }
       },
       "is_incremental": false,
@@ -1630,7 +1596,19 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Serialization.JSON.JsonInheritanceConverter.html",
-          "hash": "RVRIlwHT1VcThCeE6TlfeQ=="
+          "hash": "FsEHmio2q6XNozdGayx3Bg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Serialization.JSON.MeshConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Serialization.JSON.MeshConverter.html",
+          "hash": "G8vdC8tj0vtM3vUm9gbU/Q=="
         }
       },
       "is_incremental": false,
@@ -1642,7 +1620,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Serialization.JSON.html",
-          "hash": "81Noa+6SpkAu6muKFYhqMw=="
+          "hash": "HeNhesGyuHeiISrPQG6ozw=="
         }
       },
       "is_incremental": false,
@@ -1654,7 +1632,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Serialization.glTF.GltfBufferExtensions.html",
-          "hash": "2iZ1Nqe3Ng2dS73u8Dq/4A=="
+          "hash": "z4dTayaX1KhRKiaSTQ9wZw=="
         }
       },
       "is_incremental": false,
@@ -1666,7 +1644,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Serialization.glTF.GltfExtensions.html",
-          "hash": "huivpBFR5712vmMddmu9nw=="
+          "hash": "Qzby9qG9lUOgLNBXVriP9g=="
         }
       },
       "is_incremental": false,
@@ -1678,7 +1656,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Serialization.glTF.html",
-          "hash": "KFQVBxtg81C78EXLFOArAA=="
+          "hash": "82gPi16/aMCbgwR6bfl3LA=="
         }
       },
       "is_incremental": false,
@@ -1690,7 +1668,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Space.html",
-          "hash": "3ST6IDV7ZA79RpUt/H9bOA=="
+          "hash": "y0ZHa5eYtXvvZCXRseE/BQ=="
         }
       },
       "is_incremental": false,
@@ -1702,7 +1680,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.EvenDivisionMode.html",
-          "hash": "ONV/IeOOnIPNL8GZnEGcpg=="
+          "hash": "Ndh6czTFDr8ViXj6cwESSA=="
         }
       },
       "is_incremental": false,
@@ -1714,7 +1692,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.FixedDivisionMode.html",
-          "hash": "llybOarKJ/+xJtvOUCcG6g=="
+          "hash": "NjTTzO2F+Gb7dpc/fMNEHw=="
         }
       },
       "is_incremental": false,
@@ -1726,7 +1704,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.Grid1d.html",
-          "hash": "f6wDyH687CseRauT1z0Tvg=="
+          "hash": "NoUo7QagxlHJd1nFhQhWTA=="
         }
       },
       "is_incremental": false,
@@ -1738,7 +1716,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.Grid2d.html",
-          "hash": "DcnOPkFURpDpmHAWfizpRw=="
+          "hash": "HXqy4Pu2nYiOm/JJN8uQzQ=="
         }
       },
       "is_incremental": false,
@@ -1750,7 +1728,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.GridDirection.html",
-          "hash": "SAWWsOEPDspNhyMvX+CGZg=="
+          "hash": "YglPiWHnw932Dn+Cheh4HA=="
         }
       },
       "is_incremental": false,
@@ -1762,7 +1740,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.MercatorProjection.html",
-          "hash": "yVG5fDx9Nkk4GfvT6ff5HQ=="
+          "hash": "o5C4gN3jb5n5vhIUXx396g=="
         }
       },
       "is_incremental": false,
@@ -1774,7 +1752,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.PatternMode.html",
-          "hash": "r1hA9XXhNmHAdRu3v79GOg=="
+          "hash": "86zSe6MfvLOy9OLBR5BSXw=="
         }
       },
       "is_incremental": false,
@@ -1786,7 +1764,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.WebMercatorProjection.html",
-          "hash": "YpiZYsepliwy0h4RigQiDQ=="
+          "hash": "j0CM6fIrdenEri1Z6tgERg=="
         }
       },
       "is_incremental": false,
@@ -1798,7 +1776,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.html",
-          "hash": "FVhEfu88tZaZmUExu0SmaQ=="
+          "hash": "2efkG4VK1HkgD9j5PyRcpQ=="
         }
       },
       "is_incremental": false,
@@ -1810,7 +1788,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.StandardWall.html",
-          "hash": "HBJ6XTw/EdZEyoz2rsLFGA=="
+          "hash": "yHwaw00DgtDCTdP+QN2/Fw=="
         }
       },
       "is_incremental": false,
@@ -1822,7 +1800,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.StringExtensions.html",
-          "hash": "DtZHSxZPTObnEjIpDKZ55g=="
+          "hash": "ZoHmmKKoEBj4qs41qlwYhQ=="
         }
       },
       "is_incremental": false,
@@ -1834,7 +1812,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.StructuralFraming.html",
-          "hash": "FPOKZ2nzdXpZw2Ql+p9V0g=="
+          "hash": "KYKScpkUZMij/qbvYBpUow=="
         }
       },
       "is_incremental": false,
@@ -1846,7 +1824,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Topography.html",
-          "hash": "DWO1DW9+pioU/BMoY1PuJQ=="
+          "hash": "tGIsCiKQfdnKwQqcRozytA=="
         }
       },
       "is_incremental": false,
@@ -1858,7 +1836,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Units.CardinalDirection.html",
-          "hash": "6AF3mhTk0M1scvw5Hy6qsQ=="
+          "hash": "WSQUO4EOb/UBTfZpHnaNdA=="
         }
       },
       "is_incremental": false,
@@ -1870,7 +1848,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Units.LengthUnit.html",
-          "hash": "c8t/6XgHxGnZIRs9ko+Cfg=="
+          "hash": "E/zrWVpP2QZPOVKKGOytrw=="
         }
       },
       "is_incremental": false,
@@ -1882,7 +1860,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Units.UnitType.html",
-          "hash": "O7p8kZbA3yIcpEG7nZk+Sg=="
+          "hash": "8h9L9zRLbeg3JPXEZsj10A=="
         }
       },
       "is_incremental": false,
@@ -1902,23 +1880,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Elements.UserElement.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.UserElement.html",
-          "hash": "6FTpg5N7lu0rFIuIJ9SKpw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Validators.ArcValidator.yml",
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.ArcValidator.html",
-          "hash": "2fqCmmW/529WWf+qzuJk0Q=="
+          "hash": "WkUsvpR4UZ37pPGQ6jqgEw=="
         }
       },
       "is_incremental": false,
@@ -1930,7 +1896,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.BBox3Validator.html",
-          "hash": "IQR9ogXmUKxk26lLH37IPw=="
+          "hash": "t/aHYtzdfsXFgVRJkBMGuw=="
         }
       },
       "is_incremental": false,
@@ -1942,7 +1908,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.ColorValidator.html",
-          "hash": "QYjDc3dtpTf3jnzU8ZHExQ=="
+          "hash": "/j8bcnmcef6hzs0VOOCgoA=="
         }
       },
       "is_incremental": false,
@@ -1954,7 +1920,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.ExtrudeValidator.html",
-          "hash": "Qn3Gmd5aRHfs35Mt331EGw=="
+          "hash": "34jgOzHBkecjRDvixybMjg=="
         }
       },
       "is_incremental": false,
@@ -1966,7 +1932,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.GeometricElementValidator.html",
-          "hash": "jCF5FWRtLyhaWDL/bkAgZw=="
+          "hash": "7yJWsm/DOxgzfKiRG+tNSw=="
         }
       },
       "is_incremental": false,
@@ -1978,7 +1944,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.IValidator.html",
-          "hash": "g8UeApq+SWg3or/XFIQlpA=="
+          "hash": "RYFi/INPR2fBzLGnFS1E2A=="
         }
       },
       "is_incremental": false,
@@ -1990,7 +1956,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.LaminaValidator.html",
-          "hash": "5cgIqXiQ36NzQ41FO8iumQ=="
+          "hash": "rcUiPbDheiNcAgRI4dpypg=="
         }
       },
       "is_incremental": false,
@@ -2002,7 +1968,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.LineValidator.html",
-          "hash": "QXxISkndkNmzHmrgbwOwLg=="
+          "hash": "1S7Ue55RKz0uaogp0AmTQg=="
         }
       },
       "is_incremental": false,
@@ -2014,7 +1980,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.MaterialValidator.html",
-          "hash": "ANSiPahkaLmbj+6MOrFJEw=="
+          "hash": "gqTA0w2TcZgyjFewMNz+Fg=="
         }
       },
       "is_incremental": false,
@@ -2026,7 +1992,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.MatrixValidator.html",
-          "hash": "X5WxNkP5JN3nS4BB8BsT8w=="
+          "hash": "LFGIPnEMIe53wSXBQJef2g=="
         }
       },
       "is_incremental": false,
@@ -2038,7 +2004,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.PlaneValidator.html",
-          "hash": "I20reoY9gO7Z+woqBvPkBA=="
+          "hash": "AwoaeY/u4Fx14xQswDcP6w=="
         }
       },
       "is_incremental": false,
@@ -2050,7 +2016,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.PolygonValidator.html",
-          "hash": "fMKDIYnDbLXPKqyuFu/TmQ=="
+          "hash": "MCfS459+F16hGEY6wG2EoQ=="
         }
       },
       "is_incremental": false,
@@ -2062,7 +2028,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.PolylineValidator.html",
-          "hash": "0CFLEd/wksQAuMQQpejQdg=="
+          "hash": "+gUqE3qkdiVGczHOacarpQ=="
         }
       },
       "is_incremental": false,
@@ -2074,7 +2040,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.ProfileValidator.html",
-          "hash": "4xotdmM4L7GpZv+icavkFA=="
+          "hash": "zmL4EBrp92WuzrBGVvuElg=="
         }
       },
       "is_incremental": false,
@@ -2086,7 +2052,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.SweepValidator.html",
-          "hash": "xZyncQ/XPaOi6yEISWaw3w=="
+          "hash": "oP69Jq6ji1b3DlK6VtJWOg=="
         }
       },
       "is_incremental": false,
@@ -2098,7 +2064,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.Validator.html",
-          "hash": "BrWVpqpagXJBhj2vs3fc7g=="
+          "hash": "XKHlqKCJU5z+a3s0JxcTjw=="
         }
       },
       "is_incremental": false,
@@ -2110,7 +2076,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.Vector3Validator.html",
-          "hash": "b7a9wl2uCDagnoH0cjUXig=="
+          "hash": "GxkxAsFk88P7yqDkah9nPg=="
         }
       },
       "is_incremental": false,
@@ -2122,7 +2088,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.html",
-          "hash": "KZK6StgrvuQ1xUVmUj/sVA=="
+          "hash": "hejjsEGgy97aQjOf4MaDQw=="
         }
       },
       "is_incremental": false,
@@ -2134,7 +2100,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Wall.html",
-          "hash": "THthr/AuhhHlBJ/YT41rQg=="
+          "hash": "NpVA3fU4Ks6n9lmWHRNfIQ=="
         }
       },
       "is_incremental": false,
@@ -2146,7 +2112,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.WallByProfile.html",
-          "hash": "TFRy/Fmu32D50YtD9G3xlA=="
+          "hash": "9jQjrdkhbG8JfKh0xY3v0g=="
         }
       },
       "is_incremental": false,
@@ -2158,7 +2124,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.html",
-          "hash": "SRmhIbFaumXk4zHhZIOF/w=="
+          "hash": "2kUBjJBitBQeFm/mSeEB9A=="
         }
       },
       "is_incremental": false,
@@ -4024,15 +3990,12 @@
       "version": ""
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "index.md",
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "lsCjmVp6W8AvvenW22DkKQ=="
+          "hash": "6HxVRcb88p5NoJEvz3T8ng=="
         }
       },
       "is_incremental": false,
@@ -4104,7 +4067,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 144,
+          "total_file_count": 141,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

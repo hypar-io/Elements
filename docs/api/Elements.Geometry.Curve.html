@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Curve
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -122,13 +122,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Curve_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonInheritance(&quot;Elements.Geometry.Line&quot;, typeof(Line))]
-[JsonInheritance(&quot;Elements.Geometry.Arc&quot;, typeof(Arc))]
-[JsonInheritance(&quot;Elements.Geometry.Polyline&quot;, typeof(Polyline))]
-[JsonInheritance(&quot;Elements.Geometry.Polygon&quot;, typeof(Polygon))]
-[JsonInheritance(&quot;Elements.Geometry.Bezier&quot;, typeof(Bezier))]
-[JsonInheritance(&quot;Elements.Geometry.Circle&quot;, typeof(Circle))]
-public abstract class Curve : ICurve, ITransformable&lt;Curve&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class Curve : ICurve, ITransformable&lt;Curve&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -138,7 +132,8 @@ public abstract class Curve : ICurve, ITransformable&lt;Curve&gt;</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Curve()</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Curve()</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -433,6 +428,50 @@ positive Z axis points along the curve.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="operators">Operators
+  </h3>
+  <a id="Elements_Geometry_Curve_op_Implicit_" data-uid="Elements.Geometry.Curve.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Curve_op_Implicit_Elements_Geometry_Curve__Elements_ModelCurve" data-uid="Elements.Geometry.Curve.op_Implicit(Elements.Geometry.Curve)~Elements.ModelCurve">Implicit(Curve to ModelCurve)</h4>
+  <div class="markdown level1 summary"><p>Implicitly convert a curve to a ModelCurve Element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator ModelCurve(Curve c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The curve to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.ModelCurve.html">ModelCurve</a></td>
         <td></td>
       </tr>
     </tbody>
