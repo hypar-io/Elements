@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ContentElement
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.56.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -157,8 +157,7 @@ public class ContentElement : GeometricElement, INotifyPropertyChanged</code></p
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleToMeters, Vector3 sourceDirection, Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleToMeters, Vector3 sourceDirection, Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -319,8 +318,7 @@ This is used in Revit Content workflows to store instance parameter data.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonExtensionData]
-public IDictionary&lt;string, object&gt; AdditionalProperties { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;string, object&gt; AdditionalProperties { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -344,8 +342,7 @@ public IDictionary&lt;string, object&gt; AdditionalProperties { get; set; }</cod
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Bounding Box&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public BBox3 BoundingBox { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public BBox3 BoundingBox { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -369,8 +366,7 @@ public BBox3 BoundingBox { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;gltfLocation&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public string GltfLocation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string GltfLocation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -394,8 +390,7 @@ public string GltfLocation { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Gltf Scale to Meters&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public double GltfScaleToMeters { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double GltfScaleToMeters { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -419,8 +414,7 @@ public double GltfScaleToMeters { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;SourceDirection&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-public Vector3 SourceDirection { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 SourceDirection { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
