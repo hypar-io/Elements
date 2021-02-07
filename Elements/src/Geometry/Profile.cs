@@ -420,6 +420,14 @@ namespace Elements.Geometry
             }
             return joinedProfiles;
         }
+
+        /// <summary>
+        /// Get all segments from a profile's perimeter and internal voids.
+        /// </summary>
+        public List<Line> Segments()
+        {
+            return Perimeter.Segments().Union(Voids.SelectMany(v => v.Segments())).ToList();
+        }
     }
 
     /// <summary>
