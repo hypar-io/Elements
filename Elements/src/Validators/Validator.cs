@@ -36,6 +36,13 @@ namespace Elements.Validators
         private static Validator _validator;
 
         /// <summary>
+        /// Use this to disable geometry validation. This can cause lots of unexpected consequences; only use it if you know what you're doing.
+        /// It's probably a good idea to turn this back to false when you're done circumventing checks for a tricky operation.
+        /// </summary>
+        /// <value></value>
+        public static bool DisableValidationOnConstruction { get; set; } = false;
+
+        /// <summary>
         /// The validator singleton.
         /// </summary>
         public static Validator Instance
@@ -75,6 +82,10 @@ namespace Elements.Validators
         /// <returns>A validator for T, or null if no validator for T can be found.</returns>
         public IValidator GetFirstValidatorForType<T>()
         {
+            if (Validator.DisableValidationOnConstruction)
+            {
+                return null;
+            }
             if (_validators.ContainsKey(typeof(T)))
             {
                 return _validators[typeof(T)];
