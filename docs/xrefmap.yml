@@ -3135,6 +3135,70 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Contour.ToPolygon
   nameWithType: Contour.ToPolygon
+- uid: Elements.Geometry.ConvexHull
+  name: ConvexHull
+  href: api/Elements.Geometry.ConvexHull.html
+  commentId: T:Elements.Geometry.ConvexHull
+  fullName: Elements.Geometry.ConvexHull
+  nameWithType: ConvexHull
+- uid: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name: FromPoints(IEnumerable<Vector3>)
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name.vb: FromPoints(IEnumerable(Of Vector3))
+  fullName: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
+  nameWithType: ConvexHull.FromPoints(IEnumerable<Vector3>)
+  nameWithType.vb: ConvexHull.FromPoints(IEnumerable(Of Vector3))
+- uid: Elements.Geometry.ConvexHull.FromPoints*
+  name: FromPoints
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPoints_
+  commentId: Overload:Elements.Geometry.ConvexHull.FromPoints
+  isSpec: "True"
+  fullName: Elements.Geometry.ConvexHull.FromPoints
+  nameWithType: ConvexHull.FromPoints
+- uid: Elements.Geometry.ConvexHull.FromPolyline(Elements.Geometry.Polyline)
+  name: FromPolyline(Polyline)
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolyline_Elements_Geometry_Polyline_
+  commentId: M:Elements.Geometry.ConvexHull.FromPolyline(Elements.Geometry.Polyline)
+  fullName: Elements.Geometry.ConvexHull.FromPolyline(Elements.Geometry.Polyline)
+  nameWithType: ConvexHull.FromPolyline(Polyline)
+- uid: Elements.Geometry.ConvexHull.FromPolyline*
+  name: FromPolyline
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolyline_
+  commentId: Overload:Elements.Geometry.ConvexHull.FromPolyline
+  isSpec: "True"
+  fullName: Elements.Geometry.ConvexHull.FromPolyline
+  nameWithType: ConvexHull.FromPolyline
+- uid: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name: FromPolylines(IEnumerable<Polyline>)
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolylines_System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name.vb: FromPolylines(IEnumerable(Of Polyline))
+  fullName: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
+  nameWithType: ConvexHull.FromPolylines(IEnumerable<Polyline>)
+  nameWithType.vb: ConvexHull.FromPolylines(IEnumerable(Of Polyline))
+- uid: Elements.Geometry.ConvexHull.FromPolylines*
+  name: FromPolylines
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolylines_
+  commentId: Overload:Elements.Geometry.ConvexHull.FromPolylines
+  isSpec: "True"
+  fullName: Elements.Geometry.ConvexHull.FromPolylines
+  nameWithType: ConvexHull.FromPolylines
+- uid: Elements.Geometry.ConvexHull.FromProfile(Elements.Geometry.Profile)
+  name: FromProfile(Profile)
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromProfile_Elements_Geometry_Profile_
+  commentId: M:Elements.Geometry.ConvexHull.FromProfile(Elements.Geometry.Profile)
+  fullName: Elements.Geometry.ConvexHull.FromProfile(Elements.Geometry.Profile)
+  nameWithType: ConvexHull.FromProfile(Profile)
+- uid: Elements.Geometry.ConvexHull.FromProfile*
+  name: FromProfile
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromProfile_
+  commentId: Overload:Elements.Geometry.ConvexHull.FromProfile
+  isSpec: "True"
+  fullName: Elements.Geometry.ConvexHull.FromProfile
+  nameWithType: ConvexHull.FromProfile
 - uid: Elements.Geometry.Curve
   name: Curve
   href: api/Elements.Geometry.Curve.html
@@ -4708,6 +4772,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Frames
   nameWithType: Polygon.Frames
+- uid: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name: FromAlignedBoundingBox2d(IEnumerable<Vector3>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_FromAlignedBoundingBox2d_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name.vb: FromAlignedBoundingBox2d(IEnumerable(Of Vector3))
+  fullName: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
+  nameWithType: Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)
+  nameWithType.vb: Polygon.FromAlignedBoundingBox2d(IEnumerable(Of Vector3))
+- uid: Elements.Geometry.Polygon.FromAlignedBoundingBox2d*
+  name: FromAlignedBoundingBox2d
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_FromAlignedBoundingBox2d_
+  commentId: Overload:Elements.Geometry.Polygon.FromAlignedBoundingBox2d
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.FromAlignedBoundingBox2d
+  nameWithType: Polygon.FromAlignedBoundingBox2d
 - uid: Elements.Geometry.Polygon.GetHashCode
   name: GetHashCode()
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_GetHashCode

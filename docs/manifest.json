@@ -306,7 +306,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "z3kx3QfRozQyRv47JypzAQ=="
+          "hash": "DjiJf7gjtfsY5e3oeczmig=="
         }
       },
       "is_incremental": false,
@@ -884,6 +884,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Geometry.ConvexHull.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Geometry.ConvexHull.html",
+          "hash": "PVWtqtO/xb7UQWGVG14tAQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Geometry.Curve.yml",
       "output": {
         ".html": {
@@ -1020,7 +1032,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "uXCUaNR0LJRqU6Ynt/GEKw=="
+          "hash": "07UAov0boNJq1KzvIV3jAQ=="
         }
       },
       "is_incremental": false,
@@ -1428,7 +1440,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.html",
-          "hash": "bABB6f8Frp+hPdzULiZq4w=="
+          "hash": "awJfaMXC/JrmYStZuLbdiQ=="
         }
       },
       "is_incremental": false,
@@ -4055,7 +4067,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 142,
+          "total_file_count": 143,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
