@@ -3629,27 +3629,33 @@ references:
   commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Line)
   fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Line)
   nameWithType: Line.ExtendTo(Line)
-- uid: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean)
-  name: ExtendTo(Polyline, Boolean)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_Elements_Geometry_Polyline_System_Boolean_
-  commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean)
-  fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline, System.Boolean)
-  nameWithType: Line.ExtendTo(Polyline, Boolean)
-- uid: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean)
-  name: ExtendTo(Profile, Boolean)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_Elements_Geometry_Profile_System_Boolean_
-  commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean)
-  fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile, System.Boolean)
-  nameWithType: Line.ExtendTo(Profile, Boolean)
-- uid: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean)
-  name: ExtendTo(IEnumerable<Line>, Boolean)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_
-  commentId: M:Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean)
-  name.vb: ExtendTo(IEnumerable(Of Line), Boolean)
-  fullName: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable<Elements.Geometry.Line>, System.Boolean)
-  fullName.vb: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Line), System.Boolean)
-  nameWithType: Line.ExtendTo(IEnumerable<Line>, Boolean)
-  nameWithType.vb: Line.ExtendTo(IEnumerable(Of Line), Boolean)
+- uid: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polygon,System.Boolean,System.Boolean)
+  name: ExtendTo(Polygon, Boolean, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_Elements_Geometry_Polygon_System_Boolean_System_Boolean_
+  commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polygon,System.Boolean,System.Boolean)
+  fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polygon, System.Boolean, System.Boolean)
+  nameWithType: Line.ExtendTo(Polygon, Boolean, Boolean)
+- uid: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean,System.Boolean)
+  name: ExtendTo(Polyline, Boolean, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_Elements_Geometry_Polyline_System_Boolean_System_Boolean_
+  commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean,System.Boolean)
+  fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline, System.Boolean, System.Boolean)
+  nameWithType: Line.ExtendTo(Polyline, Boolean, Boolean)
+- uid: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean,System.Boolean)
+  name: ExtendTo(Profile, Boolean, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_Elements_Geometry_Profile_System_Boolean_System_Boolean_
+  commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean,System.Boolean)
+  fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile, System.Boolean, System.Boolean)
+  nameWithType: Line.ExtendTo(Profile, Boolean, Boolean)
+- uid: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)
+  name: ExtendTo(IEnumerable<Line>, Boolean, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_System_Boolean_
+  commentId: M:Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)
+  name.vb: ExtendTo(IEnumerable(Of Line), Boolean, Boolean)
+  fullName: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable<Elements.Geometry.Line>, System.Boolean, System.Boolean)
+  fullName.vb: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Line), System.Boolean, System.Boolean)
+  nameWithType: Line.ExtendTo(IEnumerable<Line>, Boolean, Boolean)
+  nameWithType.vb: Line.ExtendTo(IEnumerable(Of Line), Boolean, Boolean)
 - uid: Elements.Geometry.Line.ExtendTo*
   name: ExtendTo
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_
@@ -12356,6 +12362,18 @@ references:
   commentId: T:Elements.ModelCurveExtensions
   fullName: Elements.ModelCurveExtensions
   nameWithType: ModelCurveExtensions
+- uid: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.BBox3,Elements.Geometry.Transform,Elements.Material)
+  name: ToModelCurves(BBox3, Transform, Material)
+  href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_BBox3_Elements_Geometry_Transform_Elements_Material_
+  commentId: M:Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.BBox3,Elements.Geometry.Transform,Elements.Material)
+  fullName: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.BBox3, Elements.Geometry.Transform, Elements.Material)
+  nameWithType: ModelCurveExtensions.ToModelCurves(BBox3, Transform, Material)
+- uid: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Profile,Elements.Geometry.Transform,Elements.Material)
+  name: ToModelCurves(Profile, Transform, Material)
+  href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_Profile_Elements_Geometry_Transform_Elements_Material_
+  commentId: M:Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Profile,Elements.Geometry.Transform,Elements.Material)
+  fullName: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Profile, Elements.Geometry.Transform, Elements.Material)
+  nameWithType: ModelCurveExtensions.ToModelCurves(Profile, Transform, Material)
 - uid: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Transform,Elements.Geometry.Transform)
   name: ToModelCurves(Transform, Transform)
   href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_Transform_Elements_Geometry_Transform_
@@ -13346,6 +13364,18 @@ references:
   commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Transform)
   fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Polygon, Elements.Geometry.Transform)
   nameWithType: Grid2d.Grid2d(Polygon, Transform)
+- uid: Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  name: Grid2d(Polygon, Vector3, Vector3, Vector3)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Geometry_Polygon_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Polygon, Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  nameWithType: Grid2d.Grid2d(Polygon, Vector3, Vector3, Vector3)
+- uid: Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  name: Grid2d(Polygon, Grid1d, Grid1d)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Geometry_Polygon_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Polygon, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
+  nameWithType: Grid2d.Grid2d(Polygon, Grid1d, Grid1d)
 - uid: Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
   name: Grid2d(Grid1d, Grid1d)
   href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
@@ -13373,6 +13403,24 @@ references:
   fullName.vb: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Transform)
   nameWithType: Grid2d.Grid2d(IList<Polygon>, Transform)
   nameWithType.vb: Grid2d.Grid2d(IList(Of Polygon), Transform)
+- uid: Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  name: Grid2d(IList<Polygon>, Vector3, Vector3, Vector3)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  name.vb: Grid2d(IList(Of Polygon), Vector3, Vector3, Vector3)
+  fullName: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  fullName.vb: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  nameWithType: Grid2d.Grid2d(IList<Polygon>, Vector3, Vector3, Vector3)
+  nameWithType.vb: Grid2d.Grid2d(IList(Of Polygon), Vector3, Vector3, Vector3)
+- uid: Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  name: Grid2d(IList<Polygon>, Grid1d, Grid1d)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  name.vb: Grid2d(IList(Of Polygon), Grid1d, Grid1d)
+  fullName: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
+  fullName.vb: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
+  nameWithType: Grid2d.Grid2d(IList<Polygon>, Grid1d, Grid1d)
+  nameWithType.vb: Grid2d.Grid2d(IList(Of Polygon), Grid1d, Grid1d)
 - uid: Elements.Spatial.Grid2d.#ctor(System.Double,System.Double)
   name: Grid2d(Double, Double)
   href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Double_System_Double_
