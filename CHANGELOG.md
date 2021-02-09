@@ -4,7 +4,11 @@
 
 ### Added
 - Profile.ToModelCurves()
+- Profile.Segments()
 - Bbox3.ToModelCurves()
+- Line.ExtendTo(IEnumerable<Line>)
+- Line.ExtendTo(Polyline)
+- Line.ExtendTo(Profile)
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 - Make Grid1d and Grid2d serializable
