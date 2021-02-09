@@ -3135,6 +3135,70 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Contour.ToPolygon
   nameWithType: Contour.ToPolygon
+- uid: Elements.Geometry.ConvexHull
+  name: ConvexHull
+  href: api/Elements.Geometry.ConvexHull.html
+  commentId: T:Elements.Geometry.ConvexHull
+  fullName: Elements.Geometry.ConvexHull
+  nameWithType: ConvexHull
+- uid: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name: FromPoints(IEnumerable<Vector3>)
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name.vb: FromPoints(IEnumerable(Of Vector3))
+  fullName: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
+  nameWithType: ConvexHull.FromPoints(IEnumerable<Vector3>)
+  nameWithType.vb: ConvexHull.FromPoints(IEnumerable(Of Vector3))
+- uid: Elements.Geometry.ConvexHull.FromPoints*
+  name: FromPoints
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPoints_
+  commentId: Overload:Elements.Geometry.ConvexHull.FromPoints
+  isSpec: "True"
+  fullName: Elements.Geometry.ConvexHull.FromPoints
+  nameWithType: ConvexHull.FromPoints
+- uid: Elements.Geometry.ConvexHull.FromPolyline(Elements.Geometry.Polyline)
+  name: FromPolyline(Polyline)
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolyline_Elements_Geometry_Polyline_
+  commentId: M:Elements.Geometry.ConvexHull.FromPolyline(Elements.Geometry.Polyline)
+  fullName: Elements.Geometry.ConvexHull.FromPolyline(Elements.Geometry.Polyline)
+  nameWithType: ConvexHull.FromPolyline(Polyline)
+- uid: Elements.Geometry.ConvexHull.FromPolyline*
+  name: FromPolyline
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolyline_
+  commentId: Overload:Elements.Geometry.ConvexHull.FromPolyline
+  isSpec: "True"
+  fullName: Elements.Geometry.ConvexHull.FromPolyline
+  nameWithType: ConvexHull.FromPolyline
+- uid: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name: FromPolylines(IEnumerable<Polyline>)
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolylines_System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name.vb: FromPolylines(IEnumerable(Of Polyline))
+  fullName: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
+  nameWithType: ConvexHull.FromPolylines(IEnumerable<Polyline>)
+  nameWithType.vb: ConvexHull.FromPolylines(IEnumerable(Of Polyline))
+- uid: Elements.Geometry.ConvexHull.FromPolylines*
+  name: FromPolylines
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolylines_
+  commentId: Overload:Elements.Geometry.ConvexHull.FromPolylines
+  isSpec: "True"
+  fullName: Elements.Geometry.ConvexHull.FromPolylines
+  nameWithType: ConvexHull.FromPolylines
+- uid: Elements.Geometry.ConvexHull.FromProfile(Elements.Geometry.Profile)
+  name: FromProfile(Profile)
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromProfile_Elements_Geometry_Profile_
+  commentId: M:Elements.Geometry.ConvexHull.FromProfile(Elements.Geometry.Profile)
+  fullName: Elements.Geometry.ConvexHull.FromProfile(Elements.Geometry.Profile)
+  nameWithType: ConvexHull.FromProfile(Profile)
+- uid: Elements.Geometry.ConvexHull.FromProfile*
+  name: FromProfile
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromProfile_
+  commentId: Overload:Elements.Geometry.ConvexHull.FromProfile
+  isSpec: "True"
+  fullName: Elements.Geometry.ConvexHull.FromProfile
+  nameWithType: ConvexHull.FromProfile
 - uid: Elements.Geometry.Curve
   name: Curve
   href: api/Elements.Geometry.Curve.html
@@ -3565,6 +3629,27 @@ references:
   commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Line)
   fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Line)
   nameWithType: Line.ExtendTo(Line)
+- uid: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean)
+  name: ExtendTo(Polyline, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_Elements_Geometry_Polyline_System_Boolean_
+  commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean)
+  fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline, System.Boolean)
+  nameWithType: Line.ExtendTo(Polyline, Boolean)
+- uid: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean)
+  name: ExtendTo(Profile, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_Elements_Geometry_Profile_System_Boolean_
+  commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean)
+  fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile, System.Boolean)
+  nameWithType: Line.ExtendTo(Profile, Boolean)
+- uid: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean)
+  name: ExtendTo(IEnumerable<Line>, Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_
+  commentId: M:Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean)
+  name.vb: ExtendTo(IEnumerable(Of Line), Boolean)
+  fullName: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable<Elements.Geometry.Line>, System.Boolean)
+  fullName.vb: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Line), System.Boolean)
+  nameWithType: Line.ExtendTo(IEnumerable<Line>, Boolean)
+  nameWithType.vb: Line.ExtendTo(IEnumerable(Of Line), Boolean)
 - uid: Elements.Geometry.Line.ExtendTo*
   name: ExtendTo
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_
@@ -4687,6 +4772,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Frames
   nameWithType: Polygon.Frames
+- uid: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name: FromAlignedBoundingBox2d(IEnumerable<Vector3>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_FromAlignedBoundingBox2d_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
+  name.vb: FromAlignedBoundingBox2d(IEnumerable(Of Vector3))
+  fullName: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
+  nameWithType: Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)
+  nameWithType.vb: Polygon.FromAlignedBoundingBox2d(IEnumerable(Of Vector3))
+- uid: Elements.Geometry.Polygon.FromAlignedBoundingBox2d*
+  name: FromAlignedBoundingBox2d
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_FromAlignedBoundingBox2d_
+  commentId: Overload:Elements.Geometry.Polygon.FromAlignedBoundingBox2d
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.FromAlignedBoundingBox2d
+  nameWithType: Polygon.FromAlignedBoundingBox2d
 - uid: Elements.Geometry.Polygon.GetHashCode
   name: GetHashCode()
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_GetHashCode
@@ -5531,6 +5632,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Contains
   nameWithType: Profile.Contains
+- uid: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
+  name: Difference(IEnumerable<Profile>, IEnumerable<Profile>, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Difference_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_
+  commentId: M:Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
+  name.vb: Difference(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
+  fullName: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Double)
+  nameWithType: Profile.Difference(IEnumerable<Profile>, IEnumerable<Profile>, Double)
+  nameWithType.vb: Profile.Difference(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
+- uid: Elements.Geometry.Profile.Difference*
+  name: Difference
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Difference_
+  commentId: Overload:Elements.Geometry.Profile.Difference
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Difference
+  nameWithType: Profile.Difference
 - uid: Elements.Geometry.Profile.Equals(Elements.Geometry.Profile)
   name: Equals(Profile)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Equals_Elements_Geometry_Profile_
@@ -5544,6 +5661,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Equals
   nameWithType: Profile.Equals
+- uid: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
+  name: Intersection(IEnumerable<Profile>, IEnumerable<Profile>, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Intersection_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_
+  commentId: M:Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
+  name.vb: Intersection(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
+  fullName: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Double)
+  nameWithType: Profile.Intersection(IEnumerable<Profile>, IEnumerable<Profile>, Double)
+  nameWithType.vb: Profile.Intersection(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
+- uid: Elements.Geometry.Profile.Intersection*
+  name: Intersection
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Intersection_
+  commentId: Overload:Elements.Geometry.Profile.Intersection
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Intersection
+  nameWithType: Profile.Intersection
 - uid: Elements.Geometry.Profile.OrientVoids
   name: OrientVoids()
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_OrientVoids
@@ -5596,6 +5729,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Scale
   nameWithType: Profile.Scale
+- uid: Elements.Geometry.Profile.Segments
+  name: Segments()
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Segments
+  commentId: M:Elements.Geometry.Profile.Segments
+  fullName: Elements.Geometry.Profile.Segments()
+  nameWithType: Profile.Segments()
+- uid: Elements.Geometry.Profile.Segments*
+  name: Segments
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Segments_
+  commentId: Overload:Elements.Geometry.Profile.Segments
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Segments
+  nameWithType: Profile.Segments
 - uid: Elements.Geometry.Profile.Transform(Elements.Geometry.Transform)
   name: Transform(Transform)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Transform_Elements_Geometry_Transform_
@@ -5664,6 +5810,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Voids
   nameWithType: Profile.Voids
+- uid: Elements.Geometry.ProfileExtensions
+  name: ProfileExtensions
+  href: api/Elements.Geometry.ProfileExtensions.html
+  commentId: T:Elements.Geometry.ProfileExtensions
+  fullName: Elements.Geometry.ProfileExtensions
+  nameWithType: ProfileExtensions
 - uid: Elements.Geometry.Profiles
   name: Elements.Geometry.Profiles
   href: api/Elements.Geometry.Profiles.html
@@ -12674,11 +12826,11 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.MeshConverter.CanConvert
   nameWithType: MeshConverter.CanConvert
-- uid: Elements.Serialization.JSON.MeshConverter.ReadJson(JsonReader,System.Type,System.Object,JsonSerializer)
+- uid: Elements.Serialization.JSON.MeshConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   name: ReadJson(JsonReader, Type, Object, JsonSerializer)
-  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_ReadJson_JsonReader_System_Type_System_Object_JsonSerializer_
-  commentId: M:Elements.Serialization.JSON.MeshConverter.ReadJson(JsonReader,System.Type,System.Object,JsonSerializer)
-  fullName: Elements.Serialization.JSON.MeshConverter.ReadJson(JsonReader, System.Type, System.Object, JsonSerializer)
+  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:Elements.Serialization.JSON.MeshConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: Elements.Serialization.JSON.MeshConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
   nameWithType: MeshConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.MeshConverter.ReadJson*
   name: ReadJson
@@ -12687,11 +12839,11 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.MeshConverter.ReadJson
   nameWithType: MeshConverter.ReadJson
-- uid: Elements.Serialization.JSON.MeshConverter.WriteJson(JsonWriter,System.Object,JsonSerializer)
+- uid: Elements.Serialization.JSON.MeshConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   name: WriteJson(JsonWriter, Object, JsonSerializer)
-  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_WriteJson_JsonWriter_System_Object_JsonSerializer_
-  commentId: M:Elements.Serialization.JSON.MeshConverter.WriteJson(JsonWriter,System.Object,JsonSerializer)
-  fullName: Elements.Serialization.JSON.MeshConverter.WriteJson(JsonWriter, System.Object, JsonSerializer)
+  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:Elements.Serialization.JSON.MeshConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: Elements.Serialization.JSON.MeshConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
   nameWithType: MeshConverter.WriteJson(JsonWriter, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.MeshConverter.WriteJson*
   name: WriteJson
@@ -12926,6 +13078,19 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.ClosestPosition
   nameWithType: Grid1d.ClosestPosition
+- uid: Elements.Spatial.Grid1d.Curve
+  name: Curve
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Curve
+  commentId: P:Elements.Spatial.Grid1d.Curve
+  fullName: Elements.Spatial.Grid1d.Curve
+  nameWithType: Grid1d.Curve
+- uid: Elements.Spatial.Grid1d.Curve*
+  name: Curve
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_Curve_
+  commentId: Overload:Elements.Spatial.Grid1d.Curve
+  isSpec: "True"
+  fullName: Elements.Spatial.Grid1d.Curve
+  nameWithType: Grid1d.Curve
 - uid: Elements.Spatial.Grid1d.DivideByApproximateLength(System.Double,Elements.Spatial.EvenDivisionMode)
   name: DivideByApproximateLength(Double, EvenDivisionMode)
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByApproximateLength_System_Double_Elements_Spatial_EvenDivisionMode_
