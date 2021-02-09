@@ -9,6 +9,11 @@
 - Line.ExtendTo(IEnumerable<Line>)
 - Line.ExtendTo(Polyline)
 - Line.ExtendTo(Profile)
+- ConvexHull.FromPoints(IEnumerable<Vector3>)
+- ConvexHull.FromPolyline(Polyline)
+- ConvexHull.FromPolylines(IEnumerable<Polyline>)
+- ConvexHull.FromProfile(Profile)
+- Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 - Make Grid1d and Grid2d serializable
