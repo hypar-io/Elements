@@ -506,15 +506,15 @@ namespace Elements.Geometry
             var start = this.Start;
             var end = this.End;
 
-            var startPoints = intersectionsOrdered
+            var startCandidates = intersectionsOrdered
                     .Where(i => (testLine.Start - i).Dot(dir) > 0)
                     .Cast<Vector3?>();
 
-            var endPoints = intersectionsOrdered
+            var endCandidates = intersectionsOrdered
                 .Where(i => (testLine.Start - i).Dot(dir) < testLine.Length() * -1)
                 .Reverse().Cast<Vector3?>();
 
-            var startEndCandidates = extendToFurthest ? (startPoints.LastOrDefault(), endPoints.LastOrDefault() ) : ( startPoints.FirstOrDefault(), endPoints.FirstOrDefault() );
+            var startEndCandidates = extendToFurthest ? (startCandidates.LastOrDefault(), endCandidates.LastOrDefault() ) : ( startCandidates.FirstOrDefault(), endCandidates.FirstOrDefault() );
 
             if (bothSides && startEndCandidates.Item1 != null)
             {
