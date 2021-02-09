@@ -146,7 +146,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Intersect this line with the specified plane 
+        /// Intersect this line with the specified plane
         /// </summary>
         /// <param name="p">The plane.</param>
         /// <param name="result">The location of intersection.</param>
@@ -180,7 +180,7 @@ namespace Elements.Geometry
         /// Does this line intersect the provided line in 2D?
         /// </summary>
         /// <param name="l"></param>
-        /// <returns>Return true if the lines intersect, 
+        /// <returns>Return true if the lines intersect,
         /// false if the lines have coincident vertices or do not intersect.</returns>
         public bool Intersects2D(Line l)
         {
@@ -235,10 +235,10 @@ namespace Elements.Geometry
             }
 
             // at this point they're not parallel, and they lie in the same plane, so we know they intersect, we just don't know where.
-            // construct a plane 
+            // construct a plane
             var normal = l.Direction().Cross(plane.Normal);
             Plane intersectionPlane = new Plane(l.Start, normal);
-            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane? 
+            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane?
             {
                 if (infinite || (l.PointOnLine(planeIntersectionResult, includeEnds) && PointOnLine(planeIntersectionResult, includeEnds)))
                 {
@@ -393,7 +393,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Offset the line. The offset direction will be defined by 
+        /// Offset the line. The offset direction will be defined by
         /// Direction X Vector3.ZAxis.
         /// </summary>
         /// <param name="distance">The distance to offset.</param>
@@ -456,13 +456,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Extend this line to its nearest intersection with any other line.
+        /// Extend this line to its (nearest, by default) intersection with any other line.
+        /// If optional `extendToFurthest` is true, extends to furthest intersection with any other line.
         /// </summary>
         /// <param name="otherLines">The other lines to intersect with</param>
         /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
-        public Line ExtendTo(IEnumerable<Line> otherLines, bool bothSides = true)
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        public Line ExtendTo(IEnumerable<Line> otherLines, bool bothSides = true, bool extendToFurthest = false)
         {
-            // this test line — inset slightly from the line — helps treat the ends as valid intersection points, to prevent 
+            // this test line — inset slightly from the line — helps treat the ends as valid intersection points, to prevent
             // extension beyond an immediate intersection.
             var testLine = new Line(this.PointAt(0.001), this.PointAt(0.999));
             var segments = otherLines;
@@ -486,7 +488,7 @@ namespace Elements.Geometry
                         pointAdded = true;
                     }
                 }
-                if (!pointAdded)
+                if (extendToFurthest || !pointAdded)
                 {
                     var intersects = testLine.Intersects(segment, out Vector3 intersection, true, true);
 
@@ -500,42 +502,67 @@ namespace Elements.Geometry
 
             var dir = this.Direction();
             var intersectionsOrdered = intersectionsForLine.OrderBy(i => (testLine.Start - i).Dot(dir));
-            var start = bothSides ?
-                (intersectionsOrdered
+
+            var start = this.Start;
+            var end = this.End;
+
+            var startPoints = intersectionsOrdered
                     .Where(i => (testLine.Start - i).Dot(dir) > 0)
-                    .Cast<Vector3?>()
-                    .FirstOrDefault() ?? this.Start)
-                : this.Start;
-            var end = intersectionsOrdered
+                    .Cast<Vector3?>();
+
+            var endPoints = intersectionsOrdered
                 .Where(i => (testLine.Start - i).Dot(dir) < testLine.Length() * -1)
-                .Reverse().Cast<Vector3?>()
-                .FirstOrDefault() ?? this.End;
+                .Reverse().Cast<Vector3?>();
+
+            var startEndCandidates = extendToFurthest ? (startPoints.LastOrDefault(), endPoints.LastOrDefault() ) : ( startPoints.FirstOrDefault(), endPoints.FirstOrDefault() );
+
+            if (bothSides && startEndCandidates.Item1 != null)
+            {
+                start = (Vector3)startEndCandidates.Item1;
+            }
+            if (startEndCandidates.Item2 != null)
+            {
+                end = (Vector3)startEndCandidates.Item2;
+            }
 
             return new Line(start, end);
         }
 
         /// <summary>
-        /// Extend this line to its nearest intersection with a polyline or polygon.
+        /// Extend this line to its (nearest, by default) intersection with a polyline.
         /// </summary>
-        /// <param name="polyline">The polyline or polygon to intersect with</param>
+        /// <param name="polyline">The polyline to intersect with</param>
         /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
-        public Line ExtendTo(Polyline polyline, bool bothSides = true)
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        public Line ExtendTo(Polyline polyline, bool bothSides = true, bool extendToFurthest = false)
         {
-            return ExtendTo(polyline.Segments(), bothSides);
+            return ExtendTo(polyline.Segments(), bothSides, extendToFurthest);
         }
 
         /// <summary>
-        /// Extend this line to its nearest intersection with a profile.
+        /// Extend this line to its (nearest, by default) intersection with a profile.
         /// </summary>
         /// <param name="profile">The profile to intersect with</param>
         /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
-        public Line ExtendTo(Profile profile, bool bothSides = true)
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        public Line ExtendTo(Profile profile, bool bothSides = true, bool extendToFurthest = false)
         {
-            return ExtendTo(profile.Segments(), bothSides);
+            return ExtendTo(profile.Segments(), bothSides, extendToFurthest);
         }
 
         /// <summary>
-        /// Trim a line with a polygon. 
+        /// Extend this line to its (nearest, by default) intersection with a polygon.
+        /// </summary>
+        /// <param name="polygon">The polygon to intersect with</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        public Line ExtendTo(Polygon polygon, bool bothSides = true, bool extendToFurthest = false)
+        {
+            return ExtendTo(polygon.Segments(), bothSides, extendToFurthest);
+        }
+
+        /// <summary>
+        /// Trim a line with a polygon.
         /// </summary>
         /// <param name="polygon">The polygon to trim with.</param>
         /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
@@ -563,7 +590,7 @@ namespace Elements.Geometry
                 var segment = new Line(polygon.Vertices[i1], polygon.Vertices[i2]);
                 var segmentsIntersect = Intersects(segment, out Vector3 intersection); // This will return false for intersections exactly at an end
 
-                // See if the segment intersects the edge. 
+                // See if the segment intersects the edge.
                 if (segmentsIntersect)
                 {
                     // Record this intersection.
@@ -612,7 +639,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a fillet arc between this line and the target. 
+        /// Create a fillet arc between this line and the target.
         /// </summary>
         /// <param name="target">The line with which to fillet.</param>
         /// <param name="radius">The radius of the fillet.</param>
@@ -661,7 +688,7 @@ namespace Elements.Geometry
             angle2 = (angle2 + 360) % 360;
             angle2 = angle2 == 0.0 ? 360.0 : angle2;
 
-            // We only support CCW wound arcs. 
+            // We only support CCW wound arcs.
             // For arcs that with start angles <1d, convert
             // the arc back to a negative value.
             var arc = new Arc(arcCenter,

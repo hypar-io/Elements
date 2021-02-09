@@ -927,7 +927,7 @@ namespace Elements.Spatial
 
             for (var i = 0; i < lines.Count(); i++)
             {
-                lines[i] = lines[i].ExtendTo(boundary);
+                lines[i] = lines[i].ExtendTo(boundary, true, true);
             }
 
             var new1 = ExtendLineSkewed(bounds, lines[0], lines[1]);
@@ -962,12 +962,12 @@ namespace Elements.Spatial
                 // move to start and extend
                 var toStart = possiblySkewedLine.Start - intersection;
                 newLine = newLine.TransformedLine(new Transform(toStart));
-                newLine = newLine.ExtendTo(boundary);
+                newLine = newLine.ExtendTo(boundary, true, true);
 
                 // move to end and extend
                 var toEnd = possiblySkewedLine.End - possiblySkewedLine.Start;
                 newLine = newLine.TransformedLine(new Transform(toEnd));
-                newLine = newLine.ExtendTo(boundary);
+                newLine = newLine.ExtendTo(boundary, true, true);
 
                 // move back to original
                 var toBeginning = intersection - possiblySkewedLine.End;
