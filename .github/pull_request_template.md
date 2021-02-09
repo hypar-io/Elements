@@ -12,7 +12,6 @@ FUTURE WORK:
 
 REQUIRED:
 - [ ] All changes are up to date in `CHANGELOG.md`.
-- [ ] The docs are up to date. To update the docs run `build_docs.sh` locally, and commit the results.
 
 COMMENTS:
 - Any other notes.
