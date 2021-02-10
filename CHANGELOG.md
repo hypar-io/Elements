@@ -21,6 +21,7 @@
 
 ### Fixed
 - Fixed a bug where Polygon.UnionAll was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
+- Fixed #517
 ## 0.8.2
 
 ### Changed
