@@ -14,6 +14,7 @@
 - ConvexHull.FromPolylines(IEnumerable<Polyline>)
 - ConvexHull.FromProfile(Profile)
 - Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)
+- `Validator.DisableValidationOnConstruction`
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 - Make Grid1d and Grid2d serializable
