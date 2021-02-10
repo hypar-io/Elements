@@ -426,7 +426,7 @@ namespace Elements.Geometry
         /// </summary>
         public List<Line> Segments()
         {
-            return Perimeter.Segments().Union(Voids.SelectMany(v => v.Segments())).ToList();
+            return Perimeter.Segments().Union(Voids?.SelectMany(v => v.Segments()) ?? new Line[0]).ToList();
         }
     }
 
