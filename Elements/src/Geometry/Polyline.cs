@@ -678,7 +678,8 @@ namespace Elements.Geometry
         {
             var nodes = new List<Node>();
 
-            // Construct a graph where each node has two children.
+            // Construct a graph where each node represents one polyline
+            // vertex pointing to a maximum of two children.
             foreach (var segment in lines)
             {
                 var start = nodes.FirstOrDefault(n => n.Position.IsAlmostEqualTo(segment.Start));
@@ -718,6 +719,8 @@ namespace Elements.Geometry
 
             foreach (var node in nodes)
             {
+                // If a child has already been visited, it's part
+                // of another polyline and doesn't need to be considered.
                 if (node.Visited)
                 {
                     continue;

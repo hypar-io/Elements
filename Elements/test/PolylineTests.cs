@@ -84,7 +84,7 @@ namespace Elements.Geometry.Tests
             {
                 for (var y = 0; y < 3; y++)
                 {
-                    var p = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(x * 3, y * 3)));
+                    var p = Polygon.Rectangle(1, 1).TransformedPolygon(new Transform(new Vector3(x * 3, y * 3)));
                     segments.AddRange(p.Segments());
                 }
             }
