@@ -9,11 +9,16 @@
 - Line.ExtendTo(IEnumerable<Line>)
 - Line.ExtendTo(Polyline)
 - Line.ExtendTo(Profile)
+- Line.ExtendTo(Polygon)
 - ConvexHull.FromPoints(IEnumerable<Vector3>)
 - ConvexHull.FromPolyline(Polyline)
 - ConvexHull.FromPolylines(IEnumerable<Polyline>)
 - ConvexHull.FromProfile(Profile)
 - Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)
+- Grid2d(Polygon, Grid1d, Grid1d)
+- Grid2d(IEnumerable<Polygon>, Grid1d, Grid1d)
+- Grid2d(Polygon, Vector3, Vector3, Vector3)
+- Grid2d(IEnumerable<Polygon>, Vector3, Vector3, Vector3)
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 - Make Grid1d and Grid2d serializable
@@ -32,7 +37,7 @@
 
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
 - Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
-- Fixed an issue where updates to a `Grid2d`'s component `Grid1d` axes would not propagate to the `Grid2d`.  
+- Fixed an issue where updates to a `Grid2d`'s component `Grid1d` axes would not propagate to the `Grid2d`.
 
 ### Added
 
