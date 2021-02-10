@@ -3,25 +3,25 @@
 ## 0.8.3
 
 ### Added
-- Profile.ToModelCurves()
-- Profile.Segments()
-- Bbox3.ToModelCurves()
-- Line.ExtendTo(IEnumerable<Line>)
-- Line.ExtendTo(Polyline)
-- Line.ExtendTo(Profile)
-- ConvexHull.FromPoints(IEnumerable<Vector3>)
-- ConvexHull.FromPolyline(Polyline)
-- ConvexHull.FromPolylines(IEnumerable<Polyline>)
-- ConvexHull.FromProfile(Profile)
-- Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)
+- `Profile.ToModelCurves()`
+- `Profile.Segments()`
+- `Bbox3.ToModelCurves()`
+- `Line.ExtendTo(IEnumerable<Line>)`
+- `Line.ExtendTo(Polyline)`
+- `Line.ExtendTo(Profile)`
+- `ConvexHull.FromPoints(IEnumerable<Vector3>)`
+- `ConvexHull.FromPolyline(Polyline)`
+- `ConvexHull.FromPolylines(IEnumerable<Polyline>)`
+- `ConvexHull.FromProfile(Profile)`
+- `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)`
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
-- Make Grid1d and Grid2d serializable
-- new Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis) did not unitize its axes, this is fixed.
+- Make `Grid1d` and `Grid2d` serializable
+- `new Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)` did not unitize its axes, this is fixed.
 
 ### Fixed
-- Fixed a bug where Polygon.UnionAll was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
-- Fixed #517
+- Fixed a bug where `Polygon.UnionAll` was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
+- Fixed [#517](https://github.com/hypar-io/Elements/issues/517)
 ## 0.8.2
 
 ### Changed
