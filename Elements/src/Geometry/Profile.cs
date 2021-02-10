@@ -17,6 +17,7 @@ namespace Elements.Geometry
         public Profile(Polygon perimeter) : base(Guid.NewGuid(), null)
         {
             this.Perimeter = perimeter;
+            this.Voids = new List<Polygon>();
         }
 
         /// <summary>
