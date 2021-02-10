@@ -89,6 +89,8 @@ namespace Elements.Geometry.Tests
                 }
             }
 
+            // Shuffle the segments to test that unordered
+            // collections of lines are joined correctly.
             segments.Shuffle();
 
             var plines = segments.ToPolylines();

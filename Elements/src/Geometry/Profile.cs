@@ -135,11 +135,11 @@ namespace Elements.Geometry
         {
             if (this.Voids != null)
             {
-                return new Profile((Polygon)this.Perimeter.Transformed(t), this.Voids.Select(v => v.Transformed(t)).Cast<Polygon>().ToList(), Guid.NewGuid(), this.Name);
+                return new Profile(this.Perimeter.TransformedPolygon(t), this.Voids.Select(v => v.TransformedPolygon(t)).ToList(), Guid.NewGuid(), this.Name);
             }
             else
             {
-                return new Profile((Polygon)this.Perimeter.Transformed(t), null, Guid.NewGuid(), this.Name);
+                return new Profile(this.Perimeter.TransformedPolygon(t), null, Guid.NewGuid(), this.Name);
             }
         }
 

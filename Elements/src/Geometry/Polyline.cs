@@ -637,6 +637,38 @@ namespace Elements.Geometry
         /// <param name="l">The line to convert.</param>
         public static Polyline ToPolyline(this Line l) => new Polyline(new[] { l.Start, l.End });
 
+        internal class Node
+        {
+            public Vector3 Position { get; set; }
+            public Node[] Children { get; set; }
+            public bool Visited { get; set; }
+
+            public Node(Vector3 position)
+            {
+                this.Position = position;
+                this.Children = new Node[2];
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Node))
+                {
+                    return false;
+                }
+
+                var n = (Node)obj;
+                return n.Position.IsAlmostEqualTo(this.Position) && n.Children[0].Equals(this.Children[0]) && n.Children[1].Equals(this.Children[1]);
+            }
+
+            public override int GetHashCode()
+            {
+                int hashCode = -236938580;
+                hashCode = hashCode * -1521134295 + Position.GetHashCode();
+                hashCode = hashCode * -1521134295 + EqualityComparer<Node[]>.Default.GetHashCode(Children);
+                return hashCode;
+            }
+        }
+
         /// <summary>
         /// Create polylines from a collection of line segments.
         /// </summary>
@@ -644,56 +676,84 @@ namespace Elements.Geometry
         /// <returns>A collection of polylines.</returns>
         public static List<Polyline> ToPolylines(this List<Line> lines)
         {
-            var polylines = new List<Polyline>();
-            foreach (var line in lines)
+            var nodes = new List<Node>();
+
+            // Construct a graph where each node has two children.
+            foreach (var segment in lines)
             {
-                if (polylines.Count == 0)
+                var start = nodes.FirstOrDefault(n => n.Position.IsAlmostEqualTo(segment.Start));
+                if (start == null)
                 {
-                    polylines.Add(new Polyline(new List<Vector3>() { line.Start, line.End }));
+                    start = new Node(segment.Start);
+                    nodes.Add(start);
+                }
+
+                var end = nodes.FirstOrDefault(n => n.Position.IsAlmostEqualTo(segment.End));
+                if (end == null)
+                {
+                    end = new Node(segment.End);
+                    nodes.Add(end);
+                }
+
+                if (start.Children[0] != null)
+                {
+                    start.Children[1] = end;
+                }
+                else
+                {
+                    start.Children[0] = end;
+                }
+
+                if (end.Children[0] != null)
+                {
+                    end.Children[1] = start;
+                }
+                else
+                {
+                    end.Children[0] = start;
+                }
+            }
+
+            var polylines = new List<Polyline>();
+
+            foreach (var node in nodes)
+            {
+                if (node.Visited)
+                {
                     continue;
                 }
 
-                var xsectFound = false;
-                foreach (var p in polylines)
+                var verts = new List<Vector3>();
+                var child = node;
+                while (!child.Visited)
                 {
-                    if (p.Vertices.Count == 0)
-                    {
-                        continue;
-                    }
+                    child.Visited = true;
 
-                    // If line's start is the polyline's end.
-                    if (p.End.IsAlmostEqualTo(line.Start))
-                    {
-                        p.Vertices.Add(line.End);
-                        xsectFound = true;
-                    }
+                    verts.Add(child.Position);
 
-                    // If the line's end is the polyline's end.
-                    else if (p.End.IsAlmostEqualTo(line.End))
+                    if (child.Children != null)
                     {
-                        p.Vertices.Add(line.Start);
-                        xsectFound = true;
+                        if (child.Children[0] != null && !child.Children[0].Visited)
+                        {
+                            child = child.Children[0];
+                        }
+                        else if (child.Children[1] != null && !child.Children[1].Visited)
+                        {
+                            child = child.Children[1];
+                        }
+                        else
+                        {
+                            // Everything has been visited.
+                            break;
+                        }
                     }
-
-                    // If the line's end is the polyline's start.
-                    else if (p.Start.IsAlmostEqualTo(line.End))
+                    else
                     {
-                        p.Vertices.Insert(0, line.Start);
-                        xsectFound = true;
-                    }
-
-                    // If the line's start is the polyline's start.
-                    else if (p.Start.IsAlmostEqualTo(line.Start))
-                    {
-                        p.Vertices.Insert(0, line.End);
-                        xsectFound = true;
+                        break;
                     }
                 }
 
-                if (!xsectFound)
-                {
-                    polylines.Add(new Polyline(new List<Vector3>() { line.Start, line.End }));
-                }
+                polylines.Add(new Polyline(verts));
             }
 
             return polylines;
