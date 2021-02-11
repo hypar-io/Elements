@@ -502,9 +502,9 @@ namespace Elements.Geometry
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
         public bool IsAlmostEqualTo(Vector3 v)
         {
-            if (Math.Abs(this.X - v.X) < EPSILON &&
-                Math.Abs(this.Y - v.Y) < EPSILON &&
-                Math.Abs(this.Z - v.Z) < EPSILON)
+            if ((this.X - v.X) * (this.X - v.X)
+              + (this.Y - v.Y) * (this.Y - v.Y)
+              + (this.Z - v.Z) * (this.Z - v.Z) < (EPSILON * EPSILON))
             {
                 return true;
             }
@@ -738,10 +738,6 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static Transform ToTransform(this IList<Vector3> points)
         {
-            if (!points.Any(p => Math.Abs(p.Z) > Vector3.EPSILON))
-            {
-                return new Transform();
-            }
             var a = (points[1] - points[0]).Unitized();
             // We need to search for a second vector that is not colinear
             // with the first. If all the vectors are tried, and one isn't
