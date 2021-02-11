@@ -762,6 +762,39 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find the minimum-area rotated rectangle containing a set of points, 
+        /// calculated without regard for Z coordinate. 
+        /// </summary>
+        /// <param name="points">The points to contain within the rectangle</param>
+        /// <returns>A rectangular polygon that contains all input points</returns>
+        public static Polygon FromAlignedBoundingBox2d(IEnumerable<Vector3> points)
+        {
+            var hull = ConvexHull.FromPoints(points);
+            var minBoxArea = double.MaxValue;
+            BBox3 minBox = new BBox3();
+            Transform minBoxXform = new Transform();
+            foreach (var edge in hull.Segments())
+            {
+                var edgeVector = edge.End - edge.Start;
+                var xform = new Transform(Vector3.Origin, edgeVector, Vector3.ZAxis, 0);
+                var invertedXform = new Transform(xform);
+                invertedXform.Invert();
+                var transformedPolygon = hull.TransformedPolygon(invertedXform);
+                var bbox = new BBox3(transformedPolygon.Vertices);
+                var bboxArea = (bbox.Max.X - bbox.Min.X) * (bbox.Max.Y - bbox.Min.Y);
+                if (bboxArea < minBoxArea)
+                {
+                    minBoxArea = bboxArea;
+                    minBox = bbox;
+                    minBoxXform = xform;
+                }
+            }
+            var xy = new Plane(Vector3.Origin, Vector3.ZAxis);
+            var boxRect = Polygon.Rectangle(minBox.Min.Project(xy), minBox.Max.Project(xy));
+            return boxRect.TransformedPolygon(minBoxXform);
+        }
+
+        /// <summary>
         /// Get the hash code for the polygon.
         /// </summary>
         /// <returns></returns>
