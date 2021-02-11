@@ -650,6 +650,38 @@ namespace Elements.Geometry
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
         }
+
+        /// <summary>
+        /// Remove sequential duplicates from a list of points. 
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <param name="wrap">Whether or not to assume a closed shape like a polygon. If true, the last vertex will be compared to the first, and deleted if identical.</param>
+        /// <returns></returns>
+        internal static IList<Vector3> RemoveSequentialDuplicates(IList<Vector3> vertices, bool wrap = false)
+        {
+            List<Vector3> newList = new List<Vector3> { vertices[0] };
+            for (int i = 1; i < vertices.Count; i++)
+            {
+                var vertex = vertices[i];
+                var prevVertex = newList[newList.Count - 1];
+                if (!vertex.IsAlmostEqualTo(prevVertex))
+                {
+                    // if we wrap, and we're at the last vertex, also check for a zero-length segment between first and last.
+                    if (wrap && i == vertices.Count - 1)
+                    {
+                        if (!vertex.IsAlmostEqualTo(vertices[0]))
+                        {
+                            newList.Add(vertex);
+                        }
+                    }
+                    else
+                    {
+                        newList.Add(vertex);
+                    }
+                }
+            }
+            return newList;
+        }
     }
 
     /// <summary>

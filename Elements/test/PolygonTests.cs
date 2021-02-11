@@ -629,10 +629,13 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void SameVertices_ThrowsException()
+        public void SameVertices_RemovesDuplicates()
         {
             var a = new Vector3();
-            Assert.Throws<ArgumentException>(() => new Polygon(new[] { a, a, a }));
+            var b = new Vector3(10, 0, 0);
+            var c = new Vector3(10, 3, 0);
+            var polygon = new Polygon(new[] { a, a, a, b, c });
+            Assert.Equal(3, polygon.Segments().Count());
         }
 
         [Fact]
@@ -646,7 +649,6 @@ namespace Elements.Geometry.Tests
             var unionB = Polygon.UnionAll(polygonsB);
             Model.AddElements(unionA.Select(u => new ModelCurve(u)));
             Model.AddElements(unionB.Select(u => new ModelCurve(u)));
-
         }
 
         [Fact]
