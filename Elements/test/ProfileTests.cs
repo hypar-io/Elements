@@ -69,7 +69,7 @@ namespace Elements.Tests
                 this.Model.AddElement(floor);
             }
             Assert.Equal(2, union.Count);
-            
+
         }
 
         [Fact]
@@ -110,9 +110,9 @@ namespace Elements.Tests
             for (int i = 0; i < 10; i++)
             {
                 var angle = (i / 10.0) * Math.PI * 2;
-                var center = new Vector3(4*Math.Cos(angle), 4*Math.Sin(angle));
-                var outerCircle = new Circle(center,5).ToPolygon(20);
-                var innerCircle = new Circle(center,4).ToPolygon(20);
+                var center = new Vector3(4 * Math.Cos(angle), 4 * Math.Sin(angle));
+                var outerCircle = new Circle(center, 5).ToPolygon(20);
+                var innerCircle = new Circle(center, 4).ToPolygon(20);
                 var location = new Transform(1, 0, 0);
                 var profile = new Profile(outerCircle, innerCircle);
                 firstSet.Add(profile);
@@ -199,6 +199,27 @@ namespace Elements.Tests
                 var dot = a.XAxis.Dot(b.XAxis);
                 Assert.True(dot >= 0);
             }
+        }
+
+        [Fact]
+        public void DeeplyNestedProfileBooleans()
+        {
+            Name = "Deeply Nested Profile Booleans";
+            var perimeter1 = Polygon.Rectangle(new Vector3(0, 0), new Vector3(50, 50));
+            var void1 = Polygon.Rectangle(new Vector3(24, 24), new Vector3(26, 26));
+            var profile1 = new Profile(perimeter1, void1);
+
+            var perimeter2 = Polygon.Rectangle(new Vector3(10, 10), new Vector3(40, 40));
+            var void2 = Polygon.Rectangle(new Vector3(12, 12), new Vector3(38, 38));
+            var profile2 = new Profile(perimeter2, void2);
+
+            var perimeter3 = Polygon.Rectangle(new Vector3(15, 15), new Vector3(35, 35));
+            var void3 = Polygon.Rectangle(new Vector3(17, 17), new Vector3(32, 32));
+            var profile3 = new Profile(perimeter3, void3);
+
+            var difference = Elements.Geometry.Profile.Difference(new[] { profile1 }, new[] { profile2, profile3 });
+            Model.AddElements(difference.Select(d => (new Floor(d, 0.1))));
+            Assert.Equal(3, difference.Count);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -501,9 +502,9 @@ namespace Elements.Geometry
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
         public bool IsAlmostEqualTo(Vector3 v)
         {
-            if (Math.Abs(this.X - v.X) < EPSILON &&
-                Math.Abs(this.Y - v.Y) < EPSILON &&
-                Math.Abs(this.Z - v.Z) < EPSILON)
+            if ((this.X - v.X) * (this.X - v.X)
+              + (this.Y - v.Y) * (this.Y - v.Y)
+              + (this.Z - v.Z) * (this.Z - v.Z) < (EPSILON * EPSILON))
             {
                 return true;
             }
