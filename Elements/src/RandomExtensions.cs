@@ -11,7 +11,7 @@ namespace Elements
         /// <summary>
         /// Generate a new color with a random R, G, and B component. Useful for debugging purposes.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The `Random` object to generate from</param>
         public static Color NextColor(this Random random)
         {
             return new Color(random.NextDouble(), random.NextDouble(), random.NextDouble(), 1);
