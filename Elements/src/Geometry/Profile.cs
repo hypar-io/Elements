@@ -337,7 +337,7 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive);
-            var joinedProfiles = solution.ToProfiles();
+            var joinedProfiles = solution.ToProfiles(tolerance);
             return joinedProfiles;
         }
 
@@ -364,7 +364,7 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
-            var joinedProfiles = solution.ToProfiles();
+            var joinedProfiles = solution.ToProfiles(tolerance);
             return joinedProfiles;
         }
 
@@ -391,7 +391,38 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctIntersection, solution, PolyFillType.pftNonZero);
-            var joinedProfiles = solution.ToProfiles();
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
+        /// <summary>
+        /// Split a set of profiles with a collection of open polylines.
+        /// </summary>
+        /// <param name="profiles">The profiles to split</param>
+        /// <param name="splitLines"></param>
+        /// <param name="tolerance"></param>
+        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines, double tolerance = Vector3.EPSILON)
+        {
+            Clipper clipper = new Clipper();
+            foreach (var profile in profiles)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance / 10);
+                clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
+            }
+
+            foreach (var line in splitLines)
+            {
+                // We're doing something a little bit questionable here — we're offsetting the split curves by a hair's width
+                // so that clipper can handle them as a subtraction, since it doesn't have a built-in split mechanism.
+                // We increase the tolerance so that the result is well within the specified tolerance of the expected result.
+                // This is imperfect, but no more imperfect than all of the other clipper-based operations we currently employ.  
+                var clipRegion = line.Offset(tolerance / 10, EndType.Butt, tolerance / 10);
+                var clipperPaths = clipRegion.Select(s => s.ToClipperPath(tolerance / 10)).ToList();
+                clipper.AddPaths(clipperPaths, PolyType.ptClip, true);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftEvenOdd);
+            var joinedProfiles = solution.ToProfiles(tolerance / 10);
             return joinedProfiles;
         }
 
@@ -439,7 +470,7 @@ namespace Elements.Geometry
         internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
         {
             var joinedProfiles = new List<Profile>();
-           
+
             if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
             {
                 var profile = node.ToProfile(tolerance);

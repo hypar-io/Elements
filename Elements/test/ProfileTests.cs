@@ -221,5 +221,30 @@ namespace Elements.Tests
             Model.AddElements(difference.Select(d => (new Floor(d, 0.1))));
             Assert.Equal(3, difference.Count);
         }
+
+        [Fact]
+        public void SplitProfiles()
+        {
+            Name = "SplitProfiles";
+            var profile = new Profile(
+                Polygon.Rectangle(20, 20),
+                new[] {
+                    Polygon.Rectangle(5, 5),
+                    Polygon.Rectangle(new Vector3(8, -8), new Vector3(9, 9))
+                    },
+                Guid.NewGuid(), null);
+            var polyline = new Polyline(new[] {
+                new Vector3(-21, 0),
+                new Vector3(0, 5),
+                new Vector3(21, -4),
+            });
+            Model.AddElement(polyline);
+            Model.AddElements(profile.ToModelCurves());
+            var split = Elements.Geometry.Profile.Split(new[] { profile }, new[] { polyline });
+            var random = new Random(4);
+            Model.AddElements(split.Select(s => new Floor(s, 0.1, new Transform(), random.NextMaterial())));
+            Assert.Equal(2, split.Count);
+            Assert.Equal(20 * 20 - 5 * 5 - 17, split.Sum(s => s.Area()), 4);
+        }
     }
 }
