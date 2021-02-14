@@ -115,6 +115,30 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Grid2dSerializes()
+        {
+            Name = "grid2d serializes";
+            var polyline = new Polyline(new[] {
+                new Vector3(0,0,0),
+                new Vector3(10,2,0),
+                new Vector3(30,4,0),
+            });
+            var uGrid = new Grid1d(polyline);
+            var p2 = new Line(Vector3.Origin, new Vector3(0, 20, 0));
+            var vGrid = new Grid1d(p2);
+            var grid2d = new Grid2d(uGrid, vGrid);
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByCount(3);
+            grid2d[2, 2].U.DivideByCount(4);
+            var json = JsonConvert.SerializeObject(grid2d);
+            var deserialized = JsonConvert.DeserializeObject<Grid2d>(json);
+            Assert.Equal(grid2d.GetCells().Count, deserialized.GetCells().Count);
+
+            var grid2dElem = new Grid2dElement(grid2d, Guid.NewGuid(), "Grid");
+            Model.AddElement(grid2dElem);
+        }
+
+        [Fact]
         public void CellSeparatorsTrimmed()
         {
             Name = "CellSeparatorsTrimmed";

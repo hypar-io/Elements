@@ -42,8 +42,8 @@ namespace Elements.Geometry
         /// <param name="profile">The Profile.</param>
         public BBox3(Profile profile)
         {
-            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
-            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
+            this.Min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
+            this.Max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
             for (var i = 0; i < profile.Perimeter.Vertices.Count; i++)
             {
                 this.Extend(profile.Perimeter.Vertices[i]);

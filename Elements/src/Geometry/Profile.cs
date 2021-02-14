@@ -17,6 +17,7 @@ namespace Elements.Geometry
         public Profile(Polygon perimeter) : base(Guid.NewGuid(), null)
         {
             this.Perimeter = perimeter;
+            this.Voids = new List<Polygon>();
         }
 
         /// <summary>
@@ -336,27 +337,121 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive);
-            if (solution.ChildCount == 0)
-            {
-                return null;
-            }
-            var joinedProfiles = new List<Profile>();
-            foreach (var result in solution.Childs)
-            {
-                var perimeter = PolygonExtensions.ToPolygon(result.Contour, tolerance);
-                List<Polygon> voidCrvs = new List<Polygon>();
-                if (result.ChildCount > 0)
-                {
-                    foreach (var child in result.Childs)
-                    {
-                        var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
-                        voidCrvs.Add(voidCrv);
-                    }
+            var joinedProfiles = solution.ToProfiles();
+            return joinedProfiles;
+        }
 
+        /// <summary>
+        /// Perform a difference operation on two sets of profiles.
+        /// </summary>
+        /// <param name="firstSet">The profiles to subtract from.</param>
+        /// <param name="secondSet">The profiles to subtract with.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A new list of profiles comprising the first set minus the second set.</returns>
+        public static List<Profile> Difference(IEnumerable<Profile> firstSet, IEnumerable<Profile> secondSet, double tolerance = Vector3.EPSILON)
+        {
+            Clipper clipper = new Clipper();
+            foreach (var profile in firstSet)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
+            }
+
+            foreach (var profile in secondSet)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptClip, true);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
+            var joinedProfiles = solution.ToProfiles();
+            return joinedProfiles;
+        }
+
+        /// <summary>
+        /// Constructs the intersections between two sets of profiles.
+        /// </summary>
+        /// <param name="firstSet">The first set of profiles to intersect with.</param>
+        /// <param name="secondSet">The second set of profiles to intersect with.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A new list of profiles comprising the overlap between the first set and the second set.</returns>
+        public static List<Profile> Intersection(IEnumerable<Profile> firstSet, IEnumerable<Profile> secondSet, double tolerance = Vector3.EPSILON)
+        {
+            Clipper clipper = new Clipper();
+            foreach (var profile in firstSet)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
+            }
+
+            foreach (var profile in secondSet)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptClip, true);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ClipType.ctIntersection, solution, PolyFillType.pftNonZero);
+            var joinedProfiles = solution.ToProfiles();
+            return joinedProfiles;
+        }
+
+        /// <summary>
+        /// Get all segments from a profile's perimeter and internal voids.
+        /// </summary>
+        public List<Line> Segments()
+        {
+            return Perimeter.Segments().Union(Voids?.SelectMany(v => v.Segments()) ?? new Line[0]).ToList();
+        }
+    }
+
+    /// <summary>
+    /// Profile extension methods.
+    /// </summary>
+    public static class ProfileExtensions
+    {
+        internal static List<List<IntPoint>> ToClipperPaths(this Profile profile, double tolerance = Vector3.EPSILON)
+        {
+            var subjectPolygons = new List<Polygon> { profile.Perimeter.IsClockWise() ? profile.Perimeter.Reversed() : profile.Perimeter };
+            if (profile.Voids != null && profile.Voids.Count > 0)
+            {
+                subjectPolygons.AddRange(profile.Voids);
+            }
+            var clipperPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
+            return clipperPaths;
+        }
+
+        internal static Profile ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
+        {
+            var perimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
+            List<Polygon> voidCrvs = new List<Polygon>();
+            if (node.ChildCount > 0)
+            {
+                foreach (var child in node.Childs)
+                {
+                    var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
+                    voidCrvs.Add(voidCrv);
                 }
-                joinedProfiles.Add(new Profile(perimeter, voidCrvs, Guid.NewGuid(), null));
+            }
+            var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
+            return profile;
+        }
+
+        internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
+        {
+            var joinedProfiles = new List<Profile>();
+           
+            if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
+            {
+                var profile = node.ToProfile(tolerance);
+                joinedProfiles.Add(profile);
+            }
+            foreach (var result in node.Childs)
+            {
+                var profiles = result.ToProfiles(tolerance);
+                joinedProfiles.AddRange(profiles);
             }
             return joinedProfiles;
         }
+
     }
 }
