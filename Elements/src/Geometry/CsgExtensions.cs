@@ -76,6 +76,9 @@ namespace Elements.Geometry
 
             var iCursor = 0;
 
+            Vector3 e1;
+            Vector3 e2;
+
             for (var i = 0; i < tessellations.Length; i++)
             {
                 var tess = tessellations[i];
@@ -90,30 +93,12 @@ namespace Elements.Geometry
                 var n = tmp.Cross(c - a).Unitized();
 
                 // Calculate the texture space basis vectors
-                // by using the longest edge as U and its perpendicular V 
-                // calculated from the normal.
-                // TODO: This parameterization strategy is weak and will lead to 
-                // unpleasant results in some scenarios. Ex: a brick pattern which
-                // should be horizontal to the ground, but turns sideways on skinny
-                // wall segments. Update this to support natural parameterization.
-                var e1 = (b - a);
-                var maxLength = e1.Length();
-                var uvOriginP = a;
-                for (var j = 0; j <= tess.Vertices.Count() - 1; j++)
-                {
-                    var start = tess.Vertices[j].Position.ToVector3();
-                    var end = j == tess.Vertices.Count() - 1 ? tess.Vertices[0].Position.ToVector3() : tess.Vertices[j + 1].Position.ToVector3();
-                    var test = start - end;
-                    var l = test.Length();
-                    if (l > maxLength)
-                    {
-                        e1 = test;
-                        maxLength = l;
-                        uvOriginP = start;
-                    }
-                }
-                e1 = e1.Unitized();
-                var e2 = e1.Cross(n).Negate();
+                // from the first triangle. This is acceptable
+                // for planar faces.
+                // TODO: Update this when we support non-planar faces.
+                // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
+                e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
+                e2 = n.Cross(e1).Unitized();
 
                 for (var j = 0; j < tess.Vertices.Length; j++)
                 {
@@ -131,9 +116,8 @@ namespace Elements.Geometry
                     // Texture coordinates are normalized
                     // based on the length of the longest edge. Removing
                     // this will cause textures to appear as unit length.
-                    var pRel = (p - uvOriginP).Unitized();
-                    var uu = e1.Dot(pRel); // / maxLength;
-                    var vv = e2.Dot(pRel); // / maxLength;
+                    var uu = e1.Dot(p);
+                    var vv = e2.Dot(p);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)uu), 0, uvBuffer, uvi, floatSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)vv), 0, uvBuffer, uvi + floatSize, floatSize);
 

@@ -155,7 +155,7 @@ namespace Elements.Serialization.glTF
                 m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
                 m.DoubleSided = material.DoubleSided;
-                
+
                 m.Name = material.Name;
 
                 if (material.Unlit)
@@ -182,7 +182,7 @@ namespace Elements.Serialization.glTF
                     m.PbrMetallicRoughness.BaseColorTexture = ti;
                     ti.Index = texId;
                     ti.TexCoord = 0;
-                    if(!material.Unlit)
+                    if (!material.Unlit)
                     {
                         ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
                     }
@@ -1010,8 +1010,8 @@ namespace Elements.Serialization.glTF
                                      nmax,
                                      imin,
                                      imax,
-                                     uvmax,
                                      uvmin,
+                                     uvmax,
                                      materialIndexMap[materialName],
                                      cmin,
                                      cmax,
@@ -1172,7 +1172,7 @@ namespace Elements.Serialization.glTF
 
             csg.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin,
-                            out cmax, out imin, out imax, out uvmax, out uvmin);
+                            out cmax, out imin, out imax, out uvmin, out uvmax);
 
             if (vertexBuffer.Length == 0)
             {

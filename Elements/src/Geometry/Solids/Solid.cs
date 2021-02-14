@@ -417,8 +417,10 @@ namespace Elements.Geometry.Solids
                         // from the first triangle. This is acceptable
                         // for planar faces.
                         // TODO: Update this when we support non-planar faces.
-                        e1 = (b - a).Unitized();
-                        e2 = e1.Cross((c - a).Unitized()).Cross(e1);
+                        // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
+                        var n = f.Plane().Normal;
+                        e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
+                        e2 = n.Cross(e1).Unitized();
                     }
 
                     var v1 = faceMesh.AddVertex(a, new UV(e1.Dot(a), e2.Dot(a)), color: color);
