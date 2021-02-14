@@ -93,9 +93,27 @@ namespace Elements.Geometry.Solids
             foreach (var he in this.Outer.Edges)
             {
                 var line = new Line(he.Edge.Left.Vertex.Point, he.Edge.Right.Vertex.Point);
-                if (line.Intersects(p, out var result))
+
+                if (line.Direction().Dot(p.Normal) == 0)
                 {
-                    xsects.Add(result);
+                    if (line.Start.DistanceTo(p).ApproximatelyEquals(0))
+                    {
+                        if (!xsects.Contains(line.Start))
+                        {
+                            xsects.Add(line.Start);
+                        }
+                        if (!xsects.Contains(line.End))
+                        {
+                            xsects.Add(line.End);
+                        }
+                    }
+                }
+                else if (line.Intersects(p, out var result))
+                {
+                    if (!xsects.Contains(result))
+                    {
+                        xsects.Add(result);
+                    }
                 }
             }
 

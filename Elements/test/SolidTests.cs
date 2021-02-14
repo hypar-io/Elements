@@ -181,6 +181,45 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SolidPlaneIntersectionAtEdge()
+        {
+            var polygon = new Polygon(new[] {
+                new Vector3(0,0,0),
+                new Vector3(10,0,0),
+                new Vector3(10,4,4),
+                new Vector3(0,4,4)
+            });
+            var extrude = new Extrude(polygon, 10, Vector3.ZAxis, false);
+            var plane = new Plane(new Vector3(0, 0, 4), Vector3.ZAxis);
+            var intersect = new[] { extrude }.TryIntersect(plane, out var result);
+            Assert.True(intersect);
+            Assert.Equal(1, result.Count);
+            Assert.Equal(40, result[0].Area());
+        }
+
+        [Fact]
+        public void SolidPlaneIntersectionAtVertex()
+        {
+            var polygon = new Polygon(new[] {
+                new Vector3(0,0,0),
+                new Vector3(10,0,2),
+                new Vector3(10,4,6),
+                new Vector3(0,4,4)
+            });
+            var extrude = new Extrude(polygon, 10, Vector3.ZAxis, false);
+            var plane1 = new Plane(new Vector3(0, 0, 4), Vector3.ZAxis);
+            // var intersect = new[] { extrude }.TryIntersect(plane1, out var result);
+            // Assert.True(intersect);
+            // Assert.Equal(1, result.Count);
+            // Assert.Equal(30, result[0].Area());
+            var plane2 = new Plane(new Vector3(0, 0, 2), Vector3.ZAxis);
+            var intersect2 = new[] { extrude }.TryIntersect(plane1, out var result2);
+            Assert.True(intersect2);
+            Assert.Equal(1, result2.Count);
+            Assert.Equal(10, result2[0].Area());
+        }
+
+        [Fact]
         public void SweptSolidAngle()
         {
             var n = 4;
