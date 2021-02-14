@@ -990,8 +990,8 @@ namespace Elements.Serialization.glTF
                                 out cmax,
                                 out imin,
                                 out imax,
-                                out uvmax,
-                                out uvmin);
+                                out uvmin,
+                                out uvmax);
 
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.

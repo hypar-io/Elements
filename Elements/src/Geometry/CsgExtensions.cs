@@ -190,6 +190,9 @@ namespace Elements.Geometry
 
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
+                Vector3 e1 = new Vector3();
+                Vector3 e2 = new Vector3();
+
                 var vertices = new List<Csg.Vertex>();
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
@@ -219,23 +222,31 @@ namespace Elements.Geometry
                             cv = v;
                         }
                     }
+                    if (i == 0)
+                    {
+                        var n = f.Plane().Normal;
+                        e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
+                        e2 = n.Cross(e1).Unitized();
+                    }
                     if (av == null)
                     {
-                        av = new Csg.Vertex(a, new Csg.Vector2D());
+                        var avv = new Vector3(a.X, a.Y, a.Z);
+                        av = new Csg.Vertex(a, new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
                         vertices.Add(av);
                     }
                     if (bv == null)
                     {
-                        bv = new Csg.Vertex(b, new Csg.Vector2D());
+                        var bvv = new Vector3(b.X, b.Y, b.Z);
+                        bv = new Csg.Vertex(b, new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
                         vertices.Add(bv);
                     }
                     if (cv == null)
                     {
-                        cv = new Csg.Vertex(c, new Csg.Vector2D());
+                        var cvv = new Vector3(c.X, c.Y, c.Z);
+                        cv = new Csg.Vertex(c, new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
                         vertices.Add(cv);
                     }
 
-                    // TODO: Add texture coordinates.
                     var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
                     polygons.Add(p);
                 }
