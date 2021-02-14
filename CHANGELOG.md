@@ -16,11 +16,13 @@
 - `ConvexHull.FromPolylines(IEnumerable<Polyline>)`
 - `ConvexHull.FromProfile(Profile)`
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)`
+
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 - Prevent the Polygon / Polyline constructors from throwing an exception on duplicate vertices, by removing duplicates automatically.
 - Make `Grid1d` and `Grid2d` serializable
 - `new Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)` did not unitize its axes, this is fixed.
+- All solids and csgs will now have planar texture coordinates.
 
 ### Fixed
 - Fixed a bug where `Polygon.UnionAll` was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
