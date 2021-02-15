@@ -5,10 +5,10 @@
 ### Added
 - `Solid.TryIntersect(Plane plane, out List<Line>lines)`
 - `SolidOperationExtensions.TryIntersect(this IList<SolidOperation> ops, Plane plane, out List<Profile> profiles)`
-- `Profile.ToModelCurves()`
-- `Bbox3.ToModelCurves()`
 - `PolylineExtensions.ToPolylines(...)`
 - `Profile.ToModelCurves()`
+- `Profile.Difference()`
+- `Profile.Intersection()`
 - `Profile.Segments()`
 - `Bbox3.ToModelCurves()`
 - `Line.ExtendTo(IEnumerable<Line>)`
@@ -19,14 +19,17 @@
 - `ConvexHull.FromPolylines(IEnumerable<Polyline>)`
 - `ConvexHull.FromProfile(Profile)`
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)`
+- `Random.NextColor()` and `Random.NextMaterial()`
 
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
-- Make Grid1d and Grid2d serializable
-- new Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis) did not unitize its axes, this is fixed.
+- Prevent the Polygon / Polyline constructors from throwing an exception on duplicate vertices, by removing duplicates automatically.
+- Make `Grid1d` and `Grid2d` serializable
+- `new Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)` did not unitize its axes, this is fixed.
 
 ### Fixed
-- Fixed a bug where Polygon.UnionAll was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
+- Fixed a bug where `Polygon.UnionAll` was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
+- Fixed [#517](https://github.com/hypar-io/Elements/issues/517)
 ## 0.8.2
 
 ### Changed
