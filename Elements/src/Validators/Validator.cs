@@ -36,10 +36,9 @@ namespace Elements.Validators
         private static Validator _validator;
 
         /// <summary>
-        /// Use this to disable geometry validation. This can cause lots of unexpected consequences; only use it if you know what you're doing.
-        /// It's probably a good idea to turn this back to false when you're done circumventing checks for a tricky operation.
+        /// Should geometry validation be disabled during construction? 
+        /// Note: Disabling validation can have unforeseen consequences. Use with caution.
         /// </summary>
-        /// <value></value>
         public static bool DisableValidationOnConstruction { get; set; } = false;
 
         /// <summary>
@@ -86,10 +85,12 @@ namespace Elements.Validators
             {
                 return null;
             }
+
             if (_validators.ContainsKey(typeof(T)))
             {
                 return _validators[typeof(T)];
             }
+            
             return null;
         }
     }
