@@ -306,7 +306,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "DjiJf7gjtfsY5e3oeczmig=="
+          "hash": "UPkqMzQjJOOrx1+u5p6Leg=="
         }
       },
       "is_incremental": false,
@@ -1592,6 +1592,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Elements.RandomExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.RandomExtensions.html",
+          "hash": "+bq/nTIBna4jP7l02Lw+rQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Serialization.JSON.JsonInheritanceConverter.yml",
       "output": {
         ".html": {
@@ -2124,7 +2136,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.html",
-          "hash": "CIL4bvDiYrAiB0nEFjioqw=="
+          "hash": "JVMsgBRuiuRLgirG1bUyYQ=="
         }
       },
       "is_incremental": false,
@@ -4067,7 +4079,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 143,
+          "total_file_count": 144,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
