@@ -416,12 +416,17 @@ namespace Elements.Geometry
                 // so that clipper can handle them as a subtraction, since it doesn't have a built-in split mechanism.
                 // We increase the tolerance so that the result is well within the specified tolerance of the expected result.
                 // This is imperfect, but no more imperfect than all of the other clipper-based operations we currently employ.  
-                var clipRegion = line.Offset(tolerance / 10, EndType.Butt, tolerance / 10);
-                var clipperPaths = clipRegion.Select(s => s.ToClipperPath(tolerance / 10)).ToList();
-                clipper.AddPaths(clipperPaths, PolyType.ptClip, true);
+                var unionClipper = new Clipper();
+                var clipRegion = line.Offset(tolerance, EndType.Butt, tolerance / 10);
+                List<List<IntPoint>> unionSolution = new List<List<IntPoint>>();
+                unionClipper.AddPaths(clipRegion.Select(c => c.ToClipperPath(tolerance / 10)).ToList(), PolyType.ptSubject, true);
+                unionClipper.Execute(ClipType.ctUnion, unionSolution, PolyFillType.pftNonZero);
+
+                // var clipperPaths = clipRegion.Select(s => s.ToClipperPath(tolerance / 10)).ToList();
+                clipper.AddPaths(unionSolution, PolyType.ptClip, true);
             }
             PolyTree solution = new PolyTree();
-            clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftEvenOdd);
+            clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
             var joinedProfiles = solution.ToProfiles(tolerance / 10);
             return joinedProfiles;
         }
@@ -454,13 +459,20 @@ namespace Elements.Geometry
         internal static Profile ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
         {
             var perimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
+            if (perimeter == null)
+            {
+                return null;
+            }
             List<Polygon> voidCrvs = new List<Polygon>();
             if (node.ChildCount > 0)
             {
                 foreach (var child in node.Childs)
                 {
                     var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
-                    voidCrvs.Add(voidCrv);
+                    if (voidCrv != null)
+                    {
+                        voidCrvs.Add(voidCrv);
+                    }
                 }
             }
             var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
@@ -479,7 +491,7 @@ namespace Elements.Geometry
             foreach (var result in node.Childs)
             {
                 var profiles = result.ToProfiles(tolerance);
-                joinedProfiles.AddRange(profiles);
+                joinedProfiles.AddRange(profiles.Where(p => p != null));
             }
             return joinedProfiles;
         }

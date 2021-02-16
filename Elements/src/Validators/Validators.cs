@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 
@@ -348,7 +349,8 @@ namespace Elements.Validators
 
         public void PostConstruct(object obj)
         {
-            if(obj is Polygon) {
+            if (obj is Polygon)
+            {
                 // we don't need to validate twice — 
                 // the Polygon PostConstruct validator will handle all of this correctly.
                 return;
@@ -376,8 +378,11 @@ namespace Elements.Validators
             polygon.Vertices = Vector3.RemoveSequentialDuplicates(polygon.Vertices, true);
             var segments = Polygon.SegmentsInternal(polygon.Vertices);
             Polyline.CheckSegmentLengthAndThrow(segments);
-
-            var t = polygon.Vertices.ToTransform();
+            var t = new Transform();
+            if (polygon.Vertices.Any(v => Math.Abs(v.Z) > Vector3.EPSILON))
+            {
+                t = polygon.Vertices.ToTransform();
+            }
             Polyline.CheckSelfIntersectionAndThrow(t, segments);
             return;
         }
