@@ -12571,6 +12571,38 @@ references:
   isSpec: "True"
   fullName: Elements.Panel.UpdateRepresentations
   nameWithType: Panel.UpdateRepresentations
+- uid: Elements.RandomExtensions
+  name: RandomExtensions
+  href: api/Elements.RandomExtensions.html
+  commentId: T:Elements.RandomExtensions
+  fullName: Elements.RandomExtensions
+  nameWithType: RandomExtensions
+- uid: Elements.RandomExtensions.NextColor(System.Random)
+  name: NextColor(Random)
+  href: api/Elements.RandomExtensions.html#Elements_RandomExtensions_NextColor_System_Random_
+  commentId: M:Elements.RandomExtensions.NextColor(System.Random)
+  fullName: Elements.RandomExtensions.NextColor(System.Random)
+  nameWithType: RandomExtensions.NextColor(Random)
+- uid: Elements.RandomExtensions.NextColor*
+  name: NextColor
+  href: api/Elements.RandomExtensions.html#Elements_RandomExtensions_NextColor_
+  commentId: Overload:Elements.RandomExtensions.NextColor
+  isSpec: "True"
+  fullName: Elements.RandomExtensions.NextColor
+  nameWithType: RandomExtensions.NextColor
+- uid: Elements.RandomExtensions.NextMaterial(System.Random,System.Boolean)
+  name: NextMaterial(Random, Boolean)
+  href: api/Elements.RandomExtensions.html#Elements_RandomExtensions_NextMaterial_System_Random_System_Boolean_
+  commentId: M:Elements.RandomExtensions.NextMaterial(System.Random,System.Boolean)
+  fullName: Elements.RandomExtensions.NextMaterial(System.Random, System.Boolean)
+  nameWithType: RandomExtensions.NextMaterial(Random, Boolean)
+- uid: Elements.RandomExtensions.NextMaterial*
+  name: NextMaterial
+  href: api/Elements.RandomExtensions.html#Elements_RandomExtensions_NextMaterial_
+  commentId: Overload:Elements.RandomExtensions.NextMaterial
+  isSpec: "True"
+  fullName: Elements.RandomExtensions.NextMaterial
+  nameWithType: RandomExtensions.NextMaterial
 - uid: Elements.Serialization.glTF
   name: Elements.Serialization.glTF
   href: api/Elements.Serialization.glTF.html
@@ -15182,6 +15214,19 @@ references:
   commentId: T:Elements.Validators.Validator
   fullName: Elements.Validators.Validator
   nameWithType: Validator
+- uid: Elements.Validators.Validator.DisableValidationOnConstruction
+  name: DisableValidationOnConstruction
+  href: api/Elements.Validators.Validator.html#Elements_Validators_Validator_DisableValidationOnConstruction
+  commentId: P:Elements.Validators.Validator.DisableValidationOnConstruction
+  fullName: Elements.Validators.Validator.DisableValidationOnConstruction
+  nameWithType: Validator.DisableValidationOnConstruction
+- uid: Elements.Validators.Validator.DisableValidationOnConstruction*
+  name: DisableValidationOnConstruction
+  href: api/Elements.Validators.Validator.html#Elements_Validators_Validator_DisableValidationOnConstruction_
+  commentId: Overload:Elements.Validators.Validator.DisableValidationOnConstruction
+  isSpec: "True"
+  fullName: Elements.Validators.Validator.DisableValidationOnConstruction
+  nameWithType: Validator.DisableValidationOnConstruction
 - uid: Elements.Validators.Validator.GetFirstValidatorForType*
   name: GetFirstValidatorForType
   href: api/Elements.Validators.Validator.html#Elements_Validators_Validator_GetFirstValidatorForType_

@@ -16,6 +16,8 @@
 - `ConvexHull.FromPolylines(IEnumerable<Polyline>)`
 - `ConvexHull.FromProfile(Profile)`
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)`
+- `Random.NextColor()` and `Random.NextMaterial()`
+- `Validator.DisableValidationOnConstruction`
 
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
