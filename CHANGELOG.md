@@ -5,6 +5,9 @@
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 
+### Added
+- A triangle validator to check for 3 distinct vertex positions.
+
 ## 0.8.2
 
 ### Changed
@@ -16,7 +19,7 @@
 
 - Fixed #483 `Deserialization of profiles created in UpdateRepresentation`
 - Fixed #484 `Failure to deserialize Model if any assembly can't be loaded.`
-- Fixed an issue where updates to a `Grid2d`'s component `Grid1d` axes would not propagate to the `Grid2d`.  
+- Fixed an issue where updates to a `Grid2d`'s component `Grid1d` axes would not propagate to the `Grid2d`.
 
 ### Added
 
