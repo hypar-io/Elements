@@ -15214,6 +15214,19 @@ references:
   commentId: T:Elements.Validators.Validator
   fullName: Elements.Validators.Validator
   nameWithType: Validator
+- uid: Elements.Validators.Validator.DisableValidationOnConstruction
+  name: DisableValidationOnConstruction
+  href: api/Elements.Validators.Validator.html#Elements_Validators_Validator_DisableValidationOnConstruction
+  commentId: P:Elements.Validators.Validator.DisableValidationOnConstruction
+  fullName: Elements.Validators.Validator.DisableValidationOnConstruction
+  nameWithType: Validator.DisableValidationOnConstruction
+- uid: Elements.Validators.Validator.DisableValidationOnConstruction*
+  name: DisableValidationOnConstruction
+  href: api/Elements.Validators.Validator.html#Elements_Validators_Validator_DisableValidationOnConstruction_
+  commentId: Overload:Elements.Validators.Validator.DisableValidationOnConstruction
+  isSpec: "True"
+  fullName: Elements.Validators.Validator.DisableValidationOnConstruction
+  nameWithType: Validator.DisableValidationOnConstruction
 - uid: Elements.Validators.Validator.GetFirstValidatorForType*
   name: GetFirstValidatorForType
   href: api/Elements.Validators.Validator.html#Elements_Validators_Validator_GetFirstValidatorForType_
