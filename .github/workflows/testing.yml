@@ -1,0 +1,33 @@
+name: Test docs
+
+on:
+  push:
+    branches:
+      - "better-docs-again"
+
+jobs:
+  build-docs:
+    runs-on: windows-2019
+    needs: build-bump-publish
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Setup docfx
+        run: choco install docfx -y
+      - name: Build docs
+        run: |
+          rm -r docs
+          dotnet test --filter Category=Examples
+          docfx ./doc/docfx.json -f --serve
+      - name: Publish docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: docs
