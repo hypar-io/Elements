@@ -395,8 +395,7 @@ namespace Elements.Geometry.Solids
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
                 var faceMesh = new Mesh();
-                Vector3 e1 = Vector3.XAxis;
-                Vector3 e2 = Vector3.YAxis;
+                (Vector3 U, Vector3 V) basis = (default(Vector3), default(Vector3));
 
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
@@ -419,13 +418,12 @@ namespace Elements.Geometry.Solids
                         // TODO: Update this when we support non-planar faces.
                         // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
                         var n = f.Plane().Normal;
-                        e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                        e2 = n.Cross(e1).Unitized();
+                        basis = n.ComputeDefaultBasisVectors();
                     }
 
-                    var v1 = faceMesh.AddVertex(a, new UV(e1.Dot(a), e2.Dot(a)), color: color);
-                    var v2 = faceMesh.AddVertex(b, new UV(e1.Dot(b), e2.Dot(b)), color: color);
-                    var v3 = faceMesh.AddVertex(c, new UV(e1.Dot(c), e2.Dot(c)), color: color);
+                    var v1 = faceMesh.AddVertex(a, new UV(basis.U.Dot(a), basis.V.Dot(a)), color: color);
+                    var v2 = faceMesh.AddVertex(b, new UV(basis.U.Dot(b), basis.V.Dot(b)), color: color);
+                    var v3 = faceMesh.AddVertex(c, new UV(basis.U.Dot(c), basis.V.Dot(c)), color: color);
 
                     faceMesh.AddTriangle(v1, v2, v3);
                 }

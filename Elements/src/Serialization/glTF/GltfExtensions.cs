@@ -13,6 +13,9 @@ using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
 using Elements.Interfaces;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp;
+using Image = glTFLoader.Schema.Image;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -175,6 +178,8 @@ namespace Elements.Serialization.glTF
                     };
                 }
 
+                var textureHasTransparency = false;
+
                 if (material.Texture != null && File.Exists(material.Texture))
                 {
                     // Add the texture
@@ -206,6 +211,8 @@ namespace Elements.Serialization.glTF
                             // 0,0  1,0
                             using (var texImage = SixLabors.ImageSharp.Image.Load(material.Texture))
                             {
+                                PngMetadata meta = texImage.Metadata.GetPngMetadata();
+                                textureHasTransparency = meta.ColorType == PngColorType.RgbWithAlpha || meta.ColorType == PngColorType.GrayscaleWithAlpha;
                                 texImage.Mutate(x => x.Flip(FlipMode.Vertical));
                                 texImage.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
                             }
@@ -239,8 +246,7 @@ namespace Elements.Serialization.glTF
                     }
                 }
 
-                // Use blend for the alpha mode as textures may have transparency.
-                if (material.Color.Alpha < 1.0 || material.Texture != null)
+                if (material.Color.Alpha < 1.0 || textureHasTransparency)
                 {
                     m.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.BLEND;
                 }

@@ -76,8 +76,7 @@ namespace Elements.Geometry
 
             var iCursor = 0;
 
-            Vector3 e1;
-            Vector3 e2;
+            (Vector3 U, Vector3 V) basis;
 
             for (var i = 0; i < tessellations.Length; i++)
             {
@@ -97,8 +96,7 @@ namespace Elements.Geometry
                 // for planar faces.
                 // TODO: Update this when we support non-planar faces.
                 // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
-                e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                e2 = n.Cross(e1).Unitized();
+                basis = n.ComputeDefaultBasisVectors();
 
                 for (var j = 0; j < tess.Vertices.Length; j++)
                 {
@@ -113,11 +111,8 @@ namespace Elements.Geometry
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Y), 0, normalBuffer, vi + floatSize, floatSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
 
-                    // Texture coordinates are normalized
-                    // based on the length of the longest edge. Removing
-                    // this will cause textures to appear as unit length.
-                    var uu = e1.Dot(p);
-                    var vv = e2.Dot(p);
+                    var uu = basis.U.Dot(p);
+                    var vv = basis.V.Dot(p);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)uu), 0, uvBuffer, uvi, floatSize);
                     System.Buffer.BlockCopy(BitConverter.GetBytes((float)vv), 0, uvBuffer, uvi + floatSize, floatSize);
 
