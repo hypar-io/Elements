@@ -216,7 +216,6 @@ namespace Elements.Serialization.glTF
 
                         while (buffer.Count % 4 != 0)
                         {
-                            // Console.WriteLine("Padding...");
                             buffer.Add(0);
                         }
 
@@ -240,7 +239,8 @@ namespace Elements.Serialization.glTF
                     }
                 }
 
-                if (material.Color.Alpha < 1.0)
+                // Use blend for the alpha mode as textures may have transparency.
+                if (material.Color.Alpha < 1.0 || material.Texture != null)
                 {
                     m.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.BLEND;
                 }
