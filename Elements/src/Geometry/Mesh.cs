@@ -224,7 +224,7 @@ Triangles:{Triangles.Count}";
             var t = new Triangle(a, b, c);
             if (HasDuplicatedVertices(t, out Vector3 duplicate))
             {
-                throw new ArgumentException($"Can't create Triangle.  The {duplicate} vertex position is duplicated.");
+                throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
             this.Triangles.Add(t);
             return t;
@@ -238,7 +238,7 @@ Triangles:{Triangles.Count}";
         {
             if (HasDuplicatedVertices(t, out Vector3 duplicate))
             {
-                throw new ArgumentException($"Not a valid Triangle.  The {duplicate} vertex position is duplicated.");
+                throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
             this.Triangles.Add(t);
             return t;
