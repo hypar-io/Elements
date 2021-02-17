@@ -615,7 +615,7 @@ namespace Elements.Geometry
             {
                 var A = intersectionsOrdered[i];
                 var B = intersectionsOrdered[i + 1];
-                if (A.DistanceTo(B) < Vector3.EPSILON) // skip duplicate points
+                if (A.IsAlmostEqualTo(B)) // skip duplicate points
                 {
                     continue;
                 }
