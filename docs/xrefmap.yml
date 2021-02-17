@@ -11044,6 +11044,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.CompareTo
   nameWithType: Vector3.CompareTo
+- uid: Elements.Geometry.Vector3.ComputeDefaultBasisVectors
+  name: ComputeDefaultBasisVectors()
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_ComputeDefaultBasisVectors
+  commentId: M:Elements.Geometry.Vector3.ComputeDefaultBasisVectors
+  fullName: Elements.Geometry.Vector3.ComputeDefaultBasisVectors()
+  nameWithType: Vector3.ComputeDefaultBasisVectors()
+- uid: Elements.Geometry.Vector3.ComputeDefaultBasisVectors*
+  name: ComputeDefaultBasisVectors
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_ComputeDefaultBasisVectors_
+  commentId: Overload:Elements.Geometry.Vector3.ComputeDefaultBasisVectors
+  isSpec: "True"
+  fullName: Elements.Geometry.Vector3.ComputeDefaultBasisVectors
+  nameWithType: Vector3.ComputeDefaultBasisVectors
 - uid: Elements.Geometry.Vector3.Cross(Elements.Geometry.Vector3)
   name: Cross(Vector3)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_Cross_Elements_Geometry_Vector3_

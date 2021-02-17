@@ -13,6 +13,9 @@ using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
 using Elements.Interfaces;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp;
+using Image = glTFLoader.Schema.Image;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -122,7 +125,10 @@ namespace Elements.Serialization.glTF
             return b64;
         }
 
-        internal static Dictionary<string, int> AddMaterials(this Gltf gltf, IList<Material> materials, List<byte> buffer, List<BufferView> bufferViews)
+        internal static Dictionary<string, int> AddMaterials(this Gltf gltf,
+                                                             IList<Material> materials,
+                                                             List<byte> buffer,
+                                                             List<BufferView> bufferViews)
         {
             var materialDict = new Dictionary<string, int>();
             var newMaterials = new List<glTFLoader.Schema.Material>();
@@ -152,12 +158,13 @@ namespace Elements.Serialization.glTF
                 m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
                 m.DoubleSided = material.DoubleSided;
+
                 m.Name = material.Name;
 
                 if (material.Unlit)
                 {
                     m.Extensions = new Dictionary<string, object>{
-                        {"KHR_materials_unlit", new Dictionary<string, object>{}}
+                        {"KHR_materials_unlit", new Dictionary<string, object>{}},
                     };
                 }
                 else
@@ -171,6 +178,8 @@ namespace Elements.Serialization.glTF
                     };
                 }
 
+                var textureHasTransparency = false;
+
                 if (material.Texture != null && File.Exists(material.Texture))
                 {
                     // Add the texture
@@ -178,7 +187,10 @@ namespace Elements.Serialization.glTF
                     m.PbrMetallicRoughness.BaseColorTexture = ti;
                     ti.Index = texId;
                     ti.TexCoord = 0;
-                    ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+                    if (!material.Unlit)
+                    {
+                        ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+                    }
 
                     if (textureDict.ContainsKey(material.Texture))
                     {
@@ -199,6 +211,8 @@ namespace Elements.Serialization.glTF
                             // 0,0  1,0
                             using (var texImage = SixLabors.ImageSharp.Image.Load(material.Texture))
                             {
+                                PngMetadata meta = texImage.Metadata.GetPngMetadata();
+                                textureHasTransparency = meta.ColorType == PngColorType.RgbWithAlpha || meta.ColorType == PngColorType.GrayscaleWithAlpha;
                                 texImage.Mutate(x => x.Flip(FlipMode.Vertical));
                                 texImage.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
                             }
@@ -209,7 +223,6 @@ namespace Elements.Serialization.glTF
 
                         while (buffer.Count % 4 != 0)
                         {
-                            // Console.WriteLine("Padding...");
                             buffer.Add(0);
                         }
 
@@ -233,7 +246,7 @@ namespace Elements.Serialization.glTF
                     }
                 }
 
-                if (material.Color.Alpha < 1.0)
+                if (material.Color.Alpha < 1.0 || textureHasTransparency)
                 {
                     m.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.BLEND;
                 }
@@ -983,8 +996,8 @@ namespace Elements.Serialization.glTF
                                 out cmax,
                                 out imin,
                                 out imax,
-                                out uvmax,
-                                out uvmin);
+                                out uvmin,
+                                out uvmax);
 
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.
@@ -1003,8 +1016,8 @@ namespace Elements.Serialization.glTF
                                      nmax,
                                      imin,
                                      imax,
-                                     uvmax,
                                      uvmin,
+                                     uvmax,
                                      materialIndexMap[materialName],
                                      cmin,
                                      cmax,
@@ -1165,7 +1178,7 @@ namespace Elements.Serialization.glTF
 
             csg.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin,
-                            out cmax, out imin, out imax, out uvmax, out uvmin);
+                            out cmax, out imin, out imax, out uvmin, out uvmax);
 
             if (vertexBuffer.Length == 0)
             {
