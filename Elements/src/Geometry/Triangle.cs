@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using Elements.Validators;
 using LibTessDotNet.Double;
 
 namespace Elements.Geometry
@@ -41,7 +40,6 @@ namespace Elements.Geometry
             {
                 Debug.WriteLine("Degenerate triangle found.");
             }
-            new TriangleValidator().PreConstruct(new object[] { this.Vertices, this.Normal });
         }
 
         /// <summary>

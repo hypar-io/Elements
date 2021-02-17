@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 
@@ -339,26 +338,6 @@ namespace Elements.Validators
             if (components.Count != 12)
             {
                 throw new ArgumentOutOfRangeException("The matrix could not be created. The component array must have 12 values.");
-            }
-        }
-    }
-
-    public class TriangleValidator : IValidator
-    {
-        public Type ValidatesType => typeof(Triangle);
-
-        public void PostConstruct(object obj)
-        {
-            return;
-        }
-
-        public void PreConstruct(object[] args)
-        {
-            var vertices = (IEnumerable<Geometry.Vertex>)args[0];
-            var distinct = vertices.GroupBy(v => v.Position).Where(g => g.Count() > 1);
-            if (distinct.Count() > 0)
-            {
-                throw new ArgumentException($"Can't create Triangle.  The {distinct.First().Key} vertex position is duplicated.");
             }
         }
     }
