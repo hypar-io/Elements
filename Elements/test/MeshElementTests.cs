@@ -55,7 +55,8 @@ namespace Elements.Tests
             var mesh = new Mesh();
 
             Assert.Throws<ArgumentException>(() => mesh.AddTriangle(a, b, b));
-            Assert.Throws<ArgumentException>(() => mesh.AddTriangle(new Triangle(new List<Vertex> { a, b, b }, Vector3.ZAxis)));
+            Assert.Throws<ArgumentException>(() => mesh.AddTriangle(a, a, b));
+            Assert.Throws<ArgumentException>(() => mesh.AddTriangle(new Triangle(new List<Vertex> { b, a, b }, Vector3.ZAxis)));
         }
     }
 }

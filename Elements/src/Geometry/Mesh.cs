@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using static Elements.Units;
 
 namespace Elements.Geometry
@@ -223,10 +222,9 @@ Triangles:{Triangles.Count}";
         public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
         {
             var t = new Triangle(a, b, c);
-            var distinct = t.Vertices.GroupBy(v => v.Position).Where(g => g.Count() > 1);
-            if (distinct.Count() > 0)
+            if (HasDuplicatedVertices(t, out Vector3 duplicate))
             {
-                throw new ArgumentException($"Can't create Triangle.  The {distinct.First().Key} vertex position is duplicated.");
+                throw new ArgumentException($"Can't create Triangle.  The {duplicate} vertex position is duplicated.");
             }
             this.Triangles.Add(t);
             return t;
@@ -238,10 +236,9 @@ Triangles:{Triangles.Count}";
         /// <param name="t">The triangle to add.</param>
         public Triangle AddTriangle(Triangle t)
         {
-            var distinct = t.Vertices.GroupBy(v => v.Position).Where(g => g.Count() > 1);
-            if (distinct.Count() > 0)
+            if (HasDuplicatedVertices(t, out Vector3 duplicate))
             {
-                throw new ArgumentException($"Not a valid Triangle.  The {distinct.First().Key} vertex position is duplicated.");
+                throw new ArgumentException($"Not a valid Triangle.  The {duplicate} vertex position is duplicated.");
             }
             this.Triangles.Add(t);
             return t;
@@ -300,6 +297,27 @@ Triangles:{Triangles.Count}";
                 return true;
             }
 
+            return false;
+        }
+
+        private bool HasDuplicatedVertices(Triangle t, out Vector3 duplicate)
+        {
+            if (t.Vertices[0].Position.IsAlmostEqualTo(t.Vertices[1].Position))
+            {
+                duplicate = t.Vertices[0].Position;
+                return true;
+            }
+            if (t.Vertices[0].Position.IsAlmostEqualTo(t.Vertices[2].Position))
+            {
+                duplicate = t.Vertices[0].Position;
+                return true;
+            }
+            if (t.Vertices[1].Position.IsAlmostEqualTo(t.Vertices[2].Position))
+            {
+                duplicate = t.Vertices[1].Position;
+                return true;
+            }
+            duplicate = default(Vector3);
             return false;
         }
     }
