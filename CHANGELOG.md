@@ -34,6 +34,7 @@
 ### Fixed
 - Fixed a bug where `Polygon.UnionAll` was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
 - Fixed [#517](https://github.com/hypar-io/Elements/issues/517)
+- Fixed a bug where Grid2d subcells would not split correctly with `SplitAtPoint`
 ## 0.8.2
 
 ### Changed

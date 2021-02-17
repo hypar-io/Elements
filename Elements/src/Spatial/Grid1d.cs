@@ -26,7 +26,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
-        [JsonProperty("Cells", NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty("Cells", NullValueHandling = NullValueHandling.Ignore)]
         public List<Grid1d> Cells
         {
             get => cells;
@@ -99,7 +99,7 @@ namespace Elements.Spatial
         // is useful in serialization so we only store the base curve once. 
         private Grid1d topLevelParentGrid;
 
-        [JsonProperty("TopLevelParentCurve", NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty("TopLevelParentCurve", NullValueHandling = NullValueHandling.Ignore)]
         private Curve topLevelParentCurve
         {
             get
@@ -314,12 +314,18 @@ namespace Elements.Spatial
         /// <param name="ignoreOutsideDomain">If true, splits at offsets outside the domain will be silently ignored.</param>
         public void SplitAtOffset(double position, bool fromEnd = false, bool ignoreOutsideDomain = false)
         {
-            position = fromEnd ? Domain.Max - position : Domain.Min + position;
+            InternalSplitAtOffset(position, fromEnd, ignoreOutsideDomain, false);
+        }
+
+        private void InternalSplitAtOffset(double position, bool fromEnd = false, bool ignoreOutsideDomain = false, bool useCurveDomain = false)
+        {
+            var domain = useCurveDomain ? curveDomain : Domain;
+            position = fromEnd ? domain.Max - position : domain.Min + position;
             if (PositionIsAtCellEdge(position))
             {
                 return; // this should be swallowed silently rather than left for Domain.Includes to handle.  
             }
-            if (!Domain.Includes(position))
+            if (!domain.Includes(position))
             {
                 if (ignoreOutsideDomain)
                 {
@@ -366,7 +372,7 @@ namespace Elements.Spatial
         public void SplitAtPoint(Vector3 point)
         {
             double posAlongCurve = ClosestPosition(point);
-            SplitAtOffset(posAlongCurve, false, true);
+            InternalSplitAtOffset(posAlongCurve, false, true, true);
         }
 
         /// <summary>
