@@ -60,7 +60,10 @@ namespace Elements.Geometry
                     if (line.StartsWith("endfacet"))
                     {
                         var t = new Triangle(vertexCache[0], vertexCache[1], vertexCache[2]);
-                        mesh.AddTriangle(t);
+                        if (!HasDuplicatedVertices(t, out _))
+                        {
+                            mesh.AddTriangle(t);
+                        }
                     }
                 }
             }
@@ -300,7 +303,7 @@ Triangles:{Triangles.Count}";
             return false;
         }
 
-        private bool HasDuplicatedVertices(Triangle t, out Vector3 duplicate)
+        private static bool HasDuplicatedVertices(Triangle t, out Vector3 duplicate)
         {
             if (t.Vertices[0].Position.IsAlmostEqualTo(t.Vertices[1].Position))
             {
