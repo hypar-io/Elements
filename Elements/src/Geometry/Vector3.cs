@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -501,9 +502,9 @@ namespace Elements.Geometry
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
         public bool IsAlmostEqualTo(Vector3 v)
         {
-            if (Math.Abs(this.X - v.X) < EPSILON &&
-                Math.Abs(this.Y - v.Y) < EPSILON &&
-                Math.Abs(this.Z - v.Z) < EPSILON)
+            if ((this.X - v.X) * (this.X - v.X)
+              + (this.Y - v.Y) * (this.Y - v.Y)
+              + (this.Z - v.Z) * (this.Z - v.Z) < (EPSILON * EPSILON))
             {
                 return true;
             }
@@ -649,6 +650,51 @@ namespace Elements.Geometry
         public static double CCW(Vector3 a, Vector3 b, Vector3 c)
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
+        }
+
+        /// <summary>
+        /// Compute basis vectors for this vector.
+        /// By default, the cross product of the world Z axis and this vector
+        /// are used to compute the U direction. If this vector is parallel
+        /// the world Z axis, then the world Y axis is used instead.
+        /// </summary>
+        public (Vector3 U, Vector3 V) ComputeDefaultBasisVectors()
+        {
+            var u = (this.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis).Cross(this).Unitized();
+            var v = this.Cross(u).Unitized();
+            return (u, v);
+        }
+
+        /// <summary>
+        /// Remove sequential duplicates from a list of points. 
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <param name="wrap">Whether or not to assume a closed shape like a polygon. If true, the last vertex will be compared to the first, and deleted if identical.</param>
+        /// <returns></returns>
+        internal static IList<Vector3> RemoveSequentialDuplicates(IList<Vector3> vertices, bool wrap = false)
+        {
+            List<Vector3> newList = new List<Vector3> { vertices[0] };
+            for (int i = 1; i < vertices.Count; i++)
+            {
+                var vertex = vertices[i];
+                var prevVertex = newList[newList.Count - 1];
+                if (!vertex.IsAlmostEqualTo(prevVertex))
+                {
+                    // if we wrap, and we're at the last vertex, also check for a zero-length segment between first and last.
+                    if (wrap && i == vertices.Count - 1)
+                    {
+                        if (!vertex.IsAlmostEqualTo(vertices[0]))
+                        {
+                            newList.Add(vertex);
+                        }
+                    }
+                    else
+                    {
+                        newList.Add(vertex);
+                    }
+                }
+            }
+            return newList;
         }
     }
 

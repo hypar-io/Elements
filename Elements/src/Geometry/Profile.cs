@@ -337,16 +337,7 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive);
-            if (solution.ChildCount == 0)
-            {
-                return null;
-            }
-            var joinedProfiles = new List<Profile>();
-            foreach (var result in solution.Childs)
-            {
-                var profile = result.ToProfile(tolerance);
-                joinedProfiles.Add(profile);
-            }
+            var joinedProfiles = solution.ToProfiles();
             return joinedProfiles;
         }
 
@@ -373,16 +364,7 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
-            if (solution.ChildCount == 0)
-            {
-                return new List<Profile>();
-            }
-            var joinedProfiles = new List<Profile>();
-            foreach (var result in solution.Childs)
-            {
-                var profile = result.ToProfile(tolerance);
-                joinedProfiles.Add(profile);
-            }
+            var joinedProfiles = solution.ToProfiles();
             return joinedProfiles;
         }
 
@@ -409,16 +391,7 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctIntersection, solution, PolyFillType.pftNonZero);
-            if (solution.ChildCount == 0)
-            {
-                return new List<Profile>();
-            }
-            var joinedProfiles = new List<Profile>();
-            foreach (var result in solution.Childs)
-            {
-                var profile = result.ToProfile(tolerance);
-                joinedProfiles.Add(profile);
-            }
+            var joinedProfiles = solution.ToProfiles();
             return joinedProfiles;
         }
 
@@ -461,6 +434,23 @@ namespace Elements.Geometry
             }
             var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
             return profile;
+        }
+
+        internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
+        {
+            var joinedProfiles = new List<Profile>();
+           
+            if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
+            {
+                var profile = node.ToProfile(tolerance);
+                joinedProfiles.Add(profile);
+            }
+            foreach (var result in node.Childs)
+            {
+                var profiles = result.ToProfiles(tolerance);
+                joinedProfiles.AddRange(profiles);
+            }
+            return joinedProfiles;
         }
 
     }

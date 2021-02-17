@@ -306,7 +306,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "DjiJf7gjtfsY5e3oeczmig=="
+          "hash": "UPkqMzQjJOOrx1+u5p6Leg=="
         }
       },
       "is_incremental": false,
@@ -1392,7 +1392,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Vector3.html",
-          "hash": "yWEpxDsmwuKgWBM5t5yp7g=="
+          "hash": "7nXKoIXCVmcP2G3tHrz5vw=="
         }
       },
       "is_incremental": false,
@@ -1585,6 +1585,18 @@
         ".html": {
           "relative_path": "api/Elements.Panel.html",
           "hash": "08ylszMMUO4fBEIgwFNofw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.RandomExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.RandomExtensions.html",
+          "hash": "NUGfICE3pWfAD//dWQujrg=="
         }
       },
       "is_incremental": false,
@@ -2064,7 +2076,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Validators.Validator.html",
-          "hash": "XKHlqKCJU5z+a3s0JxcTjw=="
+          "hash": "2RWe/1/RvO7cEKuAiS1JlQ=="
         }
       },
       "is_incremental": false,
@@ -2124,7 +2136,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.html",
-          "hash": "CIL4bvDiYrAiB0nEFjioqw=="
+          "hash": "JVMsgBRuiuRLgirG1bUyYQ=="
         }
       },
       "is_incremental": false,
@@ -4067,7 +4079,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 143,
+          "total_file_count": 144,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

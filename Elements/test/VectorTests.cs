@@ -190,6 +190,21 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ToleranceInvariance() {
+            var polygon = new Polygon(new [] {
+                new Vector3(0,0),
+                new Vector3(Vector3.EPSILON * 1.1, 0),
+                new Vector3(4, 0),
+                new Vector3(4,4),
+                new Vector3(0,4)
+            });
+            var rotation = new Transform();
+            rotation.Rotate(Vector3.ZAxis, 45);
+            var rotatedPolygon = polygon.TransformedPolygon(rotation);
+            // Should execute without exception. 
+        }
+
+        [Fact]
         public void ProfileContains()
         {
             var perimeter = new Polygon(new[]
