@@ -36,6 +36,12 @@ namespace Elements.Validators
         private static Validator _validator;
 
         /// <summary>
+        /// Should geometry validation be disabled during construction? 
+        /// Note: Disabling validation can have unforeseen consequences. Use with caution.
+        /// </summary>
+        public static bool DisableValidationOnConstruction { get; set; } = false;
+
+        /// <summary>
         /// The validator singleton.
         /// </summary>
         public static Validator Instance
@@ -75,10 +81,16 @@ namespace Elements.Validators
         /// <returns>A validator for T, or null if no validator for T can be found.</returns>
         public IValidator GetFirstValidatorForType<T>()
         {
+            if (Validator.DisableValidationOnConstruction)
+            {
+                return null;
+            }
+
             if (_validators.ContainsKey(typeof(T)))
             {
                 return _validators[typeof(T)];
             }
+            
             return null;
         }
     }

@@ -6,6 +6,7 @@ using Xunit.Abstractions;
 using Newtonsoft.Json;
 using Elements.Tests;
 using Elements.Serialization.glTF;
+using System.IO;
 
 namespace Elements.Geometry.Tests
 {
@@ -628,10 +629,62 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void SameVertices_ThrowsException()
+        public void SameVertices_RemovesDuplicates()
         {
             var a = new Vector3();
-            Assert.Throws<ArgumentException>(() => new Polygon(new[] { a, a, a }));
+            var b = new Vector3(10, 0, 0);
+            var c = new Vector3(10, 3, 0);
+            var polygon = new Polygon(new[] { a, a, a, b, c });
+            Assert.Equal(3, polygon.Segments().Count());
+        }
+
+        [Fact]
+        public void UnionAllSequential()
+        {
+            Name = "UnionAllSequential";
+            // sample data contributed by Marco Juliani
+            var polygonsA = JsonConvert.DeserializeObject<List<Polygon>>(File.ReadAllText("../../../models/Geometry/testUnionAll.json"));
+            var polygonsB = JsonConvert.DeserializeObject<List<Polygon>>(File.ReadAllText("../../../models/Geometry/testUnionAll_2.json"));
+            var unionA = Polygon.UnionAll(polygonsA);
+            var unionB = Polygon.UnionAll(polygonsB);
+            Model.AddElements(unionA.Select(u => new ModelCurve(u)));
+            Model.AddElements(unionB.Select(u => new ModelCurve(u)));
+        }
+
+        [Fact]
+        public void ConvexHullAndBoundingRect()
+        {
+            Name = "Convex Hull";
+            var rand = new Random();
+            // fuzz test
+            for (int test = 0; test < 50; test++)
+            {
+                var basePt = new Vector3((test % 5) * 12, (test - (test % 5)) / 5 * 12);
+                var pts = new List<Vector3>();
+                for (int i = 0; i < 20; i++)
+                {
+                    pts.Add(basePt + new Vector3(rand.NextDouble() * 10, rand.NextDouble() * 10));
+                }
+                var modelPts = pts.Select(p => new ModelCurve(new Circle(p, 0.2)));
+                var hull = ConvexHull.FromPoints(pts);
+                var boundingRect = Polygon.FromAlignedBoundingBox2d(pts);
+                Model.AddElements(modelPts);
+                Model.AddElements(boundingRect);
+                Model.AddElement(hull);
+            }
+
+            // handle collinear pts test
+            var coPts = new List<Vector3> {
+                new Vector3(0,0),
+                new Vector3(1,0),
+                new Vector3(2,0),
+                new Vector3(4,0),
+                new Vector3(10,0),
+                new Vector3(10,5),
+                new Vector3(10,10)
+            };
+            var coHull = ConvexHull.FromPoints(coPts);
+            Assert.Equal(50, coHull.Area());
         }
 
         [Fact]

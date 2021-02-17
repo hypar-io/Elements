@@ -91,6 +91,10 @@ namespace Elements.Generate
             "NumericProperty",
             "InputData",
             "Point",
+            "Grid1d",
+            "Grid2d",
+            "Domain1d",
+            "IndexedCell"
         };
 
         /// <summary>

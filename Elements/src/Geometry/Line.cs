@@ -456,6 +456,85 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Extend this line to its nearest intersection with any other line.
+        /// </summary>
+        /// <param name="otherLines">The other lines to intersect with</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        public Line ExtendTo(IEnumerable<Line> otherLines, bool bothSides = true)
+        {
+            // this test line — inset slightly from the line — helps treat the ends as valid intersection points, to prevent 
+            // extension beyond an immediate intersection.
+            var testLine = new Line(this.PointAt(0.001), this.PointAt(0.999));
+            var segments = otherLines;
+            var intersectionsForLine = new List<Vector3>();
+            foreach (var segment in segments)
+            {
+                bool pointAdded = false;
+                // special case for parallel + collinear lines
+                if (segment.Direction().IsParallelTo(testLine.Direction()) && // if the two lines are parallel
+                    (new[] { segment.End, testLine.Start, testLine.End }).AreCollinear())// and collinear
+                {
+                    if (!this.PointOnLine(segment.End, true))
+                    {
+                        intersectionsForLine.Add(segment.End);
+                        pointAdded = true;
+                    }
+
+                    if (!this.PointOnLine(segment.Start, true))
+                    {
+                        intersectionsForLine.Add(segment.Start);
+                        pointAdded = true;
+                    }
+                }
+                if (!pointAdded)
+                {
+                    var intersects = testLine.Intersects(segment, out Vector3 intersection, true, true);
+
+                    // if the intersection lies on the obstruction, but is beyond the segment, we collect it
+                    if (segment.PointOnLine(intersection, true) && !testLine.PointOnLine(intersection, true))
+                    {
+                        intersectionsForLine.Add(intersection);
+                    }
+                }
+            }
+
+            var dir = this.Direction();
+            var intersectionsOrdered = intersectionsForLine.OrderBy(i => (testLine.Start - i).Dot(dir));
+            var start = bothSides ?
+                (intersectionsOrdered
+                    .Where(i => (testLine.Start - i).Dot(dir) > 0)
+                    .Cast<Vector3?>()
+                    .FirstOrDefault() ?? this.Start)
+                : this.Start;
+            var end = intersectionsOrdered
+                .Where(i => (testLine.Start - i).Dot(dir) < testLine.Length() * -1)
+                .Reverse().Cast<Vector3?>()
+                .FirstOrDefault() ?? this.End;
+
+            return new Line(start, end);
+        }
+
+        /// <summary>
+        /// Extend this line to its nearest intersection with a polyline or polygon.
+        /// </summary>
+        /// <param name="polyline">The polyline or polygon to intersect with</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        public Line ExtendTo(Polyline polyline, bool bothSides = true)
+        {
+            return ExtendTo(polyline.Segments(), bothSides);
+        }
+
+        /// <summary>
+        /// Extend this line to its nearest intersection with a profile.
+        /// </summary>
+        /// <param name="profile">The profile to intersect with</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        public Line ExtendTo(Profile profile, bool bothSides = true)
+        {
+            return ExtendTo(profile.Segments(), bothSides);
+        }
+
+        /// <summary>
         /// Trim a line with a polygon. 
         /// </summary>
         /// <param name="polygon">The polygon to trim with.</param>
