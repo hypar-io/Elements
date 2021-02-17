@@ -1,0 +1,1523 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Line
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Line
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.56.6.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.Geometry.Line">
+  
+  <h1 id="Elements_Geometry_Line" data-uid="Elements.Geometry.Line" class="text-break">Class Line
+  </h1>
+  <div class="markdown level0 summary"><p>A line between two points. The line is parameterized from 0.0(start) to 1.0(end)</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div id="model"></div>
+  <script type="text/javascript" src="../js/three.js"></script>
+  <script type="text/javascript" src="../js/GLTFLoader.js"></script>
+  <script type="text/javascript" src="../js/OrbitControls.js"></script>
+  <script>
+    var scene = new THREE.Scene();
+    var div = document.getElementById("model")
+    var camera = new THREE.PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize( div.clientWidth, div.clientHeight );
+    renderer.setClearColor( 0x000000, 0 );
+    div.appendChild( renderer.domElement );
+  
+    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+  
+    var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add( light );
+  
+    var axesHelper = new THREE.AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    var size = 100;
+    var divisions = 100;
+    var colorCenterLine = new THREE.Color( 0xa0a0a0 );
+    // var colorGrid = new THREE.Color( 0xdbdbdb );
+    // var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
+    // scene.add( gridHelper );
+  
+    window.addEventListener( 'resize', onWindowResize, false );
+  
+    
+  
+    // Instantiate a loader
+    var loader = new THREE.GLTFLoader();
+  
+    // Load a glTF resource
+    loader.load(
+      // resource URL
+      '../models/Elements_Geometry_Line.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+  
+        scene.add( gltf.scene );
+  
+        gltf.animations; // Array<THREE.AnimationClip>
+        gltf.scene; // THREE.Scene
+        gltf.scenes; // Array<THREE.Scene>
+        gltf.cameras; // Array<THREE.Camera>
+        gltf.asset; // Object
+  
+        fitCameraToObject(gltf.scene, 2.0, controls)
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+  
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+  
+      },
+      // called when loading has errors
+      function ( error ) {
+  
+        console.log( 'An error happened' );
+  
+      }
+    );
+  
+    var animate = function () {
+      requestAnimationFrame( animate );
+      renderer.render( scene, camera );
+    };
+  
+    function onWindowResize(){
+      var div = document.getElementById("model");
+      camera.aspect = div.clientWidth / div.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize( div.clientWidth, div.clientHeight );
+    };
+  
+    const fitCameraToObject = function ( object, offset, orbitControls ) {
+  
+      const boundingBox = new THREE.Box3();
+      boundingBox.setFromObject( object );
+  
+      const center = boundingBox.getCenter();
+      const size = boundingBox.getSize();
+  
+      // get the max side of the bounding box
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
+      const fov = this.camera.fov * ( Math.PI / 180 );
+      let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
+      
+      // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
+      // object filling the whole canvas
+      if( offset !== undefined && offset !== 0 ) {
+        cameraZ *= offset;
+      } 
+  
+      camera.position.set( center.x, center.y, cameraZ );
+      
+      // set the far plane of the camera so that it easily encompasses the whole object
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
+  
+      this.camera.far = cameraToFarEdge * 3;
+      this.camera.updateProjectionMatrix();
+  
+      if ( orbitControls !== undefined ) {
+  
+        // set camera to rotate around center of loaded object
+        orbitControls.target = center;
+  
+        // prevent camera from zooming out far enough to create far plane cutoff
+        orbitControls.maxDistance = cameraToFarEdge * 2;
+      }
+    };
+  
+    animate();
+  </script><h5 id="Elements_Geometry_Line"><strong>Examples</strong></h5>
+  <pre><code class="lang-csharp" name="Main">var a = new Vector3();
+var b = new Vector3(5, 5, 5);
+var l = new Line(a, b);
+</code></pre>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
+    <div class="level2"><span class="xref">Line</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Geometry_Line_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Line : Curve, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Line&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Geometry_Line__ctor_" data-uid="Elements.Geometry.Line.#ctor*"></a>
+  <h4 id="Elements_Geometry_Line__ctor" data-uid="Elements.Geometry.Line.#ctor">Line()</h4>
+  <div class="markdown level1 summary"><p>Create a line of one unit length along the X axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line()</code></pre>
+  </div>
+  <a id="Elements_Geometry_Line__ctor_" data-uid="Elements.Geometry.Line.#ctor*"></a>
+  <h4 id="Elements_Geometry_Line__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Line.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Line(Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Line(Vector3 start, Vector3 end)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">start</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">end</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line__ctor_" data-uid="Elements.Geometry.Line.#ctor*"></a>
+  <h4 id="Elements_Geometry_Line__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Line.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double)">Line(Vector3, Vector3, Double)</h4>
+  <div class="markdown level1 summary"><p>Construct a line of length from a start along direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line(Vector3 start, Vector3 direction, double length)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">start</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">direction</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">length</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Geometry_Line_End_" data-uid="Elements.Geometry.Line.End*"></a>
+  <h4 id="Elements_Geometry_Line_End" data-uid="Elements.Geometry.Line.End">End</h4>
+  <div class="markdown level1 summary"><p>The end of the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;End&quot;, Required = Required.AllowNull)]
+public Vector3 End { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Start_" data-uid="Elements.Geometry.Line.Start*"></a>
+  <h4 id="Elements_Geometry_Line_Start" data-uid="Elements.Geometry.Line.Start">Start</h4>
+  <div class="markdown level1 summary"><p>The start of the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Start&quot;, Required = Required.AllowNull)]
+public Vector3 Start { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Geometry_Line_Bounds_" data-uid="Elements.Geometry.Line.Bounds*"></a>
+  <h4 id="Elements_Geometry_Line_Bounds" data-uid="Elements.Geometry.Line.Bounds">Bounds()</h4>
+  <div class="markdown level1 summary"><p>Get the bounding box for this line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override BBox3 Bounds()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><p>A bounding box for this line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
+  <a id="Elements_Geometry_Line_Direction_" data-uid="Elements.Geometry.Line.Direction*"></a>
+  <h4 id="Elements_Geometry_Line_Direction" data-uid="Elements.Geometry.Line.Direction">Direction()</h4>
+  <div class="markdown level1 summary"><p>A normalized vector representing the direction of the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 Direction()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_DivideByLength_" data-uid="Elements.Geometry.Line.DivideByLength*"></a>
+  <h4 id="Elements_Geometry_Line_DivideByLength_System_Double_System_Boolean_" data-uid="Elements.Geometry.Line.DivideByLength(System.Double,System.Boolean)">DivideByLength(Double, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Divide the line into as many segments of the provided length as possible.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Line&gt; DivideByLength(double l, bool removeShortSegments = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">l</span></td>
+        <td><p>The length.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">removeShortSegments</span></td>
+        <td><p>A flag indicating whether segments shorter than l should be removed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_DivideByLengthFromCenter_" data-uid="Elements.Geometry.Line.DivideByLengthFromCenter*"></a>
+  <h4 id="Elements_Geometry_Line_DivideByLengthFromCenter_System_Double_" data-uid="Elements.Geometry.Line.DivideByLengthFromCenter(System.Double)">DivideByLengthFromCenter(Double)</h4>
+  <div class="markdown level1 summary"><p>Divide the line into as many segments of the provided length as possible.
+Divisions will be centered along the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Line&gt; DivideByLengthFromCenter(double l)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">l</span></td>
+        <td><p>The length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_DivideIntoEqualSegments_" data-uid="Elements.Geometry.Line.DivideIntoEqualSegments*"></a>
+  <h4 id="Elements_Geometry_Line_DivideIntoEqualSegments_System_Int32_" data-uid="Elements.Geometry.Line.DivideIntoEqualSegments(System.Int32)">DivideIntoEqualSegments(Int32)</h4>
+  <div class="markdown level1 summary"><p>Divide the line into n equal segments.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Line&gt; DivideIntoEqualSegments(int n)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">n</span></td>
+        <td><p>The number of segments.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Equals_" data-uid="Elements.Geometry.Line.Equals*"></a>
+  <h4 id="Elements_Geometry_Line_Equals_Elements_Geometry_Line_" data-uid="Elements.Geometry.Line.Equals(Elements.Geometry.Line)">Equals(Line)</h4>
+  <div class="markdown level1 summary"><p>Is this line equal to the provided line?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(Line other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The target line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the start and end points of the lines are equal, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
+  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Line_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Line)">ExtendTo(Line)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to the trimming curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(Line line)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>The curve to which to extend.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><p>A new line, or null if these lines would never intersect if extended infinitely.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
+  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Polyline_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean)">ExtendTo(Polyline, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to its nearest intersection with a polyline or polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(Polyline polyline, bool bothSides = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><span class="parametername">polyline</span></td>
+        <td><p>The polyline or polygon to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">bothSides</span></td>
+        <td><p>Optional — if false, will only extend in the line's direction; if true will extend in both directions.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
+  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Profile_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean)">ExtendTo(Profile, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to its nearest intersection with a profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(Profile profile, bool bothSides = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td><p>The profile to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">bothSides</span></td>
+        <td><p>Optional — if false, will only extend in the line's direction; if true will extend in both directions.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
+  <h4 id="Elements_Geometry_Line_ExtendTo_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean)">ExtendTo(IEnumerable&lt;Line&gt;, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to its nearest intersection with any other line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(IEnumerable&lt;Line&gt; otherLines, bool bothSides = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="parametername">otherLines</span></td>
+        <td><p>The other lines to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">bothSides</span></td>
+        <td><p>Optional — if false, will only extend in the line's direction; if true will extend in both directions.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Fillet_" data-uid="Elements.Geometry.Line.Fillet*"></a>
+  <h4 id="Elements_Geometry_Line_Fillet_Elements_Geometry_Line_System_Double_" data-uid="Elements.Geometry.Line.Fillet(Elements.Geometry.Line,System.Double)">Fillet(Line, Double)</h4>
+  <div class="markdown level1 summary"><p>Create a fillet arc between this line and the target.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Arc Fillet(Line target, double radius)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">target</span></td>
+        <td><p>The line with which to fillet.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td><p>The radius of the fillet.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></td>
+        <td><p>An arc, or null if no fillet can be calculated.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_GetHashCode_" data-uid="Elements.Geometry.Line.GetHashCode*"></a>
+  <h4 id="Elements_Geometry_Line_GetHashCode" data-uid="Elements.Geometry.Line.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p>Get the hash code for the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
+  <a id="Elements_Geometry_Line_Intersects_" data-uid="Elements.Geometry.Line.Intersects*"></a>
+  <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean,System.Boolean)">Intersects(Line, out Vector3, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Does this line intersect the provided line in 3D?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Line l, out Vector3 result, bool infinite = false, bool includeEnds = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">l</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">infinite</span></td>
+        <td><p>Treat the lines as infinite?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">includeEnds</span></td>
+        <td><p>If the end of one line lies exactly on the other, count it as an intersection?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the lines intersect, false if they are fully collinear or do not intersect.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Intersects_" data-uid="Elements.Geometry.Line.Intersects*"></a>
+  <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@,System.Boolean)">Intersects(Plane, out Vector3, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Intersect this line with the specified plane</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane p, out Vector3 result, bool infinite = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>The plane.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The location of intersection.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">infinite</span></td>
+        <td><p>If true, line will be treated as infinite. (False by default)</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the line intersects the plane, false if no intersection occurs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Intersects2D_" data-uid="Elements.Geometry.Line.Intersects2D*"></a>
+  <h4 id="Elements_Geometry_Line_Intersects2D_Elements_Geometry_Line_" data-uid="Elements.Geometry.Line.Intersects2D(Elements.Geometry.Line)">Intersects2D(Line)</h4>
+  <div class="markdown level1 summary"><p>Does this line intersect the provided line in 2D?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects2D(Line l)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">l</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Return true if the lines intersect,
+false if the lines have coincident vertices or do not intersect.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Length_" data-uid="Elements.Geometry.Line.Length*"></a>
+  <h4 id="Elements_Geometry_Line_Length" data-uid="Elements.Geometry.Line.Length">Length()</h4>
+  <div class="markdown level1 summary"><p>Calculate the length of the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double Length()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <a id="Elements_Geometry_Line_Offset_" data-uid="Elements.Geometry.Line.Offset*"></a>
+  <h4 id="Elements_Geometry_Line_Offset_System_Double_System_Boolean_" data-uid="Elements.Geometry.Line.Offset(System.Double,System.Boolean)">Offset(Double, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Offset the line. The offset direction will be defined by
+Direction X Vector3.ZAxis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line Offset(double distance, bool flip)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The distance to offset.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">flip</span></td>
+        <td><p>Flip the offset direction.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_PointAt_" data-uid="Elements.Geometry.Line.PointAt*"></a>
+  <h4 id="Elements_Geometry_Line_PointAt_System_Double_" data-uid="Elements.Geometry.Line.PointAt(System.Double)">PointAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Get a point along the line at parameter u.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Vector3 PointAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>A point on the curve at parameter u.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
+  <a id="Elements_Geometry_Line_PointOnLine_" data-uid="Elements.Geometry.Line.PointOnLine*"></a>
+  <h4 id="Elements_Geometry_Line_PointOnLine_Elements_Geometry_Vector3_System_Boolean_" data-uid="Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3,System.Boolean)">PointOnLine(Vector3, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Test if a point lies within this line segment</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool PointOnLine(Vector3 point, bool includeEnds = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The point to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">includeEnds</span></td>
+        <td><p>Consider a point at the endpoint as on the line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Reversed_" data-uid="Elements.Geometry.Line.Reversed*"></a>
+  <h4 id="Elements_Geometry_Line_Reversed" data-uid="Elements.Geometry.Line.Reversed">Reversed()</h4>
+  <div class="markdown level1 summary"><p>Get a new line that is the reverse of the original line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line Reversed()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Thicken_" data-uid="Elements.Geometry.Line.Thicken*"></a>
+  <h4 id="Elements_Geometry_Line_Thicken_System_Double_" data-uid="Elements.Geometry.Line.Thicken(System.Double)">Thicken(Double)</h4>
+  <div class="markdown level1 summary"><p>Thicken a line by the specified amount.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polygon Thicken(double amount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>The amount to thicken the line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_TransformAt_" data-uid="Elements.Geometry.Line.TransformAt*"></a>
+  <h4 id="Elements_Geometry_Line_TransformAt_System_Double_" data-uid="Elements.Geometry.Line.TransformAt(System.Double)">TransformAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Get a transform whose XY plane is perpendicular to the curve, and whose
+positive Z axis points along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><p>A transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
+  <a id="Elements_Geometry_Line_Transformed_" data-uid="Elements.Geometry.Line.Transformed*"></a>
+  <h4 id="Elements_Geometry_Line_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Line.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Curve Transformed(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Transformed_Elements_Geometry_Transform_">Curve.Transformed(Transform)</a></div>
+  <a id="Elements_Geometry_Line_TransformedLine_" data-uid="Elements.Geometry.Line.TransformedLine*"></a>
+  <h4 id="Elements_Geometry_Line_TransformedLine_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Line.TransformedLine(Elements.Geometry.Transform)">TransformedLine(Transform)</h4>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line TransformedLine(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_Trim_" data-uid="Elements.Geometry.Line.Trim*"></a>
+  <h4 id="Elements_Geometry_Line_Trim_Elements_Geometry_Polygon_System_Collections_Generic_List_Elements_Geometry_Line___" data-uid="Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,System.Collections.Generic.List{Elements.Geometry.Line}@)">Trim(Polygon, out List&lt;Line&gt;)</h4>
+  <div class="markdown level1 summary"><p>Trim a line with a polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Line&gt; Trim(Polygon polygon, out List&lt;Line&gt; outsideSegments)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon to trim with.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="parametername">outsideSegments</span></td>
+        <td><p>A list of the segment(s) of the line outside of the supplied polygon.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><p>A list of the segment(s) of the line within the supplied polygon.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_TrimTo_" data-uid="Elements.Geometry.Line.TrimTo*"></a>
+  <h4 id="Elements_Geometry_Line_TrimTo_Elements_Geometry_Line_System_Boolean_" data-uid="Elements.Geometry.Line.TrimTo(Elements.Geometry.Line,System.Boolean)">TrimTo(Line, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Trim this line to the trimming curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line TrimTo(Line line, bool flip = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>The curve to which to trim.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">flip</span></td>
+        <td><p>Should the trim direction be reversed?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><p>A new line, or null if this line does not intersect the trimming line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
