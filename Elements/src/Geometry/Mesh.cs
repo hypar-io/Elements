@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using static Elements.Units;
 
 namespace Elements.Geometry
@@ -222,6 +223,11 @@ Triangles:{Triangles.Count}";
         public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
         {
             var t = new Triangle(a, b, c);
+            var distinct = t.Vertices.GroupBy(v => v.Position).Where(g => g.Count() > 1);
+            if (distinct.Count() > 0)
+            {
+                throw new ArgumentException($"Can't create Triangle.  The {distinct.First().Key} vertex position is duplicated.");
+            }
             this.Triangles.Add(t);
             return t;
         }
@@ -232,6 +238,11 @@ Triangles:{Triangles.Count}";
         /// <param name="t">The triangle to add.</param>
         public Triangle AddTriangle(Triangle t)
         {
+            var distinct = t.Vertices.GroupBy(v => v.Position).Where(g => g.Count() > 1);
+            if (distinct.Count() > 0)
+            {
+                throw new ArgumentException($"Not a valid Triangle.  The {distinct.First().Key} vertex position is duplicated.");
+            }
             this.Triangles.Add(t);
             return t;
         }
