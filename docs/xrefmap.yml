@@ -5735,6 +5735,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Segments
   nameWithType: Profile.Segments
+- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)
+  name: Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_System_Double_
+  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)
+  name.vb: Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double, Double)
+  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>, System.Double, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline), System.Double, System.Double)
+  nameWithType: Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double, Double)
+  nameWithType.vb: Profile.Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double, Double)
+- uid: Elements.Geometry.Profile.Split*
+  name: Split
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_
+  commentId: Overload:Elements.Geometry.Profile.Split
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Split
+  nameWithType: Profile.Split
 - uid: Elements.Geometry.Profile.Transform(Elements.Geometry.Transform)
   name: Transform(Transform)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Transform_Elements_Geometry_Transform_
@@ -11176,12 +11192,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.GetHashCode
   nameWithType: Vector3.GetHashCode
-- uid: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)
-  name: IsAlmostEqualTo(Vector3)
-  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsAlmostEqualTo_Elements_Geometry_Vector3_
-  commentId: M:Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)
-  fullName: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)
-  nameWithType: Vector3.IsAlmostEqualTo(Vector3)
+- uid: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3,System.Double)
+  name: IsAlmostEqualTo(Vector3, Double)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsAlmostEqualTo_Elements_Geometry_Vector3_System_Double_
+  commentId: M:Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3,System.Double)
+  fullName: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3, System.Double)
+  nameWithType: Vector3.IsAlmostEqualTo(Vector3, Double)
 - uid: Elements.Geometry.Vector3.IsAlmostEqualTo(System.Double,System.Double,System.Double)
   name: IsAlmostEqualTo(Double, Double, Double)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsAlmostEqualTo_System_Double_System_Double_System_Double_

@@ -713,6 +713,66 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Profile_Split_" data-uid="Elements.Geometry.Profile.Split*"></a>
+  <h4 id="Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_System_Double_" data-uid="Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)">Split(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Polyline&gt;, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Split a set of profiles with a collection of open polylines, with an optional gap between results.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Split(IEnumerable&lt;Profile&gt; profiles, IEnumerable&lt;Polyline&gt; splitLines, double gapSize = 0, double tolerance = 1E-05)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="parametername">profiles</span></td>
+        <td><p>The profiles to split</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
+        <td><span class="parametername">splitLines</span></td>
+        <td><p>The polylines defining the splits.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">gapSize</span></td>
+        <td><p>An optional gap size between split pieces. If splits are failing, it can be helpful to increase this.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional tolerance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Profile_Transform_" data-uid="Elements.Geometry.Profile.Transform*"></a>
   <h4 id="Elements_Geometry_Profile_Transform_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Profile.Transform(Elements.Geometry.Transform)">Transform(Transform)</h4>
   <div class="markdown level1 summary"><p>Transform this profile in place.</p>
