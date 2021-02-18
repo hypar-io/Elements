@@ -11,15 +11,19 @@
 - `Line.ExtendTo(IEnumerable<Line>)`
 - `Line.ExtendTo(Polyline)`
 - `Line.ExtendTo(Profile)`
+- `Line.ExtendTo(Polygon)`
 - `ConvexHull.FromPoints(IEnumerable<Vector3>)`
 - `ConvexHull.FromPolyline(Polyline)`
 - `ConvexHull.FromPolylines(IEnumerable<Polyline>)`
 - `ConvexHull.FromProfile(Profile)`
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)`
+- `Grid2d(Polygon, Grid1d, Grid1d)`
+- `Grid2d(IEnumerable<Polygon>, Grid1d, Grid1d)`
+- `Grid2d(Polygon, Vector3, Vector3, Vector3)`
+- `Grid2d(IEnumerable<Polygon>, Vector3, Vector3, Vector3)`
 - `Random.NextColor()` and `Random.NextMaterial()`
 - `Validator.DisableValidationOnConstruction`
 - `Vector3.ComputeDefaultBasisVectors()`
-
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 - Prevent the Polygon / Polyline constructors from throwing an exception on duplicate vertices, by removing duplicates automatically.

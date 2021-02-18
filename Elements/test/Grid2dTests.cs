@@ -99,7 +99,7 @@ namespace Elements.Tests
             var u = new Grid1d(10);
             var v = new Grid1d(5);
             var grid2d = new Grid2d(u, v);
-            Assert.Equal(1, grid2d.CellsFlat.Count);
+            Assert.Single(grid2d.CellsFlat);
             grid2d.U.DivideByCount(10);
             grid2d.V.DivideByCount(5);
             Assert.Equal(50, grid2d.CellsFlat.Count);
@@ -364,6 +364,54 @@ namespace Elements.Tests
             grid.U.DivideByPattern(new double[] { 1, 2 });
             grid.V.DivideByCount(10);
             Assert.Equal(80, grid.GetCells().Count());
+        }
+
+        [Fact]
+        public void SkewedGridsFillBoundary()
+        {
+            var squareSize = 10;
+            var rect = Polygon.Rectangle(squareSize, squareSize);
+
+            // Using constructor with origin
+            var origin = new Vector3();
+            var uDirection = new Vector3(1, 0, 0);
+            var vDirection = new Vector3(-1, 1, 0); // 45 degrees up to the left
+
+            var grid = new Grid2d(rect, origin, uDirection, vDirection);
+
+            // Making a grid from the origin doesn't subdivide it for you,
+            // just makes sure the UV axes are big enough to fill the bounds
+            Assert.Single(grid.GetCells());
+
+            // Split grid at the origin
+            grid.SplitAtPoint(origin);
+            Assert.Equal(4, grid.GetCells().Count);
+            Assert.Equal(squareSize * 2, grid.U.Curve.Length()); // Expanding to 45 degree square should give us 2x square size (half size extension each direction)
+            Assert.Equal(Math.Sqrt(2 * Math.Pow(squareSize, 2)), grid.V.Curve.Length()); // Skewed side should be hypotenuse with other legs at square size.
+        }
+
+        [Fact]
+        public void CustomUVAndBounds()
+        {
+            var boundary = Polygon.Rectangle(new Vector3(), new Vector3(1, 1));
+
+            var u = new Grid1d(new Line(new Vector3(5, 0), new Vector3(10, 0)));
+            var v = new Grid1d(new Line(new Vector3(0, 5), new Vector3(0, 10)));
+
+            var grid = new Grid2d(boundary, u, v);
+
+            Assert.Equal(5, grid.U.Curve.Length());
+            Assert.Equal(5, grid.V.Curve.Length());
+
+            var count = grid.GetCells().Count;
+
+            foreach (var cell in grid.GetCells())
+            {
+                // We gave it U and V coordinates that do not intersect with the bounds.
+                // We expect empty trimmed cells back.
+                var trimmed = cell.GetTrimmedCellGeometry();
+                Assert.Equal(0, trimmed.Count());
+            }
         }
     }
 }
