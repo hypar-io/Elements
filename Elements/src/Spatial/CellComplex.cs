@@ -17,13 +17,11 @@ namespace Elements.Spatial
         /// <summary>
         /// ID
         /// </summary>
-        [JsonProperty("Id")]
         public long Id;
 
         /// <summary>
         /// Location in space
         /// </summary>
-        [JsonProperty("Point")]
         public Vector3 Point;
 
         public Vertex(long id, Vector3 point)
@@ -41,19 +39,16 @@ namespace Elements.Spatial
         /// <summary>
         /// ID
         /// </summary>
-        [JsonProperty("Id")]
         public long Id;
 
         /// <summary>
         /// ID of first vertex
         /// </summary>
-        [JsonProperty("Vertex1Id")]
         public long Vertex1Id;
 
         /// <summary>
         /// ID of second vertex
         /// </summary>
-        [JsonProperty("Vertex2Id")]
         public long Vertex2Id;
 
         public Segment(long id, long index1, long index2)
@@ -72,25 +67,21 @@ namespace Elements.Spatial
         /// <summary>
         /// ID
         /// </summary>
-        [JsonProperty("Id")]
         public long Id;
 
         /// <summary>
         /// ID of segment
         /// </summary>
-        [JsonProperty("SegmentId")]
         public long SegmentId;
 
         /// <summary>
         /// ID of start vertex
         /// </summary>
-        [JsonProperty("StartVertexId")]
         public long StartVertexId;
 
         /// <summary>
         /// ID of end vertex
         /// </summary>
-        [JsonProperty("EndVertexId")]
         public long EndVertexId;
 
         public DirectedSegment(long id, Segment segment, Boolean segmentOrderMatchesDirection)
@@ -132,16 +123,14 @@ namespace Elements.Spatial
         /// <summary>
         /// ID
         /// </summary>
-        [JsonProperty("Id")]
         public long Id;
 
         /// <summary>
         /// Directed segment IDs
         /// </summary>
-        [JsonProperty("DirectedSegmentIds")]
         public List<long> DirectedSegmentIds;
 
-        public Face(long id, List<DirectedSegment> directedSegments):this(id, directedSegments.Select(ds => ds.Id).ToList())
+        public Face(long id, List<DirectedSegment> directedSegments) : this(id, directedSegments.Select(ds => ds.Id).ToList())
         {
         }
 
@@ -165,25 +154,21 @@ namespace Elements.Spatial
         /// <summary>
         /// ID
         /// </summary>
-        [JsonProperty("Id")]
         public long Id;
 
         /// <summary>
         /// Bottom face. Can be null. Expected to be duplicated in list of faces.
         /// </summary>
-        [JsonProperty("BottomFaceId")]
         public Nullable<long> BottomFaceId = null;
 
         /// <summary>
         /// Top face. Can be null. Expected to be duplicated in list of faces.
         /// </summary>
-        [JsonProperty("TopFaceId")]
         public Nullable<long> TopFaceId = null;
 
         /// <summary>
         /// All faces
         /// </summary>
-        [JsonProperty("FaceIds")]
         public List<long> FaceIds;
 
         public Cell(long id, List<Face> faces, Face bottomFace, Face topFace)
@@ -217,34 +202,43 @@ namespace Elements.Spatial
 
     public class CellComplex : Elements.Element
     {
+        [JsonIgnore]
         private long _segmentId = 0;
+
+        [JsonIgnore]
         private long _directedSegmentId = 0;
+
+        [JsonIgnore]
         private long _vertexId = 0;
+
+        [JsonIgnore]
         private long _faceId = 0;
+
+        [JsonIgnore]
         private long _cellId = 0;
 
-        [JsonProperty("Vertices")]
         public Dictionary<long, Vertex> Vertices = new Dictionary<long, Vertex>();
 
-        [JsonProperty("Segments")]
         public Dictionary<long, Segment> Segments = new Dictionary<long, Segment>();
 
-        [JsonProperty("DirectedSegments")]
         public Dictionary<long, DirectedSegment> DirectedSegments = new Dictionary<long, DirectedSegment>();
 
-        [JsonProperty("Faces")]
         public Dictionary<long, Face> Faces = new Dictionary<long, Face>();
 
-        [JsonProperty("Cells")]
         public Dictionary<long, Cell> Cells = new Dictionary<long, Cell>();
 
+        [JsonIgnore]
         private Dictionary<double, Dictionary<double, Dictionary<double, long>>> verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
 
         // Indexed by tuple of (lesserVertexId, greaterVertexId)
+        [JsonIgnore]
         private Dictionary<(long, long), long> segmentsLookup = new Dictionary<(long, long), long>();
+
         // Same as segmentsLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
+        [JsonIgnore]
         private Dictionary<(long, long), Dictionary<Boolean, long>> directedSegmentsLookup = new Dictionary<(long, long), Dictionary<Boolean, long>>();
 
+        [JsonIgnore]
         private Dictionary<string, long> facesLookup = new Dictionary<string, long>();
 
         public CellComplex(Guid id, string name) : base(id, name)
@@ -252,54 +246,49 @@ namespace Elements.Spatial
 
         }
 
-        // public CellComplex(Elements.CellComplex fromSerialization) : base(fromSerialization.Id, fromSerialization.Name)
-        // {
-        //     foreach (var vertex in fromSerialization.Vertices)
-        //     {
-        //         this.AddVertex(vertex.Point, vertex.Id);
-        //     }
+        [JsonConstructor]
+        public CellComplex(Guid id, string name, Dictionary<long, Vertex> vertices, Dictionary<long, Segment> segments, Dictionary<long, DirectedSegment> directedSegments, Dictionary<long, Face> faces, Dictionary<long, Cell> cells): base(id, name)
+        {
+            foreach (var vertex in vertices.Values)
+            {
+                this.AddVertex(vertex.Point, vertex.Id);
+            }
 
-        //     foreach (var segment in fromSerialization.Segments)
-        //     {
-        //         if (!this.AddSegment((segment.Vertex1, segment.Vertex2), segment.Id, out var addedSegment))
-        //         {
-        //             throw new Exception("Duplicate segment ID found");
-        //         }
-        //     }
+            foreach (var segment in segments.Values)
+            {
+                if (!this.AddSegment((segment.Vertex1Id, segment.Vertex2Id), segment.Id, out var addedSegment))
+                {
+                    throw new Exception("Duplicate segment ID found");
+                }
+            }
 
-        //     foreach (var directedSegment in fromSerialization.DirectedSegments)
-        //     {
-        //         var segment = this.Segments.GetValueOrDefault(directedSegment.SegmentId);
-        //         if (!this.AddDirectedSegment(segment, segment.Vertex2 == directedSegment.Start, directedSegment.Id, out var addedDirectedSegment))
-        //         {
-        //             throw new Exception("Duplicate directed segment ID found");
-        //         }
-        //     }
+            foreach (var directedSegment in directedSegments.Values)
+            {
+                var segment = this.GetSegment(directedSegment.SegmentId);
+                if (!this.AddDirectedSegment(segment, segment.Vertex1Id == directedSegment.StartVertexId, directedSegment.Id, out var addedDirectedSegment))
+                {
+                    throw new Exception("Duplicate directed segment ID found");
+                }
+            }
 
-        //     foreach (var face in fromSerialization.Faces)
-        //     {
-        //         var vertices = face.DirectedSegmentIds.Select(
-        //             segmentId => this.DirectedSegments.GetValueOrDefault(segmentId).Start
-        //         ).Select(
-        //             vertexId => this.Vertices.GetValueOrDefault(vertexId).Point
-        //         ).ToList();
+            foreach (var face in faces.Values)
+            {
+                var polygon = this.GetFaceGeometry(face);
 
-        //         var polygon = new Polygon(vertices);
+                if (!this.AddFace(polygon, face.Id, out var addedFace))
+                {
+                    throw new Exception("Duplicate face ID found");
+                }
+            }
 
-        //         if (!this.AddFace(polygon, face.Id, out var addedFace))
-        //         {
-        //             throw new Exception("Duplicate face ID found");
-        //         }
-        //     }
-
-        //     foreach (var cell in fromSerialization.Cells)
-        //     {
-        //         var faces = cell.FaceIds.Select(fId => this.Faces.GetValueOrDefault(fId)).ToList();
-        //         var bottomFace = this.Faces.GetValueOrDefault(cell.BottomFaceId);
-        //         var topFace = this.Faces.GetValueOrDefault(cell.TopFaceId);
-        //         this.AddCell(cell.Id, faces, bottomFace, topFace);
-        //     }
-        // }
+            foreach (var cell in cells.Values)
+            {
+                var cellFaces = cell.FaceIds.Select(fId => this.GetFace(fId)).ToList();
+                var bottomFace = this.GetFace(cell.BottomFaceId);
+                var topFace = this.GetFace(cell.TopFaceId);
+                this.AddCell(cell.Id, cellFaces, bottomFace, topFace);
+            }
+        }
 
         public Cell AddCell(Polygon polygon, double height, double elevation)
         {
@@ -523,9 +512,14 @@ namespace Elements.Spatial
             return directedSegment;
         }
 
-        public Face GetFace(long faceId)
+        public Face GetFace(long? faceId)
         {
-            this.Faces.TryGetValue(faceId, out var face);
+            if (faceId == null)
+            {
+                return null;
+            }
+
+            this.Faces.TryGetValue((long)faceId, out var face);
             return face;
         }
 
