@@ -317,6 +317,14 @@ namespace Elements.Spatial
             InternalSplitAtOffset(position, fromEnd, ignoreOutsideDomain, false);
         }
 
+        /// <summary>
+        /// This private method is called by public SplitAtOffset, as well as by SplitAtPoint, which calculates its position relative to the 
+        /// overall curve domain, rather than relative to the grid's own (possibly different) subdomain.
+        /// </summary>
+        /// <param name="position">The relative position at which to split.</param>
+        /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
+        /// <param name="ignoreOutsideDomain">If true, splits at offsets outside the domain will be silently ignored.</param>
+        /// <param name="useCurveDomain">If true, the position is measured relative to the top-level curve domain, not the subdomain. </param>
         private void InternalSplitAtOffset(double position, bool fromEnd = false, bool ignoreOutsideDomain = false, bool useCurveDomain = false)
         {
             var domain = useCurveDomain ? curveDomain : Domain;
