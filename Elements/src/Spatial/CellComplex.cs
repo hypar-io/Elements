@@ -110,6 +110,18 @@ namespace Elements.Spatial
                 this.EndVertexId = segment.Vertex1Id;
             }
         }
+
+        /// <summary>
+        /// Used for serialization only!
+        /// </summary>
+        [JsonConstructor]
+        public DirectedSegment(long id, long segmentId, long startVertexId, long endVertexId)
+        {
+            this.Id = id;
+            this.SegmentId = segmentId;
+            this.StartVertexId = startVertexId;
+            this.EndVertexId = endVertexId;
+        }
     }
 
     /// <summary>
@@ -129,10 +141,19 @@ namespace Elements.Spatial
         [JsonProperty("DirectedSegmentIds")]
         public List<long> DirectedSegmentIds;
 
-        public Face(long id, List<DirectedSegment> directedSegments)
+        public Face(long id, List<DirectedSegment> directedSegments):this(id, directedSegments.Select(ds => ds.Id).ToList())
+        {
+        }
+
+        /// <summary>
+        /// Used for deserialization only!
+        /// </summary>
+        [JsonConstructor]
+        public Face(long id, List<long> directedSegmentIds)
         {
             this.Id = id;
-            this.DirectedSegmentIds = directedSegments.Select(ds => ds.Id).ToList();
+            this.DirectedSegmentIds = directedSegmentIds;
+
         }
     }
 
@@ -178,6 +199,18 @@ namespace Elements.Spatial
             }
             this.FaceIds = faces.Select(ds => ds.Id).ToList();
         }
+
+        /// <summary>
+        /// Used for deserialization only!
+        /// </summary>
+        [JsonConstructor]
+        public Cell(long id, List<long> faceIds, long? bottomFaceId, long? topFaceId)
+        {
+            this.Id = id;
+            this.FaceIds = faceIds;
+            this.BottomFaceId = bottomFaceId;
+            this.TopFaceId = topFaceId;
+        }
     }
 
     #endregion
@@ -190,10 +223,19 @@ namespace Elements.Spatial
         private long _faceId = 0;
         private long _cellId = 0;
 
+        [JsonProperty("Vertices")]
         public Dictionary<long, Vertex> Vertices = new Dictionary<long, Vertex>();
+
+        [JsonProperty("Segments")]
         public Dictionary<long, Segment> Segments = new Dictionary<long, Segment>();
+
+        [JsonProperty("DirectedSegments")]
         public Dictionary<long, DirectedSegment> DirectedSegments = new Dictionary<long, DirectedSegment>();
+
+        [JsonProperty("Faces")]
         public Dictionary<long, Face> Faces = new Dictionary<long, Face>();
+
+        [JsonProperty("Cells")]
         public Dictionary<long, Cell> Cells = new Dictionary<long, Cell>();
 
         private Dictionary<double, Dictionary<double, Dictionary<double, long>>> verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
