@@ -496,15 +496,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Determine whether this vector's components are equal to those of v, within Epsilon.
+        /// Determine whether this vector's components are equal to those of v, within tolerance.
         /// </summary>
         /// <param name="v">The vector to compare.</param>
+        /// <param name="tolerance">Optional custom tolerance value.</param>
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
-        public bool IsAlmostEqualTo(Vector3 v)
+        public bool IsAlmostEqualTo(Vector3 v, double tolerance = Vector3.EPSILON)
         {
             if ((this.X - v.X) * (this.X - v.X)
               + (this.Y - v.Y) * (this.Y - v.Y)
-              + (this.Z - v.Z) * (this.Z - v.Z) < (EPSILON * EPSILON))
+              + (this.Z - v.Z) * (this.Z - v.Z) < (tolerance * tolerance))
             {
                 return true;
             }
@@ -670,20 +671,21 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="wrap">Whether or not to assume a closed shape like a polygon. If true, the last vertex will be compared to the first, and deleted if identical.</param>
+        /// <param name="tolerance">An optional distance tolerance for the comparison.</param>
         /// <returns></returns>
-        internal static IList<Vector3> RemoveSequentialDuplicates(IList<Vector3> vertices, bool wrap = false)
+        internal static IList<Vector3> RemoveSequentialDuplicates(IList<Vector3> vertices, bool wrap = false, double tolerance = Vector3.EPSILON)
         {
             List<Vector3> newList = new List<Vector3> { vertices[0] };
             for (int i = 1; i < vertices.Count; i++)
             {
                 var vertex = vertices[i];
                 var prevVertex = newList[newList.Count - 1];
-                if (!vertex.IsAlmostEqualTo(prevVertex))
+                if (!vertex.IsAlmostEqualTo(prevVertex, tolerance))
                 {
                     // if we wrap, and we're at the last vertex, also check for a zero-length segment between first and last.
                     if (wrap && i == vertices.Count - 1)
                     {
-                        if (!vertex.IsAlmostEqualTo(vertices[0]))
+                        if (!vertex.IsAlmostEqualTo(vertices[0], tolerance))
                         {
                             newList.Add(vertex);
                         }
@@ -695,6 +697,27 @@ namespace Elements.Geometry
                 }
             }
             return newList;
+        }
+
+        internal static List<Vector3> AttemptPostClipperCleanup(IList<Vector3> vertices)
+        {
+            var deduplicated = RemoveSequentialDuplicates(vertices, true, Vector3.EPSILON * 2);
+            List<Vector3> newList = new List<Vector3> { };
+            for (int i = 0; i < deduplicated.Count; i++)
+            {
+                var prevVertex = deduplicated[(i - 1 + deduplicated.Count) % deduplicated.Count];
+                var currVertex = deduplicated[i];
+                var nextVertex = deduplicated[(i + 1) % deduplicated.Count];
+                var prevToCurr = (currVertex - prevVertex).Unitized();
+                var currToNext = (nextVertex - currVertex).Unitized();
+                if (prevToCurr.Dot(currToNext) < -0.999)
+                {
+                    continue;
+                }
+                newList.Add(currVertex);
+            }
+            return newList;
+
         }
     }
 

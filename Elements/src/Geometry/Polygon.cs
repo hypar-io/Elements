@@ -1126,7 +1126,38 @@ namespace Elements.Geometry
                 var v = p[i];
                 converted[i] = new Vector3(v.X / scale, v.Y / scale);
             }
-            return new Polygon(converted);
+            try
+            {
+                return new Polygon(converted);
+            }
+            catch (ArgumentException e)
+            {
+                // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back. 
+                // here we make a last-ditch attempt to fix this and construct a new polygon. 
+                var cleanedVertices = Vector3.AttemptPostClipperCleanup(converted);
+                try
+                {
+                    return new Polygon(cleanedVertices);
+                }
+                catch (Exception e2)
+                {
+                    Console.WriteLine("Unable to fix geometry coming out of clipper.");
+                    Console.WriteLine("ORIGINAL EXCEPTION:");
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                    Console.WriteLine("🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣");
+                    Console.WriteLine("SECOND EXCEPTION:");
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                    Console.WriteLine("🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣");
+                    Console.WriteLine("ORIGINAL VERTICES:");
+                    Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(converted));
+                    Console.WriteLine("🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣");
+                    Console.WriteLine("CLEANED VERTICES:");
+                    Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(cleanedVertices));
+                    return null;
+                }
+            }
         }
 
         public static IList<Polygon> Reversed(this IList<Polygon> polygons)
