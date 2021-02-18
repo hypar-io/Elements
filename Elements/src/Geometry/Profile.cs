@@ -396,38 +396,51 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Split a set of profiles with a collection of open polylines.
+        /// Split a set of profiles with a collection of open polylines, with an optional gap between results.
         /// </summary>
         /// <param name="profiles">The profiles to split</param>
-        /// <param name="splitLines"></param>
-        /// <param name="tolerance"></param>
-        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines, double tolerance = Vector3.EPSILON)
+        /// <param name="splitLines">The polylines defining the splits.</param>
+        /// <param name="gapSize">An optional gap size between split pieces. If splits are failing, it can be helpful to increase this.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines, double gapSize = 0, double tolerance = Vector3.EPSILON)
         {
+            // We're doing something a little bit questionable here — we're offsetting the split curves by a hair's width
+            // so that clipper can handle them as a subtraction, since it doesn't have a built-in split mechanism.
+            // We increase the tolerance so that the result is well within the specified tolerance of the expected result.
+            // This is imperfect, but no more imperfect than all of the other clipper-based operations we currently employ.  
+          
+            var internalTolerance = tolerance / 10; // to keep splits within tolerance, we execute clipper at a 10x smaller tolerance.
             Clipper clipper = new Clipper();
             foreach (var profile in profiles)
             {
-                var clipperPaths = profile.ToClipperPaths(tolerance / 10);
+                var clipperPaths = profile.ToClipperPaths(internalTolerance);
                 clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
             }
 
             foreach (var line in splitLines)
             {
-                // We're doing something a little bit questionable here — we're offsetting the split curves by a hair's width
-                // so that clipper can handle them as a subtraction, since it doesn't have a built-in split mechanism.
-                // We increase the tolerance so that the result is well within the specified tolerance of the expected result.
-                // This is imperfect, but no more imperfect than all of the other clipper-based operations we currently employ.  
                 var unionClipper = new Clipper();
-                var clipRegion = line.Offset(tolerance, EndType.Butt, tolerance / 10);
+
+                // This is basically the same as 
+                // line.Offset(offsetDist, EndType.Butt, internalTolerance), 
+                // but without the unneccessary conversion back to Elements geometry.
+                var co = new ClipperOffset();
+                var offsetSolution = new List<List<IntPoint>>();
+                var offsetPath = line.ToClipperPath(internalTolerance);
+                var offsetDist = (internalTolerance) + gapSize;
+                var clipperScale = 1.0 / internalTolerance;
+                co.AddPath(offsetPath, JoinType.jtMiter, ClipperLib.EndType.etOpenButt);
+                co.Execute(ref offsetSolution, offsetDist * clipperScale);
+
                 List<List<IntPoint>> unionSolution = new List<List<IntPoint>>();
-                unionClipper.AddPaths(clipRegion.Select(c => c.ToClipperPath(tolerance / 10)).ToList(), PolyType.ptSubject, true);
+                unionClipper.AddPaths(offsetSolution, PolyType.ptSubject, true);
                 unionClipper.Execute(ClipType.ctUnion, unionSolution, PolyFillType.pftNonZero);
 
-                // var clipperPaths = clipRegion.Select(s => s.ToClipperPath(tolerance / 10)).ToList();
                 clipper.AddPaths(unionSolution, PolyType.ptClip, true);
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
-            var joinedProfiles = solution.ToProfiles(tolerance / 10);
+            var joinedProfiles = solution.ToProfiles(internalTolerance);
             return joinedProfiles;
         }
 

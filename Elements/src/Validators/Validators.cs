@@ -378,11 +378,7 @@ namespace Elements.Validators
             polygon.Vertices = Vector3.RemoveSequentialDuplicates(polygon.Vertices, true);
             var segments = Polygon.SegmentsInternal(polygon.Vertices);
             Polyline.CheckSegmentLengthAndThrow(segments);
-            var t = new Transform();
-            if (polygon.Vertices.Any(v => Math.Abs(v.Z) > Vector3.EPSILON))
-            {
-                t = polygon.Vertices.ToTransform();
-            }
+            var t = polygon.Vertices.ToTransform();
             Polyline.CheckSelfIntersectionAndThrow(t, segments);
             return;
         }

@@ -1141,21 +1141,7 @@ namespace Elements.Geometry
                 }
                 catch (Exception e2)
                 {
-                    Console.WriteLine("Unable to fix geometry coming out of clipper.");
-                    Console.WriteLine("ORIGINAL EXCEPTION:");
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e.StackTrace);
-                    Console.WriteLine("🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣");
-                    Console.WriteLine("SECOND EXCEPTION:");
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e.StackTrace);
-                    Console.WriteLine("🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣");
-                    Console.WriteLine("ORIGINAL VERTICES:");
-                    Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(converted));
-                    Console.WriteLine("🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣🟣");
-                    Console.WriteLine("CLEANED VERTICES:");
-                    Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(cleanedVertices));
-                    return null;
+                    throw new Exception("Unable to clean up bad polygon resulting from a polygon boolean operation.");
                 }
             }
         }
