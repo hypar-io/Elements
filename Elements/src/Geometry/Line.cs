@@ -514,15 +514,17 @@ namespace Elements.Geometry
                 .Where(i => (testLine.Start - i).Dot(dir) < testLine.Length() * -1)
                 .Reverse().Cast<Vector3?>();
 
-            var startEndCandidates = extendToFurthest ? (startCandidates.LastOrDefault(), endCandidates.LastOrDefault() ) : ( startCandidates.FirstOrDefault(), endCandidates.FirstOrDefault() );
+            (Vector3? Start, Vector3? End) startEndCandidates = extendToFurthest ?
+                (startCandidates.Count() > 0 ? startCandidates.Last() : null, endCandidates.Count() > 0 ? endCandidates.Last() : null) :
+                (startCandidates.Count() > 0 ? startCandidates.First() : null, endCandidates.Count() > 0 ? endCandidates.First(): null);
 
-            if (bothSides && startEndCandidates.Item1 != null)
+            if (bothSides && startEndCandidates.Start != null)
             {
-                start = (Vector3)startEndCandidates.Item1;
+                start = (Vector3)startEndCandidates.Start;
             }
-            if (startEndCandidates.Item2 != null)
+            if (startEndCandidates.End != null)
             {
-                end = (Vector3)startEndCandidates.Item2;
+                end = (Vector3)startEndCandidates.End;
             }
 
             return new Line(start, end);

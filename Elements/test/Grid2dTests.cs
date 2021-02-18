@@ -370,8 +370,7 @@ namespace Elements.Tests
         public void SkewedGridsFillBoundary()
         {
             var squareSize = 10;
-            var squareHalfSize = squareSize/2;
-            var rect = Polygon.Rectangle(new Vector3(-squareHalfSize, -squareHalfSize), new Vector3(squareHalfSize, squareHalfSize));
+            var rect = Polygon.Rectangle(squareSize, squareSize);
 
             // Using constructor with origin
             var origin = new Vector3();
