@@ -318,6 +318,39 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SplitSubCellAtPoint()
+        {
+            Name = "Split Subcell at point";
+            var u = new Grid1d(new Line(new Vector3(-2, 0), new Vector3(-4, 5)));
+            var v = new Grid1d(new Line(new Vector3(0, -2), new Vector3(7, -2)));
+            var grid = new Grid2d(u, v);
+            grid.SplitAtPoint(new Vector3(2, 2));
+            grid[1, 1].SplitAtPoint(new Vector3(3, 3));
+            Model.AddElement(new Circle(new Vector3(2, 2), 0.1));
+            Model.AddElement(new Circle(new Vector3(3, 3), 0.1));
+            var subcell = grid[1, 1];
+            Model.AddElements(grid.GetCells().Select(c => new ModelCurve(c.GetCellGeometry(), BuiltInMaterials.XAxis)));
+            Assert.Equal(7, grid.GetCells().Count);
+
+            var shape = new Polygon(new[] {
+                new Vector3(10,10),
+                new Vector3(20,10),
+                new Vector3(24, 20),
+                new Vector3(15, 16),
+                new Vector3(10, 16)
+            });
+            var grid2 = new Grid2d(shape);
+            grid2.SplitAtPoint(new Vector3(12, 13));
+            Model.AddElements(new Circle(new Vector3(12, 13), 0.2));
+            Model.AddElements(new Circle(new Vector3(17, 15), 0.2));
+            grid2[1, 1].U.DivideByCount(4);
+            grid2[1, 1].SplitAtPoint(new Vector3(17, 15));
+            Model.AddElements(grid2.GetCells().SelectMany(c => c.GetTrimmedCellGeometry().Select(c2 => new ModelCurve(c2, BuiltInMaterials.XAxis))));
+            Model.AddElement(shape);
+            Assert.Equal(13, grid2.GetCells().Count);
+        }
+
+        [Fact]
         public void XYParallelNonOrthogonalBoundary()
         {
             var polygon = new Polygon(new[]

@@ -19,7 +19,6 @@
 - `Random.NextColor()` and `Random.NextMaterial()`
 - `Validator.DisableValidationOnConstruction`
 - `Vector3.ComputeDefaultBasisVectors()`
-- A triangle validator to check for 3 distinct vertex positions.
 
 ### Changed
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
@@ -27,10 +26,13 @@
 - Make `Grid1d` and `Grid2d` serializable
 - `new Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)` did not unitize its axes, this is fixed.
 - All solids and csgs will now have planar texture coordinates.
+- Triangles are now validated to check for 3 distinct vertex positions.
+
 
 ### Fixed
 - Fixed a bug where `Polygon.UnionAll` was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
 - Fixed [#517](https://github.com/hypar-io/Elements/issues/517)
+- Fixed a bug where Grid2d subcells would not split correctly with `SplitAtPoint`
 ## 0.8.2
 
 ### Changed
