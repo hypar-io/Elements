@@ -654,6 +654,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Compute basis vectors for this vector.
+        /// By default, the cross product of the world Z axis and this vector
+        /// are used to compute the U direction. If this vector is parallel
+        /// the world Z axis, then the world Y axis is used instead.
+        /// </summary>
+        public (Vector3 U, Vector3 V) ComputeDefaultBasisVectors()
+        {
+            var u = (this.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis).Cross(this).Unitized();
+            var v = this.Cross(u).Unitized();
+            return (u, v);
+        }
+
+        /// <summary>
         /// Remove sequential duplicates from a list of points. 
         /// </summary>
         /// <param name="vertices"></param>

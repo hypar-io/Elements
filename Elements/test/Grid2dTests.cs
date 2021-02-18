@@ -99,7 +99,7 @@ namespace Elements.Tests
             var u = new Grid1d(10);
             var v = new Grid1d(5);
             var grid2d = new Grid2d(u, v);
-            Assert.Equal(1, grid2d.CellsFlat.Count);
+            Assert.Single(grid2d.CellsFlat);
             grid2d.U.DivideByCount(10);
             grid2d.V.DivideByCount(5);
             Assert.Equal(50, grid2d.CellsFlat.Count);
@@ -318,6 +318,39 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SplitSubCellAtPoint()
+        {
+            Name = "Split Subcell at point";
+            var u = new Grid1d(new Line(new Vector3(-2, 0), new Vector3(-4, 5)));
+            var v = new Grid1d(new Line(new Vector3(0, -2), new Vector3(7, -2)));
+            var grid = new Grid2d(u, v);
+            grid.SplitAtPoint(new Vector3(2, 2));
+            grid[1, 1].SplitAtPoint(new Vector3(3, 3));
+            Model.AddElement(new Circle(new Vector3(2, 2), 0.1));
+            Model.AddElement(new Circle(new Vector3(3, 3), 0.1));
+            var subcell = grid[1, 1];
+            Model.AddElements(grid.GetCells().Select(c => new ModelCurve(c.GetCellGeometry(), BuiltInMaterials.XAxis)));
+            Assert.Equal(7, grid.GetCells().Count);
+
+            var shape = new Polygon(new[] {
+                new Vector3(10,10),
+                new Vector3(20,10),
+                new Vector3(24, 20),
+                new Vector3(15, 16),
+                new Vector3(10, 16)
+            });
+            var grid2 = new Grid2d(shape);
+            grid2.SplitAtPoint(new Vector3(12, 13));
+            Model.AddElements(new Circle(new Vector3(12, 13), 0.2));
+            Model.AddElements(new Circle(new Vector3(17, 15), 0.2));
+            grid2[1, 1].U.DivideByCount(4);
+            grid2[1, 1].SplitAtPoint(new Vector3(17, 15));
+            Model.AddElements(grid2.GetCells().SelectMany(c => c.GetTrimmedCellGeometry().Select(c2 => new ModelCurve(c2, BuiltInMaterials.XAxis))));
+            Model.AddElement(shape);
+            Assert.Equal(13, grid2.GetCells().Count);
+        }
+
+        [Fact]
         public void XYParallelNonOrthogonalBoundary()
         {
             var polygon = new Polygon(new[]
@@ -331,6 +364,54 @@ namespace Elements.Tests
             grid.U.DivideByPattern(new double[] { 1, 2 });
             grid.V.DivideByCount(10);
             Assert.Equal(80, grid.GetCells().Count());
+        }
+
+        [Fact]
+        public void SkewedGridsFillBoundary()
+        {
+            var squareSize = 10;
+            var rect = Polygon.Rectangle(squareSize, squareSize);
+
+            // Using constructor with origin
+            var origin = new Vector3();
+            var uDirection = new Vector3(1, 0, 0);
+            var vDirection = new Vector3(-1, 1, 0); // 45 degrees up to the left
+
+            var grid = new Grid2d(rect, origin, uDirection, vDirection);
+
+            // Making a grid from the origin doesn't subdivide it for you,
+            // just makes sure the UV axes are big enough to fill the bounds
+            Assert.Single(grid.GetCells());
+
+            // Split grid at the origin
+            grid.SplitAtPoint(origin);
+            Assert.Equal(4, grid.GetCells().Count);
+            Assert.Equal(squareSize * 2, grid.U.Curve.Length()); // Expanding to 45 degree square should give us 2x square size (half size extension each direction)
+            Assert.Equal(Math.Sqrt(2 * Math.Pow(squareSize, 2)), grid.V.Curve.Length()); // Skewed side should be hypotenuse with other legs at square size.
+        }
+
+        [Fact]
+        public void CustomUVAndBounds()
+        {
+            var boundary = Polygon.Rectangle(new Vector3(), new Vector3(1, 1));
+
+            var u = new Grid1d(new Line(new Vector3(5, 0), new Vector3(10, 0)));
+            var v = new Grid1d(new Line(new Vector3(0, 5), new Vector3(0, 10)));
+
+            var grid = new Grid2d(boundary, u, v);
+
+            Assert.Equal(5, grid.U.Curve.Length());
+            Assert.Equal(5, grid.V.Curve.Length());
+
+            var count = grid.GetCells().Count;
+
+            foreach (var cell in grid.GetCells())
+            {
+                // We gave it U and V coordinates that do not intersect with the bounds.
+                // We expect empty trimmed cells back.
+                var trimmed = cell.GetTrimmedCellGeometry();
+                Assert.Equal(0, trimmed.Count());
+            }
         }
     }
 }
