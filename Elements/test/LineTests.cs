@@ -256,5 +256,56 @@ namespace Elements.Geometry.Tests
             Assert.Equal(2.02291, hvLine.Length(), 4);
             Assert.Equal(new Vector3(3, 3).DistanceTo(new Vector3(5, 5)), hitsParallelSegment.Length());
         }
+
+        [Fact]
+        public void ExtendWithMultipleIntersections()
+        {
+            Name = "ExtendWithMultipleIntersections";
+            var line = new Line(new Vector3(0, 0), new Vector3(1, 0));
+
+            var vertices = new List<Vector3>()
+                {
+                    new Vector3(-1, -1),
+                    new Vector3(2, -1),
+                    new Vector3(2, 1),
+                    new Vector3(3, 1),
+                    new Vector3(3, -1),
+                    new Vector3(4, -1),
+                    new Vector3(4, 2),
+                    new Vector3(-1, 2)
+                };
+
+            var polygon = new Polygon(vertices);
+
+            // Extends in both directions, and stops at earliest intersection
+            var defaultExtend = line.ExtendTo(polygon);
+
+            Assert.Equal(-1, defaultExtend.Start.X);
+            Assert.Equal(2, defaultExtend.End.X);
+
+            // Extend only endpoint
+            var singleDirectionExtend = line.ExtendTo(polygon, false);
+
+            Assert.Equal(0, singleDirectionExtend.Start.X);
+            Assert.Equal(2, singleDirectionExtend.End.X);
+
+            // Extend both sides to furthest intersection
+            var furthestExtend = line.ExtendTo(polygon, true, true);
+
+            Assert.Equal(-1, furthestExtend.Start.X);
+            Assert.Equal(4, furthestExtend.End.X);
+
+            // Extend endpoint only to furthest intersection
+            var singleFurthestExtend = line.ExtendTo(polygon, false, true);
+
+            Assert.Equal(0, singleFurthestExtend.Start.X);
+            Assert.Equal(4, singleFurthestExtend.End.X);
+
+            // If no intersections found, returns line with same endpoints
+            var noIntersection = line.ExtendTo(Polygon.Rectangle(new Vector3(1,1), new Vector3(2, 2)));
+
+            Assert.Equal(line.Start.X, noIntersection.Start.X);
+            Assert.Equal(line.End.X, noIntersection.End.X);
+        }
     }
 }

@@ -654,13 +654,13 @@ Divisions will be centered along the line.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
-  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Polyline_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean)">ExtendTo(Polyline, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Extend this line to its nearest intersection with a polyline or polygon.</p>
+  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Polygon_System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polygon,System.Boolean,System.Boolean)">ExtendTo(Polygon, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to its (nearest, by default) intersection with a polygon.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Line ExtendTo(Polyline polyline, bool bothSides = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(Polygon polygon, bool bothSides = true, bool extendToFurthest = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -673,15 +673,21 @@ Divisions will be centered along the line.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
-        <td><span class="parametername">polyline</span></td>
-        <td><p>The polyline or polygon to intersect with</p>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon to intersect with</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">bothSides</span></td>
         <td><p>Optional — if false, will only extend in the line's direction; if true will extend in both directions.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">extendToFurthest</span></td>
+        <td><p>Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</p>
 </td>
       </tr>
     </tbody>
@@ -702,13 +708,67 @@ Divisions will be centered along the line.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
-  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Profile_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean)">ExtendTo(Profile, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Extend this line to its nearest intersection with a profile.</p>
+  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Polyline_System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Polyline,System.Boolean,System.Boolean)">ExtendTo(Polyline, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to its (nearest, by default) intersection with a polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Line ExtendTo(Profile profile, bool bothSides = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(Polyline polyline, bool bothSides = true, bool extendToFurthest = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><span class="parametername">polyline</span></td>
+        <td><p>The polyline to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">bothSides</span></td>
+        <td><p>Optional — if false, will only extend in the line's direction; if true will extend in both directions.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">extendToFurthest</span></td>
+        <td><p>Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
+  <h4 id="Elements_Geometry_Line_ExtendTo_Elements_Geometry_Profile_System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean,System.Boolean)">ExtendTo(Profile, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to its (nearest, by default) intersection with a profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(Profile profile, bool bothSides = true, bool extendToFurthest = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -732,6 +792,12 @@ Divisions will be centered along the line.</p>
         <td><p>Optional — if false, will only extend in the line's direction; if true will extend in both directions.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">extendToFurthest</span></td>
+        <td><p>Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -750,13 +816,14 @@ Divisions will be centered along the line.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
-  <h4 id="Elements_Geometry_Line_ExtendTo_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean)">ExtendTo(IEnumerable&lt;Line&gt;, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Extend this line to its nearest intersection with any other line.</p>
+  <h4 id="Elements_Geometry_Line_ExtendTo_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)">ExtendTo(IEnumerable&lt;Line&gt;, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Extend this line to its (nearest, by default) intersection with any other line.
+If optional <code>extendToFurthest</code> is true, extends to furthest intersection with any other line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Line ExtendTo(IEnumerable&lt;Line&gt; otherLines, bool bothSides = true)</code></pre>
+    <pre><code class="lang-csharp hljs">public Line ExtendTo(IEnumerable&lt;Line&gt; otherLines, bool bothSides = true, bool extendToFurthest = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -778,6 +845,12 @@ Divisions will be centered along the line.</p>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">bothSides</span></td>
         <td><p>Optional — if false, will only extend in the line's direction; if true will extend in both directions.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">extendToFurthest</span></td>
+        <td><p>Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</p>
 </td>
       </tr>
     </tbody>
