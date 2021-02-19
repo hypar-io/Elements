@@ -4990,6 +4990,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.PointAtInternal
   nameWithType: Polygon.PointAtInternal
+- uid: Elements.Geometry.Polygon.PointInternal
+  name: PointInternal()
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_PointInternal
+  commentId: M:Elements.Geometry.Polygon.PointInternal
+  fullName: Elements.Geometry.Polygon.PointInternal()
+  nameWithType: Polygon.PointInternal()
+- uid: Elements.Geometry.Polygon.PointInternal*
+  name: PointInternal
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_PointInternal_
+  commentId: Overload:Elements.Geometry.Polygon.PointInternal
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.PointInternal
+  nameWithType: Polygon.PointInternal
 - uid: Elements.Geometry.Polygon.Project(Elements.Geometry.Plane)
   name: Project(Plane)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Project_Elements_Geometry_Plane_
