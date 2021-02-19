@@ -6,6 +6,7 @@
 - `Profile.ToModelCurves()`
 - `Profile.Difference()`
 - `Profile.Intersection()`
+- `Profile.Split()`
 - `Profile.Segments()`
 - `Bbox3.ToModelCurves()`
 - `Line.ExtendTo(IEnumerable<Line>)`

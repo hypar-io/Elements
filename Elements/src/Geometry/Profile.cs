@@ -337,7 +337,7 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive);
-            var joinedProfiles = solution.ToProfiles();
+            var joinedProfiles = solution.ToProfiles(tolerance);
             return joinedProfiles;
         }
 
@@ -364,7 +364,7 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
-            var joinedProfiles = solution.ToProfiles();
+            var joinedProfiles = solution.ToProfiles(tolerance);
             return joinedProfiles;
         }
 
@@ -391,7 +391,56 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctIntersection, solution, PolyFillType.pftNonZero);
-            var joinedProfiles = solution.ToProfiles();
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
+        /// <summary>
+        /// Split a set of profiles with a collection of open polylines, with an optional gap between results.
+        /// </summary>
+        /// <param name="profiles">The profiles to split</param>
+        /// <param name="splitLines">The polylines defining the splits.</param>
+        /// <param name="gapSize">An optional gap size between split pieces. If splits are failing, it can be helpful to increase this.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines, double gapSize = 0, double tolerance = Vector3.EPSILON)
+        {
+            // We're doing something a little bit questionable here — we're offsetting the split curves by a hair's width
+            // so that clipper can handle them as a subtraction, since it doesn't have a built-in split mechanism.
+            // We increase the tolerance so that the result is well within the specified tolerance of the expected result.
+            // This is imperfect, but no more imperfect than all of the other clipper-based operations we currently employ.  
+          
+            var internalTolerance = tolerance / 10; // to keep splits within tolerance, we execute clipper at a 10x smaller tolerance.
+            Clipper clipper = new Clipper();
+            foreach (var profile in profiles)
+            {
+                var clipperPaths = profile.ToClipperPaths(internalTolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
+            }
+
+            foreach (var line in splitLines)
+            {
+                var unionClipper = new Clipper();
+
+                // This is basically the same as 
+                // line.Offset(offsetDist, EndType.Butt, internalTolerance), 
+                // but without the unneccessary conversion back to Elements geometry.
+                var co = new ClipperOffset();
+                var offsetSolution = new List<List<IntPoint>>();
+                var offsetPath = line.ToClipperPath(internalTolerance);
+                var offsetDist = (internalTolerance) + gapSize;
+                var clipperScale = 1.0 / internalTolerance;
+                co.AddPath(offsetPath, JoinType.jtMiter, ClipperLib.EndType.etOpenButt);
+                co.Execute(ref offsetSolution, offsetDist * clipperScale);
+
+                List<List<IntPoint>> unionSolution = new List<List<IntPoint>>();
+                unionClipper.AddPaths(offsetSolution, PolyType.ptSubject, true);
+                unionClipper.Execute(ClipType.ctUnion, unionSolution, PolyFillType.pftNonZero);
+
+                clipper.AddPaths(unionSolution, PolyType.ptClip, true);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
+            var joinedProfiles = solution.ToProfiles(internalTolerance);
             return joinedProfiles;
         }
 
@@ -423,13 +472,20 @@ namespace Elements.Geometry
         internal static Profile ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
         {
             var perimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
+            if (perimeter == null)
+            {
+                return null;
+            }
             List<Polygon> voidCrvs = new List<Polygon>();
             if (node.ChildCount > 0)
             {
                 foreach (var child in node.Childs)
                 {
                     var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
-                    voidCrvs.Add(voidCrv);
+                    if (voidCrv != null)
+                    {
+                        voidCrvs.Add(voidCrv);
+                    }
                 }
             }
             var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
@@ -439,7 +495,7 @@ namespace Elements.Geometry
         internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
         {
             var joinedProfiles = new List<Profile>();
-           
+
             if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
             {
                 var profile = node.ToProfile(tolerance);
@@ -448,7 +504,7 @@ namespace Elements.Geometry
             foreach (var result in node.Childs)
             {
                 var profiles = result.ToProfiles(tolerance);
-                joinedProfiles.AddRange(profiles);
+                joinedProfiles.AddRange(profiles.Where(p => p != null));
             }
             return joinedProfiles;
         }
