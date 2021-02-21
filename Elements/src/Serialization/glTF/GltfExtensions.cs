@@ -279,7 +279,7 @@ namespace Elements.Serialization.glTF
             return materialDict;
         }
 
-        internal static void AddLights(this Gltf gltf, List<DirectionalLight> lights, List<Node> nodes)
+        internal static void AddLights(this Gltf gltf, List<Light> lights, List<Node> nodes)
         {
             gltf.Extensions = new Dictionary<string, object>();
             var lightCount = 0;
@@ -289,10 +289,17 @@ namespace Elements.Serialization.glTF
                 // Create the top level collection of lights.
                 var gltfLight = new Dictionary<string, object>(){
                     {"color", new[]{light.Color.Red, light.Color.Green, light.Color.Blue}},
-                    {"type", "directional"},
+                    {"type", Enum.GetName(typeof(LightType), light.LightType).ToLower()},
                     {"intensity", light.Intensity},
                     {"name", light.Name != null ? light.Name : string.Empty}
                 };
+                if (light.LightType == LightType.Spot)
+                {
+                    gltfLight["spot"] = new Dictionary<string, double>(){
+                        {"innerConeAngle", ((SpotLight)light).InnerConeAngle},
+                        {"outerConeAngle", ((SpotLight)light).OuterConeAngle}
+                    };
+                }
                 lightsArr.Add(gltfLight);
 
                 // Create the light nodes
@@ -674,7 +681,7 @@ namespace Elements.Serialization.glTF
             scene.Nodes = new[] { 0 };
             gltf.Scenes = new[] { scene };
 
-            var lights = model.AllElementsOfType<DirectionalLight>().ToList();
+            var lights = model.AllElementsOfType<Light>().ToList();
             gltf.ExtensionsUsed = lights.Any() ? new[] {
                 "KHR_materials_pbrSpecularGlossiness",
                 "KHR_materials_unlit",
