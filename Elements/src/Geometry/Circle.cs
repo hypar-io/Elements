@@ -26,7 +26,7 @@ namespace Elements.Geometry
         /// Create a polygon through a set of points along the arc.
         /// </summary>
         /// <param name="divisions">The number of divisions of the arc.</param>
-        /// <returns>A polyline.</returns>
+        /// <returns>A polygon.</returns>
         public Polygon ToPolygon(int divisions = 10)
         {
             var pts = new Vector3[divisions];

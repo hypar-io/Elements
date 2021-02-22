@@ -4,6 +4,7 @@ using Elements.Spatial;
 using Xunit;
 using Elements.Geometry;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -103,9 +104,18 @@ namespace Elements.Tests
         public void DivideFromPosition()
         {
             var grid = new Grid1d(new Domain1d(-8, 8));
-            Assert.Throws<ArgumentException>(() => grid.DivideByFixedLengthFromPosition(1, 10));
+            grid.DivideByFixedLengthFromPosition(20, 10);
+            Assert.Null(grid.Cells); // this should have been left undivided
             grid.DivideByFixedLengthFromPosition(4, 0);
             Assert.Equal(4, grid.Cells.Count);
+        }
+
+        [Fact]
+        public void DivideFromPoint()
+        {
+            var grid = new Grid1d(new Line(new Vector3(-5, -5), new Vector3(5, 5)));
+            grid.DivideByFixedLengthFromPoint(3, new Vector3(-4, 4));
+            Assert.Equal(6, grid.Cells.Count);
         }
 
         [Fact]
@@ -120,6 +130,23 @@ namespace Elements.Tests
             var allCells = grid.GetCells();
             var cellGeometry = allCells.Select(c => c.GetCellGeometry());
             Assert.Equal(11, allCells.Count);
+        }
+
+        [Fact]
+        public void Grid1dSerializes()
+        {
+            var polyline = new Polyline(new[] {
+                new Vector3(0,0,0),
+                new Vector3(10,2,0),
+                new Vector3(30,4,0),
+            });
+            var grid = new Grid1d(polyline);
+            grid.DivideByCount(4);
+            grid[3].DivideByFixedLength(0.4);
+            var json = JsonConvert.SerializeObject(grid);
+            var deserialized = JsonConvert.DeserializeObject<Grid1d>(json);
+            Assert.Equal(grid.GetCells().Count, deserialized.GetCells().Count);
+            Assert.Equal(0, (grid.Curve as Polyline).Start.DistanceTo((deserialized.Curve as Polyline).Start));
         }
 
         [Fact]

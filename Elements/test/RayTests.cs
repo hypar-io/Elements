@@ -6,7 +6,7 @@ using solids = Elements.Geometry.Solids;
 using Xunit;
 using Xunit.Abstractions;
 using System.Diagnostics;
-using Elements.Geometry.Solids;
+using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements.Tests
 {
@@ -264,6 +264,15 @@ namespace Elements.Tests
             this._output.WriteLine($"Shot {analysisMesh.TotalAnalysisLocations} rays in {sw.Elapsed.TotalMilliseconds}ms.");
 
             this.Model.AddElements(new Element[] { mass, analysisMesh });
+        }
+
+        [Fact]
+        private static void RayIntersectsNewlyGeneratedElement()
+        {
+            var wall = new StandardWall(new Line(Vector3.Origin, new Vector3(10, 0, 0)), 0.3, 3);
+            var ray = new Ray(new Vector3(5, 5, 1), new Vector3(0, -1, 0));
+            var doesIntersect = ray.Intersects(wall, out var result);
+            Assert.True(doesIntersect);
         }
 
         private static Vector3 Center(Triangle t)

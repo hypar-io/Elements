@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct BBox3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -83,15 +83,6 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.ValueType.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.ValueType.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.ValueType.ToString()</span>
-    </div>
-    <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
     </div>
     <div>
@@ -105,7 +96,8 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_BBox3_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct BBox3</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
+public struct BBox3</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -142,7 +134,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BBox3(Vector3 min, Vector3 max)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public BBox3(Vector3 min, Vector3 max)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -228,7 +221,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Max { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Max&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public Vector3 Max { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -252,7 +246,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Min { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Min&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public Vector3 Min { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -296,6 +291,102 @@
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_BBox3_Equals_" data-uid="Elements.Geometry.BBox3.Equals*"></a>
+  <h4 id="Elements_Geometry_BBox3_Equals_System_Object_" data-uid="Elements.Geometry.BBox3.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"><p>Is the provided object a bounding box? If so, is it
+equal to this bounding box within Epsilon?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
+  <a id="Elements_Geometry_BBox3_GetHashCode_" data-uid="Elements.Geometry.BBox3.GetHashCode*"></a>
+  <h4 id="Elements_Geometry_BBox3_GetHashCode" data-uid="Elements.Geometry.BBox3.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p>Get the hash code for the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
+  <a id="Elements_Geometry_BBox3_ToString_" data-uid="Elements.Geometry.BBox3.ToString*"></a>
+  <h4 id="Elements_Geometry_BBox3_ToString" data-uid="Elements.Geometry.BBox3.ToString">ToString()</h4>
+  <div class="markdown level1 summary"><p>The string representation of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.ToString()</span></div>
   <a id="Elements_Geometry_BBox3_Translated_" data-uid="Elements.Geometry.BBox3.Translated*"></a>
   <h4 id="Elements_Geometry_BBox3_Translated_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.Translated(Elements.Geometry.Vector3)">Translated(Vector3)</h4>
   <div class="markdown level1 summary"><p>Get a translated copy of the bounding box.</p>
@@ -338,6 +429,104 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="operators">Operators
+  </h3>
+  <a id="Elements_Geometry_BBox3_op_Equality_" data-uid="Elements.Geometry.BBox3.op_Equality*"></a>
+  <h4 id="Elements_Geometry_BBox3_op_Equality_Elements_Geometry_BBox3_Elements_Geometry_BBox3_" data-uid="Elements.Geometry.BBox3.op_Equality(Elements.Geometry.BBox3,Elements.Geometry.BBox3)">Equality(BBox3, BBox3)</h4>
+  <div class="markdown level1 summary"><p>Are the two bounding boxes equal within Epsilon?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(BBox3 a, BBox3 b)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_op_Inequality_" data-uid="Elements.Geometry.BBox3.op_Inequality*"></a>
+  <h4 id="Elements_Geometry_BBox3_op_Inequality_Elements_Geometry_BBox3_Elements_Geometry_BBox3_" data-uid="Elements.Geometry.BBox3.op_Inequality(Elements.Geometry.BBox3,Elements.Geometry.BBox3)">Inequality(BBox3, BBox3)</h4>
+  <div class="markdown level1 summary"><p>Are the two bounding boxes not equal within Epsilon?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(BBox3 a, BBox3 b)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_BBox3_Elements_Geometry_Transform_Elements_Material_">ModelCurveExtensions.ToModelCurves(BBox3, Transform, Material)</a>
+  </div>
 </article>
           </div>
           

@@ -50,6 +50,86 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ProfileUnionAll()
+        {
+            this.Name = "ProfileUnionAll";
+            var outer1 = new Circle(Vector3.Origin, 5).ToPolygon(10);
+            var inner1 = new Circle(Vector3.Origin, 4).ToPolygon(10);
+            var outer2 = new Circle(new Vector3(9, 0, 0), 5).ToPolygon(10);
+            var inner2 = new Circle(new Vector3(9, 0, 0), 4).ToPolygon(10);
+            var outer3 = new Circle(new Vector3(4.5, 12, 0), 5).ToPolygon(10);
+            var inner3 = new Circle(new Vector3(4.5, 12, 0), 4).ToPolygon(10);
+            var p1 = new Profile(outer1, inner1);
+            var p2 = new Profile(outer2, inner2);
+            var p3 = new Profile(outer3, inner3);
+            var union = Elements.Geometry.Profile.UnionAll(new[] { p1, p2, p3 });
+            foreach (var profile in union)
+            {
+                var floor = new Floor(profile, 1);
+                this.Model.AddElement(floor);
+            }
+            Assert.Equal(2, union.Count);
+
+        }
+
+        [Fact]
+        public void ProfileDifference()
+        {
+            Name = "Profile Difference";
+            var rect = Polygon.Rectangle(10, 10);
+            var rect2 = rect.TransformedPolygon(new Transform(11, 0, 0));
+            var difference = Elements.Geometry.Profile.Difference(new[] { new Profile(rect) }, new[] { new Profile(rect2) });
+
+            var innerRect = Polygon.Rectangle(3, 3);
+            var grid2d = new Elements.Spatial.Grid2d(new[] { rect, innerRect });
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByCount(10);
+            var secondSet = new[] {
+                new Profile(new Circle(new Vector3(4,4), 4).ToPolygon(), new Circle(new Vector3(4,4), 2).ToPolygon()),
+                new Profile(new Circle(new Vector3(-4,-4), 4).ToPolygon(), new Circle(new Vector3(-4,-4), 2).ToPolygon())
+            };
+
+            foreach (var cell in grid2d.GetCells())
+            {
+                var crvs = cell.GetTrimmedCellGeometry().OfType<Polygon>().ToList();
+                var profiles = crvs.Select(p => new Profile(p));
+                var differenceResult = Elements.Geometry.Profile.Difference(profiles, secondSet);
+                var floors = differenceResult.Select(p => new Floor(p, 1));
+                var mcs = differenceResult.Select(p => new ModelCurve(p.Perimeter, transform: new Transform(0, 0, 1.1)));
+                Model.AddElements(floors);
+                Model.AddElements(mcs);
+            }
+            Assert.Equal(84, Model.AllElementsOfType<Floor>().Count());
+        }
+
+        [Fact]
+        public void ProfileIntersection()
+        {
+            Name = "Profile Intersection";
+            var firstSet = new List<Profile>();
+            for (int i = 0; i < 10; i++)
+            {
+                var angle = (i / 10.0) * Math.PI * 2;
+                var center = new Vector3(4 * Math.Cos(angle), 4 * Math.Sin(angle));
+                var outerCircle = new Circle(center, 5).ToPolygon(20);
+                var innerCircle = new Circle(center, 4).ToPolygon(20);
+                var location = new Transform(1, 0, 0);
+                var profile = new Profile(outerCircle, innerCircle);
+                firstSet.Add(profile);
+                Model.AddElement(new Floor(profile, 0.04));
+            }
+            var clipProfile = new Profile(Polygon.Rectangle(20, 10), Polygon.Rectangle(5, 5));
+            Model.AddElement(new Floor(clipProfile, 0.1));
+            var secondSet = new List<Profile> {
+                clipProfile,
+            };
+            var intersection = Elements.Geometry.Profile.Intersection(firstSet, secondSet);
+            var floors = intersection.Select(p => new Floor(p, 0.4, material: BuiltInMaterials.XAxis));
+            Model.AddElements(floors);
+        }
+
+
+        [Fact]
         public void VoidsOrientedCorrectly()
         {
             this.Name = "VoidsOrientedCorrectly";
@@ -119,6 +199,66 @@ namespace Elements.Tests
                 var dot = a.XAxis.Dot(b.XAxis);
                 Assert.True(dot >= 0);
             }
+        }
+
+        [Fact]
+        public void DeeplyNestedProfileBooleans()
+        {
+            Name = "Deeply Nested Profile Booleans";
+            var perimeter1 = Polygon.Rectangle(new Vector3(0, 0), new Vector3(50, 50));
+            var void1 = Polygon.Rectangle(new Vector3(24, 24), new Vector3(26, 26));
+            var profile1 = new Profile(perimeter1, void1);
+
+            var perimeter2 = Polygon.Rectangle(new Vector3(10, 10), new Vector3(40, 40));
+            var void2 = Polygon.Rectangle(new Vector3(12, 12), new Vector3(38, 38));
+            var profile2 = new Profile(perimeter2, void2);
+
+            var perimeter3 = Polygon.Rectangle(new Vector3(15, 15), new Vector3(35, 35));
+            var void3 = Polygon.Rectangle(new Vector3(17, 17), new Vector3(32, 32));
+            var profile3 = new Profile(perimeter3, void3);
+
+            var difference = Elements.Geometry.Profile.Difference(new[] { profile1 }, new[] { profile2, profile3 });
+            Model.AddElements(difference.Select(d => (new Floor(d, 0.1))));
+            Assert.Equal(3, difference.Count);
+        }
+
+        [Fact]
+        public void SplitProfiles()
+        {
+            Name = "Profile_Split";
+            var profile = new Profile(
+                Polygon.Rectangle(20, 20),
+                new[] {
+                    Polygon.Rectangle(5, 5),
+                    Polygon.Rectangle(new Vector3(8, -8), new Vector3(9, 9))
+                    },
+                Guid.NewGuid(), null);
+            // this one crosses all the way thru, and should split the profile.
+            var polyline1 = new Polyline(new[] {
+                new Vector3(-21, 0),
+                new Vector3(0, 5),
+                new Vector3(21, -4),
+            });
+            // this one doesn't and should be ignored by the split
+            var polyline2 = new Polyline(new[] {
+                new Vector3(-21, -6),
+                new Vector3(0, -8),
+            });
+            //this one is totally internal and should also be ignored by the split
+            var polyline3 = new Polyline(new [] {
+                new Vector3(2, -4),
+                new Vector3(-2, -7)
+            });
+            Model.AddElement(polyline1);
+            Model.AddElement(polyline2);
+            Model.AddElement(polyline3);
+            Model.AddElements(profile.ToModelCurves());
+            var split = Elements.Geometry.Profile.Split(new[] { profile }, new[] { polyline1, polyline2, polyline3 });
+            var random = new Random(4);
+            Model.AddElements(split.SelectMany(s => s.ToModelCurves()));
+            Model.AddElements(split.Select(s => new Floor(s, 0.1, new Transform(), random.NextMaterial())));
+            Assert.Equal(2, split.Count);
+            Assert.Equal(20 * 20 - 5 * 5 - 17, split.Sum(s => s.Area()), 4);
         }
     }
 }

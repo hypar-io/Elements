@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Elements.Tests;
 using Newtonsoft.Json;
 using Xunit;
@@ -228,7 +229,83 @@ namespace Elements.Geometry.Tests
             var i7 = passesThroughAtVertex.Trim(Polygon, out var o7);
             Assert.Single(i7);
             Assert.Single(o7);
+        }
 
+        [Fact]
+        public void ExtendToProfile()
+        {
+            Name = "ExtendToProfile";
+            var polygons = JsonConvert.DeserializeObject<List<Polygon>>("[{\"Vertices\":[{\"X\":-3.3239130434782611,\"Y\":2.534782608695652,\"Z\":0.0},{\"X\":1.924698097225491,\"Y\":6.0910303088278326,\"Z\":0.0},{\"X\":2.5714592294272105,\"Y\":3.5518940120358997,\"Z\":0.0},{\"X\":1.1956521739130428,\"Y\":2.1760869565217393,\"Z\":0.0},{\"X\":1.7456521739130428,\"Y\":0.47826086956521707,\"Z\":0.0},{\"X\":0.69347826086956554,\"Y\":-1.2195652173913047,\"Z\":0.0},{\"X\":2.9652173913043476,\"Y\":-1.3391304347826083,\"Z\":0.0},{\"X\":3.2760869565217394,\"Y\":-2.7978260869565217,\"Z\":0.0},{\"X\":1.5065217391304346,\"Y\":-3.347826086956522,\"Z\":0.0},{\"X\":-0.43043478260869589,\"Y\":-1.482608695652174,\"Z\":0.0},{\"X\":-1.4586956521739132,\"Y\":-1.7695652173913039,\"Z\":0.0},{\"X\":-3.3239130434782611,\"Y\":-2.1043478260869568,\"Z\":0.0}]},{\"Vertices\":[{\"X\":0.070768827751857444,\"Y\":-0.75686629107050352,\"Z\":0.0},{\"X\":1.1928650019807621,\"Y\":0.39683822609442632,\"Z\":0.0},{\"X\":-1.1303482038171115,\"Y\":2.5936180601481968,\"Z\":0.0},{\"X\":-1.3358024329012763,\"Y\":2.2617304593199297,\"Z\":0.0}]}]");
+            var profile = new Profile(polygons);
+            var mcs = profile.ToModelCurves(material: BuiltInMaterials.XAxis);
+            Model.AddElements(mcs);
+            var intersectsAtVertex = JsonConvert.DeserializeObject<Vector3>("{\"X\":1.9248644534137522,\"Y\":-2.3794833726732039,\"Z\":0.0}");
+            var doesntIntersect = JsonConvert.DeserializeObject<Vector3>("{\"X\":-3.5077580495618728,\"Y\":3.5797588753975274,\"Z\":0.0}");
+            var hitsVoid = JsonConvert.DeserializeObject<Vector3>("{\"X\":-0.73780074305628141,\"Y\":-0.976285760075414,\"Z\":0.0}");
+            var lineDir = new Vector3(0.1, 0.1);
+            var iavLine = new Line(intersectsAtVertex, intersectsAtVertex + lineDir).ExtendTo(profile);
+            var diLine = new Line(doesntIntersect, doesntIntersect + lineDir).ExtendTo(profile);
+            var hvLine = new Line(hitsVoid, hitsVoid + lineDir).ExtendTo(profile);
+
+            var otherLines = new List<Line> { new Line(new Vector3(5, 5), new Vector3(6, 6)) };
+            var hitsParallelSegment = new Line(new Vector3(3, 3), new Vector3(4, 4)).ExtendTo(otherLines, false);
+
+            Model.AddElements(new[] { iavLine, diLine, hvLine }.Select(l => new ModelCurve(l)));
+            Assert.Equal(2.45915, iavLine.Length(), 4);
+            Assert.Equal(lineDir.Length(), diLine.Length(), 4);
+            Assert.Equal(2.02291, hvLine.Length(), 4);
+            Assert.Equal(new Vector3(3, 3).DistanceTo(new Vector3(5, 5)), hitsParallelSegment.Length());
+        }
+
+        [Fact]
+        public void ExtendWithMultipleIntersections()
+        {
+            Name = "ExtendWithMultipleIntersections";
+            var line = new Line(new Vector3(0, 0), new Vector3(1, 0));
+
+            var vertices = new List<Vector3>()
+                {
+                    new Vector3(-1, -1),
+                    new Vector3(2, -1),
+                    new Vector3(2, 1),
+                    new Vector3(3, 1),
+                    new Vector3(3, -1),
+                    new Vector3(4, -1),
+                    new Vector3(4, 2),
+                    new Vector3(-1, 2)
+                };
+
+            var polygon = new Polygon(vertices);
+
+            // Extends in both directions, and stops at earliest intersection
+            var defaultExtend = line.ExtendTo(polygon);
+
+            Assert.Equal(-1, defaultExtend.Start.X);
+            Assert.Equal(2, defaultExtend.End.X);
+
+            // Extend only endpoint
+            var singleDirectionExtend = line.ExtendTo(polygon, false);
+
+            Assert.Equal(0, singleDirectionExtend.Start.X);
+            Assert.Equal(2, singleDirectionExtend.End.X);
+
+            // Extend both sides to furthest intersection
+            var furthestExtend = line.ExtendTo(polygon, true, true);
+
+            Assert.Equal(-1, furthestExtend.Start.X);
+            Assert.Equal(4, furthestExtend.End.X);
+
+            // Extend endpoint only to furthest intersection
+            var singleFurthestExtend = line.ExtendTo(polygon, false, true);
+
+            Assert.Equal(0, singleFurthestExtend.Start.X);
+            Assert.Equal(4, singleFurthestExtend.End.X);
+
+            // If no intersections found, returns line with same endpoints
+            var noIntersection = line.ExtendTo(Polygon.Rectangle(new Vector3(1,1), new Vector3(2, 2)));
+
+            Assert.Equal(line.Start.X, noIntersection.Start.X);
+            Assert.Equal(line.End.X, noIntersection.End.X);
         }
     }
 }

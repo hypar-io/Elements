@@ -12,7 +12,6 @@ namespace Elements.Analysis
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/AnalysisMeshTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class AnalysisMesh : GeometricElement, ITessellate
     {
         private List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();

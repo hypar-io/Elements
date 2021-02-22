@@ -114,12 +114,11 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
-            var profileTrans = new Transform();
-            profileTrans.Rotate(profileTrans.ZAxis, this.Rotation);
-            this.Representation.SolidOperations.Add(new Sweep(profileTrans.OfProfile(this.Profile),
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile,
                                                             this.Curve,
                                                             this.StartSetback,
                                                             this.EndSetback,
+                                                            this.Rotation,
                                                             false));
         }
     }

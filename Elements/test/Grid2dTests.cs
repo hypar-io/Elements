@@ -64,6 +64,7 @@ namespace Elements.Tests
         [Fact]
         public void TrimBehavior()
         {
+            Name = "TrimBehavior";
             var polygonjson = "[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-14.371519985751306,\"Y\":-4.8816304299427005,\"Z\":0.0},{\"X\":-17.661873645682569,\"Y\":9.2555712951713573,\"Z\":0.0},{\"X\":12.965610421927806,\"Y\":9.2555712951713573,\"Z\":0.0},{\"X\":12.965610421927806,\"Y\":3.5538269529982784,\"Z\":0.0},{\"X\":6.4046991240848143,\"Y\":3.5538269529982784,\"Z\":0.0},{\"X\":1.3278034769444158,\"Y\":-4.8816304299427005,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-9.4508365123690652,\"Y\":0.20473478280229102,\"Z\":0.0},{\"X\":-1.8745460850979974,\"Y\":0.20473478280229102,\"Z\":0.0},{\"X\":-1.8745460850979974,\"Y\":5.4378426037008651,\"Z\":0.0},{\"X\":-9.4508365123690652,\"Y\":5.4378426037008651,\"Z\":0.0}]}]\r\n";
             var polygons = JsonConvert.DeserializeObject<List<Polygon>>(polygonjson);
             var grid = new Grid2d(polygons);
@@ -73,15 +74,97 @@ namespace Elements.Tests
             }
             grid.CellsFlat.ForEach(c => c.U.DivideByApproximateLength(1.0, EvenDivisionMode.RoundDown));
 
-            var trimmedCells = grid.GetCells().Select(c => new Dictionary<string, object>
+            var trimmedCells = grid.GetCells().Select(c =>
+                (TrimmedGeometry: c.GetTrimmedCellGeometry(),
+                BaseRect: c.GetCellGeometry(),
+                IsTrimmed: c.IsTrimmed()));
+
+            foreach (var trimGeometry in trimmedCells)
+            {
+                var trimGeo = trimGeometry.TrimmedGeometry.OfType<Polygon>();
+                var material = trimGeometry.IsTrimmed ? BuiltInMaterials.XAxis : BuiltInMaterials.ZAxis;
+                foreach (var t in trimGeo)
                 {
-                    {"TrimmedGeometry", c.GetTrimmedCellGeometry()},
-                    {"BaseRect", c.GetCellGeometry() },
-                    {"IsTrimmed", c.IsTrimmed()}
+                    Model.AddElement(new ModelCurve(t));
+                    Model.AddElement(new Mass(t, 1, material, new Transform(0, 0, -1.001)));
                 }
-            );
+            }
             Assert.Equal(87, trimmedCells.Count());
-            Assert.Equal(18, trimmedCells.Count(c => (bool)c["IsTrimmed"]));
+            Assert.Equal(18, trimmedCells.Count(c => c.IsTrimmed));
+        }
+
+        [Fact]
+        public void ChildGridUpdatesParent()
+        {
+            var u = new Grid1d(10);
+            var v = new Grid1d(5);
+            var grid2d = new Grid2d(u, v);
+            Assert.Single(grid2d.CellsFlat);
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByCount(5);
+            Assert.Equal(50, grid2d.CellsFlat.Count);
+        }
+
+        [Fact]
+        public void DisallowedGridEditingThrowsException()
+        {
+            var grid2d = new Grid2d(5, 5);
+            grid2d.V.DivideByCount(5);
+            grid2d.CellsFlat[2].U.DivideByCount(5);
+            Assert.Throws<NotSupportedException>(() => grid2d.U.DivideByCount(2));
+        }
+
+        [Fact]
+        public void Grid2dSerializes()
+        {
+            Name = "grid2d serializes";
+            var polyline = new Polyline(new[] {
+                new Vector3(0,0,0),
+                new Vector3(10,2,0),
+                new Vector3(30,4,0),
+            });
+            var uGrid = new Grid1d(polyline);
+            var p2 = new Line(Vector3.Origin, new Vector3(0, 20, 0));
+            var vGrid = new Grid1d(p2);
+            var grid2d = new Grid2d(uGrid, vGrid);
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByCount(3);
+            grid2d[2, 2].U.DivideByCount(4);
+            var json = JsonConvert.SerializeObject(grid2d);
+            var deserialized = JsonConvert.DeserializeObject<Grid2d>(json);
+            Assert.Equal(grid2d.GetCells().Count, deserialized.GetCells().Count);
+
+            var grid2dElem = new Grid2dElement(grid2d, Guid.NewGuid(), "Grid");
+            Model.AddElement(grid2dElem);
+        }
+
+        [Fact]
+        public void CellSeparatorsTrimmed()
+        {
+            Name = "CellSeparatorsTrimmed";
+            var polygon = new Polygon(new[] {
+                Vector3.Origin,
+                new Vector3(4,2),
+                new Vector3(5,3),
+                new Vector3(7,7),
+                new Vector3(3,6)
+            });
+            var polygon2 = new Polygon(new[] {
+                new Vector3(1.1,1),
+                new Vector3(1.5,1),
+                new Vector3(1.5,2),
+                new Vector3(1.1,2)
+            });
+            var polygons = new[] { polygon, polygon2 };
+            var grid2d = new Grid2d(polygons);
+            grid2d.U.DivideByCount(10);
+            grid2d.V.DivideByFixedLength(1);
+            var csu = grid2d.GetCellSeparators(GridDirection.U, true);
+            var csv = grid2d.GetCellSeparators(GridDirection.V, true);
+            Assert.Equal(10, csu.Count);
+            Assert.Equal(10, csv.Count);
+            Model.AddElements(polygons.Select(p => new ModelCurve(p, BuiltInMaterials.XAxis)));
+            Model.AddElements(csu.Union(csv).Select(l => new ModelCurve(l as Line)));
         }
 
         [Fact]
@@ -235,6 +318,39 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SplitSubCellAtPoint()
+        {
+            Name = "Split Subcell at point";
+            var u = new Grid1d(new Line(new Vector3(-2, 0), new Vector3(-4, 5)));
+            var v = new Grid1d(new Line(new Vector3(0, -2), new Vector3(7, -2)));
+            var grid = new Grid2d(u, v);
+            grid.SplitAtPoint(new Vector3(2, 2));
+            grid[1, 1].SplitAtPoint(new Vector3(3, 3));
+            Model.AddElement(new Circle(new Vector3(2, 2), 0.1));
+            Model.AddElement(new Circle(new Vector3(3, 3), 0.1));
+            var subcell = grid[1, 1];
+            Model.AddElements(grid.GetCells().Select(c => new ModelCurve(c.GetCellGeometry(), BuiltInMaterials.XAxis)));
+            Assert.Equal(7, grid.GetCells().Count);
+
+            var shape = new Polygon(new[] {
+                new Vector3(10,10),
+                new Vector3(20,10),
+                new Vector3(24, 20),
+                new Vector3(15, 16),
+                new Vector3(10, 16)
+            });
+            var grid2 = new Grid2d(shape);
+            grid2.SplitAtPoint(new Vector3(12, 13));
+            Model.AddElements(new Circle(new Vector3(12, 13), 0.2));
+            Model.AddElements(new Circle(new Vector3(17, 15), 0.2));
+            grid2[1, 1].U.DivideByCount(4);
+            grid2[1, 1].SplitAtPoint(new Vector3(17, 15));
+            Model.AddElements(grid2.GetCells().SelectMany(c => c.GetTrimmedCellGeometry().Select(c2 => new ModelCurve(c2, BuiltInMaterials.XAxis))));
+            Model.AddElement(shape);
+            Assert.Equal(13, grid2.GetCells().Count);
+        }
+
+        [Fact]
         public void XYParallelNonOrthogonalBoundary()
         {
             var polygon = new Polygon(new[]
@@ -248,6 +364,54 @@ namespace Elements.Tests
             grid.U.DivideByPattern(new double[] { 1, 2 });
             grid.V.DivideByCount(10);
             Assert.Equal(80, grid.GetCells().Count());
+        }
+
+        [Fact]
+        public void SkewedGridsFillBoundary()
+        {
+            var squareSize = 10;
+            var rect = Polygon.Rectangle(squareSize, squareSize);
+
+            // Using constructor with origin
+            var origin = new Vector3();
+            var uDirection = new Vector3(1, 0, 0);
+            var vDirection = new Vector3(-1, 1, 0); // 45 degrees up to the left
+
+            var grid = new Grid2d(rect, origin, uDirection, vDirection);
+
+            // Making a grid from the origin doesn't subdivide it for you,
+            // just makes sure the UV axes are big enough to fill the bounds
+            Assert.Single(grid.GetCells());
+
+            // Split grid at the origin
+            grid.SplitAtPoint(origin);
+            Assert.Equal(4, grid.GetCells().Count);
+            Assert.Equal(squareSize * 2, grid.U.Curve.Length()); // Expanding to 45 degree square should give us 2x square size (half size extension each direction)
+            Assert.Equal(Math.Sqrt(2 * Math.Pow(squareSize, 2)), grid.V.Curve.Length()); // Skewed side should be hypotenuse with other legs at square size.
+        }
+
+        [Fact]
+        public void CustomUVAndBounds()
+        {
+            var boundary = Polygon.Rectangle(new Vector3(), new Vector3(1, 1));
+
+            var u = new Grid1d(new Line(new Vector3(5, 0), new Vector3(10, 0)));
+            var v = new Grid1d(new Line(new Vector3(0, 5), new Vector3(0, 10)));
+
+            var grid = new Grid2d(boundary, u, v);
+
+            Assert.Equal(5, grid.U.Curve.Length());
+            Assert.Equal(5, grid.V.Curve.Length());
+
+            var count = grid.GetCells().Count;
+
+            foreach (var cell in grid.GetCells())
+            {
+                // We gave it U and V coordinates that do not intersect with the bounds.
+                // We expect empty trimmed cells back.
+                var trimmed = cell.GetTrimmedCellGeometry();
+                Assert.Equal(0, trimmed.Count());
+            }
         }
     }
 }

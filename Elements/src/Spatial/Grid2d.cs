@@ -8,18 +8,20 @@ using Newtonsoft.Json;
 namespace Elements.Spatial
 {
     /// <summary>
-    /// Represents a 2-dimensional grid which can be subdivided 
+    /// Represents a 2-dimensional grid which can be subdivided
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid2dTests.cs?name=example)]
     /// </example>
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class Grid2d
     {
         #region Properties
 
         /// <summary>
-        /// Returns true if this 2D Grid has no subdivisions / sub-grids. 
+        /// Returns true if this 2D Grid has no subdivisions / sub-grids.
         /// </summary>
+        [JsonIgnore]
         public bool IsSingleCell => U.IsSingleCell && V.IsSingleCell;
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace Elements.Spatial
         public Grid1d V { get; private set; }
 
         /// <summary>
-        /// An optional type designation for this cell.  
+        /// An optional type designation for this cell.
         /// </summary>
         public string Type
         {
@@ -47,22 +49,91 @@ namespace Elements.Spatial
         /// <summary>
         /// A transform from grid space to world space
         /// </summary>
-        private Transform fromGrid = new Transform();
+        [JsonProperty("FromGrid")]
+        internal Transform fromGrid = new Transform();
 
         /// <summary>
         /// A transform from world space to grid space
         /// </summary>
-        private Transform toGrid = new Transform();
+        [JsonProperty("ToGrid")]
+        internal Transform toGrid = new Transform();
 
+        [JsonProperty("UDomainInternal")]
         private Domain1d UDomainInternal = new Domain1d(0, 0);
+
+        [JsonProperty("VDomainInternal")]
         private Domain1d VDomainInternal = new Domain1d(0, 0);
 
         /// <summary>
-        /// Any boundary curves, transformed to grid space. 
+        /// Any boundary curves, transformed to grid space.
         /// </summary>
+        [JsonProperty("BoundariesInGridSpace", NullValueHandling = NullValueHandling.Ignore)]
         private IList<Polygon> boundariesInGridSpace;
         private List<List<Grid2d>> cells;
 
+        [JsonProperty("ModifiedChildCells", NullValueHandling = NullValueHandling.Ignore)]
+        internal List<IndexedCell> ModifiedChildCells => GetModifiedChildCells();
+
+        // for serialization purposes, we store only those cells that are not a natural consequence of the U and V 1d grids composing this grid.
+        private List<IndexedCell> GetModifiedChildCells()
+        {
+            var indexedCellList = new List<IndexedCell>();
+            if (this.cells == null)
+            {
+                return null;
+            }
+            for (int i = 0; i < cells.Count; i++)
+            {
+                List<Grid2d> row = (List<Grid2d>)cells[i];
+                for (int j = 0; j < row.Count; j++)
+                {
+                    Grid2d cell = row[j];
+                    if (cell.IsSingleCell)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        indexedCellList.Add(new IndexedCell(i, j, cell));
+                    }
+                }
+            }
+            return indexedCellList;
+        }
+
+        /// <summary>
+        /// Represents a subcell at a position in a parent grid
+        /// </summary>
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public class IndexedCell
+        {
+            /// <summary>
+            /// Make a new indexed cell
+            /// </summary>
+            /// <param name="i"></param>
+            /// <param name="j"></param>
+            /// <param name="grid"></param>
+            [JsonConstructor]
+            public IndexedCell(int i, int j, Grid2d grid)
+            {
+                this.I = i;
+                this.J = j;
+                this.Grid = grid;
+            }
+            /// <summary>
+            /// The i Index
+            /// </summary>
+            public int I { get; set; }
+
+            /// <summary>
+            /// The j Index
+            /// </summary>
+            public int J { get; set; }
+            /// <summary>
+            /// The grid cell
+            /// </summary>
+            public Grid2d Grid { get; set; }
+        }
         #endregion
 
         #region Constructors
@@ -73,6 +144,43 @@ namespace Elements.Spatial
         public Grid2d()
         {
             InitializeUV(new Domain1d(), new Domain1d());
+        }
+
+        /// <summary>
+        /// Do not use this constructor — it is only for serialization purposes.
+        /// </summary>
+        /// <param name="fromGrid"></param>
+        /// <param name="toGrid"></param>
+        /// <param name="uDomainInternal"></param>
+        /// <param name="vDomainInternal"></param>
+        /// <param name="boundariesInGridSpace"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <param name="type"></param>
+        /// <param name="modifiedChildCells"></param>
+        /// <returns></returns>
+        [JsonConstructor]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public Grid2d(Transform fromGrid, Transform toGrid, Domain1d uDomainInternal, Domain1d vDomainInternal, List<Polygon> boundariesInGridSpace, Grid1d u, Grid1d v, string type, List<IndexedCell> modifiedChildCells)
+        {
+            this.fromGrid = fromGrid;
+            this.toGrid = toGrid;
+            this.UDomainInternal = uDomainInternal;
+            this.VDomainInternal = uDomainInternal;
+            this.boundariesInGridSpace = boundariesInGridSpace;
+            this.U = u;
+            this.V = v;
+            this.Type = type;
+            this.U.SetParent(this);
+            this.V.SetParent(this);
+            if (modifiedChildCells != null)
+            {
+                this.cells = GetTopLevelCells();
+                foreach (var c in modifiedChildCells)
+                {
+                    this.Cells[c.I][c.J] = c.Grid;
+                }
+            }
         }
 
         /// <summary>
@@ -102,7 +210,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Construct a Grid2d using another Grid2d as the base, but with different Grid1ds as its axes. 
+        /// Construct a Grid2d using another Grid2d as the base, but with different Grid1ds as its axes.
         /// </summary>
         /// <param name="other">The Grid2d to base this one on.</param>
         /// <param name="u">The Grid1d representing the U Axis.</param>
@@ -160,7 +268,7 @@ namespace Elements.Spatial
         /// If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
         /// Currently only transforms parallel to the supplied polygons are supported.
         /// The polygon's bounding box parallel to the supplied transform will be
-        /// used as the grid extents. 
+        /// used as the grid extents.
         /// </summary>
         /// <param name="boundary">The external boundary of this grid system.</param>
         /// <param name="transform">A transform representing the alignment of the grid.</param>
@@ -182,12 +290,12 @@ namespace Elements.Spatial
         {
             if (transform == null)
             {
-                //if no transform is supplied, calculate one from the normal. 
+                //if no transform is supplied, calculate one from the normal.
                 var planeTransform = boundaries.First().Vertices.ToTransform();
                 // If we are calculating the transform automatically, then the user has not
                 // supplied any rotational orientation information; we only care about
                 // direction. So if the polygon is nearly XY-parallel, let's just use
-                // the XY plane at the boundary's location to be consistent with default behavior. 
+                // the XY plane at the boundary's location to be consistent with default behavior.
                 transform = Math.Abs(planeTransform.ZAxis.Dot(Vector3.ZAxis)).ApproximatelyEquals(1) ?
                     new Transform(planeTransform.Origin) :
                     planeTransform;
@@ -199,22 +307,70 @@ namespace Elements.Spatial
 
             var transformedBoundaries = toGrid.OfPolygons(boundaries);
 
-            // verify that all boundaries are in XY plane after transform
-            foreach (var boundary in transformedBoundaries)
-            {
-                foreach (var vertex in boundary.Vertices)
-                {
-                    if (!vertex.Z.ApproximatelyEquals(0))
-                    {
-                        throw new Exception("The Grid2d could not be constructed. After transform, this polygon was not in the XY Plane. Please ensure that all your geometry as well as any provided transform all lie in the same plane.");
-                    }
-                }
-            }
-            var bbox = new BBox3(transformedBoundaries);
-
-            boundariesInGridSpace = transformedBoundaries;
+            var bbox = this.SetBoundaries(transformedBoundaries);
 
             InitializeUV(new Domain1d(bbox.Min.X, bbox.Max.X), new Domain1d(bbox.Min.Y, bbox.Max.Y));
+        }
+
+        /// <summary>
+        /// Create a grid from a single boundary, an origin, and its U and V directions
+        /// </summary>
+        /// <param name="boundary"></param>
+        /// <param name="origin"></param>
+        /// <param name="uDirection"></param>
+        /// <param name="vDirection"></param>
+        /// <returns></returns>
+        public Grid2d(Polygon boundary, Vector3 origin, Vector3 uDirection, Vector3 vDirection) : this(new Polygon[] { boundary }, origin, uDirection, vDirection)
+        {
+
+        }
+
+        /// <summary>
+        /// Create a grid from a list of boundaries, an origin, and its U and V directions
+        /// </summary>
+        /// <param name="boundaries"></param>
+        /// <param name="origin"></param>
+        /// <param name="uDirection"></param>
+        /// <param name="vDirection"></param>
+        public Grid2d(IList<Polygon> boundaries, Vector3 origin, Vector3 uDirection, Vector3 vDirection)
+        {
+            var bbox = this.SetBoundaries(boundaries);
+            var lines = new List<Line>() {
+                 new Line(origin, origin + uDirection),
+                 new Line(origin, origin + vDirection)
+            };
+            ExpandLinesToBounds(bbox, lines);
+            this.U = new Grid1d(lines[0]);
+            this.V = new Grid1d(lines[1]);
+            this.U.SetParent(this);
+            this.V.SetParent(this);
+        }
+
+        /// <summary>
+        /// Create a grid from a boundary and custom U and V grids
+        /// </summary>
+        /// <param name="boundary"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public Grid2d(Polygon boundary, Grid1d u, Grid1d v) : this(new Polygon[] { boundary }, u, v)
+        {
+
+        }
+
+        /// <summary>
+        /// Create a grid from a list of boundaries and custom U and V grids
+        /// </summary>
+        /// <param name="boundaries"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        public Grid2d(IList<Polygon> boundaries, Grid1d u, Grid1d v)
+        {
+            this.SetBoundaries(boundaries);
+            this.U = u;
+            this.V = v;
+            this.U.SetParent(this);
+            this.V.SetParent(this);
         }
 
         #endregion
@@ -251,9 +407,8 @@ namespace Elements.Spatial
         /// <param name="point">The point at which to split.</param>
         public void SplitAtPoint(Vector3 point)
         {
-            var ptTransformed = toGrid.OfPoint(point);
-            U.SplitAtPoint(AxisTransformPoint(GridDirection.U, ptTransformed));
-            V.SplitAtPoint(AxisTransformPoint(GridDirection.V, ptTransformed));
+            U.SplitAtPoint(AxisTransformPoint(GridDirection.U, point));
+            V.SplitAtPoint(AxisTransformPoint(GridDirection.V, point));
         }
 
         /// <summary>
@@ -289,7 +444,7 @@ namespace Elements.Spatial
         #region Cell Retrieval
 
         /// <summary>
-        /// Retrieve the grid cell (as a Grid1d) at a length along the U and V domains. 
+        /// Retrieve the grid cell (as a Grid1d) at a length along the U and V domains.
         /// </summary>
         /// <param name="uPosition">U Position</param>
         /// <param name="vPosition">V Position</param>
@@ -369,6 +524,7 @@ namespace Elements.Spatial
         /// <param name="u">The U index</param>
         /// <param name="v">The V index</param>
         /// <returns>The cell at these indices</returns>
+        [JsonIgnore]
         public Grid2d this[int u, int v]
         {
             get
@@ -381,6 +537,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
+        [JsonIgnore]
         public List<List<Grid2d>> Cells
         {
             get
@@ -391,13 +548,13 @@ namespace Elements.Spatial
                 }
                 return cells;
             }
-            private set => cells = value;
+            internal set => cells = value;
         }
 
         /// <summary>
         /// A flat list of all the top-level cells in this grid. To get child cells as well, use Grid2d.GetCells() instead.
         /// </summary>
-        [JsonIgnoreAttribute]
+        [JsonIgnore]
         public List<Grid2d> CellsFlat
         {
             get
@@ -408,11 +565,34 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Get the points at the corners of all grid cells.
+        /// /// </summary>
+        /// <returns></returns>
+        public List<Vector3> GetCellNodes()
+        {
+            var points = new List<Vector3>();
+            var origin = GetTransformedOrigin();
+            var vToOrigin = origin - V.StartPoint();
+            var uToOrigin = origin - U.StartPoint();
+            var uPoints = U.GetCellSeparators(true);
+            var vPoints = V.GetCellSeparators(true);
+
+            foreach (var vpt in vPoints)
+            {
+                var displacement = new Transform(vpt - uToOrigin);
+                // points.AddRange(uPoints.Select(u => fromGrid.OfPoint(displacement.OfPoint(u))));
+                points.AddRange(uPoints.Select(u => fromGrid.OfPoint(u + vpt)));
+            }
+            return points;
+        }
+
+        /// <summary>
         /// Get the top-level lines separating cells from one another.
         /// </summary>
         /// <param name="direction">The grid direction in which you want to get separators. </param>
+        /// <param name="trim">Whether or not to trim cell separators with the trimmed cell boundary</param>
         /// <returns>The lines between cells, running parallel to the grid direction selected. </returns>
-        public List<ICurve> GetCellSeparators(GridDirection direction)
+        public List<ICurve> GetCellSeparators(GridDirection direction, bool trim = false)
         {
             var curves = new List<ICurve>();
             var points = new List<Vector3>();
@@ -422,12 +602,12 @@ namespace Elements.Spatial
             {
                 case GridDirection.U:
                     points = V.GetCellSeparators(true);
-                    otherDirection = U.curve;
+                    otherDirection = U.Curve;
                     toOrigin = GetTransformedOrigin() - V.StartPoint();
                     break;
                 case GridDirection.V:
                     points = U.GetCellSeparators(true);
-                    otherDirection = V.curve;
+                    otherDirection = V.Curve;
                     toOrigin = GetTransformedOrigin() - U.StartPoint();
                     break;
             }
@@ -438,7 +618,47 @@ namespace Elements.Spatial
                 curves.Add(otherDirection.Transformed(displacement).Transformed(fromGrid));
             }
 
-            //TODO: add support for trimmed lines
+
+            if (trim && IsTrimmed())
+            {
+                List<ICurve> trimmedCurves = new List<ICurve>();
+                var trimmedCellGeometry = GetTrimmedCellGeometry().OfType<Polygon>();
+                // TODO: support keeping polylines joined when trimming. This would depend on an implementation of Polyline.Trim(Polygon p)
+                // Currently we simply return the "shattered" lines that result. Since most grids are constructed from linear
+                // axes, this is fine most of the time.
+                if (trimmedCellGeometry.Count() == 1)
+                {
+                    var boundary = trimmedCellGeometry.First();
+                    var lines = curves.OfType<Line>().Union(curves.OfType<Polyline>().SelectMany(c => c.Segments()));
+                    trimmedCurves.AddRange(lines.SelectMany(l => l.Trim(boundary, out var _)));
+                }
+                else
+                {
+                    // If we potentially have nested polygons, assume clockwise winding indicates a hole — trim with all the outer polygons first,
+                    // and then trim out anything inside the holes.
+                    // TODO: get smarter about complex nesting scenarios taking advantage of clipper's PolyTree structure.
+                    var outerPolygons = trimmedCellGeometry.Where(p => !p.IsClockWise());
+                    var innerPolygons = trimmedCellGeometry.Where(p => p.IsClockWise());
+                    foreach (var outerPoly in outerPolygons)
+                    {
+                        var lines = curves.OfType<Line>().Union(curves.OfType<Polyline>().SelectMany(c => c.Segments()));
+                        var intermediateResults = lines.SelectMany(l => l.Trim(outerPoly, out var _));
+                        var innerPolygonsWithinOuterPolygon = innerPolygons.Where(i => outerPoly.Contains(i.Vertices.First()));
+                        foreach (var ip in innerPolygonsWithinOuterPolygon)
+                        {
+                            var linesOutsideHole = intermediateResults.SelectMany(ir =>
+                            {
+                                ir.Trim(ip, out var outsideLines);
+                                return outsideLines;
+                            });
+                            intermediateResults = linesOutsideHole;
+                        }
+                        trimmedCurves.AddRange(intermediateResults);
+                    }
+                }
+
+                return trimmedCurves;
+            }
 
             return curves;
 
@@ -516,15 +736,29 @@ namespace Elements.Spatial
             }
 
             var baseRect = GetBaseRectangleTransformed();
-
             var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
-            if (trimmedRect == null || trimmedRect.Count > 1 || trimmedRect.Count < 1) return false;
+            if (trimmedRect == null || trimmedRect.Count < 1) { return false; }
+            if (trimmedRect.Count > 1) { return true; }
             return !trimmedRect[0].IsAlmostEqualTo(baseRect, Vector3.EPSILON);
         }
 
         #endregion
 
-        #region Private Methods
+        #region Private/Internal Methods
+        /// <summary>
+        /// Invalidate the `Cells` property, used by child (axis) 1d grids to tell the parent that they've been updated.
+        /// This sort of change is not allowed if the sub-cells already have been further subdivided, as regenerating them
+        /// would wipe out these subcells, so in this case an error is thrown.
+        /// </summary>
+        internal void TryInvalidateGrid()
+        {
+            if (this.cells != null && this.CellsFlat.Any(c => !c.IsSingleCell))
+            {
+                throw new NotSupportedException("An attempt was made to modify the underlying U or V grid of a 2D Grid, after some of its cells had already been further subdivided.");
+            }
+            this.cells = null;
+        }
+
         private void InitializeUV(Domain1d uDomain, Domain1d vDomain)
         {
             var uCrv = new Line(new Vector3(uDomain.Min, 0, 0), new Vector3(uDomain.Max, 0, 0));
@@ -549,7 +783,7 @@ namespace Elements.Spatial
         /// <summary>
         /// This method returns the "rectangle" of the cell transformed into the grid's
         /// distorted coordinate space. The result may be a parallelogram rather than a rectangle
-        /// depending on the shape of the axis curves. 
+        /// depending on the shape of the axis curves.
         /// </summary>
         /// <returns></returns>
         private Polygon GetBaseRectangleTransformed()
@@ -614,8 +848,8 @@ namespace Elements.Spatial
                 return new List<List<Grid2d>> { new List<Grid2d> { this } };
             }
             var cells = new List<List<Grid2d>>();
-            var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.Cells;
-            var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.Cells;
+            var uCells = U.IsSingleCell ? new List<Grid1d> { U } : U.GetCells();
+            var vCells = V.IsSingleCell ? new List<Grid1d> { V } : V.GetCells();
             foreach (var uCell in uCells)
             {
                 var column = new List<Grid2d>();
@@ -654,6 +888,93 @@ namespace Elements.Spatial
             newCell.boundariesInGridSpace = boundariesInGridSpace;
 
             return newCell;
+        }
+
+        /// <summary>
+        /// Sets the clipping boundaries of this grid2d
+        /// </summary>
+        /// <param name="boundaries"></param>
+        /// <returns></returns>
+        private BBox3 SetBoundaries(IList<Polygon> boundaries)
+        {
+            // verify that all boundaries are in XY plane after transform
+            foreach (var boundary in boundaries)
+            {
+                foreach (var vertex in boundary.Vertices)
+                {
+                    if (!vertex.Z.ApproximatelyEquals(0))
+                    {
+                        throw new Exception("The Grid2d could not be constructed. After transform, this polygon was not in the XY Plane. Please ensure that all your geometry as well as any provided transform all lie in the same plane.");
+                    }
+                }
+            }
+
+            this.boundariesInGridSpace = boundaries;
+
+            return new BBox3(boundaries);
+        }
+
+        /// <summary>
+        /// Modifies a list of lines intended to represent uv guides in place to hit the bounds.
+        /// Accounts for skewed, parallel lists of 2. If list contains more lines, those will be ignored.
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        private static List<Line> ExpandLinesToBounds(BBox3 bounds, List<Line> lines)
+        {
+            var boundary = Polygon.Rectangle(bounds.Min, bounds.Max);
+
+            for (var i = 0; i < lines.Count(); i++)
+            {
+                lines[i] = lines[i].ExtendTo(boundary, true, true);
+            }
+
+            var new1 = ExtendLineSkewed(bounds, lines[0], lines[1]);
+            var new2 = ExtendLineSkewed(bounds, lines[1], new1);
+
+            new1 = ExtendLineSkewed(bounds, new1, new2);
+            new2 = ExtendLineSkewed(bounds, new2, new1);
+
+            lines[0] = new1;
+            lines[1] = new2;
+
+            return lines;
+        }
+
+        /// <summary>
+        /// Extend a line to a bounding box along a second line,
+        /// making sure this line extends to the boundary at the endpoints of second line to account for its skew.
+        /// Used to make sure U and V guide lines extend out far enough to encompass a boundary.
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <param name="line"></param>
+        /// <param name="possiblySkewedLine"></param>
+        /// <returns></returns>
+        private static Line ExtendLineSkewed(BBox3 bounds, Line line, Line possiblySkewedLine)
+        {
+            var boundary = Polygon.Rectangle(bounds.Min, bounds.Max);
+
+            var newLine = new Line(line.Start, line.End);
+
+            if (newLine.Intersects(possiblySkewedLine, out var intersection))
+            {
+                // move to start and extend
+                var toStart = possiblySkewedLine.Start - intersection;
+                newLine = newLine.TransformedLine(new Transform(toStart));
+                newLine = newLine.ExtendTo(boundary, true, true);
+
+                // move to end and extend
+                var toEnd = possiblySkewedLine.End - possiblySkewedLine.Start;
+                newLine = newLine.TransformedLine(new Transform(toEnd));
+                newLine = newLine.ExtendTo(boundary, true, true);
+
+                // move back to original
+                var toBeginning = intersection - possiblySkewedLine.End;
+                newLine = newLine.TransformedLine(new Transform(toBeginning));
+            }
+
+            return newLine;
         }
 
         #endregion

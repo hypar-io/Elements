@@ -31,7 +31,6 @@ namespace Elements.Geometry
         /// <summary>
         /// Get the hash code for the vector.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.ToString().GetHashCode();
@@ -164,8 +163,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The angle in degrees from this vector to the provided vector. 
-        /// Note that for angles in the plane that can be greater than 180 degrees, 
+        /// The angle in degrees from this vector to the provided vector.
+        /// Note that for angles in the plane that can be greater than 180 degrees,
         /// you should use Vector3.PlaneAngleTo.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
@@ -184,7 +183,12 @@ namespace Elements.Geometry
             {
                 return 0.0;
             }
+            if (r.ApproximatelyEquals(-1.0))
+            {
+                return 180;
+            }
             var rad = Math.Acos(r);
+
             return rad * 180 / Math.PI;
         }
 
@@ -265,7 +269,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Find the distance from this point to the line, and output the location 
+        /// Find the distance from this point to the line, and output the location
         /// of the closest point on that line.
         /// Using formula from https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd
         /// </summary>
@@ -488,19 +492,20 @@ namespace Elements.Geometry
         /// <returns>The string representation of this vector.</returns>
         public override string ToString()
         {
-            return $"X:{this.X.ToString("F4")},Y:{this.Y.ToString("F4")},Z:{this.Z.ToString("F4")}";
+            return $"X:{this.X.ToString("F4")}, Y:{this.Y.ToString("F4")}, Z:{this.Z.ToString("F4")}";
         }
 
         /// <summary>
         /// Determine whether this vector's components are equal to those of v, within tolerance.
         /// </summary>
         /// <param name="v">The vector to compare.</param>
+        /// <param name="tolerance">Optional custom tolerance value.</param>
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
-        public bool IsAlmostEqualTo(Vector3 v)
+        public bool IsAlmostEqualTo(Vector3 v, double tolerance = Vector3.EPSILON)
         {
-            if (Math.Abs(this.X - v.X) < EPSILON &&
-                Math.Abs(this.Y - v.Y) < EPSILON &&
-                Math.Abs(this.Z - v.Z) < EPSILON)
+            if ((this.X - v.X) * (this.X - v.X)
+              + (this.Y - v.Y) * (this.Y - v.Y)
+              + (this.Z - v.Z) * (this.Z - v.Z) < (tolerance * tolerance))
             {
                 return true;
             }
@@ -575,6 +580,21 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Is this vector equal to the provided vector?
+        /// </summary>
+        /// <param name="other">The vector to test.</param>
+        /// <returns>Returns true if all components of the two vectors are within Epsilon, otherwise false.</returns>
+        public override bool Equals(object other)
+        {
+            if (!(other is Vector3))
+            {
+                return false;
+            }
+            var v = (Vector3)other;
+            return this.IsAlmostEqualTo(v);
+        }
+
+        /// <summary>
         /// Are any components of this vector NaN?
         /// </summary>
         /// <returns>True if any components are NaN otherwise false.</returns>
@@ -631,6 +651,73 @@ namespace Elements.Geometry
         public static double CCW(Vector3 a, Vector3 b, Vector3 c)
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
+        }
+
+        /// <summary>
+        /// Compute basis vectors for this vector.
+        /// By default, the cross product of the world Z axis and this vector
+        /// are used to compute the U direction. If this vector is parallel
+        /// the world Z axis, then the world Y axis is used instead.
+        /// </summary>
+        public (Vector3 U, Vector3 V) ComputeDefaultBasisVectors()
+        {
+            var u = (this.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis).Cross(this).Unitized();
+            var v = this.Cross(u).Unitized();
+            return (u, v);
+        }
+
+        /// <summary>
+        /// Remove sequential duplicates from a list of points. 
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <param name="wrap">Whether or not to assume a closed shape like a polygon. If true, the last vertex will be compared to the first, and deleted if identical.</param>
+        /// <param name="tolerance">An optional distance tolerance for the comparison.</param>
+        /// <returns></returns>
+        internal static IList<Vector3> RemoveSequentialDuplicates(IList<Vector3> vertices, bool wrap = false, double tolerance = Vector3.EPSILON)
+        {
+            List<Vector3> newList = new List<Vector3> { vertices[0] };
+            for (int i = 1; i < vertices.Count; i++)
+            {
+                var vertex = vertices[i];
+                var prevVertex = newList[newList.Count - 1];
+                if (!vertex.IsAlmostEqualTo(prevVertex, tolerance))
+                {
+                    // if we wrap, and we're at the last vertex, also check for a zero-length segment between first and last.
+                    if (wrap && i == vertices.Count - 1)
+                    {
+                        if (!vertex.IsAlmostEqualTo(vertices[0], tolerance))
+                        {
+                            newList.Add(vertex);
+                        }
+                    }
+                    else
+                    {
+                        newList.Add(vertex);
+                    }
+                }
+            }
+            return newList;
+        }
+
+        internal static List<Vector3> AttemptPostClipperCleanup(IList<Vector3> vertices)
+        {
+            var deduplicated = RemoveSequentialDuplicates(vertices, true, Vector3.EPSILON * 2);
+            List<Vector3> newList = new List<Vector3> { };
+            for (int i = 0; i < deduplicated.Count; i++)
+            {
+                var prevVertex = deduplicated[(i - 1 + deduplicated.Count) % deduplicated.Count];
+                var currVertex = deduplicated[i];
+                var nextVertex = deduplicated[(i + 1) % deduplicated.Count];
+                var prevToCurr = (currVertex - prevVertex).Unitized();
+                var currToNext = (nextVertex - currVertex).Unitized();
+                if (prevToCurr.Dot(currToNext) < -0.999)
+                {
+                    continue;
+                }
+                newList.Add(currVertex);
+            }
+            return newList;
+
         }
     }
 
@@ -712,7 +799,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute a transform with the origin at points[0], with
         /// an X axis along points[1]->points[0], and a normal
-        /// computed using the vectors points[2]->points[1] and 
+        /// computed using the vectors points[2]->points[1] and
         /// points[1]->points[0].
         /// </summary>
         /// <param name="points"></param>
@@ -720,9 +807,9 @@ namespace Elements.Geometry
         public static Transform ToTransform(this IList<Vector3> points)
         {
             var a = (points[1] - points[0]).Unitized();
-            // We need to search for a second vector that is not colinear 
+            // We need to search for a second vector that is not colinear
             // with the first. If all the vectors are tried, and one isn't
-            // found that's not parallel to the first, you'll 
+            // found that's not parallel to the first, you'll
             // get a zero-length normal.
             Vector3 b = new Vector3();
             for (var i = 2; i < points.Count; i++)

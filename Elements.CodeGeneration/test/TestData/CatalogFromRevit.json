@@ -1,153 +1,282 @@
 {
-    "Transform": {
-        "Matrix": {
-            "Components": [
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0
-            ]
+    "discriminator": "Elements.ContentCatalog",
+    "Content": [
+        {
+            "discriminator": "Elements.ContentElement",
+            "gltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/cd57afa5-9c89-40d9-a95a-17a2f8ba02a1/HermanMiller_Exclave_GuitarPickTable60.glb",
+            "Bounding Box": {
+                "discriminator": "Elements.Geometry.BBox3",
+                "Min": {
+                    "X": -1.7023717484534728,
+                    "Y": -1.095245538336501,
+                    "Z": -1.9820443441737558E-14
+                },
+                "Max": {
+                    "X": 0.976336481533778,
+                    "Y": 1.0133703304909183,
+                    "Z": 0.7479878116989188
+                }
+            },
+            "Gltf Scale to Meters": 1.0,
+            "SourceDirection": {
+                "X": -1.0,
+                "Y": -7.838514701059575E-15,
+                "Z": 0.0
+            },
+            "Transform": {
+                "Matrix": {
+                    "Components": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            "Material": {
+                "discriminator": "Elements.Material",
+                "Color": {
+                    "Red": 1.0,
+                    "Green": 1.0,
+                    "Blue": 1.0,
+                    "Alpha": 1.0
+                },
+                "SpecularFactor": 0.0,
+                "GlossinessFactor": 0.0,
+                "Unlit": false,
+                "DoubleSided": false,
+                "Id": "9babb829-9b96-4e73-97f4-9658d4d6c31c",
+                "Name": "default"
+            },
+            "Representation": null,
+            "IsElementDefinition": true,
+            "Id": "fd4bb931-277a-47e5-87e4-1de490506277",
+            "Name": "HermanMiller_Exclave_GuitarPickTable60",
+            "Elevation from Level": 0.0,
+            "Offset from Host": 0.0,
+            "Moves With Nearby Elements": 0,
+            "Product Documentation Link": "http://www.hermanmiller.com/products/exclave",
+            "Catalog Code": "HEX",
+            "Base Price": "3969",
+            "Comments": "None",
+            "Workset": 0,
+            "AdditionalProperties": null
+        },
+        {
+            "discriminator": "Elements.ContentElement",
+            "gltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/cd57afa5-9c89-40d9-a95a-17a2f8ba02a1/HermanMiller_Exclave.glb",
+            "Bounding Box": {
+                "discriminator": "Elements.Geometry.BBox3",
+                "Min": {
+                    "X": -0.5101488819632607,
+                    "Y": -0.5101568260493856,
+                    "Z": 0.0004241482347212351
+                },
+                "Max": {
+                    "X": 0.5154979058250575,
+                    "Y": 0.5154899617389379,
+                    "Z": 1.9628832401275618
+                }
+            },
+            "Gltf Scale to Meters": 1.0,
+            "SourceDirection": {
+                "X": -0.7071067811865432,
+                "Y": -0.7071067811865519,
+                "Z": 0.0
+            },
+            "Transform": {
+                "Matrix": {
+                    "Components": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            "Material": {
+                "discriminator": "Elements.Material",
+                "Color": {
+                    "Red": 1.0,
+                    "Green": 1.0,
+                    "Blue": 1.0,
+                    "Alpha": 1.0
+                },
+                "SpecularFactor": 0.0,
+                "GlossinessFactor": 0.0,
+                "Unlit": false,
+                "DoubleSided": false,
+                "Id": "9babb829-9b96-4e73-97f4-9658d4d6c31c",
+                "Name": "default"
+            },
+            "Representation": null,
+            "IsElementDefinition": true,
+            "Id": "b4a14886-a9b0-4e0a-8597-8c2a1c96e084",
+            "Name": "HermanMiller_Exclave",
+            "Elevation from Level": 0.0,
+            "Offset from Host": 0.0,
+            "Moves With Nearby Elements": 0,
+            "Product Documentation Link": "http://www.hermanmiller.com/products/exclave",
+            "Catalog Code": "HEX",
+            "Base Price": "2222",
+            "Comments": "None",
+            "Workset": 0,
+            "AdditionalProperties": null
+        },
+        {
+            "discriminator": "Elements.ContentElement",
+            "gltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/cd57afa5-9c89-40d9-a95a-17a2f8ba02a1/Shelving+with+Plants.glb",
+            "Bounding Box": {
+                "discriminator": "Elements.Geometry.BBox3",
+                "Min": {
+                    "X": -0.27318441867846843,
+                    "Y": -1.0668000000000255,
+                    "Z": -5.756961574121535E-15
+                },
+                "Max": {
+                    "X": 0.24734648239862622,
+                    "Y": 1.0668000000000681,
+                    "Z": 1.854200000000001
+                }
+            },
+            "Gltf Scale to Meters": 1.0,
+            "SourceDirection": {
+                "X": 1.0,
+                "Y": -1.7844059563287828E-13,
+                "Z": 0.0
+            },
+            "Transform": {
+                "Matrix": {
+                    "Components": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            "Material": {
+                "discriminator": "Elements.Material",
+                "Color": {
+                    "Red": 1.0,
+                    "Green": 1.0,
+                    "Blue": 1.0,
+                    "Alpha": 1.0
+                },
+                "SpecularFactor": 0.0,
+                "GlossinessFactor": 0.0,
+                "Unlit": false,
+                "DoubleSided": false,
+                "Id": "9babb829-9b96-4e73-97f4-9658d4d6c31c",
+                "Name": "default"
+            },
+            "Representation": null,
+            "IsElementDefinition": true,
+            "Id": "f17fe7d0-5264-45e9-b42b-737b7f9335cf",
+            "Name": "Shelving with Plant",
+            "Elevation from Level": -3.1086244689504383E-15,
+            "Offset from Host": -3.1086244689504383E-15,
+            "Moves With Nearby Elements": 0,
+            "Comments": "None",
+            "Workset": 0,
+            "AdditionalProperties": null
+        },
+        {
+            "discriminator": "Elements.ContentElement",
+            "gltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/cd57afa5-9c89-40d9-a95a-17a2f8ba02a1/Workstation+Pod.glb",
+            "Bounding Box": {
+                "discriminator": "Elements.Geometry.BBox3",
+                "Min": {
+                    "X": -0.6500000000000057,
+                    "Y": -7.105427357601002E-15,
+                    "Z": -4.5418706832833775E-09
+                },
+                "Max": {
+                    "X": 0.6500000000000057,
+                    "Y": 1.6000000000000103,
+                    "Z": 1.3350000000000026
+                }
+            },
+            "Gltf Scale to Meters": 1.0,
+            "SourceDirection": {
+                "X": 1.0,
+                "Y": -1.970645868709652E-15,
+                "Z": 0.0
+            },
+            "Transform": {
+                "Matrix": {
+                    "Components": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0
+                    ]
+                }
+            },
+            "Material": {
+                "discriminator": "Elements.Material",
+                "Color": {
+                    "Red": 1.0,
+                    "Green": 1.0,
+                    "Blue": 1.0,
+                    "Alpha": 1.0
+                },
+                "SpecularFactor": 0.0,
+                "GlossinessFactor": 0.0,
+                "Unlit": false,
+                "DoubleSided": false,
+                "Id": "9babb829-9b96-4e73-97f4-9658d4d6c31c",
+                "Name": "default"
+            },
+            "Representation": null,
+            "IsElementDefinition": true,
+            "Id": "1f59d131-304e-4bef-8f85-f0b74669fcac",
+            "Name": "Workstation Pod",
+            "Chair Location 01": 1,
+            "Chair Location 02": 0,
+            "Chair Location 03": 0,
+            "Laptop Location 01": 1,
+            "Laptop Location 02": 0,
+            "Elevation from Level": 0.0,
+            "Offset from Host": 0.0,
+            "Moves With Nearby Elements": 0,
+            "Comments": "None",
+            "Workset": 0,
+            "AdditionalProperties": null
         }
-    },
-    "Elements": {
-        "ce742c23-3add-4de0-9789-f1dbb4e6941b": {
-            "discriminator": "Elements.ContentElement",
-            "GltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/Table_Landscape_Barleaner%20-%202200w%20x%20950d%20x%201100h.glb",
-            "BoundingBox": {
-                "Max": {
-                    "X": -6.521206805008476,
-                    "Y": -26.374258543314703,
-                    "Z": 1.100000000000153
-                },
-                "Min": {
-                    "X": -7.471206805008485,
-                    "Y": -28.574258543314706,
-                    "Z": 1.4361525302319934e-13
-                }
-            },
-            "GltfScaleToMeters": 0.3048,
-            "Transform": {
-                "Matrix": {
-                    "Components": [
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0
-                    ]
-                }
-            },
-            "Material": null,
-            "Representation": null,
-            "IsElementDefinition": true,
-            "Id": "ce742c23-3add-4de0-9789-f1dbb4e6941b",
-            "Name": "Table_Landscape_Barleaner - 2200w x 950d x 1100h"
-        },
-        "8316d32b-202b-4ba3-98e3-2246fd5bde5d": {
-            "discriminator": "Elements.ContentElement",
-            "GltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/Table_Koskela_Stirrup%20-%2010%20Person.glb",
-            "BoundingBox": {
-                "Max": {
-                    "X": -4.38903907481615,
-                    "Y": -25.484463660525222,
-                    "Z": 0.720000000000145
-                },
-                "Min": {
-                    "X": -5.489039074816552,
-                    "Y": -28.484463660525233,
-                    "Z": 1.4361525302319934e-13
-                }
-            },
-            "GltfScaleToMeters": 0.3048,
-            "Transform": {
-                "Matrix": {
-                    "Components": [
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0
-                    ]
-                }
-            },
-            "Material": null,
-            "Representation": null,
-            "IsElementDefinition": true,
-            "Id": "8316d32b-202b-4ba3-98e3-2246fd5bde5d",
-            "Name": "Table_Koskela_Stirrup - 10 Person"
-        },
-        "70f6453e-a2d2-432d-a7b0-972efa201548": {
-            "discriminator": "Elements.ContentElement",
-            "GltfLocation": "https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/HermanMiller_Prospect_CBTBL_Table%20-%20No%20Cutout%2040Dia%2036H.glb",
-            "BoundingBox": {
-                "Max": {
-                    "X": -0.5869646716266325,
-                    "Y": -27.129963014728396,
-                    "Z": 0.9143999999998927
-                },
-                "Min": {
-                    "X": -1.9022237520463752,
-                    "Y": -28.445222095148136,
-                    "Z": 6.980270231070976e-14
-                }
-            },
-            "GltfScaleToMeters": 0.3048,
-            "Transform": {
-                "Matrix": {
-                    "Components": [
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0
-                    ]
-                }
-            },
-            "Material": null,
-            "Representation": null,
-            "IsElementDefinition": true,
-            "Id": "70f6453e-a2d2-432d-a7b0-972efa201548",
-            "Name": "HermanMiller_Prospect_CBTBL_Table - No Cutout 40Dia 36H"
-        },
-        "0958ec55-2050-4cd0-8ed5-608f7a5ab239": {
-            "discriminator": "Elements.ContentCatalog",
-            "CatalogName": "FromRevit",
-            "Content": [
-                "ce742c23-3add-4de0-9789-f1dbb4e6941b",
-                "8316d32b-202b-4ba3-98e3-2246fd5bde5d",
-                "70f6453e-a2d2-432d-a7b0-972efa201548"
-            ],
-            "Id": "0958ec55-2050-4cd0-8ed5-608f7a5ab239",
-            "Name": "FromRevit"
-        }
-    }
+    ],
+    "Id": "cd57afa5-9c89-40d9-a95a-17a2f8ba02a1",
+    "Name": "SampleCatalog"
 }

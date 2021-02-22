@@ -3,6 +3,7 @@ using System;
 using Elements.Geometry.Solids;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Elements.Interfaces;
 
 namespace Elements
 {
@@ -12,8 +13,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/FloorTests.cs?name=example)]
     /// </example>
-    [UserElement]
-    public class Floor : GeometricElement
+    public class Floor : GeometricElement, IHasOpenings
     {
         /// <summary>
         /// The elevation from which the floor is extruded.

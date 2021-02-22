@@ -1,7 +1,8 @@
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using System;
+using System.Collections.Generic;
 using Xunit;
+using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements.Tests
 {
@@ -43,6 +44,19 @@ namespace Elements.Tests
             var meshElement = new MeshElement(mesh, new Material("Lime", Colors.Lime));
             //</example>
             this.Model.AddElement(meshElement);
+        }
+
+        [Fact]
+        public void AddInvalidTriangle()
+        {
+            var a = new Vertex(new Vector3(0, 0, 0));
+            var b = new Vertex(new Vector3(1, 1, 1));
+
+            var mesh = new Mesh();
+
+            Assert.Throws<ArgumentException>(() => mesh.AddTriangle(a, b, b));
+            Assert.Throws<ArgumentException>(() => mesh.AddTriangle(a, a, b));
+            Assert.Throws<ArgumentException>(() => mesh.AddTriangle(new Triangle(new List<Vertex> { b, a, b }, Vector3.ZAxis)));
         }
     }
 }

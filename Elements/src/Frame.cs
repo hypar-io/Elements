@@ -8,7 +8,6 @@ namespace Elements
     /// <summary>
     /// An element defined by a perimeter and a cross section swept along that perimeter.
     /// </summary>
-    [UserElement]
     public class Frame : GeometricElement
     {
         /// <summary>
@@ -63,7 +62,7 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, false));
+            this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, 0.0, false));
         }
     }
 }

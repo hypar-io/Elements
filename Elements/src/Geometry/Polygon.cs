@@ -21,6 +21,15 @@ namespace Elements.Geometry
         /// <param name="p">The polygon to convert.</param>
         public static implicit operator Profile(Polygon p) => new Profile(p);
 
+        // Though this conversion may seem redundant to the Curve => ModelCurve converter, it is needed to
+        // make this the default implicit conversion from a polygon to an element (rather than the
+        // polygon => profile conversion above.)
+        /// <summary>
+        /// Implicitly convert a Polygon to a ModelCurve Element.
+        /// </summary>
+        /// <param name="c">The curve to convert.</param>
+        public static implicit operator Element(Polygon c) => new ModelCurve(c);
+
         /// <summary>
         /// Construct a transformed copy of this Polygon.
         /// </summary>
@@ -59,7 +68,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon, using a 2D method. 
+        /// Tests if the supplied Vector3 is within this Polygon, using a 2D method.
         /// </summary>
         /// <param name="vector">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
@@ -339,7 +348,7 @@ namespace Elements.Geometry
         /// <returns>Returns a list of Polygons representing the subtraction of the second set of polygons from the first set.</returns>
         public static IList<Polygon> Difference(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Difference, tolerance);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Difference, VoidTreatment.PreserveInternalVoids, tolerance);
         }
 
         /// <summary>
@@ -352,7 +361,7 @@ namespace Elements.Geometry
         [Obsolete("Please use UnionAll, which takes a single list of polygons.")]
         public static IList<Polygon> Union(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Union, tolerance);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Union, VoidTreatment.IgnoreInternalVoids, tolerance);
         }
 
         /// <summary>
@@ -363,7 +372,7 @@ namespace Elements.Geometry
         /// <returns>Returns a list of Polygons representing the union of all polygons.</returns>
         public static IList<Polygon> UnionAll(IList<Polygon> polygons, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(polygons, new List<Polygon>(), BooleanMode.Union, tolerance);
+            return BooleanTwoSets(polygons, new List<Polygon>(), BooleanMode.Union, VoidTreatment.IgnoreInternalVoids, tolerance);
         }
 
         /// <summary>
@@ -378,7 +387,7 @@ namespace Elements.Geometry
         /// </returns>
         public static IList<Polygon> XOR(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.XOr, tolerance);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.XOr, VoidTreatment.PreserveInternalVoids, tolerance);
         }
 
         /// <summary>
@@ -393,7 +402,7 @@ namespace Elements.Geometry
         /// </returns>
         public static IList<Polygon> Intersection(IList<Polygon> firstSet, IList<Polygon> secondSet, double tolerance = Vector3.EPSILON)
         {
-            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Intersection, tolerance);
+            return BooleanTwoSets(firstSet, secondSet, BooleanMode.Intersection, VoidTreatment.PreserveInternalVoids, tolerance);
         }
 
 
@@ -402,9 +411,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="subjectPolygons">Polygons to clip</param>
         /// <param name="clippingPolygons">Polygons with which to clip</param>
-        /// <param name="mode">The operation to apply: Union, Difference, Intersection, or XOr</param>
+        /// <param name="booleanMode">The operation to apply: Union, Difference, Intersection, or XOr</param>
+        /// <param name="voidTreatment">Optional setting for how to process the polygons in each set: either treat polygons inside others as voids, or treat them all as solid (thereby ignoring internal polygons).</param>
         /// <param name="tolerance">Optional override of the tolerance for determining if two polygons are identical.</param>
-        private static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode mode, double tolerance = Vector3.EPSILON)
+        private static IList<Polygon> BooleanTwoSets(IList<Polygon> subjectPolygons, IList<Polygon> clippingPolygons, BooleanMode booleanMode, VoidTreatment voidTreatment = VoidTreatment.PreserveInternalVoids, double tolerance = Vector3.EPSILON)
         {
             var subjectPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
             var clipPaths = clippingPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
@@ -413,7 +423,12 @@ namespace Elements.Geometry
             clipper.AddPaths(clipPaths, PolyType.ptClip, true);
             var solution = new List<List<IntPoint>>();
             var executionMode = ClipType.ctDifference;
-            switch (mode)
+            var polyFillType = PolyFillType.pftEvenOdd;
+            if (voidTreatment == VoidTreatment.IgnoreInternalVoids)
+            {
+                polyFillType = PolyFillType.pftNonZero;
+            }
+            switch (booleanMode)
             {
                 case BooleanMode.Difference:
                     executionMode = ClipType.ctDifference;
@@ -428,7 +443,7 @@ namespace Elements.Geometry
                     executionMode = ClipType.ctXor;
                     break;
             }
-            clipper.Execute(executionMode, solution);
+            clipper.Execute(executionMode, solution, polyFillType);
             if (solution.Count == 0)
             {
                 return null;
@@ -747,6 +762,39 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find the minimum-area rotated rectangle containing a set of points, 
+        /// calculated without regard for Z coordinate. 
+        /// </summary>
+        /// <param name="points">The points to contain within the rectangle</param>
+        /// <returns>A rectangular polygon that contains all input points</returns>
+        public static Polygon FromAlignedBoundingBox2d(IEnumerable<Vector3> points)
+        {
+            var hull = ConvexHull.FromPoints(points);
+            var minBoxArea = double.MaxValue;
+            BBox3 minBox = new BBox3();
+            Transform minBoxXform = new Transform();
+            foreach (var edge in hull.Segments())
+            {
+                var edgeVector = edge.End - edge.Start;
+                var xform = new Transform(Vector3.Origin, edgeVector, Vector3.ZAxis, 0);
+                var invertedXform = new Transform(xform);
+                invertedXform.Invert();
+                var transformedPolygon = hull.TransformedPolygon(invertedXform);
+                var bbox = new BBox3(transformedPolygon.Vertices);
+                var bboxArea = (bbox.Max.X - bbox.Min.X) * (bbox.Max.Y - bbox.Min.Y);
+                if (bboxArea < minBoxArea)
+                {
+                    minBoxArea = bboxArea;
+                    minBox = bbox;
+                    minBoxXform = xform;
+                }
+            }
+            var xy = new Plane(Vector3.Origin, Vector3.ZAxis);
+            var boxRect = Polygon.Rectangle(minBox.Min.Project(xy), minBox.Max.Project(xy));
+            return boxRect.TransformedPolygon(minBoxXform);
+        }
+
+        /// <summary>
         /// Get the hash code for the polygon.
         /// </summary>
         /// <returns></returns>
@@ -792,7 +840,19 @@ namespace Elements.Geometry
         /// <param name="endSetback"></param>
         public override Transform[] Frames(double startSetback, double endSetback)
         {
-            return FramesInternal(startSetback, endSetback, true);
+            // Create an array of transforms with the same
+            // number of items as the vertices.
+            var result = new Transform[this.Vertices.Count];
+
+            // Cache the normal so we don't have to recalculate
+            // using Newell for every frame.
+            var up = Normal();
+            for (var i = 0; i < result.Length; i++)
+            {
+                var a = this.Vertices[i];
+                result[i] = CreateMiterTransform(i, a, up);
+            }
+            return result;
         }
 
         /// <summary>
@@ -860,6 +920,16 @@ namespace Elements.Geometry
             {
                 this.Vertices[i] = t.OfPoint(this.Vertices[i]);
             }
+        }
+
+        /// <summary>
+        /// Transform a specified segment of this polygon in place.
+        /// </summary>
+        /// <param name="t">The transform. If it is not within the polygon plane, then an exception will be thrown.</param>
+        /// <param name="i">The segment to transform. If it does not exist, then no work will be done.</param>
+        public void TransformSegment(Transform t, int i)
+        {
+            this.TransformSegment(t, i, true, true);
         }
 
         /// <summary>
@@ -935,7 +1005,7 @@ namespace Elements.Geometry
         /// The normal of this polygon, according to Newell's Method.
         /// </summary>
         /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
-        public override Vector3 Normal()
+        public Vector3 Normal()
         {
             var normal = new Vector3();
             for (int i = 0; i < Vertices.Count; i++)
@@ -947,6 +1017,24 @@ namespace Elements.Geometry
                 normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
             }
             return normal.Unitized();
+        }
+        /// <summary>
+        /// Get the normal of each vertex on the polygon.
+        /// </summary>
+        /// <remarks>All normals will be the same since polygons are coplanar by definition.</remarks>
+        /// <returns>A collection of unit vectors, each corresponding to a single vertex.</returns>
+        protected override Vector3[] NormalsAtVertices()
+        {
+            // Create an array of transforms with the same number of items as the vertices.
+            var result = new Vector3[this.Vertices.Count];
+
+            // Since polygons must be coplanar, all vertex normals can match the polygon's normal.
+            var normal = this.Normal();
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                result[i] = normal;
+            }
+            return result;
         }
 
         /// <summary>
@@ -978,9 +1066,27 @@ namespace Elements.Geometry
         /// </summary>
         Intersection,
         /// <summary>
-        /// Exclusive or — either A or B but not both. 
+        /// Exclusive or — either A or B but not both.
         /// </summary>
         XOr
+    }
+
+
+    /// <summary>
+    /// Controls the handling of internal regions in a polygon boolean operation.
+    /// </summary>
+    public enum VoidTreatment
+    {
+        /// <summary>
+        /// Use an Even/Odd fill pattern to decide whether internal polygons are solid or void.
+        /// This corresponds to Clipper's "EvenOdd" PolyFillType.
+        /// </summary>
+        PreserveInternalVoids = 0,
+        /// <summary>
+        /// Treat all contained or overlapping polygons as solid.
+        /// This corresponds to Clipper's "Positive" PolyFillType.
+        /// </summary>
+        IgnoreInternalVoids = 1
     }
 
     /// <summary>
@@ -1006,7 +1112,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a Polygon from a clipper path 
+        /// Construct a Polygon from a clipper path
         /// </summary>
         /// <param name="p"></param>
         /// <param name="tolerance">Optional tolerance value. Be sure to use the same tolerance value as you used when converting to Clipper path.</param>
@@ -1020,7 +1126,24 @@ namespace Elements.Geometry
                 var v = p[i];
                 converted[i] = new Vector3(v.X / scale, v.Y / scale);
             }
-            return new Polygon(converted);
+            try
+            {
+                return new Polygon(converted);
+            }
+            catch (ArgumentException e)
+            {
+                // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back. 
+                // here we make a last-ditch attempt to fix this and construct a new polygon. 
+                var cleanedVertices = Vector3.AttemptPostClipperCleanup(converted);
+                try
+                {
+                    return new Polygon(cleanedVertices);
+                }
+                catch (Exception e2)
+                {
+                    throw new Exception("Unable to clean up bad polygon resulting from a polygon boolean operation.");
+                }
+            }
         }
 
         public static IList<Polygon> Reversed(this IList<Polygon> polygons)

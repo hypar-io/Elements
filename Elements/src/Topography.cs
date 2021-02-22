@@ -6,6 +6,7 @@ using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
+using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements
 {
@@ -15,7 +16,6 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/TopographyTests.cs?name=example)]
     /// </example>
-    [UserElement]
     public class Topography : MeshElement, ITessellate
     {
         private double _minElevation = double.PositiveInfinity;

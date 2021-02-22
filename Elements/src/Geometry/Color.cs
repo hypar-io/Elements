@@ -5,7 +5,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An RGBA color.
     /// </summary>
-    public partial struct Color: IEquatable<Color>
+    public partial struct Color : IEquatable<Color>
     {
         /// <summary>
         /// Get the color's components as an array.
@@ -13,7 +13,7 @@ namespace Elements.Geometry
         /// <returns>An array containing the color's components.</returns>
         public float[] ToArray()
         {
-            return new[]{(float)Red, (float)Green, (float)Blue, (float)Alpha};
+            return new[] { (float)Red, (float)Green, (float)Blue, (float)Alpha };
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return new {this.Red, this.Green, this.Blue, this.Alpha}.GetHashCode();
+            return new { this.Red, this.Green, this.Blue, this.Alpha }.GetHashCode();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Color Lerp(Color other, double t)
         {
-            if(t < 0 || t > 1)
+            if (t < 0 || t > 1)
             {
                 throw new ArgumentException("The value of t must be between 0.0 and 1.0.");
             }
@@ -92,7 +92,7 @@ namespace Elements.Geometry
         /// <param name="t">The scalar.</param>
         public static Color operator *(double t, Color a)
         {
-            if(t < 0)
+            if (t < 0)
             {
                 throw new ArgumentException("The value of t must be greater than 0.0.");
             }
@@ -114,6 +114,26 @@ namespace Elements.Geometry
                              Math.Min(1, a.Green + b.Green),
                              Math.Min(1, a.Blue + b.Blue),
                              Math.Min(1, a.Alpha + b.Alpha));
+        }
+
+        /// <summary>
+        /// Are the two Colors equal?
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static bool operator ==(Color a, Color b)
+        {
+            return a.Equals(b);
+        }
+
+        /// <summary>
+        /// Are the two Colors equal?
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static bool operator !=(Color a, Color b)
+        {
+            return !a.Equals(b);
         }
     }
 }

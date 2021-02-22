@@ -7,7 +7,7 @@ using ClipperLib;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A coplanar continuous set of lines.
+    /// A continuous set of lines.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
@@ -100,7 +100,6 @@ namespace Elements.Geometry
 
             var segmentIndex = 0;
             var o = PointAtInternal(u, out segmentIndex);
-            var y = Normal();
             Vector3 x = Vector3.XAxis; // Vector3: Convert to XAxis
 
             // Check if the provided parameter is equal
@@ -116,38 +115,43 @@ namespace Elements.Geometry
                 }
             }
 
+            var normals = this.NormalsAtVertices();
+
             if (isEqualToVertex)
             {
                 var idx = this.Vertices.IndexOf(a);
 
                 if (idx == 0 || idx == this.Vertices.Count - 1)
                 {
-                    return CreateOthogonalTransform(idx, a, y);
+                    return CreateOrthogonalTransform(idx, a, normals[idx]);
                 }
                 else
                 {
-                    return CreateMiterTransform(idx, a, y);
+                    return CreateMiterTransform(idx, a, normals[idx]);
                 }
             }
-            else
+
+            var d = this.Length() * u;
+            var totalLength = 0.0;
+            var segments = Segments();
+            var normal = new Vector3();
+            for (var i = 0; i < segments.Length; i++)
             {
-                var d = this.Length() * u;
-                var totalLength = 0.0;
-                var segments = Segments();
-                for (var i = 0; i < segments.Length; i++)
+                var s = segments[i];
+                var currLength = s.Length();
+                if (totalLength <= d && totalLength + currLength >= d)
                 {
-                    var s = segments[i];
-                    var currLength = s.Length();
-                    if (totalLength <= d && totalLength + currLength >= d)
-                    {
-                        o = s.PointAt((d - totalLength) / currLength);
-                        x = s.Direction().Cross(y);
-                        break;
-                    }
-                    totalLength += currLength;
+                    var parameterOnSegment = (d - totalLength) / currLength;
+                    o = s.PointAt(parameterOnSegment);
+                    var previousNormal = normals[i];
+                    var nextNormal = normals[(i + 1) % this.Vertices.Count];
+                    normal = ((nextNormal - previousNormal) * parameterOnSegment + previousNormal).Unitized();
+                    x = s.Direction().Cross(normal);
+                    break;
                 }
+                totalLength += currLength;
             }
-            return new Transform(o, x, y, x.Cross(y));
+            return new Transform(o, x, normal, x.Cross(normal));
         }
 
         /// <summary>
@@ -175,13 +179,122 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Transform a specified segment of this polyline in place.
+        /// </summary>
+        /// <param name="t">The transform. If it is not within the polygon plane, then an exception will be thrown.</param>
+        /// <param name="i">The segment to transform. If it does not exist, then no work will be done.</param>
+        /// <param name="isClosed">If set to true, the segment between the start end end point will be considered a valid target.</param>
+        /// <param name="isPlanar">If set to true, an exception will be thrown if the resultant shape is no longer planar.</param>
+        public void TransformSegment(Transform t, int i, bool isClosed = false, bool isPlanar = false)
+        {
+            var v = this.Vertices;
+
+            if (i < 0 || i > v.Count)
+            {
+                // Segment index is out of range, do no work.
+                return;
+            }
+
+            var candidates = new List<Vector3>(this.Vertices);
+
+            var endIndex = (i + 1) % v.Count;
+
+            candidates[i] = t.OfPoint(v[i]);
+            candidates[endIndex] = t.OfPoint(v[endIndex]);
+
+            // All motion for a triangle results in a planar shape, skip this case.
+            var enforcePlanar = v.Count != 3 && isPlanar;
+
+            if (enforcePlanar && !candidates.AreCoplanar())
+            {
+                throw new Exception("Segment transformation must be within the polygon's plane.");
+            }
+
+            this.Vertices = candidates;
+        }
+
+        /// <summary>
+        /// Get the normal of each vertex on the polyline.
+        /// </summary>
+        /// <returns>A collection of unit vectors, each corresponding to a single vertex.</returns>
+        protected virtual Vector3[] NormalsAtVertices()
+        {
+            // Vertex normals will be the cross product of the previous edge and the next edge.
+            var nextDirection = (this.Vertices[1] - this.Vertices[0]).Unitized();
+
+            // At the first point, use either the next non-collinear edge or a cardinal direction to choose a normal.
+            var previousDirection = new Vector3();
+            if (Vector3Extensions.AreCollinear(this.Vertices))
+            {
+                // If the polyline is collinear, use whichever cardinal direction isn't collinear with it.
+                if (Math.Abs(nextDirection.Dot(Vector3.YAxis)) < 1 - Vector3.EPSILON)
+                {
+                    previousDirection = Vector3.YAxis;
+                }
+                else
+                {
+                    previousDirection = Vector3.XAxis;
+                }
+            }
+            else
+            {
+                // Find the next non-collinear edge and use that to hint the normal of the first vertex.
+                for (var i = 2; i < this.Vertices.Count; i++)
+                {
+                    previousDirection = (this.Vertices[i] - this.Vertices[1]).Unitized();
+                    if (Math.Abs(previousDirection.Dot(nextDirection)) > 1 - Vector3.EPSILON)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Create an array of transforms with the same number of items as the vertices.
+            var result = new Vector3[this.Vertices.Count];
+            var previousNormal = new Vector3();
+            for (var i = 0; i < result.Length; i++)
+            {
+                // If this vertex has a bend, use the normal computed from the previous and next edges.
+                // Otherwise keep using the normal frnom the previous bend.
+                if (i < result.Length - 1)
+                {
+                    var direction = (this.Vertices[i + 1] - this.Vertices[i]).Unitized();
+                    if (Math.Abs(nextDirection.Dot(direction)) < 1 - Vector3.EPSILON)
+                    {
+                        previousDirection = nextDirection;
+                        nextDirection = direction;
+                    }
+                }
+                var normal = nextDirection.Cross(previousDirection);
+
+                // Flip the normal if it's pointing away from the previous point's normal.
+                if (i > 1 && previousNormal.Dot(normal) < 0)
+                {
+                    normal *= -1;
+                }
+                result[i] = normal.Unitized();
+                previousNormal = normal;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Get the transforms used to transform a Profile extruded along this Polyline.
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
         public override Transform[] Frames(double startSetback, double endSetback)
         {
-            return FramesInternal(startSetback, endSetback, false);
+            var normals = this.NormalsAtVertices();
+
+            // Create an array of transforms with the same number of items as the vertices.
+            var result = new Transform[this.Vertices.Count];
+            for (var i = 0; i < result.Length; i++)
+            {
+                var a = this.Vertices[i];
+                result[i] = CreateOrthogonalTransform(i, a, normals[i]);
+            }
+            return result;
         }
 
         /// <summary>
@@ -200,52 +313,6 @@ namespace Elements.Geometry
         {
             var xform = Vertices.ToTransform();
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
-        }
-
-        /// <summary>
-        /// The normal of this polyline, according to Newell's Method.
-        /// </summary>
-        /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
-        public virtual Vector3 Normal()
-        {
-            // This is a slight variation on Newell that does not
-            // close the loop, as we do for polygons. For polylines, 
-            // closing the loop often results in self-intersection
-            // which returns a zero length vector.
-            var normal = new Vector3();
-            for (int i = 0; i < Vertices.Count - 1; i++)
-            {
-                var p0 = Vertices[i];
-                var p1 = Vertices[i + 1];
-                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
-                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
-                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
-            }
-            return normal.Unitized();
-        }
-
-        internal Transform[] FramesInternal(double startSetback, double endSetback, bool closed = false)
-        {
-            // Create an array of transforms with the same
-            // number of items as the vertices.
-            var result = new Transform[this.Vertices.Count];
-
-            // Cache the normal so we don't have to recalculate
-            // using Newell for every frame.
-            var up = Normal();
-            for (var i = 0; i < result.Length; i++)
-            {
-                var a = this.Vertices[i];
-                if (closed)
-                {
-                    result[i] = CreateMiterTransform(i, a, up);
-                }
-                else
-                {
-                    result[i] = CreateOthogonalTransform(i, a, up);
-                }
-            }
-            return result;
         }
 
         /// <summary>
@@ -336,7 +403,10 @@ namespace Elements.Geometry
             return result;
         }
 
-        private Transform CreateMiterTransform(int i, Vector3 a, Vector3 up)
+        /// <summary>
+        /// Generates a transform that expresses the plane of a miter join at a point on the curve.
+        /// </summary>
+        protected Transform CreateMiterTransform(int i, Vector3 a, Vector3 up)
         {
             var b = i == 0 ? this.Vertices[this.Vertices.Count - 1] : this.Vertices[i - 1];
             var c = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
@@ -348,7 +418,7 @@ namespace Elements.Geometry
             return new Transform(this.Vertices[i], x, x.Cross(up));
         }
 
-        private Transform CreateOthogonalTransform(int i, Vector3 a, Vector3 up)
+        private Transform CreateOrthogonalTransform(int i, Vector3 a, Vector3 up)
         {
             Vector3 b, x, c;
 
@@ -466,6 +536,59 @@ namespace Elements.Geometry
             }
             return true;
         }
+
+        /// <summary>
+        /// Identify any shared segments between two polylines.
+        /// </summary>
+        /// <param name="a">The first polyline to compare.</param>
+        /// <param name="b">The second polyline to compare.</param>
+        /// <param name="isClosed">Flag as closed to include segment between first and last vertex.</param>
+        /// <returns>Returns a list of tuples of indices for the segments that match in each polyline.</returns>
+        public static List<(int indexOnA, int indexOnB)> SharedSegments(Polyline a, Polyline b, bool isClosed = false)
+        {
+            var result = new List<(int, int)>();
+
+            // Abbreviate lists to compare
+            var va = a.Vertices;
+            var vb = b.Vertices;
+
+            for (var i = 0; i < va.Count; i++)
+            {
+                var ia = va[i];
+                var ib = va[(i + 1) % va.Count];
+
+                var iterations = isClosed ? vb.Count : vb.Count - 1;
+
+                for (var j = 0; j < iterations; j++)
+                {
+                    var ja = vb[j];
+
+                    if (ia.IsAlmostEqualTo(ja))
+                    {
+                        // Current vertices match, compare next vertices
+                        var jNext = (j + 1) % vb.Count;
+                        var jPrev = j == 0 ? vb.Count - 1 : j - 1;
+
+                        var jb = vb[jNext];
+                        var jc = vb[jPrev];
+
+                        if (ib.IsAlmostEqualTo(jb))
+                        {
+                            // Match is current segment a and current segment b
+                            result.Add((i, j));
+                        }
+
+                        if (ib.IsAlmostEqualTo(jc))
+                        {
+                            // Match is current segment a and previous segment b
+                            result.Add((i, jPrev));
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 
     /// <summary>
@@ -489,6 +612,13 @@ namespace Elements.Geometry
             }
             return path;
         }
+
+        /// <summary>
+        /// Convert a line to a polyline
+        /// </summary>
+        /// <param name="l">The line to convert.</param>
+        public static Polyline ToPolyline(this Line l) => new Polyline(new[] { l.Start, l.End });
+
     }
 
     /// <summary>
@@ -497,7 +627,7 @@ namespace Elements.Geometry
     public enum EndType
     {
         /// <summary>
-        /// Open ends are extended by the offset distance and squared off 
+        /// Open ends are extended by the offset distance and squared off
         /// </summary>
         Square,
         /// <summary>

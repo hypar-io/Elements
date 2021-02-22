@@ -1,15 +1,8 @@
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
-using Elements.Serialization.JSON;
 
 namespace Elements.Geometry
 {
-    [JsonInheritanceAttribute("Elements.Geometry.Line", typeof(Line))]
-    [JsonInheritanceAttribute("Elements.Geometry.Arc", typeof(Arc))]
-    [JsonInheritanceAttribute("Elements.Geometry.Polyline", typeof(Polyline))]
-    [JsonInheritanceAttribute("Elements.Geometry.Polygon", typeof(Polygon))]
-    [JsonInheritanceAttribute("Elements.Geometry.Bezier", typeof(Bezier))]
-    [JsonInheritanceAttribute("Elements.Geometry.Circle", typeof(Circle))]
     public abstract partial class Curve : ICurve, ITransformable<Curve>
     {
         /// <summary>
@@ -93,5 +86,11 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);
+
+        /// <summary>
+        /// Implicitly convert a curve to a ModelCurve Element.
+        /// </summary>
+        /// <param name="c">The curve to convert.</param>
+        public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
     }
 }

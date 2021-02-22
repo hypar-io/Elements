@@ -7,7 +7,7 @@ using Elements;
 using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Properties;
+using Elements.Spatial;
 using Elements.Validators;
 using Elements.Serialization.JSON;
 using System;
@@ -16,38 +16,36 @@ using System.Linq;
 using Line = Elements.Geometry.Line;
 using Polygon = Elements.Geometry.Polygon;
 
-namespace Elements.Geometry
+namespace Elements
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>The base class for all geometry</summary>
+    /// <summary>Just a test</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
-    [JsonInheritanceAttribute("Mesh", typeof(Mesh))]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
-    [UserElement]
-	public partial class Geometry 
+    public partial class Grid2dElement : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Geometry(Material @material)
+        public Grid2dElement(Grid2d @grid, System.Guid @id, string @name)
+            : base(id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Geometry>
-            ();
+            var validator = Validator.Instance.GetFirstValidatorForType<Grid2dElement>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @material});
+                validator.PreConstruct(new object[]{ @grid, @id, @name});
             }
         
-                this.Material = @material;
+            this.Grid = @grid;
             
             if(validator != null)
             {
-            validator.PostConstruct(this);
+                validator.PostConstruct(this);
             }
-            }
+        }
     
-        /// <summary>The material for this piece of geometry.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Material Material { get; set; }
+        /// <summary>contains a grid</summary>
+        [Newtonsoft.Json.JsonProperty("Grid", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Grid2d Grid { get; set; }
     
     
     }
