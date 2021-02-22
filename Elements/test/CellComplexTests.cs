@@ -29,7 +29,9 @@ namespace Elements.Tests
             var cellComplex = new CellComplex(Guid.NewGuid(), "Test");
             var height = 5;
 
-            for (var i = 0; i < 3; i++)
+            var i = 0;
+
+            for (i = 0; i < 3; i++)
             {
                 foreach (var cell in grid.GetCells())
                 {
@@ -40,11 +42,19 @@ namespace Elements.Tests
                 }
             }
 
+            i = 0;
+            foreach (var vertex in cellComplex.Vertices.Values)
+            {
+                vertex.Name = $"Vertex-{i}";
+                i++;
+            }
+
             var model = new Model();
             model.AddElement(cellComplex);
             var json = model.ToJson();
             var modelFromDeserialization = Model.FromJson(json);
             var cellComplexDeserialized = modelFromDeserialization.GetElementOfType<CellComplex>(cellComplex.Id);
+            var vertexExists = cellComplexDeserialized.VertexExists(new Vector3(0, Vector3.EPSILON / 2, 0), out var vertexId, Vector3.EPSILON);
 
         }
     }

@@ -22,13 +22,24 @@ namespace Elements.Spatial
         /// <summary>
         /// Location in space
         /// </summary>
-        public Vector3 Point;
+        public Vector3 Value;
 
-        public Vertex(long id, Vector3 point)
+        /// <summary>
+        /// Some optional name, if we want it
+        /// </summary>
+        public string Name { get; set; }
+
+        public Vertex(long id, Vector3 point, string name = null)
         {
             this.Id = id;
-            this.Point = point;
+            this.Value = point;
+            this.Name = name;
         }
+    }
+
+    public class UV : Vertex
+    {
+        public UV(long id, Vector3 point, string name = null) : base(id, point, name) { }
     }
 
     /// <summary>
@@ -126,22 +137,44 @@ namespace Elements.Spatial
         public long Id;
 
         /// <summary>
+        /// ID of U direction
+        /// </summary>
+        public Nullable<long> UId;
+
+        /// <summary>
+        /// ID of V direction
+        /// </summary>
+        public Nullable<long> VId;
+
+        /// <summary>
         /// Directed segment IDs
         /// </summary>
         public List<long> DirectedSegmentIds;
 
-        public Face(long id, List<DirectedSegment> directedSegments) : this(id, directedSegments.Select(ds => ds.Id).ToList())
+        public Face(long id, List<DirectedSegment> directedSegments, UV u = null, UV v = null)
         {
+            this.Id = id;
+            this.DirectedSegmentIds = directedSegments.Select(ds => ds.Id).ToList();
+            if (u != null)
+            {
+                this.UId = u.Id;
+            }
+            if (v != null)
+            {
+                this.VId = v.Id;
+            }
         }
 
         /// <summary>
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        public Face(long id, List<long> directedSegmentIds)
+        public Face(long id, List<long> directedSegmentIds, Nullable<long> uId = null, Nullable<long> vId = null)
         {
             this.Id = id;
             this.DirectedSegmentIds = directedSegmentIds;
+            this.UId = uId;
+            this.VId = vId;
 
         }
     }
@@ -203,21 +236,26 @@ namespace Elements.Spatial
     public class CellComplex : Elements.Element
     {
         [JsonIgnore]
-        private long _segmentId = 0;
+        private long _segmentId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _directedSegmentId = 0;
+        private long _directedSegmentId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _vertexId = 0;
+        private long _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _faceId = 0;
+        private long _faceId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _cellId = 0;
+        private long _cellId = 1; // we start at 1 because 0 is returned as default value from dicts
+
+        [JsonIgnore]
+        private long _uvId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         public Dictionary<long, Vertex> Vertices = new Dictionary<long, Vertex>();
+
+        public Dictionary<long, UV> UVs = new Dictionary<long, UV>();
 
         public Dictionary<long, Segment> Segments = new Dictionary<long, Segment>();
 
@@ -229,6 +267,9 @@ namespace Elements.Spatial
 
         [JsonIgnore]
         private Dictionary<double, Dictionary<double, Dictionary<double, long>>> verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
+
+        [JsonIgnore]
+        private Dictionary<double, Dictionary<double, Dictionary<double, long>>> uvsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
 
         // Indexed by tuple of (lesserVertexId, greaterVertexId)
         [JsonIgnore]
@@ -247,11 +288,17 @@ namespace Elements.Spatial
         }
 
         [JsonConstructor]
-        public CellComplex(Guid id, string name, Dictionary<long, Vertex> vertices, Dictionary<long, Segment> segments, Dictionary<long, DirectedSegment> directedSegments, Dictionary<long, Face> faces, Dictionary<long, Cell> cells): base(id, name)
+        public CellComplex(Guid id, string name, Dictionary<long, Vertex> vertices, Dictionary<long, Vertex> uvs, Dictionary<long, Segment> segments, Dictionary<long, DirectedSegment> directedSegments, Dictionary<long, Face> faces, Dictionary<long, Cell> cells) : base(id, name)
         {
             foreach (var vertex in vertices.Values)
             {
-                this.AddVertex(vertex.Point, vertex.Id);
+                var added = this.AddVertex(vertex.Value, vertex.Id);
+                added.Name = vertex.Name;
+            }
+
+            foreach (var uv in uvs.Values)
+            {
+                this.AddUV(uv.Value, uv.Id);
             }
 
             foreach (var segment in segments.Values)
@@ -274,8 +321,10 @@ namespace Elements.Spatial
             foreach (var face in faces.Values)
             {
                 var polygon = this.GetFaceGeometry(face);
+                var u = this.GetUV(face.UId);
+                var v = this.GetUV(face.VId);
 
-                if (!this.AddFace(polygon, face.Id, out var addedFace))
+                if (!this.AddFace(polygon, face.Id, u, v, out var addedFace))
                 {
                     throw new Exception("Duplicate face ID found");
                 }
@@ -290,7 +339,7 @@ namespace Elements.Spatial
             }
         }
 
-        public Cell AddCell(Polygon polygon, double height, double elevation)
+        public Cell AddCell(Polygon polygon, double height, double elevation, Grid1d uGrid = null, Grid1d vGrid = null)
         {
             var elevationVector = new Vector3(0, 0, elevation);
             var heightVector = new Vector3(0, 0, height);
@@ -298,18 +347,33 @@ namespace Elements.Spatial
             var transformedPolygonBottom = (Polygon)polygon.Transformed(new Transform(elevationVector));
             var transformedPolygonTop = (Polygon)polygon.Transformed(new Transform(elevationVector + heightVector));
 
-            var bottomFace = this.AddFace(transformedPolygonBottom);
-            var topFace = this.AddFace(transformedPolygonTop);
+            UV u = null;
+            UV v = null;
+
+            if (uGrid != null)
+            {
+                u = this.AddUV(uGrid.Direction().Unitized());
+            }
+            if (vGrid != null)
+            {
+                v = this.AddUV(vGrid.Direction().Unitized());
+            }
+
+            var bottomFace = this.AddFace(transformedPolygonBottom, u, v);
+            var topFace = this.AddFace(transformedPolygonTop, u, v);
 
             var faces = new List<Face>() { bottomFace, topFace };
+
+            var up = this.AddUV(new Vector3(0, 0, 1));
 
             foreach (var faceEdge in transformedPolygonBottom.Segments())
             {
                 var vertices = new List<Vector3>() { faceEdge.Start, faceEdge.End };
+                var verticalU = this.AddUV((faceEdge.End - faceEdge.Start).Unitized());
                 vertices.Add(faceEdge.End + heightVector);
                 vertices.Add(faceEdge.Start + heightVector);
-                var face = new Polygon(vertices);
-                faces.Add(this.AddFace(face));
+                var facePoly = new Polygon(vertices);
+                faces.Add(this.AddFace(facePoly, verticalU, up));
             }
 
             return this.AddCell(this._cellId, faces, bottomFace, topFace);
@@ -323,17 +387,15 @@ namespace Elements.Spatial
             return cell;
         }
 
-        public Face AddFace(Polygon polygon)
+        public Face AddFace(Polygon polygon, UV u = null, UV v = null)
         {
-            this.AddFace(polygon, this._faceId, out var face);
+            this.AddFace(polygon, this._faceId, u, v, out var face);
             return face;
 
         }
 
-        private Boolean AddFace(Polygon polygon, long idIfNew, out Face face)
+        private Boolean AddFace(Polygon polygon, long idIfNew, UV u, UV v, out Face face)
         {
-            // TODO: we probably also want a directed face that includes the normal?
-
             var lines = polygon.Segments();
             var directedSegments = new List<DirectedSegment>();
             foreach (var line in lines)
@@ -348,7 +410,7 @@ namespace Elements.Spatial
 
             if (!this.facesLookup.TryGetValue(hash, out var faceId))
             {
-                face = new Face(idIfNew, directedSegments);
+                face = new Face(idIfNew, directedSegments, u, v);
                 faceId = face.Id;
                 this.facesLookup.Add(hash, faceId);
                 this.Faces.Add(faceId, face);
@@ -413,7 +475,6 @@ namespace Elements.Spatial
 
         private Boolean AddSegment((long, long) segmentTuple, long idIfNew, out Segment segment)
         {
-
             if (!this.segmentsLookup.TryGetValue(segmentTuple, out var segmentId))
             {
                 segment = new Segment(idIfNew, segmentTuple.Item1, segmentTuple.Item2);
@@ -441,7 +502,7 @@ namespace Elements.Spatial
             return vertex;
         }
 
-        private Vertex AddVertex(Vector3 point, long id)
+        private Vertex AddVertex(Vector3 point, long id, string name = null)
         {
             this.AddVertex(point, id, out var vertexId);
 
@@ -463,41 +524,156 @@ namespace Elements.Spatial
         /// <returns>True if vertex was added, false if it already added.</returns>
         private Boolean AddVertex(Vector3 point, long idIfNew, out long id)
         {
-            if (!this.verticesLookup.TryGetValue(point.X, out var yzDict))
-            {
-                yzDict = new Dictionary<double, Dictionary<double, long>>();
-                this.verticesLookup.Add(point.X, yzDict);
-            }
-
-            if (!yzDict.TryGetValue(point.Y, out var zDict))
-            {
-                zDict = new Dictionary<double, long>();
-                yzDict.Add(point.Y, zDict);
-            }
-
-            if (!zDict.TryGetValue(point.Z, out id))
-            {
-                var vertex = new Vertex(idIfNew, point);
-                id = vertex.Id;
-
-                zDict.Add(point.Z, id);
-                this.Vertices.Add(id, vertex);
-
-                this._vertexId = Math.Max(id + 1, this._vertexId + 1);
-                return true;
-            }
-            else
+            if (ValueExists(this.verticesLookup, point, out id))
             {
                 return false;
             }
+
+            var zDict = GetAddressParent(this.verticesLookup, point, true);
+
+            var vertex = new Vertex(idIfNew, point);
+            id = vertex.Id;
+
+            zDict.Add(point.Z, id);
+            this.Vertices.Add(id, vertex);
+
+            this._vertexId = Math.Max(id + 1, this._vertexId + 1);
+            return true;
         }
 
         #endregion
+
+        #region add uv
+
+        // TODO: this is exactly the same as addvertex except referencing different members/dicts, how can I consolidate this?
+
+        public UV AddUV(Vector3 point)
+        {
+            this.AddUV(point, this._uvId, out var uvId);
+            this.UVs.TryGetValue(uvId, out var uv);
+            return uv;
+        }
+
+        private UV AddUV(Vector3 point, long id)
+        {
+            this.AddUV(point, id, out var uvId);
+
+            if (uvId != id)
+            {
+                throw new Exception("This ID already exists");
+            }
+
+            this.UVs.TryGetValue(uvId, out var uv);
+            return uv;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="idIfNew"></param>
+        /// <param name="id"></param>
+        /// <returns>True if vertex was added, false if it already added.</returns>
+        private Boolean AddUV(Vector3 point, long idIfNew, out long id)
+        {
+            if (ValueExists(this.uvsLookup, point, out id))
+            {
+                return false;
+            }
+
+            var zDict = GetAddressParent(this.uvsLookup, point, true);
+
+            var uv = new UV(idIfNew, point);
+            id = uv.Id;
+
+            zDict.Add(point.Z, id);
+            this.UVs.Add(id, uv);
+
+            this._uvId = Math.Max(id + 1, this._uvId + 1);
+            return true;
+        }
+
+        #endregion
+
+        private static Dictionary<double, long> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, long>>> dict, Vector3 point, Boolean addAddressIfNonExistent = false, Nullable<double> fuzzyFactor = null)
+        {
+            if (!TryGetValue<Dictionary<double, Dictionary<double, long>>>(dict, point.X, out var yzDict, fuzzyFactor))
+            {
+                yzDict = new Dictionary<double, Dictionary<double, long>>();
+                if (addAddressIfNonExistent)
+                {
+                    dict.Add(point.X, yzDict);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            if (!TryGetValue<Dictionary<double, long>>(yzDict, point.Y, out var zDict, fuzzyFactor))
+            {
+                zDict = new Dictionary<double, long>();
+                if (addAddressIfNonExistent)
+                {
+                    yzDict.Add(point.Y, zDict);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return zDict;
+
+        }
+
+        private static Boolean ValueExists(Dictionary<double, Dictionary<double, Dictionary<double, long>>> dict, Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
+        {
+            var zDict = GetAddressParent(dict, point, fuzzyFactor: fuzzyFactor);
+            if (zDict == null)
+            {
+                id = 0;
+                return false;
+            }
+            return TryGetValue<long>(zDict, point.Z, out id, fuzzyFactor);
+        }
+
+        private static Boolean TryGetValue<T>(Dictionary<double, T> dict, double key, out T value, Nullable<double> fuzzyFactor = null)
+        {
+            if (dict.TryGetValue(key, out value))
+            {
+                return true;
+            }
+            if (fuzzyFactor != null)
+            {
+                foreach (var curKey in dict.Keys)
+                {
+                    if (Math.Abs(curKey - key) <= fuzzyFactor)
+                    {
+                        value = dict[curKey];
+                        return true;
+
+                    }
+                }
+            }
+            return false;
+        }
 
         public Vertex GetVertex(long vertexId)
         {
             this.Vertices.TryGetValue(vertexId, out var vertex);
             return vertex;
+        }
+
+
+        public UV GetUV(long? uvId)
+        {
+            if (uvId == null)
+            {
+                return null;
+            }
+            this.UVs.TryGetValue((long)uvId, out var uv);
+            return uv;
         }
 
         public Segment GetSegment(long segmentId)
@@ -532,8 +708,8 @@ namespace Elements.Spatial
         public Line GetSegmentGeometry(Segment segment)
         {
             return new Line(
-                this.GetVertex(segment.Vertex1Id).Point,
-                this.GetVertex(segment.Vertex2Id).Point
+                this.GetVertex(segment.Vertex1Id).Value,
+                this.GetVertex(segment.Vertex2Id).Value
             );
         }
 
@@ -541,8 +717,8 @@ namespace Elements.Spatial
         {
             var directedSegment = this.GetDirectedSegment(directedSegmentId);
             return new Line(
-                this.GetVertex(directedSegment.StartVertexId).Point,
-                this.GetVertex(directedSegment.EndVertexId).Point
+                this.GetVertex(directedSegment.StartVertexId).Value,
+                this.GetVertex(directedSegment.EndVertexId).Value
             );
         }
 
@@ -550,6 +726,28 @@ namespace Elements.Spatial
         {
             var vertices = face.DirectedSegmentIds.Select(dsId => GetDirectedSegmentGeometry(dsId).Start).ToList();
             return new Polygon(vertices);
+        }
+
+        public List<Vertex> GetVerticesMatchingXY(double x, double y)
+        {
+            var vertices = new List<Vertex>();
+
+            if (!this.verticesLookup.TryGetValue(x, out var yzDict))
+            {
+                return vertices;
+            }
+
+            if (!yzDict.TryGetValue(y, out var zDict))
+            {
+                return vertices;
+            }
+
+            return zDict.Values.Select(vertexId => this.GetVertex(vertexId)).ToList();
+        }
+
+        public Boolean VertexExists(Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
+        {
+            return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
         }
     }
 }
