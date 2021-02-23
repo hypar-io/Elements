@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Newtonsoft.Json;
+using Elements;
+using System.Linq;
 
 namespace Elements.Analysis
 {
@@ -20,61 +22,109 @@ namespace Elements.Analysis
         public List<Color> Colors { get; } = new List<Color>();
 
         /// <summary>
-        /// Construct a color scale.
+        /// The domain of the scale
         /// </summary>
-        /// <param name="colors">The colors which define the color scale.</param>
-        [JsonConstructor]
-        public ColorScale(List<Color> colors)
-        {
-            this.Colors = colors;
-        }
+        public List<Domain1d> Domains { get; } = null;
 
         /// <summary>
         /// Construct a color scale.
+        /// </summary>
+        /// <param name="colors">The colors which define the color scale.</param>
+        /// <param name="domains">The domains which the colors map to</param>
+        [JsonConstructor]
+        public ColorScale(List<Color> colors, List<Domain1d> domains)
+        {
+            this.Colors = colors;
+            this.Domains = domains;
+        }
+
+        /// <summary>
+        /// Deprecated: Construct a color scale
         /// </summary>
         /// <param name="colors">The color scale's key values.</param>
         /// <param name="colorCount">The number of colors in the final color scale
         /// These values will be interpolated between the provided colors.</param>
-        public ColorScale(List<Color> colors, int colorCount)
+        public ColorScale(List<Color> colors, int colorCount) : this(colors)
         {
-            if (colors.Count > colorCount)
-            {
-                throw new ArgumentException("The color scale could not be created. The number of supplied colors is greater than the final color count.");
-            }
 
+        }
+
+        /// <summary>
+        /// Construct a ColorScale from a list of colors and an optional list of values
+        /// </summary>
+        /// <param name="colors">The color scale's key values.</param>
+        /// <param name="values">List of values each color corresponds to on your scale. If specified, it expects one value per color, in ascending numerical order.</param>
+        public ColorScale(List<Color> colors, List<double> values = null)
+        {
             this.Colors = colors;
 
-            while (this.Colors.Count < colorCount)
+            if (values == null)
             {
-                var startCount = this.Colors.Count;
-                for (var i = 0; i < startCount; i += 2)
+                var domain = new Domain1d(0, 1);
+                this.Domains = domain.DivideByCount(colors.Count - 1).ToList();
+            }
+            else if (colors.Count == values.Count)
+            {
+                this.Domains = new List<Domain1d>();
+
+                for (var i = 0; i < values.Count - 1; i++)
                 {
-                    if (this.Colors.Count >= colorCount)
-                    {
-                        break;
-                    }
-                    var a = this.Colors[i];
-                    var b = this.Colors[i + 1];
-                    var c = a.Lerp(b, 0.5);
-                    this.Colors.Insert(i + 1, c);
+                    this.Domains.Add(new Domain1d(values[i], values[i + 1]));
                 }
+            }
+            else
+            {
+                throw new Exception("If you provide a list of custom values, it must match your list of colors in its count of items");
             }
         }
 
         /// <summary>
-        /// Get the color from the color scale most closely 
+        /// Get the color from the color scale most closely
         /// approximating the provided value.
         /// </summary>
         /// <param name="t">A number between 0.0 and 1.0</param>
         /// <returns>A color.</returns>
         public Color GetColorForValue(double t)
         {
-            if (t < 0.0 || t > 1.0)
+            if (this.Domains == null)
             {
-                throw new ArgumentException("The value of t must be between 0.0 and 1.0");
+                throw new ArgumentException("Your domains have not been calculated. Make sure this was initiated as a linear numerical scale");
             }
-            var index = (int)Math.Floor(t * (this.Colors.Count - 1));
-            return this.Colors[index];
+            var domainIdx = GetDomainIndex(t);
+
+            if (domainIdx == null)
+            {
+                throw new Exception($"Value {t} was not found in color scale");
+            }
+
+            var foundDomainIdx = (int)domainIdx;
+            var domain = this.Domains[foundDomainIdx];
+            var colorMin = this.Colors[foundDomainIdx];
+            var colorMax = this.Colors[foundDomainIdx + 1];
+            var unitizedDistance = (t - domain.Min) / (domain.Max - domain.Min);
+            return colorMin.Lerp(colorMax, unitizedDistance);
+        }
+
+        /// <summary>
+        /// Find the index number of the domain that a value corresponds to.
+        /// </summary>
+        /// <param name="t">Value to search for</param>
+        /// <returns></returns>
+        private int? GetDomainIndex(double t)
+        {
+            if (t < this.Domains.First().Min || t > this.Domains.Last().Max)
+            {
+                throw new ArgumentException("Your value is outside of the the expected bounds");
+            }
+
+            for (var i = 0; i < this.Domains.Count; i++)
+            {
+                if (this.Domains[i].Min <= t && this.Domains[i].Max >= t)
+                {
+                    return i;
+                }
+            }
+            return null;
         }
     }
 }
