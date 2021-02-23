@@ -39,11 +39,12 @@ namespace Elements.Analysis
         }
 
         /// <summary>
-        /// Deprecated: Construct a color scale
+        /// Construct a color scale
         /// </summary>
         /// <param name="colors">The color scale's key values.</param>
         /// <param name="colorCount">The number of colors in the final color scale
         /// These values will be interpolated between the provided colors.</param>
+        [Obsolete("colorCount is no longer required, and this constructor will simply create an evenly interpolated scale between 0 and 1.")]
         public ColorScale(List<Color> colors, int colorCount) : this(colors)
         {
 
