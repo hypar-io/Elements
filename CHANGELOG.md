@@ -3,6 +3,13 @@
 ## 0.8.3
 
 ### Added
+
+### Changed
+- `ColorScale` no longer bands colors but returns smooth gradient interpolation. It additionally now supports a list of values that correspond with the provided colors, allowing intentionally skewed interpolation.
+
+## 0.8.3
+
+### Added
 - `Profile.ToModelCurves()`
 - `Profile.Difference()`
 - `Profile.Intersection()`
