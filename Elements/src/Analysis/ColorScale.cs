@@ -74,7 +74,7 @@ namespace Elements.Analysis
             }
             else
             {
-                throw new Exception("If you provide a list of custom values, it must match your list of colors in its count of items");
+                throw new ArgumentException("If you provide a list of custom values, it must match your list of colors in its count of items");
             }
         }
 
@@ -94,7 +94,7 @@ namespace Elements.Analysis
 
             if (domainIdx == null)
             {
-                throw new Exception($"Value {t} was not found in color scale");
+                throw new ArgumentException($"Value {t} was not found in color scale");
             }
 
             var foundDomainIdx = (int)domainIdx;
