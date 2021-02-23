@@ -35,6 +35,13 @@ namespace Elements.Tests
             Assert.Equal(colorScale.Colors[1], colorScale.GetColorForValue(0.5));
             Assert.Equal(colorScale.Colors[0], colorScale.GetColorForValue(0.0));
             Assert.Equal(colorScale.Colors[2], colorScale.GetColorForValue(1.0));
+
+            var unevenColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange }, new List<double>() { 0, 10, 15 });
+            Assert.Equal(unevenColorScale.Colors[0], unevenColorScale.GetColorForValue(0.0));
+            Assert.Equal(unevenColorScale.Colors[1], unevenColorScale.GetColorForValue(10.0));
+            Assert.Equal(unevenColorScale.Colors[2], unevenColorScale.GetColorForValue(15.0));
+
+            Assert.Throws<ArgumentException>(() => unevenColorScale.GetColorForValue(15.1));
         }
 
         [Fact]

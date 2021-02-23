@@ -114,7 +114,7 @@ namespace Elements.Analysis
         {
             if (t < this.Domains.First().Min || t > this.Domains.Last().Max)
             {
-                throw new ArgumentException("Your value is outside of the the expected bounds");
+                throw new ArgumentException($"Your value {t} is outside of the the expected bounds of {this.Domains.First().Min} - {this.Domains.Last().Max}");
             }
 
             for (var i = 0; i < this.Domains.Count; i++)
