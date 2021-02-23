@@ -202,12 +202,12 @@ a number of key values.</p>
   </script><h5 id="Elements_Analysis_ColorScale"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Construct a color scale specifying only
 // a few colors. The rest will be interpolated.
-var colorScale = new ColorScale(new List&lt;Color&gt;(){Colors.Cyan, Colors.Purple, Colors.Orange}, 10);
+var colorScale = new ColorScale(new List&lt;Color&gt;() { Colors.Cyan, Colors.Purple, Colors.Orange });
 
-var i=0;
-foreach(var c in colorScale.Colors)
+var i = 0;
+foreach (var c in colorScale.Colors)
 {
-    var panel = new Panel(Polygon.Rectangle(1,1), new Material($&quot;Material{i}&quot;, c));
+    var panel = new Panel(Polygon.Rectangle(1, 1), new Material($&quot;Material{i}&quot;, c));
     panel.Transform.Move(new Vector3(i * 1.1, 0, 0));
     this.Model.AddElement(panel);
     i++;
@@ -251,14 +251,14 @@ foreach(var c in colorScale.Colors)
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Analysis_ColorScale__ctor_" data-uid="Elements.Analysis.ColorScale.#ctor*"></a>
-  <h4 id="Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__" data-uid="Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color})">ColorScale(List&lt;Color&gt;)</h4>
+  <h4 id="Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Collections_Generic_List_Elements_Domain1d__" data-uid="Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Collections.Generic.List{Elements.Domain1d})">ColorScale(List&lt;Color&gt;, List&lt;Domain1d&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a color scale.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-public ColorScale(List&lt;Color&gt; colors)</code></pre>
+public ColorScale(List&lt;Color&gt; colors, List&lt;Domain1d&gt; domains)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -276,16 +276,56 @@ public ColorScale(List&lt;Color&gt; colors)</code></pre>
         <td><p>The colors which define the color scale.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Domain1d.html">Domain1d</a>&gt;</td>
+        <td><span class="parametername">domains</span></td>
+        <td><p>The domains which the colors map to</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <a id="Elements_Analysis_ColorScale__ctor_" data-uid="Elements.Analysis.ColorScale.#ctor*"></a>
-  <h4 id="Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Int32_" data-uid="Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Int32)">ColorScale(List&lt;Color&gt;, Int32)</h4>
-  <div class="markdown level1 summary"><p>Construct a color scale.</p>
+  <h4 id="Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Collections_Generic_List_System_Double__" data-uid="Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Collections.Generic.List{System.Double})">ColorScale(List&lt;Color&gt;, List&lt;Double&gt;)</h4>
+  <div class="markdown level1 summary"><p>Construct a ColorScale from a list of colors and an optional list of values</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ColorScale(List&lt;Color&gt; colors, int colorCount)</code></pre>
+    <pre><code class="lang-csharp hljs">public ColorScale(List&lt;Color&gt; colors, List&lt;double&gt; values = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
+        <td><span class="parametername">colors</span></td>
+        <td><p>The color scale's key values.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td><p>List of values each color corresponds to on your scale. If specified, it expects one value per color, in ascending numerical order.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Analysis_ColorScale__ctor_" data-uid="Elements.Analysis.ColorScale.#ctor*"></a>
+  <h4 id="Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Int32_" data-uid="Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Int32)">ColorScale(List&lt;Color&gt;, Int32)</h4>
+  <div class="markdown level1 summary"><p>Construct a color scale</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;colorCount is no longer required, and this constructor will simply create an evenly interpolated scale between 0 and 1.&quot;)]
+public ColorScale(List&lt;Color&gt; colors, int colorCount)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -334,6 +374,30 @@ These values will be interpolated between the provided colors.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Analysis_ColorScale_Domains_" data-uid="Elements.Analysis.ColorScale.Domains*"></a>
+  <h4 id="Elements_Analysis_ColorScale_Domains" data-uid="Elements.Analysis.ColorScale.Domains">Domains</h4>
+  <div class="markdown level1 summary"><p>The domain of the scale</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Domain1d&gt; Domains { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Domain1d.html">Domain1d</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
