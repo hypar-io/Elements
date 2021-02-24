@@ -73,5 +73,21 @@ namespace Elements.Tests
             Assert.Throws<ArgumentException>(() => new SpotLight(Colors.White, new Transform(), outerConeAngle: 1.6));
             Assert.Throws<ArgumentException>(() => new SpotLight(Colors.White, new Transform(), outerConeAngle: -1));
         }
+
+        [Fact]
+        public void CanCreateModelWithOnlyLights()
+        {
+            // Ensure that a model containing only lights, without any geometry,
+            // can be created and written to glTF.
+            this.Name = "Lights";
+            for (var x = 0; x < 20; x += 3)
+            {
+                for (var y = 0; y < 20; y += 3)
+                {
+                    var spotLight = new SpotLight(Colors.White, new Transform(x, y, 3), 10, 0, 0.4);
+                    this.Model.AddElement(spotLight);
+                }
+            }
+        }
     }
 }

@@ -776,8 +776,15 @@ namespace Elements.Serialization.glTF
                 schemaBuffers[0].ByteLength = buffers.Count;
             }
             gltf.Buffers = schemaBuffers.ToArray(schemaBuffers.Count);
-            gltf.BufferViews = bufferViews.ToArray(bufferViews.Count);
-            gltf.Accessors = accessors.ToArray(accessors.Count);
+            if (bufferViews.Count > 0)
+            {
+                gltf.BufferViews = bufferViews.ToArray(bufferViews.Count);
+            }
+            if (accessors.Count > 0)
+            {
+                gltf.Accessors = accessors.ToArray(accessors.Count);
+            }
+
             gltf.Materials = materials.ToArray(materials.Count);
             if (textures.Count > 0)
             {
