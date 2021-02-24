@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.8.4
+
+### Added
+- `Elements.Light`
+- `Elements.PointLight`
+- `Elements.SpotLight`
+
+### Changed
+- `Elements.DirectionalLight` now inherits from `Elements.Light`.
+
 ## 0.8.3
 
 ### Added
