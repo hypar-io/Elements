@@ -724,10 +724,51 @@ namespace Elements.Geometry.Tests
         public void PointInternal()
         {
             Name = "PointInternal";
-            var extremelyConvexPolygon = JsonConvert.DeserializeObject<Polygon>("{\n  \"Vertices\": [\n    {\n      \"X\": 5.894565217391305,\n      \"Y\": 0.0,\n      \"Z\": 0.0\n    },\n    {\n      \"X\": 5.894565217391305,\n      \"Y\": 0.69347826086956488,\n      \"Z\": 0.0\n    },\n    {\n      \"X\": 0.19082958701549974,\n      \"Y\": 0.13222235119778919,\n      \"Z\": 0.0\n    },\n    {\n      \"X\": 0.0,\n      \"Y\": 2.3964022904166224,\n      \"Z\": 0.0\n    },\n    {\n      \"X\": 6.2310064053894925,\n      \"Y\": 3.9731847432442322,\n      \"Z\": 0.0\n    },\n    {\n      \"X\": 5.9682093299182242,\n      \"Y\": 4.5513383092810225,\n      \"Z\": 0.0\n    },\n    {\n      \"X\": -0.085624933213594254,\n      \"Y\": 2.4045397339325851,\n      \"Z\": 0.0\n    },\n    {\n      \"X\": 0.0,\n      \"Y\": 0.0,\n      \"Z\": 0.0\n    }\n  ]\n}");
-            var pointInternal = extremelyConvexPolygon.PointInternal();
-            Assert.True(extremelyConvexPolygon.Contains(pointInternal));
-            Model.AddElement(extremelyConvexPolygon);
+            var extremelyConcavePolygon = new Polygon(new[] {
+                new Vector3(
+                        5.894565217391305,
+                        0.0,
+                        0.0
+                        ),
+                        new Vector3(
+                        5.894565217391305,
+                        0.69347826086956488,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.19082958701549974,
+                        0.13222235119778919,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.0,
+                        2.3964022904166224,
+                        0.0
+                        ),
+                        new Vector3(
+                        6.2310064053894925,
+                        3.9731847432442322,
+                        0.0
+                        ),
+                        new Vector3(
+                        5.9682093299182242,
+                        4.5513383092810225,
+                        0.0
+                        ),
+                        new Vector3(
+                        -0.085624933213594254,
+                        2.4045397339325851,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.0,
+                        0.0,
+                        0.0
+                        )
+            });
+            var pointInternal = extremelyConcavePolygon.PointInternal();
+            Assert.True(extremelyConcavePolygon.Contains(pointInternal));
+            Model.AddElement(extremelyConcavePolygon);
             Curve.MinimumChordLength = 0.001;
             Model.AddElement(new Circle(pointInternal, 0.02));
         }
