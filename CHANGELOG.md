@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.4
+
+### Added
+- `Identity` static class
+
 ## 0.8.3
 
 ### Added
