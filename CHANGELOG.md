@@ -6,6 +6,7 @@
 - `Elements.Light`
 - `Elements.PointLight`
 - `Elements.SpotLight`
+- `Material.NormalTexture`
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
