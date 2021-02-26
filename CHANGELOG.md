@@ -6,7 +6,7 @@
 - `Elements.Light`
 - `Elements.PointLight`
 - `Elements.SpotLight`
-- `Identity.AddAddOverrideIdentity`
+- `Identity.AddOverrideIdentity`
 - `Polygon.PointInternal()`
 
 ### Changed
