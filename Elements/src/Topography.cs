@@ -22,6 +22,8 @@ namespace Elements
 
         private double _maxElevation = double.NegativeInfinity;
 
+        private double _depthBelowMinimumElevation = 500;
+
         /// <summary>
         /// The maximum elevation of the topography.
         /// </summary>
@@ -60,6 +62,20 @@ namespace Elements
         public double CellHeight { get; }
 
         /// <summary>
+        /// The depth of the the topography's mass below the topography's minimum elevation.
+        /// </summary>
+        /// <value></value>
+        public double DepthBelowMinimumElevation
+        {
+            get { return _depthBelowMinimumElevation; }
+            set
+            {
+                _depthBelowMinimumElevation = value;
+                RaisePropertyChanged("DepthBelowMinimumElevation");
+            }
+        }
+
+        /// <summary>
         /// Create a topography.
         /// </summary>
         /// <param name="origin">The origin of the topography.</param>
@@ -83,16 +99,21 @@ namespace Elements
                                                      name)
         {
             this._mesh = new Mesh();
-
             this.Origin = origin;
             this.Elevations = elevations;
             this.RowWidth = (int)Math.Sqrt(elevations.Length);
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
-            var mesh = GenerateMesh(elevations, origin, this.RowWidth, this.CellWidth, this.CellWidth);
-            this._mesh = mesh.Mesh;
-            this._minElevation = mesh.MinElevation;
-            this._maxElevation = mesh.MaxElevation;
+
+            GenerateMeshAndSetInternals();
+
+            this.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "DepthBelowMinimumElevation")
+                {
+                    GenerateMeshAndSetInternals();
+                }
+            };
         }
 
         [JsonConstructor]
@@ -115,7 +136,26 @@ namespace Elements
             this.RowWidth = rowWidth;
             this.CellWidth = cellWidth;
             this.CellHeight = cellHeight;
-            var mesh = GenerateMesh(elevations, origin, rowWidth, cellWidth, cellHeight);
+
+            GenerateMeshAndSetInternals();
+
+            this.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "DepthBelowMinimumElevation")
+                {
+                    GenerateMeshAndSetInternals();
+                }
+            };
+        }
+
+        private void GenerateMeshAndSetInternals()
+        {
+            var mesh = GenerateMesh(this.Elevations,
+                                    this.Origin,
+                                    this.RowWidth,
+                                    this.CellWidth,
+                                    this.CellWidth,
+                                    this.DepthBelowMinimumElevation);
             this._mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
@@ -126,7 +166,8 @@ namespace Elements
             Vector3 origin,
             int rowWidth,
             double cellWidth,
-            double cellHeight)
+            double cellHeight,
+            double depth)
         {
             var minElevation = double.MaxValue;
             var maxElevation = double.MinValue;
@@ -184,7 +225,6 @@ namespace Elements
             Vertex lastT = null;
             Vertex lastB = null;
 
-            var depth = 500;
             for (var u = 0; u < rowWidth - 1; u++)
             {
                 // Left side

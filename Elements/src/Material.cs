@@ -12,7 +12,7 @@ namespace Elements
         /// <summary>
         /// Should the texture be repeated?
         /// </summary>
-        /// <value></value>
+        /// <value>The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.</value>
         public bool RepeatTexture { get; set; }
 
         /// <summary>
