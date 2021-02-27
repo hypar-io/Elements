@@ -24,7 +24,7 @@ namespace Elements
         private static Material _yAxis = new Material("Y", new Color(0.0f, 1.0f, 0.0f, 1.0f), 0.1f, 0.1f, null, true, false, Guid.Parse("30ab5b47-7ef8-4376-98c1-8d58f3c61c5f"));
         private static Material _zAxis = new Material("Z", new Color(0.0f, 0.0f, 1.0f, 1.0f), 0.1f, 0.1f, null, true, false, Guid.Parse("0dd0b2da-f4ca-47c5-a50e-6d4f8b044c36"));
         private static Material _trans = new Material("trans", new Color(0.0f, 0.0f, 0.0f, 0.0f), 0.0f, 0.0f, null, false, false, Guid.Parse("0af9722a-3bbc-4731-aaff-1d023e02b573"));
-        private static Material _dirt = new Material("dirt", Colors.White, 0, 0, "./Textures/Ground037_1K_Color.jpg", false, false, Guid.Parse("919cf0d2-cc48-4393-a6a8-904bc047ef65"));
+        private static Material _dirt = new Material("dirt", Colors.White, 0, 0, "./Textures/Ground039_1K_Color.jpg", false, false, Guid.Parse("919cf0d2-cc48-4393-a6a8-904bc047ef65"));
 
         /// <summary>
         /// Glass.
